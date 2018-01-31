@@ -1,0 +1,211 @@
+public abstract class org.junit.runners.model.RunnerBuilder extends java.lang.Object
+{
+    private final java.util.Set parents;
+
+    public void <init>()
+    {
+        org.junit.runners.model.RunnerBuilder r0;
+        java.util.HashSet $r1;
+
+        r0 := @this: org.junit.runners.model.RunnerBuilder;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $r1 = new java.util.HashSet;
+
+        specialinvoke $r1.<java.util.HashSet: void <init>()>();
+
+        r0.<org.junit.runners.model.RunnerBuilder: java.util.Set parents> = $r1;
+
+        return;
+    }
+
+    public abstract org.junit.runner.Runner runnerForClass(java.lang.Class) throws java.lang.Throwable;
+
+    public org.junit.runner.Runner safeRunnerForClass(java.lang.Class)
+    {
+        org.junit.runners.model.RunnerBuilder r0;
+        java.lang.Class r1;
+        org.junit.runner.Runner $r3;
+        java.lang.Throwable $r4;
+        org.junit.internal.runners.ErrorReportingRunner $r5;
+
+        r0 := @this: org.junit.runners.model.RunnerBuilder;
+
+        r1 := @parameter0: java.lang.Class;
+
+     label1:
+        $r3 = virtualinvoke r0.<org.junit.runners.model.RunnerBuilder: org.junit.runner.Runner runnerForClass(java.lang.Class)>(r1);
+
+     label2:
+        return $r3;
+
+     label3:
+        $r4 := @caughtexception;
+
+        $r5 = new org.junit.internal.runners.ErrorReportingRunner;
+
+        specialinvoke $r5.<org.junit.internal.runners.ErrorReportingRunner: void <init>(java.lang.Class,java.lang.Throwable)>(r1, $r4);
+
+        return $r5;
+
+        catch java.lang.Throwable from label1 to label2 with label3;
+    }
+
+    java.lang.Class addParent(java.lang.Class) throws org.junit.runners.model.InitializationError
+    {
+        org.junit.runners.model.RunnerBuilder r0;
+        java.lang.Class r1;
+        java.util.Set $r2;
+        boolean $z0;
+        org.junit.runners.model.InitializationError $r3;
+        java.lang.Object[] $r4;
+        java.lang.String $r5, $r6;
+
+        r0 := @this: org.junit.runners.model.RunnerBuilder;
+
+        r1 := @parameter0: java.lang.Class;
+
+        $r2 = r0.<org.junit.runners.model.RunnerBuilder: java.util.Set parents>;
+
+        $z0 = interfaceinvoke $r2.<java.util.Set: boolean add(java.lang.Object)>(r1);
+
+        if $z0 != 0 goto label1;
+
+        $r3 = new org.junit.runners.model.InitializationError;
+
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = virtualinvoke r1.<java.lang.Class: java.lang.String getName()>();
+
+        $r4[0] = $r5;
+
+        $r6 = staticinvoke <java.lang.String: java.lang.String format(java.lang.String,java.lang.Object[])>("class \'%s\' (possibly indirectly) contains itself as a SuiteClass", $r4);
+
+        specialinvoke $r3.<org.junit.runners.model.InitializationError: void <init>(java.lang.String)>($r6);
+
+        throw $r3;
+
+     label1:
+        return r1;
+    }
+
+    void removeParent(java.lang.Class)
+    {
+        org.junit.runners.model.RunnerBuilder r0;
+        java.lang.Class r1;
+        java.util.Set $r2;
+
+        r0 := @this: org.junit.runners.model.RunnerBuilder;
+
+        r1 := @parameter0: java.lang.Class;
+
+        $r2 = r0.<org.junit.runners.model.RunnerBuilder: java.util.Set parents>;
+
+        interfaceinvoke $r2.<java.util.Set: boolean remove(java.lang.Object)>(r1);
+
+        return;
+    }
+
+    public java.util.List runners(java.lang.Class, java.lang.Class[]) throws org.junit.runners.model.InitializationError
+    {
+        org.junit.runners.model.RunnerBuilder r0;
+        java.lang.Class r1;
+        java.lang.Class[] r2;
+        java.util.List r3;
+        java.lang.Throwable $r6;
+
+        r0 := @this: org.junit.runners.model.RunnerBuilder;
+
+        r1 := @parameter0: java.lang.Class;
+
+        r2 := @parameter1: java.lang.Class[];
+
+        virtualinvoke r0.<org.junit.runners.model.RunnerBuilder: java.lang.Class addParent(java.lang.Class)>(r1);
+
+     label1:
+        r3 = specialinvoke r0.<org.junit.runners.model.RunnerBuilder: java.util.List runners(java.lang.Class[])>(r2);
+
+     label2:
+        virtualinvoke r0.<org.junit.runners.model.RunnerBuilder: void removeParent(java.lang.Class)>(r1);
+
+        return r3;
+
+     label3:
+        $r6 := @caughtexception;
+
+     label4:
+        virtualinvoke r0.<org.junit.runners.model.RunnerBuilder: void removeParent(java.lang.Class)>(r1);
+
+        throw $r6;
+
+        catch java.lang.Throwable from label1 to label2 with label3;
+        catch java.lang.Throwable from label3 to label4 with label3;
+    }
+
+    public java.util.List runners(java.lang.Class, java.util.List) throws org.junit.runners.model.InitializationError
+    {
+        org.junit.runners.model.RunnerBuilder r0;
+        java.lang.Class r1;
+        java.util.List r2, $r6;
+        java.lang.Class[] $r3, $r5;
+        java.lang.Object[] $r4;
+
+        r0 := @this: org.junit.runners.model.RunnerBuilder;
+
+        r1 := @parameter0: java.lang.Class;
+
+        r2 := @parameter1: java.util.List;
+
+        $r3 = newarray (java.lang.Class)[0];
+
+        $r4 = interfaceinvoke r2.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r3);
+
+        $r5 = (java.lang.Class[]) $r4;
+
+        $r6 = virtualinvoke r0.<org.junit.runners.model.RunnerBuilder: java.util.List runners(java.lang.Class,java.lang.Class[])>(r1, $r5);
+
+        return $r6;
+    }
+
+    private java.util.List runners(java.lang.Class[])
+    {
+        org.junit.runners.model.RunnerBuilder r0;
+        java.lang.Class[] r1;
+        int i0, i1;
+        java.lang.Class r4;
+        org.junit.runner.Runner r5;
+        java.util.ArrayList $r6;
+
+        r0 := @this: org.junit.runners.model.RunnerBuilder;
+
+        r1 := @parameter0: java.lang.Class[];
+
+        $r6 = new java.util.ArrayList;
+
+        specialinvoke $r6.<java.util.ArrayList: void <init>()>();
+
+        i0 = lengthof r1;
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label3;
+
+        r4 = r1[i1];
+
+        r5 = virtualinvoke r0.<org.junit.runners.model.RunnerBuilder: org.junit.runner.Runner safeRunnerForClass(java.lang.Class)>(r4);
+
+        if r5 == null goto label2;
+
+        virtualinvoke $r6.<java.util.ArrayList: boolean add(java.lang.Object)>(r5);
+
+     label2:
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label3:
+        return $r6;
+    }
+}

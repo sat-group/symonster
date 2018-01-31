@@ -1,0 +1,809 @@
+public abstract class org.junit.runners.ParentRunner extends org.junit.runner.Runner implements org.junit.runner.manipulation.Filterable, org.junit.runner.manipulation.Sortable
+{
+    private final org.junit.runners.model.TestClass fTestClass;
+    private org.junit.runner.manipulation.Sorter fSorter;
+    private java.util.List fFilteredChildren;
+    private org.junit.runners.model.RunnerScheduler fScheduler;
+
+    protected void <init>(java.lang.Class) throws org.junit.runners.model.InitializationError
+    {
+        org.junit.runners.ParentRunner r0;
+        java.lang.Class r1;
+        org.junit.runner.manipulation.Sorter $r2;
+        org.junit.runners.ParentRunner$1 $r3;
+        org.junit.runners.model.TestClass $r4;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        r1 := @parameter0: java.lang.Class;
+
+        specialinvoke r0.<org.junit.runner.Runner: void <init>()>();
+
+        $r2 = <org.junit.runner.manipulation.Sorter: org.junit.runner.manipulation.Sorter NULL>;
+
+        r0.<org.junit.runners.ParentRunner: org.junit.runner.manipulation.Sorter fSorter> = $r2;
+
+        r0.<org.junit.runners.ParentRunner: java.util.List fFilteredChildren> = null;
+
+        $r3 = new org.junit.runners.ParentRunner$1;
+
+        specialinvoke $r3.<org.junit.runners.ParentRunner$1: void <init>(org.junit.runners.ParentRunner)>(r0);
+
+        r0.<org.junit.runners.ParentRunner: org.junit.runners.model.RunnerScheduler fScheduler> = $r3;
+
+        $r4 = new org.junit.runners.model.TestClass;
+
+        specialinvoke $r4.<org.junit.runners.model.TestClass: void <init>(java.lang.Class)>(r1);
+
+        r0.<org.junit.runners.ParentRunner: org.junit.runners.model.TestClass fTestClass> = $r4;
+
+        specialinvoke r0.<org.junit.runners.ParentRunner: void validate()>();
+
+        return;
+    }
+
+    protected abstract java.util.List getChildren();
+
+    protected abstract org.junit.runner.Description describeChild(java.lang.Object);
+
+    protected abstract void runChild(java.lang.Object, org.junit.runner.notification.RunNotifier);
+
+    protected void collectInitializationErrors(java.util.List)
+    {
+        org.junit.runners.ParentRunner r0;
+        java.util.List r1;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        r1 := @parameter0: java.util.List;
+
+        virtualinvoke r0.<org.junit.runners.ParentRunner: void validatePublicVoidNoArgMethods(java.lang.Class,boolean,java.util.List)>(class "org/junit/BeforeClass", 1, r1);
+
+        virtualinvoke r0.<org.junit.runners.ParentRunner: void validatePublicVoidNoArgMethods(java.lang.Class,boolean,java.util.List)>(class "org/junit/AfterClass", 1, r1);
+
+        specialinvoke r0.<org.junit.runners.ParentRunner: void validateClassRules(java.util.List)>(r1);
+
+        return;
+    }
+
+    protected void validatePublicVoidNoArgMethods(java.lang.Class, boolean, java.util.List)
+    {
+        org.junit.runners.ParentRunner r0;
+        java.lang.Class r1;
+        boolean z0, $z1;
+        java.util.List r2, r3;
+        java.util.Iterator r4;
+        org.junit.runners.model.FrameworkMethod r5;
+        org.junit.runners.model.TestClass $r6;
+        java.lang.Object $r7;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        r1 := @parameter0: java.lang.Class;
+
+        z0 := @parameter1: boolean;
+
+        r2 := @parameter2: java.util.List;
+
+        $r6 = virtualinvoke r0.<org.junit.runners.ParentRunner: org.junit.runners.model.TestClass getTestClass()>();
+
+        r3 = virtualinvoke $r6.<org.junit.runners.model.TestClass: java.util.List getAnnotatedMethods(java.lang.Class)>(r1);
+
+        r4 = interfaceinvoke r3.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z1 = interfaceinvoke r4.<java.util.Iterator: boolean hasNext()>();
+
+        if $z1 == 0 goto label2;
+
+        $r7 = interfaceinvoke r4.<java.util.Iterator: java.lang.Object next()>();
+
+        r5 = (org.junit.runners.model.FrameworkMethod) $r7;
+
+        virtualinvoke r5.<org.junit.runners.model.FrameworkMethod: void validatePublicVoidNoArg(boolean,java.util.List)>(z0, r2);
+
+        goto label1;
+
+     label2:
+        return;
+    }
+
+    private void validateClassRules(java.util.List)
+    {
+        org.junit.runners.ParentRunner r0;
+        java.util.List r1;
+        org.junit.internal.runners.rules.RuleFieldValidator $r2, $r4;
+        org.junit.runners.model.TestClass $r3, $r5;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        r1 := @parameter0: java.util.List;
+
+        $r2 = <org.junit.internal.runners.rules.RuleFieldValidator: org.junit.internal.runners.rules.RuleFieldValidator CLASS_RULE_VALIDATOR>;
+
+        $r3 = virtualinvoke r0.<org.junit.runners.ParentRunner: org.junit.runners.model.TestClass getTestClass()>();
+
+        virtualinvoke $r2.<org.junit.internal.runners.rules.RuleFieldValidator: void validate(org.junit.runners.model.TestClass,java.util.List)>($r3, r1);
+
+        $r4 = <org.junit.internal.runners.rules.RuleFieldValidator: org.junit.internal.runners.rules.RuleFieldValidator CLASS_RULE_METHOD_VALIDATOR>;
+
+        $r5 = virtualinvoke r0.<org.junit.runners.ParentRunner: org.junit.runners.model.TestClass getTestClass()>();
+
+        virtualinvoke $r4.<org.junit.internal.runners.rules.RuleFieldValidator: void validate(org.junit.runners.model.TestClass,java.util.List)>($r5, r1);
+
+        return;
+    }
+
+    protected org.junit.runners.model.Statement classBlock(org.junit.runner.notification.RunNotifier)
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runner.notification.RunNotifier r1;
+        org.junit.runners.model.Statement r2, r3, r4, r5;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        r1 := @parameter0: org.junit.runner.notification.RunNotifier;
+
+        r2 = virtualinvoke r0.<org.junit.runners.ParentRunner: org.junit.runners.model.Statement childrenInvoker(org.junit.runner.notification.RunNotifier)>(r1);
+
+        r3 = virtualinvoke r0.<org.junit.runners.ParentRunner: org.junit.runners.model.Statement withBeforeClasses(org.junit.runners.model.Statement)>(r2);
+
+        r4 = virtualinvoke r0.<org.junit.runners.ParentRunner: org.junit.runners.model.Statement withAfterClasses(org.junit.runners.model.Statement)>(r3);
+
+        r5 = specialinvoke r0.<org.junit.runners.ParentRunner: org.junit.runners.model.Statement withClassRules(org.junit.runners.model.Statement)>(r4);
+
+        return r5;
+    }
+
+    protected org.junit.runners.model.Statement withBeforeClasses(org.junit.runners.model.Statement)
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runners.model.Statement r1, $r4;
+        java.util.List r2;
+        org.junit.runners.model.TestClass $r3;
+        boolean $z0;
+        org.junit.internal.runners.statements.RunBefores r5;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        r1 := @parameter0: org.junit.runners.model.Statement;
+
+        $r3 = r0.<org.junit.runners.ParentRunner: org.junit.runners.model.TestClass fTestClass>;
+
+        r2 = virtualinvoke $r3.<org.junit.runners.model.TestClass: java.util.List getAnnotatedMethods(java.lang.Class)>(class "org/junit/BeforeClass");
+
+        $z0 = interfaceinvoke r2.<java.util.List: boolean isEmpty()>();
+
+        if $z0 == 0 goto label1;
+
+        $r4 = r1;
+
+        goto label2;
+
+     label1:
+        r5 = new org.junit.internal.runners.statements.RunBefores;
+
+        $r4 = r5;
+
+        specialinvoke r5.<org.junit.internal.runners.statements.RunBefores: void <init>(org.junit.runners.model.Statement,java.util.List,java.lang.Object)>(r1, r2, null);
+
+     label2:
+        return $r4;
+    }
+
+    protected org.junit.runners.model.Statement withAfterClasses(org.junit.runners.model.Statement)
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runners.model.Statement r1, $r4;
+        java.util.List r2;
+        org.junit.runners.model.TestClass $r3;
+        boolean $z0;
+        org.junit.internal.runners.statements.RunAfters r5;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        r1 := @parameter0: org.junit.runners.model.Statement;
+
+        $r3 = r0.<org.junit.runners.ParentRunner: org.junit.runners.model.TestClass fTestClass>;
+
+        r2 = virtualinvoke $r3.<org.junit.runners.model.TestClass: java.util.List getAnnotatedMethods(java.lang.Class)>(class "org/junit/AfterClass");
+
+        $z0 = interfaceinvoke r2.<java.util.List: boolean isEmpty()>();
+
+        if $z0 == 0 goto label1;
+
+        $r4 = r1;
+
+        goto label2;
+
+     label1:
+        r5 = new org.junit.internal.runners.statements.RunAfters;
+
+        $r4 = r5;
+
+        specialinvoke r5.<org.junit.internal.runners.statements.RunAfters: void <init>(org.junit.runners.model.Statement,java.util.List,java.lang.Object)>(r1, r2, null);
+
+     label2:
+        return $r4;
+    }
+
+    private org.junit.runners.model.Statement withClassRules(org.junit.runners.model.Statement)
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runners.model.Statement r1, $r4;
+        java.util.List r2;
+        boolean $z0;
+        org.junit.runner.Description $r3;
+        org.junit.rules.RunRules r5;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        r1 := @parameter0: org.junit.runners.model.Statement;
+
+        r2 = virtualinvoke r0.<org.junit.runners.ParentRunner: java.util.List classRules()>();
+
+        $z0 = interfaceinvoke r2.<java.util.List: boolean isEmpty()>();
+
+        if $z0 == 0 goto label1;
+
+        $r4 = r1;
+
+        goto label2;
+
+     label1:
+        r5 = new org.junit.rules.RunRules;
+
+        $r4 = r5;
+
+        $r3 = virtualinvoke r0.<org.junit.runners.ParentRunner: org.junit.runner.Description getDescription()>();
+
+        specialinvoke r5.<org.junit.rules.RunRules: void <init>(org.junit.runners.model.Statement,java.lang.Iterable,org.junit.runner.Description)>(r1, r2, $r3);
+
+     label2:
+        return $r4;
+    }
+
+    protected java.util.List classRules()
+    {
+        org.junit.runners.ParentRunner r0;
+        java.util.List r1, $r4;
+        org.junit.runners.model.TestClass $r2, $r3;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        $r2 = r0.<org.junit.runners.ParentRunner: org.junit.runners.model.TestClass fTestClass>;
+
+        r1 = virtualinvoke $r2.<org.junit.runners.model.TestClass: java.util.List getAnnotatedMethodValues(java.lang.Object,java.lang.Class,java.lang.Class)>(null, class "org/junit/ClassRule", class "org/junit/rules/TestRule");
+
+        $r3 = r0.<org.junit.runners.ParentRunner: org.junit.runners.model.TestClass fTestClass>;
+
+        $r4 = virtualinvoke $r3.<org.junit.runners.model.TestClass: java.util.List getAnnotatedFieldValues(java.lang.Object,java.lang.Class,java.lang.Class)>(null, class "org/junit/ClassRule", class "org/junit/rules/TestRule");
+
+        interfaceinvoke r1.<java.util.List: boolean addAll(java.util.Collection)>($r4);
+
+        return r1;
+    }
+
+    protected org.junit.runners.model.Statement childrenInvoker(org.junit.runner.notification.RunNotifier)
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runner.notification.RunNotifier r1;
+        org.junit.runners.ParentRunner$2 $r2;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        r1 := @parameter0: org.junit.runner.notification.RunNotifier;
+
+        $r2 = new org.junit.runners.ParentRunner$2;
+
+        specialinvoke $r2.<org.junit.runners.ParentRunner$2: void <init>(org.junit.runners.ParentRunner,org.junit.runner.notification.RunNotifier)>(r0, r1);
+
+        return $r2;
+    }
+
+    private void runChildren(org.junit.runner.notification.RunNotifier)
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runner.notification.RunNotifier r1;
+        java.util.Iterator r2;
+        java.lang.Object r3;
+        java.util.List $r4;
+        boolean $z0;
+        org.junit.runners.model.RunnerScheduler $r5, $r7;
+        org.junit.runners.ParentRunner$3 $r6;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        r1 := @parameter0: org.junit.runner.notification.RunNotifier;
+
+        $r4 = specialinvoke r0.<org.junit.runners.ParentRunner: java.util.List getFilteredChildren()>();
+
+        r2 = interfaceinvoke $r4.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r2.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label2;
+
+        r3 = interfaceinvoke r2.<java.util.Iterator: java.lang.Object next()>();
+
+        $r7 = r0.<org.junit.runners.ParentRunner: org.junit.runners.model.RunnerScheduler fScheduler>;
+
+        $r6 = new org.junit.runners.ParentRunner$3;
+
+        specialinvoke $r6.<org.junit.runners.ParentRunner$3: void <init>(org.junit.runners.ParentRunner,java.lang.Object,org.junit.runner.notification.RunNotifier)>(r0, r3, r1);
+
+        interfaceinvoke $r7.<org.junit.runners.model.RunnerScheduler: void schedule(java.lang.Runnable)>($r6);
+
+        goto label1;
+
+     label2:
+        $r5 = r0.<org.junit.runners.ParentRunner: org.junit.runners.model.RunnerScheduler fScheduler>;
+
+        interfaceinvoke $r5.<org.junit.runners.model.RunnerScheduler: void finished()>();
+
+        return;
+    }
+
+    protected java.lang.String getName()
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runners.model.TestClass $r1;
+        java.lang.String $r2;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        $r1 = r0.<org.junit.runners.ParentRunner: org.junit.runners.model.TestClass fTestClass>;
+
+        $r2 = virtualinvoke $r1.<org.junit.runners.model.TestClass: java.lang.String getName()>();
+
+        return $r2;
+    }
+
+    public final org.junit.runners.model.TestClass getTestClass()
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runners.model.TestClass $r1;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        $r1 = r0.<org.junit.runners.ParentRunner: org.junit.runners.model.TestClass fTestClass>;
+
+        return $r1;
+    }
+
+    protected final void runLeaf(org.junit.runners.model.Statement, org.junit.runner.Description, org.junit.runner.notification.RunNotifier)
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runners.model.Statement r1;
+        org.junit.runner.Description r2;
+        org.junit.runner.notification.RunNotifier r3;
+        org.junit.internal.runners.model.EachTestNotifier $r6;
+        java.lang.Throwable $r7, $r8;
+        org.junit.internal.AssumptionViolatedException $r9;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        r1 := @parameter0: org.junit.runners.model.Statement;
+
+        r2 := @parameter1: org.junit.runner.Description;
+
+        r3 := @parameter2: org.junit.runner.notification.RunNotifier;
+
+        $r6 = new org.junit.internal.runners.model.EachTestNotifier;
+
+        specialinvoke $r6.<org.junit.internal.runners.model.EachTestNotifier: void <init>(org.junit.runner.notification.RunNotifier,org.junit.runner.Description)>(r3, r2);
+
+        virtualinvoke $r6.<org.junit.internal.runners.model.EachTestNotifier: void fireTestStarted()>();
+
+     label1:
+        virtualinvoke r1.<org.junit.runners.model.Statement: void evaluate()>();
+
+     label2:
+        virtualinvoke $r6.<org.junit.internal.runners.model.EachTestNotifier: void fireTestFinished()>();
+
+        goto label9;
+
+     label3:
+        $r9 := @caughtexception;
+
+        virtualinvoke $r6.<org.junit.internal.runners.model.EachTestNotifier: void addFailedAssumption(org.junit.internal.AssumptionViolatedException)>($r9);
+
+     label4:
+        virtualinvoke $r6.<org.junit.internal.runners.model.EachTestNotifier: void fireTestFinished()>();
+
+        goto label9;
+
+     label5:
+        $r7 := @caughtexception;
+
+        virtualinvoke $r6.<org.junit.internal.runners.model.EachTestNotifier: void addFailure(java.lang.Throwable)>($r7);
+
+     label6:
+        virtualinvoke $r6.<org.junit.internal.runners.model.EachTestNotifier: void fireTestFinished()>();
+
+        goto label9;
+
+     label7:
+        $r8 := @caughtexception;
+
+     label8:
+        virtualinvoke $r6.<org.junit.internal.runners.model.EachTestNotifier: void fireTestFinished()>();
+
+        throw $r8;
+
+     label9:
+        return;
+
+        catch org.junit.internal.AssumptionViolatedException from label1 to label2 with label3;
+        catch java.lang.Throwable from label1 to label2 with label5;
+        catch java.lang.Throwable from label1 to label2 with label7;
+        catch java.lang.Throwable from label3 to label4 with label7;
+        catch java.lang.Throwable from label5 to label6 with label7;
+        catch java.lang.Throwable from label7 to label8 with label7;
+    }
+
+    protected java.lang.annotation.Annotation[] getRunnerAnnotations()
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runners.model.TestClass $r1;
+        java.lang.annotation.Annotation[] $r2;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        $r1 = r0.<org.junit.runners.ParentRunner: org.junit.runners.model.TestClass fTestClass>;
+
+        $r2 = virtualinvoke $r1.<org.junit.runners.model.TestClass: java.lang.annotation.Annotation[] getAnnotations()>();
+
+        return $r2;
+    }
+
+    public org.junit.runner.Description getDescription()
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runner.Description r1, $r7;
+        java.util.Iterator r2;
+        java.lang.Object r3;
+        java.lang.String $r4;
+        java.lang.annotation.Annotation[] $r5;
+        java.util.List $r6;
+        boolean $z0;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        $r4 = virtualinvoke r0.<org.junit.runners.ParentRunner: java.lang.String getName()>();
+
+        $r5 = virtualinvoke r0.<org.junit.runners.ParentRunner: java.lang.annotation.Annotation[] getRunnerAnnotations()>();
+
+        r1 = staticinvoke <org.junit.runner.Description: org.junit.runner.Description createSuiteDescription(java.lang.String,java.lang.annotation.Annotation[])>($r4, $r5);
+
+        $r6 = specialinvoke r0.<org.junit.runners.ParentRunner: java.util.List getFilteredChildren()>();
+
+        r2 = interfaceinvoke $r6.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r2.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label2;
+
+        r3 = interfaceinvoke r2.<java.util.Iterator: java.lang.Object next()>();
+
+        $r7 = virtualinvoke r0.<org.junit.runners.ParentRunner: org.junit.runner.Description describeChild(java.lang.Object)>(r3);
+
+        virtualinvoke r1.<org.junit.runner.Description: void addChild(org.junit.runner.Description)>($r7);
+
+        goto label1;
+
+     label2:
+        return r1;
+    }
+
+    public void run(org.junit.runner.notification.RunNotifier)
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runner.notification.RunNotifier r1;
+        org.junit.internal.runners.model.EachTestNotifier $r3;
+        org.junit.runner.Description $r4;
+        java.lang.Throwable $r5;
+        org.junit.runner.notification.StoppedByUserException $r6;
+        org.junit.internal.AssumptionViolatedException $r7;
+        org.junit.runners.model.Statement r8;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        r1 := @parameter0: org.junit.runner.notification.RunNotifier;
+
+        $r3 = new org.junit.internal.runners.model.EachTestNotifier;
+
+        $r4 = virtualinvoke r0.<org.junit.runners.ParentRunner: org.junit.runner.Description getDescription()>();
+
+        specialinvoke $r3.<org.junit.internal.runners.model.EachTestNotifier: void <init>(org.junit.runner.notification.RunNotifier,org.junit.runner.Description)>(r1, $r4);
+
+     label1:
+        r8 = virtualinvoke r0.<org.junit.runners.ParentRunner: org.junit.runners.model.Statement classBlock(org.junit.runner.notification.RunNotifier)>(r1);
+
+        virtualinvoke r8.<org.junit.runners.model.Statement: void evaluate()>();
+
+     label2:
+        goto label6;
+
+     label3:
+        $r7 := @caughtexception;
+
+        virtualinvoke $r3.<org.junit.internal.runners.model.EachTestNotifier: void fireTestIgnored()>();
+
+        goto label6;
+
+     label4:
+        $r6 := @caughtexception;
+
+        throw $r6;
+
+     label5:
+        $r5 := @caughtexception;
+
+        virtualinvoke $r3.<org.junit.internal.runners.model.EachTestNotifier: void addFailure(java.lang.Throwable)>($r5);
+
+     label6:
+        return;
+
+        catch org.junit.internal.AssumptionViolatedException from label1 to label2 with label3;
+        catch org.junit.runner.notification.StoppedByUserException from label1 to label2 with label4;
+        catch java.lang.Throwable from label1 to label2 with label5;
+    }
+
+    public void filter(org.junit.runner.manipulation.Filter) throws org.junit.runner.manipulation.NoTestsRemainException
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runner.manipulation.Filter r1;
+        java.util.Iterator r2;
+        java.lang.Object r3;
+        java.util.List $r5, $r6;
+        boolean $z0, $z1, $z2;
+        org.junit.runner.manipulation.NoTestsRemainException $r7, $r8;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        r1 := @parameter0: org.junit.runner.manipulation.Filter;
+
+        $r5 = specialinvoke r0.<org.junit.runners.ParentRunner: java.util.List getFilteredChildren()>();
+
+        r2 = interfaceinvoke $r5.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r2.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label7;
+
+        r3 = interfaceinvoke r2.<java.util.Iterator: java.lang.Object next()>();
+
+        $z2 = specialinvoke r0.<org.junit.runners.ParentRunner: boolean shouldRun(org.junit.runner.manipulation.Filter,java.lang.Object)>(r1, r3);
+
+        if $z2 == 0 goto label5;
+
+     label2:
+        virtualinvoke r1.<org.junit.runner.manipulation.Filter: void apply(java.lang.Object)>(r3);
+
+     label3:
+        goto label6;
+
+     label4:
+        $r8 := @caughtexception;
+
+        interfaceinvoke r2.<java.util.Iterator: void remove()>();
+
+        goto label6;
+
+     label5:
+        interfaceinvoke r2.<java.util.Iterator: void remove()>();
+
+     label6:
+        goto label1;
+
+     label7:
+        $r6 = specialinvoke r0.<org.junit.runners.ParentRunner: java.util.List getFilteredChildren()>();
+
+        $z1 = interfaceinvoke $r6.<java.util.List: boolean isEmpty()>();
+
+        if $z1 == 0 goto label8;
+
+        $r7 = new org.junit.runner.manipulation.NoTestsRemainException;
+
+        specialinvoke $r7.<org.junit.runner.manipulation.NoTestsRemainException: void <init>()>();
+
+        throw $r7;
+
+     label8:
+        return;
+
+        catch org.junit.runner.manipulation.NoTestsRemainException from label2 to label3 with label4;
+    }
+
+    public void sort(org.junit.runner.manipulation.Sorter)
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runner.manipulation.Sorter r1;
+        java.util.Iterator r2;
+        java.lang.Object r3;
+        java.util.List $r4, $r5;
+        boolean $z0;
+        java.util.Comparator $r6;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        r1 := @parameter0: org.junit.runner.manipulation.Sorter;
+
+        r0.<org.junit.runners.ParentRunner: org.junit.runner.manipulation.Sorter fSorter> = r1;
+
+        $r4 = specialinvoke r0.<org.junit.runners.ParentRunner: java.util.List getFilteredChildren()>();
+
+        r2 = interfaceinvoke $r4.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r2.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label2;
+
+        r3 = interfaceinvoke r2.<java.util.Iterator: java.lang.Object next()>();
+
+        specialinvoke r0.<org.junit.runners.ParentRunner: void sortChild(java.lang.Object)>(r3);
+
+        goto label1;
+
+     label2:
+        $r5 = specialinvoke r0.<org.junit.runners.ParentRunner: java.util.List getFilteredChildren()>();
+
+        $r6 = specialinvoke r0.<org.junit.runners.ParentRunner: java.util.Comparator comparator()>();
+
+        staticinvoke <java.util.Collections: void sort(java.util.List,java.util.Comparator)>($r5, $r6);
+
+        return;
+    }
+
+    private void validate() throws org.junit.runners.model.InitializationError
+    {
+        org.junit.runners.ParentRunner r0;
+        java.util.ArrayList $r2;
+        boolean $z0;
+        org.junit.runners.model.InitializationError $r3;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        $r2 = new java.util.ArrayList;
+
+        specialinvoke $r2.<java.util.ArrayList: void <init>()>();
+
+        virtualinvoke r0.<org.junit.runners.ParentRunner: void collectInitializationErrors(java.util.List)>($r2);
+
+        $z0 = interfaceinvoke $r2.<java.util.List: boolean isEmpty()>();
+
+        if $z0 != 0 goto label1;
+
+        $r3 = new org.junit.runners.model.InitializationError;
+
+        specialinvoke $r3.<org.junit.runners.model.InitializationError: void <init>(java.util.List)>($r2);
+
+        throw $r3;
+
+     label1:
+        return;
+    }
+
+    private java.util.List getFilteredChildren()
+    {
+        org.junit.runners.ParentRunner r0;
+        java.util.List $r1, $r2, $r4;
+        java.util.ArrayList $r3;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        $r1 = r0.<org.junit.runners.ParentRunner: java.util.List fFilteredChildren>;
+
+        if $r1 != null goto label1;
+
+        $r3 = new java.util.ArrayList;
+
+        $r4 = virtualinvoke r0.<org.junit.runners.ParentRunner: java.util.List getChildren()>();
+
+        specialinvoke $r3.<java.util.ArrayList: void <init>(java.util.Collection)>($r4);
+
+        r0.<org.junit.runners.ParentRunner: java.util.List fFilteredChildren> = $r3;
+
+     label1:
+        $r2 = r0.<org.junit.runners.ParentRunner: java.util.List fFilteredChildren>;
+
+        return $r2;
+    }
+
+    private void sortChild(java.lang.Object)
+    {
+        org.junit.runners.ParentRunner r0;
+        java.lang.Object r1;
+        org.junit.runner.manipulation.Sorter $r2;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        r1 := @parameter0: java.lang.Object;
+
+        $r2 = r0.<org.junit.runners.ParentRunner: org.junit.runner.manipulation.Sorter fSorter>;
+
+        virtualinvoke $r2.<org.junit.runner.manipulation.Sorter: void apply(java.lang.Object)>(r1);
+
+        return;
+    }
+
+    private boolean shouldRun(org.junit.runner.manipulation.Filter, java.lang.Object)
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runner.manipulation.Filter r1;
+        java.lang.Object r2;
+        org.junit.runner.Description $r3;
+        boolean $z0;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        r1 := @parameter0: org.junit.runner.manipulation.Filter;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = virtualinvoke r0.<org.junit.runners.ParentRunner: org.junit.runner.Description describeChild(java.lang.Object)>(r2);
+
+        $z0 = virtualinvoke r1.<org.junit.runner.manipulation.Filter: boolean shouldRun(org.junit.runner.Description)>($r3);
+
+        return $z0;
+    }
+
+    private java.util.Comparator comparator()
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runners.ParentRunner$4 $r1;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        $r1 = new org.junit.runners.ParentRunner$4;
+
+        specialinvoke $r1.<org.junit.runners.ParentRunner$4: void <init>(org.junit.runners.ParentRunner)>(r0);
+
+        return $r1;
+    }
+
+    public void setScheduler(org.junit.runners.model.RunnerScheduler)
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runners.model.RunnerScheduler r1;
+
+        r0 := @this: org.junit.runners.ParentRunner;
+
+        r1 := @parameter0: org.junit.runners.model.RunnerScheduler;
+
+        r0.<org.junit.runners.ParentRunner: org.junit.runners.model.RunnerScheduler fScheduler> = r1;
+
+        return;
+    }
+
+    static void access$000(org.junit.runners.ParentRunner, org.junit.runner.notification.RunNotifier)
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runner.notification.RunNotifier r1;
+
+        r0 := @parameter0: org.junit.runners.ParentRunner;
+
+        r1 := @parameter1: org.junit.runner.notification.RunNotifier;
+
+        specialinvoke r0.<org.junit.runners.ParentRunner: void runChildren(org.junit.runner.notification.RunNotifier)>(r1);
+
+        return;
+    }
+
+    static org.junit.runner.manipulation.Sorter access$100(org.junit.runners.ParentRunner)
+    {
+        org.junit.runners.ParentRunner r0;
+        org.junit.runner.manipulation.Sorter $r1;
+
+        r0 := @parameter0: org.junit.runners.ParentRunner;
+
+        $r1 = r0.<org.junit.runners.ParentRunner: org.junit.runner.manipulation.Sorter fSorter>;
+
+        return $r1;
+    }
+}

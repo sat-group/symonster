@@ -1,0 +1,377 @@
+public class org.junit.internal.runners.JUnit38ClassRunner extends org.junit.runner.Runner implements org.junit.runner.manipulation.Filterable, org.junit.runner.manipulation.Sortable
+{
+    private junit.framework.Test fTest;
+
+    public void <init>(java.lang.Class)
+    {
+        org.junit.internal.runners.JUnit38ClassRunner r0;
+        java.lang.Class r1, $r3;
+        junit.framework.TestSuite $r2;
+
+        r0 := @this: org.junit.internal.runners.JUnit38ClassRunner;
+
+        r1 := @parameter0: java.lang.Class;
+
+        $r2 = new junit.framework.TestSuite;
+
+        $r3 = virtualinvoke r1.<java.lang.Class: java.lang.Class asSubclass(java.lang.Class)>(class "junit/framework/TestCase");
+
+        specialinvoke $r2.<junit.framework.TestSuite: void <init>(java.lang.Class)>($r3);
+
+        specialinvoke r0.<org.junit.internal.runners.JUnit38ClassRunner: void <init>(junit.framework.Test)>($r2);
+
+        return;
+    }
+
+    public void <init>(junit.framework.Test)
+    {
+        org.junit.internal.runners.JUnit38ClassRunner r0;
+        junit.framework.Test r1;
+
+        r0 := @this: org.junit.internal.runners.JUnit38ClassRunner;
+
+        r1 := @parameter0: junit.framework.Test;
+
+        specialinvoke r0.<org.junit.runner.Runner: void <init>()>();
+
+        specialinvoke r0.<org.junit.internal.runners.JUnit38ClassRunner: void setTest(junit.framework.Test)>(r1);
+
+        return;
+    }
+
+    public void run(org.junit.runner.notification.RunNotifier)
+    {
+        org.junit.internal.runners.JUnit38ClassRunner r0;
+        org.junit.runner.notification.RunNotifier r1;
+        junit.framework.TestResult $r3;
+        junit.framework.TestListener $r4;
+        junit.framework.Test $r5;
+
+        r0 := @this: org.junit.internal.runners.JUnit38ClassRunner;
+
+        r1 := @parameter0: org.junit.runner.notification.RunNotifier;
+
+        $r3 = new junit.framework.TestResult;
+
+        specialinvoke $r3.<junit.framework.TestResult: void <init>()>();
+
+        $r4 = virtualinvoke r0.<org.junit.internal.runners.JUnit38ClassRunner: junit.framework.TestListener createAdaptingListener(org.junit.runner.notification.RunNotifier)>(r1);
+
+        virtualinvoke $r3.<junit.framework.TestResult: void addListener(junit.framework.TestListener)>($r4);
+
+        $r5 = specialinvoke r0.<org.junit.internal.runners.JUnit38ClassRunner: junit.framework.Test getTest()>();
+
+        interfaceinvoke $r5.<junit.framework.Test: void run(junit.framework.TestResult)>($r3);
+
+        return;
+    }
+
+    public junit.framework.TestListener createAdaptingListener(org.junit.runner.notification.RunNotifier)
+    {
+        org.junit.internal.runners.JUnit38ClassRunner r0;
+        org.junit.runner.notification.RunNotifier r1;
+        org.junit.internal.runners.JUnit38ClassRunner$OldTestClassAdaptingListener $r2;
+
+        r0 := @this: org.junit.internal.runners.JUnit38ClassRunner;
+
+        r1 := @parameter0: org.junit.runner.notification.RunNotifier;
+
+        $r2 = new org.junit.internal.runners.JUnit38ClassRunner$OldTestClassAdaptingListener;
+
+        specialinvoke $r2.<org.junit.internal.runners.JUnit38ClassRunner$OldTestClassAdaptingListener: void <init>(org.junit.internal.runners.JUnit38ClassRunner,org.junit.runner.notification.RunNotifier,org.junit.internal.runners.JUnit38ClassRunner$1)>(r0, r1, null);
+
+        return $r2;
+    }
+
+    public org.junit.runner.Description getDescription()
+    {
+        org.junit.internal.runners.JUnit38ClassRunner r0;
+        junit.framework.Test $r1;
+        org.junit.runner.Description $r2;
+
+        r0 := @this: org.junit.internal.runners.JUnit38ClassRunner;
+
+        $r1 = specialinvoke r0.<org.junit.internal.runners.JUnit38ClassRunner: junit.framework.Test getTest()>();
+
+        $r2 = staticinvoke <org.junit.internal.runners.JUnit38ClassRunner: org.junit.runner.Description makeDescription(junit.framework.Test)>($r1);
+
+        return $r2;
+    }
+
+    private static org.junit.runner.Description makeDescription(junit.framework.Test)
+    {
+        junit.framework.Test r0, $r6, $r11;
+        org.junit.runner.Description r2, r3, $r5, $r7, $r8, $r14;
+        int i0, i1;
+        boolean $z0, $z1, $z2, $z3;
+        java.lang.Class $r4, $r12;
+        java.lang.String $r9, $r13, $r17;
+        java.lang.annotation.Annotation[] $r10;
+        junit.framework.TestCase r15;
+        junit.framework.TestSuite r16;
+        org.junit.runner.Describable r18;
+        junit.extensions.TestDecorator r19;
+
+        r0 := @parameter0: junit.framework.Test;
+
+        $z0 = r0 instanceof junit.framework.TestCase;
+
+        if $z0 == 0 goto label1;
+
+        r15 = (junit.framework.TestCase) r0;
+
+        $r12 = virtualinvoke r15.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r13 = virtualinvoke r15.<junit.framework.TestCase: java.lang.String getName()>();
+
+        $r14 = staticinvoke <org.junit.runner.Description: org.junit.runner.Description createTestDescription(java.lang.Class,java.lang.String)>($r12, $r13);
+
+        return $r14;
+
+     label1:
+        $z1 = r0 instanceof junit.framework.TestSuite;
+
+        if $z1 == 0 goto label6;
+
+        r16 = (junit.framework.TestSuite) r0;
+
+        $r9 = virtualinvoke r16.<junit.framework.TestSuite: java.lang.String getName()>();
+
+        if $r9 != null goto label2;
+
+        $r17 = staticinvoke <org.junit.internal.runners.JUnit38ClassRunner: java.lang.String createSuiteDescription(junit.framework.TestSuite)>(r16);
+
+        goto label3;
+
+     label2:
+        $r17 = virtualinvoke r16.<junit.framework.TestSuite: java.lang.String getName()>();
+
+     label3:
+        $r10 = newarray (java.lang.'annotation'.Annotation)[0];
+
+        r2 = staticinvoke <org.junit.runner.Description: org.junit.runner.Description createSuiteDescription(java.lang.String,java.lang.annotation.Annotation[])>($r17, $r10);
+
+        i0 = virtualinvoke r16.<junit.framework.TestSuite: int testCount()>();
+
+        i1 = 0;
+
+     label4:
+        if i1 >= i0 goto label5;
+
+        $r11 = virtualinvoke r16.<junit.framework.TestSuite: junit.framework.Test testAt(int)>(i1);
+
+        r3 = staticinvoke <org.junit.internal.runners.JUnit38ClassRunner: org.junit.runner.Description makeDescription(junit.framework.Test)>($r11);
+
+        virtualinvoke r2.<org.junit.runner.Description: void addChild(org.junit.runner.Description)>(r3);
+
+        i1 = i1 + 1;
+
+        goto label4;
+
+     label5:
+        return r2;
+
+     label6:
+        $z2 = r0 instanceof org.junit.runner.Describable;
+
+        if $z2 == 0 goto label7;
+
+        r18 = (org.junit.runner.Describable) r0;
+
+        $r8 = interfaceinvoke r18.<org.junit.runner.Describable: org.junit.runner.Description getDescription()>();
+
+        return $r8;
+
+     label7:
+        $z3 = r0 instanceof junit.extensions.TestDecorator;
+
+        if $z3 == 0 goto label8;
+
+        r19 = (junit.extensions.TestDecorator) r0;
+
+        $r6 = virtualinvoke r19.<junit.extensions.TestDecorator: junit.framework.Test getTest()>();
+
+        $r7 = staticinvoke <org.junit.internal.runners.JUnit38ClassRunner: org.junit.runner.Description makeDescription(junit.framework.Test)>($r6);
+
+        return $r7;
+
+     label8:
+        $r4 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r5 = staticinvoke <org.junit.runner.Description: org.junit.runner.Description createSuiteDescription(java.lang.Class)>($r4);
+
+        return $r5;
+    }
+
+    private static java.lang.String createSuiteDescription(junit.framework.TestSuite)
+    {
+        junit.framework.TestSuite r0;
+        int i0;
+        java.lang.Object[] $r2, $r4;
+        junit.framework.Test $r3;
+        java.lang.Integer $r5;
+        java.lang.String $r6, $r7;
+
+        r0 := @parameter0: junit.framework.TestSuite;
+
+        i0 = virtualinvoke r0.<junit.framework.TestSuite: int countTestCases()>();
+
+        if i0 != 0 goto label1;
+
+        $r7 = "";
+
+        goto label2;
+
+     label1:
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r3 = virtualinvoke r0.<junit.framework.TestSuite: junit.framework.Test testAt(int)>(0);
+
+        $r2[0] = $r3;
+
+        $r7 = staticinvoke <java.lang.String: java.lang.String format(java.lang.String,java.lang.Object[])>(" [example: %s]", $r2);
+
+     label2:
+        $r4 = newarray (java.lang.Object)[2];
+
+        $r5 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        $r4[0] = $r5;
+
+        $r4[1] = $r7;
+
+        $r6 = staticinvoke <java.lang.String: java.lang.String format(java.lang.String,java.lang.Object[])>("TestSuite with %s tests%s", $r4);
+
+        return $r6;
+    }
+
+    public void filter(org.junit.runner.manipulation.Filter) throws org.junit.runner.manipulation.NoTestsRemainException
+    {
+        org.junit.internal.runners.JUnit38ClassRunner r0;
+        org.junit.runner.manipulation.Filter r1;
+        int i0, i1;
+        junit.framework.Test r3, $r4, $r5, $r6, $r10;
+        boolean $z0, $z1, $z2;
+        junit.framework.TestSuite $r7, r12;
+        java.lang.String $r8;
+        org.junit.runner.Description $r9;
+        org.junit.runner.manipulation.Filterable r11;
+
+        r0 := @this: org.junit.internal.runners.JUnit38ClassRunner;
+
+        r1 := @parameter0: org.junit.runner.manipulation.Filter;
+
+        $r4 = specialinvoke r0.<org.junit.internal.runners.JUnit38ClassRunner: junit.framework.Test getTest()>();
+
+        $z0 = $r4 instanceof org.junit.runner.manipulation.Filterable;
+
+        if $z0 == 0 goto label1;
+
+        $r10 = specialinvoke r0.<org.junit.internal.runners.JUnit38ClassRunner: junit.framework.Test getTest()>();
+
+        r11 = (org.junit.runner.manipulation.Filterable) $r10;
+
+        interfaceinvoke r11.<org.junit.runner.manipulation.Filterable: void filter(org.junit.runner.manipulation.Filter)>(r1);
+
+        goto label5;
+
+     label1:
+        $r5 = specialinvoke r0.<org.junit.internal.runners.JUnit38ClassRunner: junit.framework.Test getTest()>();
+
+        $z1 = $r5 instanceof junit.framework.TestSuite;
+
+        if $z1 == 0 goto label5;
+
+        $r6 = specialinvoke r0.<org.junit.internal.runners.JUnit38ClassRunner: junit.framework.Test getTest()>();
+
+        r12 = (junit.framework.TestSuite) $r6;
+
+        $r7 = new junit.framework.TestSuite;
+
+        $r8 = virtualinvoke r12.<junit.framework.TestSuite: java.lang.String getName()>();
+
+        specialinvoke $r7.<junit.framework.TestSuite: void <init>(java.lang.String)>($r8);
+
+        i0 = virtualinvoke r12.<junit.framework.TestSuite: int testCount()>();
+
+        i1 = 0;
+
+     label2:
+        if i1 >= i0 goto label4;
+
+        r3 = virtualinvoke r12.<junit.framework.TestSuite: junit.framework.Test testAt(int)>(i1);
+
+        $r9 = staticinvoke <org.junit.internal.runners.JUnit38ClassRunner: org.junit.runner.Description makeDescription(junit.framework.Test)>(r3);
+
+        $z2 = virtualinvoke r1.<org.junit.runner.manipulation.Filter: boolean shouldRun(org.junit.runner.Description)>($r9);
+
+        if $z2 == 0 goto label3;
+
+        virtualinvoke $r7.<junit.framework.TestSuite: void addTest(junit.framework.Test)>(r3);
+
+     label3:
+        i1 = i1 + 1;
+
+        goto label2;
+
+     label4:
+        specialinvoke r0.<org.junit.internal.runners.JUnit38ClassRunner: void setTest(junit.framework.Test)>($r7);
+
+     label5:
+        return;
+    }
+
+    public void sort(org.junit.runner.manipulation.Sorter)
+    {
+        org.junit.internal.runners.JUnit38ClassRunner r0;
+        org.junit.runner.manipulation.Sorter r1;
+        org.junit.runner.manipulation.Sortable r2;
+        junit.framework.Test $r3, $r4;
+        boolean $z0;
+
+        r0 := @this: org.junit.internal.runners.JUnit38ClassRunner;
+
+        r1 := @parameter0: org.junit.runner.manipulation.Sorter;
+
+        $r3 = specialinvoke r0.<org.junit.internal.runners.JUnit38ClassRunner: junit.framework.Test getTest()>();
+
+        $z0 = $r3 instanceof org.junit.runner.manipulation.Sortable;
+
+        if $z0 == 0 goto label1;
+
+        $r4 = specialinvoke r0.<org.junit.internal.runners.JUnit38ClassRunner: junit.framework.Test getTest()>();
+
+        r2 = (org.junit.runner.manipulation.Sortable) $r4;
+
+        interfaceinvoke r2.<org.junit.runner.manipulation.Sortable: void sort(org.junit.runner.manipulation.Sorter)>(r1);
+
+     label1:
+        return;
+    }
+
+    private void setTest(junit.framework.Test)
+    {
+        org.junit.internal.runners.JUnit38ClassRunner r0;
+        junit.framework.Test r1;
+
+        r0 := @this: org.junit.internal.runners.JUnit38ClassRunner;
+
+        r1 := @parameter0: junit.framework.Test;
+
+        r0.<org.junit.internal.runners.JUnit38ClassRunner: junit.framework.Test fTest> = r1;
+
+        return;
+    }
+
+    private junit.framework.Test getTest()
+    {
+        org.junit.internal.runners.JUnit38ClassRunner r0;
+        junit.framework.Test $r1;
+
+        r0 := @this: org.junit.internal.runners.JUnit38ClassRunner;
+
+        $r1 = r0.<org.junit.internal.runners.JUnit38ClassRunner: junit.framework.Test fTest>;
+
+        return $r1;
+    }
+}

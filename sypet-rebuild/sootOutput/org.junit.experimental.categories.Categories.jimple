@@ -1,0 +1,235 @@
+public class org.junit.experimental.categories.Categories extends org.junit.runners.Suite
+{
+
+    public void <init>(java.lang.Class, org.junit.runners.model.RunnerBuilder) throws org.junit.runners.model.InitializationError
+    {
+        org.junit.experimental.categories.Categories r0;
+        java.lang.Class r1, $r5, $r6;
+        org.junit.runners.model.RunnerBuilder r2;
+        org.junit.experimental.categories.Categories$CategoryFilter $r4;
+        org.junit.runner.Description $r7;
+        org.junit.runner.manipulation.NoTestsRemainException $r8;
+        org.junit.runners.model.InitializationError $r9;
+
+        r0 := @this: org.junit.experimental.categories.Categories;
+
+        r1 := @parameter0: java.lang.Class;
+
+        r2 := @parameter1: org.junit.runners.model.RunnerBuilder;
+
+        specialinvoke r0.<org.junit.runners.Suite: void <init>(java.lang.Class,org.junit.runners.model.RunnerBuilder)>(r1, r2);
+
+     label1:
+        $r4 = new org.junit.experimental.categories.Categories$CategoryFilter;
+
+        $r5 = specialinvoke r0.<org.junit.experimental.categories.Categories: java.lang.Class getIncludedCategory(java.lang.Class)>(r1);
+
+        $r6 = specialinvoke r0.<org.junit.experimental.categories.Categories: java.lang.Class getExcludedCategory(java.lang.Class)>(r1);
+
+        specialinvoke $r4.<org.junit.experimental.categories.Categories$CategoryFilter: void <init>(java.lang.Class,java.lang.Class)>($r5, $r6);
+
+        virtualinvoke r0.<org.junit.experimental.categories.Categories: void filter(org.junit.runner.manipulation.Filter)>($r4);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r8 := @caughtexception;
+
+        $r9 = new org.junit.runners.model.InitializationError;
+
+        specialinvoke $r9.<org.junit.runners.model.InitializationError: void <init>(java.lang.Throwable)>($r8);
+
+        throw $r9;
+
+     label4:
+        $r7 = virtualinvoke r0.<org.junit.experimental.categories.Categories: org.junit.runner.Description getDescription()>();
+
+        specialinvoke r0.<org.junit.experimental.categories.Categories: void assertNoCategorizedDescendentsOfUncategorizeableParents(org.junit.runner.Description)>($r7);
+
+        return;
+
+        catch org.junit.runner.manipulation.NoTestsRemainException from label1 to label2 with label3;
+    }
+
+    private java.lang.Class getIncludedCategory(java.lang.Class)
+    {
+        org.junit.experimental.categories.Categories r0;
+        java.lang.Class r1, $r4;
+        org.junit.experimental.categories.Categories$IncludeCategory r2;
+        java.lang.'annotation'.Annotation $r3;
+
+        r0 := @this: org.junit.experimental.categories.Categories;
+
+        r1 := @parameter0: java.lang.Class;
+
+        $r3 = virtualinvoke r1.<java.lang.Class: java.lang.'annotation'.Annotation getAnnotation(java.lang.Class)>(class "org/junit/experimental/categories/Categories$IncludeCategory");
+
+        r2 = (org.junit.experimental.categories.Categories$IncludeCategory) $r3;
+
+        if r2 != null goto label1;
+
+        $r4 = null;
+
+        goto label2;
+
+     label1:
+        $r4 = interfaceinvoke r2.<org.junit.experimental.categories.Categories$IncludeCategory: java.lang.Class value()>();
+
+     label2:
+        return $r4;
+    }
+
+    private java.lang.Class getExcludedCategory(java.lang.Class)
+    {
+        org.junit.experimental.categories.Categories r0;
+        java.lang.Class r1, $r4;
+        org.junit.experimental.categories.Categories$ExcludeCategory r2;
+        java.lang.'annotation'.Annotation $r3;
+
+        r0 := @this: org.junit.experimental.categories.Categories;
+
+        r1 := @parameter0: java.lang.Class;
+
+        $r3 = virtualinvoke r1.<java.lang.Class: java.lang.'annotation'.Annotation getAnnotation(java.lang.Class)>(class "org/junit/experimental/categories/Categories$ExcludeCategory");
+
+        r2 = (org.junit.experimental.categories.Categories$ExcludeCategory) $r3;
+
+        if r2 != null goto label1;
+
+        $r4 = null;
+
+        goto label2;
+
+     label1:
+        $r4 = interfaceinvoke r2.<org.junit.experimental.categories.Categories$ExcludeCategory: java.lang.Class value()>();
+
+     label2:
+        return $r4;
+    }
+
+    private void assertNoCategorizedDescendentsOfUncategorizeableParents(org.junit.runner.Description) throws org.junit.runners.model.InitializationError
+    {
+        org.junit.experimental.categories.Categories r0;
+        org.junit.runner.Description r1, r3;
+        java.util.Iterator r2;
+        boolean $z0, $z1;
+        java.util.ArrayList $r4;
+        java.lang.Object $r5;
+
+        r0 := @this: org.junit.experimental.categories.Categories;
+
+        r1 := @parameter0: org.junit.runner.Description;
+
+        $z0 = staticinvoke <org.junit.experimental.categories.Categories: boolean canHaveCategorizedChildren(org.junit.runner.Description)>(r1);
+
+        if $z0 != 0 goto label1;
+
+        specialinvoke r0.<org.junit.experimental.categories.Categories: void assertNoDescendantsHaveCategoryAnnotations(org.junit.runner.Description)>(r1);
+
+     label1:
+        $r4 = virtualinvoke r1.<org.junit.runner.Description: java.util.ArrayList getChildren()>();
+
+        r2 = virtualinvoke $r4.<java.util.ArrayList: java.util.Iterator iterator()>();
+
+     label2:
+        $z1 = interfaceinvoke r2.<java.util.Iterator: boolean hasNext()>();
+
+        if $z1 == 0 goto label3;
+
+        $r5 = interfaceinvoke r2.<java.util.Iterator: java.lang.Object next()>();
+
+        r3 = (org.junit.runner.Description) $r5;
+
+        specialinvoke r0.<org.junit.experimental.categories.Categories: void assertNoCategorizedDescendentsOfUncategorizeableParents(org.junit.runner.Description)>(r3);
+
+        goto label2;
+
+     label3:
+        return;
+    }
+
+    private void assertNoDescendantsHaveCategoryAnnotations(org.junit.runner.Description) throws org.junit.runners.model.InitializationError
+    {
+        org.junit.experimental.categories.Categories r0;
+        org.junit.runner.Description r1, r3;
+        java.util.Iterator r2;
+        java.util.ArrayList $r4;
+        boolean $z0;
+        java.lang.Object $r5;
+        java.lang.'annotation'.Annotation $r6;
+        org.junit.runners.model.InitializationError $r7;
+
+        r0 := @this: org.junit.experimental.categories.Categories;
+
+        r1 := @parameter0: org.junit.runner.Description;
+
+        $r4 = virtualinvoke r1.<org.junit.runner.Description: java.util.ArrayList getChildren()>();
+
+        r2 = virtualinvoke $r4.<java.util.ArrayList: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r2.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label3;
+
+        $r5 = interfaceinvoke r2.<java.util.Iterator: java.lang.Object next()>();
+
+        r3 = (org.junit.runner.Description) $r5;
+
+        $r6 = virtualinvoke r3.<org.junit.runner.Description: java.lang.'annotation'.Annotation getAnnotation(java.lang.Class)>(class "org/junit/experimental/categories/Category");
+
+        if $r6 == null goto label2;
+
+        $r7 = new org.junit.runners.model.InitializationError;
+
+        specialinvoke $r7.<org.junit.runners.model.InitializationError: void <init>(java.lang.String)>("Category annotations on Parameterized classes are not supported on individual methods.");
+
+        throw $r7;
+
+     label2:
+        specialinvoke r0.<org.junit.experimental.categories.Categories: void assertNoDescendantsHaveCategoryAnnotations(org.junit.runner.Description)>(r3);
+
+        goto label1;
+
+     label3:
+        return;
+    }
+
+    private static boolean canHaveCategorizedChildren(org.junit.runner.Description)
+    {
+        org.junit.runner.Description r0, r2;
+        java.util.Iterator r1;
+        java.util.ArrayList $r3;
+        boolean $z0;
+        java.lang.Object $r4;
+        java.lang.Class $r5;
+
+        r0 := @parameter0: org.junit.runner.Description;
+
+        $r3 = virtualinvoke r0.<org.junit.runner.Description: java.util.ArrayList getChildren()>();
+
+        r1 = virtualinvoke $r3.<java.util.ArrayList: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r1.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label3;
+
+        $r4 = interfaceinvoke r1.<java.util.Iterator: java.lang.Object next()>();
+
+        r2 = (org.junit.runner.Description) $r4;
+
+        $r5 = virtualinvoke r2.<org.junit.runner.Description: java.lang.Class getTestClass()>();
+
+        if $r5 != null goto label2;
+
+        return 0;
+
+     label2:
+        goto label1;
+
+     label3:
+        return 1;
+    }
+}

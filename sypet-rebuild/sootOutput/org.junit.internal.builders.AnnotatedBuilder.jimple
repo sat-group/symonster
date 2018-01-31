@@ -1,0 +1,144 @@
+public class org.junit.internal.builders.AnnotatedBuilder extends org.junit.runners.model.RunnerBuilder
+{
+    private static final java.lang.String CONSTRUCTOR_ERROR_FORMAT;
+    private org.junit.runners.model.RunnerBuilder fSuiteBuilder;
+
+    public void <init>(org.junit.runners.model.RunnerBuilder)
+    {
+        org.junit.internal.builders.AnnotatedBuilder r0;
+        org.junit.runners.model.RunnerBuilder r1;
+
+        r0 := @this: org.junit.internal.builders.AnnotatedBuilder;
+
+        r1 := @parameter0: org.junit.runners.model.RunnerBuilder;
+
+        specialinvoke r0.<org.junit.runners.model.RunnerBuilder: void <init>()>();
+
+        r0.<org.junit.internal.builders.AnnotatedBuilder: org.junit.runners.model.RunnerBuilder fSuiteBuilder> = r1;
+
+        return;
+    }
+
+    public org.junit.runner.Runner runnerForClass(java.lang.Class) throws java.lang.Exception
+    {
+        org.junit.internal.builders.AnnotatedBuilder r0;
+        java.lang.Class r1, $r4;
+        org.junit.runner.RunWith r2;
+        java.lang.'annotation'.Annotation $r3;
+        org.junit.runner.Runner $r5;
+
+        r0 := @this: org.junit.internal.builders.AnnotatedBuilder;
+
+        r1 := @parameter0: java.lang.Class;
+
+        $r3 = virtualinvoke r1.<java.lang.Class: java.lang.'annotation'.Annotation getAnnotation(java.lang.Class)>(class "org/junit/runner/RunWith");
+
+        r2 = (org.junit.runner.RunWith) $r3;
+
+        if r2 == null goto label1;
+
+        $r4 = interfaceinvoke r2.<org.junit.runner.RunWith: java.lang.Class value()>();
+
+        $r5 = virtualinvoke r0.<org.junit.internal.builders.AnnotatedBuilder: org.junit.runner.Runner buildRunner(java.lang.Class,java.lang.Class)>($r4, r1);
+
+        return $r5;
+
+     label1:
+        return null;
+    }
+
+    public org.junit.runner.Runner buildRunner(java.lang.Class, java.lang.Class) throws java.lang.Exception
+    {
+        org.junit.internal.builders.AnnotatedBuilder r0;
+        java.lang.Class r1, r2;
+        java.lang.String r5, $r14;
+        java.lang.Class[] $r6, $r16;
+        java.lang.reflect.Constructor $r7, $r17;
+        java.lang.Object[] $r8, $r13, $r18;
+        java.lang.Object $r9, $r20;
+        org.junit.runner.Runner $r10, $r21;
+        java.lang.NoSuchMethodException $r11, $r15;
+        org.junit.runners.model.InitializationError $r12;
+        org.junit.runners.model.RunnerBuilder $r19;
+
+        r0 := @this: org.junit.internal.builders.AnnotatedBuilder;
+
+        r1 := @parameter0: java.lang.Class;
+
+        r2 := @parameter1: java.lang.Class;
+
+     label1:
+        $r6 = newarray (java.lang.Class)[1];
+
+        $r6[0] = class "java/lang/Class";
+
+        $r7 = virtualinvoke r1.<java.lang.Class: java.lang.reflect.Constructor getConstructor(java.lang.Class[])>($r6);
+
+        $r8 = newarray (java.lang.Object)[1];
+
+        $r8[0] = r2;
+
+        $r9 = virtualinvoke $r7.<java.lang.reflect.Constructor: java.lang.Object newInstance(java.lang.Object[])>($r8);
+
+        $r10 = (org.junit.runner.Runner) $r9;
+
+     label2:
+        return $r10;
+
+     label3:
+        $r15 := @caughtexception;
+
+     label4:
+        $r16 = newarray (java.lang.Class)[2];
+
+        $r16[0] = class "java/lang/Class";
+
+        $r16[1] = class "org/junit/runners/model/RunnerBuilder";
+
+        $r17 = virtualinvoke r1.<java.lang.Class: java.lang.reflect.Constructor getConstructor(java.lang.Class[])>($r16);
+
+        $r18 = newarray (java.lang.Object)[2];
+
+        $r18[0] = r2;
+
+        $r19 = r0.<org.junit.internal.builders.AnnotatedBuilder: org.junit.runners.model.RunnerBuilder fSuiteBuilder>;
+
+        $r18[1] = $r19;
+
+        $r20 = virtualinvoke $r17.<java.lang.reflect.Constructor: java.lang.Object newInstance(java.lang.Object[])>($r18);
+
+        $r21 = (org.junit.runner.Runner) $r20;
+
+     label5:
+        return $r21;
+
+     label6:
+        $r11 := @caughtexception;
+
+        r5 = virtualinvoke r1.<java.lang.Class: java.lang.String getSimpleName()>();
+
+        $r12 = new org.junit.runners.model.InitializationError;
+
+        $r13 = newarray (java.lang.Object)[2];
+
+        $r13[0] = r5;
+
+        $r13[1] = r5;
+
+        $r14 = staticinvoke <java.lang.String: java.lang.String format(java.lang.String,java.lang.Object[])>("Custom runner class %s should have a public constructor with signature %s(Class testClass)", $r13);
+
+        specialinvoke $r12.<org.junit.runners.model.InitializationError: void <init>(java.lang.String)>($r14);
+
+        throw $r12;
+
+        catch java.lang.NoSuchMethodException from label1 to label2 with label3;
+        catch java.lang.NoSuchMethodException from label4 to label5 with label6;
+    }
+
+    public static void <clinit>()
+    {
+        <org.junit.internal.builders.AnnotatedBuilder: java.lang.String CONSTRUCTOR_ERROR_FORMAT> = "Custom runner class %s should have a public constructor with signature %s(Class testClass)";
+
+        return;
+    }
+}

@@ -1,0 +1,348 @@
+public class org.junit.internal.runners.TestClass extends java.lang.Object
+{
+    private final java.lang.Class fClass;
+
+    public void <init>(java.lang.Class)
+    {
+        org.junit.internal.runners.TestClass r0;
+        java.lang.Class r1;
+
+        r0 := @this: org.junit.internal.runners.TestClass;
+
+        r1 := @parameter0: java.lang.Class;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<org.junit.internal.runners.TestClass: java.lang.Class fClass> = r1;
+
+        return;
+    }
+
+    public java.util.List getTestMethods()
+    {
+        org.junit.internal.runners.TestClass r0;
+        java.util.List $r1;
+
+        r0 := @this: org.junit.internal.runners.TestClass;
+
+        $r1 = virtualinvoke r0.<org.junit.internal.runners.TestClass: java.util.List getAnnotatedMethods(java.lang.Class)>(class "org/junit/Test");
+
+        return $r1;
+    }
+
+    java.util.List getBefores()
+    {
+        org.junit.internal.runners.TestClass r0;
+        java.util.List $r1;
+
+        r0 := @this: org.junit.internal.runners.TestClass;
+
+        $r1 = virtualinvoke r0.<org.junit.internal.runners.TestClass: java.util.List getAnnotatedMethods(java.lang.Class)>(class "org/junit/BeforeClass");
+
+        return $r1;
+    }
+
+    java.util.List getAfters()
+    {
+        org.junit.internal.runners.TestClass r0;
+        java.util.List $r1;
+
+        r0 := @this: org.junit.internal.runners.TestClass;
+
+        $r1 = virtualinvoke r0.<org.junit.internal.runners.TestClass: java.util.List getAnnotatedMethods(java.lang.Class)>(class "org/junit/AfterClass");
+
+        return $r1;
+    }
+
+    public java.util.List getAnnotatedMethods(java.lang.Class)
+    {
+        org.junit.internal.runners.TestClass r0;
+        java.lang.Class r1, r4, $r10;
+        java.util.Iterator r3;
+        java.lang.reflect.Method[] r5;
+        int i0, i1;
+        java.lang.reflect.Method r7;
+        java.lang.'annotation'.Annotation r8;
+        java.util.ArrayList $r9;
+        java.util.List $r11;
+        boolean $z0, $z1, $z2;
+        java.lang.Object $r12;
+
+        r0 := @this: org.junit.internal.runners.TestClass;
+
+        r1 := @parameter0: java.lang.Class;
+
+        $r9 = new java.util.ArrayList;
+
+        specialinvoke $r9.<java.util.ArrayList: void <init>()>();
+
+        $r10 = r0.<org.junit.internal.runners.TestClass: java.lang.Class fClass>;
+
+        $r11 = specialinvoke r0.<org.junit.internal.runners.TestClass: java.util.List getSuperClasses(java.lang.Class)>($r10);
+
+        r3 = interfaceinvoke $r11.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label5;
+
+        $r12 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+
+        r4 = (java.lang.Class) $r12;
+
+        r5 = staticinvoke <org.junit.internal.MethodSorter: java.lang.reflect.Method[] getDeclaredMethods(java.lang.Class)>(r4);
+
+        i0 = lengthof r5;
+
+        i1 = 0;
+
+     label2:
+        if i1 >= i0 goto label4;
+
+        r7 = r5[i1];
+
+        r8 = virtualinvoke r7.<java.lang.reflect.Method: java.lang.'annotation'.Annotation getAnnotation(java.lang.Class)>(r1);
+
+        if r8 == null goto label3;
+
+        $z2 = specialinvoke r0.<org.junit.internal.runners.TestClass: boolean isShadowed(java.lang.reflect.Method,java.util.List)>(r7, $r9);
+
+        if $z2 != 0 goto label3;
+
+        interfaceinvoke $r9.<java.util.List: boolean add(java.lang.Object)>(r7);
+
+     label3:
+        i1 = i1 + 1;
+
+        goto label2;
+
+     label4:
+        goto label1;
+
+     label5:
+        $z1 = specialinvoke r0.<org.junit.internal.runners.TestClass: boolean runsTopToBottom(java.lang.Class)>(r1);
+
+        if $z1 == 0 goto label6;
+
+        staticinvoke <java.util.Collections: void reverse(java.util.List)>($r9);
+
+     label6:
+        return $r9;
+    }
+
+    private boolean runsTopToBottom(java.lang.Class)
+    {
+        org.junit.internal.runners.TestClass r0;
+        java.lang.Class r1;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: org.junit.internal.runners.TestClass;
+
+        r1 := @parameter0: java.lang.Class;
+
+        $z0 = virtualinvoke r1.<java.lang.Object: boolean equals(java.lang.Object)>(class "org/junit/Before");
+
+        if $z0 != 0 goto label1;
+
+        $z1 = virtualinvoke r1.<java.lang.Object: boolean equals(java.lang.Object)>(class "org/junit/BeforeClass");
+
+        if $z1 == 0 goto label2;
+
+     label1:
+        $z2 = 1;
+
+        goto label3;
+
+     label2:
+        $z2 = 0;
+
+     label3:
+        return $z2;
+    }
+
+    private boolean isShadowed(java.lang.reflect.Method, java.util.List)
+    {
+        org.junit.internal.runners.TestClass r0;
+        java.lang.reflect.Method r1, r4;
+        java.util.List r2;
+        java.util.Iterator r3;
+        boolean $z0, $z1;
+        java.lang.Object $r5;
+
+        r0 := @this: org.junit.internal.runners.TestClass;
+
+        r1 := @parameter0: java.lang.reflect.Method;
+
+        r2 := @parameter1: java.util.List;
+
+        r3 = interfaceinvoke r2.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label3;
+
+        $r5 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+
+        r4 = (java.lang.reflect.Method) $r5;
+
+        $z1 = specialinvoke r0.<org.junit.internal.runners.TestClass: boolean isShadowed(java.lang.reflect.Method,java.lang.reflect.Method)>(r1, r4);
+
+        if $z1 == 0 goto label2;
+
+        return 1;
+
+     label2:
+        goto label1;
+
+     label3:
+        return 0;
+    }
+
+    private boolean isShadowed(java.lang.reflect.Method, java.lang.reflect.Method)
+    {
+        org.junit.internal.runners.TestClass r0;
+        java.lang.reflect.Method r1, r2;
+        java.lang.String $r3, $r4;
+        boolean $z0, $z1;
+        java.lang.Class[] $r5, $r6, $r7, $r8, $r10;
+        int $i0, $i1, $i2, i3;
+        java.lang.Class $r9, $r11;
+
+        r0 := @this: org.junit.internal.runners.TestClass;
+
+        r1 := @parameter0: java.lang.reflect.Method;
+
+        r2 := @parameter1: java.lang.reflect.Method;
+
+        $r3 = virtualinvoke r2.<java.lang.reflect.Method: java.lang.String getName()>();
+
+        $r4 = virtualinvoke r1.<java.lang.reflect.Method: java.lang.String getName()>();
+
+        $z0 = virtualinvoke $r3.<java.lang.String: boolean equals(java.lang.Object)>($r4);
+
+        if $z0 != 0 goto label1;
+
+        return 0;
+
+     label1:
+        $r5 = virtualinvoke r2.<java.lang.reflect.Method: java.lang.Class[] getParameterTypes()>();
+
+        $i0 = lengthof $r5;
+
+        $r6 = virtualinvoke r1.<java.lang.reflect.Method: java.lang.Class[] getParameterTypes()>();
+
+        $i1 = lengthof $r6;
+
+        if $i0 == $i1 goto label2;
+
+        return 0;
+
+     label2:
+        i3 = 0;
+
+     label3:
+        $r7 = virtualinvoke r2.<java.lang.reflect.Method: java.lang.Class[] getParameterTypes()>();
+
+        $i2 = lengthof $r7;
+
+        if i3 >= $i2 goto label5;
+
+        $r8 = virtualinvoke r2.<java.lang.reflect.Method: java.lang.Class[] getParameterTypes()>();
+
+        $r9 = $r8[i3];
+
+        $r10 = virtualinvoke r1.<java.lang.reflect.Method: java.lang.Class[] getParameterTypes()>();
+
+        $r11 = $r10[i3];
+
+        $z1 = virtualinvoke $r9.<java.lang.Object: boolean equals(java.lang.Object)>($r11);
+
+        if $z1 != 0 goto label4;
+
+        return 0;
+
+     label4:
+        i3 = i3 + 1;
+
+        goto label3;
+
+     label5:
+        return 1;
+    }
+
+    private java.util.List getSuperClasses(java.lang.Class)
+    {
+        org.junit.internal.runners.TestClass r0;
+        java.lang.Class r1, r4;
+        java.util.ArrayList $r3;
+
+        r0 := @this: org.junit.internal.runners.TestClass;
+
+        r1 := @parameter0: java.lang.Class;
+
+        $r3 = new java.util.ArrayList;
+
+        specialinvoke $r3.<java.util.ArrayList: void <init>()>();
+
+        r4 = r1;
+
+     label1:
+        if r4 == null goto label2;
+
+        virtualinvoke $r3.<java.util.ArrayList: boolean add(java.lang.Object)>(r4);
+
+        r4 = virtualinvoke r4.<java.lang.Class: java.lang.Class getSuperclass()>();
+
+        goto label1;
+
+     label2:
+        return $r3;
+    }
+
+    public java.lang.reflect.Constructor getConstructor() throws java.lang.SecurityException, java.lang.NoSuchMethodException
+    {
+        org.junit.internal.runners.TestClass r0;
+        java.lang.Class[] $r1;
+        java.lang.Class $r2;
+        java.lang.reflect.Constructor $r3;
+
+        r0 := @this: org.junit.internal.runners.TestClass;
+
+        $r2 = r0.<org.junit.internal.runners.TestClass: java.lang.Class fClass>;
+
+        $r1 = newarray (java.lang.Class)[0];
+
+        $r3 = virtualinvoke $r2.<java.lang.Class: java.lang.reflect.Constructor getConstructor(java.lang.Class[])>($r1);
+
+        return $r3;
+    }
+
+    public java.lang.Class getJavaClass()
+    {
+        org.junit.internal.runners.TestClass r0;
+        java.lang.Class $r1;
+
+        r0 := @this: org.junit.internal.runners.TestClass;
+
+        $r1 = r0.<org.junit.internal.runners.TestClass: java.lang.Class fClass>;
+
+        return $r1;
+    }
+
+    public java.lang.String getName()
+    {
+        org.junit.internal.runners.TestClass r0;
+        java.lang.Class $r1;
+        java.lang.String $r2;
+
+        r0 := @this: org.junit.internal.runners.TestClass;
+
+        $r1 = r0.<org.junit.internal.runners.TestClass: java.lang.Class fClass>;
+
+        $r2 = virtualinvoke $r1.<java.lang.Class: java.lang.String getName()>();
+
+        return $r2;
+    }
+}

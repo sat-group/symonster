@@ -1,0 +1,345 @@
+public class org.junit.experimental.max.MaxHistory extends java.lang.Object implements java.io.Serializable
+{
+    private static final long serialVersionUID;
+    private final java.util.Map fDurations;
+    private final java.util.Map fFailureTimestamps;
+    private final java.io.File fHistoryStore;
+
+    public static org.junit.experimental.max.MaxHistory forFolder(java.io.File)
+    {
+        java.io.File r0;
+        boolean $z0;
+        org.junit.experimental.max.MaxHistory $r2, $r3;
+        org.junit.experimental.max.CouldNotReadCoreException $r4;
+
+        r0 := @parameter0: java.io.File;
+
+        $z0 = virtualinvoke r0.<java.io.File: boolean exists()>();
+
+        if $z0 == 0 goto label4;
+
+     label1:
+        $r3 = staticinvoke <org.junit.experimental.max.MaxHistory: org.junit.experimental.max.MaxHistory readHistory(java.io.File)>(r0);
+
+     label2:
+        return $r3;
+
+     label3:
+        $r4 := @caughtexception;
+
+        virtualinvoke $r4.<org.junit.experimental.max.CouldNotReadCoreException: void printStackTrace()>();
+
+        virtualinvoke r0.<java.io.File: boolean delete()>();
+
+     label4:
+        $r2 = new org.junit.experimental.max.MaxHistory;
+
+        specialinvoke $r2.<org.junit.experimental.max.MaxHistory: void <init>(java.io.File)>(r0);
+
+        return $r2;
+
+        catch org.junit.experimental.max.CouldNotReadCoreException from label1 to label2 with label3;
+    }
+
+    private static org.junit.experimental.max.MaxHistory readHistory(java.io.File) throws org.junit.experimental.max.CouldNotReadCoreException
+    {
+        java.io.File r0;
+        org.junit.experimental.max.MaxHistory r2;
+        java.io.FileInputStream $r5;
+        java.io.ObjectInputStream $r6;
+        java.lang.Object $r7;
+        java.lang.Exception $r8;
+        org.junit.experimental.max.CouldNotReadCoreException $r9;
+        java.lang.Throwable $r10, $r11;
+
+        r0 := @parameter0: java.io.File;
+
+     label01:
+        $r5 = new java.io.FileInputStream;
+
+        specialinvoke $r5.<java.io.FileInputStream: void <init>(java.io.File)>(r0);
+
+     label02:
+        $r6 = new java.io.ObjectInputStream;
+
+        specialinvoke $r6.<java.io.ObjectInputStream: void <init>(java.io.InputStream)>($r5);
+
+     label03:
+        $r7 = virtualinvoke $r6.<java.io.ObjectInputStream: java.lang.Object readObject()>();
+
+        r2 = (org.junit.experimental.max.MaxHistory) $r7;
+
+     label04:
+        virtualinvoke $r6.<java.io.ObjectInputStream: void close()>();
+
+     label05:
+        virtualinvoke $r5.<java.io.FileInputStream: void close()>();
+
+     label06:
+        return r2;
+
+     label07:
+        $r10 := @caughtexception;
+
+     label08:
+        virtualinvoke $r6.<java.io.ObjectInputStream: void close()>();
+
+        throw $r10;
+
+     label09:
+        $r11 := @caughtexception;
+
+     label10:
+        virtualinvoke $r5.<java.io.FileInputStream: void close()>();
+
+        throw $r11;
+
+     label11:
+        $r8 := @caughtexception;
+
+        $r9 = new org.junit.experimental.max.CouldNotReadCoreException;
+
+        specialinvoke $r9.<org.junit.experimental.max.CouldNotReadCoreException: void <init>(java.lang.Throwable)>($r8);
+
+        throw $r9;
+
+        catch java.lang.Throwable from label03 to label04 with label07;
+        catch java.lang.Throwable from label07 to label08 with label07;
+        catch java.lang.Throwable from label02 to label05 with label09;
+        catch java.lang.Throwable from label07 to label10 with label09;
+        catch java.lang.Exception from label01 to label06 with label11;
+        catch java.lang.Exception from label07 to label11 with label11;
+    }
+
+    private void <init>(java.io.File)
+    {
+        org.junit.experimental.max.MaxHistory r0;
+        java.io.File r1;
+        java.util.HashMap $r2, $r3;
+
+        r0 := @this: org.junit.experimental.max.MaxHistory;
+
+        r1 := @parameter0: java.io.File;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $r2 = new java.util.HashMap;
+
+        specialinvoke $r2.<java.util.HashMap: void <init>()>();
+
+        r0.<org.junit.experimental.max.MaxHistory: java.util.Map fDurations> = $r2;
+
+        $r3 = new java.util.HashMap;
+
+        specialinvoke $r3.<java.util.HashMap: void <init>()>();
+
+        r0.<org.junit.experimental.max.MaxHistory: java.util.Map fFailureTimestamps> = $r3;
+
+        r0.<org.junit.experimental.max.MaxHistory: java.io.File fHistoryStore> = r1;
+
+        return;
+    }
+
+    private void save() throws java.io.IOException
+    {
+        org.junit.experimental.max.MaxHistory r0;
+        java.io.ObjectOutputStream $r2;
+        java.io.FileOutputStream $r3;
+        java.io.File $r4;
+
+        r0 := @this: org.junit.experimental.max.MaxHistory;
+
+        $r2 = new java.io.ObjectOutputStream;
+
+        $r3 = new java.io.FileOutputStream;
+
+        $r4 = r0.<org.junit.experimental.max.MaxHistory: java.io.File fHistoryStore>;
+
+        specialinvoke $r3.<java.io.FileOutputStream: void <init>(java.io.File)>($r4);
+
+        specialinvoke $r2.<java.io.ObjectOutputStream: void <init>(java.io.OutputStream)>($r3);
+
+        virtualinvoke $r2.<java.io.ObjectOutputStream: void writeObject(java.lang.Object)>(r0);
+
+        virtualinvoke $r2.<java.io.ObjectOutputStream: void close()>();
+
+        return;
+    }
+
+    java.lang.Long getFailureTimestamp(org.junit.runner.Description)
+    {
+        org.junit.experimental.max.MaxHistory r0;
+        org.junit.runner.Description r1;
+        java.util.Map $r2;
+        java.lang.String $r3;
+        java.lang.Object $r4;
+        java.lang.Long $r5;
+
+        r0 := @this: org.junit.experimental.max.MaxHistory;
+
+        r1 := @parameter0: org.junit.runner.Description;
+
+        $r2 = r0.<org.junit.experimental.max.MaxHistory: java.util.Map fFailureTimestamps>;
+
+        $r3 = virtualinvoke r1.<org.junit.runner.Description: java.lang.String toString()>();
+
+        $r4 = interfaceinvoke $r2.<java.util.Map: java.lang.Object get(java.lang.Object)>($r3);
+
+        $r5 = (java.lang.Long) $r4;
+
+        return $r5;
+    }
+
+    void putTestFailureTimestamp(org.junit.runner.Description, long)
+    {
+        org.junit.experimental.max.MaxHistory r0;
+        org.junit.runner.Description r1;
+        long l0;
+        java.util.Map $r2;
+        java.lang.String $r3;
+        java.lang.Long $r4;
+
+        r0 := @this: org.junit.experimental.max.MaxHistory;
+
+        r1 := @parameter0: org.junit.runner.Description;
+
+        l0 := @parameter1: long;
+
+        $r2 = r0.<org.junit.experimental.max.MaxHistory: java.util.Map fFailureTimestamps>;
+
+        $r3 = virtualinvoke r1.<org.junit.runner.Description: java.lang.String toString()>();
+
+        $r4 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>(l0);
+
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r3, $r4);
+
+        return;
+    }
+
+    boolean isNewTest(org.junit.runner.Description)
+    {
+        org.junit.experimental.max.MaxHistory r0;
+        org.junit.runner.Description r1;
+        java.util.Map $r2;
+        java.lang.String $r3;
+        boolean $z0, $z1;
+
+        r0 := @this: org.junit.experimental.max.MaxHistory;
+
+        r1 := @parameter0: org.junit.runner.Description;
+
+        $r2 = r0.<org.junit.experimental.max.MaxHistory: java.util.Map fDurations>;
+
+        $r3 = virtualinvoke r1.<org.junit.runner.Description: java.lang.String toString()>();
+
+        $z0 = interfaceinvoke $r2.<java.util.Map: boolean containsKey(java.lang.Object)>($r3);
+
+        if $z0 != 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        return $z1;
+    }
+
+    java.lang.Long getTestDuration(org.junit.runner.Description)
+    {
+        org.junit.experimental.max.MaxHistory r0;
+        org.junit.runner.Description r1;
+        java.util.Map $r2;
+        java.lang.String $r3;
+        java.lang.Object $r4;
+        java.lang.Long $r5;
+
+        r0 := @this: org.junit.experimental.max.MaxHistory;
+
+        r1 := @parameter0: org.junit.runner.Description;
+
+        $r2 = r0.<org.junit.experimental.max.MaxHistory: java.util.Map fDurations>;
+
+        $r3 = virtualinvoke r1.<org.junit.runner.Description: java.lang.String toString()>();
+
+        $r4 = interfaceinvoke $r2.<java.util.Map: java.lang.Object get(java.lang.Object)>($r3);
+
+        $r5 = (java.lang.Long) $r4;
+
+        return $r5;
+    }
+
+    void putTestDuration(org.junit.runner.Description, long)
+    {
+        org.junit.experimental.max.MaxHistory r0;
+        org.junit.runner.Description r1;
+        long l0;
+        java.util.Map $r2;
+        java.lang.String $r3;
+        java.lang.Long $r4;
+
+        r0 := @this: org.junit.experimental.max.MaxHistory;
+
+        r1 := @parameter0: org.junit.runner.Description;
+
+        l0 := @parameter1: long;
+
+        $r2 = r0.<org.junit.experimental.max.MaxHistory: java.util.Map fDurations>;
+
+        $r3 = virtualinvoke r1.<org.junit.runner.Description: java.lang.String toString()>();
+
+        $r4 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>(l0);
+
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r3, $r4);
+
+        return;
+    }
+
+    public org.junit.runner.notification.RunListener listener()
+    {
+        org.junit.experimental.max.MaxHistory r0;
+        org.junit.experimental.max.MaxHistory$RememberingListener $r1;
+
+        r0 := @this: org.junit.experimental.max.MaxHistory;
+
+        $r1 = new org.junit.experimental.max.MaxHistory$RememberingListener;
+
+        specialinvoke $r1.<org.junit.experimental.max.MaxHistory$RememberingListener: void <init>(org.junit.experimental.max.MaxHistory,org.junit.experimental.max.MaxHistory$1)>(r0, null);
+
+        return $r1;
+    }
+
+    public java.util.Comparator testComparator()
+    {
+        org.junit.experimental.max.MaxHistory r0;
+        org.junit.experimental.max.MaxHistory$TestComparator $r1;
+
+        r0 := @this: org.junit.experimental.max.MaxHistory;
+
+        $r1 = new org.junit.experimental.max.MaxHistory$TestComparator;
+
+        specialinvoke $r1.<org.junit.experimental.max.MaxHistory$TestComparator: void <init>(org.junit.experimental.max.MaxHistory,org.junit.experimental.max.MaxHistory$1)>(r0, null);
+
+        return $r1;
+    }
+
+    static void access$000(org.junit.experimental.max.MaxHistory) throws java.io.IOException
+    {
+        org.junit.experimental.max.MaxHistory r0;
+
+        r0 := @parameter0: org.junit.experimental.max.MaxHistory;
+
+        specialinvoke r0.<org.junit.experimental.max.MaxHistory: void save()>();
+
+        return;
+    }
+
+    public static void <clinit>()
+    {
+        <org.junit.experimental.max.MaxHistory: long serialVersionUID> = 1L;
+
+        return;
+    }
+}

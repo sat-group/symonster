@@ -1,0 +1,167 @@
+public abstract class org.junit.internal.matchers.TypeSafeMatcher extends org.hamcrest.BaseMatcher
+{
+    private java.lang.Class expectedType;
+
+    public abstract boolean matchesSafely(java.lang.Object);
+
+    protected void <init>()
+    {
+        org.junit.internal.matchers.TypeSafeMatcher r0;
+        java.lang.Class $r1, $r2;
+
+        r0 := @this: org.junit.internal.matchers.TypeSafeMatcher;
+
+        specialinvoke r0.<org.hamcrest.BaseMatcher: void <init>()>();
+
+        $r1 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r2 = staticinvoke <org.junit.internal.matchers.TypeSafeMatcher: java.lang.Class findExpectedType(java.lang.Class)>($r1);
+
+        r0.<org.junit.internal.matchers.TypeSafeMatcher: java.lang.Class expectedType> = $r2;
+
+        return;
+    }
+
+    private static java.lang.Class findExpectedType(java.lang.Class)
+    {
+        java.lang.Class r0, $r5, r6;
+        java.lang.reflect.Method[] r1;
+        int i0, i1;
+        java.lang.reflect.Method r2;
+        java.lang.Error $r3;
+        boolean $z0;
+        java.lang.Class[] $r4;
+
+        r0 := @parameter0: java.lang.Class;
+
+        r6 = r0;
+
+     label1:
+        if r6 == class "java/lang/Object" goto label5;
+
+        r1 = staticinvoke <org.junit.internal.MethodSorter: java.lang.reflect.Method[] getDeclaredMethods(java.lang.Class)>(r6);
+
+        i0 = lengthof r1;
+
+        i1 = 0;
+
+     label2:
+        if i1 >= i0 goto label4;
+
+        r2 = r1[i1];
+
+        $z0 = staticinvoke <org.junit.internal.matchers.TypeSafeMatcher: boolean isMatchesSafelyMethod(java.lang.reflect.Method)>(r2);
+
+        if $z0 == 0 goto label3;
+
+        $r4 = virtualinvoke r2.<java.lang.reflect.Method: java.lang.Class[] getParameterTypes()>();
+
+        $r5 = $r4[0];
+
+        return $r5;
+
+     label3:
+        i1 = i1 + 1;
+
+        goto label2;
+
+     label4:
+        r6 = virtualinvoke r6.<java.lang.Class: java.lang.Class getSuperclass()>();
+
+        goto label1;
+
+     label5:
+        $r3 = new java.lang.Error;
+
+        specialinvoke $r3.<java.lang.Error: void <init>(java.lang.String)>("Cannot determine correct type for matchesSafely() method.");
+
+        throw $r3;
+    }
+
+    private static boolean isMatchesSafelyMethod(java.lang.reflect.Method)
+    {
+        java.lang.reflect.Method r0;
+        java.lang.String $r1;
+        boolean $z0, $z1, $z2;
+        java.lang.Class[] $r2;
+        int $i0;
+
+        r0 := @parameter0: java.lang.reflect.Method;
+
+        $r1 = virtualinvoke r0.<java.lang.reflect.Method: java.lang.String getName()>();
+
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>("matchesSafely");
+
+        if $z0 == 0 goto label1;
+
+        $r2 = virtualinvoke r0.<java.lang.reflect.Method: java.lang.Class[] getParameterTypes()>();
+
+        $i0 = lengthof $r2;
+
+        if $i0 != 1 goto label1;
+
+        $z1 = virtualinvoke r0.<java.lang.reflect.Method: boolean isSynthetic()>();
+
+        if $z1 != 0 goto label1;
+
+        $z2 = 1;
+
+        goto label2;
+
+     label1:
+        $z2 = 0;
+
+     label2:
+        return $z2;
+    }
+
+    protected void <init>(java.lang.Class)
+    {
+        org.junit.internal.matchers.TypeSafeMatcher r0;
+        java.lang.Class r1;
+
+        r0 := @this: org.junit.internal.matchers.TypeSafeMatcher;
+
+        r1 := @parameter0: java.lang.Class;
+
+        specialinvoke r0.<org.hamcrest.BaseMatcher: void <init>()>();
+
+        r0.<org.junit.internal.matchers.TypeSafeMatcher: java.lang.Class expectedType> = r1;
+
+        return;
+    }
+
+    public final boolean matches(java.lang.Object)
+    {
+        org.junit.internal.matchers.TypeSafeMatcher r0;
+        java.lang.Object r1;
+        java.lang.Class $r2;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: org.junit.internal.matchers.TypeSafeMatcher;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r1 == null goto label1;
+
+        $r2 = r0.<org.junit.internal.matchers.TypeSafeMatcher: java.lang.Class expectedType>;
+
+        $z0 = virtualinvoke $r2.<java.lang.Class: boolean isInstance(java.lang.Object)>(r1);
+
+        if $z0 == 0 goto label1;
+
+        $z1 = virtualinvoke r0.<org.junit.internal.matchers.TypeSafeMatcher: boolean matchesSafely(java.lang.Object)>(r1);
+
+        if $z1 == 0 goto label1;
+
+        $z2 = 1;
+
+        goto label2;
+
+     label1:
+        $z2 = 0;
+
+     label2:
+        return $z2;
+    }
+}
