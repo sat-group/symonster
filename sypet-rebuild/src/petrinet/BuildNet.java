@@ -1,16 +1,13 @@
 package petrinet;
 
-import Parser.JarParser;
-import Parser.MethodSignature;
+import parser.JarParser;
+import parser.MethodSignature;
 import soot.Type;
 
-import uniol.apt.adt.exception.FlowExistsException;
 import uniol.apt.adt.exception.NoSuchEdgeException;
 import uniol.apt.adt.exception.NoSuchNodeException;
 import uniol.apt.adt.pn.Flow;
-import uniol.apt.adt.pn.Node;
 import uniol.apt.adt.pn.PetriNet;
-import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,5 +1,5 @@
-package Parser;
-import Utils.SootUtils;
+package parser;
+import utils.SootUtils;
 import soot.*;
 
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+
  *
  */
 public class JarParser extends BodyTransformer{
@@ -19,10 +20,10 @@ public class JarParser extends BodyTransformer{
      */
     public static void main(String[] args) {
         List<String> libs = new ArrayList<>();
-        libs.add("../benchmarks/examples/point/point.jar");
-        libs.add("../benchmarks/examples/geometry/geometry.jar");
+        //libs.add("../benchmarks/examples/point/point.jar");
+        //libs.add("../benchmarks/examples/geometry/geometry.jar");
         libs.add("lib/hamcrest-core-1.3.jar");
-        libs.add("lib/junit-4.11.jar");
+        //libs.add("lib/junit-4.11.jar");
         System.out.println(parseJar(libs));
     }
 
@@ -43,8 +44,13 @@ public class JarParser extends BodyTransformer{
                 SootClass clazz = Scene.v().getSootClass(cl);
                 List<SootMethod> methods = clazz.getMethods();
                 for (SootMethod method : methods) {
-                    MethodSignature sig = new MethodSignature(method.getName(),method.getReturnType(),method.getParameterTypes());
-                    sigs.add(sig);
+                    if (!method.isPrivate()){
+                        System.out.println(clazz);
+                        System.out.println(method.getName());
+                        System.out.println(method.getSignature());
+                        MethodSignature sig = new MethodSignature(method.getSignature(),method.getReturnType(),method.getParameterTypes(),method.isStatic(),clazz);
+                        sigs.add(sig);
+                    }
                 }
             }
         }

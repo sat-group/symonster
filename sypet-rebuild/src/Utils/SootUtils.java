@@ -1,12 +1,8 @@
-package Utils;
+package utils;
 
 import soot.Main;
 import soot.Body;
 import soot.Unit;
-import soot.SootMethod;
-import soot.SootField;
-import soot.SootClass;
-import soot.tagkit.Host;
 import soot.NormalUnitPrinter;
 
 import java.util.ArrayList;
