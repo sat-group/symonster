@@ -1,9 +1,8 @@
-package Utils;
+package utils;
 
 import heros.ThreadSafe;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 @ThreadSafe
 public class ReflectionUtils {

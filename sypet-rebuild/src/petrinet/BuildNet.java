@@ -1,16 +1,14 @@
 package petrinet;
 
-import Parser.JarParser;
-import Parser.MethodSignature;
+import parser.JarParser;
+import parser.MethodSignature;
+import soot.SootClass;
 import soot.Type;
 
-import uniol.apt.adt.exception.FlowExistsException;
 import uniol.apt.adt.exception.NoSuchEdgeException;
 import uniol.apt.adt.exception.NoSuchNodeException;
 import uniol.apt.adt.pn.Flow;
-import uniol.apt.adt.pn.Node;
 import uniol.apt.adt.pn.PetriNet;
-import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,16 +29,19 @@ public class BuildNet {
         List<String> libs = new ArrayList<>();
         libs.add("../benchmarks/examples/point/point.jar");
         List<MethodSignature> result = JarParser.parseJar(libs);
-        List<Type> typelist = new ArrayList<Type>();
 
         for (MethodSignature k : result) {
             //add transition
             String methodname = k.getName();
-            try {
-                petrinet.getTransition(methodname);
-            } catch (NoSuchNodeException e) {
-                petrinet.createTransition(methodname);
+            boolean isStatic = k.getIsStatic();
+            String className = k.getHostClass().getName();
+            String transitionName;
+            if (isStatic) {
+                transitionName = className + " -static-" + methodname;
+            } else {
+                transitionName = className + " -nonStatic-" + methodname;
             }
+            petrinet.createTransition(transitionName);
 
             List<Type> args = k.getArgTypes();
             for (Type t : args) {
@@ -49,6 +50,10 @@ public class BuildNet {
                     petrinet.getPlace(t.toString());
                 } catch (NoSuchNodeException e) {
                     petrinet.createPlace(t.toString());
+                    //add clone transition
+                    petrinet.createTransition(t.toString() + "Clone");
+                    petrinet.createFlow(t.toString(), t.toString() + "Clone", 1);
+                    petrinet.createFlow(t.toString() + "Clone", t.toString(), 2);
                 }
 
                 //add flow
@@ -66,14 +71,13 @@ public class BuildNet {
                 petrinet.getPlace(retType.toString());
             } catch (NoSuchNodeException e) {
                 petrinet.createPlace(retType.toString());
+                //add clone transition
+                petrinet.createTransition(retType.toString() + "Clone");
+                petrinet.createFlow(retType.toString(), retType.toString() + "Clone", 1);
+                petrinet.createFlow(retType.toString() + "Clone", retType.toString(), 2);
             }
             //add flow
-            try {
-                Flow originalFlow = petrinet.getFlow(methodname, retType.toString());
-                originalFlow.setWeight(originalFlow.getWeight() + 1);
-            } catch (NoSuchEdgeException e) {
-                petrinet.createFlow(methodname, retType.toString(), 1);
-            }
+            petrinet.createFlow(methodname, retType.toString(), 1);
         }
     }
 
