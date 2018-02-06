@@ -1,4 +1,5 @@
 package edu.cmu.parser;
+import edu.cmu.codeformer.CodeFormer;
 import edu.cmu.utils.SootUtils;
 import soot.*;
 
@@ -20,9 +21,9 @@ public class JarParser extends BodyTransformer{
      */
     public static void main(String[] args) {
         List<String> libs = new ArrayList<>();
-        //libs.add("../benchmarks/examples/point/point.jar");
+        libs.add("../benchmarks/examples/point/point.jar");
         //libs.add("../benchmarks/examples/geometry/geometry.jar");
-        libs.add("lib/hamcrest-core-1.3.jar");
+        //libs.add("lib/hamcrest-core-1.3.jar");
         //libs.add("lib/junit-4.11.jar");
         System.out.println(parseJar(libs));
     }
@@ -45,11 +46,14 @@ public class JarParser extends BodyTransformer{
                 List<SootMethod> methods = clazz.getMethods();
                 for (SootMethod method : methods) {
                     if (!method.isPrivate()){
-                        System.out.println(clazz);
-                        System.out.println(method.getName());
-                        System.out.println(method.getSignature());
-                        MethodSignature sig = new MethodSignature(method.getSignature(),method.getReturnType(),method.getParameterTypes(),method.isStatic(),clazz);
-                        sigs.add(sig);
+                        if (method.getName().equals("<init>")){
+                            MethodSignature sig = new MethodSignature(clazz.getName(),clazz.getType(),method.getParameterTypes(),method.isStatic(),clazz);
+                            sigs.add(sig);
+                        }
+                        else{
+                            MethodSignature sig = new MethodSignature(method.getName(),method.getReturnType(),method.getParameterTypes(),method.isStatic(),clazz);
+                            sigs.add(sig);
+                        }
                     }
                 }
             }

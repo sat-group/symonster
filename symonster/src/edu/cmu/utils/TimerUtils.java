@@ -8,13 +8,25 @@ import java.util.Map;
  */
 public class TimerUtils {
     private static Map<String,Long> timers = new HashMap<>();
+    private static Map<String,Long> cumulativeTimers = new HashMap<>();
 
-    public static void addTimer(String name){
+    public static synchronized void startTimer(String name){
+
         timers.put(name, System.currentTimeMillis());
     }
-    public static long popTimer(String name){
+    public static synchronized long stopTimer(String name){
         long ret = System.currentTimeMillis() - timers.get("name");
         timers.remove(name);
+        //Update cumulative timer
+        if (cumulativeTimers.containsKey(name)){
+            cumulativeTimers.put(name,cumulativeTimers.get(name) + ret);
+        }
+        else{
+            cumulativeTimers.put(name,ret);
+        }
         return ret;
+    }
+    public static synchronized long getCumulativeTime(String name){
+        return cumulativeTimers.get(name);
     }
 }
