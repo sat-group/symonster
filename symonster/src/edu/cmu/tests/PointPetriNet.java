@@ -7,7 +7,7 @@ public class PointPetriNet {
 	
 	private PetriNet pnet;
 	
-	PointPetriNet(){
+	public PointPetriNet(){
 		this.pnet = new PetriNet();
 	}
 	

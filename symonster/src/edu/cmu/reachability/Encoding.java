@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 public interface Encoding {
-	
+		
 	// Maps the pair <transition in the petri-net, timestamp> to variable
 	HashMap<Pair<Transition, Integer>,Variable> transition2variable = new HashMap<>();
 	
@@ -17,8 +17,6 @@ public interface Encoding {
 	HashMap<Triple<Place, Integer, Integer>,Variable> place2variable = new HashMap<>();
 	
 	SATSolver solver = new SATSolver();
-	
-	public void setPetriNet(PetriNet pnet);
 	
 	public void setState(Set<Pair<Place, Integer>> state, int timestep);
 	

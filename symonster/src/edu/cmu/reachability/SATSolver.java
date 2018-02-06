@@ -25,6 +25,13 @@ public class SATSolver {
 		solver = SolverFactory.newDefault();
 	}
 	
+	public void reset(){
+		solver = SolverFactory.newDefault();
+		unsat = false;
+		id2variable.clear();
+		nbVariables = 0;
+	}
+	
 	public void setNbVariables(int vars){
 		nbVariables = vars;
 		solver.newVar(nbVariables);

@@ -27,6 +27,13 @@ public class SequentialEncoding implements Encoding {
 	public SequentialEncoding(PetriNet pnet, int loc) {
 		this.pnet = pnet;
 		this.loc = loc;
+		
+		place2variable.clear();
+		transition2variable.clear();
+		solver.reset();
+		
+		createVariables();
+		createConstraints();
 	}
 
 	// Exactly one transition f is fired at each time step t
@@ -53,47 +60,102 @@ public class SequentialEncoding implements Encoding {
 			// loop for each transition
 			for (Transition tr : pnet.getTransitions()) {
 
+				Place target = null;
+				int source_weight = 1;
+				int target_weight = 1;
+
+				assert (tr.getPostsetEdges().size() == 1);
 				for (Flow f : tr.getPostsetEdges()) {
+					target = f.getPlace();
+					target_weight = f.getWeight();
+				}
+
+				boolean sameSourceTarget = false;
+				for (Flow f : tr.getPresetEdges()) {
 					Place p = f.getPlace();
-
-					Pair<Transition, Integer> transition = new ImmutablePair<Transition, Integer>(tr, t);
-					Variable fireTr = transition2variable.get(transition);
-
-					for (int w = 0; w < p.getMaxToken(); w++) {
-						Triple<Place, Integer, Integer> placeBefore = new ImmutableTriple<Place, Integer, Integer>(p, t, w);
-						Triple<Place, Integer, Integer> placeAfter = new ImmutableTriple<Place, Integer, Integer>(p, t + 1, w + 1);
-						VecInt state = new VecInt();
-
-						Variable previousState = place2variable.get(placeBefore);
-						state.push(fireTr.getId());
-						state.push(previousState.getId());
-
-						Variable nextState = place2variable.get(placeAfter);
-						// if f is fired then the number of tokens is increased in the target place
-						solver.addPostConditions(state, nextState.getId());
+					if (p.equals(target)) {
+						sameSourceTarget = true;
+						// check how much do we have at the end
+						source_weight = f.getWeight();
 					}
 				}
-				
-				for (Flow f: tr.getPresetEdges()){
-					Place p = f.getPlace();
+
+				if (sameSourceTarget) {
+					// consider the case where the source and target are the same
+					int diff_weight = target_weight - source_weight;
 					
-					Pair<Transition, Integer> transition = new ImmutablePair<Transition, Integer>(tr, t);
-					Variable fireTr = transition2variable.get(transition);
+					for (Flow f : tr.getPostsetEdges()) {
+						Place p = f.getPlace();
+
+						Pair<Transition, Integer> transition = new ImmutablePair<Transition, Integer>(tr, t);
+						Variable fireTr = transition2variable.get(transition);
+
+						for (int w = 0; w < p.getMaxToken(); w++) {
+							
+							// there was not enough resources to fire this transition
+							if (w+diff_weight < 0)
+								continue;
+							
+							Triple<Place, Integer, Integer> placeBefore = new ImmutableTriple<Place, Integer, Integer>(p, t, w);
+							Triple<Place, Integer, Integer> placeAfter = new ImmutableTriple<Place, Integer, Integer>(p, t + 1, w + diff_weight);
+							VecInt state = new VecInt();
+
+							Variable previousState = place2variable.get(placeBefore);
+							state.push(fireTr.getId());
+							state.push(previousState.getId());
+
+							Variable nextState = place2variable.get(placeAfter);
+							// if f is fired then the number of tokens is
+							// increased in the target place
+							solver.addPostConditions(state, nextState.getId());
+						}
+					}
 					
-					int weight = f.getWeight();
+				} else {
 
-					for (int w = weight; w <= p.getMaxToken(); w++) {
-						Triple<Place, Integer, Integer> placeBefore = new ImmutableTriple<Place, Integer, Integer>(p, t, w);
-						Triple<Place, Integer, Integer> placeAfter = new ImmutableTriple<Place, Integer, Integer>(p, t + 1, w - weight);
-						VecInt state = new VecInt();
+					for (Flow f : tr.getPostsetEdges()) {
+						Place p = f.getPlace();
 
-						Variable previousState = place2variable.get(placeBefore);
-						state.push(fireTr.getId());
-						state.push(previousState.getId());
+						Pair<Transition, Integer> transition = new ImmutablePair<Transition, Integer>(tr, t);
+						Variable fireTr = transition2variable.get(transition);
 
-						Variable nextState = place2variable.get(placeAfter);
-						// if f is fired then the number of tokens is decreased in the source place
-						solver.addPostConditions(state, nextState.getId());
+						for (int w = 0; w < p.getMaxToken(); w++) {
+							Triple<Place, Integer, Integer> placeBefore = new ImmutableTriple<Place, Integer, Integer>(p, t, w);
+							Triple<Place, Integer, Integer> placeAfter = new ImmutableTriple<Place, Integer, Integer>(p, t + 1, w + 1);
+							VecInt state = new VecInt();
+
+							Variable previousState = place2variable.get(placeBefore);
+							state.push(fireTr.getId());
+							state.push(previousState.getId());
+
+							Variable nextState = place2variable.get(placeAfter);
+							// if f is fired then the number of tokens is
+							// increased in the target place
+							solver.addPostConditions(state, nextState.getId());
+						}
+					}
+
+					for (Flow f : tr.getPresetEdges()) {
+						Place p = f.getPlace();
+
+						Pair<Transition, Integer> transition = new ImmutablePair<Transition, Integer>(tr, t);
+						Variable fireTr = transition2variable.get(transition);
+
+						int weight = f.getWeight();
+
+						for (int w = weight; w <= p.getMaxToken(); w++) {
+							Triple<Place, Integer, Integer> placeBefore = new ImmutableTriple<Place, Integer, Integer>(p, t, w);
+							Triple<Place, Integer, Integer> placeAfter = new ImmutableTriple<Place, Integer, Integer>(p, t + 1, w - weight);
+							VecInt state = new VecInt();
+
+							Variable previousState = place2variable.get(placeBefore);
+							state.push(fireTr.getId());
+							state.push(previousState.getId());
+
+							Variable nextState = place2variable.get(placeAfter);
+							// if f is fired then the number of tokens is decreased in the source place
+							solver.addPostConditions(state, nextState.getId());
+						}
 					}
 				}
 			}
@@ -192,11 +254,6 @@ public class SequentialEncoding implements Encoding {
 	}
 	
 	@Override
-	public void setPetriNet(PetriNet pnet) {
-		this.pnet = pnet;
-	}
-
-	@Override
 	public void createVariables() {
 		assert (pnet != null);
 
@@ -263,19 +320,6 @@ public class SequentialEncoding implements Encoding {
 			int v = place2variable.get(place).getId();
 			solver.setTrue(v);
 			visited.add(p.getLeft());
-		}
-
-		// loop for each place and set those that do not appear as false
-		for (Place p : pnet.getPlaces()) {
-			if ((p.getId().equals("void") && timestep == loc) || visited.contains(p)) {
-				// ignore void for final target or if it is in the state
-				continue;
-			}
-
-			// if it is not in the state set its value to 0
-			Triple<Place, Integer, Integer> place = new ImmutableTriple<Place, Integer, Integer>(p, timestep, 0);
-			int v = place2variable.get(place).getId();
-			solver.setTrue(v);
 		}
 	}
 
