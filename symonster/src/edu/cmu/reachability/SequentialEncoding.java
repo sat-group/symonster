@@ -11,6 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.sat4j.core.VecInt;
 
+import edu.cmu.reachability.SATSolver.ConstraintType;
 import edu.cmu.reachability.Variable.Type;
 import uniol.apt.adt.pn.Flow;
 import uniol.apt.adt.pn.PetriNet;
@@ -28,6 +29,7 @@ public class SequentialEncoding implements Encoding {
 		this.pnet = pnet;
 		this.loc = loc;
 		
+		// clean the data structures before creating a new encoding
 		place2variable.clear();
 		transition2variable.clear();
 		solver.reset();
@@ -50,7 +52,7 @@ public class SequentialEncoding implements Encoding {
 			}
 
 			// add constraints to the solver
-			solver.addExactly(constraint, 1);
+			solver.addConstraint(constraint, ConstraintType.EQ, 1);
 		}
 	}
 
@@ -98,16 +100,12 @@ public class SequentialEncoding implements Encoding {
 							
 							Triple<Place, Integer, Integer> placeBefore = new ImmutableTriple<Place, Integer, Integer>(p, t, w);
 							Triple<Place, Integer, Integer> placeAfter = new ImmutableTriple<Place, Integer, Integer>(p, t + 1, w + diff_weight);
-							VecInt state = new VecInt();
-
+							
+							// if f is fired then the number of tokens is increased in the target place
 							Variable previousState = place2variable.get(placeBefore);
-							state.push(fireTr.getId());
-							state.push(previousState.getId());
-
 							Variable nextState = place2variable.get(placeAfter);
-							// if f is fired then the number of tokens is
-							// increased in the target place
-							solver.addPostConditions(state, nextState.getId());
+							VecInt state = new VecInt(new int[]{-fireTr.getId(), -previousState.getId(), nextState.getId()});
+							solver.addConstraint(state, ConstraintType.GTE, 1);
 						}
 					}
 					
@@ -122,16 +120,12 @@ public class SequentialEncoding implements Encoding {
 						for (int w = 0; w < p.getMaxToken(); w++) {
 							Triple<Place, Integer, Integer> placeBefore = new ImmutableTriple<Place, Integer, Integer>(p, t, w);
 							Triple<Place, Integer, Integer> placeAfter = new ImmutableTriple<Place, Integer, Integer>(p, t + 1, w + 1);
-							VecInt state = new VecInt();
 
+							// if f is fired then the number of tokens is increased in the target place
 							Variable previousState = place2variable.get(placeBefore);
-							state.push(fireTr.getId());
-							state.push(previousState.getId());
-
 							Variable nextState = place2variable.get(placeAfter);
-							// if f is fired then the number of tokens is
-							// increased in the target place
-							solver.addPostConditions(state, nextState.getId());
+							VecInt state = new VecInt(new int[]{-fireTr.getId(), -previousState.getId(), nextState.getId()});
+							solver.addConstraint(state, ConstraintType.GTE, 1);
 						}
 					}
 
@@ -146,15 +140,12 @@ public class SequentialEncoding implements Encoding {
 						for (int w = weight; w <= p.getMaxToken(); w++) {
 							Triple<Place, Integer, Integer> placeBefore = new ImmutableTriple<Place, Integer, Integer>(p, t, w);
 							Triple<Place, Integer, Integer> placeAfter = new ImmutableTriple<Place, Integer, Integer>(p, t + 1, w - weight);
-							VecInt state = new VecInt();
-
-							Variable previousState = place2variable.get(placeBefore);
-							state.push(fireTr.getId());
-							state.push(previousState.getId());
-
-							Variable nextState = place2variable.get(placeAfter);
+							
 							// if f is fired then the number of tokens is decreased in the source place
-							solver.addPostConditions(state, nextState.getId());
+							Variable previousState = place2variable.get(placeBefore);
+							Variable nextState = place2variable.get(placeAfter);
+							VecInt state = new VecInt(new int[]{-fireTr.getId(), -previousState.getId(), nextState.getId()});
+							solver.addConstraint(state, ConstraintType.GTE, 1);
 						}
 					}
 				}
@@ -182,18 +173,21 @@ public class SequentialEncoding implements Encoding {
 
 				Pair<Transition, Integer> pair = new ImmutablePair<Transition, Integer>(tr, t);
 				Variable fireTr = transition2variable.get(pair);
-				// if f is fired then there are enough resources to fire it
 				
-				solver.addPreconditions(fireTr.getId(), preconditions);
+				// if f is fired then there are enough resources to fire it
+				for (VecInt pc : preconditions){
+					pc.push(-fireTr.getId());
+					solver.addConstraint(pc, ConstraintType.GTE, 1);
+				}
 
 				for (Flow f : tr.getPostsetEdges()) {
-					VecInt pre = new VecInt();
 					Place p = f.getPlace();
 					Triple<Place, Integer, Integer> triple = new ImmutableTriple<Place, Integer, Integer>(p, t, p.getMaxToken());
 					Variable v = place2variable.get(triple);
-					pre.push(-v.getId());
+					
 					// if is fired then we are not at maximum resources in the target
-					solver.addPreconditions(fireTr.getId(), pre);
+					VecInt clause = new VecInt(new int[]{-v.getId(), -fireTr.getId()});
+					solver.addConstraint(clause, ConstraintType.GTE, 1);
 				}
 			}
 		}
@@ -213,7 +207,7 @@ public class SequentialEncoding implements Encoding {
 					amo.push(v.getId());
 				}
 				// enforce token restrictions
-				solver.addExactly(amo, 1);
+				solver.addConstraint(amo, ConstraintType.EQ, 1);
 			}
 		}
 
@@ -237,22 +231,27 @@ public class SequentialEncoding implements Encoding {
 				for (int w = 0; w <= p.getMaxToken(); w++){
 					Triple<Place, Integer, Integer> current = new ImmutableTriple<Place, Integer, Integer>(p, t, w);
 					Triple<Place, Integer, Integer> next = new ImmutableTriple<Place, Integer, Integer>(p, t+1, w);
-					solver.addSameTokens(transitionsConstr, place2variable.get(current).getId(), place2variable.get(next).getId());
+					
+					VecInt clause = new VecInt();
+					transitionsConstr.copyTo(clause);
+					clause.push(-place2variable.get(current).getId());
+					clause.push(place2variable.get(next).getId());
+					solver.addConstraint(clause, ConstraintType.GTE, 1);
 				}
 			}
 		}
 	}
-
+	
 	private void dummyConstraints() {
 
-		VecInt constraint = new VecInt();
 		for (int v = 1; v <= nbVariables; v++) {
+			VecInt constraint = new VecInt();
 			constraint.push(v);
+			solver.addConstraint(constraint, ConstraintType.LTE, 1);
 		}
-		solver.addAtLeast(constraint, 0);
 
 	}
-	
+
 	@Override
 	public void createVariables() {
 		assert (pnet != null);
@@ -291,7 +290,8 @@ public class SequentialEncoding implements Encoding {
 	@Override
 	public void createConstraints() {
 
-		// FIXME: quick hack to guarantee that all variables are used
+		// All variables must be used in some constraint
+		// These dummy constraints would not be necessary if the above invariant is maintained
 		dummyConstraints();
 
 		// Exactly one transition f is fired at each time step t
@@ -308,7 +308,7 @@ public class SequentialEncoding implements Encoding {
 		
 		// if no transitions were fired that used the place p then the marking of p remains the same from times step t to t+1
 		noTransitionTokens();
-
+		
 	}
 
 	@Override

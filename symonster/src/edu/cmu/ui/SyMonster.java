@@ -75,6 +75,7 @@ public class SyMonster {
 		boolean solution = false;
 		
 		while (!solution) {
+			System.out.println("loc = " + loc);
 			// create a formula that has the same semantics as the petri-net
 			Encoding encoding = new SequentialEncoding(example.getPetriNet(), loc);
 			

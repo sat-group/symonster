@@ -16,6 +16,8 @@ public class SATSolver {
 	private ISolver solver = null;
 	private boolean unsat = false;
 	
+	enum ConstraintType { LTE, EQ, GTE; }
+	
 	// Maps the variable id to transition
 	public HashMap<Integer,Variable> id2variable = new HashMap<>();
 	
@@ -41,68 +43,28 @@ public class SATSolver {
 		return nbVariables;
 	}
 	
-	public void addAtLeast(VecInt constraint, int k){
+	public void addConstraint(VecInt constraint, ConstraintType ct, int k){ 
 		try {
-			solver.addAtLeast(constraint, k);
-		} catch (ContradictionException e) {
-			unsat = true;
-		}
-	}
-	
-	public void addAtMost(VecInt constraint, int k){
-		try {
-			solver.addAtMost(constraint, k);
-		} catch (ContradictionException e) {
-			unsat = true;
-		}
-	}
-	
-	public void addExactly(VecInt constraint, int k){
-		try {
-			solver.addExactly(constraint, k);
-		} catch (ContradictionException e) {
-			unsat = true;
-		}
-	}
-	
-	// v is only true if preconditions holds
-	public void addPreconditions(int v, VecInt preconditions){
-		try {
-			VecInt clause = new VecInt(new int[] {-v});
-			preconditions.copyTo(clause);
-			solver.addClause(clause);
-		} catch (ContradictionException e) {
-			unsat = true;
-		}		
-	}
-	
-	// v is only true if all preconditions holds
-	public void addPreconditions(int v, List<VecInt> preconditions){
-		try {
-			for (VecInt vc : preconditions){
-				VecInt clause = new VecInt(new int[] {-v});
-				vc.copyTo(clause);
-				solver.addClause(clause);
+			switch(ct){
+				case LTE:
+					solver.addAtMost(constraint, k);
+					break;
+				case EQ:
+					solver.addExactly(constraint, k);
+					break;
+				case GTE:
+					// if k == 1 then it is a clause
+					if (k == 1) solver.addClause(constraint);
+					else solver.addAtLeast(constraint, k);
+					break;
+				default:
+					assert(false);
 			}
 		} catch (ContradictionException e) {
 			unsat = true;
-		}		
+		}
 	}
-	
-	// if the variables in state hold then they imply that v is true
-	public void addPostConditions(VecInt state, int v){
-		try{
-			VecInt clause = new VecInt();
-			for (int i = 0; i < state.size(); i++){
-				clause.push(-state.get(i));
-			}
-			clause.push(v);
-			solver.addClause(clause);
-		} catch (ContradictionException e) {
-			unsat = true;
-		}	
-	}
-	
+		
 	public void setTrue(int v){
 		try{
 			VecInt clause = new VecInt(new int[] {v});
@@ -119,20 +81,6 @@ public class SATSolver {
 		} catch (ContradictionException e) {
 			unsat = true;
 		}
-	}
-	
-	public void addSameTokens(VecInt transitions, int placePrevious, int placeAfter){
-		try{
-			VecInt clause = new VecInt();
-			for (int i = 0; i < transitions.size(); i++){
-				clause.push(transitions.get(i));
-			}
-			clause.push(-placePrevious);
-			clause.push(placeAfter);
-			solver.addClause(clause);
-		} catch (ContradictionException e) {
-			unsat = true;
-		}		
 	}
 	
 	public List<Variable> findPath(){
