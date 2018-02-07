@@ -17,15 +17,4 @@ public class MyPoint {
 		this.x = x;
 		this.y = y;
 	}
-	
-	static int convert(MyPoint sypet_arg0){
-		int sypet_var2 = sypet_arg0.getY();
-		return sypet_var2;
-	}
-	
-	public static void main(String[] args){
-		cmu.symonster.MyPoint mp = new cmu.symonster.MyPoint(1,3);
-		System.out.println("x= " + mp.getX());
-		System.out.println("convert= " + convert(mp));
-	}
 }
