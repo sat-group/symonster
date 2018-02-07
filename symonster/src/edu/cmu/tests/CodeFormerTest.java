@@ -1,6 +1,7 @@
 package edu.cmu.tests;
 
 import edu.cmu.codeformer.CodeFormer;
+import edu.cmu.codeformer.TestRunner;
 import edu.cmu.parser.JarParser;
 import edu.cmu.parser.MethodSignature;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,13 @@ public class CodeFormerTest {
         sequence.add(sigs.get(5));
         sequence.add(sigs.get(4));
         sequence.add(sigs.get(3));
-        CodeFormer former = new CodeFormer(sequence);
+        List<String> inputTypes = new ArrayList<>();
+        inputTypes.add("int");
+        inputTypes.add("int");
+        String returnType = "cmu.symonster.MyPoint";
+
+        CodeFormer former = new CodeFormer(sequence,inputTypes,returnType);
+        TestRunner runner = new TestRunner();
         while (!former.isUnsat()){
             try {
                 String result = former.solve();

@@ -23,6 +23,8 @@ public class CodeFormer {
     private final VarTable slotTypes = new VarTable();
     private final VarTable returnedValTypes = new VarTable();
     private boolean unsat = false;
+    List<String> inputTypes;
+    String retType;
     ISolver solver = SolverFactory.newDefault();
 
     /**
@@ -30,17 +32,27 @@ public class CodeFormer {
      * The initial setup for the class.
      * @param sigs requires a sequence of signatures in the expected order.
      */
-    public CodeFormer(List<MethodSignature> sigs) {
+    public CodeFormer(List<MethodSignature> sigs, List<String> inputTypes,String retType) {
         this.sigs = sigs;
-
+        this.inputTypes = inputTypes;
+        this.retType = retType;
         //Setup
+        //Add method input
+        for (String input : inputTypes){
+            returnedValTypes.addEntry(input,retNumber);
+            retNumber += 1;
+        }
+
         //Add slots and variables to the signatures table
         for (MethodSignature sig : sigs){
             if (!sig.getRetType().toString().equals("void")){
                 returnedValTypes.addEntry(sig.getRetType().toString(),retNumber);
                 retNumber += 1;
             }
-            if (!sig.getIsStatic()){
+            if (sig.getIsConstructor()){
+
+            }
+            else if (!sig.getIsStatic()){
                 slotTypes.addEntry(sig.getHostClass().getType().toString(),slotNumber);
                 slotNumber += 1;
             }
@@ -49,6 +61,12 @@ public class CodeFormer {
                 slotNumber += 1;
             }
 
+        }
+        //Add method return value
+        if (retType != null)
+        {
+            slotTypes.addEntry(retType,slotNumber);
+            slotNumber += 1;
         }
 
         //Setup constrains
@@ -112,6 +130,9 @@ public class CodeFormer {
     private void addSingleVariableConstrains(){
         for (int slotValue = 0; slotValue < slotNumber ; slotValue += 1) {
             IVecInt vec = new VecInt();
+            //System.out.println("start");
+            //System.out.println(slotTypes.getType(slotValue));
+            //System.out.println(returnedValTypes.getEntries(slotTypes.getType(slotValue)));
             for (int returnedValue : returnedValTypes.getEntries(slotTypes.getType(slotValue))) {
                 vec.push(calculateID(returnedValue,slotValue));
             }
@@ -144,6 +165,25 @@ public class CodeFormer {
         StringBuilder builder = new StringBuilder();
         int varCount = 0;
         int slotCount = 0;
+
+        //Add method signature
+        builder.append("public ");
+        if (retType != null){
+            builder.append(retType.toString());
+            builder.append(" ");
+        }
+        else{
+            builder.append("void ");
+        }
+        builder.append("method(");
+        for (int i = 0 ; i < inputTypes.size() ; i++){
+            builder.append(inputTypes.get(i));
+            builder.append(" var_"+varCount);
+            varCount += 1;
+            if (i != inputTypes.size() - 1) builder.append(", ");
+        }
+        builder.append("){\n");
+
         for (MethodSignature sig : sigs){
             if (!sig.getRetType().toString().equals("void")){
                 builder.append(sig.getRetType().toString());
@@ -153,7 +193,16 @@ public class CodeFormer {
                 varCount += 1;
                 builder.append(" = ");
             }
-            if (!sig.getIsStatic()){
+
+            if (sig.getIsConstructor()){
+                builder.append(" new ");
+            }
+            else if (sig.getIsStatic()){
+                builder.append(sig.getHostClass());
+                builder.append(".");
+            }
+
+            else{
                 int id = satResult.get(slotCount);
                 slotCount ++;
                 int returnedValue = clculateReturnedValue(id);
@@ -161,11 +210,8 @@ public class CodeFormer {
                 assert (slotValue == slotCount);
                 builder.append("var_");
                 builder.append(returnedValue);
+                builder.append(".");
             }
-            else{
-                builder.append(sig.getHostClass());
-            }
-            builder.append(".");
 
             builder.append(sig.getName());
             builder.append("(");
@@ -184,6 +230,19 @@ public class CodeFormer {
             }
             builder.append(");\n");
         }
+        if (retType != null ){
+            builder.append("return ");
+
+            int id = satResult.get(slotCount);
+            slotCount ++;
+            int returnedValue = clculateReturnedValue(id);
+            int slotValue = calculateSlotValue(id);
+            assert (slotValue == slotCount);
+            builder.append("var_");
+            builder.append(returnedValue);
+            builder.append(";\n");
+        }
+        builder.append("}");
         return builder.toString();
     }
 

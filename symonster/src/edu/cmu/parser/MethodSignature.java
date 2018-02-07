@@ -1,6 +1,5 @@
 package edu.cmu.parser;
 
-import heros.ThreadSafe;
 import soot.SootClass;
 import soot.Type;
 
@@ -20,13 +19,14 @@ public class MethodSignature {
     private final List<Type> argTypes;
     private final boolean isStatic;
     private final SootClass hostClass;
-
-    protected MethodSignature(String name, Type retType, List<Type> argTypes, boolean isStatic, SootClass hostClass){
+    private final boolean isConstructor;
+    protected MethodSignature(String name, Type retType, List<Type> argTypes, boolean isStatic, SootClass hostClass, boolean isConstructor){
         this.name = name;
         this.retType = retType;
         this.argTypes = argTypes;
         this.isStatic = isStatic;
         this.hostClass = hostClass;
+        this.isConstructor = isConstructor;
     }
 
     public String getName() {
@@ -43,6 +43,9 @@ public class MethodSignature {
 
     public boolean getIsStatic(){
         return isStatic;
+    }
+    public boolean getIsConstructor(){
+        return isConstructor;
     }
     public SootClass getHostClass() {
         return hostClass;

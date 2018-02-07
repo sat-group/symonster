@@ -23,7 +23,10 @@ public class VarTable {
      * @return
      */
     public List<Integer> getEntries(String type){
-        if (!table.containsKey(type)) System.out.println(table);
+        if (!table.containsKey(type)) {
+            System.out.println(type);
+            System.out.println(table);
+        }
         return table.get(type);
     }
 

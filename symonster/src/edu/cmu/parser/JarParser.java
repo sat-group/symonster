@@ -1,5 +1,4 @@
 package edu.cmu.parser;
-import edu.cmu.codeformer.CodeFormer;
 import edu.cmu.utils.SootUtils;
 import soot.*;
 
@@ -45,13 +44,13 @@ public class JarParser extends BodyTransformer{
                 SootClass clazz = Scene.v().getSootClass(cl);
                 List<SootMethod> methods = clazz.getMethods();
                 for (SootMethod method : methods) {
-                    if (!method.isPrivate()){
+                    if (method.isPublic()){
                         if (method.getName().equals("<init>")){
-                            MethodSignature sig = new MethodSignature(clazz.getName(),clazz.getType(),method.getParameterTypes(),method.isStatic(),clazz);
+                            MethodSignature sig = new MethodSignature(clazz.getName(),clazz.getType(),method.getParameterTypes(),method.isStatic(),clazz,true);
                             sigs.add(sig);
                         }
                         else{
-                            MethodSignature sig = new MethodSignature(method.getName(),method.getReturnType(),method.getParameterTypes(),method.isStatic(),clazz);
+                            MethodSignature sig = new MethodSignature(method.getName(),method.getReturnType(),method.getParameterTypes(),method.isStatic(),clazz,false);
                             sigs.add(sig);
                         }
                     }
