@@ -8,6 +8,7 @@ import uniol.apt.adt.exception.NoSuchEdgeException;
 import uniol.apt.adt.exception.NoSuchNodeException;
 import uniol.apt.adt.pn.Flow;
 import uniol.apt.adt.pn.PetriNet;
+import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ public class BuildNet {
 
     public static void main(String[] args) {
         build();
+        //output all transitions in petrinet
         Set<Transition> pl = petrinet.getTransitions();
         for (Transition p : pl) {
             System.out.println(p.getId());
@@ -29,6 +31,11 @@ public class BuildNet {
         libs.add("../benchmarks/examples/point/point.jar");
         List<MethodSignature> result = JarParser.parseJar(libs);
 
+        //create void type
+        petrinet.createPlace("void");
+        petrinet.createTransition("voidClone");
+        petrinet.createFlow("void", "voidClone", 1);
+        petrinet.createFlow("voidClone", "void", 2);
         for (MethodSignature k : result) {
             //add transition
             String methodname = k.getName();
@@ -36,9 +43,9 @@ public class BuildNet {
             String className = k.getHostClass().getName();
             String transitionName;
             if (isStatic) {
-                transitionName = className + " -static-" + methodname;
+                transitionName = className + "-static-" + methodname;
             } else {
-                transitionName = className + " -nonStatic-" + methodname;
+                transitionName = className + "-nonStatic-" + methodname;
             }
             petrinet.createTransition(transitionName);
 
@@ -57,10 +64,10 @@ public class BuildNet {
 
                 //add flow
                 try {
-                    Flow originalFlow = petrinet.getFlow(t.toString(), methodname);
+                    Flow originalFlow = petrinet.getFlow(t.toString(), transitionName);
                     originalFlow.setWeight(originalFlow.getWeight() + 1);
                 } catch (NoSuchEdgeException e) {
-                    petrinet.createFlow(t.toString(), methodname, 1);
+                    petrinet.createFlow(t.toString(), transitionName, 1);
                 }
             }
 
@@ -76,9 +83,7 @@ public class BuildNet {
                 petrinet.createFlow(retType.toString() + "Clone", retType.toString(), 2);
             }
             //add flow
-            petrinet.createFlow(methodname, retType.toString(), 1);
+            petrinet.createFlow(transitionName, retType.toString(), 1);
         }
     }
-
-
 }
