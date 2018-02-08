@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
 
+import edu.cmu.parser.MethodSignature;
+import edu.cmu.petrinet.BuildNet;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -15,6 +18,8 @@ import edu.cmu.reachability.Variable;
 import edu.cmu.tests.PointPetriNet;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
+import uniol.apt.adt.pn.Transition;
+
 
 public class SyMonster {
 	
@@ -65,10 +70,17 @@ public class SyMonster {
 		
 		// 3. Build petri-net
 		// TODO: use the code for building the petri-net here
-		
+
+        //build a petrinet and signatureMap of library
+		BuildNet b = new BuildNet();
+		PetriNet net = b.build();
+		Map<String, MethodSignature> signatureMap = b.dict;
+
+		//example petrinet
 		PointPetriNet example = new PointPetriNet();
 		example.buildPointPetriNet();
-		
+		PetriNet pointNet = example.getPetriNet();
+
 		int loc = 1;
 		int paths = 0;
 		int programs = 0;
@@ -77,11 +89,11 @@ public class SyMonster {
 		while (!solution) {
 			System.out.println("loc = " + loc);
 			// create a formula that has the same semantics as the petri-net
-			Encoding encoding = new SequentialEncoding(example.getPetriNet(), loc);
+			Encoding encoding = new SequentialEncoding(net, loc);
 			
 			// set initial state and final state
-			encoding.setState(setInitialState(example.getPetriNet()), 0);
-			encoding.setState(setGoalState(example.getPetriNet()), loc);
+			encoding.setState(setInitialState(net), 0);
+			encoding.setState(setGoalState(net), loc);
 
 			// 4. Perform reachability analysis
 			
@@ -91,12 +103,22 @@ public class SyMonster {
 				paths++;
 				String path = "Path #" + paths + " =\n";
 				List<String> apis  = new ArrayList<String>();
+				//A list of method signatures
+				List<MethodSignature> signatures = new ArrayList<>();
 				for (Variable s : result) {
 					apis.add(s.getName());
 					path += s.toString() + "\n";
+					MethodSignature sig = signatureMap.get(s.getName());
+					if(sig != null) {
+						signatures.add(signatureMap.get(s.getName()));
+					}
 				}
 				System.out.println(path);
-				
+				System.out.println("Signatures:");
+				for (MethodSignature sig : signatures) {
+					System.out.println(sig);
+				}
+
 				// 5. Convert a path to a program
 				// TODO: write this code
 				// NOTE: one path may correspond to multiple programs and we may need a loop here!
@@ -118,6 +140,7 @@ public class SyMonster {
 			// we did not find a program of length = loc
 			loc++;
 		}
+
 	}
 
 }
