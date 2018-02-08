@@ -1,30 +1,25 @@
 package edu.cmu.ui;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Map;
-
+import edu.cmu.codeformer.CodeFormer;
+import edu.cmu.compilation.Test;
+import edu.cmu.parser.JarParser;
 import edu.cmu.parser.MethodSignature;
 import edu.cmu.petrinet.BuildNet;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-
-import edu.cmu.compilation.Test;
 import edu.cmu.reachability.Encoding;
 import edu.cmu.reachability.SequentialEncoding;
 import edu.cmu.reachability.Variable;
 import edu.cmu.tests.PointPetriNet;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.sat4j.specs.TimeoutException;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
-import uniol.apt.adt.pn.Transition;
 
-
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.*;
 public class SyMonster {
 	
 	private static Set<Pair<Place, Integer>> setInitialState(PetriNet pnet){
-
 		// Initial state
 		Place placeMyPoint = pnet.getPlace("MyPoint");
 		Place placePoint = pnet.getPlace("Point");
@@ -58,22 +53,27 @@ public class SyMonster {
 		
 	}
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws IOException {
 		
 		Test test = new Test();
 		
 		// 1. Read input from the user
 		// TODO: read from .json file instead of using predefined values
-		
+        // TODO: fake
+        List<String> varNames = new ArrayList<>();
+        varNames.add("point1");
+        varNames.add("point2");
+        String methodName = "conv";
+        List<String> libs = new ArrayList<>();
+        libs.add("../benchmarks/examples/point/point.jar");
 		// 2. Parse library
 		// TODO: use the code to parse the library here
-		
+        List<MethodSignature> sigs = JarParser.parseJar(libs);
 		// 3. Build petri-net
-		// TODO: use the code for building the petri-net here
 
         //build a petrinet and signatureMap of library
 		BuildNet b = new BuildNet();
-		PetriNet net = b.build();
+		PetriNet net = b.build(sigs);
 		Map<String, MethodSignature> signatureMap = b.dict;
 
 		//example petrinet
@@ -87,7 +87,7 @@ public class SyMonster {
 		boolean solution = false;
 		
 		while (!solution) {
-			System.out.println("loc = " + loc);
+			//System.out.println("loc = " + loc);
 			// create a formula that has the same semantics as the petri-net
 			Encoding encoding = new SequentialEncoding(net, loc);
 			
@@ -99,7 +99,7 @@ public class SyMonster {
 			
 			// for each loc find all possible programs
 			List<Variable> result = Encoding.solver.findPath();
-			while(!result.isEmpty() || solution){
+            while(!result.isEmpty() && !solution){
 				paths++;
 				String path = "Path #" + paths + " =\n";
 				List<String> apis  = new ArrayList<String>();
@@ -113,25 +113,40 @@ public class SyMonster {
 						signatures.add(signatureMap.get(s.getName()));
 					}
 				}
-				System.out.println(path);
-				System.out.println("Signatures:");
+				//System.out.println(path);
+				//System.out.println("Signatures:");
 				for (MethodSignature sig : signatures) {
-					System.out.println(sig);
+					//System.out.println(sig);
 				}
-
-				// 5. Convert a path to a program
-				// TODO: write this code
+                //System.out.println(signatures);
+                // 5. Convert a path to a program
 				// NOTE: one path may correspond to multiple programs and we may need a loop here!
-				programs++;
-				
-				// 6. Run the test cases
-				// TODO: write this code; if all test cases pass then we can terminate
-				if (test.runTest(apis)) {
-					solution = true;
-					System.out.println("Programs explored = " + programs);
-					break;
-				}
-				
+
+                boolean sat = true;
+                while (sat){
+                    System.out.println(signatures);
+                    //TODO Replace the null pointers with inputs/output types
+                    List<String> inputs = new ArrayList<>();
+                    inputs.add("cmu.symonster.MyPoint");
+                    inputs.add("cmu.symonster.Point");
+                    CodeFormer former = new CodeFormer(signatures,inputs,"cmu.symonster.Point", varNames, methodName);
+                    String code;
+                    try {
+                        code = former.solve();
+                    } catch (TimeoutException e) {
+                        sat = false;
+                        break;
+                    }
+                    sat = !former.isUnsat();
+                    programs++;
+                    // 6. Run the test cases
+                    // TODO: write this code; if all test cases pass then we can terminate
+                    if (test.runTest(code)) {
+                        solution = true;
+                        System.out.println("Programs explored = " + programs);
+                        break;
+                    }
+                }
 				// the current path did not result in a program that passes all test cases
 				// find the next path
 				result = Encoding.solver.findPath();
@@ -142,5 +157,9 @@ public class SyMonster {
 		}
 
 	}
+
+    private static void readFromJson() {
+
+    }
 
 }

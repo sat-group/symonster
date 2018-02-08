@@ -1,6 +1,7 @@
 package edu.cmu.utils;
 
 import edu.cmu.testfiles.TargetInterface;
+import edu.cmu.testfiles.Testing;
 import heros.ThreadSafe;
 
 import java.io.File;
@@ -14,7 +15,10 @@ public class ReflectionUtils {
         try {
             Class classToLoad = ClassLoader.getSystemClassLoader().loadClass("edu.cmu.testfiles."+testName);
             TargetInterface target = (TargetInterface)classToLoad.newInstance();
-            target.method(null,null);
+            if (Testing.pass(target)){
+                return true;
+            }
+            else return false;
         } catch (InstantiationException e) {
             System.out.println("invalid 1");;
         } catch (IllegalAccessException e) {

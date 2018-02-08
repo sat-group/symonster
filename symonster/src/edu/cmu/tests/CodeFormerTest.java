@@ -1,10 +1,9 @@
 package edu.cmu.tests;
 
 import edu.cmu.codeformer.CodeFormer;
-import edu.cmu.codeformer.TestRunner;
 import edu.cmu.parser.JarParser;
 import edu.cmu.parser.MethodSignature;
-import org.junit.jupiter.api.Test;
+import junit.textui.TestRunner;
 import org.sat4j.specs.TimeoutException;
 
 import java.util.ArrayList;
@@ -28,8 +27,11 @@ public class CodeFormerTest {
         inputTypes.add("int");
         inputTypes.add("int");
         String returnType = "cmu.symonster.MyPoint";
-
-        CodeFormer former = new CodeFormer(sequence,inputTypes,returnType);
+        List<String> varNames = new ArrayList<>();
+        varNames.add("x");
+        varNames.add("y");
+        String methodName = "method";
+        CodeFormer former = new CodeFormer(sequence,inputTypes,returnType, varNames, methodName);
         TestRunner runner = new TestRunner();
         while (!former.isUnsat()){
             try {

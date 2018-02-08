@@ -24,7 +24,6 @@ public class JarParser extends BodyTransformer{
         //libs.add("../benchmarks/examples/geometry/geometry.jar");
         //libs.add("lib/hamcrest-core-1.3.jar");
         //libs.add("lib/junit-4.11.jar");
-        System.out.println(parseJar(libs));
     }
 
     /**
@@ -46,11 +45,13 @@ public class JarParser extends BodyTransformer{
                 for (SootMethod method : methods) {
                     if (method.isPublic()){
                         if (method.getName().equals("<init>")){
-                            MethodSignature sig = new MethodSignature(clazz.getName(),clazz.getType(),method.getParameterTypes(),method.isStatic(),clazz,true);
+                            MethodSignature sig = new MethodSignature(clazz.getName(),clazz.getType(),
+                                    method.getParameterTypes(),method.isStatic(),clazz,true);
                             sigs.add(sig);
                         }
                         else{
-                            MethodSignature sig = new MethodSignature(method.getName(),method.getReturnType(),method.getParameterTypes(),method.isStatic(),clazz,false);
+                            MethodSignature sig = new MethodSignature(method.getName(),method.getReturnType(),
+                                    method.getParameterTypes(),method.isStatic(),clazz,false);
                             sigs.add(sig);
                         }
                     }

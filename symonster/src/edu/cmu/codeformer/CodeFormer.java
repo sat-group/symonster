@@ -1,8 +1,6 @@
 package edu.cmu.codeformer;
 
-import edu.cmu.parser.JarParser;
 import edu.cmu.parser.MethodSignature;
-import org.junit.jupiter.api.Test;
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
@@ -23,19 +21,26 @@ public class CodeFormer {
     private final VarTable slotTypes = new VarTable();
     private final VarTable returnedValTypes = new VarTable();
     private boolean unsat = false;
-    List<String> inputTypes;
-    String retType;
+    private final List<String> inputTypes;
+    private final String retType;
+    private final List<String> varNames;
+    private final String methodName;
     ISolver solver = SolverFactory.newDefault();
 
     /**
      *
      * The initial setup for the class.
      * @param sigs requires a sequence of signatures in the expected order.
+     * @param varNames
+     * @param methodName
      */
-    public CodeFormer(List<MethodSignature> sigs, List<String> inputTypes,String retType) {
+    public CodeFormer(List<MethodSignature> sigs, List<String> inputTypes, String retType, List<String> varNames, String methodName) {
         this.sigs = sigs;
         this.inputTypes = inputTypes;
         this.retType = retType;
+        this.varNames = varNames;
+        this.methodName = methodName;
+        solver.setTimeout(1000000);
         //Setup
         //Add method input
         for (String input : inputTypes){
@@ -130,9 +135,6 @@ public class CodeFormer {
     private void addSingleVariableConstrains(){
         for (int slotValue = 0; slotValue < slotNumber ; slotValue += 1) {
             IVecInt vec = new VecInt();
-            //System.out.println("start");
-            //System.out.println(slotTypes.getType(slotValue));
-            //System.out.println(returnedValTypes.getEntries(slotTypes.getType(slotValue)));
             for (int returnedValue : returnedValTypes.getEntries(slotTypes.getType(slotValue))) {
                 vec.push(calculateID(returnedValue,slotValue));
             }
@@ -175,10 +177,12 @@ public class CodeFormer {
         else{
             builder.append("void ");
         }
-        builder.append("method(");
+        builder.append(methodName);
+        builder.append("(");
         for (int i = 0 ; i < inputTypes.size() ; i++){
             builder.append(inputTypes.get(i));
-            builder.append(" var_"+varCount);
+            builder.append(" ");
+            builder.append(varNames.get(varCount));
             varCount += 1;
             if (i != inputTypes.size() - 1) builder.append(", ");
         }
@@ -188,8 +192,7 @@ public class CodeFormer {
             if (!sig.getRetType().toString().equals("void")){
                 builder.append(sig.getRetType().toString());
                 builder.append(" ");
-                builder.append("var_");
-                builder.append(varCount);
+                builder.append(convVarName(varCount));
                 varCount += 1;
                 builder.append(" = ");
             }
@@ -205,11 +208,10 @@ public class CodeFormer {
             else{
                 int id = satResult.get(slotCount);
                 slotCount ++;
-                int returnedValue = clculateReturnedValue(id);
+                int returnedValue = calculateReturnedValue(id);
                 int slotValue = calculateSlotValue(id);
                 assert (slotValue == slotCount);
-                builder.append("var_");
-                builder.append(returnedValue);
+                builder.append(convVarName(returnedValue));
                 builder.append(".");
             }
 
@@ -218,12 +220,11 @@ public class CodeFormer {
             for (int i = 0; i < sig.getArgTypes().size() ; i++){
                 int id = satResult.get(slotCount);
                 slotCount ++;
-                int returnedValue = clculateReturnedValue(id);
+                int returnedValue = calculateReturnedValue(id);
                 int slotValue = calculateSlotValue(id);
                 assert (slotValue == slotCount);
 
-                builder.append("var_");
-                builder.append(returnedValue);
+                builder.append(convVarName(returnedValue));
                 if (i != sig.getArgTypes().size() - 1){
                     builder.append(",");
                 }
@@ -235,11 +236,10 @@ public class CodeFormer {
 
             int id = satResult.get(slotCount);
             slotCount ++;
-            int returnedValue = clculateReturnedValue(id);
+            int returnedValue = calculateReturnedValue(id);
             int slotValue = calculateSlotValue(id);
             assert (slotValue == slotCount);
-            builder.append("var_");
-            builder.append(returnedValue);
+            builder.append(convVarName(returnedValue));
             builder.append(";\n");
         }
         builder.append("}");
@@ -250,11 +250,16 @@ public class CodeFormer {
     private int calculateID(int returnedValue,int slotValue){
         return returnedValue + retNumber * slotValue + 1;
     }
-    private int clculateReturnedValue(int id){
+    private int calculateReturnedValue(int id){
         return (id-1)%retNumber;
     }
     private int calculateSlotValue(int id){
         return (id-1)/retNumber;
+    }
+
+    private String convVarName(int val){
+        if (val < varNames.size()) return varNames.get(val);
+        else return "var_"+(val - varNames.size());
     }
 
 }

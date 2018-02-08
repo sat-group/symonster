@@ -24,7 +24,12 @@ public class BuildNet {
     static public Map<String, MethodSignature> dict = new HashMap<String, MethodSignature>();
 
     public static void main(String[] args) {
-        build();
+        List<String> libs = new ArrayList<>();
+        libs.add("../benchmarks/examples/point/point.jar");
+        // 2. Parse library
+        // TODO: use the code to parse the library here
+        List<MethodSignature> sigs = JarParser.parseJar(libs);
+        build(sigs);
         //output all transitions in petrinet
         Set<Transition> pl = petrinet.getTransitions();
         for (Transition p : pl) {
@@ -36,11 +41,7 @@ public class BuildNet {
         }
     }
 
-    public static PetriNet build () {
-        List<String> libs = new ArrayList<>();
-        libs.add("../benchmarks/examples/point/point.jar");
-        List<MethodSignature> result = JarParser.parseJar(libs);
-
+    public static PetriNet build (List<MethodSignature> result) {
         //create void type
         petrinet.createPlace("void");
         petrinet.createTransition("voidClone");
