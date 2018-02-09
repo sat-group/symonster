@@ -1,7 +1,8 @@
 package edu.cmu.testfiles;
 public class Target1 implements edu.cmu.testfiles.TargetInterface {
-public cmu.symonster.Point conv(cmu.symonster.MyPoint point1, cmu.symonster.Point point2){
-int var_0 = point1.getX();
-point2.setX(var_0);
-return point2;
+public cmu.symonster.MyPoint conv(int x, int y){
+cmu.symonster.Point var_0 =  new cmu.symonster.Point();
+var_0.setY(x);
+cmu.symonster.MyPoint var_1 =  new cmu.symonster.MyPoint(x,y);
+return var_1;
 }}

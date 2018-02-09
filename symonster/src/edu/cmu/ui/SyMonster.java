@@ -20,28 +20,61 @@ import java.lang.reflect.Method;
 import java.util.*;
 public class SyMonster {
 	
-	private static Set<Pair<Place, Integer>> setInitialState(PetriNet pnet){
+	private static Set<Pair<Place, Integer>> setInitialState(PetriNet pnet, List<String> inputs){
 		// Initial state
-		Place placeMyPoint = pnet.getPlace("MyPoint");
-		Place placePoint = pnet.getPlace("Point");
+		HashSet<Pair<Place,Integer>> initial = new HashSet<>();
+		for (String input : inputs) {
+		    Place p = pnet.getPlace(input);
+			initial.add(new ImmutablePair<Place, Integer>(p, 1));
+		}
+		Set<Place> ps = pnet.getPlaces();
+		for (Place p : ps) {
+			boolean isInput = false;
+			for (String input : inputs) {
+				if (p.getId().equals(input)) {
+				    isInput = true;
+				}
+			}
+			if(!isInput) {
+				initial.add(new ImmutablePair<Place, Integer>(p, 0));
+			}
+		}
+		// Initial state
+		/*
+		Place placeMyPoint = pnet.getPlace("cmu.symonster.MyPoint");
+		Place placePoint = pnet.getPlace("cmu.symonster.Point");
 		Place placeVoid = pnet.getPlace("void");
 		Place placeInt = pnet.getPlace("int");
-		
+
 		HashSet<Pair<Place,Integer>> initial = new HashSet<>();
 		initial.add(new ImmutablePair<Place,Integer>(placeMyPoint, 1));
 		initial.add(new ImmutablePair<Place,Integer>(placeVoid, 1));
-		initial.add(new ImmutablePair<Place,Integer>(placePoint, 0));
+		initial.add(new ImmutablePair<Place,Integer>(placePoint, 1));
 		initial.add(new ImmutablePair<Place,Integer>(placeInt, 0));
-		
+		*/
+
 		return initial;
-		
 	}
 	
-	private static Set<Pair<Place, Integer>> setGoalState(PetriNet pnet){
+	private static Set<Pair<Place, Integer>> setGoalState(PetriNet pnet, String retType){
 
 		// Final state
-		Place placeMyPoint = pnet.getPlace("MyPoint");
-		Place placePoint = pnet.getPlace("Point");
+		HashSet<Pair<Place,Integer>> initial = new HashSet<>();
+		Set<Place> pl = pnet.getPlaces();
+		for(Place p : pl){
+		    if(p.getId().equals("void")) {
+		        continue;
+			} else if (p.getId().equals(retType)) {
+		        initial.add(new ImmutablePair<Place, Integer>(p, 1));
+			} else {
+		    	initial.add(new ImmutablePair<Place, Integer>(p, 0));
+				System.out.println(p.getId());
+			}
+		}
+		/*
+		// Final state
+		Place placeMyPoint = pnet.getPlace("cmu.symonster.MyPoint");
+		Place placePoint = pnet.getPlace("cmu.symonster.Point");
 		Place placeInt = pnet.getPlace("int");
 
 		// if you do not want any restrictions on a place then do not add it to the list
@@ -49,9 +82,9 @@ public class SyMonster {
 		initial.add(new ImmutablePair<Place,Integer>(placeMyPoint, 0));
 		initial.add(new ImmutablePair<Place,Integer>(placePoint, 1));
 		initial.add(new ImmutablePair<Place,Integer>(placeInt, 0));
-		
+		*/
+
 		return initial;
-		
 	}
 	
 	public static void main(String[] args) throws IOException {
@@ -62,16 +95,18 @@ public class SyMonster {
 		// TODO: read from .json file instead of using predefined values
         // TODO: fake
         List<String> varNames = new ArrayList<>();
-        varNames.add("point1");
-        varNames.add("point2");
+        varNames.add("x");
+        varNames.add("y");
         String methodName = "conv";
         List<String> libs = new ArrayList<>();
-        libs.add("../benchmarks/examples/point/point.jar");
-
+        libs.add("lib/point.jar");
+		List<String> inputs = new ArrayList<>();
+		inputs.add("int");
+		inputs.add("int");
+		String retType = "cmu.symonster.MyPoint";
 		// 2. Parse library
 		// TODO: use the code to parse the library here
         List<MethodSignature> sigs = JarParser.parseJar(libs);
-
         // 3. build a petrinet and signatureMap of library
 		BuildNet b = new BuildNet();
 		PetriNet net = b.build(sigs);
@@ -86,26 +121,27 @@ public class SyMonster {
 		int paths = 0;
 		int programs = 0;
 		boolean solution = false;
-		
 		while (!solution) {
 			//System.out.println("loc = " + loc);
 			// create a formula that has the same semantics as the petri-net
 			Encoding encoding = new SequentialEncoding(net, loc);
 			
 			// set initial state and final state
-			encoding.setState(setInitialState(net), 0);
-			encoding.setState(setGoalState(net), loc);
+			encoding.setState(setInitialState(net, inputs),  0);
+			encoding.setState(setGoalState(net, retType),  loc);
 
 			// 4. Perform reachability analysis
 			
 			// for each loc find all possible programs
 			List<Variable> result = Encoding.solver.findPath();
+			System.out.println("outin");
             while(!result.isEmpty() && !solution){
 				paths++;
 				String path = "Path #" + paths + " =\n";
 				List<String> apis  = new ArrayList<String>();
 				//A list of method signatures
 				List<MethodSignature> signatures = new ArrayList<>();
+				System.out.println(signatures);
 				for (Variable s : result) {
 					apis.add(s.getName());
 					path += s.toString() + "\n";
@@ -114,7 +150,7 @@ public class SyMonster {
 						signatures.add(signatureMap.get(s.getName()));
 					}
 				}
-				//System.out.println(path);
+				System.out.println(path);
 				//System.out.println("Signatures:");
 				for (MethodSignature sig : signatures) {
 					//System.out.println(sig);
@@ -124,13 +160,10 @@ public class SyMonster {
 				// NOTE: one path may correspond to multiple programs and we may need a loop here!
 
                 boolean sat = true;
+				CodeFormer former = new CodeFormer(signatures,inputs,retType, varNames, methodName);
                 while (sat){
-                    System.out.println(signatures);
+                    System.out.println("inner");
                     //TODO Replace the null pointers with inputs/output types
-                    List<String> inputs = new ArrayList<>();
-                    inputs.add("cmu.symonster.MyPoint");
-                    inputs.add("cmu.symonster.Point");
-                    CodeFormer former = new CodeFormer(signatures,inputs,"cmu.symonster.Point", varNames, methodName);
                     String code;
                     try {
                         code = former.solve();

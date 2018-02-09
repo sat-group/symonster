@@ -106,10 +106,8 @@ public class CodeFormer {
         //Block this version, and filter the result with only positive ones.
         VecInt block = new VecInt();
         for (Integer id : satResult){
-            if (id > 0){
-                block.push(-id);
-                satList.add(id);
-            }
+            block.push(-id);
+            if (id > 0) satList.add(id);
         }
         try {
             solver.addClause(block);

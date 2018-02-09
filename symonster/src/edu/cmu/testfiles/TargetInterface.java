@@ -1,5 +1,5 @@
 package edu.cmu.testfiles;
 
 public interface TargetInterface {
-    cmu.symonster.Point conv(cmu.symonster.MyPoint point1, cmu.symonster.Point point2);
+    cmu.symonster.MyPoint conv(int x, int y);
 }
