@@ -13,6 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.sat4j.specs.TimeoutException;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
+import uniol.apt.adt.pn.Transition;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -66,12 +67,12 @@ public class SyMonster {
         String methodName = "conv";
         List<String> libs = new ArrayList<>();
         libs.add("../benchmarks/examples/point/point.jar");
+
 		// 2. Parse library
 		// TODO: use the code to parse the library here
         List<MethodSignature> sigs = JarParser.parseJar(libs);
-		// 3. Build petri-net
 
-        //build a petrinet and signatureMap of library
+        // 3. build a petrinet and signatureMap of library
 		BuildNet b = new BuildNet();
 		PetriNet net = b.build(sigs);
 		Map<String, MethodSignature> signatureMap = b.dict;

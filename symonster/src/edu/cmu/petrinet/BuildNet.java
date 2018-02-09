@@ -30,15 +30,12 @@ public class BuildNet {
         // TODO: use the code to parse the library here
         List<MethodSignature> sigs = JarParser.parseJar(libs);
         build(sigs);
+
         //output all transitions in petrinet
-        Set<Transition> pl = petrinet.getTransitions();
-        for (Transition p : pl) {
-            try {
-                System.out.println((dict.get(p.getId())).toString());
-            } catch (NullPointerException e) {
-                System.out.println(p.toString());
-            }
-        }
+       // Set<Place> pl = petrinet.getPlaces();
+        //for (Place p : pl) {
+         //       System.out.println(p.toString());
+       // }
     }
 
     public static PetriNet build (List<MethodSignature> result) {
@@ -98,6 +95,19 @@ public class BuildNet {
             //add flow
             petrinet.createFlow(transitionName, retType.toString(), 1);
         }
+        //Set max tokens for each place
+        for (Place p : petrinet.getPlaces()) {
+            int count = 0;
+            for(Transition t : petrinet.getTransitions()) {
+                try {
+                    Flow f = petrinet.getFlow(p.getId(), t.getId());
+                    count = Math.max(count, f.getWeight()+1);
+                } catch (NoSuchEdgeException e) {
+                    continue;
+                }
+            }
+            p.setMaxToken(count);
+        }
 
 
 
@@ -106,6 +116,7 @@ public class BuildNet {
         Since we currently can not parse type MyPoint and point, method MyPoint() and Point()
         I will hardcode these nodes into the graph for testing purpose :)
          */
+        /*
         petrinet.createPlace("MyPoint");
         petrinet.createTransition("MyPointClone");
         petrinet.createFlow("MyPoint", "MyPointClone", 1);
@@ -141,6 +152,8 @@ public class BuildNet {
         petrinet.getPlace("Point").setMaxToken(2);
         petrinet.getPlace("int").setMaxToken(3);
         petrinet.getPlace("void").setMaxToken(2);
+        return petrinet;
+        */
         return petrinet;
     }
 }
