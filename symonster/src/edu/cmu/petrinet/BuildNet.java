@@ -2,7 +2,6 @@ package edu.cmu.petrinet;
 
 import edu.cmu.parser.JarParser;
 import edu.cmu.parser.MethodSignature;
-import org.jboss.util.Null;
 import soot.Type;
 
 import uniol.apt.adt.exception.NoSuchEdgeException;
@@ -12,7 +11,6 @@ import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.Set;
 import java.util.HashMap;
@@ -25,10 +23,11 @@ public class BuildNet {
 
     public static void main(String[] args) {
         List<String> libs = new ArrayList<>();
-        libs.add("../benchmarks/examples/point/point.jar");
+        libs.add("lib/point.jar");
         // 2. Parse library
         // TODO: use the code to parse the library here
         List<MethodSignature> sigs = JarParser.parseJar(libs);
+        System.out.println(sigs);
         build(sigs);
 
         Set<Place> pl = petrinet.getPlaces();
@@ -60,25 +59,28 @@ public class BuildNet {
         petrinet.createTransition("voidClone");
         petrinet.createFlow("void", "voidClone", 1);
         petrinet.createFlow("voidClone", "void", 2);
+
+        //iterate through each method
         for (MethodSignature k : result) {
-            //add transition
             String methodname = k.getName();
             boolean isStatic = k.getIsStatic();
             boolean isConstructor = k.getIsConstructor();
             String className = k.getHostClass().getName();
             String transitionName;
 
+            //adding transition
             if(isConstructor) {
-                transitionName = className + "." + methodname;
+                transitionName =  methodname + "()";
                 petrinet.createTransition(transitionName);
             }
             else if (isStatic) {
-                transitionName = className + "." + methodname;
+                transitionName =  className + "." + methodname + "()";
                 petrinet.createTransition(transitionName);
-            } else {
-                transitionName = className + "." + methodname;
+            } else { //The method is not static, so it has an extra argument
+                transitionName = className + "." + methodname + "()";
                 petrinet.createTransition(transitionName);
 
+                //creating the place and flow for class instance
                 Flow f;
                 try {
                     petrinet.getPlace(k.getHostClass().toString());
@@ -99,7 +101,7 @@ public class BuildNet {
 
             List<Type> args = k.getArgTypes();
             for (Type t : args) {
-                //add place
+                //add place for each argument
                 try {
                     petrinet.getPlace(t.toString());
                 } catch (NoSuchNodeException e) {
@@ -110,7 +112,7 @@ public class BuildNet {
                     petrinet.createFlow(t.toString() + "Clone", t.toString(), 2);
                 }
 
-                //add flow
+                //add flow for each argument
                 try {
                     Flow originalFlow = petrinet.getFlow(t.toString(), transitionName);
                     originalFlow.setWeight(originalFlow.getWeight() + 1);
@@ -119,9 +121,8 @@ public class BuildNet {
                 }
             }
 
+            //add place for the return type
             Type retType = k.getRetType();
-
-            //add place
             try {
                 petrinet.getPlace(retType.toString());
             } catch (NoSuchNodeException e) {
@@ -131,9 +132,10 @@ public class BuildNet {
                 petrinet.createFlow(retType.toString(), retType.toString() + "Clone", 1);
                 petrinet.createFlow(retType.toString() + "Clone", retType.toString(), 2);
             }
-            //add flow
+            //add flow for the return type
             petrinet.createFlow(transitionName, retType.toString(), 1);
         }
+
         //Set max tokens for each place
         for (Place p : petrinet.getPlaces()) {
             int count = 0;
@@ -148,49 +150,6 @@ public class BuildNet {
             p.setMaxToken(count);
         }
 
-
-
-        /*
-        Since we currently can not parse type MyPoint and point, method MyPoint() and Point()
-        I will hardcode these nodes into the graph for testing purpose :)
-         */
-        /*
-        petrinet.createPlace("MyPoint");
-        petrinet.createTransition("MyPointClone");
-        petrinet.createFlow("MyPoint", "MyPointClone", 1);
-        petrinet.createFlow("MyPointClone", "MyPoint", 2);
-
-        petrinet.createPlace("Point");
-        petrinet.createTransition("PointClone");
-        petrinet.createFlow("Point", "PointClone", 1);
-        petrinet.createFlow("PointClone", "Point", 2);
-
-        petrinet.createTransition("MyPoint()");
-        petrinet.createTransition("Point()");
-
-        //flows for MyPoint
-        petrinet.createFlow("MyPoint", "cmu.symonster.MyPoint-nonStatic-getX", 1);
-        petrinet.createFlow("MyPoint", "cmu.symonster.MyPoint-nonStatic-getY", 1);
-        petrinet.createFlow("MyPoint()", "MyPoint", 1);
-
-        //flows for MyPoint()
-        petrinet.createFlow("int", "MyPoint()", 2);
-
-        //flows for Point
-        petrinet.createFlow("Point", "cmu.symonster.Point-nonStatic-setX", 1);
-        petrinet.createFlow("Point", "cmu.symonster.Point-nonStatic-setY", 1);
-        petrinet.createFlow("Point()", "Point", 1);
-
-        //flows for Point()
-        petrinet.createFlow("void", "Point()");
-
-
-        //set max tokens for each of the types
-        petrinet.getPlace("cmu.symonster.MyPoint").setMaxToken(2);
-        petrinet.getPlace("cmu.symonster.Point").setMaxToken(2);
-        petrinet.getPlace("int").setMaxToken(3);
-        petrinet.getPlace("void").setMaxToken(2);
-        */
         return petrinet;
     }
 }
