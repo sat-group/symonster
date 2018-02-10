@@ -9,7 +9,9 @@ import org.sat4j.specs.IVecInt;
 import org.sat4j.specs.TimeoutException;
 import soot.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Given a sequence of method calls, this class will produce a string containing the corresponding Java code.
@@ -25,6 +27,7 @@ public class CodeFormer {
     private final String retType;
     private final List<String> varNames;
     private final String methodName;
+    private final Map<Integer,Integer> lastValueOfSlot = new HashMap<>();
     ISolver solver = SolverFactory.newDefault();
 
     /**
@@ -50,27 +53,30 @@ public class CodeFormer {
 
         //Add slots and variables to the signatures table
         for (MethodSignature sig : sigs){
-            if (!sig.getRetType().toString().equals("void")){
-                returnedValTypes.addEntry(sig.getRetType().toString(),retNumber);
-                retNumber += 1;
-            }
             if (sig.getIsConstructor()){
 
             }
             else if (!sig.getIsStatic()){
                 slotTypes.addEntry(sig.getHostClass().getType().toString(),slotNumber);
+                lastValueOfSlot.put(slotNumber,retNumber);
                 slotNumber += 1;
             }
             for (Type type : sig.getArgTypes()){
                 slotTypes.addEntry(type.toString(),slotNumber);
+                lastValueOfSlot.put(slotNumber,retNumber);
                 slotNumber += 1;
             }
 
+            if (!sig.getRetType().toString().equals("void")){
+                returnedValTypes.addEntry(sig.getRetType().toString(),retNumber);
+                retNumber += 1;
+            }
         }
         //Add method return value
         if (retType != null)
         {
             slotTypes.addEntry(retType,slotNumber);
+            lastValueOfSlot.put(slotNumber,retNumber);
             slotNumber += 1;
         }
 
@@ -133,11 +139,14 @@ public class CodeFormer {
     private void addSingleVariableConstrains(){
         for (int slotValue = 0; slotValue < slotNumber ; slotValue += 1) {
             IVecInt vec = new VecInt();
+            IVecInt vec0 = new VecInt();
             for (int returnedValue : returnedValTypes.getEntries(slotTypes.getType(slotValue))) {
-                vec.push(calculateID(returnedValue,slotValue));
+                if (returnedValue < lastValueOfSlot.get(slotValue)) vec.push(calculateID(returnedValue,slotValue));
+                else vec0.push(calculateID(returnedValue,slotValue));
             }
             try {
                 solver.addExactly(vec,1);
+                solver.addExactly(vec0,0);
             } catch (ContradictionException e) {
                 unsat = true;
             }

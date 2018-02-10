@@ -8,6 +8,7 @@ import edu.cmu.reachability.Encoding;
 import edu.cmu.reachability.SequentialEncoding;
 import edu.cmu.reachability.Variable;
 import edu.cmu.tests.PointPetriNet;
+import edu.cmu.utils.TimerUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.sat4j.specs.TimeoutException;
@@ -18,6 +19,7 @@ import uniol.apt.adt.pn.Transition;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
+
 public class SyMonster {
 	
 	private static Set<Pair<Place, Integer>> setInitialState(PetriNet pnet, List<String> inputs){
@@ -68,7 +70,6 @@ public class SyMonster {
 		        initial.add(new ImmutablePair<Place, Integer>(p, 1));
 			} else {
 		    	initial.add(new ImmutablePair<Place, Integer>(p, 0));
-				System.out.println(p.getId());
 			}
 		}
 		/*
@@ -95,15 +96,18 @@ public class SyMonster {
 		// TODO: read from .json file instead of using predefined values
         // TODO: fake
         List<String> varNames = new ArrayList<>();
-        varNames.add("x");
-        varNames.add("y");
+        varNames.add("p");
         String methodName = "conv";
         List<String> libs = new ArrayList<>();
         libs.add("lib/point.jar");
 		List<String> inputs = new ArrayList<>();
-		inputs.add("int");
-		inputs.add("int");
-		String retType = "cmu.symonster.MyPoint";
+        inputs.add("cmu.symonster.MyPoint");
+		String retType = "cmu.symonster.Point";
+		String testCode = "    public boolean pass(){\n" +
+                "        if (conv(new cmu.symonster.MyPoint(20,30)).getX()== 20 && conv(new cmu.symonster.MyPoint(20,30)).getY()==30)\n" +
+                "            return true;\n" +
+                "        else return false;\n" +
+                "    }";
 		// 2. Parse library
 		// TODO: use the code to parse the library here
         List<MethodSignature> sigs = JarParser.parseJar(libs);
@@ -121,8 +125,10 @@ public class SyMonster {
 		int paths = 0;
 		int programs = 0;
 		boolean solution = false;
+
+        TimerUtils.startTimer("total");
+
 		while (!solution) {
-			//System.out.println("loc = " + loc);
 			// create a formula that has the same semantics as the petri-net
 			Encoding encoding = new SequentialEncoding(net, loc);
 			
@@ -134,14 +140,12 @@ public class SyMonster {
 			
 			// for each loc find all possible programs
 			List<Variable> result = Encoding.solver.findPath();
-			System.out.println("outin");
             while(!result.isEmpty() && !solution){
 				paths++;
 				String path = "Path #" + paths + " =\n";
 				List<String> apis  = new ArrayList<String>();
 				//A list of method signatures
 				List<MethodSignature> signatures = new ArrayList<>();
-				System.out.println(signatures);
 				for (Variable s : result) {
 					apis.add(s.getName());
 					path += s.toString() + "\n";
@@ -150,19 +154,13 @@ public class SyMonster {
 						signatures.add(signatureMap.get(s.getName()));
 					}
 				}
-				System.out.println(path);
-				//System.out.println("Signatures:");
-				for (MethodSignature sig : signatures) {
-					//System.out.println(sig);
-				}
-                //System.out.println(signatures);
+
                 // 5. Convert a path to a program
 				// NOTE: one path may correspond to multiple programs and we may need a loop here!
 
                 boolean sat = true;
 				CodeFormer former = new CodeFormer(signatures,inputs,retType, varNames, methodName);
                 while (sat){
-                    System.out.println("inner");
                     //TODO Replace the null pointers with inputs/output types
                     String code;
                     try {
@@ -173,11 +171,24 @@ public class SyMonster {
                     }
                     sat = !former.isUnsat();
                     programs++;
+                    if (programs % 10000 == 0)
+                    {
+                        System.out.println("programs: "+programs);
+                        System.out.println(signatures);
+                        System.out.println("n signatures: "+ signatures.size());
+                        System.out.println(code);
+                        System.out.println();
+                    }
+
+
                     // 6. Run the test cases
                     // TODO: write this code; if all test cases pass then we can terminate
-                    if (test.runTest(code)) {
+                    if (test.runTest(code,testCode)) {
                         solution = true;
                         System.out.println("Programs explored = " + programs);
+                        System.out.println("code:");
+                        System.out.println(code);
+                        System.out.println("total time: "+TimerUtils.getCumulativeTime("total"));
                         break;
                     }
                 }
