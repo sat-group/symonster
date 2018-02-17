@@ -5,19 +5,29 @@ import java.util.*;
 
 public class JarParser extends BodyTransformer {
     public static final String ANALYSIS_NAME = "jap.analysis";
-    public static final String ANALYSIS_LIB_NAME = "jap.analysis.lib";
-    private static Map<String, Set<String>> methodDict = new HashMap<>();
-    private static Map<String, Map<String, Integer>> methodVarDict = new HashMap<>();
+    private static Set<String> labelMap = new HashSet<>();
+    private static Map<String, Set<String>> methodToAppearancesMap = new HashMap<>();
+    private static Map<String, Map<String, Integer>> methodToVarAppearancesMap = new HashMap<>();
+    private static boolean isParsingLib = false;
 
     /**
      * Parse a list of given jar files, and stores the result in methodDict and methodVarDict
      * @param libs physical addresses of libraries. e.g. "lib/hamcrest-core-1.3.jar"
      */
-    public static void parseJar(List<String> libs) {
-
+    public static void parseJar(List<String> libs, boolean isLib) {
+        isParsingLib = isLib;
         String[] args = SootUtils.getSootArgs(libs);
+        G.reset();
         PackManager.v().getPack("jap").add(new Transform(ANALYSIS_NAME, new JarParser()));
         SootUtils.runSoot(args);
+    }
+
+    public static Set<String> getLabelMap() {
+        return labelMap;
+    }
+
+    public static Map<String, Set<String>> getMethodToAppearancesMap(){
+        return methodToAppearancesMap;
     }
 
     @Override
@@ -32,6 +42,11 @@ public class JarParser extends BodyTransformer {
 
             // keep track of all the variables appeared in the methods
             Map<String, Integer> hashMap = new HashMap<>();
+
+            if(isParsingLib){
+                labelMap.add(body.getMethod().toString());
+                return;
+            }
 
             for (Unit unit : body.getUnits()) {
                 Stmt stmt = (Stmt) unit;
@@ -81,14 +96,10 @@ public class JarParser extends BodyTransformer {
             }
 
             // store in dict
-            methodDict.put(body.getMethod().toString(), methodSet);
-            methodVarDict.put(body.getMethod().toString(), hashMap);
+            methodToAppearancesMap.put(body.getMethod().toString(), methodSet);
+            methodToVarAppearancesMap.put(body.getMethod().toString(), hashMap);
             System.out.println(hashMap);
             System.out.println("-----------------");
         }
-    }
-
-    public static Map<String, Set<String>> getParsedMethods(){
-        return methodDict;
     }
 }

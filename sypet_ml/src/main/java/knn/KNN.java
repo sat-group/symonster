@@ -24,11 +24,12 @@ public class KNN {
                 labelMap.put(this.labels[i], i);
             }
             this.values = new ArrayList<>();
+            System.out.println(labels);
         }
     }
 
 
-    public void addTrainVector(List<String> occurredLabels){
+    public void addTrainVector(Set<String> occurredLabels){
         int[] vector = new int[labelSize];
         for(String s : occurredLabels){
             if(labelMap.containsKey(s)){
@@ -47,7 +48,7 @@ public class KNN {
         return values.size();
     }
 
-    public void predict(List<String> appearances){
+    public void predict(Set<String> appearances){
 
     }
 }

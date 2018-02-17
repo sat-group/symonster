@@ -2,6 +2,8 @@ import knn.KNN;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Main {
 
@@ -11,14 +13,20 @@ public class Main {
      */
     public static void main(String[] args) {
         List<String> libs = new ArrayList<>();
+
+        // add labels from library
         libs.add("lib/geometry.jar");
+        JarParser.parseJar(libs, true);
+        KNN knn = new KNN(JarParser.getLabelMap());
 
-        JarParser.parseJar(libs);
-        KNN knn = new KNN(JarParser.getParsedMethods().keySet());
-
-        libs = new ArrayList<>();
-        libs.add("lib/rt.jar");
-        JarParser.parseJar(libs);
+        // add trainig data
+        /* libs.add("some.jar");
+        JarParser.parseJar(libs, false);
+        Map<String, Set<String>> data = JarParser.getMethodToAppearancesMap();
+        for(Set<String> set : data.values()){
+            knn.addTrainVector(set);
+        }
+        */
     }
 
 }
