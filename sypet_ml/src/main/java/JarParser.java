@@ -3,11 +3,15 @@ import soot.jimple.*;
 
 import java.util.*;
 
+/**
+ * Parses bundles of jar files for ml purposes
+ */
 public class JarParser extends BodyTransformer {
     public static final String ANALYSIS_NAME = "jap.analysis";
     private static Set<String> labelMap = new HashSet<>();
     private static Map<String, Set<String>> methodToAppearancesMap = new HashMap<>();
-    private static Map<String, Map<String, Integer>> methodToVarAppearancesMap = new HashMap<>();
+    private static Map<String, Map<String, Set<String>>> methodToVarAppearancesMap = new HashMap<>();
+    private static Map<String, Map<String, Integer>> methodToVarFreqMap = new HashMap<>();
     private static boolean isParsingLib = false;
 
     /**
@@ -30,6 +34,10 @@ public class JarParser extends BodyTransformer {
         return methodToAppearancesMap;
     }
 
+    public static Map<String, Map<String, Set<String>>> getMethodToVarAppearancesMap(){
+        return methodToVarAppearancesMap;
+    }
+
     @Override
     protected void internalTransform(Body body, String s, Map<String, String> map) {
         // main process that extracts information about every method
@@ -42,6 +50,7 @@ public class JarParser extends BodyTransformer {
 
             // keep track of all the variables appeared in the methods
             Map<String, Integer> hashMap = new HashMap<>();
+            Map<String, Set<String>> varMethodMap = new HashMap<>();
 
             if(isParsingLib){
                 labelMap.add(body.getMethod().toString());
@@ -80,8 +89,13 @@ public class JarParser extends BodyTransformer {
                         calls.removeAll(callees);
                         if(hashMap.containsKey(assignVar.toString())){
                             hashMap.put(assignVar.toString(), hashMap.get(assignVar.toString())+1);
+                            Set<String> set = varMethodMap.get(assignVar.toString());
+                            set.add(invokeExp.getMethod().toString());
                         }else{
                             hashMap.put(assignVar.toString(), 1);
+                            Set<String> set = new HashSet<>();
+                            set.add(invokeExp.getMethod().toString());
+                            varMethodMap.put(assignVar.toString(), set);
                         }
                     }else{
                         callees = new ArrayList<>(calls);
@@ -96,8 +110,10 @@ public class JarParser extends BodyTransformer {
             }
 
             // store in dict
-            methodToAppearancesMap.put(body.getMethod().toString(), methodSet);
-            methodToVarAppearancesMap.put(body.getMethod().toString(), hashMap);
+            String methodName = body.getMethod().toString();
+            methodToAppearancesMap.put(methodName, methodSet);
+            methodToVarFreqMap.put(methodName, hashMap);
+            methodToVarAppearancesMap.put(methodName, varMethodMap);
             System.out.println(hashMap);
             System.out.println("-----------------");
         }

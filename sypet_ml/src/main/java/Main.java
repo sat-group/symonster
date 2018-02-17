@@ -1,9 +1,6 @@
 import knn.KNN;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Main {
 
@@ -19,14 +16,26 @@ public class Main {
         JarParser.parseJar(libs, true);
         KNN knn = new KNN(JarParser.getLabelMap());
 
-        // add trainig data
-        /* libs.add("some.jar");
+        // add training data (var independent)
+        /* libs.add("train.jar");
         JarParser.parseJar(libs, false);
         Map<String, Set<String>> data = JarParser.getMethodToAppearancesMap();
         for(Set<String> set : data.values()){
             knn.addTrainVector(set);
         }
         */
+
+        // add training data (var dependent)
+        /*
+        libs.add("train.jar");
+        JarParser.parseJar(libs, false);
+        Map<String, Map<String, Set<String>>> data = JarParser.getMethodToVarAppearancesMap();
+        Map<String, Set<String>> set = new HashMap<>();
+        for(Map<String, Set<String>> s :  data.values()){
+            for(Set<String> t : s.values()){
+                knn.addTrainVector(t);
+            }
+        }*/
     }
 
 }

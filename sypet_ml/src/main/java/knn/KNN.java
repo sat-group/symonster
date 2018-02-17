@@ -2,11 +2,15 @@ package knn;
 
 import java.util.*;
 
+/**
+ * k-Nearest Neighbors, finds nearest neighbor through frequency
+ */
 public class KNN {
     private String[] labels;
     private Map<String, Integer> labelMap;
     private List<int[]> values;
     private int labelSize;
+    private float[] freqTable;
 
     public KNN(Set<String> labels){
         if(labels.size() <= 0){
@@ -24,14 +28,16 @@ public class KNN {
                 labelMap.put(this.labels[i], i);
             }
             this.values = new ArrayList<>();
+            this.freqTable = new float[labelSize];
+            Arrays.fill(freqTable, -1);
             System.out.println(labels);
         }
     }
 
 
-    public void addTrainVector(Set<String> occurredLabels){
+    public void addTrainVector(Set<String> appearances){
         int[] vector = new int[labelSize];
-        for(String s : occurredLabels){
+        for(String s : appearances){
             if(labelMap.containsKey(s)){
                 int i = labelMap.get(s);
                 vector[i] = 1;
@@ -48,7 +54,40 @@ public class KNN {
         return values.size();
     }
 
-    public void predict(Set<String> appearances){
+    public Map<String, Float> predict(Set<String> appearances){
+        int size = appearances.size();
+        List<Integer> candidates = new ArrayList<>(labelSize - appearances.size());
+        for(int i=0; i<labelSize; i++){
+            if(!appearances.contains(labels[i])){
+                candidates.add(i);
+                if(freqTable[i]==-1) {
+                    freqTable[i] = average(i);
+                }
+            }
+        }
+        candidates.sort(new FreqComparator());
+        Map<String, Float> result = new LinkedHashMap<>();
+        for(int c : candidates){
+            result.put(labels[c], freqTable[c]);
+        }
+        return result;
+    }
 
+    private class FreqComparator implements Comparator<Integer> {
+
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            // descending order
+            return (int) -(freqTable[o1] - freqTable[o2]);
+        }
+    }
+
+    private float average(int col){
+        int[] colVector = new int[getTrainSetSize()];
+        int i = 0;
+        for(int[] row : values){
+            colVector[i] = row[col];
+        }
+        return (float) Arrays.stream(colVector).sum() / (float) labelSize;
     }
 }
