@@ -1,0 +1,168 @@
+public class org.hamcrest.internal.ReflectiveTypeFinder extends java.lang.Object
+{
+    private final java.lang.String methodName;
+    private final int expectedNumberOfParameters;
+    private final int typedParameter;
+
+    public void <init>(java.lang.String, int, int)
+    {
+        org.hamcrest.internal.ReflectiveTypeFinder r0;
+        java.lang.String r1;
+        int i0, i1;
+
+        r0 := @this: org.hamcrest.internal.ReflectiveTypeFinder;
+
+        r1 := @parameter0: java.lang.String;
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<org.hamcrest.internal.ReflectiveTypeFinder: java.lang.String methodName> = r1;
+
+        r0.<org.hamcrest.internal.ReflectiveTypeFinder: int expectedNumberOfParameters> = i0;
+
+        r0.<org.hamcrest.internal.ReflectiveTypeFinder: int typedParameter> = i1;
+
+        return;
+    }
+
+    public java.lang.Class findExpectedType(java.lang.Class)
+    {
+        org.hamcrest.internal.ReflectiveTypeFinder r0;
+        java.lang.Class r1, $r11, r12;
+        java.lang.reflect.Method[] r2;
+        int i0, i1;
+        java.lang.reflect.Method r3;
+        java.lang.Error $r4;
+        java.lang.StringBuilder $r5, $r6, $r8, $r9;
+        java.lang.String $r7, $r10;
+        boolean $z0;
+
+        r0 := @this: org.hamcrest.internal.ReflectiveTypeFinder;
+
+        r1 := @parameter0: java.lang.Class;
+
+        r12 = r1;
+
+     label1:
+        if r12 == class "Ljava/lang/Object;" goto label5;
+
+        r2 = virtualinvoke r12.<java.lang.Class: java.lang.reflect.Method[] getDeclaredMethods()>();
+
+        i0 = lengthof r2;
+
+        i1 = 0;
+
+     label2:
+        if i1 >= i0 goto label4;
+
+        r3 = r2[i1];
+
+        $z0 = virtualinvoke r0.<org.hamcrest.internal.ReflectiveTypeFinder: boolean canObtainExpectedTypeFrom(java.lang.reflect.Method)>(r3);
+
+        if $z0 == 0 goto label3;
+
+        $r11 = virtualinvoke r0.<org.hamcrest.internal.ReflectiveTypeFinder: java.lang.Class expectedTypeFrom(java.lang.reflect.Method)>(r3);
+
+        return $r11;
+
+     label3:
+        i1 = i1 + 1;
+
+        goto label2;
+
+     label4:
+        r12 = virtualinvoke r12.<java.lang.Class: java.lang.Class getSuperclass()>();
+
+        goto label1;
+
+     label5:
+        $r4 = new java.lang.Error;
+
+        $r5 = new java.lang.StringBuilder;
+
+        specialinvoke $r5.<java.lang.StringBuilder: void <init>()>();
+
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Cannot determine correct type for ");
+
+        $r7 = r0.<org.hamcrest.internal.ReflectiveTypeFinder: java.lang.String methodName>;
+
+        $r8 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r7);
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("() method.");
+
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r4.<java.lang.Error: void <init>(java.lang.String)>($r10);
+
+        throw $r4;
+    }
+
+    protected boolean canObtainExpectedTypeFrom(java.lang.reflect.Method)
+    {
+        org.hamcrest.internal.ReflectiveTypeFinder r0;
+        java.lang.reflect.Method r1;
+        java.lang.String $r2, $r3;
+        boolean $z0, $z1, $z2;
+        java.lang.Class[] $r4;
+        int $i0, $i1;
+
+        r0 := @this: org.hamcrest.internal.ReflectiveTypeFinder;
+
+        r1 := @parameter0: java.lang.reflect.Method;
+
+        $r2 = virtualinvoke r1.<java.lang.reflect.Method: java.lang.String getName()>();
+
+        $r3 = r0.<org.hamcrest.internal.ReflectiveTypeFinder: java.lang.String methodName>;
+
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>($r3);
+
+        if $z0 == 0 goto label1;
+
+        $r4 = virtualinvoke r1.<java.lang.reflect.Method: java.lang.Class[] getParameterTypes()>();
+
+        $i1 = lengthof $r4;
+
+        $i0 = r0.<org.hamcrest.internal.ReflectiveTypeFinder: int expectedNumberOfParameters>;
+
+        if $i1 != $i0 goto label1;
+
+        $z1 = virtualinvoke r1.<java.lang.reflect.Method: boolean isSynthetic()>();
+
+        if $z1 != 0 goto label1;
+
+        $z2 = 1;
+
+        goto label2;
+
+     label1:
+        $z2 = 0;
+
+     label2:
+        return $z2;
+    }
+
+    protected java.lang.Class expectedTypeFrom(java.lang.reflect.Method)
+    {
+        org.hamcrest.internal.ReflectiveTypeFinder r0;
+        java.lang.reflect.Method r1;
+        java.lang.Class[] $r2;
+        int $i0;
+        java.lang.Class $r3;
+
+        r0 := @this: org.hamcrest.internal.ReflectiveTypeFinder;
+
+        r1 := @parameter0: java.lang.reflect.Method;
+
+        $r2 = virtualinvoke r1.<java.lang.reflect.Method: java.lang.Class[] getParameterTypes()>();
+
+        $i0 = r0.<org.hamcrest.internal.ReflectiveTypeFinder: int typedParameter>;
+
+        $r3 = $r2[$i0];
+
+        return $r3;
+    }
+}
