@@ -41,20 +41,6 @@ public class SyMonster {
 				initial.add(new ImmutablePair<Place, Integer>(p, 0));
 			}
 		}
-		// Initial state
-		/*
-		Place placeMyPoint = pnet.getPlace("cmu.symonster.MyPoint");
-		Place placePoint = pnet.getPlace("cmu.symonster.Point");
-		Place placeVoid = pnet.getPlace("void");
-		Place placeInt = pnet.getPlace("int");
-
-		HashSet<Pair<Place,Integer>> initial = new HashSet<>();
-		initial.add(new ImmutablePair<Place,Integer>(placeMyPoint, 1));
-		initial.add(new ImmutablePair<Place,Integer>(placeVoid, 1));
-		initial.add(new ImmutablePair<Place,Integer>(placePoint, 1));
-		initial.add(new ImmutablePair<Place,Integer>(placeInt, 0));
-		*/
-
 		return initial;
 	}
 	
@@ -72,19 +58,6 @@ public class SyMonster {
 		    	initial.add(new ImmutablePair<Place, Integer>(p, 0));
 			}
 		}
-		/*
-		// Final state
-		Place placeMyPoint = pnet.getPlace("cmu.symonster.MyPoint");
-		Place placePoint = pnet.getPlace("cmu.symonster.Point");
-		Place placeInt = pnet.getPlace("int");
-
-		// if you do not want any restrictions on a place then do not add it to the list
-		HashSet<Pair<Place,Integer>> initial = new HashSet<>();
-		initial.add(new ImmutablePair<Place,Integer>(placeMyPoint, 0));
-		initial.add(new ImmutablePair<Place,Integer>(placePoint, 1));
-		initial.add(new ImmutablePair<Place,Integer>(placeInt, 0));
-		*/
-
 		return initial;
 	}
 	
@@ -116,10 +89,12 @@ public class SyMonster {
 		PetriNet net = b.build(sigs);
 		Map<String, MethodSignature> signatureMap = b.dict;
 
-		//example petrinet
+		/*
+		example petrinet
 		PointPetriNet example = new PointPetriNet();
 		example.buildPointPetriNet();
 		PetriNet pointNet = example.getPetriNet();
+		*/
 
 		int loc = 1;
 		int paths = 0;
