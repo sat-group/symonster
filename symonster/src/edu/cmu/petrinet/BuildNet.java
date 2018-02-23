@@ -72,7 +72,7 @@ public class BuildNet {
             List<Type> args = k.getArgTypes();
             //adding transition
             if(isConstructor) {
-                transitionName =  methodname + "(";
+                transitionName =  className + "." + methodname + "(";
                 for(Type t : args) {
                     transitionName += t.toString() + " ";
                 }

@@ -25,12 +25,16 @@ public class MethodSignature {
     private final SootMethod method;
 
     protected MethodSignature(String name, Type retType, List<Type> argTypes, boolean isStatic, SootClass hostClass, boolean isConstructor, SootMethod method){
-        this.name = name;
         this.retType = retType;
         this.argTypes = argTypes;
         this.isStatic = isStatic;
         this.hostClass = hostClass;
         this.isConstructor = isConstructor;
+        if (isConstructor) {
+            this.name = hostClass.getName();
+        }else{
+            this.name = name;
+        }
         this.method = method;
     }
 

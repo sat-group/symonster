@@ -77,13 +77,12 @@ public class SyMonster {
         inputs.add("cmu.symonster.MyPoint");
 		String retType = "cmu.symonster.Point";
 		String testCode = "    public boolean pass(){\n" +
-                "        if (conv(new cmu.symonster.MyPoint(20,30)).getX()== 20 && conv(new cmu.symonster.MyPoint(20,30)).getY()==30)\n" +
-                "            return true;\n" +
-                "        else return false;\n" +
+                "        return conv(new cmu.symonster.MyPoint(20,30)).getX()== 20 && conv(new cmu.symonster.MyPoint(20,30)).getY()==30;\n"+
                 "    }";
 		// 2. Parse library
 		// TODO: use the code to parse the library here
         List<MethodSignature> sigs = JarParser.parseJar(libs);
+        System.out.println(sigs);
         // 3. build a petrinet and signatureMap of library
 		BuildNet b = new BuildNet();
 		PetriNet net = b.build(sigs);
@@ -146,7 +145,7 @@ public class SyMonster {
                     }
                     sat = !former.isUnsat();
                     programs++;
-                    if (programs % 10000 == 0)
+                    if (programs % 50 == 0)
                     {
                         System.out.println("programs: "+programs);
                         System.out.println(signatures);

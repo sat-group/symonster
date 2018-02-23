@@ -189,7 +189,7 @@ public class CodeFormer {
         for (int i = 0 ; i < inputTypes.size() ; i++){
             builder.append(inputTypes.get(i));
             builder.append(" ");
-            builder.append(varNames.get(varCount));
+            builder.append(convVarName(varCount));
             varCount += 1;
             if (i != inputTypes.size() - 1) builder.append(", ");
         }

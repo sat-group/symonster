@@ -45,14 +45,7 @@ public class JarParser extends BodyTransformer{
                 List<SootMethod> methods = clazz.getMethods();
                 for (SootMethod method : methods) {
                     if (method.isPublic()){
-                        if (method.getName().equals("<init>")){
-                            sigs.add(getMethodSignature(method));
-                        }
-                        else{
-                            MethodSignature sig = new MethodSignature(method.getName(),method.getReturnType(),
-                                    method.getParameterTypes(),method.isStatic(),clazz,false,method);
-                            sigs.add(sig);
-                        }
+                        sigs.add(getMethodSignature(method));
                     }
                 }
             }
@@ -89,9 +82,16 @@ public class JarParser extends BodyTransformer{
 
     static private MethodSignature getMethodSignature(SootMethod method){
         SootClass clazz = method.getDeclaringClass();
-        MethodSignature sig = new MethodSignature(method.getName(),method.getReturnType(),
-                method.getParameterTypes(),method.isStatic(),clazz,false,method);
-        return sig;
+        if (method.getName().equals("<init>")){
+            MethodSignature sig = new MethodSignature(method.getName(),clazz.getType(),
+                    method.getParameterTypes(),method.isStatic(),clazz,true,method);
+            return sig;
+        }
+        else{
+            MethodSignature sig = new MethodSignature(method.getName(),method.getReturnType(),
+                    method.getParameterTypes(),method.isStatic(),clazz,false,method);
+            return sig;
+        }
     }
 
     @Override
