@@ -60,6 +60,7 @@ public class BuildNet {
         petrinet.createFlow("void", "voidClone", 1);
         petrinet.createFlow("voidClone", "void", 2);
 
+
         //iterate through each method
         for (MethodSignature k : result) {
             String methodname = k.getName();
@@ -68,16 +69,29 @@ public class BuildNet {
             String className = k.getHostClass().getName();
             String transitionName;
 
+            List<Type> args = k.getArgTypes();
             //adding transition
             if(isConstructor) {
-                transitionName =  methodname + "()";
+                transitionName =  methodname + "(";
+                for(Type t : args) {
+                    transitionName += t.toString() + " ";
+                }
+                transitionName += ")";
                 petrinet.createTransition(transitionName);
             }
             else if (isStatic) {
-                transitionName =  className + "." + methodname + "()";
+                transitionName =  className + "." + methodname + "(";
+                for(Type t : args) {
+                    transitionName += t.toString() + " ";
+                }
+                transitionName += ")";
                 petrinet.createTransition(transitionName);
             } else { //The method is not static, so it has an extra argument
-                transitionName = className + "." + methodname + "()";
+                transitionName = className + "." + methodname + "(";
+                for(Type t : args) {
+                    transitionName += t.toString() + " ";
+                }
+                transitionName += ")";
                 petrinet.createTransition(transitionName);
 
                 //creating the place and flow for class instance
@@ -99,7 +113,6 @@ public class BuildNet {
             }
             dict.put(transitionName, k); //add signature into map
 
-            List<Type> args = k.getArgTypes();
             for (Type t : args) {
                 //add place for each argument
                 try {

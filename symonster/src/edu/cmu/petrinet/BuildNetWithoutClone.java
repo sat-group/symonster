@@ -33,6 +33,7 @@ public class BuildNetWithoutClone {
         for (Place p : pl) {
             System.out.println(p.toString());
             System.out.println(p.getMaxToken());
+            //output all methods that take p as an argument
             for (Transition t : tl) {
                 try {
                     System.out.println(petrinet.getFlow(p.getId(), t.getId()));
@@ -66,20 +67,33 @@ public class BuildNetWithoutClone {
             //transitionCopy will have its input as its additional output
             String transitionName;
             String transitionCopy;
+            List<Type> args = k.getArgTypes();
 
             //adding transition
             if (isConstructor) {
-                transitionName = methodname + "()";
+                transitionName = methodname + "(";
+                for(Type t : args) {
+                    transitionName += t.toString() + " ";
+                }
+                transitionName += ")";
                 transitionCopy = transitionName + "Copy";
                 petrinet.createTransition(transitionName);
                 petrinet.createTransition(transitionCopy);
             } else if (isStatic) {
-                transitionName = className + "." + methodname + "()";
+                transitionName = className + "." + methodname + "(";
+                for(Type t : args) {
+                    transitionName += t.toString() + " ";
+                }
+                transitionName += ")";
                 transitionCopy = transitionName + "Copy";
                 petrinet.createTransition(transitionName);
                 petrinet.createTransition(transitionCopy);
             } else { //The method is not static, so it has an extra argument
-                transitionName = className + "." + methodname + "()";
+                transitionName = className + "." + methodname + "(";
+                for(Type t : args) {
+                    transitionName += t.toString() + " ";
+                }
+                transitionName += ")";
                 transitionCopy = transitionName + "Copy";
                 petrinet.createTransition(transitionName);
                 petrinet.createTransition(transitionCopy);
@@ -119,7 +133,6 @@ public class BuildNetWithoutClone {
             dict.put(transitionName, k);
             dict.put(transitionCopy, k);
 
-            List<Type> args = k.getArgTypes();
             for (Type t : args) {
                 //add place for each argument
                 try {
