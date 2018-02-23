@@ -23,7 +23,38 @@ import java.util.*;
 public class SyMonster {
 	
 	private static Set<Pair<Place, Integer>> setInitialState(PetriNet pnet, List<String> inputs){
-		// Initial state
+		// Initiaol state
+		HashSet<Pair<Place,Integer>> initial = new HashSet<>();
+		HashMap<Place, Integer> count = new HashMap<Place, Integer>();
+		for (String input : inputs) {
+			Place p = pnet.getPlace(input);
+			if (count.containsKey(p)) {
+				count.put(p, count.get(p) + 1);
+			} else {
+				count.put(p, 1);
+			}
+		}
+		for(Place key : count.keySet()) {
+			initial.add(new ImmutablePair<Place, Integer>(key, count.get(key)));
+		}
+
+
+		Set<Place> ps = pnet.getPlaces();
+		for (Place p : ps) {
+			boolean isInput = false;
+			for (String input : inputs) {
+				if (p.getId().equals(input)) {
+					isInput = true;
+				}
+			}
+			if(p.getId().equals("void")) {
+				initial.add(new ImmutablePair<Place, Integer>(p, 1));
+			}
+			else if(!isInput) {
+				initial.add(new ImmutablePair<Place, Integer>(p, 0));
+			}
+		}
+		/*
 		HashSet<Pair<Place,Integer>> initial = new HashSet<>();
 		for (String input : inputs) {
 		    Place p = pnet.getPlace(input);
@@ -41,6 +72,7 @@ public class SyMonster {
 				initial.add(new ImmutablePair<Place, Integer>(p, 0));
 			}
 		}
+		*/
 		return initial;
 	}
 	
