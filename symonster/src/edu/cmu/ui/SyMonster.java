@@ -4,6 +4,7 @@ import edu.cmu.compilation.Test;
 import edu.cmu.parser.JarParser;
 import edu.cmu.parser.MethodSignature;
 import edu.cmu.petrinet.BuildNet;
+import edu.cmu.petrinet.BuildNetWithoutClone;
 import edu.cmu.reachability.Encoding;
 import edu.cmu.reachability.SequentialEncoding;
 import edu.cmu.reachability.Variable;
@@ -26,6 +27,7 @@ public class SyMonster {
 		// Initiaol state
 		HashSet<Pair<Place,Integer>> initial = new HashSet<>();
 		HashMap<Place, Integer> count = new HashMap<Place, Integer>();
+		// Count the number of inputs
 		for (String input : inputs) {
 			Place p = pnet.getPlace(input);
 			if (count.containsKey(p)) {
@@ -34,11 +36,13 @@ public class SyMonster {
 				count.put(p, 1);
 			}
 		}
+		// Add inputs into initial state
 		for(Place key : count.keySet()) {
 			initial.add(new ImmutablePair<Place, Integer>(key, count.get(key)));
 		}
 
 
+		//Add non-input places into initial states
 		Set<Place> ps = pnet.getPlaces();
 		for (Place p : ps) {
 			boolean isInput = false;
@@ -54,25 +58,6 @@ public class SyMonster {
 				initial.add(new ImmutablePair<Place, Integer>(p, 0));
 			}
 		}
-		/*
-		HashSet<Pair<Place,Integer>> initial = new HashSet<>();
-		for (String input : inputs) {
-		    Place p = pnet.getPlace(input);
-			initial.add(new ImmutablePair<Place, Integer>(p, 1));
-		}
-		Set<Place> ps = pnet.getPlaces();
-		for (Place p : ps) {
-			boolean isInput = false;
-			for (String input : inputs) {
-				if (p.getId().equals(input)) {
-				    isInput = true;
-				}
-			}
-			if(!isInput) {
-				initial.add(new ImmutablePair<Place, Integer>(p, 0));
-			}
-		}
-		*/
 		return initial;
 	}
 	
@@ -116,16 +101,10 @@ public class SyMonster {
         List<MethodSignature> sigs = JarParser.parseJar(libs);
         System.out.println(sigs);
         // 3. build a petrinet and signatureMap of library
-		BuildNet b = new BuildNet();
+        // Currently built without clone edges
+		BuildNetWithoutClone b = new BuildNetWithoutClone();
 		PetriNet net = b.build(sigs);
 		Map<String, MethodSignature> signatureMap = b.dict;
-
-		/*
-		example petrinet
-		PointPetriNet example = new PointPetriNet();
-		example.buildPointPetriNet();
-		PetriNet pointNet = example.getPetriNet();
-		*/
 
 		int loc = 1;
 		int paths = 0;
@@ -156,14 +135,13 @@ public class SyMonster {
 					apis.add(s.getName());
 					path += s.toString() + "\n";
 					MethodSignature sig = signatureMap.get(s.getName());
-					if(sig != null) {
-						signatures.add(signatureMap.get(s.getName()));
+					if(sig != null) { //check if s is a line of a code
+						signatures.add(sig);
 					}
 				}
 
                 // 5. Convert a path to a program
 				// NOTE: one path may correspond to multiple programs and we may need a loop here!
-
                 boolean sat = true;
 				CodeFormer former = new CodeFormer(signatures,inputs,retType, varNames, methodName);
                 while (sat){

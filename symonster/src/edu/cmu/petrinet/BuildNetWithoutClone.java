@@ -16,6 +16,10 @@ import java.util.Set;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+   An reimplementation of BuildNet, but eliminates all clone edges by creating
+   a copy for each method that returns its own arguments.
+ */
 public class BuildNetWithoutClone {
     static public PetriNet petrinet = new PetriNet("net");
     //map from transition name to a method signature
@@ -132,6 +136,13 @@ public class BuildNetWithoutClone {
             dict.put(transitionName, k);
             dict.put(transitionCopy, k);
 
+            //If method has no argument and is static , create flow with void
+            if(args.size() == 0 && (isStatic || isConstructor)) {
+                petrinet.createFlow("void", transitionName);
+                petrinet.createFlow("void", transitionCopy);
+                petrinet.createFlow(transitionCopy, "void");
+            }
+
             for (Type t : args) {
                 //add place for each argument
                 try {
@@ -182,7 +193,7 @@ public class BuildNetWithoutClone {
             for (Transition t : petrinet.getTransitions()) {
                 try {
                     Flow f = petrinet.getFlow(p.getId(), t.getId());
-                    count = Math.max(count, f.getWeight() + 1);
+                    count = Math.max(count, f.getWeight());
                 } catch (NoSuchEdgeException e) {
                     continue;
                 }

@@ -26,7 +26,7 @@ public class Visualization {
         libs.add("lib/point.jar");
         List<MethodSignature> sigs = JarParser.parseJar(libs);
         System.out.println(sigs);
-        PetriNet net = BuildNet.build(sigs);
+        PetriNet net = BuildNetWithoutClone.build(sigs);
         translate(net);
     }
     public static void translate(PetriNet net) throws java.io.IOException{

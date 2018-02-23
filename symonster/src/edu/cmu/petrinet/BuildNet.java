@@ -72,7 +72,7 @@ public class BuildNet {
             List<Type> args = k.getArgTypes();
             //adding transition
             if(isConstructor) {
-                transitionName =  className + "." + methodname + "(";
+                transitionName = methodname + "(";
                 for(Type t : args) {
                     transitionName += t.toString() + " ";
                 }
@@ -112,6 +112,11 @@ public class BuildNet {
                 }
             }
             dict.put(transitionName, k); //add signature into map
+
+            //Add a edge from void if the method has no argument and is static
+            if(args.size() == 0 && (isStatic || isConstructor)) {
+                petrinet.createFlow("void", transitionName);
+            }
 
             for (Type t : args) {
                 //add place for each argument
