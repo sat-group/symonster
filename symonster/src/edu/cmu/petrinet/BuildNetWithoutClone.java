@@ -25,7 +25,6 @@ public class BuildNetWithoutClone {
         List<String> libs = new ArrayList<>();
         libs.add("lib/point.jar");
         List<MethodSignature> sigs = JarParser.parseJar(libs);
-        System.out.println(sigs);
         build(sigs);
 
         Set<Place> pl = petrinet.getPlaces();

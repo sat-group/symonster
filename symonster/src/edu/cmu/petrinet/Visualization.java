@@ -1,99 +1,61 @@
 package edu.cmu.petrinet;
+import edu.cmu.parser.JarParser;
+import edu.cmu.parser.MethodSignature;
+import soot.Type;
 
-import java.net.*;
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
+import uniol.apt.adt.exception.NoSuchEdgeException;
+import uniol.apt.adt.exception.NoSuchNodeException;
+import uniol.apt.adt.pn.Flow;
+import uniol.apt.adt.pn.PetriNet;
+import uniol.apt.adt.pn.Place;
+import uniol.apt.adt.pn.Transition;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import edu.cmu.petrinet.BuildNet;
 
-/**
- * A simple introduction to using JGraphT.
- *
- * @author Barak Naveh
- * @since Jul 27, 2003
- */
-public final class Visualization
-{
-    private void HelloJGraphT()
-    {
-        return;
-    } // ensure non-instantiability.
-
-    /**
-     * The starting point for the demo.
-     *
-     * @param args ignored.
-     */
-    public static void main(String[] args)
-    {
-        Graph<String, DefaultEdge> stringGraph = createStringGraph();
-
-        // note undirected edges are printed as: {<v1>,<v2>}
-        System.out.println(stringGraph.toString());
-
-        // create a graph based on URL objects
-        Graph<URL, DefaultEdge> hrefGraph = createHrefGraph();
-
-        // note directed edges are printed as: (<v1>,<v2>)
-        System.out.println(hrefGraph.toString());
+public class Visualization {
+    public static void main(String[] args) throws IOException{
+        List<String> libs = new ArrayList<>();
+        libs.add("lib/point.jar");
+        List<MethodSignature> sigs = JarParser.parseJar(libs);
+        System.out.println(sigs);
+        PetriNet net = BuildNet.build(sigs);
+        translate(net);
     }
+    public static void translate(PetriNet net) throws java.io.IOException{
+        Set<Place> ps = net.getPlaces();
+        Set<Transition> ts = net.getTransitions();
 
-    /**
-     * Creates a toy directed graph based on URL objects that represents link structure.
-     *
-     * @return a graph based on URL objects.
-     */
-    private static Graph<URL, DefaultEdge> createHrefGraph()
-    {
-        Graph<URL, DefaultEdge> g = new DefaultDirectedGraph<>(DefaultEdge.class);
+        String str = "digraph " + net.getName() + "{\n";
+        BufferedWriter writer = new BufferedWriter(new FileWriter(net.getName() + "visualization"));
+        writer.write(str);
 
-        try {
-            URL amazon = new URL("http://www.amazon.com");
-            URL yahoo = new URL("http://www.yahoo.com");
-            URL ebay = new URL("http://www.ebay.com");
-
-            // add the vertices
-            g.addVertex(amazon);
-            g.addVertex(yahoo);
-            g.addVertex(ebay);
-
-            // add edges to create linking structure
-            g.addEdge(yahoo, amazon);
-            g.addEdge(yahoo, ebay);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+        for (Place p : ps) {
+            for(Transition t : ts) {
+                try {
+                    Flow f = net.getFlow(p.getId(), t.getId());
+                    str = "\""+p.getId()+"\"" + "->" +  "\""+t.getId()+"\""  + "[label=\"" + f.getWeight() + "\"]\n";
+                    writer.write(str);
+                } catch (NoSuchEdgeException e) {}
+            }
         }
-
-        return g;
-    }
-
-    /**
-     * Create a toy graph based on String objects.
-     *
-     * @return a graph based on String objects.
-     */
-    private static Graph<String, DefaultEdge> createStringGraph()
-    {
-        Graph<String, DefaultEdge> g = new SimpleGraph<>(DefaultEdge.class);
-
-        String v1 = "v1";
-        String v2 = "v2";
-        String v3 = "v3";
-        String v4 = "v4";
-
-        // add the vertices
-        g.addVertex(v1);
-        g.addVertex(v2);
-        g.addVertex(v3);
-        g.addVertex(v4);
-
-        // add edges to create a circuit
-        g.addEdge(v1, v2);
-        g.addEdge(v2, v3);
-        g.addEdge(v3, v4);
-        g.addEdge(v4, v1);
-
-        return g;
+        for (Transition t : ts) {
+            for (Place p : ps) {
+                try {
+                    Flow f = net.getFlow(t.getId(), p.getId());
+                    str =  "\""+t.getId()+"\"" + "->" + "\""+p.getId()+"\"" + "[label=\"" + f.getWeight() + "\"]\n";
+                    writer.write(str);
+                } catch (NoSuchEdgeException e) {}
+            }
+        }
+        writer.write("}");
+        writer.close();
     }
 }
-
-// End HelloJGraphT.java
