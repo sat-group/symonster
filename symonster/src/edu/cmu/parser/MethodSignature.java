@@ -1,8 +1,10 @@
 package edu.cmu.parser;
 
 import soot.SootClass;
+import soot.SootMethod;
 import soot.Type;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -20,13 +22,16 @@ public class MethodSignature {
     private final boolean isStatic;
     private final SootClass hostClass;
     private final boolean isConstructor;
-    protected MethodSignature(String name, Type retType, List<Type> argTypes, boolean isStatic, SootClass hostClass, boolean isConstructor){
+    private final SootMethod method;
+
+    protected MethodSignature(String name, Type retType, List<Type> argTypes, boolean isStatic, SootClass hostClass, boolean isConstructor, SootMethod method){
         this.name = name;
         this.retType = retType;
         this.argTypes = argTypes;
         this.isStatic = isStatic;
         this.hostClass = hostClass;
         this.isConstructor = isConstructor;
+        this.method = method;
     }
 
     public String getName() {
@@ -50,6 +55,9 @@ public class MethodSignature {
     public SootClass getHostClass() {
         return hostClass;
     }
+    public SootMethod getMethod() {
+        return method;
+    }
 
     @Override
     public String toString(){
@@ -64,5 +72,17 @@ public class MethodSignature {
         }
         result += ")";
         return result;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (!(o instanceof MethodSignature)) return false;
+        MethodSignature sig = (MethodSignature)o;
+        return sig.method.equals(method);
+    }
+
+    @Override
+    public int hashCode(){
+        return method.hashCode();
     }
 }
