@@ -1,4 +1,4 @@
-package knn;
+package main.java.knn;
 
 import java.util.*;
 

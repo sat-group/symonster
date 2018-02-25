@@ -1,4 +1,5 @@
-import knn.KNN;
+package main.java;
+import main.java.knn.KNN;
 
 import java.util.*;
 
@@ -12,7 +13,7 @@ public class Main {
         List<String> libs = new ArrayList<>();
 
         // add labels from library
-        libs.add("lib/geometry.jar");
+        libs.add("lib/rt.jar");
         JarParser.parseJar(libs, true);
         KNN knn = new KNN(JarParser.getLabelMap());
 

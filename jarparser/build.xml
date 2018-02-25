@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jarparser" default="jar">
+
+    <dirname property="this.dir" file="${ant.file}"/>
+    <property name="target.loc" location="${target}"/>
+
+    <target name="init">
+        <mkdir dir="bin"/>
+    </target>
+
+    <target name="compile" depends="init"
+          description="compile the source code">
+
+    <javac target="1.8" source="1.8" srcdir="src" destdir="bin" debug="true">
+        <classpath>
+            <pathelement location="../sypet_ml/lib/soot-3.0.1-jar-with-dependencies.jar"/>
+        </classpath>
+    </javac>
+    </target>
+
+    <target name="jarparser">
+    <java classname="cmu.edu.JarParser"
+          maxmemory="4g"
+          fork="true"
+          failonerror="true">
+        <arg line="${args}"/>
+        <jvmarg value="-ea"/>
+        <classpath>
+            <pathelement location="${this.dir}/jarparser.jar"/>
+            <pathelement location="../sypet_ml/lib/soot-3.0.1-jar-with-dependencies.jar"/>
+        </classpath>
+    </java>
+    </target>
+
+    <target name="jar" depends="compile"
+          description="generate the distribution" >
+        <jar jarfile="jarparser.jar" basedir="bin"/>
+    </target>
+
+    <target name="clean"
+          description="clean up" >
+        <delete dir="bin"/>
+        <delete file="jarparser.jar"/>
+    </target>
+</project>
