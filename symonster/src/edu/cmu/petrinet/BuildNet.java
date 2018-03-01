@@ -18,8 +18,12 @@ import java.util.Map;
 
 public class BuildNet {
     static public PetriNet petrinet = new PetriNet("net");
-    //map from transition name to a method signature
+    // A map from transition name to a method signature
     static public Map<String, MethodSignature> dict = new HashMap<String, MethodSignature>();
+
+    // TODO polymorphism information is currently hardcoded
+    // A map that encodes the polymorphism
+    static private Map<String, List<String>> poly = new HashMap<>();
 
     public static void main(String[] args) {
         List<String> libs = new ArrayList<>();
@@ -53,13 +57,47 @@ public class BuildNet {
         }
     }
 
+    private static void handlePolymorphism() {
+        // This method handles polymorphism by creating methods that transforms each
+        // subclass into its super class
+        // TODO polymorphism information is currently hardcoded
+        List<String> l1 = new ArrayList<>();
+        l1.add("cmu.symonster.Shape");
+
+        poly.put("cmu.symonster.Rectangle", l1);
+        poly.put("cmu.symonster.Triangle", l1);
+
+        for(String subClass : poly.keySet()) {
+            for (String superClass : poly.get(subClass)) {
+                assert (petrinet.containsNode(subClass));
+                assert (petrinet.containsNode(superClass));
+                String methodName = subClass + "=" + superClass;
+                petrinet.createTransition(methodName);
+                petrinet.createFlow(subClass, methodName);
+                petrinet.createFlow(methodName, superClass);
+            }
+        }
+    }
+
+    private static void handlePolyorphismAlt(MethodSignature k) {
+        // This method handles polymorphism by creating altered version for
+        // each existing method that work on polymorphic types
+        // TODO polymorphism information is currently hardcoded
+        List<String> l1 = new ArrayList<>();
+        poly.put("cmu.symonster.Rectangle", l1);
+        poly.put("cmu.symonster.Triangle", l1);
+
+        // TODO First check if method is non-static, if so, add an argument
+        // Iterate each argument to check if has a polymophism, if so, create a new version
+
+    }
+
     public static PetriNet build (List<MethodSignature> result) {
         //create void type
         petrinet.createPlace("void");
         petrinet.createTransition("voidClone");
         petrinet.createFlow("void", "voidClone", 1);
         petrinet.createFlow("voidClone", "void", 2);
-
 
         //iterate through each method
         for (MethodSignature k : result) {
@@ -153,6 +191,10 @@ public class BuildNet {
             //add flow for the return type
             petrinet.createFlow(transitionName, retType.toString(), 1);
         }
+
+
+        // Create methods that handle polymorphism
+        //handlePolymorphism();
 
         //Set max tokens for each place
         for (Place p : petrinet.getPlaces()) {

@@ -88,19 +88,19 @@ public class SyMonster {
         List<String> varNames = new ArrayList<>();
         String methodName = "conv";
         List<String> libs = new ArrayList<>();
-        libs.add("lib/point.jar");
+        libs.add("lib/simplePoint.jar");
 		List<String> inputs = new ArrayList<>();
-        inputs.add("int");
-        varNames.add("x");
-        inputs.add("int");
-        varNames.add("y");
+        //inputs.add("int");
+        //varNames.add("x");
+        //inputs.add("int");
+        //varNames.add("y");
         inputs.add("cmu.symonster.MyPoint");
         varNames.add("p");
 
-        String retType = "cmu.symonster.MyPoint";
+        String retType = "cmu.symonster.Point";
 		String testCode = "    public boolean pass(){\n" +
-                "       cmu.symonster.MyPoint p = new cmu.symonster.MyPoint(0,0); " +
-                "       return conv(10,20,p).getX() == 10;\n"+
+                "       cmu.symonster.MyPoint p = new cmu.symonster.MyPoint(15,20); " +
+                "       return conv(p).getX() == 15 && conv(p).getY() == 20;\n"+
                 "    }";
 		// 2. Parse library
 		// TODO: use the code to parse the library here
@@ -130,6 +130,7 @@ public class SyMonster {
 			
 			// for each loc find all possible programs
 			List<Variable> result = Encoding.solver.findPath();
+			System.out.println(result.size());
             while(!result.isEmpty() && !solution){
 				paths++;
 				String path = "Path #" + paths + " =\n";

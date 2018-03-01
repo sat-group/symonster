@@ -23,7 +23,7 @@ import edu.cmu.petrinet.BuildNet;
 public class Visualization {
     public static void main(String[] args) throws IOException{
         List<String> libs = new ArrayList<>();
-        libs.add("lib/point.jar");
+        libs.add("lib/simplePoint.jar");
         List<MethodSignature> sigs = JarParser.parseJar(libs);
         System.out.println(sigs);
         PetriNet net = BuildNetWithoutClone.build(sigs);
@@ -34,7 +34,7 @@ public class Visualization {
         Set<Transition> ts = net.getTransitions();
 
         String str = "digraph " + net.getName() + "{\n";
-        BufferedWriter writer = new BufferedWriter(new FileWriter(net.getName() + "visualization"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(net.getName() + "visualization.dot"));
         writer.write(str);
 
         for (Place p : ps) {

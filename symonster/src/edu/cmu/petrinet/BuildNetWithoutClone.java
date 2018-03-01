@@ -25,9 +25,9 @@ public class BuildNetWithoutClone {
     //map from transition name to a method signature
     static public Map<String, MethodSignature> dict = new HashMap<String, MethodSignature>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws java.io.IOException{
         List<String> libs = new ArrayList<>();
-        libs.add("lib/point.jar");
+        libs.add("lib/simplePoint.jar");
         List<MethodSignature> sigs = JarParser.parseJar(libs);
         build(sigs);
 
@@ -35,13 +35,12 @@ public class BuildNetWithoutClone {
         Set<Transition> tl = petrinet.getTransitions();
         for (Place p : pl) {
             System.out.println(p.toString());
-            System.out.println(p.getMaxToken());
+            System.out.println("max token: " + p.getMaxToken());
             //output all methods that take p as an argument
             for (Transition t : tl) {
                 try {
                     System.out.println(petrinet.getFlow(p.getId(), t.getId()));
                 } catch (NoSuchEdgeException e) {
-
                 }
             }
         }
@@ -54,6 +53,8 @@ public class BuildNetWithoutClone {
                 }
             }
         }
+
+        Visualization.translate(petrinet);
     }
 
     public static PetriNet build(List<MethodSignature> result) {
