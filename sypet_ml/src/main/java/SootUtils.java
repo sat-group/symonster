@@ -1,4 +1,3 @@
-package main.java;
 import soot.Main;
 import soot.Body;
 import soot.Unit;

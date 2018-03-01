@@ -1,30 +1,26 @@
-package main.java;
-import main.java.knn.KNN;
+import knn.KNN;
 
 import java.util.*;
 
 public class Main {
+
+    private static KNN knn;
 
     /**
      * Sample main function
      * @param args no use at all
      */
     public static void main(String[] args) {
-        List<String> libs = new ArrayList<>();
+        // Libraries that we want to read from
+        ArrayList<String> libs = new ArrayList<>();
+        libs.add("../sypet_ml/lib/rt.jar");
 
-        // add labels from library
-        libs.add("lib/rt.jar");
-        JarParser.parseJar(libs, true);
-        KNN knn = new KNN(JarParser.getLabelMap());
+        // Packages from those libraries that we are interested on
+        // If this list is empty then we consider all packages!
+        ArrayList<String> packages = new ArrayList<>();
+        packages.add("java.awt.geom");
 
-        // add training data (var independent)
-        /* libs.add("train.jar");
-        JarParser.parseJar(libs, false);
-        Map<String, Set<String>> data = JarParser.getMethodToAppearancesMap();
-        for(Set<String> set : data.values()){
-            knn.addTrainVector(set);
-        }
-        */
+        JarParserLib.init(libs, packages);
 
         // add training data (var dependent)
         /*
@@ -37,6 +33,20 @@ public class Main {
                 knn.addTrainVector(t);
             }
         }*/
+    }
+
+    public static void onParseLibComplete(){
+        // add labels from library
+        knn = new KNN(JarParserLib.getLabelSet());
+
+        // add training data (var independent)
+        List<String> libs = new ArrayList<>();
+        libs.add("geometry.jar");
+        JarParser.parseJar(libs);
+        Map<String, Set<String>> data = JarParser.getMethodToAppearancesMap();
+        for(Set<String> set : data.values()){
+            knn.addTrainVector(set);
+        }
     }
 
 }

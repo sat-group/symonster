@@ -1,6 +1,9 @@
-package main.java.knn;
+package knn;
+
+import soot.SootMethod;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * k-Nearest Neighbors, finds nearest neighbor through frequency
@@ -30,7 +33,9 @@ public class KNN {
             this.values = new ArrayList<>();
             this.freqTable = new float[labelSize];
             Arrays.fill(freqTable, -1);
-            System.out.println(labels);
+            for (String label : labelMap.keySet()){
+                System.out.println(label);
+            }
         }
     }
 

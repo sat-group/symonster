@@ -1,4 +1,3 @@
-package main.java;
 import soot.*;
 import soot.jimple.*;
 
@@ -9,26 +8,19 @@ import java.util.*;
  */
 public class JarParser extends BodyTransformer {
     public static final String ANALYSIS_NAME = "jap.analysis";
-    private static Set<String> labelMap = new HashSet<>();
     private static Map<String, Set<String>> methodToAppearancesMap = new HashMap<>();
     private static Map<String, Map<String, Set<String>>> methodToVarAppearancesMap = new HashMap<>();
     private static Map<String, Map<String, Integer>> methodToVarFreqMap = new HashMap<>();
-    private static boolean isParsingLib = false;
 
     /**
      * Parse a list of given jar files, and stores the result in methodDict and methodVarDict
      * @param libs physical addresses of libraries. e.g. "lib/hamcrest-core-1.3.jar"
      */
-    public static void parseJar(List<String> libs, boolean isLib) {
-        isParsingLib = isLib;
+    public static void parseJar(List<String> libs) {
         String[] args = SootUtils.getSootArgs(libs);
         G.reset();
         PackManager.v().getPack("jap").add(new Transform(ANALYSIS_NAME, new JarParser()));
         SootUtils.runSoot(args);
-    }
-
-    public static Set<String> getLabelMap() {
-        return labelMap;
     }
 
     public static Map<String, Set<String>> getMethodToAppearancesMap(){
@@ -52,11 +44,6 @@ public class JarParser extends BodyTransformer {
             // keep track of all the variables appeared in the methods
             Map<String, Integer> hashMap = new HashMap<>();
             Map<String, Set<String>> varMethodMap = new HashMap<>();
-
-            if(isParsingLib){
-                labelMap.add(body.getMethod().toString());
-                return;
-            }
 
             for (Unit unit : body.getUnits()) {
                 Stmt stmt = (Stmt) unit;
