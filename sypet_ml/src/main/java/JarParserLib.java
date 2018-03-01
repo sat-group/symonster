@@ -12,15 +12,13 @@ public class JarParserLib {
 
     private static Set<String> labelSet = new HashSet<>();
 
-    public static Set<SootMethod> parse(String lib, ArrayList<String> pkg, boolean visible){
+    public static Set<SootMethod> parse(String lib, List<String> pkg, boolean visible){
         Set<SootMethod> methods = new HashSet<>();
 
         for (String cl : SourceLocator.v().getClassesUnder(lib)) {
             SootClass clazz = Scene.v().getSootClass(cl);
-
             LinkedList<SootMethod> methodsCopy = new LinkedList<SootMethod>(clazz.getMethods());
             for (SootMethod method : methodsCopy) {
-
                 // Only considers method that start with the package that we are interested on
                 boolean skip = !pkg.isEmpty();
                 for (String pName : pkg) {
@@ -46,7 +44,7 @@ public class JarParserLib {
         return methods;
     }
 
-    public static void initSoot(ArrayList<String> libs, ArrayList<String> packages){
+    public static void initSoot(ArrayList<String> libs, List<String> packages){
 
         StringBuilder options = new StringBuilder();
         options.append("-prepend-classpath");
@@ -60,7 +58,7 @@ public class JarParserLib {
             options.append(" -process-dir " + lib);
         }
 
-        options.append(" -cp " + cp.toString());
+        options.append(" -cp --quiet" + cp.toString());
 
         if (!Options.v().parse(options.toString().split(" ")))
             throw new CompilationDeathException(CompilationDeathException.COMPILATION_ABORTED,
@@ -70,7 +68,7 @@ public class JarParserLib {
         Scene.v().loadNecessaryClasses();
     }
 
-    public static void init(ArrayList<String> libs, ArrayList<String> packages) {
+    public static void init(ArrayList<String> libs, List<String> packages) {
         initSoot(libs, packages);
 
         for (String lib : libs){

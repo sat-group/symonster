@@ -1,6 +1,8 @@
 import soot.*;
 import soot.jimple.*;
 
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.*;
 
 /**
@@ -11,15 +13,20 @@ public class JarParser extends BodyTransformer {
     private static Map<String, Set<String>> methodToAppearancesMap = new HashMap<>();
     private static Map<String, Map<String, Set<String>>> methodToVarAppearancesMap = new HashMap<>();
     private static Map<String, Map<String, Integer>> methodToVarFreqMap = new HashMap<>();
+    private static List<String> pckg;
 
     /**
      * Parse a list of given jar files, and stores the result in methodDict and methodVarDict
      * @param libs physical addresses of libraries. e.g. "lib/hamcrest-core-1.3.jar"
      */
-    public static void parseJar(List<String> libs) {
+    public static void parseJar(List<String> libs, List<String> packg) {
         String[] args = SootUtils.getSootArgs(libs);
+        pckg = packg;
         G.reset();
         PackManager.v().getPack("jap").add(new Transform(ANALYSIS_NAME, new JarParser()));
+        methodToVarAppearancesMap = new HashMap<>();
+        methodToVarAppearancesMap = new HashMap<>();
+        methodToVarFreqMap = new HashMap<>();
         SootUtils.runSoot(args);
     }
 
@@ -35,8 +42,8 @@ public class JarParser extends BodyTransformer {
     protected void internalTransform(Body body, String s, Map<String, String> map) {
         // main process that extracts information about every method
         synchronized (this) {
-            System.out.println("-----------------");
-            System.out.println("main: " + body.getMethod());
+            //System.out.println("-----------------");
+            //System.out.println("main: " + body.getMethod());
 
             // keep track of all the methods in the body
             Set<String> methodSet = new HashSet<>();
@@ -72,38 +79,63 @@ public class JarParser extends BodyTransformer {
                         // if there is a function call, separate callers from callees
                         InvokeExpr invokeExp = ((InvokeExpr) assignExpr);
                         String method = invokeExp.getMethod().toString();
-                        methodSet.add(method);
+                        boolean fitsPackage = false;
+                        for(String pck : pckg){
+                            if(method.contains(pck)){
+                                methodSet.add(method);
+                                fitsPackage = true;
+                                break;
+                            }
+                        }
                         callees = invokeExp.getArgs();
                         calls.removeAll(callees);
-                        if(hashMap.containsKey(assignVar.toString())){
-                            hashMap.put(assignVar.toString(), hashMap.get(assignVar.toString())+1);
-                            Set<String> set = varMethodMap.get(assignVar.toString());
-                            set.add(invokeExp.getMethod().toString());
-                        }else{
-                            hashMap.put(assignVar.toString(), 1);
-                            Set<String> set = new HashSet<>();
-                            set.add(invokeExp.getMethod().toString());
-                            varMethodMap.put(assignVar.toString(), set);
+                        if(fitsPackage) {
+                            if (hashMap.containsKey(assignVar.toString())) {
+                                hashMap.put(assignVar.toString(), hashMap.get(assignVar.toString()) + 1);
+                            } else {
+                                hashMap.put(assignVar.toString(), 1);
+                                Set<String> set = new HashSet<>();
+                                set.add(invokeExp.getMethod().toString());
+                                varMethodMap.put(assignVar.toString(), set);
+                            }
+                            for (Value var : calls) {
+                                if (varMethodMap.containsKey(var.toString())) {
+                                    Set<String> set = varMethodMap.get(var.toString());
+                                    set.add(invokeExp.getMethod().toString());
+                                } else {
+                                    Set<String> set = new HashSet<>();
+                                    set.add(invokeExp.getMethod().toString());
+                                    varMethodMap.put(var.toString(), set);
+                                }
+                            }
                         }
                     }else{
                         callees = new ArrayList<>(calls);
                         calls = null;
                     }
-                    System.out.println("assign to: "+ assignVar +" with " + "caller: "+calls+" callees: "+callees);
+                    //System.out.println("assign to: "+ assignVar +" with " + "caller: "+calls+" callees: "+callees);
                 } else if(stmt instanceof InvokeStmt){
                     // if is purely a functional invocation
                     InvokeStmt invokeStmt = (InvokeStmt) stmt;
-                    methodSet.add(invokeStmt.getInvokeExpr().getMethod().toString());
+                    String method = invokeStmt.getInvokeExpr().getMethod().toString();
+                    for(String pck : pckg){
+                        if(method.contains(pck)){
+                            methodSet.add(method);
+                            break;
+                        }
+                    }
                 }
             }
 
             // store in dict
             String methodName = body.getMethod().toString();
-            methodToAppearancesMap.put(methodName, methodSet);
-            methodToVarFreqMap.put(methodName, hashMap);
-            methodToVarAppearancesMap.put(methodName, varMethodMap);
-            System.out.println(hashMap);
-            System.out.println("-----------------");
+            if(methodSet.size()>0) {
+                methodToAppearancesMap.put(methodName, methodSet);
+                methodToVarFreqMap.put(methodName, hashMap);
+                methodToVarAppearancesMap.put(methodName, varMethodMap);
+            }
+            //System.out.println(hashMap);
+            //System.out.println("-----------------");
         }
     }
 }

@@ -25,28 +25,24 @@ public class SootUtils {
     public static String[] getSootArgs(List<String> libs) {
         String separator = System.getProperty("file.separator");
         String pathSeparator = System.getProperty("path.separator");
-        String rtJarPath = "lib" + separator + "rt.jar";
-        rtJarPath += pathSeparator + "lib" + separator + "jce.jar";
-        String sootClasspath = rtJarPath + pathSeparator + "build";
         List<String> argList = new ArrayList<>();
-        argList.add("cp");
-        argList.add(sootClasspath);
+        argList.add("-cp");
         argList.add("-keep-line-number");
-        argList.add("-f");
-        argList.add("-J");
+        argList.add("-prepend-classpath");
+        argList.add("-full-resolver");
+        argList.add("-allow-phantom-refs");
+        //argList.add("-f");
+        //argList.add("-J");
         for (String lib : libs){
             argList.add("-process-dir");
             argList.add(lib);
         }
-        String [] fixedargs = { "-cp", sootClasspath, "-keep-line-number", "-f", "J"};
+
         String[] args = new String[argList.size()];
-        for (int i = 0; i < 5; i++){
-            args[i] = fixedargs[i];
+        for(int i=0; i<args.length; i++){
+            args[i] = argList.get(i);
         }
-        for (int i = 5 ; i < argList.size(); i++){
-            args[i] = argList.get(i).toString();
-        }
-        System.out.println(argList);
+
         return args;
     }
 
@@ -56,6 +52,9 @@ public class SootUtils {
     public static void runSoot(String[] args) {
         try {
             forbidSystemExitCall();
+            for(String arg: args) {
+                System.out.println(arg);
+            }
             Main.main(args);
             SootUtils.enableSystemExitCall();
         } catch (SootUtils.ExitTrappedException e) {
