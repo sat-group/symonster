@@ -15,7 +15,7 @@ public class TimerUtils {
         timers.put(name, System.currentTimeMillis());
     }
     public static synchronized long stopTimer(String name){
-        long ret = System.currentTimeMillis() - timers.get("name");
+        long ret = System.currentTimeMillis() - timers.get(name);
         timers.remove(name);
         //Update cumulative timer
         if (cumulativeTimers.containsKey(name)){

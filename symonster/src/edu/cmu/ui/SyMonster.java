@@ -86,20 +86,25 @@ public class SyMonster {
 		// TODO: read from .json file instead of using predefined values
         // TODO: fake
         List<String> varNames = new ArrayList<>();
-        varNames.add("p");
         String methodName = "conv";
         List<String> libs = new ArrayList<>();
         libs.add("lib/point.jar");
 		List<String> inputs = new ArrayList<>();
+        inputs.add("int");
+        varNames.add("x");
+        inputs.add("int");
+        varNames.add("y");
         inputs.add("cmu.symonster.MyPoint");
-		String retType = "cmu.symonster.Point";
+        varNames.add("p");
+
+        String retType = "cmu.symonster.MyPoint";
 		String testCode = "    public boolean pass(){\n" +
-                "        return conv(new cmu.symonster.MyPoint(20,30)).getX()== 20 && conv(new cmu.symonster.MyPoint(20,30)).getY()==30;\n"+
+                "       cmu.symonster.MyPoint p = new cmu.symonster.MyPoint(0,0); " +
+                "       return conv(10,20,p).getX() == 10;\n"+
                 "    }";
 		// 2. Parse library
 		// TODO: use the code to parse the library here
         List<MethodSignature> sigs = JarParser.parseJar(libs);
-        System.out.println(sigs);
         // 3. build a petrinet and signatureMap of library
         // Currently built without clone edges
 		BuildNetWithoutClone b = new BuildNetWithoutClone();
@@ -172,6 +177,7 @@ public class SyMonster {
                         System.out.println("Programs explored = " + programs);
                         System.out.println("code:");
                         System.out.println(code);
+                        TimerUtils.stopTimer("total");
                         System.out.println("total time: "+TimerUtils.getCumulativeTime("total"));
                         break;
                     }

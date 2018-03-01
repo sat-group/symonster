@@ -2,8 +2,11 @@ package edu.cmu.parser;
 import edu.cmu.equivprogram.DependencyMap;
 import edu.cmu.utils.SootUtils;
 import soot.*;
+import soot.jimple.FieldRef;
+import soot.jimple.InvokeExpr;
 import soot.jimple.Stmt;
 import soot.jimple.internal.JInstanceFieldRef;
+import soot.jimple.internal.JInvokeStmt;
 
 import java.util.*;
 
@@ -15,6 +18,8 @@ public class JarParser extends BodyTransformer{
     public static final String ANALYSIS_NAME = "jap.analysis";
     private static Map<MethodSignature,Set<SootField>> usedFieldDict = new HashMap<>();
     private static DependencyMap dependencyMap = new DependencyMap();
+    private static Map<SootMethod,Body> bodies = new HashMap<>();
+    private static Set<MethodSignature> workings = new HashSet<>();
     /**
      * Sample main function
      * @param args no use at all
@@ -26,6 +31,7 @@ public class JarParser extends BodyTransformer{
         //libs.add("lib/hamcrest-core-1.3.jar");
         //libs.add("lib/junit-4.11.jar");
         List<MethodSignature> sigs = parseJar(libs);
+        System.out.println(createDependencyMap().toString());
     }
 
     /**
@@ -45,22 +51,8 @@ public class JarParser extends BodyTransformer{
                 List<SootMethod> methods = clazz.getMethods();
                 for (SootMethod method : methods) {
                     if (method.isPublic()){
+                        System.out.println(method);
                         sigs.add(getMethodSignature(method));
-                    }
-                }
-            }
-        }
-
-        for (MethodSignature sig1 : usedFieldDict.keySet()){
-            for (MethodSignature sig2 : usedFieldDict.keySet()){
-                if (!sig1.equals(sig2)){
-                    Set<SootField> set1 = usedFieldDict.get(sig1);
-                    Set<SootField> set2 = usedFieldDict.get(sig2);
-                    for (SootField field : set1){
-                        if (set2.contains(field)){
-                            dependencyMap.addDep(sig1,sig2);
-                            break;
-                        }
                     }
                 }
             }
@@ -73,14 +65,31 @@ public class JarParser extends BodyTransformer{
      * @return
      */
 
-    public static DependencyMap getDependencyMap(){
+    public static DependencyMap createDependencyMap(){
         DependencyMap ret = dependencyMap;
         dependencyMap = new DependencyMap();
-        usedFieldDict = new HashMap<>();
+        analyzeDep();
+        //Create dependencies
+        for (MethodSignature s1 : usedFieldDict.keySet()){
+            for (MethodSignature s2 : usedFieldDict.keySet()){
+                if (s1 != s2){
+                    boolean intersect = false;
+                    for (SootField field : usedFieldDict.get(s1)){
+                        if (usedFieldDict.get(s2).contains(field)){
+                            intersect = true;
+                            break;
+                        }
+                    }
+                    if (intersect){
+                        dependencyMap.addDep(s1,s2);
+                    }
+                }
+            }
+        }
         return dependencyMap;
     }
 
-    static private MethodSignature getMethodSignature(SootMethod method){
+    private static MethodSignature getMethodSignature(SootMethod method){
         SootClass clazz = method.getDeclaringClass();
         if (method.getName().equals("<init>")){
             MethodSignature sig = new MethodSignature(method.getName(),clazz.getType(),
@@ -94,17 +103,25 @@ public class JarParser extends BodyTransformer{
         }
     }
 
-    @Override
-    protected void internalTransform(Body body, String s, Map<String, String> map) {
-        Set<SootField> result = addProgramMethod(body,s);
-        SootMethod method = body.getMethod();
-        if (method != null){
+    private static void analyzeDep(){
+        usedFieldDict = new HashMap<>();
+        for (SootMethod method : bodies.keySet()){
+            Body body = bodies.get(method);
+            Set<SootField> result = addProgramMethod(body,getMethodSignature(method));
             usedFieldDict.put(getMethodSignature(body.getMethod()),result);
         }
+
     }
 
-    private static Set<SootField> addProgramMethod(Body body,String name){
-        if (usedFieldDict.keySet().contains(name))return new HashSet<>();
+    @Override
+    protected void internalTransform(Body body, String s, Map<String, String> map) {
+        bodies.put(body.getMethod(),body);
+    }
+
+    private static Set<SootField> addProgramMethod(Body body,MethodSignature methodSignature){
+        if (usedFieldDict.keySet().contains(methodSignature))return usedFieldDict.get(methodSignature);
+        if (workings.contains(methodSignature)) return new HashSet<>();
+        workings.add(methodSignature);
         Set<SootField> result = new HashSet<>();
         for (Unit unit : body.getUnits()){
             if (unit instanceof Stmt){
@@ -113,31 +130,53 @@ public class JarParser extends BodyTransformer{
             }
         }
         System.out.println(result.size());
+        workings.remove(methodSignature);
         return result;
 
     }
 
-    static private Set<SootField> addAllFieldInUnit(Unit unit){
+    // Return all fields reference in a unit
+    private static Set<SootField> addAllFieldInUnit(Unit unit){
         Set<SootField> result = new HashSet<>();
         List<ValueBox> boxes = unit.getUseAndDefBoxes();
         if (unit instanceof JInstanceFieldRef){
-            System.out.println("Field!");
-            System.out.println(unit);
             JInstanceFieldRef ref = (JInstanceFieldRef)unit;
             result.add(ref.getField());
+        }
+        else if (unit instanceof JInvokeStmt){
+            JInvokeStmt st = (JInvokeStmt)unit;
+            SootMethod met = st.getInvokeExpr().getMethod();
+            if (bodies.keySet().contains(met))  result.addAll(addProgramMethod(bodies.get(met),getMethodSignature(met)));
+            else result.add(null);
+
         }
         for (ValueBox b : boxes){
             result.addAll(addAllFieldInValue(b.getValue()));
         }
         return result;
     }
-    static private Set<SootField> addAllFieldInValue(Value value){
+
+    // Return all fields reference in a value
+    private static Set<SootField> addAllFieldInValue(Value value){
         Set<SootField> result = new HashSet<>();
         List<ValueBox> boxes = value.getUseBoxes();
         if (value instanceof JInstanceFieldRef){
-            System.out.println("Field!");
             JInstanceFieldRef ref = (JInstanceFieldRef)value;
             result.add(ref.getField());
+        }
+        else if (value instanceof SootFieldRef){
+            SootFieldRef ref = (SootFieldRef)value;
+            result.add(ref.resolve());
+        }
+        else if (value instanceof FieldRef){
+            JInstanceFieldRef ref = (JInstanceFieldRef)value;
+            result.add(ref.getField());
+        }
+        else if (value instanceof InvokeExpr){
+            InvokeExpr expr = (InvokeExpr)value;
+            SootMethod met = expr.getMethod();
+            if (bodies.keySet().contains(met))  result.addAll(addProgramMethod(bodies.get(met),getMethodSignature(met)));
+            else result.add(null);
         }
         for (ValueBox b : boxes){
             result.addAll(addAllFieldInValue(b.getValue()));

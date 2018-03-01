@@ -22,4 +22,13 @@ public class DependencyMap {
     List<List<MethodSignature>> findAllTopSort(){
         return null;
     }
+
+    @Override
+    public String toString(){
+        StringBuilder builder = new StringBuilder();
+        for (MethodSignature key : map.keySet()){
+            builder.append(key + "" + map.get(key) + "\n");
+        }
+        return builder.toString();
+    }
 }
