@@ -2,7 +2,9 @@ package edu.cmu.ui;
 import edu.cmu.codeformer.CodeFormer;
 import edu.cmu.compilation.Test;
 import edu.cmu.parser.JarParser;
+import edu.cmu.parser.JsonParser;
 import edu.cmu.parser.MethodSignature;
+import edu.cmu.parser.SyMonsterInput;
 import edu.cmu.petrinet.BuildNet;
 import edu.cmu.petrinet.BuildNetWithoutClone;
 import edu.cmu.reachability.Encoding;
@@ -81,29 +83,26 @@ public class SyMonster {
 	public static void main(String[] args) throws IOException {
 		
 		Test test = new Test();
-		
-		// 1. Read input from the user
-		// TODO: read from .json file instead of using predefined values
-        // TODO: fake
-        List<String> varNames = new ArrayList<>();
-        String methodName = "conv";
-        List<String> libs = new ArrayList<>();
-        libs.add("lib/simplePoint.jar");
-		List<String> inputs = new ArrayList<>();
-        //inputs.add("int");
-        //varNames.add("x");
-        //inputs.add("int");
-        //varNames.add("y");
-        inputs.add("cmu.symonster.MyPoint");
-        varNames.add("p");
 
-        String retType = "cmu.symonster.Point";
-		String testCode = "    public boolean pass(){\n" +
-                "       cmu.symonster.MyPoint p = new cmu.symonster.MyPoint(15,20); " +
-                "       return conv(p).getX() == 15 && conv(p).getY() == 20;\n"+
-                "    }";
+		// 1. Read input from the user
+        SyMonsterInput jsonInput;
+        if (args.length == 0) {
+            System.out.println("Please use the program args next time.");
+            jsonInput = JsonParser.parseJson("../benchmarks/sampleJson.json");
+        }
+        else{
+            jsonInput = JsonParser.parseJson(args[0]);
+        }
+
+        String methodName = jsonInput.methodName;
+        List<String> libs =jsonInput.libs;
+		List<String> inputs = jsonInput.inputTypes;
+        List<String> varNames = jsonInput.inputVarNames;
+        String retType = jsonInput.returnType;
+        String testCode = jsonInput.testCode;
+
+
 		// 2. Parse library
-		// TODO: use the code to parse the library here
         List<MethodSignature> sigs = JarParser.parseJar(libs);
         // 3. build a petrinet and signatureMap of library
         // Currently built without clone edges
@@ -130,7 +129,6 @@ public class SyMonster {
 			
 			// for each loc find all possible programs
 			List<Variable> result = Encoding.solver.findPath();
-			System.out.println(result.size());
             while(!result.isEmpty() && !solution){
 				paths++;
 				String path = "Path #" + paths + " =\n";
@@ -141,7 +139,7 @@ public class SyMonster {
 					apis.add(s.getName());
 					path += s.toString() + "\n";
 					MethodSignature sig = signatureMap.get(s.getName());
-					if(sig != null) { //check if s is a line of a code
+                    if(sig != null) { //check if s is a line of a code
 						signatures.add(sig);
 					}
 				}
@@ -161,7 +159,7 @@ public class SyMonster {
                     }
                     sat = !former.isUnsat();
                     programs++;
-                    if (programs % 50 == 0)
+                    if (programs % 50 == 1)
                     {
                         System.out.println("programs: "+programs);
                         System.out.println(signatures);
@@ -193,9 +191,5 @@ public class SyMonster {
 		}
 
 	}
-
-    private static void readFromJson() {
-
-    }
 
 }

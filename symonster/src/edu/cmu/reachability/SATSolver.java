@@ -102,7 +102,8 @@ public class SATSolver {
 				// block model
 				try {
 					solver.addClause(block);
-				} catch (ContradictionException e) {
+				}
+				catch (ContradictionException e) {
 					unsat = true;
 				}
 				

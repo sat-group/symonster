@@ -61,6 +61,26 @@ public class JarParser extends BodyTransformer{
     }
 
     /**
+     * A method that provides the super classes of all application classes.
+     * @param acceptableSuperClasses the set of classes that can be considered super classes. In order to reduce the
+     *                               unnecessary super classes (e.g. Object).
+     * @return the map from each SootClass, to its corresponding set of super classes.
+     */
+    public static Map<SootClass,Set<SootClass>> getSuperClasses(Set<SootClass> acceptableSuperClasses){
+        Map<SootClass,Set<SootClass>> result = new HashMap<>();
+        for (SootClass cl : Scene.v().getApplicationClasses()){
+            SootClass cur = cl;
+            Set<SootClass> superClasses = new HashSet<>();
+            while (cur.hasSuperclass()){
+                cur = cur.getSuperclass();
+                if (acceptableSuperClasses.contains(cur)) superClasses.add(cur);
+            }
+            result.put(cl,superClasses);
+        }
+        return result;
+    }
+
+    /**
      * Return the resulting dependency map of the signatures, and reset all fields.
      * @return
      */
