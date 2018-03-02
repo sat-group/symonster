@@ -57,63 +57,6 @@ public class BuildNetWithoutClone {
         Visualization.translate(petrinet);
     }
 
-    private static void generateCopies(Transition t, List<Place> inputs, List<Place> outputs) {
-        if(inputs.size() == 0) {
-            if(outputs.size() == 0) {
-                return;
-            }
-            String newTransitionName = t.getId()+ "(";
-            for(Place p : outputs) {
-                newTransitionName += p.getId() + " ";
-            }
-            newTransitionName += ")";
-
-            if(petrinet.containsTransition(newTransitionName)) {
-                return;
-            }
-            Transition newTransition  = petrinet.createTransition(newTransitionName);
-            for(Flow f : t.getPresetEdges()) {
-                Place p = f.getPlace();
-                int w = f.getWeight();
-                petrinet.createFlow(p, newTransition, w);
-            }
-            for(Flow f : t.getPostsetEdges()) {
-                Place p = f.getPlace();
-                int w = f.getWeight();
-                petrinet.createFlow(newTransition, p, w);
-            }
-            for(Place p : outputs) {
-                try {
-                    Flow f = petrinet.getFlow(newTransition, p);
-                    f.setWeight(f.getWeight() + 1);
-                } catch (NoSuchEdgeException e) {
-                    petrinet.createFlow(newTransition, p, 1);
-                }
-            }
-
-            dict.put(newTransitionName, dict.get(t.getId()));
-        } else {
-            Place first = inputs.remove(0);
-            generateCopies(t, inputs, outputs);
-            outputs.add(first);
-            generateCopies(t, inputs, outputs);
-            inputs.add(first);
-            outputs.remove(first);
-        }
-    }
-
-    private static void createCopies(Transition t) {
-        Set<Flow> inputEdges = petrinet.getPresetEdges(t);
-        List<Place> inputs = new ArrayList<>();
-        for(Flow e : inputEdges) {
-            for(int i = 0 ; i < e.getWeight(); i++) {
-                inputs.add(e.getPlace());
-            }
-        }
-        List<Place> outputs = new ArrayList<>();
-        generateCopies(t, inputs, outputs);
-    }
-
     public static PetriNet build(List<MethodSignature> result) {
         //create void type
         petrinet.createPlace("void");
@@ -127,6 +70,7 @@ public class BuildNetWithoutClone {
             //We create two transitions for each method
             //transitionCopy will have its input as its additional output
             String transitionName;
+            String transitionCopy;
             List<Type> args = k.getArgTypes();
 
             //adding transition
@@ -136,21 +80,27 @@ public class BuildNetWithoutClone {
                     transitionName += t.toString() + " ";
                 }
                 transitionName += ")";
+                transitionCopy = transitionName + "Copy";
                 petrinet.createTransition(transitionName);
+                petrinet.createTransition(transitionCopy);
             } else if (isStatic) {
                 transitionName = className + "." + methodname + "(";
                 for(Type t : args) {
                     transitionName += t.toString() + " ";
                 }
                 transitionName += ")";
+                transitionCopy = transitionName + "Copy";
                 petrinet.createTransition(transitionName);
+                petrinet.createTransition(transitionCopy);
             } else { //The method is not static, so it has an extra argument
                 transitionName = className + "." + methodname + "(";
                 for(Type t : args) {
                     transitionName += t.toString() + " ";
                 }
                 transitionName += ")";
+                transitionCopy = transitionName + "Copy";
                 petrinet.createTransition(transitionName);
+                petrinet.createTransition(transitionCopy);
 
                 //creating the place for the class instance
                 try {
@@ -167,13 +117,31 @@ public class BuildNetWithoutClone {
                     petrinet.createFlow(k.getHostClass().toString(), transitionName);
                 }
 
+                //create flow from class instance to transition copy
+                try {
+                    Flow f = petrinet.getFlow(k.getHostClass().toString(), transitionCopy);
+                    f.setWeight(f.getWeight() + 1);
+                } catch (NoSuchEdgeException e) {
+                    petrinet.createFlow(k.getHostClass().toString(), transitionCopy);
+                }
+
+                //Creating the out edge from transitionCopy to class instance for transitionCopy
+                try {
+                    Flow f = petrinet.getFlow(transitionCopy, k.getHostClass().toString());
+                    f.setWeight(f.getWeight() + 1);
+                } catch (NoSuchEdgeException e) {
+                    petrinet.createFlow(transitionCopy, k.getHostClass().toString());
+                }
             }
             //add method signatures into map
             dict.put(transitionName, k);
+            dict.put(transitionCopy, k);
 
             //If method has no argument and is static , create flow with void
             if(args.size() == 0 && (isStatic || isConstructor)) {
                 petrinet.createFlow("void", transitionName);
+                petrinet.createFlow("void", transitionCopy);
+                petrinet.createFlow(transitionCopy, "void");
             }
 
             for (Type t : args) {
@@ -191,7 +159,20 @@ public class BuildNetWithoutClone {
                 } catch (NoSuchEdgeException e) {
                     petrinet.createFlow(t.toString(), transitionName, 1);
                 }
+                try {
+                    Flow originalFlow = petrinet.getFlow(t.toString(), transitionCopy);
+                    originalFlow.setWeight(originalFlow.getWeight() + 1);
+                } catch (NoSuchEdgeException e) {
+                    petrinet.createFlow(t.toString(), transitionCopy, 1);
+                }
 
+                //add output for transitionCopy
+                try {
+                    Flow originalFlow = petrinet.getFlow(transitionCopy, t.toString());
+                    originalFlow.setWeight(originalFlow.getWeight() + 1);
+                } catch (NoSuchEdgeException e) {
+                    petrinet.createFlow(transitionCopy, t.toString(), 1);
+                }
             }
 
             //add place for the return type
@@ -204,8 +185,7 @@ public class BuildNetWithoutClone {
 
             //add flows for the return type
             petrinet.createFlow(transitionName, retType.toString(), 1);
-
-            createCopies(petrinet.getTransition(transitionName));
+            petrinet.createFlow(transitionCopy, retType.toString(), 1);
         }
 
         //Set max tokens for each place
