@@ -40,30 +40,48 @@ export default {
     };
   },
   http(config) {
-    testj = {
-              "methodName": "scale",
-              "paramNames": [
-                "sypet_arg0",
-                "sypet_arg1",
-                "sypet_arg2"
-              ],
-              "srcTypes": [
-                "java.awt.geom.Rectangle2D",
-                "double",
-                "double"
-              ],
-              "tgtType": "java.awt.geom.Rectangle2D",
-              "packages": [
-                "java.awt.geom"
-              ],
-              "testBody": "public static boolean test() throws Throwable { java.awt.geom.Rectangle2D rec = new java.awt.geom.Rectangle2D.Double(10, 20, 10, 2); java.awt.geom.Rectangle2D target = new java.awt.geom.Rectangle2D.Double(20, 60, 20, 6); java.awt.geom.Rectangle2D result = scale(rec, 2, 3); return (target.equals(result));}"
+    return new Promise((resolve, reject ) => {
+        testj = {
+                  "methodName": "scale",
+                  "paramNames": [
+                    "sypet_arg0",
+                    "sypet_arg1",
+                    "sypet_arg2"
+                  ],
+                  "srcTypes": [
+                    "java.awt.geom.Rectangle2D",
+                    "double",
+                    "double"
+                  ],
+                  "tgtType": "java.awt.geom.Rectangle2D",
+                  "packages": [
+                    "java.awt.geom"
+                  ],
+                  "testBody": "public static boolean test() throws Throwable { java.awt.geom.Rectangle2D rec = new java.awt.geom.Rectangle2D.Double(10, 20, 10, 2); java.awt.geom.Rectangle2D target = new java.awt.geom.Rectangle2D.Double(20, 60, 20, 6); java.awt.geom.Rectangle2D result = scale(rec, 2, 3); return (target.equals(result));}"
+                }
+        console.log(JSON.stringify(config))
+        console.log(JSON.stringify(testj))
+        options = {
+            url: 'http://128.83.122.134:9092',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(config)
+        };
+        //console.log(JSON.stringify(testj))
+        request.post(options, function (err, response, body) {
+            if(!err && response.statusCode == 200) {
+                resolve(body)
             }
-     request.post({
-       url: 'http://128.83.122.134:9092',
-       form: testj   },
-   function (err, httpResponse, body) {
-       console.log(err, body);
-   });
+            else {
+                reject({
+                    'error': err
+                })
+            }
+           console.log(err, body);
+       });
+    })
 
 },
 toggle() {
@@ -77,11 +95,11 @@ toggle() {
     w = []
     for(var x =0; x < words.length ; x++) {
         if (words[x].slice(0,3) == "//#") {
-            w.push(words[x].slice(3))
+            w.push(words[x].slice(3).trim())
             x++;
-            w.push(words[x].slice(3))
+            w.push(words[x].slice(3).trim())
             x++;
-            w.push(words[x].slice(3))
+            w.push(words[x].slice(3).trim())
             x++;
             w.push(words[x])
 
@@ -127,7 +145,7 @@ toggle() {
     config["srcTypes"] = types
     config["packages"] = packages
     config["tgtType"] = tgtType
-    config["testBody"] = match2[1]
+    config["testBody"] = w[2]
 
     console.log(config)
 
@@ -138,7 +156,10 @@ toggle() {
     console.log(w.join("\n"))
     FileSaver.saveAs(blob, "hello.txt");
 
-    this.http(config)
+    this.http(config).then((code) => {
+        console.log("Returned!")
+        console.log(code)
+    })
     //this.modalPanel.show();
     }
 }
