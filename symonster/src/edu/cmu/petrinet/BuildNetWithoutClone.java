@@ -1,6 +1,5 @@
 package edu.cmu.petrinet;
 
-import edu.cmu.parser.JarParser;
 import edu.cmu.parser.MethodSignature;
 import soot.Type;
 
@@ -31,12 +30,6 @@ public class BuildNetWithoutClone {
     private static void handlePolymorphism() {
         // This method handles polymorphism by creating methods that transforms each
         // subclass into its super class
-        // TODO polymorphism information is currently hardcoded
-        List<String> l1 = new ArrayList<>();
-        l1.add("cmu.symonster.Shape");
-
-        superDict.put("cmu.symonster.Rectangle", l1);
-        superDict.put("cmu.symonster.Triangle", l1);
 
         for(String subClass : superDict.keySet()) {
             for (String superClass : superDict.get(subClass)) {
@@ -114,10 +107,6 @@ public class BuildNetWithoutClone {
     private static void handlePolymorphismAlt() {
         // Handles polymorphism by creating copies for each method that
         // has superclass as input type
-        List<String> l1 = new ArrayList<>();
-        l1.add("cmu.symonster.Rectangle");
-        l1.add("cmu.symonster.Triangle");
-        subDict.put("cmu.symonster.Shape", l1);
         for(Transition t : petrinet.getTransitions()) {
             List<Place> inputs = new ArrayList<>();
             List<Place> outputs = new ArrayList<>();
@@ -195,7 +184,25 @@ public class BuildNetWithoutClone {
         generateCopies(t, inputs, outputs);
     }
 
-    public static PetriNet build(List<MethodSignature> result) {
+    public static PetriNet build(List<MethodSignature> result,
+                                 Map<String, Set<String>> superClassMap,
+                                 Map<String, Set<String>> subClassMap) {
+        // Create polymorphism dicts
+        for(String s : superClassMap.keySet()) {
+            Set<String> superClasses = superClassMap.get(s);
+            List<String> l = new ArrayList<>(superClasses);
+            if(l.size() != 0) {
+                superDict.put(s, l);
+            }
+        }
+        for(String s : subClassMap.keySet()) {
+            Set<String> subClasses = subClassMap.get(s);
+            List<String> l = new ArrayList<>(subClasses);
+            if(l.size() != 0) {
+                subDict.put(s, l);
+            }
+        }
+
         //create void type
         petrinet.createPlace("void");
 
@@ -226,7 +233,7 @@ public class BuildNetWithoutClone {
                 transitionName += ")";
                 petrinet.createTransition(transitionName);
             } else { //The method is not static, so it has an extra argument
-                transitionName = className + "." + methodname + "(";
+                transitionName = "(static)" + className + "." + methodname + "(";
                 transitionName += k.getHostClass().toString() + " ";
                 for(Type t : args) {
                     transitionName += t.toString() + " ";
@@ -312,6 +319,10 @@ public class BuildNetWithoutClone {
             } else {
                 p.setMaxToken(1);
             }
+        }
+        for(Place p : petrinet.getPlaces()) {
+            System.out.println(p);
+            System.out.println(p.getMaxToken());
         }
         return petrinet;
     }

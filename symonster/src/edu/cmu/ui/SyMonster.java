@@ -12,6 +12,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.sat4j.specs.TimeoutException;
 import soot.SootClass;
+import uniol.apt.adt.exception.NoSuchNodeException;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
 
@@ -29,7 +30,8 @@ public class SyMonster {
 		HashMap<Place, Integer> count = new HashMap<Place, Integer>();
 		// Count the number of inputs
 		for (String input : inputs) {
-			Place p = pnet.getPlace(input);
+			Place p;
+			p = pnet.getPlace(input);
 			if (count.containsKey(p)) {
 				count.put(p, count.get(p) + 1);
 			} else {
@@ -125,10 +127,12 @@ public class SyMonster {
             }
         }
 
+		System.out.println(sigs);
+
         // 3. build a petrinet and signatureMap of library
         // Currently built without clone edges
 		BuildNetWithoutClone b = new BuildNetWithoutClone();
-		PetriNet net = b.build(sigs);
+		PetriNet net = b.build(sigs, superclassMap, subclassMap);
 		Map<String, MethodSignature> signatureMap = b.dict;
 
 		int loc = 1;

@@ -41,7 +41,7 @@ public class JarParser extends BodyTransformer{
                     if (method.isPublic()){
                         boolean sat = false;
                         for (String pkg : pkgs){
-                            if (method.getName().startsWith(pkg)){
+                            if (method.getDeclaringClass().getName().startsWith(pkg)){
                                 sat = true;
                                 break;
                             }
