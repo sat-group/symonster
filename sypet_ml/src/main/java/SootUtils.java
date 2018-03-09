@@ -56,9 +56,9 @@ public class SootUtils {
                 System.out.println(arg);
             }
             Main.main(args);
-            SootUtils.enableSystemExitCall();
-        } catch (SootUtils.ExitTrappedException e) {
-            // swallow the exception if Soot tried to exit directly; we'll exit soon anyway
+            //SootUtils.enableSystemExitCall();
+        } catch (Exception e){
+
         }
     }
 

@@ -69,6 +69,22 @@ public class KNN {
         }
     }
 
+    public String getTrainSparseString(){
+        StringBuilder vecString = new StringBuilder();
+        vecString.append(values.size()).append(",");
+        float total = 0;
+        for (int[] vec : values) {
+            for (int i = 0; i < vec.length; i++) {
+                if (vec[i] == 1) {
+                    total+=1;
+                }
+            }
+        }
+        float average = total/values.size();
+        vecString.append(average).append('\n');
+        return vecString.toString();
+    }
+
     public void showTrainSetSparse() {
         for (int[] vec : values) {
             StringBuilder vecString = new StringBuilder();

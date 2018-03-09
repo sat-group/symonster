@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -68,7 +69,7 @@ public class JarParserLib {
         Scene.v().loadNecessaryClasses();
     }
 
-    public static void init(ArrayList<String> libs, List<String> packages) {
+    public static void init(ArrayList<String> libs, List<String> packages) throws FileNotFoundException {
         initSoot(libs, packages);
 
         for (String lib : libs){

@@ -1,39 +1,72 @@
 import knn.KNN;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class Main {
 
     private static KNN knn;
+    private static KNN experimentKnn;
     private static List<String> packages = Collections.singletonList("java.awt.geom");
 
     /**
      * Sample main function
      * @param args no use at all
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         // Libraries that we want to read from
         JarParserLib.init(generateLib(), packages);
     }
 
-    public static void onParseLibComplete(){
+    public static void onParseLibComplete() throws FileNotFoundException {
         // add labels from library
         knn = new KNN(JarParserLib.getLabelSet());
+        experimentKnn = new KNN(JarParserLib.getLabelSet());
         List<String> libs = generateTrain();
         //libs.add("lib/geometry.jar");
-        JarParser.parseJar(libs, packages);
+        PrintWriter pw = new PrintWriter(new File("src/resources/data.csv"));
+        pw.write("name,parsed,rows,average\n");
+        for(String s : libs) {
+            JarParser.parseJar(Collections.singletonList(s), packages);
+            pw.write(s);
+            if(JarParser.getMethodToAppearancesMap().size() != 0){
+                trainVarIndependent(libs, false);
+                String resultString = experimentKnn.getTrainSparseString();
+                pw.write(",true,");
+                pw.write(resultString);
+
+                // reload
+                experimentKnn = new KNN(JarParserLib.getLabelSet());
+                trainVarIndependent(libs, true);
+                JarParser.refresh();
+            }else{
+                pw.write(",false\n");
+            }
+        }
+        pw.write("final result:");
+        pw.write(knn.getTrainSparseString());
+        pw.close();
 
         // add training data (var independent)
-        //trainVarIndependent(libs);
+        /*if(JarParser.getMethodToAppearancesMap().size() == 0){
+            System.out.println("empty, abort");
+            return;
+        }
+        trainVarIndependent(libs);*/
 
         // add training data (var dependent)
-        trainVarDependent(libs);
+        /*if(JarParser.getMethodToVarAppearancesMap().size() == 0){
+            return;
+        }*/
+        //trainVarDependent(libs);
 
-        printTrainResult(false, true);
+        //printTrainResult(false, true);
 
         // test prediction, var independent
         // pick a method from geometry
+        /**
         libs = generateTest();
         JarParser.parseJar(libs, packages);
         Map<String, Set<String>> dataT = JarParser.getMethodToAppearancesMap();
@@ -50,28 +83,45 @@ public class Main {
                 System.out.println(method + " -> " + map.get(method));
                 k++;
             }
-        }
+        }**/
     }
 
-    private static void trainVarDependent(List<String> libs){
+    private static void trainVarDependent(List<String> libs, boolean flag){
         JarParser.parseJar(libs, packages);
         Map<String, Map<String, Set<String>>> varData = JarParser.getMethodToVarAppearancesMap();
-        for(Map<String, Set<String>> s :  varData.values()){
-            for(Set<String> t : s.values()){
-                knn.addTrainVector(t);
+        if(flag) {
+            for (Map<String, Set<String>> s : varData.values()) {
+                for (Set<String> t : s.values()) {
+                    knn.addTrainVector(t);
+                }
             }
+            knn.preSort();
+        }else{
+            for (Map<String, Set<String>> s : varData.values()) {
+                for (Set<String> t : s.values()) {
+                    experimentKnn.addTrainVector(t);
+                }
+            }
+            experimentKnn.preSort();
         }
-        knn.preSort();
     }
 
-    private static void trainVarIndependent(List<String> libs){
+    private static void trainVarIndependent(List<String> libs, boolean flag){
         Map<String, Set<String>> data = JarParser.getMethodToAppearancesMap();
 
-        for(Set<String> set : data.values()){
-            knn.addTrainVector(set);
-        }
+        if(flag) {
+            for (Set<String> set : data.values()) {
+                knn.addTrainVector(set);
+            }
 
-        knn.preSort();
+            knn.preSort();
+        }else{
+            for (Set<String> set : data.values()) {
+                experimentKnn.addTrainVector(set);
+            }
+
+            experimentKnn.preSort();
+        }
     }
 
     private static void printTrainResult(boolean dense, boolean sparse){
@@ -89,18 +139,20 @@ public class Main {
     private static ArrayList<String> generateTrain(){
         // read all files from folder
         ArrayList<String> libs = new ArrayList<>();
-        /*File libFolder = new File("../sypet_ml/lib/corpus/");
+        File libFolder = new File("lib/corpus/");
         for(final File fileEntry: libFolder.listFiles()){
             System.out.println(fileEntry.getName());
-            libs.add("../sypet_ml/lib/corpus/"+fileEntry.getName());
-        }*/
+            libs.add("lib/corpus/"+fileEntry.getName());
+        }
 
         // for manual testing
         //libs.add("../sypet_ml/lib/geometry.jar");
-        libs.add("../sypet_ml/lib/corpus/00benallen-VillageCraft.jar");
-        libs.add("../sypet_ml/lib/corpus/2yangk23-GridGame.jar");
-        libs.add("../sypet_ml/lib/corpus/AlanFoster-Java-Game-Engine.jar");
-        libs.add("../sypet_ml/lib/corpus/AlexGreulich-MG2Game.jar");
+        /*
+        ArrayList<String> libs = new ArrayList<>();
+        libs.add("lib/corpus/n0Live-BrickGame.jar");
+        libs.add("lib/corpus/2yangk23-GridGame.jar");
+        libs.add("lib/corpus/AlanFoster-Java-Game-Engine.jar");
+        libs.add("lib/corpus/AlexGreulich-MG2Game.jar");
         libs.add("../sypet_ml/lib/corpus/AlexLamson-BattleshipGame.jar");
         libs.add("../sypet_ml/lib/corpus/AnassTeemo-Jump_Game.jar");
         libs.add("../sypet_ml/lib/corpus/Anastron-Game.jar");
@@ -133,7 +185,7 @@ public class Main {
         libs.add("../sypet_ml/lib/corpus/ellbosch-Helicopter_Game.jar");
         libs.add("../sypet_ml/lib/corpus/emlagowski-PangGame.jar");
         libs.add("../sypet_ml/lib/corpus/fab-jul-GameOfAnts.jar");
-        libs.add("../sypet_ml/lib/corpus/fingerco-MazeGame.jar");
+        libs.add("../sypet_ml/lib/corpus/fingerco-MazeGame.jar");*/
         return libs;
     }
 

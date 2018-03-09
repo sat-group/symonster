@@ -1,8 +1,6 @@
 import soot.*;
 import soot.jimple.*;
 
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.util.*;
 
 /**
@@ -14,6 +12,7 @@ public class JarParser extends BodyTransformer {
     private static Map<String, Map<String, Set<String>>> methodToVarAppearancesMap = new HashMap<>();
     private static Map<String, Map<String, Integer>> methodToVarFreqMap = new HashMap<>();
     private static List<String> pckg;
+    private static boolean parseOK;
 
     /**
      * Parse a list of given jar files, and stores the result in methodDict and methodVarDict
@@ -36,6 +35,12 @@ public class JarParser extends BodyTransformer {
 
     public static Map<String, Map<String, Set<String>>> getMethodToVarAppearancesMap(){
         return methodToVarAppearancesMap;
+    }
+
+    public static void refresh(){
+        methodToAppearancesMap.clear();
+        methodToVarAppearancesMap.clear();
+        methodToVarFreqMap.clear();
     }
 
     @Override
