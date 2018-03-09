@@ -9,7 +9,7 @@ public class Main {
 
     private static KNN knn;
     private static KNN experimentKnn;
-    private static List<String> packages = Collections.singletonList("java.awt.geom");
+    protected static List<String> packages = Collections.singletonList("java.awt.geom");
 
     /**
      * Sample main function
@@ -17,7 +17,7 @@ public class Main {
      */
     public static void main(String[] args) throws FileNotFoundException {
         // Libraries that we want to read from
-        JarParserLib.init(generateLib(), packages);
+        JarParserLib.init(generateLib(), packages, true);
     }
 
     public static void onParseLibComplete() throws FileNotFoundException {
@@ -190,14 +190,14 @@ public class Main {
         return libs;
     }
 
-    private static ArrayList<String> generateLib(){
+    protected static ArrayList<String> generateLib(){
         ArrayList<String> libs = new ArrayList<>();
         libs.add("../sypet_ml/lib/rt.jar");
 
         return libs;
     }
 
-    private static ArrayList<String> generateTest(){
+    protected static ArrayList<String> generateTest(){
         ArrayList<String> libs = new ArrayList<>();
         libs.add("../sypet_ml/lib/geometry.jar");
         return libs;

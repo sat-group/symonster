@@ -69,7 +69,7 @@ public class JarParserLib {
         Scene.v().loadNecessaryClasses();
     }
 
-    public static void init(ArrayList<String> libs, List<String> packages) throws FileNotFoundException {
+    public static void init(ArrayList<String> libs, List<String> packages, boolean notify) throws FileNotFoundException {
         initSoot(libs, packages);
 
         for (String lib : libs){
@@ -77,7 +77,8 @@ public class JarParserLib {
             labelSet = methods.stream().map(SootMethod::getSignature).collect(Collectors.toSet());
             System.out.println("#methods = " + labelSet.size());
         }
-        Main.onParseLibComplete();
+        if(notify)
+            Main.onParseLibComplete();
     }
 
     public static Set<String> getLabelSet() {

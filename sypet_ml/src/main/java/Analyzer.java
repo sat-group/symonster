@@ -1,16 +1,42 @@
+import knn.KNN;
+
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.Boolean.parseBoolean;
 
-public class CSVDataParser {
+public class Analyzer {
     static List<TrainData> goodDataList = new ArrayList<>();
     static List<BadData> badDataList = new ArrayList<>();
+    static List<int[]> vectors = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         read();
         write();
+        JarParserLib.init(Main.generateLib(), Main.packages, false);
+        KNN knn = new KNN(JarParserLib.getLabelSet(),vectors);
+        knn.preSort();
+
+        // mock test on geometry
+        List<String> libs = Main.generateTest();
+        JarParser.parseJar(libs, Main.packages);
+        Map<String, Set<String>> dataT = JarParser.getMethodToAppearancesMap();
+        //Set<String> sampleRotate = data.get("<symonster.cmu.edu.Examples: java.awt.geom.Area rotate(java.awt.geom.Area,java.awt.geom.Point2D,double)>");
+        Set<String> sampleRotate = new HashSet<>();
+        sampleRotate.add("<java.awt.geom.Point2D: double getX()>");
+        //sampleRotate.remove("<java.awt.geom.Area: java.awt.geom.Area createTransformedArea(java.awt.geom.AffineTransform)>");
+        //System.out.println("prob: "+knn.getFreq(""));
+        LinkedHashMap<String, Float> map = knn.predict(sampleRotate);
+        System.out.println("===== Top 10 Prediction =====");
+        int k = 0;
+        for(String method : map.keySet()) {
+            if (k < 10) {
+                System.out.println(method + " -> " + map.get(method));
+                k++;
+            }
+        }
+
+            System.out.println(knn.getTrainSetSize());
     }
 
     public static void write() throws FileNotFoundException {
@@ -33,12 +59,17 @@ public class CSVDataParser {
 
         BufferedReader br = new BufferedReader(new FileReader("src/resources/data.csv"));
         while ((line = br.readLine()) != null) {
-
             // check if we have reached final
             if(line.startsWith("final result:")){
-                break;
+                // first line of vector
+                String s = line.split(":")[1];
+                stringToVector(s);
             } else if(line.startsWith("name")){
                 // do nothing
+            }else if(line.startsWith("<j")){
+
+            }else if(line.startsWith("<")){
+                vectors.add(stringToVector(line));
             }else {
                 String[] dataStr = line.split(cvsSplitBy);
                 String name = dataStr[0].split("/")[4];
@@ -57,6 +88,16 @@ public class CSVDataParser {
             }
 
         }
+    }
+
+    static int[] stringToVector(String s){
+        s = s.substring(1,s.length()-1);
+        String[] strings = s.split(",");
+        int[] vec = new int[strings.length];
+        for(int i=0; i<strings.length; i++){
+            vec[i] = Integer.parseInt(strings[i].replaceAll("\\s+",""));
+        }
+        return vec;
     }
 
     static class TrainData{

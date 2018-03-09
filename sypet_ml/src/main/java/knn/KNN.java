@@ -38,6 +38,23 @@ public class KNN {
         }
     }
 
+    public KNN(Set<String> labels, List<int[]> preTrained){
+        this.labelSize = labels.size();
+        this.labels = new String[labelSize];
+        int j = 0;
+        for (String s : labels) {
+            this.labels[j] = s;
+            j++;
+        }
+        this.labelMap = new HashMap<>();
+        for (int i = 0; i < this.labels.length; i++) {
+            labelMap.put(this.labels[i], i);
+        }
+        this.values = preTrained;
+        this.freqTable = new float[labelSize];
+        Arrays.fill(freqTable, -1);
+    }
+
 
     public void addTrainVector(Set<String> appearances) {
         int[] vector = new int[labelSize];
