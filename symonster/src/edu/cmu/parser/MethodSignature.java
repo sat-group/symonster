@@ -75,7 +75,7 @@ public class MethodSignature {
             i += 1;
         }
         result += ")";
-        return result;
+        return name;
     }
 
     @Override

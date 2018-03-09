@@ -8,6 +8,7 @@ import soot.jimple.Stmt;
 import soot.jimple.internal.JInstanceFieldRef;
 import soot.jimple.internal.JInvokeStmt;
 
+import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -26,12 +27,26 @@ public class JarParser extends BodyTransformer{
      */
     public static void main(String[] args) {
         List<String> libs = new ArrayList<>();
-        libs.add("lib/point.jar");
+        libs.add("lib/simplePoint.jar");
         //libs.add("../benchmarks/examples/geometry/geometry.jar");
         //libs.add("lib/hamcrest-core-1.3.jar");
         //libs.add("lib/junit-4.11.jar");
         List<MethodSignature> sigs = parseJar(libs);
-        System.out.println(createDependencyMap().toString());
+        DependencyMap depmap = createDependencyMap();
+        System.out.println(sigs);
+        List<MethodSignature> testlist = new ArrayList<>();
+        testlist.add(sigs.get(7));
+        testlist.add(sigs.get(5));
+        testlist.add(sigs.get(6));
+        testlist.add(sigs.get(3));
+        testlist.add(sigs.get(4));
+        testlist.add(sigs.get(0));
+        System.out.println(testlist);
+        List<List<MethodSignature>> result = depmap.findAllTopSorts(testlist);
+        System.out.println("Found "+result.size() + " results.");
+        for (List<MethodSignature> small:result){
+            System.out.println(small);
+        }
     }
 
     /**
@@ -40,9 +55,8 @@ public class JarParser extends BodyTransformer{
      * @return the list of method signature contained in the given libraries
      */
     public static List<MethodSignature> parseJar(List<String> libs) {
-        String[] args = SootUtils.getSootArgs(libs);
         PackManager.v().getPack("jap").add(new Transform(ANALYSIS_NAME, new JarParser()));
-        SootUtils.runSoot(args);
+        SootUtils.runSoot(SootUtils.getSootArgs(libs));
         List<MethodSignature> sigs = new LinkedList<>();
         for (String jarPath : libs){
             List<String> cls = SourceLocator.v().getClassesUnder(jarPath);
@@ -51,7 +65,6 @@ public class JarParser extends BodyTransformer{
                 List<SootMethod> methods = clazz.getMethods();
                 for (SootMethod method : methods) {
                     if (method.isPublic()){
-                        System.out.println(method);
                         sigs.add(getMethodSignature(method));
                     }
                 }
@@ -89,20 +102,21 @@ public class JarParser extends BodyTransformer{
         DependencyMap ret = dependencyMap;
         dependencyMap = new DependencyMap();
         analyzeDep();
+        List<MethodSignature> keyset = new ArrayList<>(usedFieldDict.keySet());
         //Create dependencies
-        for (MethodSignature s1 : usedFieldDict.keySet()){
-            for (MethodSignature s2 : usedFieldDict.keySet()){
-                if (s1 != s2){
-                    boolean intersect = false;
-                    for (SootField field : usedFieldDict.get(s1)){
-                        if (usedFieldDict.get(s2).contains(field)){
-                            intersect = true;
-                            break;
-                        }
+        for (int i = 0 ; i < keyset.size() ; i++){
+            for (int j = i + 1; j < keyset.size() ; j++){
+                MethodSignature s1 = keyset.get(i);
+                MethodSignature s2 = keyset.get(j);
+                boolean intersect = false;
+                for (SootField field : usedFieldDict.get(s1)){
+                    if (usedFieldDict.get(s2).contains(field)){
+                        intersect = true;
+                        break;
                     }
-                    if (intersect){
-                        dependencyMap.addDep(s1,s2);
-                    }
+                }
+                if (intersect){
+                    dependencyMap.addDep(s1,s2);
                 }
             }
         }
@@ -127,8 +141,10 @@ public class JarParser extends BodyTransformer{
         usedFieldDict = new HashMap<>();
         for (SootMethod method : bodies.keySet()){
             Body body = bodies.get(method);
-            Set<SootField> result = addProgramMethod(body,getMethodSignature(method));
-            usedFieldDict.put(getMethodSignature(body.getMethod()),result);
+            if (body != null){
+                Set<SootField> result = addProgramMethod(body,getMethodSignature(method));
+                usedFieldDict.put(getMethodSignature(body.getMethod()),result);
+            }
         }
 
     }
@@ -149,7 +165,6 @@ public class JarParser extends BodyTransformer{
                 result.addAll(addAllFieldInUnit(stmt));
             }
         }
-        System.out.println(result.size());
         workings.remove(methodSignature);
         return result;
 

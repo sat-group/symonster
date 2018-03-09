@@ -1,6 +1,7 @@
 package edu.cmu.ui;
 import edu.cmu.codeformer.CodeFormer;
 import edu.cmu.compilation.Test;
+import edu.cmu.equivprogram.DependencyMap;
 import edu.cmu.parser.JarParser;
 import edu.cmu.parser.JsonParser;
 import edu.cmu.parser.MethodSignature;
@@ -19,6 +20,9 @@ import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -88,7 +92,7 @@ public class SyMonster {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJson("../benchmarks/sampleJson.json");
+            jsonInput = JsonParser.parseJson("benchmarks/tests/7/test7.json");
         }
         else{
             jsonInput = JsonParser.parseJson(args[0]);
@@ -96,10 +100,18 @@ public class SyMonster {
 
         String methodName = jsonInput.methodName;
         List<String> libs =jsonInput.libs;
-		List<String> inputs = jsonInput.inputTypes;
-        List<String> varNames = jsonInput.inputVarNames;
-        String retType = jsonInput.returnType;
-        String testCode = jsonInput.testCode;
+		List<String> inputs = jsonInput.srcTypes;
+        List<String> varNames = jsonInput.paramNames;
+        String retType = jsonInput.tgtType;
+        File file = new File(jsonInput.testPath);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        StringBuilder fileContents = new StringBuilder();
+        String line = br.readLine();
+        while (line != null) {
+            fileContents.append(line);
+            line = br.readLine();
+        }
+        String testCode = fileContents.toString();
 
 
 		// 2. Parse library
@@ -117,6 +129,8 @@ public class SyMonster {
 
         TimerUtils.startTimer("total");
 
+        Set<List<MethodSignature>> repeatSolutions = new HashSet<>();
+        DependencyMap dependencyMap = JarParser.createDependencyMap();
 		while (!solution) {
 			// create a formula that has the same semantics as the petri-net
 			Encoding encoding = new SequentialEncoding(net, loc);
@@ -144,43 +158,49 @@ public class SyMonster {
 					}
 				}
 
-                // 5. Convert a path to a program
-				// NOTE: one path may correspond to multiple programs and we may need a loop here!
-                boolean sat = true;
-				CodeFormer former = new CodeFormer(signatures,inputs,retType, varNames, methodName);
-                while (sat){
-                    //TODO Replace the null pointers with inputs/output types
-                    String code;
-                    try {
-                        code = former.solve();
-                    } catch (TimeoutException e) {
-                        sat = false;
-                        break;
-                    }
-                    sat = !former.isUnsat();
-                    programs++;
-                    if (programs % 50 == 1)
-                    {
-                        System.out.println("programs: "+programs);
-                        System.out.println(signatures);
-                        System.out.println("n signatures: "+ signatures.size());
-                        System.out.println(code);
-                        System.out.println();
-                    }
+                if (!repeatSolutions.contains(signatures)){
+                    List<List<MethodSignature>> repeated = dependencyMap.findAllTopSorts(signatures);
+
+                    repeatSolutions.addAll(repeated);
+                    // 5. Convert a path to a program
+                    // NOTE: one path may correspond to multiple programs and we may need a loop here!
+                    boolean sat = true;
+                    CodeFormer former = new CodeFormer(signatures,inputs,retType, varNames, methodName);
+                    while (sat){
+                        //TODO Replace the null pointers with inputs/output types
+                        String code;
+                        try {
+                            code = former.solve();
+                        } catch (TimeoutException e) {
+                            sat = false;
+                            break;
+                        }
+                        sat = !former.isUnsat();
+                        programs++;
+                        if (programs % 50 == 1)
+                        {
+                            System.out.println("programs: "+programs);
+                            System.out.println(signatures);
+                            System.out.println("n signatures: "+ signatures.size());
+                            System.out.println(code);
+                            System.out.println();
+                        }
 
 
-                    // 6. Run the test cases
-                    // TODO: write this code; if all test cases pass then we can terminate
-                    if (test.runTest(code,testCode)) {
-                        solution = true;
-                        System.out.println("Programs explored = " + programs);
-                        System.out.println("code:");
-                        System.out.println(code);
-                        TimerUtils.stopTimer("total");
-                        System.out.println("total time: "+TimerUtils.getCumulativeTime("total"));
-                        break;
+                        // 6. Run the test cases
+                        // TODO: write this code; if all test cases pass then we can terminate
+                        if (test.runTest(code,testCode)) {
+                            solution = true;
+                            System.out.println("Programs explored = " + programs);
+                            System.out.println("code:");
+                            System.out.println(code);
+                            TimerUtils.stopTimer("total");
+                            System.out.println("total time: "+TimerUtils.getCumulativeTime("total"));
+                            break;
+                        }
                     }
                 }
+
 				// the current path did not result in a program that passes all test cases
 				// find the next path
 				result = Encoding.solver.findPath();

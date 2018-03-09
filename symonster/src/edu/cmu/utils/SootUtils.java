@@ -34,8 +34,9 @@ public class SootUtils {
         argList.add("cp");
         argList.add(sootClasspath);
         argList.add("-keep-line-number");
-        argList.add("-f");
-        argList.add("-J");
+        argList.add("-prepend-classpath");
+        argList.add("-full-resolver");
+        argList.add("-allow-phantom-refs");
         for (String lib : libs){
             argList.add("-process-dir");
             argList.add(lib);

@@ -18,7 +18,7 @@ import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-public class ReflectionUtils {
+public class TestUtils {
     /** where shall the compiled class be saved to (should exist already) */
     private static String classOutputFolder = "folder";
 
@@ -108,7 +108,7 @@ public class ReflectionUtils {
             Class params[] = {};
             Object paramsObj[] = {};
             Object instance = thisClass.newInstance();
-            Method thisMethod = thisClass.getDeclaredMethod("pass", params);
+            Method thisMethod = thisClass.getDeclaredMethod("test", params);
 
             // run the testAdd() method on the instance:
             return (boolean)thisMethod.invoke(instance, paramsObj);
@@ -123,6 +123,7 @@ public class ReflectionUtils {
         }
         catch (Exception ex)
         {
+            ex.printStackTrace();
             System.out.println("bug3");
         }
         return false;

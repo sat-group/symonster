@@ -1,15 +1,9 @@
 package edu.cmu.compilation;
 
-import edu.cmu.utils.ReflectionUtils;
+import edu.cmu.utils.TestUtils;
 
-import javax.tools.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 public class Test {
     private static String classOutputFolder = "build";
@@ -35,7 +29,7 @@ public class Test {
     public static boolean runTest(String code,String testCode) throws IOException {
         //Create file;
         String classCode = writeCode(code,testCode);
-        boolean runResult = ReflectionUtils.runTest(classCode);
+        boolean runResult = TestUtils.runTest(classCode);
         //if (!runResult) file.delete();
         return runResult;
     }
