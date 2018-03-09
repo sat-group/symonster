@@ -46,7 +46,8 @@ public class Main {
             }
         }
         pw.write("final result:");
-        pw.write(knn.getTrainSparseString());
+        pw.write(knn.getTrainDenseString());
+        pw.write(knn.getSortedFreqString());
         pw.close();
 
         // add training data (var independent)

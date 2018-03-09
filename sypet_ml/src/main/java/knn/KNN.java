@@ -85,6 +85,19 @@ public class KNN {
         return vecString.toString();
     }
 
+    public String getTrainDenseString(){
+        StringBuilder vecString = new StringBuilder();
+        for (int[] vec : values) {
+            vecString.append("<");
+            for (int i = 0; i < vec.length; i++) {
+                vecString.append(vec[i] + ", ");
+            }
+            vecString.deleteCharAt(vecString.length() - 1);
+            vecString.append(">\n");
+        }
+        return vecString.toString();
+    }
+
     public void showTrainSetSparse() {
         for (int[] vec : values) {
             StringBuilder vecString = new StringBuilder();
@@ -184,5 +197,14 @@ public class KNN {
 
         sortedFreqIndexTable.sort(new FreqComparator());
         isSorted = true;
+    }
+
+    public String getSortedFreqString(){
+        StringBuilder result = new StringBuilder();
+        for(int index : sortedFreqIndexTable){
+            result.append(labels[index])
+            .append("<").append(freqTable[index]).append(",");
+        }
+        return result.toString();
     }
 }
