@@ -7,6 +7,7 @@ import junit.textui.TestRunner;
 import org.sat4j.specs.TimeoutException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CodeFormerTest {
@@ -31,7 +32,7 @@ public class CodeFormerTest {
         varNames.add("x");
         varNames.add("y");
         String methodName = "method";
-        CodeFormer former = new CodeFormer(sequence,inputTypes,returnType, varNames, methodName);
+        CodeFormer former = new CodeFormer(sequence,inputTypes,returnType, varNames, methodName,new HashMap<>());
         TestRunner runner = new TestRunner();
         while (!former.isUnsat()){
             try {

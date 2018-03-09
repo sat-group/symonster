@@ -86,6 +86,8 @@ public class SyMonster {
         Set<String> acceptableSuperClasses = new HashSet<>();
         acceptableSuperClasses.addAll(jsonConfig.acceptableSuperClasses);
 
+
+
         // 1. Read input from the user
         SyMonsterInput jsonInput;
         if (args.length == 0) {
@@ -114,7 +116,16 @@ public class SyMonster {
 
 		// 2. Parse library
         List<MethodSignature> sigs = JarParser.parseJar(libs);
-        Map<SootClass,Set<SootClass>> superclassMap = JarParser.getSuperClasses(acceptableSuperClasses);
+        Map<String,Set<String>> superclassMap = JarParser.getSuperClasses(acceptableSuperClasses);
+        Map<String,Set<String>> subclassMap = new HashMap<>();
+        for (String key : superclassMap.keySet()){
+            for (String value :superclassMap.get(key)){
+                if (!subclassMap.containsKey(value)){
+                    subclassMap.put(value,new HashSet<>());
+                }
+                subclassMap.get(value).add(key);
+            }
+        }
 
         // 3. build a petrinet and signatureMap of library
         // Currently built without clone edges
@@ -165,7 +176,7 @@ public class SyMonster {
                     // 5. Convert a path to a program
                     // NOTE: one path may correspond to multiple programs and we may need a loop here!
                     boolean sat = true;
-                    CodeFormer former = new CodeFormer(signatures,inputs,retType, varNames, methodName);
+                    CodeFormer former = new CodeFormer(signatures,inputs,retType, varNames, methodName,subclassMap);
                     while (sat){
                         //TODO Replace the null pointers with inputs/output types
                         String code;

@@ -7,11 +7,10 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.IVecInt;
 import org.sat4j.specs.TimeoutException;
+import soot.SootClass;
 import soot.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 /**
  * Given a sequence of method calls, this class will produce a string containing the corresponding Java code.
@@ -28,6 +27,7 @@ public class CodeFormer {
     private final List<String> varNames;
     private final String methodName;
     private final Map<Integer,Integer> lastValueOfSlot = new HashMap<>();
+    private final Map<String,Set<String>> subclassMap;
     ISolver solver = SolverFactory.newDefault();
 
     /**
@@ -37,12 +37,14 @@ public class CodeFormer {
      * @param varNames
      * @param methodName
      */
-    public CodeFormer(List<MethodSignature> sigs, List<String> inputTypes, String retType, List<String> varNames, String methodName) {
+    public CodeFormer(List<MethodSignature> sigs, List<String> inputTypes, String retType, List<String> varNames,
+                      String methodName, Map<String,Set<String>> subclassMap) {
         this.sigs = sigs;
         this.inputTypes = inputTypes;
         this.retType = retType;
         this.varNames = varNames;
         this.methodName = methodName;
+        this.subclassMap = subclassMap;
         solver.setTimeout(1000000);
         //Setup
         //Add method input
@@ -140,9 +142,15 @@ public class CodeFormer {
         for (int slotValue = 0; slotValue < slotNumber ; slotValue += 1) {
             IVecInt vec = new VecInt();
             IVecInt vec0 = new VecInt();
-            for (int returnedValue : returnedValTypes.getEntries(slotTypes.getType(slotValue))) {
-                if (returnedValue < lastValueOfSlot.get(slotValue)) vec.push(calculateID(returnedValue,slotValue));
-                else vec0.push(calculateID(returnedValue,slotValue));
+            String slotType = slotTypes.getType(slotValue);
+            List<String> possibleSlotTypes = new LinkedList<>();
+            if (subclassMap.containsKey(slotType)) possibleSlotTypes.addAll(subclassMap.get(slotType));
+            possibleSlotTypes.add(slotType);
+            for (String curSlotType : possibleSlotTypes){
+                for (int returnedValue : returnedValTypes.getEntries(curSlotType)) {
+                    if (returnedValue < lastValueOfSlot.get(slotValue)) vec.push(calculateID(returnedValue,slotValue));
+                    else vec0.push(calculateID(returnedValue,slotValue));
+                }
             }
             try {
                 solver.addExactly(vec,1);
@@ -153,7 +161,7 @@ public class CodeFormer {
         }
     }
 
-    //Each slot only has one variable
+    //Each returned value used at least once
     private void addAtLeastOneSlot(){
         //TODO Constrain by the order
         for (int returnedValue = 0; returnedValue < retNumber ; returnedValue += 1) {

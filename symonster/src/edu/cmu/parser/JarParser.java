@@ -46,7 +46,7 @@ public class JarParser extends BodyTransformer{
         SymonsterConfig config = JsonParser.parseJsonConfig("config/config.json");
         Set<String> acceptableSuperClasses = new HashSet<>();
         acceptableSuperClasses.addAll(config.acceptableSuperClasses);
-        for (Set<SootClass> set : getSuperClasses(acceptableSuperClasses).values()){
+        for (Set<String> set : getSuperClasses(acceptableSuperClasses).values()){
             System.out.println(set);
         }
     }
@@ -81,26 +81,26 @@ public class JarParser extends BodyTransformer{
      *                               unnecessary super classes (e.g. Object).
      * @return the map from each SootClass, to its corresponding set of super classes.
      */
-    public static Map<SootClass,Set<SootClass>> getSuperClasses(Set<String> acceptableSuperClasses){
-        Map<SootClass,Set<SootClass>> result = new HashMap<>();
+    public static Map<String,Set<String>> getSuperClasses(Set<String> acceptableSuperClasses){
+        Map<String,Set<String>> result = new HashMap<>();
         for (SootClass cl : Scene.v().getApplicationClasses()){
-            result.put(cl,getSuperClassesOfClass(acceptableSuperClasses,cl));
+            result.put(cl.getName(),getSuperClassesOfClass(acceptableSuperClasses,cl));
         }
         return result;
     }
 
-    private static Set<SootClass> getSuperClassesOfClass(Set<String> acceptableSuperClasses, SootClass cl){
-        Set<SootClass> res;
+    private static Set<String> getSuperClassesOfClass(Set<String> acceptableSuperClasses, SootClass cl){
+        Set<String> res;
         if (cl.hasSuperclass()){
             SootClass sup = cl.getSuperclass();
             res= getSuperClassesOfClass(acceptableSuperClasses,sup);
-            if (acceptableSuperClasses.contains(sup.getName())) res.add(cl.getSuperclass());
+            if (acceptableSuperClasses.contains(sup.getName())) res.add(cl.getSuperclass().getName());
         }
         else{
             res = new HashSet<>();
         }
         for (SootClass interf:cl.getInterfaces()){
-            if (acceptableSuperClasses.contains(interf.getName())) res.add(cl.getSuperclass());
+            if (acceptableSuperClasses.contains(interf.getName())) res.add(cl.getSuperclass().getName());
             res.addAll(getSuperClassesOfClass(acceptableSuperClasses,interf));
         }
         return res;
