@@ -1,9 +1,6 @@
 package edu.cmu.codeformer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class VarTable {
     final Map<String,List<Integer>> table = new HashMap<>();
@@ -23,7 +20,8 @@ public class VarTable {
      * @return
      */
     public List<Integer> getEntries(String type){
-        return table.get(type);
+        if (table.containsKey(type)) return table.get(type);
+        else return new LinkedList<>();
     }
 
     public String getType(int val){
