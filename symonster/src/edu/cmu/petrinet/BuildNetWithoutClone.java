@@ -319,16 +319,14 @@ public class BuildNetWithoutClone {
             //add flows for the return type
             petrinet.createFlow(transitionName, retType.toString(), 1);
 
-            // TODO check the logic here
-            //createCopies(petrinet.getTransition(transitionName));
         }
 
         handlePolymorphismAlt();
-
         // TODO check the logic here
         for(Transition t : petrinet.getTransitions()) {
             createCopies(t);
         }
+        //handlePolymorphism();
 
         //Set max tokens for each place
         for (Place p : petrinet.getPlaces()) {
@@ -341,9 +339,12 @@ public class BuildNetWithoutClone {
                     continue;
                 }
             }
-            p.setMaxToken(count);
+            if(count != 0) {
+                p.setMaxToken(count);
+            } else {
+                p.setMaxToken(1);
+            }
         }
-
         return petrinet;
     }
 }

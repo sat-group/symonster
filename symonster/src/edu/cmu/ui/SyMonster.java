@@ -92,7 +92,7 @@ public class SyMonster {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/tests/7/test7.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/tests/9/test9.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
