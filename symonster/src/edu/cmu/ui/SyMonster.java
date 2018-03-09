@@ -2,29 +2,23 @@ package edu.cmu.ui;
 import edu.cmu.codeformer.CodeFormer;
 import edu.cmu.compilation.Test;
 import edu.cmu.equivprogram.DependencyMap;
-import edu.cmu.parser.JarParser;
-import edu.cmu.parser.JsonParser;
-import edu.cmu.parser.MethodSignature;
-import edu.cmu.parser.SyMonsterInput;
-import edu.cmu.petrinet.BuildNet;
+import edu.cmu.parser.*;
 import edu.cmu.petrinet.BuildNetWithoutClone;
 import edu.cmu.reachability.Encoding;
 import edu.cmu.reachability.SequentialEncoding;
 import edu.cmu.reachability.Variable;
-import edu.cmu.tests.PointPetriNet;
 import edu.cmu.utils.TimerUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.sat4j.specs.TimeoutException;
+import soot.SootClass;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
-import uniol.apt.adt.pn.Transition;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.*;
 
 public class SyMonster {
@@ -87,15 +81,19 @@ public class SyMonster {
 	public static void main(String[] args) throws IOException {
 		
 		Test test = new Test();
+        // 0. Read config
+        SymonsterConfig jsonConfig = JsonParser.parseJsonConfig("config/config.json");
+        Set<String> acceptableSuperClasses = new HashSet<>();
+        acceptableSuperClasses.addAll(jsonConfig.acceptableSuperClasses);
 
-		// 1. Read input from the user
+        // 1. Read input from the user
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJson("benchmarks/tests/7/test7.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/tests/7/test7.json");
         }
         else{
-            jsonInput = JsonParser.parseJson(args[0]);
+            jsonInput = JsonParser.parseJsonInput(args[0]);
         }
 
         String methodName = jsonInput.methodName;
@@ -116,6 +114,8 @@ public class SyMonster {
 
 		// 2. Parse library
         List<MethodSignature> sigs = JarParser.parseJar(libs);
+        Map<SootClass,Set<SootClass>> superclassMap = JarParser.getSuperClasses(acceptableSuperClasses);
+
         // 3. build a petrinet and signatureMap of library
         // Currently built without clone edges
 		BuildNetWithoutClone b = new BuildNetWithoutClone();

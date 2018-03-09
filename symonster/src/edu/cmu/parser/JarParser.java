@@ -7,6 +7,7 @@ import soot.jimple.InvokeExpr;
 import soot.jimple.Stmt;
 import soot.jimple.internal.JInstanceFieldRef;
 import soot.jimple.internal.JInvokeStmt;
+import soot.util.ArraySet;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -27,13 +28,12 @@ public class JarParser extends BodyTransformer{
      */
     public static void main(String[] args) {
         List<String> libs = new ArrayList<>();
-        libs.add("lib/simplePoint.jar");
+        libs.add("lib/point.jar");
         //libs.add("../benchmarks/examples/geometry/geometry.jar");
         //libs.add("lib/hamcrest-core-1.3.jar");
         //libs.add("lib/junit-4.11.jar");
         List<MethodSignature> sigs = parseJar(libs);
         DependencyMap depmap = createDependencyMap();
-        System.out.println(sigs);
         List<MethodSignature> testlist = new ArrayList<>();
         testlist.add(sigs.get(7));
         testlist.add(sigs.get(5));
@@ -41,11 +41,13 @@ public class JarParser extends BodyTransformer{
         testlist.add(sigs.get(3));
         testlist.add(sigs.get(4));
         testlist.add(sigs.get(0));
-        System.out.println(testlist);
         List<List<MethodSignature>> result = depmap.findAllTopSorts(testlist);
         System.out.println("Found "+result.size() + " results.");
-        for (List<MethodSignature> small:result){
-            System.out.println(small);
+        SymonsterConfig config = JsonParser.parseJsonConfig("config/config.json");
+        Set<String> acceptableSuperClasses = new HashSet<>();
+        acceptableSuperClasses.addAll(config.acceptableSuperClasses);
+        for (Set<SootClass> set : getSuperClasses(acceptableSuperClasses).values()){
+            System.out.println(set);
         }
     }
 
@@ -79,19 +81,32 @@ public class JarParser extends BodyTransformer{
      *                               unnecessary super classes (e.g. Object).
      * @return the map from each SootClass, to its corresponding set of super classes.
      */
-    public static Map<SootClass,Set<SootClass>> getSuperClasses(Set<SootClass> acceptableSuperClasses){
+    public static Map<SootClass,Set<SootClass>> getSuperClasses(Set<String> acceptableSuperClasses){
         Map<SootClass,Set<SootClass>> result = new HashMap<>();
         for (SootClass cl : Scene.v().getApplicationClasses()){
-            SootClass cur = cl;
-            Set<SootClass> superClasses = new HashSet<>();
-            while (cur.hasSuperclass()){
-                cur = cur.getSuperclass();
-                if (acceptableSuperClasses.contains(cur)) superClasses.add(cur);
-            }
-            result.put(cl,superClasses);
+            result.put(cl,getSuperClassesOfClass(acceptableSuperClasses,cl));
         }
         return result;
     }
+
+    private static Set<SootClass> getSuperClassesOfClass(Set<String> acceptableSuperClasses, SootClass cl){
+        Set<SootClass> res;
+        if (cl.hasSuperclass()){
+            SootClass sup = cl.getSuperclass();
+            res= getSuperClassesOfClass(acceptableSuperClasses,sup);
+            if (acceptableSuperClasses.contains(sup.getName())) res.add(cl.getSuperclass());
+        }
+        else{
+            res = new HashSet<>();
+        }
+        for (SootClass interf:cl.getInterfaces()){
+            if (acceptableSuperClasses.contains(interf.getName())) res.add(cl.getSuperclass());
+            res.addAll(getSuperClassesOfClass(acceptableSuperClasses,interf));
+        }
+        return res;
+    }
+
+
 
     /**
      * Return the resulting dependency map of the signatures, and reset all fields.

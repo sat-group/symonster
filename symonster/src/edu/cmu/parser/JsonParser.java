@@ -6,12 +6,25 @@ import java.io.*;
 
 public class JsonParser {
     public static void main(String[] args) {
-        parseJson("/Users/liukaige/Desktop/testJson.json");
+        parseJsonInput("/Users/liukaige/Desktop/testJson.json");
     }
-    public static SyMonsterInput parseJson(String path){
+    public static SyMonsterInput parseJsonInput(String path){
         try(Reader reader = new InputStreamReader(new FileInputStream(new File(path)))){
             Gson gson = new GsonBuilder().create();
             SyMonsterInput p = gson.fromJson(reader, SyMonsterInput.class);
+            return p;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static SymonsterConfig parseJsonConfig(String path){
+        try(Reader reader = new InputStreamReader(new FileInputStream(new File(path)))){
+            Gson gson = new GsonBuilder().create();
+            SymonsterConfig p = gson.fromJson(reader, SymonsterConfig.class);
             return p;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
