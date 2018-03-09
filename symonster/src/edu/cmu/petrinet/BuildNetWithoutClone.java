@@ -25,9 +25,12 @@ public class BuildNetWithoutClone {
     //map from transition name to a method signature
     static public Map<String, MethodSignature> dict = new HashMap<String, MethodSignature>();
 
+    static private Map<String, List<String>> superDict = new HashMap<>();
+    static private Map<String, List<String>> subDict = new HashMap<>();
+
     public static void main(String[] args) throws java.io.IOException{
         List<String> libs = new ArrayList<>();
-        libs.add("lib/simplePoint.jar");
+        libs.add("lib/point.jar");
         List<MethodSignature> sigs = JarParser.parseJar(libs);
         build(sigs);
 
@@ -55,6 +58,116 @@ public class BuildNetWithoutClone {
         }
 
         Visualization.translate(petrinet);
+    }
+
+    private static void handlePolymorphism() {
+        // This method handles polymorphism by creating methods that transforms each
+        // subclass into its super class
+        // TODO polymorphism information is currently hardcoded
+        List<String> l1 = new ArrayList<>();
+        l1.add("cmu.symonster.Shape");
+
+        superDict.put("cmu.symonster.Rectangle", l1);
+        superDict.put("cmu.symonster.Triangle", l1);
+
+        for(String subClass : superDict.keySet()) {
+            for (String superClass : superDict.get(subClass)) {
+                assert (petrinet.containsNode(subClass));
+                assert (petrinet.containsNode(superClass));
+                String methodName = subClass + "=" + superClass;
+                petrinet.createTransition(methodName);
+                petrinet.createFlow(subClass, methodName);
+                petrinet.createFlow(methodName, superClass);
+            }
+        }
+    }
+
+    private static void generatePolymophism(Transition t,
+                                            int count,
+                                            List<Place> inputs,
+                                            List<Place> trueInputs) {
+        if(inputs.size() == count) {
+            // skip if true inputs is same as inputs
+            boolean skip = true;
+            for(int i = 0; i < inputs.size(); i++) {
+                if(!inputs.get(i).equals(trueInputs.get(i))) {
+                    skip = false;
+                }
+            }
+            if(skip) {
+                return;
+            }
+
+            String newTransitionName = t.getId() + "poly:(";
+            for(Place p : trueInputs) {
+                newTransitionName += p.getId() + " ";
+            }
+            newTransitionName += ")";
+
+            if(petrinet.containsTransition(newTransitionName)) {
+                return;
+            }
+            Transition newTransition  = petrinet.createTransition(newTransitionName);
+            // Add inputs
+            for(Place p : trueInputs) {
+                try {
+                    Flow f = petrinet.getFlow(p, newTransition);
+                    f.setWeight(f.getWeight() + 1);
+                } catch (NoSuchEdgeException e) {
+                    petrinet.createFlow(p, newTransition, 1);
+                }
+            }
+            // Add outputs but should changes as well....
+            for(Flow f : t.getPostsetEdges()) {
+                Place p = f.getPlace();
+                int w = f.getWeight();
+                petrinet.createFlow(newTransition, p, w);
+            }
+
+            dict.put(newTransitionName, dict.get(t.getId()));
+        } else {
+            Place p = inputs.get(count);
+            List<String> subClasses = subDict.get(p.getId());
+            if(subClasses == null) { // No possible polymophism
+                trueInputs.add(p);
+                generatePolymophism(t, count+1, inputs, trueInputs);
+                return;
+            } else {
+                for(String subclass : subClasses) {
+                    Place polyClass = petrinet.getPlace(subclass);
+                    trueInputs.add(polyClass);
+                    generatePolymophism(t, count+1, inputs, trueInputs);
+                    trueInputs.remove(polyClass);
+                }
+                return;
+            }
+        }
+    }
+    private static void handlePolymorphismAlt() {
+        // Handles polymorphism by creating copies for each method that
+        // has superclass as input type
+        List<String> l1 = new ArrayList<>();
+        l1.add("cmu.symonster.Rectangle");
+        l1.add("cmu.symonster.Triangle");
+        subDict.put("cmu.symonster.Shape", l1);
+        for(Transition t : petrinet.getTransitions()) {
+            List<Place> inputs = new ArrayList<>();
+            List<Place> outputs = new ArrayList<>();
+            Set<Flow> inEdges = t.getPresetEdges();
+            Set<Flow> outEdges = t.getPostsetEdges();
+            for(Flow f : inEdges) {
+                for(int i = 0; i < f.getWeight(); i++) {
+                    inputs.add(f.getPlace());
+                }
+            }
+            for(Flow f : outEdges) {
+                for(int i = 0; i < f.getWeight(); i++) {
+                    outputs.add(f.getPlace());
+                }
+            }
+            List<Place> trueInputs = new ArrayList<>();
+            generatePolymophism(t, 0, inputs, trueInputs);
+        }
     }
 
     private static void generateCopies(Transition t, List<Place> inputs, List<Place> outputs) {
@@ -146,6 +259,7 @@ public class BuildNetWithoutClone {
                 petrinet.createTransition(transitionName);
             } else { //The method is not static, so it has an extra argument
                 transitionName = className + "." + methodname + "(";
+                transitionName += k.getHostClass().toString() + " ";
                 for(Type t : args) {
                     transitionName += t.toString() + " ";
                 }
@@ -205,7 +319,15 @@ public class BuildNetWithoutClone {
             //add flows for the return type
             petrinet.createFlow(transitionName, retType.toString(), 1);
 
-            createCopies(petrinet.getTransition(transitionName));
+            // TODO check the logic here
+            //createCopies(petrinet.getTransition(transitionName));
+        }
+
+        handlePolymorphismAlt();
+
+        // TODO check the logic here
+        for(Transition t : petrinet.getTransitions()) {
+            createCopies(t);
         }
 
         //Set max tokens for each place
