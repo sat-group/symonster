@@ -1,0 +1,324 @@
+public class org.apache.commons.math3.linear.CholeskyDecomposition extends java.lang.Object
+{
+    public static final double DEFAULT_RELATIVE_SYMMETRY_THRESHOLD;
+    public static final double DEFAULT_ABSOLUTE_POSITIVITY_THRESHOLD;
+    private double[][] lTData;
+    private org.apache.commons.math3.linear.RealMatrix cachedL;
+    private org.apache.commons.math3.linear.RealMatrix cachedLT;
+
+    public void <init>(org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.linear.CholeskyDecomposition r0;
+        org.apache.commons.math3.linear.RealMatrix r1;
+
+        r0 := @this: org.apache.commons.math3.linear.CholeskyDecomposition;
+
+        r1 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        specialinvoke r0.<org.apache.commons.math3.linear.CholeskyDecomposition: void <init>(org.apache.commons.math3.linear.RealMatrix,double,double)>(r1, 1.0E-15, 1.0E-10);
+
+        return;
+    }
+
+    public void <init>(org.apache.commons.math3.linear.RealMatrix, double, double)
+    {
+        org.apache.commons.math3.linear.CholeskyDecomposition r0;
+        org.apache.commons.math3.linear.RealMatrix r1;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, d20, d21, d22;
+        int i0, $i3, $i4, i5, i6, i7, i8, i9;
+        double[] r2, r3, r12, r13;
+        boolean $z0;
+        double[][] $r4, $r5, $r6, $r8, $r9;
+        byte $b1, $b2;
+        org.apache.commons.math3.linear.NonPositiveDefiniteMatrixException $r7;
+        org.apache.commons.math3.linear.NonSymmetricMatrixException $r10;
+        org.apache.commons.math3.linear.NonSquareMatrixException $r11;
+
+        r0 := @this: org.apache.commons.math3.linear.CholeskyDecomposition;
+
+        r1 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $z0 = interfaceinvoke r1.<org.apache.commons.math3.linear.RealMatrix: boolean isSquare()>();
+
+        if $z0 != 0 goto label01;
+
+        $r11 = new org.apache.commons.math3.linear.NonSquareMatrixException;
+
+        $i3 = interfaceinvoke r1.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        $i4 = interfaceinvoke r1.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        specialinvoke $r11.<org.apache.commons.math3.linear.NonSquareMatrixException: void <init>(int,int)>($i3, $i4);
+
+        throw $r11;
+
+     label01:
+        i0 = interfaceinvoke r1.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        $r4 = interfaceinvoke r1.<org.apache.commons.math3.linear.RealMatrix: double[][] getData()>();
+
+        r0.<org.apache.commons.math3.linear.CholeskyDecomposition: double[][] lTData> = $r4;
+
+        r0.<org.apache.commons.math3.linear.CholeskyDecomposition: org.apache.commons.math3.linear.RealMatrix cachedL> = null;
+
+        r0.<org.apache.commons.math3.linear.CholeskyDecomposition: org.apache.commons.math3.linear.RealMatrix cachedLT> = null;
+
+        i5 = 0;
+
+     label02:
+        if i5 >= i0 goto label06;
+
+        $r8 = r0.<org.apache.commons.math3.linear.CholeskyDecomposition: double[][] lTData>;
+
+        r12 = $r8[i5];
+
+        i6 = i5 + 1;
+
+     label03:
+        if i6 >= i0 goto label05;
+
+        $r9 = r0.<org.apache.commons.math3.linear.CholeskyDecomposition: double[][] lTData>;
+
+        r2 = $r9[i6];
+
+        d20 = r12[i6];
+
+        d21 = r2[i5];
+
+        $d15 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d20);
+
+        $d16 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d21);
+
+        $d17 = staticinvoke <org.apache.commons.math3.util.FastMath: double max(double,double)>($d15, $d16);
+
+        d2 = d0 * $d17;
+
+        $d18 = d20 - d21;
+
+        $d19 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d18);
+
+        $b2 = $d19 cmpl d2;
+
+        if $b2 <= 0 goto label04;
+
+        $r10 = new org.apache.commons.math3.linear.NonSymmetricMatrixException;
+
+        specialinvoke $r10.<org.apache.commons.math3.linear.NonSymmetricMatrixException: void <init>(int,int,double)>(i5, i6, d0);
+
+        throw $r10;
+
+     label04:
+        r2[i5] = 0.0;
+
+        i6 = i6 + 1;
+
+        goto label03;
+
+     label05:
+        i5 = i5 + 1;
+
+        goto label02;
+
+     label06:
+        i7 = 0;
+
+     label07:
+        if i7 >= i0 goto label13;
+
+        $r5 = r0.<org.apache.commons.math3.linear.CholeskyDecomposition: double[][] lTData>;
+
+        r13 = $r5[i7];
+
+        $d3 = r13[i7];
+
+        $b1 = $d3 cmpg d1;
+
+        if $b1 > 0 goto label08;
+
+        $r7 = new org.apache.commons.math3.linear.NonPositiveDefiniteMatrixException;
+
+        $d14 = r13[i7];
+
+        specialinvoke $r7.<org.apache.commons.math3.linear.NonPositiveDefiniteMatrixException: void <init>(double,int,double)>($d14, i7, d1);
+
+        throw $r7;
+
+     label08:
+        $d4 = r13[i7];
+
+        $d5 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d4);
+
+        r13[i7] = $d5;
+
+        $d6 = r13[i7];
+
+        d22 = 1.0 / $d6;
+
+        i8 = i0 - 1;
+
+     label09:
+        if i8 <= i7 goto label12;
+
+        $d7 = r13[i8];
+
+        $d8 = $d7 * d22;
+
+        r13[i8] = $d8;
+
+        $r6 = r0.<org.apache.commons.math3.linear.CholeskyDecomposition: double[][] lTData>;
+
+        r3 = $r6[i8];
+
+        i9 = i8;
+
+     label10:
+        if i9 >= i0 goto label11;
+
+        $d12 = r3[i9];
+
+        $d10 = r13[i8];
+
+        $d9 = r13[i9];
+
+        $d11 = $d10 * $d9;
+
+        $d13 = $d12 - $d11;
+
+        r3[i9] = $d13;
+
+        i9 = i9 + 1;
+
+        goto label10;
+
+     label11:
+        i8 = i8 + -1;
+
+        goto label09;
+
+     label12:
+        i7 = i7 + 1;
+
+        goto label07;
+
+     label13:
+        return;
+    }
+
+    public org.apache.commons.math3.linear.RealMatrix getL()
+    {
+        org.apache.commons.math3.linear.CholeskyDecomposition r0;
+        org.apache.commons.math3.linear.RealMatrix $r1, $r2, $r3, $r4;
+
+        r0 := @this: org.apache.commons.math3.linear.CholeskyDecomposition;
+
+        $r1 = r0.<org.apache.commons.math3.linear.CholeskyDecomposition: org.apache.commons.math3.linear.RealMatrix cachedL>;
+
+        if $r1 != null goto label1;
+
+        $r3 = virtualinvoke r0.<org.apache.commons.math3.linear.CholeskyDecomposition: org.apache.commons.math3.linear.RealMatrix getLT()>();
+
+        $r4 = interfaceinvoke $r3.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix transpose()>();
+
+        r0.<org.apache.commons.math3.linear.CholeskyDecomposition: org.apache.commons.math3.linear.RealMatrix cachedL> = $r4;
+
+     label1:
+        $r2 = r0.<org.apache.commons.math3.linear.CholeskyDecomposition: org.apache.commons.math3.linear.RealMatrix cachedL>;
+
+        return $r2;
+    }
+
+    public org.apache.commons.math3.linear.RealMatrix getLT()
+    {
+        org.apache.commons.math3.linear.CholeskyDecomposition r0;
+        org.apache.commons.math3.linear.RealMatrix $r1, $r2, $r4;
+        double[][] $r3;
+
+        r0 := @this: org.apache.commons.math3.linear.CholeskyDecomposition;
+
+        $r1 = r0.<org.apache.commons.math3.linear.CholeskyDecomposition: org.apache.commons.math3.linear.RealMatrix cachedLT>;
+
+        if $r1 != null goto label1;
+
+        $r3 = r0.<org.apache.commons.math3.linear.CholeskyDecomposition: double[][] lTData>;
+
+        $r4 = staticinvoke <org.apache.commons.math3.linear.MatrixUtils: org.apache.commons.math3.linear.RealMatrix createRealMatrix(double[][])>($r3);
+
+        r0.<org.apache.commons.math3.linear.CholeskyDecomposition: org.apache.commons.math3.linear.RealMatrix cachedLT> = $r4;
+
+     label1:
+        $r2 = r0.<org.apache.commons.math3.linear.CholeskyDecomposition: org.apache.commons.math3.linear.RealMatrix cachedLT>;
+
+        return $r2;
+    }
+
+    public double getDeterminant()
+    {
+        org.apache.commons.math3.linear.CholeskyDecomposition r0;
+        double d0, $d1, d2;
+        double[][] $r1, $r2;
+        int $i0, i1;
+        double[] $r3;
+
+        r0 := @this: org.apache.commons.math3.linear.CholeskyDecomposition;
+
+        d2 = 1.0;
+
+        i1 = 0;
+
+     label1:
+        $r1 = r0.<org.apache.commons.math3.linear.CholeskyDecomposition: double[][] lTData>;
+
+        $i0 = lengthof $r1;
+
+        if i1 >= $i0 goto label2;
+
+        $r2 = r0.<org.apache.commons.math3.linear.CholeskyDecomposition: double[][] lTData>;
+
+        $r3 = $r2[i1];
+
+        d0 = $r3[i1];
+
+        $d1 = d0 * d0;
+
+        d2 = d2 * $d1;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return d2;
+    }
+
+    public org.apache.commons.math3.linear.DecompositionSolver getSolver()
+    {
+        org.apache.commons.math3.linear.CholeskyDecomposition r0;
+        org.apache.commons.math3.linear.CholeskyDecomposition$Solver $r1;
+        double[][] $r2;
+
+        r0 := @this: org.apache.commons.math3.linear.CholeskyDecomposition;
+
+        $r1 = new org.apache.commons.math3.linear.CholeskyDecomposition$Solver;
+
+        $r2 = r0.<org.apache.commons.math3.linear.CholeskyDecomposition: double[][] lTData>;
+
+        specialinvoke $r1.<org.apache.commons.math3.linear.CholeskyDecomposition$Solver: void <init>(double[][],org.apache.commons.math3.linear.CholeskyDecomposition$1)>($r2, null);
+
+        return $r1;
+    }
+
+    public static void <clinit>()
+    {
+        <org.apache.commons.math3.linear.CholeskyDecomposition: double DEFAULT_ABSOLUTE_POSITIVITY_THRESHOLD> = 1.0E-10;
+
+        <org.apache.commons.math3.linear.CholeskyDecomposition: double DEFAULT_RELATIVE_SYMMETRY_THRESHOLD> = 1.0E-15;
+
+        return;
+    }
+}

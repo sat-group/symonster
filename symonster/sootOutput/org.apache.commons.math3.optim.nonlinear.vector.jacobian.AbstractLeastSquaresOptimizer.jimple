@@ -1,0 +1,398 @@
+public abstract class org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer extends org.apache.commons.math3.optim.nonlinear.vector.JacobianMultivariateVectorOptimizer
+{
+    private org.apache.commons.math3.linear.RealMatrix weightMatrixSqrt;
+    private double cost;
+
+    protected void <init>(org.apache.commons.math3.optim.ConvergenceChecker)
+    {
+        org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer r0;
+        org.apache.commons.math3.optim.ConvergenceChecker r1;
+
+        r0 := @this: org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer;
+
+        r1 := @parameter0: org.apache.commons.math3.optim.ConvergenceChecker;
+
+        specialinvoke r0.<org.apache.commons.math3.optim.nonlinear.vector.JacobianMultivariateVectorOptimizer: void <init>(org.apache.commons.math3.optim.ConvergenceChecker)>(r1);
+
+        return;
+    }
+
+    protected org.apache.commons.math3.linear.RealMatrix computeWeightedJacobian(double[])
+    {
+        org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer r0;
+        double[] r1;
+        org.apache.commons.math3.linear.RealMatrix $r2, $r4, $r5;
+        double[][] $r3;
+
+        r0 := @this: org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer;
+
+        r1 := @parameter0: double[];
+
+        $r2 = r0.<org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer: org.apache.commons.math3.linear.RealMatrix weightMatrixSqrt>;
+
+        $r3 = virtualinvoke r0.<org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer: double[][] computeJacobian(double[])>(r1);
+
+        $r4 = staticinvoke <org.apache.commons.math3.linear.MatrixUtils: org.apache.commons.math3.linear.RealMatrix createRealMatrix(double[][])>($r3);
+
+        $r5 = interfaceinvoke $r2.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>($r4);
+
+        return $r5;
+    }
+
+    protected double computeCost(double[])
+    {
+        org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer r0;
+        double[] r1;
+        org.apache.commons.math3.linear.ArrayRealVector $r3;
+        org.apache.commons.math3.linear.RealMatrix $r4;
+        org.apache.commons.math3.linear.RealVector $r5;
+        double $d0, $d1;
+
+        r0 := @this: org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer;
+
+        r1 := @parameter0: double[];
+
+        $r3 = new org.apache.commons.math3.linear.ArrayRealVector;
+
+        specialinvoke $r3.<org.apache.commons.math3.linear.ArrayRealVector: void <init>(double[])>(r1);
+
+        $r4 = virtualinvoke r0.<org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer: org.apache.commons.math3.linear.RealMatrix getWeight()>();
+
+        $r5 = interfaceinvoke $r4.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealVector operate(org.apache.commons.math3.linear.RealVector)>($r3);
+
+        $d0 = virtualinvoke $r3.<org.apache.commons.math3.linear.ArrayRealVector: double dotProduct(org.apache.commons.math3.linear.RealVector)>($r5);
+
+        $d1 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d0);
+
+        return $d1;
+    }
+
+    public double getRMS()
+    {
+        org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer r0;
+        double $d0, $d1, $d2, $d3;
+        int $i0;
+
+        r0 := @this: org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer;
+
+        $d0 = virtualinvoke r0.<org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer: double getChiSquare()>();
+
+        $i0 = virtualinvoke r0.<org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer: int getTargetSize()>();
+
+        $d1 = (double) $i0;
+
+        $d2 = $d0 / $d1;
+
+        $d3 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d2);
+
+        return $d3;
+    }
+
+    public double getChiSquare()
+    {
+        org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer r0;
+        double $d0, $d1, $d2;
+
+        r0 := @this: org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer;
+
+        $d1 = r0.<org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer: double cost>;
+
+        $d0 = r0.<org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer: double cost>;
+
+        $d2 = $d1 * $d0;
+
+        return $d2;
+    }
+
+    public org.apache.commons.math3.linear.RealMatrix getWeightSquareRoot()
+    {
+        org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer r0;
+        org.apache.commons.math3.linear.RealMatrix $r1, $r2;
+
+        r0 := @this: org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer;
+
+        $r1 = r0.<org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer: org.apache.commons.math3.linear.RealMatrix weightMatrixSqrt>;
+
+        $r2 = interfaceinvoke $r1.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix copy()>();
+
+        return $r2;
+    }
+
+    protected void setCost(double)
+    {
+        org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer;
+
+        d0 := @parameter0: double;
+
+        r0.<org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer: double cost> = d0;
+
+        return;
+    }
+
+    public double[][] computeCovariances(double[], double)
+    {
+        org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer r0;
+        double[] r1;
+        double d0;
+        org.apache.commons.math3.linear.RealMatrix r2, r3, $r5, $r7;
+        org.apache.commons.math3.linear.DecompositionSolver r4;
+        org.apache.commons.math3.linear.QRDecomposition $r6;
+        double[][] $r8;
+
+        r0 := @this: org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer;
+
+        r1 := @parameter0: double[];
+
+        d0 := @parameter1: double;
+
+        r2 = virtualinvoke r0.<org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer: org.apache.commons.math3.linear.RealMatrix computeWeightedJacobian(double[])>(r1);
+
+        $r5 = interfaceinvoke r2.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix transpose()>();
+
+        r3 = interfaceinvoke $r5.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>(r2);
+
+        $r6 = new org.apache.commons.math3.linear.QRDecomposition;
+
+        specialinvoke $r6.<org.apache.commons.math3.linear.QRDecomposition: void <init>(org.apache.commons.math3.linear.RealMatrix,double)>(r3, d0);
+
+        r4 = virtualinvoke $r6.<org.apache.commons.math3.linear.QRDecomposition: org.apache.commons.math3.linear.DecompositionSolver getSolver()>();
+
+        $r7 = interfaceinvoke r4.<org.apache.commons.math3.linear.DecompositionSolver: org.apache.commons.math3.linear.RealMatrix getInverse()>();
+
+        $r8 = interfaceinvoke $r7.<org.apache.commons.math3.linear.RealMatrix: double[][] getData()>();
+
+        return $r8;
+    }
+
+    public double[] computeSigma(double[], double)
+    {
+        org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer r0;
+        double[] r1, r2, $r4;
+        double d0, $d1, $d2;
+        int i0, i1;
+        double[][] r3;
+
+        r0 := @this: org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer;
+
+        r1 := @parameter0: double[];
+
+        d0 := @parameter1: double;
+
+        i0 = lengthof r1;
+
+        r2 = newarray (double)[i0];
+
+        r3 = virtualinvoke r0.<org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer: double[][] computeCovariances(double[],double)>(r1, d0);
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $r4 = r3[i1];
+
+        $d1 = $r4[i1];
+
+        $d2 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d1);
+
+        r2[i1] = $d2;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return r2;
+    }
+
+    public transient org.apache.commons.math3.optim.PointVectorValuePair optimize(org.apache.commons.math3.optim.OptimizationData[]) throws org.apache.commons.math3.exception.TooManyEvaluationsException
+    {
+        org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer r0;
+        org.apache.commons.math3.optim.OptimizationData[] r1;
+        org.apache.commons.math3.optim.PointVectorValuePair $r2;
+
+        r0 := @this: org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer;
+
+        r1 := @parameter0: org.apache.commons.math3.optim.OptimizationData[];
+
+        $r2 = specialinvoke r0.<org.apache.commons.math3.optim.nonlinear.vector.JacobianMultivariateVectorOptimizer: org.apache.commons.math3.optim.PointVectorValuePair optimize(org.apache.commons.math3.optim.OptimizationData[])>(r1);
+
+        return $r2;
+    }
+
+    protected double[] computeResiduals(double[])
+    {
+        org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer r0;
+        double[] r1, r2, r3;
+        int $i0, $i1, $i2, $i3, $i4, $i5, i6;
+        double $d0, $d1, $d2;
+        org.apache.commons.math3.exception.DimensionMismatchException $r4;
+
+        r0 := @this: org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer;
+
+        r1 := @parameter0: double[];
+
+        r2 = virtualinvoke r0.<org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer: double[] getTarget()>();
+
+        $i1 = lengthof r1;
+
+        $i0 = lengthof r2;
+
+        if $i1 == $i0 goto label1;
+
+        $r4 = new org.apache.commons.math3.exception.DimensionMismatchException;
+
+        $i5 = lengthof r2;
+
+        $i4 = lengthof r1;
+
+        specialinvoke $r4.<org.apache.commons.math3.exception.DimensionMismatchException: void <init>(int,int)>($i5, $i4);
+
+        throw $r4;
+
+     label1:
+        $i2 = lengthof r2;
+
+        r3 = newarray (double)[$i2];
+
+        i6 = 0;
+
+     label2:
+        $i3 = lengthof r2;
+
+        if i6 >= $i3 goto label3;
+
+        $d1 = r2[i6];
+
+        $d0 = r1[i6];
+
+        $d2 = $d1 - $d0;
+
+        r3[i6] = $d2;
+
+        i6 = i6 + 1;
+
+        goto label2;
+
+     label3:
+        return r3;
+    }
+
+    protected transient void parseOptimizationData(org.apache.commons.math3.optim.OptimizationData[])
+    {
+        org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer r0;
+        org.apache.commons.math3.optim.OptimizationData[] r1;
+        int i0, i1;
+        org.apache.commons.math3.optim.OptimizationData r3;
+        boolean $z0;
+        org.apache.commons.math3.optim.nonlinear.vector.Weight $r4;
+        org.apache.commons.math3.linear.RealMatrix $r5, $r6;
+
+        r0 := @this: org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer;
+
+        r1 := @parameter0: org.apache.commons.math3.optim.OptimizationData[];
+
+        specialinvoke r0.<org.apache.commons.math3.optim.nonlinear.vector.JacobianMultivariateVectorOptimizer: void parseOptimizationData(org.apache.commons.math3.optim.OptimizationData[])>(r1);
+
+        i0 = lengthof r1;
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label3;
+
+        r3 = r1[i1];
+
+        $z0 = r3 instanceof org.apache.commons.math3.optim.nonlinear.vector.Weight;
+
+        if $z0 == 0 goto label2;
+
+        $r4 = (org.apache.commons.math3.optim.nonlinear.vector.Weight) r3;
+
+        $r5 = virtualinvoke $r4.<org.apache.commons.math3.optim.nonlinear.vector.Weight: org.apache.commons.math3.linear.RealMatrix getWeight()>();
+
+        $r6 = specialinvoke r0.<org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer: org.apache.commons.math3.linear.RealMatrix squareRoot(org.apache.commons.math3.linear.RealMatrix)>($r5);
+
+        r0.<org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer: org.apache.commons.math3.linear.RealMatrix weightMatrixSqrt> = $r6;
+
+        goto label3;
+
+     label2:
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label3:
+        return;
+    }
+
+    private org.apache.commons.math3.linear.RealMatrix squareRoot(org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer r0;
+        org.apache.commons.math3.linear.RealMatrix r1, $r4;
+        boolean $z0;
+        org.apache.commons.math3.linear.EigenDecomposition $r3;
+        org.apache.commons.math3.linear.DiagonalMatrix $r5;
+        double $d0, $d1;
+        int i0, i1;
+
+        r0 := @this: org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer;
+
+        r1 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        $z0 = r1 instanceof org.apache.commons.math3.linear.DiagonalMatrix;
+
+        if $z0 == 0 goto label3;
+
+        i0 = interfaceinvoke r1.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        $r5 = new org.apache.commons.math3.linear.DiagonalMatrix;
+
+        specialinvoke $r5.<org.apache.commons.math3.linear.DiagonalMatrix: void <init>(int)>(i0);
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $d0 = interfaceinvoke r1.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i1, i1);
+
+        $d1 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d0);
+
+        interfaceinvoke $r5.<org.apache.commons.math3.linear.RealMatrix: void setEntry(int,int,double)>(i1, i1, $d1);
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return $r5;
+
+     label3:
+        $r3 = new org.apache.commons.math3.linear.EigenDecomposition;
+
+        specialinvoke $r3.<org.apache.commons.math3.linear.EigenDecomposition: void <init>(org.apache.commons.math3.linear.RealMatrix)>(r1);
+
+        $r4 = virtualinvoke $r3.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix getSquareRoot()>();
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object optimize(org.apache.commons.math3.optim.OptimizationData[])
+    {
+        org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer r0;
+        org.apache.commons.math3.optim.OptimizationData[] r1;
+        org.apache.commons.math3.optim.PointVectorValuePair $r2;
+
+        r0 := @this: org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer;
+
+        r1 := @parameter0: org.apache.commons.math3.optim.OptimizationData[];
+
+        $r2 = virtualinvoke r0.<org.apache.commons.math3.optim.nonlinear.vector.jacobian.AbstractLeastSquaresOptimizer: org.apache.commons.math3.optim.PointVectorValuePair optimize(org.apache.commons.math3.optim.OptimizationData[])>(r1);
+
+        return $r2;
+    }
+}

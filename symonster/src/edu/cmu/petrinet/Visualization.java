@@ -21,14 +21,6 @@ import java.io.FileWriter;
 import edu.cmu.petrinet.BuildNet;
 
 public class Visualization {
-    public static void main(String[] args) throws IOException{
-        List<String> libs = new ArrayList<>();
-        libs.add("lib/simplePoint.jar");
-        List<MethodSignature> sigs = JarParser.parseJar(libs);
-        System.out.println(sigs);
-        PetriNet net = BuildNetWithoutClone.build(sigs);
-        translate(net);
-    }
     public static void translate(PetriNet net) throws java.io.IOException{
         Set<Place> ps = net.getPlaces();
         Set<Transition> ts = net.getTransitions();

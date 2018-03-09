@@ -1,0 +1,331 @@
+public class org.apache.commons.math3.transform.FastHadamardTransformer extends java.lang.Object implements org.apache.commons.math3.transform.RealTransformer, java.io.Serializable
+{
+    static final long serialVersionUID;
+
+    public void <init>()
+    {
+        org.apache.commons.math3.transform.FastHadamardTransformer r0;
+
+        r0 := @this: org.apache.commons.math3.transform.FastHadamardTransformer;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public double[] transform(double[], org.apache.commons.math3.transform.TransformType)
+    {
+        org.apache.commons.math3.transform.FastHadamardTransformer r0;
+        double[] r1, $r4, $r5, $r6;
+        org.apache.commons.math3.transform.TransformType r2, $r3;
+        int $i0;
+        double $d0, $d1;
+
+        r0 := @this: org.apache.commons.math3.transform.FastHadamardTransformer;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: org.apache.commons.math3.transform.TransformType;
+
+        $r3 = <org.apache.commons.math3.transform.TransformType: org.apache.commons.math3.transform.TransformType FORWARD>;
+
+        if r2 != $r3 goto label1;
+
+        $r6 = virtualinvoke r0.<org.apache.commons.math3.transform.FastHadamardTransformer: double[] fht(double[])>(r1);
+
+        return $r6;
+
+     label1:
+        $r4 = virtualinvoke r0.<org.apache.commons.math3.transform.FastHadamardTransformer: double[] fht(double[])>(r1);
+
+        $i0 = lengthof r1;
+
+        $d0 = (double) $i0;
+
+        $d1 = 1.0 / $d0;
+
+        $r5 = staticinvoke <org.apache.commons.math3.transform.TransformUtils: double[] scaleArray(double[],double)>($r4, $d1);
+
+        return $r5;
+    }
+
+    public double[] transform(org.apache.commons.math3.analysis.UnivariateFunction, double, double, int, org.apache.commons.math3.transform.TransformType)
+    {
+        org.apache.commons.math3.transform.FastHadamardTransformer r0;
+        org.apache.commons.math3.analysis.UnivariateFunction r1;
+        double d0, d1;
+        int i0;
+        org.apache.commons.math3.transform.TransformType r2;
+        double[] $r3, $r4;
+
+        r0 := @this: org.apache.commons.math3.transform.FastHadamardTransformer;
+
+        r1 := @parameter0: org.apache.commons.math3.analysis.UnivariateFunction;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        i0 := @parameter3: int;
+
+        r2 := @parameter4: org.apache.commons.math3.transform.TransformType;
+
+        $r3 = staticinvoke <org.apache.commons.math3.analysis.FunctionUtils: double[] sample(org.apache.commons.math3.analysis.UnivariateFunction,double,double,int)>(r1, d0, d1, i0);
+
+        $r4 = virtualinvoke r0.<org.apache.commons.math3.transform.FastHadamardTransformer: double[] transform(double[],org.apache.commons.math3.transform.TransformType)>($r3, r2);
+
+        return $r4;
+    }
+
+    public int[] transform(int[])
+    {
+        org.apache.commons.math3.transform.FastHadamardTransformer r0;
+        int[] r1, $r2;
+
+        r0 := @this: org.apache.commons.math3.transform.FastHadamardTransformer;
+
+        r1 := @parameter0: int[];
+
+        $r2 = virtualinvoke r0.<org.apache.commons.math3.transform.FastHadamardTransformer: int[] fht(int[])>(r1);
+
+        return $r2;
+    }
+
+    protected double[] fht(double[]) throws org.apache.commons.math3.exception.MathIllegalArgumentException
+    {
+        org.apache.commons.math3.transform.FastHadamardTransformer r0;
+        double[] r1, r2, r8, r9;
+        int i0, i1, $i3, $i4, $i5, $i6, i7, i8, i9, i10, i11;
+        long $l2;
+        boolean $z0;
+        java.lang.Object $r3;
+        double $d0, $d1, $d2, $d3, $d4, $d5;
+        org.apache.commons.math3.exception.MathIllegalArgumentException $r4;
+        java.lang.Object[] $r5;
+        org.apache.commons.math3.exception.util.LocalizedFormats $r6;
+        java.lang.Integer $r7;
+
+        r0 := @this: org.apache.commons.math3.transform.FastHadamardTransformer;
+
+        r1 := @parameter0: double[];
+
+        i0 = lengthof r1;
+
+        i1 = i0 / 2;
+
+        $l2 = (long) i0;
+
+        $z0 = staticinvoke <org.apache.commons.math3.util.ArithmeticUtils: boolean isPowerOfTwo(long)>($l2);
+
+        if $z0 != 0 goto label1;
+
+        $r4 = new org.apache.commons.math3.exception.MathIllegalArgumentException;
+
+        $r6 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats NOT_POWER_OF_TWO>;
+
+        $r5 = newarray (java.lang.Object)[1];
+
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        $r5[0] = $r7;
+
+        specialinvoke $r4.<org.apache.commons.math3.exception.MathIllegalArgumentException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Object[])>($r6, $r5);
+
+        throw $r4;
+
+     label1:
+        r8 = newarray (double)[i0];
+
+        $r3 = virtualinvoke r1.<java.lang.Object: java.lang.Object clone()>();
+
+        r9 = (double[]) $r3;
+
+        i7 = 1;
+
+     label2:
+        if i7 >= i0 goto label7;
+
+        r2 = r9;
+
+        r9 = r8;
+
+        r8 = r2;
+
+        i8 = 0;
+
+     label3:
+        if i8 >= i1 goto label4;
+
+        i9 = 2 * i8;
+
+        $d4 = r2[i9];
+
+        $i6 = i9 + 1;
+
+        $d3 = r2[$i6];
+
+        $d5 = $d4 + $d3;
+
+        r9[i8] = $d5;
+
+        i8 = i8 + 1;
+
+        goto label3;
+
+     label4:
+        i10 = i1;
+
+     label5:
+        if i10 >= i0 goto label6;
+
+        i11 = 2 * i10;
+
+        $i3 = i11 - i0;
+
+        $d1 = r2[$i3];
+
+        $i4 = i11 - i0;
+
+        $i5 = $i4 + 1;
+
+        $d0 = r2[$i5];
+
+        $d2 = $d1 - $d0;
+
+        r9[i10] = $d2;
+
+        i10 = i10 + 1;
+
+        goto label5;
+
+     label6:
+        i7 = i7 << 1;
+
+        goto label2;
+
+     label7:
+        return r9;
+    }
+
+    protected int[] fht(int[]) throws org.apache.commons.math3.exception.MathIllegalArgumentException
+    {
+        org.apache.commons.math3.transform.FastHadamardTransformer r0;
+        int[] r1, r2, r8, r9;
+        int i0, i1, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, i13, i14, i15, i16, i17;
+        long $l2;
+        boolean $z0;
+        java.lang.Object $r3;
+        org.apache.commons.math3.exception.MathIllegalArgumentException $r4;
+        java.lang.Object[] $r5;
+        org.apache.commons.math3.exception.util.LocalizedFormats $r6;
+        java.lang.Integer $r7;
+
+        r0 := @this: org.apache.commons.math3.transform.FastHadamardTransformer;
+
+        r1 := @parameter0: int[];
+
+        i0 = lengthof r1;
+
+        i1 = i0 / 2;
+
+        $l2 = (long) i0;
+
+        $z0 = staticinvoke <org.apache.commons.math3.util.ArithmeticUtils: boolean isPowerOfTwo(long)>($l2);
+
+        if $z0 != 0 goto label1;
+
+        $r4 = new org.apache.commons.math3.exception.MathIllegalArgumentException;
+
+        $r6 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats NOT_POWER_OF_TWO>;
+
+        $r5 = newarray (java.lang.Object)[1];
+
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        $r5[0] = $r7;
+
+        specialinvoke $r4.<org.apache.commons.math3.exception.MathIllegalArgumentException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Object[])>($r6, $r5);
+
+        throw $r4;
+
+     label1:
+        r8 = newarray (int)[i0];
+
+        $r3 = virtualinvoke r1.<java.lang.Object: java.lang.Object clone()>();
+
+        r9 = (int[]) $r3;
+
+        i13 = 1;
+
+     label2:
+        if i13 >= i0 goto label7;
+
+        r2 = r9;
+
+        r9 = r8;
+
+        r8 = r2;
+
+        i14 = 0;
+
+     label3:
+        if i14 >= i1 goto label4;
+
+        i15 = 2 * i14;
+
+        $i11 = r2[i15];
+
+        $i9 = i15 + 1;
+
+        $i10 = r2[$i9];
+
+        $i12 = $i11 + $i10;
+
+        r9[i14] = $i12;
+
+        i14 = i14 + 1;
+
+        goto label3;
+
+     label4:
+        i16 = i1;
+
+     label5:
+        if i16 >= i0 goto label6;
+
+        i17 = 2 * i16;
+
+        $i3 = i17 - i0;
+
+        $i7 = r2[$i3];
+
+        $i4 = i17 - i0;
+
+        $i5 = $i4 + 1;
+
+        $i6 = r2[$i5];
+
+        $i8 = $i7 - $i6;
+
+        r9[i16] = $i8;
+
+        i16 = i16 + 1;
+
+        goto label5;
+
+     label6:
+        i13 = i13 << 1;
+
+        goto label2;
+
+     label7:
+        return r9;
+    }
+
+    public static void <clinit>()
+    {
+        <org.apache.commons.math3.transform.FastHadamardTransformer: long serialVersionUID> = 20120211L;
+
+        return;
+    }
+}

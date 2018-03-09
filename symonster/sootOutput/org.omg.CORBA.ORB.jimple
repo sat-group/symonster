@@ -1,0 +1,845 @@
+public abstract class org.omg.CORBA.ORB extends java.lang.Object
+{
+    private static final java.lang.String ORBClassKey;
+    private static final java.lang.String ORBSingletonClassKey;
+    private static org.omg.CORBA.ORB singleton;
+
+    public void <init>()
+    {
+        org.omg.CORBA.ORB r0;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    private static java.lang.String getSystemProperty(java.lang.String)
+    {
+        java.lang.String r0, r1;
+        org.omg.CORBA.ORB$1 $r2;
+        java.lang.Object $r3;
+
+        r0 := @parameter0: java.lang.String;
+
+        $r2 = new org.omg.CORBA.ORB$1;
+
+        specialinvoke $r2.<org.omg.CORBA.ORB$1: void <init>(java.lang.String)>(r0);
+
+        $r3 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r2);
+
+        r1 = (java.lang.String) $r3;
+
+        return r1;
+    }
+
+    private static java.lang.String getPropertyFromFile(java.lang.String)
+    {
+        java.lang.String r0, r1;
+        org.omg.CORBA.ORB$2 $r2;
+        java.lang.Object $r3;
+
+        r0 := @parameter0: java.lang.String;
+
+        $r2 = new org.omg.CORBA.ORB$2;
+
+        specialinvoke $r2.<org.omg.CORBA.ORB$2: void <init>(java.lang.String)>(r0);
+
+        $r3 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r2);
+
+        r1 = (java.lang.String) $r3;
+
+        return r1;
+    }
+
+    public static synchronized org.omg.CORBA.ORB init()
+    {
+        org.omg.CORBA.ORB $r0, $r2, $r4;
+        com.sun.corba.se.impl.orb.ORBSingleton $r1;
+        boolean $z0;
+        java.lang.String r3;
+
+        $r0 = <org.omg.CORBA.ORB: org.omg.CORBA.ORB singleton>;
+
+        if $r0 != null goto label4;
+
+        r3 = staticinvoke <org.omg.CORBA.ORB: java.lang.String getSystemProperty(java.lang.String)>("org.omg.CORBA.ORBSingletonClass");
+
+        if r3 != null goto label1;
+
+        r3 = staticinvoke <org.omg.CORBA.ORB: java.lang.String getPropertyFromFile(java.lang.String)>("org.omg.CORBA.ORBSingletonClass");
+
+     label1:
+        if r3 == null goto label2;
+
+        $z0 = virtualinvoke r3.<java.lang.String: boolean equals(java.lang.Object)>("com.sun.corba.se.impl.orb.ORBSingleton");
+
+        if $z0 == 0 goto label3;
+
+     label2:
+        $r1 = new com.sun.corba.se.impl.orb.ORBSingleton;
+
+        specialinvoke $r1.<com.sun.corba.se.impl.orb.ORBSingleton: void <init>()>();
+
+        <org.omg.CORBA.ORB: org.omg.CORBA.ORB singleton> = $r1;
+
+        goto label4;
+
+     label3:
+        $r2 = staticinvoke <org.omg.CORBA.ORB: org.omg.CORBA.ORB create_impl(java.lang.String)>(r3);
+
+        <org.omg.CORBA.ORB: org.omg.CORBA.ORB singleton> = $r2;
+
+     label4:
+        $r4 = <org.omg.CORBA.ORB: org.omg.CORBA.ORB singleton>;
+
+        return $r4;
+    }
+
+    private static org.omg.CORBA.ORB create_impl(java.lang.String)
+    {
+        java.lang.String r0, $r10;
+        java.lang.Thread $r1;
+        java.lang.Class $r2, r14;
+        java.lang.Object $r3;
+        org.omg.CORBA.ORB $r4;
+        java.lang.Throwable $r5;
+        org.omg.CORBA.INITIALIZE $r6;
+        java.lang.StringBuilder $r7, $r8, $r9;
+        java.lang.ClassLoader r12;
+
+        r0 := @parameter0: java.lang.String;
+
+        $r1 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+
+        r12 = virtualinvoke $r1.<java.lang.Thread: java.lang.ClassLoader getContextClassLoader()>();
+
+        if r12 != null goto label1;
+
+        r12 = staticinvoke <java.lang.ClassLoader: java.lang.ClassLoader getSystemClassLoader()>();
+
+     label1:
+        staticinvoke <sun.reflect.misc.ReflectUtil: void checkPackageAccess(java.lang.String)>(r0);
+
+        $r2 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String,boolean,java.lang.ClassLoader)>(r0, 1, r12);
+
+        r14 = virtualinvoke $r2.<java.lang.Class: java.lang.Class asSubclass(java.lang.Class)>(class "org/omg/CORBA/ORB");
+
+        $r3 = virtualinvoke r14.<java.lang.Class: java.lang.Object newInstance()>();
+
+        $r4 = (org.omg.CORBA.ORB) $r3;
+
+     label2:
+        return $r4;
+
+     label3:
+        $r5 := @caughtexception;
+
+        $r6 = new org.omg.CORBA.INITIALIZE;
+
+        $r7 = new java.lang.StringBuilder;
+
+        specialinvoke $r7.<java.lang.StringBuilder: void <init>()>();
+
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("can\'t instantiate default ORB implementation ");
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r0);
+
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r6.<org.omg.CORBA.INITIALIZE: void <init>(java.lang.String)>($r10);
+
+        virtualinvoke $r6.<org.omg.CORBA.SystemException: java.lang.Throwable initCause(java.lang.Throwable)>($r5);
+
+        throw $r6;
+
+        catch java.lang.Throwable from label1 to label2 with label3;
+    }
+
+    public static org.omg.CORBA.ORB init(java.lang.String[], java.util.Properties)
+    {
+        java.lang.String[] r0;
+        java.util.Properties r1;
+        com.sun.corba.se.impl.orb.ORBImpl $r2;
+        boolean $z0;
+        java.lang.String r3;
+        org.omg.CORBA.ORB r4;
+
+        r0 := @parameter0: java.lang.String[];
+
+        r1 := @parameter1: java.util.Properties;
+
+        r3 = null;
+
+        if r1 == null goto label1;
+
+        r3 = virtualinvoke r1.<java.util.Properties: java.lang.String getProperty(java.lang.String)>("org.omg.CORBA.ORBClass");
+
+     label1:
+        if r3 != null goto label2;
+
+        r3 = staticinvoke <org.omg.CORBA.ORB: java.lang.String getSystemProperty(java.lang.String)>("org.omg.CORBA.ORBClass");
+
+     label2:
+        if r3 != null goto label3;
+
+        r3 = staticinvoke <org.omg.CORBA.ORB: java.lang.String getPropertyFromFile(java.lang.String)>("org.omg.CORBA.ORBClass");
+
+     label3:
+        if r3 == null goto label4;
+
+        $z0 = virtualinvoke r3.<java.lang.String: boolean equals(java.lang.Object)>("com.sun.corba.se.impl.orb.ORBImpl");
+
+        if $z0 == 0 goto label5;
+
+     label4:
+        $r2 = new com.sun.corba.se.impl.orb.ORBImpl;
+
+        specialinvoke $r2.<com.sun.corba.se.impl.orb.ORBImpl: void <init>()>();
+
+        r4 = $r2;
+
+        goto label6;
+
+     label5:
+        r4 = staticinvoke <org.omg.CORBA.ORB: org.omg.CORBA.ORB create_impl(java.lang.String)>(r3);
+
+     label6:
+        virtualinvoke r4.<org.omg.CORBA.ORB: void set_parameters(java.lang.String[],java.util.Properties)>(r0, r1);
+
+        return r4;
+    }
+
+    public static org.omg.CORBA.ORB init(java.applet.Applet, java.util.Properties)
+    {
+        java.applet.Applet r0;
+        java.util.Properties r1;
+        com.sun.corba.se.impl.orb.ORBImpl $r2;
+        boolean $z0;
+        java.lang.String r3;
+        org.omg.CORBA.ORB r4;
+
+        r0 := @parameter0: java.applet.Applet;
+
+        r1 := @parameter1: java.util.Properties;
+
+        r3 = virtualinvoke r0.<java.applet.Applet: java.lang.String getParameter(java.lang.String)>("org.omg.CORBA.ORBClass");
+
+        if r3 != null goto label1;
+
+        if r1 == null goto label1;
+
+        r3 = virtualinvoke r1.<java.util.Properties: java.lang.String getProperty(java.lang.String)>("org.omg.CORBA.ORBClass");
+
+     label1:
+        if r3 != null goto label2;
+
+        r3 = staticinvoke <org.omg.CORBA.ORB: java.lang.String getSystemProperty(java.lang.String)>("org.omg.CORBA.ORBClass");
+
+     label2:
+        if r3 != null goto label3;
+
+        r3 = staticinvoke <org.omg.CORBA.ORB: java.lang.String getPropertyFromFile(java.lang.String)>("org.omg.CORBA.ORBClass");
+
+     label3:
+        if r3 == null goto label4;
+
+        $z0 = virtualinvoke r3.<java.lang.String: boolean equals(java.lang.Object)>("com.sun.corba.se.impl.orb.ORBImpl");
+
+        if $z0 == 0 goto label5;
+
+     label4:
+        $r2 = new com.sun.corba.se.impl.orb.ORBImpl;
+
+        specialinvoke $r2.<com.sun.corba.se.impl.orb.ORBImpl: void <init>()>();
+
+        r4 = $r2;
+
+        goto label6;
+
+     label5:
+        r4 = staticinvoke <org.omg.CORBA.ORB: org.omg.CORBA.ORB create_impl(java.lang.String)>(r3);
+
+     label6:
+        virtualinvoke r4.<org.omg.CORBA.ORB: void set_parameters(java.applet.Applet,java.util.Properties)>(r0, r1);
+
+        return r4;
+    }
+
+    protected abstract void set_parameters(java.lang.String[], java.util.Properties);
+
+    protected abstract void set_parameters(java.applet.Applet, java.util.Properties);
+
+    public void connect(org.omg.CORBA.Object)
+    {
+        org.omg.CORBA.ORB r0;
+        org.omg.CORBA.Object r1;
+        org.omg.CORBA.NO_IMPLEMENT $r2;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        r1 := @parameter0: org.omg.CORBA.Object;
+
+        $r2 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r2.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r2;
+    }
+
+    public void destroy()
+    {
+        org.omg.CORBA.ORB r0;
+        org.omg.CORBA.NO_IMPLEMENT $r1;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        $r1 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r1.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r1;
+    }
+
+    public void disconnect(org.omg.CORBA.Object)
+    {
+        org.omg.CORBA.ORB r0;
+        org.omg.CORBA.Object r1;
+        org.omg.CORBA.NO_IMPLEMENT $r2;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        r1 := @parameter0: org.omg.CORBA.Object;
+
+        $r2 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r2.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r2;
+    }
+
+    public abstract java.lang.String[] list_initial_services();
+
+    public abstract org.omg.CORBA.Object resolve_initial_references(java.lang.String) throws org.omg.CORBA.ORBPackage.InvalidName;
+
+    public abstract java.lang.String object_to_string(org.omg.CORBA.Object);
+
+    public abstract org.omg.CORBA.Object string_to_object(java.lang.String);
+
+    public abstract org.omg.CORBA.NVList create_list(int);
+
+    public org.omg.CORBA.NVList create_operation_list(org.omg.CORBA.Object)
+    {
+        org.omg.CORBA.ORB r0;
+        org.omg.CORBA.Object r1;
+        java.lang.reflect.Method r3;
+        java.lang.Thread $r5;
+        java.lang.Class[] $r6;
+        java.lang.Class $r7, r19;
+        java.lang.Object[] $r8;
+        java.lang.Object $r9;
+        org.omg.CORBA.NVList $r10;
+        java.lang.Exception $r11;
+        org.omg.CORBA.NO_IMPLEMENT $r12, $r14;
+        java.lang.reflect.InvocationTargetException $r13;
+        boolean $z0, $z1;
+        java.lang.RuntimeException $r15, $r17;
+        java.lang.Error $r16;
+        java.lang.ClassLoader r18;
+        java.lang.Throwable r21;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        r1 := @parameter0: org.omg.CORBA.Object;
+
+     label1:
+        $r5 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+
+        r18 = virtualinvoke $r5.<java.lang.Thread: java.lang.ClassLoader getContextClassLoader()>();
+
+        if r18 != null goto label2;
+
+        r18 = staticinvoke <java.lang.ClassLoader: java.lang.ClassLoader getSystemClassLoader()>();
+
+     label2:
+        r19 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String,boolean,java.lang.ClassLoader)>("org.omg.CORBA.OperationDef", 1, r18);
+
+        $r6 = newarray (java.lang.Class)[1];
+
+        $r6[0] = r19;
+
+        $r7 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        r3 = virtualinvoke $r7.<java.lang.Class: java.lang.reflect.Method getMethod(java.lang.String,java.lang.Class[])>("create_operation_list", $r6);
+
+        $r8 = newarray (java.lang.Object)[1];
+
+        $r8[0] = r1;
+
+        $r9 = virtualinvoke r3.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(r0, $r8);
+
+        $r10 = (org.omg.CORBA.NVList) $r9;
+
+     label3:
+        return $r10;
+
+     label4:
+        $r13 := @caughtexception;
+
+        r21 = virtualinvoke $r13.<java.lang.reflect.InvocationTargetException: java.lang.Throwable getTargetException()>();
+
+        $z0 = r21 instanceof java.lang.Error;
+
+        if $z0 == 0 goto label5;
+
+        $r16 = (java.lang.Error) r21;
+
+        throw $r16;
+
+     label5:
+        $z1 = r21 instanceof java.lang.RuntimeException;
+
+        if $z1 == 0 goto label6;
+
+        $r15 = (java.lang.RuntimeException) r21;
+
+        throw $r15;
+
+     label6:
+        $r14 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r14.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r14;
+
+     label7:
+        $r17 := @caughtexception;
+
+        throw $r17;
+
+     label8:
+        $r11 := @caughtexception;
+
+        $r12 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r12.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r12;
+
+        catch java.lang.reflect.InvocationTargetException from label1 to label3 with label4;
+        catch java.lang.RuntimeException from label1 to label3 with label7;
+        catch java.lang.Exception from label1 to label3 with label8;
+    }
+
+    public abstract org.omg.CORBA.NamedValue create_named_value(java.lang.String, org.omg.CORBA.Any, int);
+
+    public abstract org.omg.CORBA.ExceptionList create_exception_list();
+
+    public abstract org.omg.CORBA.ContextList create_context_list();
+
+    public abstract org.omg.CORBA.Context get_default_context();
+
+    public abstract org.omg.CORBA.Environment create_environment();
+
+    public abstract org.omg.CORBA.portable.OutputStream create_output_stream();
+
+    public abstract void send_multiple_requests_oneway(org.omg.CORBA.Request[]);
+
+    public abstract void send_multiple_requests_deferred(org.omg.CORBA.Request[]);
+
+    public abstract boolean poll_next_response();
+
+    public abstract org.omg.CORBA.Request get_next_response() throws org.omg.CORBA.WrongTransaction;
+
+    public abstract org.omg.CORBA.TypeCode get_primitive_tc(org.omg.CORBA.TCKind);
+
+    public abstract org.omg.CORBA.TypeCode create_struct_tc(java.lang.String, java.lang.String, org.omg.CORBA.StructMember[]);
+
+    public abstract org.omg.CORBA.TypeCode create_union_tc(java.lang.String, java.lang.String, org.omg.CORBA.TypeCode, org.omg.CORBA.UnionMember[]);
+
+    public abstract org.omg.CORBA.TypeCode create_enum_tc(java.lang.String, java.lang.String, java.lang.String[]);
+
+    public abstract org.omg.CORBA.TypeCode create_alias_tc(java.lang.String, java.lang.String, org.omg.CORBA.TypeCode);
+
+    public abstract org.omg.CORBA.TypeCode create_exception_tc(java.lang.String, java.lang.String, org.omg.CORBA.StructMember[]);
+
+    public abstract org.omg.CORBA.TypeCode create_interface_tc(java.lang.String, java.lang.String);
+
+    public abstract org.omg.CORBA.TypeCode create_string_tc(int);
+
+    public abstract org.omg.CORBA.TypeCode create_wstring_tc(int);
+
+    public abstract org.omg.CORBA.TypeCode create_sequence_tc(int, org.omg.CORBA.TypeCode);
+
+    public abstract org.omg.CORBA.TypeCode create_recursive_sequence_tc(int, int);
+
+    public abstract org.omg.CORBA.TypeCode create_array_tc(int, org.omg.CORBA.TypeCode);
+
+    public org.omg.CORBA.TypeCode create_native_tc(java.lang.String, java.lang.String)
+    {
+        org.omg.CORBA.ORB r0;
+        java.lang.String r1, r2;
+        org.omg.CORBA.NO_IMPLEMENT $r3;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        r1 := @parameter0: java.lang.String;
+
+        r2 := @parameter1: java.lang.String;
+
+        $r3 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r3.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r3;
+    }
+
+    public org.omg.CORBA.TypeCode create_abstract_interface_tc(java.lang.String, java.lang.String)
+    {
+        org.omg.CORBA.ORB r0;
+        java.lang.String r1, r2;
+        org.omg.CORBA.NO_IMPLEMENT $r3;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        r1 := @parameter0: java.lang.String;
+
+        r2 := @parameter1: java.lang.String;
+
+        $r3 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r3.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r3;
+    }
+
+    public org.omg.CORBA.TypeCode create_fixed_tc(short, short)
+    {
+        org.omg.CORBA.ORB r0;
+        short s0, s1;
+        org.omg.CORBA.NO_IMPLEMENT $r1;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        s0 := @parameter0: short;
+
+        s1 := @parameter1: short;
+
+        $r1 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r1.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r1;
+    }
+
+    public org.omg.CORBA.TypeCode create_value_tc(java.lang.String, java.lang.String, short, org.omg.CORBA.TypeCode, org.omg.CORBA.ValueMember[])
+    {
+        org.omg.CORBA.ORB r0;
+        java.lang.String r1, r2;
+        short s0;
+        org.omg.CORBA.TypeCode r3;
+        org.omg.CORBA.ValueMember[] r4;
+        org.omg.CORBA.NO_IMPLEMENT $r5;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        r1 := @parameter0: java.lang.String;
+
+        r2 := @parameter1: java.lang.String;
+
+        s0 := @parameter2: short;
+
+        r3 := @parameter3: org.omg.CORBA.TypeCode;
+
+        r4 := @parameter4: org.omg.CORBA.ValueMember[];
+
+        $r5 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r5.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r5;
+    }
+
+    public org.omg.CORBA.TypeCode create_recursive_tc(java.lang.String)
+    {
+        org.omg.CORBA.ORB r0;
+        java.lang.String r1;
+        org.omg.CORBA.NO_IMPLEMENT $r2;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        r1 := @parameter0: java.lang.String;
+
+        $r2 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r2.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r2;
+    }
+
+    public org.omg.CORBA.TypeCode create_value_box_tc(java.lang.String, java.lang.String, org.omg.CORBA.TypeCode)
+    {
+        org.omg.CORBA.ORB r0;
+        java.lang.String r1, r2;
+        org.omg.CORBA.TypeCode r3;
+        org.omg.CORBA.NO_IMPLEMENT $r4;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        r1 := @parameter0: java.lang.String;
+
+        r2 := @parameter1: java.lang.String;
+
+        r3 := @parameter2: org.omg.CORBA.TypeCode;
+
+        $r4 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r4.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r4;
+    }
+
+    public abstract org.omg.CORBA.Any create_any();
+
+    public org.omg.CORBA.Current get_current()
+    {
+        org.omg.CORBA.ORB r0;
+        org.omg.CORBA.NO_IMPLEMENT $r1;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        $r1 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r1.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r1;
+    }
+
+    public void run()
+    {
+        org.omg.CORBA.ORB r0;
+        org.omg.CORBA.NO_IMPLEMENT $r1;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        $r1 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r1.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r1;
+    }
+
+    public void shutdown(boolean)
+    {
+        org.omg.CORBA.ORB r0;
+        boolean z0;
+        org.omg.CORBA.NO_IMPLEMENT $r1;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        z0 := @parameter0: boolean;
+
+        $r1 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r1.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r1;
+    }
+
+    public boolean work_pending()
+    {
+        org.omg.CORBA.ORB r0;
+        org.omg.CORBA.NO_IMPLEMENT $r1;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        $r1 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r1.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r1;
+    }
+
+    public void perform_work()
+    {
+        org.omg.CORBA.ORB r0;
+        org.omg.CORBA.NO_IMPLEMENT $r1;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        $r1 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r1.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r1;
+    }
+
+    public boolean get_service_information(short, org.omg.CORBA.ServiceInformationHolder)
+    {
+        org.omg.CORBA.ORB r0;
+        short s0;
+        org.omg.CORBA.ServiceInformationHolder r1;
+        org.omg.CORBA.NO_IMPLEMENT $r2;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        s0 := @parameter0: short;
+
+        r1 := @parameter1: org.omg.CORBA.ServiceInformationHolder;
+
+        $r2 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r2.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r2;
+    }
+
+    public org.omg.CORBA.DynAny create_dyn_any(org.omg.CORBA.Any)
+    {
+        org.omg.CORBA.ORB r0;
+        org.omg.CORBA.Any r1;
+        org.omg.CORBA.NO_IMPLEMENT $r2;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        r1 := @parameter0: org.omg.CORBA.Any;
+
+        $r2 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r2.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r2;
+    }
+
+    public org.omg.CORBA.DynAny create_basic_dyn_any(org.omg.CORBA.TypeCode) throws org.omg.CORBA.ORBPackage.InconsistentTypeCode
+    {
+        org.omg.CORBA.ORB r0;
+        org.omg.CORBA.TypeCode r1;
+        org.omg.CORBA.NO_IMPLEMENT $r2;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        r1 := @parameter0: org.omg.CORBA.TypeCode;
+
+        $r2 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r2.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r2;
+    }
+
+    public org.omg.CORBA.DynStruct create_dyn_struct(org.omg.CORBA.TypeCode) throws org.omg.CORBA.ORBPackage.InconsistentTypeCode
+    {
+        org.omg.CORBA.ORB r0;
+        org.omg.CORBA.TypeCode r1;
+        org.omg.CORBA.NO_IMPLEMENT $r2;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        r1 := @parameter0: org.omg.CORBA.TypeCode;
+
+        $r2 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r2.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r2;
+    }
+
+    public org.omg.CORBA.DynSequence create_dyn_sequence(org.omg.CORBA.TypeCode) throws org.omg.CORBA.ORBPackage.InconsistentTypeCode
+    {
+        org.omg.CORBA.ORB r0;
+        org.omg.CORBA.TypeCode r1;
+        org.omg.CORBA.NO_IMPLEMENT $r2;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        r1 := @parameter0: org.omg.CORBA.TypeCode;
+
+        $r2 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r2.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r2;
+    }
+
+    public org.omg.CORBA.DynArray create_dyn_array(org.omg.CORBA.TypeCode) throws org.omg.CORBA.ORBPackage.InconsistentTypeCode
+    {
+        org.omg.CORBA.ORB r0;
+        org.omg.CORBA.TypeCode r1;
+        org.omg.CORBA.NO_IMPLEMENT $r2;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        r1 := @parameter0: org.omg.CORBA.TypeCode;
+
+        $r2 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r2.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r2;
+    }
+
+    public org.omg.CORBA.DynUnion create_dyn_union(org.omg.CORBA.TypeCode) throws org.omg.CORBA.ORBPackage.InconsistentTypeCode
+    {
+        org.omg.CORBA.ORB r0;
+        org.omg.CORBA.TypeCode r1;
+        org.omg.CORBA.NO_IMPLEMENT $r2;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        r1 := @parameter0: org.omg.CORBA.TypeCode;
+
+        $r2 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r2.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r2;
+    }
+
+    public org.omg.CORBA.DynEnum create_dyn_enum(org.omg.CORBA.TypeCode) throws org.omg.CORBA.ORBPackage.InconsistentTypeCode
+    {
+        org.omg.CORBA.ORB r0;
+        org.omg.CORBA.TypeCode r1;
+        org.omg.CORBA.NO_IMPLEMENT $r2;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        r1 := @parameter0: org.omg.CORBA.TypeCode;
+
+        $r2 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r2.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r2;
+    }
+
+    public org.omg.CORBA.Policy create_policy(int, org.omg.CORBA.Any) throws org.omg.CORBA.PolicyError
+    {
+        org.omg.CORBA.ORB r0;
+        int i0;
+        org.omg.CORBA.Any r1;
+        org.omg.CORBA.NO_IMPLEMENT $r2;
+
+        r0 := @this: org.omg.CORBA.ORB;
+
+        i0 := @parameter0: int;
+
+        r1 := @parameter1: org.omg.CORBA.Any;
+
+        $r2 = new org.omg.CORBA.NO_IMPLEMENT;
+
+        specialinvoke $r2.<org.omg.CORBA.NO_IMPLEMENT: void <init>()>();
+
+        throw $r2;
+    }
+
+    public static void <clinit>()
+    {
+        <org.omg.CORBA.ORB: java.lang.String ORBSingletonClassKey> = "org.omg.CORBA.ORBSingletonClass";
+
+        <org.omg.CORBA.ORB: java.lang.String ORBClassKey> = "org.omg.CORBA.ORBClass";
+
+        return;
+    }
+}

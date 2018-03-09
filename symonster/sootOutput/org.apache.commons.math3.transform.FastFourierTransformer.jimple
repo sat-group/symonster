@@ -1,0 +1,1236 @@
+public class org.apache.commons.math3.transform.FastFourierTransformer extends java.lang.Object implements java.io.Serializable
+{
+    static final long serialVersionUID;
+    private static final double[] W_SUB_N_R;
+    private static final double[] W_SUB_N_I;
+    private final org.apache.commons.math3.transform.DftNormalization normalization;
+    static final boolean $assertionsDisabled;
+
+    public void <init>(org.apache.commons.math3.transform.DftNormalization)
+    {
+        org.apache.commons.math3.transform.FastFourierTransformer r0;
+        org.apache.commons.math3.transform.DftNormalization r1;
+
+        r0 := @this: org.apache.commons.math3.transform.FastFourierTransformer;
+
+        r1 := @parameter0: org.apache.commons.math3.transform.DftNormalization;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<org.apache.commons.math3.transform.FastFourierTransformer: org.apache.commons.math3.transform.DftNormalization normalization> = r1;
+
+        return;
+    }
+
+    private static void bitReversalShuffle2(double[], double[])
+    {
+        double[] r0, r1;
+        int i0, i1, $i2, i3, i4, i5;
+        boolean $z0;
+        double $d0, $d1, d2, d3;
+        java.lang.AssertionError $r2;
+
+        r0 := @parameter0: double[];
+
+        r1 := @parameter1: double[];
+
+        i0 = lengthof r0;
+
+        $z0 = <org.apache.commons.math3.transform.FastFourierTransformer: boolean $assertionsDisabled>;
+
+        if $z0 != 0 goto label1;
+
+        $i2 = lengthof r1;
+
+        if $i2 == i0 goto label1;
+
+        $r2 = new java.lang.AssertionError;
+
+        specialinvoke $r2.<java.lang.AssertionError: void <init>()>();
+
+        throw $r2;
+
+     label1:
+        i1 = i0 >> 1;
+
+        i3 = 0;
+
+        i4 = 0;
+
+     label2:
+        if i4 >= i0 goto label6;
+
+        if i4 >= i3 goto label3;
+
+        d2 = r0[i4];
+
+        $d0 = r0[i3];
+
+        r0[i4] = $d0;
+
+        r0[i3] = d2;
+
+        d3 = r1[i4];
+
+        $d1 = r1[i3];
+
+        r1[i4] = $d1;
+
+        r1[i3] = d3;
+
+     label3:
+        i5 = i1;
+
+     label4:
+        if i5 > i3 goto label5;
+
+        if i5 <= 0 goto label5;
+
+        i3 = i3 - i5;
+
+        i5 = i5 >> 1;
+
+        goto label4;
+
+     label5:
+        i3 = i3 + i5;
+
+        i4 = i4 + 1;
+
+        goto label2;
+
+     label6:
+        return;
+    }
+
+    private static void normalizeTransformedData(double[][], org.apache.commons.math3.transform.DftNormalization, org.apache.commons.math3.transform.TransformType)
+    {
+        double[][] r0;
+        org.apache.commons.math3.transform.DftNormalization r1;
+        org.apache.commons.math3.transform.TransformType r2, $r6;
+        double[] r3, r4;
+        int i0, $i1, $i2, $i3, i4, i5;
+        boolean $z0;
+        int[] $r5;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, d11, d12;
+        org.apache.commons.math3.exception.MathIllegalStateException $r7;
+        java.lang.AssertionError $r8;
+
+        r0 := @parameter0: double[][];
+
+        r1 := @parameter1: org.apache.commons.math3.transform.DftNormalization;
+
+        r2 := @parameter2: org.apache.commons.math3.transform.TransformType;
+
+        r3 = r0[0];
+
+        r4 = r0[1];
+
+        i0 = lengthof r3;
+
+        $z0 = <org.apache.commons.math3.transform.FastFourierTransformer: boolean $assertionsDisabled>;
+
+        if $z0 != 0 goto label1;
+
+        $i3 = lengthof r4;
+
+        if $i3 == i0 goto label1;
+
+        $r8 = new java.lang.AssertionError;
+
+        specialinvoke $r8.<java.lang.AssertionError: void <init>()>();
+
+        throw $r8;
+
+     label1:
+        $r5 = <org.apache.commons.math3.transform.FastFourierTransformer$1: int[] $SwitchMap$org$apache$commons$math3$transform$DftNormalization>;
+
+        $i1 = virtualinvoke r1.<org.apache.commons.math3.transform.DftNormalization: int ordinal()>();
+
+        $i2 = $r5[$i1];
+
+        lookupswitch($i2)
+        {
+            case 1: goto label2;
+            case 2: goto label5;
+            default: goto label8;
+        };
+
+     label2:
+        $r6 = <org.apache.commons.math3.transform.TransformType: org.apache.commons.math3.transform.TransformType INVERSE>;
+
+        if r2 != $r6 goto label9;
+
+        $d6 = (double) i0;
+
+        d11 = 1.0 / $d6;
+
+        i4 = 0;
+
+     label3:
+        if i4 >= i0 goto label4;
+
+        $d7 = r3[i4];
+
+        $d8 = $d7 * d11;
+
+        r3[i4] = $d8;
+
+        $d9 = r4[i4];
+
+        $d10 = $d9 * d11;
+
+        r4[i4] = $d10;
+
+        i4 = i4 + 1;
+
+        goto label3;
+
+     label4:
+        goto label9;
+
+     label5:
+        $d0 = (double) i0;
+
+        $d1 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d0);
+
+        d12 = 1.0 / $d1;
+
+        i5 = 0;
+
+     label6:
+        if i5 >= i0 goto label7;
+
+        $d2 = r3[i5];
+
+        $d3 = $d2 * d12;
+
+        r3[i5] = $d3;
+
+        $d4 = r4[i5];
+
+        $d5 = $d4 * d12;
+
+        r4[i5] = $d5;
+
+        i5 = i5 + 1;
+
+        goto label6;
+
+     label7:
+        goto label9;
+
+     label8:
+        $r7 = new org.apache.commons.math3.exception.MathIllegalStateException;
+
+        specialinvoke $r7.<org.apache.commons.math3.exception.MathIllegalStateException: void <init>()>();
+
+        throw $r7;
+
+     label9:
+        return;
+    }
+
+    public static void transformInPlace(double[][], org.apache.commons.math3.transform.DftNormalization, org.apache.commons.math3.transform.TransformType)
+    {
+        double[][] r0;
+        org.apache.commons.math3.transform.DftNormalization r1;
+        org.apache.commons.math3.transform.TransformType r2, $r5, $r8;
+        double[] r3, r4, $r6, $r7;
+        int i0, i1, $i2, $i3, $i4, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, i17, i18, i19, i20, i21, i22, i23, i24, i25, i26, i27, i28, i29, i30;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, d78, d79, d80, d81, d82, d83, d84, d85, d86, d87, d88, d89, d90, d91, d92, d93, d94, d95, d96, d97, d98, d99, d100, d101;
+        long $l5;
+        boolean $z0;
+        org.apache.commons.math3.exception.MathIllegalArgumentException $r9;
+        java.lang.Object[] $r10;
+        org.apache.commons.math3.exception.util.LocalizedFormats $r11;
+        java.lang.Integer $r12;
+        org.apache.commons.math3.exception.DimensionMismatchException $r13, $r14;
+
+        r0 := @parameter0: double[][];
+
+        r1 := @parameter1: org.apache.commons.math3.transform.DftNormalization;
+
+        r2 := @parameter2: org.apache.commons.math3.transform.TransformType;
+
+        $i2 = lengthof r0;
+
+        if $i2 == 2 goto label01;
+
+        $r14 = new org.apache.commons.math3.exception.DimensionMismatchException;
+
+        $i16 = lengthof r0;
+
+        specialinvoke $r14.<org.apache.commons.math3.exception.DimensionMismatchException: void <init>(int,int)>($i16, 2);
+
+        throw $r14;
+
+     label01:
+        r3 = r0[0];
+
+        r4 = r0[1];
+
+        $i4 = lengthof r3;
+
+        $i3 = lengthof r4;
+
+        if $i4 == $i3 goto label02;
+
+        $r13 = new org.apache.commons.math3.exception.DimensionMismatchException;
+
+        $i15 = lengthof r4;
+
+        $i14 = lengthof r3;
+
+        specialinvoke $r13.<org.apache.commons.math3.exception.DimensionMismatchException: void <init>(int,int)>($i15, $i14);
+
+        throw $r13;
+
+     label02:
+        i0 = lengthof r3;
+
+        $l5 = (long) i0;
+
+        $z0 = staticinvoke <org.apache.commons.math3.util.ArithmeticUtils: boolean isPowerOfTwo(long)>($l5);
+
+        if $z0 != 0 goto label03;
+
+        $r9 = new org.apache.commons.math3.exception.MathIllegalArgumentException;
+
+        $r11 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats NOT_POWER_OF_TWO_CONSIDER_PADDING>;
+
+        $r10 = newarray (java.lang.Object)[1];
+
+        $r12 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        $r10[0] = $r12;
+
+        specialinvoke $r9.<org.apache.commons.math3.exception.MathIllegalArgumentException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Object[])>($r11, $r10);
+
+        throw $r9;
+
+     label03:
+        if i0 != 1 goto label04;
+
+        return;
+
+     label04:
+        if i0 != 2 goto label05;
+
+        d78 = r3[0];
+
+        d79 = r4[0];
+
+        d80 = r3[1];
+
+        d81 = r4[1];
+
+        $d74 = d78 + d80;
+
+        r3[0] = $d74;
+
+        $d75 = d79 + d81;
+
+        r4[0] = $d75;
+
+        $d76 = d78 - d80;
+
+        r3[1] = $d76;
+
+        $d77 = d79 - d81;
+
+        r4[1] = $d77;
+
+        staticinvoke <org.apache.commons.math3.transform.FastFourierTransformer: void normalizeTransformedData(double[][],org.apache.commons.math3.transform.DftNormalization,org.apache.commons.math3.transform.TransformType)>(r0, r1, r2);
+
+        return;
+
+     label05:
+        staticinvoke <org.apache.commons.math3.transform.FastFourierTransformer: void bitReversalShuffle2(double[],double[])>(r3, r4);
+
+        $r5 = <org.apache.commons.math3.transform.TransformType: org.apache.commons.math3.transform.TransformType INVERSE>;
+
+        if r2 != $r5 goto label08;
+
+        i17 = 0;
+
+     label06:
+        if i17 >= i0 goto label07;
+
+        i18 = i17 + 1;
+
+        i19 = i17 + 2;
+
+        i20 = i17 + 3;
+
+        d82 = r3[i17];
+
+        d83 = r4[i17];
+
+        d84 = r3[i19];
+
+        d85 = r4[i19];
+
+        d86 = r3[i18];
+
+        d87 = r4[i18];
+
+        d88 = r3[i20];
+
+        d89 = r4[i20];
+
+        $d50 = d82 + d84;
+
+        $d51 = $d50 + d86;
+
+        $d52 = $d51 + d88;
+
+        r3[i17] = $d52;
+
+        $d53 = d83 + d85;
+
+        $d54 = $d53 + d87;
+
+        $d55 = $d54 + d89;
+
+        r4[i17] = $d55;
+
+        $d57 = d82 - d86;
+
+        $d56 = d89 - d85;
+
+        $d58 = $d57 + $d56;
+
+        r3[i18] = $d58;
+
+        $d60 = d83 - d87;
+
+        $d59 = d84 - d88;
+
+        $d61 = $d60 + $d59;
+
+        r4[i18] = $d61;
+
+        $d62 = d82 - d84;
+
+        $d63 = $d62 + d86;
+
+        $d64 = $d63 - d88;
+
+        r3[i19] = $d64;
+
+        $d65 = d83 - d85;
+
+        $d66 = $d65 + d87;
+
+        $d67 = $d66 - d89;
+
+        r4[i19] = $d67;
+
+        $d69 = d82 - d86;
+
+        $d68 = d85 - d89;
+
+        $d70 = $d69 + $d68;
+
+        r3[i20] = $d70;
+
+        $d72 = d83 - d87;
+
+        $d71 = d88 - d84;
+
+        $d73 = $d72 + $d71;
+
+        r4[i20] = $d73;
+
+        i17 = i17 + 4;
+
+        goto label06;
+
+     label07:
+        goto label10;
+
+     label08:
+        i21 = 0;
+
+     label09:
+        if i21 >= i0 goto label10;
+
+        i22 = i21 + 1;
+
+        i23 = i21 + 2;
+
+        i24 = i21 + 3;
+
+        d90 = r3[i21];
+
+        d91 = r4[i21];
+
+        d92 = r3[i23];
+
+        d93 = r4[i23];
+
+        d94 = r3[i22];
+
+        d95 = r4[i22];
+
+        d96 = r3[i24];
+
+        d97 = r4[i24];
+
+        $d26 = d90 + d92;
+
+        $d27 = $d26 + d94;
+
+        $d28 = $d27 + d96;
+
+        r3[i21] = $d28;
+
+        $d29 = d91 + d93;
+
+        $d30 = $d29 + d95;
+
+        $d31 = $d30 + d97;
+
+        r4[i21] = $d31;
+
+        $d33 = d90 - d94;
+
+        $d32 = d93 - d97;
+
+        $d34 = $d33 + $d32;
+
+        r3[i22] = $d34;
+
+        $d36 = d91 - d95;
+
+        $d35 = d96 - d92;
+
+        $d37 = $d36 + $d35;
+
+        r4[i22] = $d37;
+
+        $d38 = d90 - d92;
+
+        $d39 = $d38 + d94;
+
+        $d40 = $d39 - d96;
+
+        r3[i23] = $d40;
+
+        $d41 = d91 - d93;
+
+        $d42 = $d41 + d95;
+
+        $d43 = $d42 - d97;
+
+        r4[i23] = $d43;
+
+        $d45 = d90 - d94;
+
+        $d44 = d97 - d93;
+
+        $d46 = $d45 + $d44;
+
+        r3[i24] = $d46;
+
+        $d48 = d91 - d95;
+
+        $d47 = d92 - d96;
+
+        $d49 = $d48 + $d47;
+
+        r4[i24] = $d49;
+
+        i21 = i21 + 4;
+
+        goto label09;
+
+     label10:
+        i25 = 4;
+
+        i26 = 2;
+
+     label11:
+        if i25 >= i0 goto label17;
+
+        i27 = i25 << 1;
+
+        i28 = i26 + 1;
+
+        $r6 = <org.apache.commons.math3.transform.FastFourierTransformer: double[] W_SUB_N_R>;
+
+        d98 = $r6[i28];
+
+        $r7 = <org.apache.commons.math3.transform.FastFourierTransformer: double[] W_SUB_N_I>;
+
+        d99 = $r7[i28];
+
+        $r8 = <org.apache.commons.math3.transform.TransformType: org.apache.commons.math3.transform.TransformType INVERSE>;
+
+        if r2 != $r8 goto label12;
+
+        d99 = neg d99;
+
+     label12:
+        i29 = 0;
+
+     label13:
+        if i29 >= i0 goto label16;
+
+        i1 = i29 + i25;
+
+        d100 = 1.0;
+
+        d101 = 0.0;
+
+        i30 = 0;
+
+     label14:
+        if i30 >= i25 goto label15;
+
+        $i6 = i29 + i30;
+
+        d0 = r3[$i6];
+
+        $i7 = i29 + i30;
+
+        d1 = r4[$i7];
+
+        $i8 = i1 + i30;
+
+        d2 = r3[$i8];
+
+        $i9 = i1 + i30;
+
+        d3 = r4[$i9];
+
+        $i10 = i29 + i30;
+
+        $d6 = d100 * d2;
+
+        $d8 = d0 + $d6;
+
+        $d7 = d101 * d3;
+
+        $d9 = $d8 - $d7;
+
+        r3[$i10] = $d9;
+
+        $i11 = i29 + i30;
+
+        $d10 = d100 * d3;
+
+        $d12 = d1 + $d10;
+
+        $d11 = d101 * d2;
+
+        $d13 = $d12 + $d11;
+
+        r4[$i11] = $d13;
+
+        $i12 = i1 + i30;
+
+        $d15 = d100 * d2;
+
+        $d14 = d101 * d3;
+
+        $d16 = $d15 - $d14;
+
+        $d17 = d0 - $d16;
+
+        r3[$i12] = $d17;
+
+        $i13 = i1 + i30;
+
+        $d19 = d100 * d3;
+
+        $d18 = d101 * d2;
+
+        $d20 = $d19 + $d18;
+
+        $d21 = d1 - $d20;
+
+        r4[$i13] = $d21;
+
+        $d23 = d100 * d98;
+
+        $d22 = d101 * d99;
+
+        d4 = $d23 - $d22;
+
+        $d25 = d100 * d99;
+
+        $d24 = d101 * d98;
+
+        d5 = $d25 + $d24;
+
+        d100 = d4;
+
+        d101 = d5;
+
+        i30 = i30 + 1;
+
+        goto label14;
+
+     label15:
+        i29 = i29 + i27;
+
+        goto label13;
+
+     label16:
+        i25 = i27;
+
+        i26 = i28;
+
+        goto label11;
+
+     label17:
+        staticinvoke <org.apache.commons.math3.transform.FastFourierTransformer: void normalizeTransformedData(double[][],org.apache.commons.math3.transform.DftNormalization,org.apache.commons.math3.transform.TransformType)>(r0, r1, r2);
+
+        return;
+    }
+
+    public org.apache.commons.math3.complex.Complex[] transform(double[], org.apache.commons.math3.transform.TransformType)
+    {
+        org.apache.commons.math3.transform.FastFourierTransformer r0;
+        double[] r1, $r5, $r6;
+        org.apache.commons.math3.transform.TransformType r2;
+        double[][] $r4;
+        int $i0, $i1;
+        org.apache.commons.math3.transform.DftNormalization $r7;
+        org.apache.commons.math3.complex.Complex[] $r8;
+
+        r0 := @this: org.apache.commons.math3.transform.FastFourierTransformer;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: org.apache.commons.math3.transform.TransformType;
+
+        $r4 = newarray (double[])[2];
+
+        $i0 = lengthof r1;
+
+        $r5 = staticinvoke <org.apache.commons.math3.util.MathArrays: double[] copyOf(double[],int)>(r1, $i0);
+
+        $r4[0] = $r5;
+
+        $i1 = lengthof r1;
+
+        $r6 = newarray (double)[$i1];
+
+        $r4[1] = $r6;
+
+        $r7 = r0.<org.apache.commons.math3.transform.FastFourierTransformer: org.apache.commons.math3.transform.DftNormalization normalization>;
+
+        staticinvoke <org.apache.commons.math3.transform.FastFourierTransformer: void transformInPlace(double[][],org.apache.commons.math3.transform.DftNormalization,org.apache.commons.math3.transform.TransformType)>($r4, $r7, r2);
+
+        $r8 = staticinvoke <org.apache.commons.math3.transform.TransformUtils: org.apache.commons.math3.complex.Complex[] createComplexArray(double[][])>($r4);
+
+        return $r8;
+    }
+
+    public org.apache.commons.math3.complex.Complex[] transform(org.apache.commons.math3.analysis.UnivariateFunction, double, double, int, org.apache.commons.math3.transform.TransformType)
+    {
+        org.apache.commons.math3.transform.FastFourierTransformer r0;
+        org.apache.commons.math3.analysis.UnivariateFunction r1;
+        double d0, d1;
+        int i0;
+        org.apache.commons.math3.transform.TransformType r2;
+        double[] r3;
+        org.apache.commons.math3.complex.Complex[] $r4;
+
+        r0 := @this: org.apache.commons.math3.transform.FastFourierTransformer;
+
+        r1 := @parameter0: org.apache.commons.math3.analysis.UnivariateFunction;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        i0 := @parameter3: int;
+
+        r2 := @parameter4: org.apache.commons.math3.transform.TransformType;
+
+        r3 = staticinvoke <org.apache.commons.math3.analysis.FunctionUtils: double[] sample(org.apache.commons.math3.analysis.UnivariateFunction,double,double,int)>(r1, d0, d1, i0);
+
+        $r4 = virtualinvoke r0.<org.apache.commons.math3.transform.FastFourierTransformer: org.apache.commons.math3.complex.Complex[] transform(double[],org.apache.commons.math3.transform.TransformType)>(r3, r2);
+
+        return $r4;
+    }
+
+    public org.apache.commons.math3.complex.Complex[] transform(org.apache.commons.math3.complex.Complex[], org.apache.commons.math3.transform.TransformType)
+    {
+        org.apache.commons.math3.transform.FastFourierTransformer r0;
+        org.apache.commons.math3.complex.Complex[] r1, $r5;
+        org.apache.commons.math3.transform.TransformType r2;
+        double[][] r3;
+        org.apache.commons.math3.transform.DftNormalization $r4;
+
+        r0 := @this: org.apache.commons.math3.transform.FastFourierTransformer;
+
+        r1 := @parameter0: org.apache.commons.math3.complex.Complex[];
+
+        r2 := @parameter1: org.apache.commons.math3.transform.TransformType;
+
+        r3 = staticinvoke <org.apache.commons.math3.transform.TransformUtils: double[][] createRealImaginaryArray(org.apache.commons.math3.complex.Complex[])>(r1);
+
+        $r4 = r0.<org.apache.commons.math3.transform.FastFourierTransformer: org.apache.commons.math3.transform.DftNormalization normalization>;
+
+        staticinvoke <org.apache.commons.math3.transform.FastFourierTransformer: void transformInPlace(double[][],org.apache.commons.math3.transform.DftNormalization,org.apache.commons.math3.transform.TransformType)>(r3, $r4, r2);
+
+        $r5 = staticinvoke <org.apache.commons.math3.transform.TransformUtils: org.apache.commons.math3.complex.Complex[] createComplexArray(double[][])>(r3);
+
+        return $r5;
+    }
+
+    public java.lang.Object mdfft(java.lang.Object, org.apache.commons.math3.transform.TransformType)
+    {
+        org.apache.commons.math3.transform.FastFourierTransformer r0;
+        java.lang.Object r1, $r6, $r7;
+        org.apache.commons.math3.transform.TransformType r2;
+        org.apache.commons.math3.transform.FastFourierTransformer$MultiDimensionalComplexMatrix r3, $r5;
+        int[] r4, $r8;
+        int $i0, i1;
+
+        r0 := @this: org.apache.commons.math3.transform.FastFourierTransformer;
+
+        r1 := @parameter0: java.lang.Object;
+
+        r2 := @parameter1: org.apache.commons.math3.transform.TransformType;
+
+        $r5 = new org.apache.commons.math3.transform.FastFourierTransformer$MultiDimensionalComplexMatrix;
+
+        specialinvoke $r5.<org.apache.commons.math3.transform.FastFourierTransformer$MultiDimensionalComplexMatrix: void <init>(java.lang.Object)>(r1);
+
+        $r6 = virtualinvoke $r5.<org.apache.commons.math3.transform.FastFourierTransformer$MultiDimensionalComplexMatrix: java.lang.Object clone()>();
+
+        r3 = (org.apache.commons.math3.transform.FastFourierTransformer$MultiDimensionalComplexMatrix) $r6;
+
+        r4 = virtualinvoke r3.<org.apache.commons.math3.transform.FastFourierTransformer$MultiDimensionalComplexMatrix: int[] getDimensionSizes()>();
+
+        i1 = 0;
+
+     label1:
+        $i0 = lengthof r4;
+
+        if i1 >= $i0 goto label2;
+
+        $r8 = newarray (int)[0];
+
+        specialinvoke r0.<org.apache.commons.math3.transform.FastFourierTransformer: void mdfft(org.apache.commons.math3.transform.FastFourierTransformer$MultiDimensionalComplexMatrix,org.apache.commons.math3.transform.TransformType,int,int[])>(r3, r2, i1, $r8);
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        $r7 = virtualinvoke r3.<org.apache.commons.math3.transform.FastFourierTransformer$MultiDimensionalComplexMatrix: java.lang.Object getArray()>();
+
+        return $r7;
+    }
+
+    private void mdfft(org.apache.commons.math3.transform.FastFourierTransformer$MultiDimensionalComplexMatrix, org.apache.commons.math3.transform.TransformType, int, int[])
+    {
+        org.apache.commons.math3.transform.FastFourierTransformer r0;
+        org.apache.commons.math3.transform.FastFourierTransformer$MultiDimensionalComplexMatrix r1;
+        org.apache.commons.math3.transform.TransformType r2;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, i13, i14, i15;
+        int[] r3, r4, r10;
+        org.apache.commons.math3.complex.Complex $r5, $r7;
+        org.apache.commons.math3.complex.Complex[] r8, r9;
+
+        r0 := @this: org.apache.commons.math3.transform.FastFourierTransformer;
+
+        r1 := @parameter0: org.apache.commons.math3.transform.FastFourierTransformer$MultiDimensionalComplexMatrix;
+
+        r2 := @parameter1: org.apache.commons.math3.transform.TransformType;
+
+        i0 := @parameter2: int;
+
+        r3 := @parameter3: int[];
+
+        r4 = virtualinvoke r1.<org.apache.commons.math3.transform.FastFourierTransformer$MultiDimensionalComplexMatrix: int[] getDimensionSizes()>();
+
+        $i2 = lengthof r3;
+
+        $i1 = lengthof r4;
+
+        if $i2 != $i1 goto label5;
+
+        $i10 = r4[i0];
+
+        r8 = newarray (org.apache.commons.math3.complex.Complex)[$i10];
+
+        i13 = 0;
+
+     label1:
+        $i11 = r4[i0];
+
+        if i13 >= $i11 goto label2;
+
+        r3[i0] = i13;
+
+        $r7 = virtualinvoke r1.<org.apache.commons.math3.transform.FastFourierTransformer$MultiDimensionalComplexMatrix: org.apache.commons.math3.complex.Complex get(int[])>(r3);
+
+        r8[i13] = $r7;
+
+        i13 = i13 + 1;
+
+        goto label1;
+
+     label2:
+        r9 = virtualinvoke r0.<org.apache.commons.math3.transform.FastFourierTransformer: org.apache.commons.math3.complex.Complex[] transform(org.apache.commons.math3.complex.Complex[],org.apache.commons.math3.transform.TransformType)>(r8, r2);
+
+        i14 = 0;
+
+     label3:
+        $i12 = r4[i0];
+
+        if i14 >= $i12 goto label4;
+
+        r3[i0] = i14;
+
+        $r5 = r9[i14];
+
+        virtualinvoke r1.<org.apache.commons.math3.transform.FastFourierTransformer$MultiDimensionalComplexMatrix: org.apache.commons.math3.complex.Complex set(org.apache.commons.math3.complex.Complex,int[])>($r5, r3);
+
+        i14 = i14 + 1;
+
+        goto label3;
+
+     label4:
+        goto label8;
+
+     label5:
+        $i3 = lengthof r3;
+
+        $i4 = $i3 + 1;
+
+        r10 = newarray (int)[$i4];
+
+        $i5 = lengthof r3;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r3, 0, r10, 0, $i5);
+
+        $i6 = lengthof r3;
+
+        if $i6 != i0 goto label6;
+
+        r10[i0] = 0;
+
+        specialinvoke r0.<org.apache.commons.math3.transform.FastFourierTransformer: void mdfft(org.apache.commons.math3.transform.FastFourierTransformer$MultiDimensionalComplexMatrix,org.apache.commons.math3.transform.TransformType,int,int[])>(r1, r2, i0, r10);
+
+        goto label8;
+
+     label6:
+        i15 = 0;
+
+     label7:
+        $i7 = lengthof r3;
+
+        $i8 = r4[$i7];
+
+        if i15 >= $i8 goto label8;
+
+        $i9 = lengthof r3;
+
+        r10[$i9] = i15;
+
+        specialinvoke r0.<org.apache.commons.math3.transform.FastFourierTransformer: void mdfft(org.apache.commons.math3.transform.FastFourierTransformer$MultiDimensionalComplexMatrix,org.apache.commons.math3.transform.TransformType,int,int[])>(r1, r2, i0, r10);
+
+        i15 = i15 + 1;
+
+        goto label7;
+
+     label8:
+        return;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0, $z1;
+        double[] $r1, $r2;
+
+        <org.apache.commons.math3.transform.FastFourierTransformer: long serialVersionUID> = 20120210L;
+
+        $r0 = class "org/apache/commons/math3/transform/FastFourierTransformer";
+
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+
+        if $z0 != 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        <org.apache.commons.math3.transform.FastFourierTransformer: boolean $assertionsDisabled> = $z1;
+
+        $r1 = newarray (double)[63];
+
+        $r1[0] = 1.0;
+
+        $r1[1] = -1.0;
+
+        $r1[2] = 6.123233995736766E-17;
+
+        $r1[3] = 0.7071067811865476;
+
+        $r1[4] = 0.9238795325112867;
+
+        $r1[5] = 0.9807852804032304;
+
+        $r1[6] = 0.9951847266721969;
+
+        $r1[7] = 0.9987954562051724;
+
+        $r1[8] = 0.9996988186962042;
+
+        $r1[9] = 0.9999247018391445;
+
+        $r1[10] = 0.9999811752826011;
+
+        $r1[11] = 0.9999952938095762;
+
+        $r1[12] = 0.9999988234517019;
+
+        $r1[13] = 0.9999997058628822;
+
+        $r1[14] = 0.9999999264657179;
+
+        $r1[15] = 0.9999999816164293;
+
+        $r1[16] = 0.9999999954041073;
+
+        $r1[17] = 0.9999999988510269;
+
+        $r1[18] = 0.9999999997127567;
+
+        $r1[19] = 0.9999999999281892;
+
+        $r1[20] = 0.9999999999820472;
+
+        $r1[21] = 0.9999999999955118;
+
+        $r1[22] = 0.999999999998878;
+
+        $r1[23] = 0.9999999999997194;
+
+        $r1[24] = 0.9999999999999298;
+
+        $r1[25] = 0.9999999999999825;
+
+        $r1[26] = 0.9999999999999957;
+
+        $r1[27] = 0.9999999999999989;
+
+        $r1[28] = 0.9999999999999998;
+
+        $r1[29] = 0.9999999999999999;
+
+        $r1[30] = 1.0;
+
+        $r1[31] = 1.0;
+
+        $r1[32] = 1.0;
+
+        $r1[33] = 1.0;
+
+        $r1[34] = 1.0;
+
+        $r1[35] = 1.0;
+
+        $r1[36] = 1.0;
+
+        $r1[37] = 1.0;
+
+        $r1[38] = 1.0;
+
+        $r1[39] = 1.0;
+
+        $r1[40] = 1.0;
+
+        $r1[41] = 1.0;
+
+        $r1[42] = 1.0;
+
+        $r1[43] = 1.0;
+
+        $r1[44] = 1.0;
+
+        $r1[45] = 1.0;
+
+        $r1[46] = 1.0;
+
+        $r1[47] = 1.0;
+
+        $r1[48] = 1.0;
+
+        $r1[49] = 1.0;
+
+        $r1[50] = 1.0;
+
+        $r1[51] = 1.0;
+
+        $r1[52] = 1.0;
+
+        $r1[53] = 1.0;
+
+        $r1[54] = 1.0;
+
+        $r1[55] = 1.0;
+
+        $r1[56] = 1.0;
+
+        $r1[57] = 1.0;
+
+        $r1[58] = 1.0;
+
+        $r1[59] = 1.0;
+
+        $r1[60] = 1.0;
+
+        $r1[61] = 1.0;
+
+        $r1[62] = 1.0;
+
+        <org.apache.commons.math3.transform.FastFourierTransformer: double[] W_SUB_N_R> = $r1;
+
+        $r2 = newarray (double)[63];
+
+        $r2[0] = 2.4492935982947064E-16;
+
+        $r2[1] = -1.2246467991473532E-16;
+
+        $r2[2] = -1.0;
+
+        $r2[3] = -0.7071067811865475;
+
+        $r2[4] = -0.3826834323650898;
+
+        $r2[5] = -0.19509032201612825;
+
+        $r2[6] = -0.0980171403295606;
+
+        $r2[7] = -0.049067674327418015;
+
+        $r2[8] = -0.024541228522912288;
+
+        $r2[9] = -0.012271538285719925;
+
+        $r2[10] = -0.006135884649154475;
+
+        $r2[11] = -0.003067956762965976;
+
+        $r2[12] = -0.0015339801862847655;
+
+        $r2[13] = -7.669903187427045E-4;
+
+        $r2[14] = -3.8349518757139556E-4;
+
+        $r2[15] = -1.917475973107033E-4;
+
+        $r2[16] = -9.587379909597734E-5;
+
+        $r2[17] = -4.793689960306688E-5;
+
+        $r2[18] = -2.396844980841822E-5;
+
+        $r2[19] = -1.1984224905069705E-5;
+
+        $r2[20] = -5.9921124526424275E-6;
+
+        $r2[21] = -2.996056226334661E-6;
+
+        $r2[22] = -1.4980281131690111E-6;
+
+        $r2[23] = -7.490140565847157E-7;
+
+        $r2[24] = -3.7450702829238413E-7;
+
+        $r2[25] = -1.8725351414619535E-7;
+
+        $r2[26] = -9.362675707309808E-8;
+
+        $r2[27] = -4.681337853654909E-8;
+
+        $r2[28] = -2.340668926827455E-8;
+
+        $r2[29] = -1.1703344634137277E-8;
+
+        $r2[30] = -5.8516723170686385E-9;
+
+        $r2[31] = -2.9258361585343192E-9;
+
+        $r2[32] = -1.4629180792671596E-9;
+
+        $r2[33] = -7.314590396335798E-10;
+
+        $r2[34] = -3.657295198167899E-10;
+
+        $r2[35] = -1.8286475990839495E-10;
+
+        $r2[36] = -9.143237995419748E-11;
+
+        $r2[37] = -4.571618997709874E-11;
+
+        $r2[38] = -2.285809498854937E-11;
+
+        $r2[39] = -1.1429047494274685E-11;
+
+        $r2[40] = -5.714523747137342E-12;
+
+        $r2[41] = -2.857261873568671E-12;
+
+        $r2[42] = -1.4286309367843356E-12;
+
+        $r2[43] = -7.143154683921678E-13;
+
+        $r2[44] = -3.571577341960839E-13;
+
+        $r2[45] = -1.7857886709804195E-13;
+
+        $r2[46] = -8.928943354902097E-14;
+
+        $r2[47] = -4.4644716774510487E-14;
+
+        $r2[48] = -2.2322358387255243E-14;
+
+        $r2[49] = -1.1161179193627622E-14;
+
+        $r2[50] = -5.580589596813811E-15;
+
+        $r2[51] = -2.7902947984069054E-15;
+
+        $r2[52] = -1.3951473992034527E-15;
+
+        $r2[53] = -6.975736996017264E-16;
+
+        $r2[54] = -3.487868498008632E-16;
+
+        $r2[55] = -1.743934249004316E-16;
+
+        $r2[56] = -8.71967124502158E-17;
+
+        $r2[57] = -4.35983562251079E-17;
+
+        $r2[58] = -2.179917811255395E-17;
+
+        $r2[59] = -1.0899589056276974E-17;
+
+        $r2[60] = -5.449794528138487E-18;
+
+        $r2[61] = -2.7248972640692436E-18;
+
+        $r2[62] = -1.3624486320346218E-18;
+
+        <org.apache.commons.math3.transform.FastFourierTransformer: double[] W_SUB_N_I> = $r2;
+
+        return;
+    }
+}

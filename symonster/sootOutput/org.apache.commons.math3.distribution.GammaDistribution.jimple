@@ -1,0 +1,782 @@
+public class org.apache.commons.math3.distribution.GammaDistribution extends org.apache.commons.math3.distribution.AbstractRealDistribution
+{
+    public static final double DEFAULT_INVERSE_ABSOLUTE_ACCURACY;
+    private static final long serialVersionUID;
+    private final double shape;
+    private final double scale;
+    private final double shiftedShape;
+    private final double densityPrefactor1;
+    private final double logDensityPrefactor1;
+    private final double densityPrefactor2;
+    private final double logDensityPrefactor2;
+    private final double minY;
+    private final double maxLogY;
+    private final double solverAbsoluteAccuracy;
+
+    public void <init>(double, double) throws org.apache.commons.math3.exception.NotStrictlyPositiveException
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+        double d0, d1;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        specialinvoke r0.<org.apache.commons.math3.distribution.GammaDistribution: void <init>(double,double,double)>(d0, d1, 1.0E-9);
+
+        return;
+    }
+
+    public void <init>(double, double, double) throws org.apache.commons.math3.exception.NotStrictlyPositiveException
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+        double d0, d1, d2;
+        org.apache.commons.math3.random.Well19937c $r1;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        $r1 = new org.apache.commons.math3.random.Well19937c;
+
+        specialinvoke $r1.<org.apache.commons.math3.random.Well19937c: void <init>()>();
+
+        specialinvoke r0.<org.apache.commons.math3.distribution.GammaDistribution: void <init>(org.apache.commons.math3.random.RandomGenerator,double,double,double)>($r1, d0, d1, d2);
+
+        return;
+    }
+
+    public void <init>(org.apache.commons.math3.random.RandomGenerator, double, double) throws org.apache.commons.math3.exception.NotStrictlyPositiveException
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+        org.apache.commons.math3.random.RandomGenerator r1;
+        double d0, d1;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        r1 := @parameter0: org.apache.commons.math3.random.RandomGenerator;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        specialinvoke r0.<org.apache.commons.math3.distribution.GammaDistribution: void <init>(org.apache.commons.math3.random.RandomGenerator,double,double,double)>(r1, d0, d1, 1.0E-9);
+
+        return;
+    }
+
+    public void <init>(org.apache.commons.math3.random.RandomGenerator, double, double, double) throws org.apache.commons.math3.exception.NotStrictlyPositiveException
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+        org.apache.commons.math3.random.RandomGenerator r1;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42;
+        byte $b0, $b1;
+        org.apache.commons.math3.exception.NotStrictlyPositiveException $r2, $r5;
+        org.apache.commons.math3.exception.util.LocalizedFormats $r3, $r6;
+        java.lang.Double $r4, $r7;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        r1 := @parameter0: org.apache.commons.math3.random.RandomGenerator;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        d2 := @parameter3: double;
+
+        specialinvoke r0.<org.apache.commons.math3.distribution.AbstractRealDistribution: void <init>(org.apache.commons.math3.random.RandomGenerator)>(r1);
+
+        $b0 = d0 cmpg 0.0;
+
+        if $b0 > 0 goto label1;
+
+        $r5 = new org.apache.commons.math3.exception.NotStrictlyPositiveException;
+
+        $r6 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats SHAPE>;
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        specialinvoke $r5.<org.apache.commons.math3.exception.NotStrictlyPositiveException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Number)>($r6, $r7);
+
+        throw $r5;
+
+     label1:
+        $b1 = d1 cmpg 0.0;
+
+        if $b1 > 0 goto label2;
+
+        $r2 = new org.apache.commons.math3.exception.NotStrictlyPositiveException;
+
+        $r3 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats SCALE>;
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        specialinvoke $r2.<org.apache.commons.math3.exception.NotStrictlyPositiveException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Number)>($r3, $r4);
+
+        throw $r2;
+
+     label2:
+        r0.<org.apache.commons.math3.distribution.GammaDistribution: double shape> = d0;
+
+        r0.<org.apache.commons.math3.distribution.GammaDistribution: double scale> = d1;
+
+        r0.<org.apache.commons.math3.distribution.GammaDistribution: double solverAbsoluteAccuracy> = d2;
+
+        $d4 = d0 + 4.7421875;
+
+        $d5 = $d4 + 0.5;
+
+        r0.<org.apache.commons.math3.distribution.GammaDistribution: double shiftedShape> = $d5;
+
+        $d6 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shiftedShape>;
+
+        $d7 = 6.283185307179586 * $d6;
+
+        d3 = 2.718281828459045 / $d7;
+
+        $d8 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>(d3);
+
+        $d9 = d0 * $d8;
+
+        $d10 = staticinvoke <org.apache.commons.math3.special.Gamma: double lanczos(double)>(d0);
+
+        $d11 = $d9 / $d10;
+
+        r0.<org.apache.commons.math3.distribution.GammaDistribution: double densityPrefactor2> = $d11;
+
+        $d12 = staticinvoke <org.apache.commons.math3.util.FastMath: double log(double)>(d0);
+
+        $d13 = staticinvoke <org.apache.commons.math3.util.FastMath: double log(double)>(d3);
+
+        $d14 = 0.5 * $d13;
+
+        $d15 = $d12 + $d14;
+
+        $d16 = staticinvoke <org.apache.commons.math3.special.Gamma: double lanczos(double)>(d0);
+
+        $d17 = staticinvoke <org.apache.commons.math3.util.FastMath: double log(double)>($d16);
+
+        $d18 = $d15 - $d17;
+
+        r0.<org.apache.commons.math3.distribution.GammaDistribution: double logDensityPrefactor2> = $d18;
+
+        $d19 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double densityPrefactor2>;
+
+        $d22 = $d19 / d1;
+
+        $d21 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shiftedShape>;
+
+        $d20 = neg d0;
+
+        $d23 = staticinvoke <org.apache.commons.math3.util.FastMath: double pow(double,double)>($d21, $d20);
+
+        $d25 = $d22 * $d23;
+
+        $d24 = d0 + 4.7421875;
+
+        $d26 = staticinvoke <org.apache.commons.math3.util.FastMath: double exp(double)>($d24);
+
+        $d27 = $d25 * $d26;
+
+        r0.<org.apache.commons.math3.distribution.GammaDistribution: double densityPrefactor1> = $d27;
+
+        $d28 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double logDensityPrefactor2>;
+
+        $d29 = staticinvoke <org.apache.commons.math3.util.FastMath: double log(double)>(d1);
+
+        $d31 = $d28 - $d29;
+
+        $d30 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shiftedShape>;
+
+        $d32 = staticinvoke <org.apache.commons.math3.util.FastMath: double log(double)>($d30);
+
+        $d33 = $d32 * d0;
+
+        $d34 = $d31 - $d33;
+
+        $d35 = $d34 + d0;
+
+        $d36 = $d35 + 4.7421875;
+
+        r0.<org.apache.commons.math3.distribution.GammaDistribution: double logDensityPrefactor1> = $d36;
+
+        $d37 = d0 + 4.7421875;
+
+        $d38 = staticinvoke <org.apache.commons.math3.util.FastMath: double log(double)>(1.7976931348623157E308);
+
+        $d39 = $d37 - $d38;
+
+        r0.<org.apache.commons.math3.distribution.GammaDistribution: double minY> = $d39;
+
+        $d40 = staticinvoke <org.apache.commons.math3.util.FastMath: double log(double)>(1.7976931348623157E308);
+
+        $d41 = d0 - 1.0;
+
+        $d42 = $d40 / $d41;
+
+        r0.<org.apache.commons.math3.distribution.GammaDistribution: double maxLogY> = $d42;
+
+        return;
+    }
+
+    public double getAlpha()
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        $d0 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shape>;
+
+        return $d0;
+    }
+
+    public double getShape()
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        $d0 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shape>;
+
+        return $d0;
+    }
+
+    public double getBeta()
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        $d0 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double scale>;
+
+        return $d0;
+    }
+
+    public double getScale()
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        $d0 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double scale>;
+
+        return $d0;
+    }
+
+    public double density(double)
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31;
+        byte $b0, $b1, $b2;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        d0 := @parameter0: double;
+
+        $b0 = d0 cmpg 0.0;
+
+        if $b0 >= 0 goto label1;
+
+        return 0.0;
+
+     label1:
+        $d5 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double scale>;
+
+        d1 = d0 / $d5;
+
+        $d6 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double minY>;
+
+        $b1 = d1 cmpg $d6;
+
+        if $b1 <= 0 goto label2;
+
+        $d22 = staticinvoke <org.apache.commons.math3.util.FastMath: double log(double)>(d1);
+
+        $d23 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double maxLogY>;
+
+        $b2 = $d22 cmpl $d23;
+
+        if $b2 < 0 goto label3;
+
+     label2:
+        $d7 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shiftedShape>;
+
+        $d9 = d1 - $d7;
+
+        $d8 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shiftedShape>;
+
+        d2 = $d9 / $d8;
+
+        $d10 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shape>;
+
+        $d11 = staticinvoke <org.apache.commons.math3.util.FastMath: double log1p(double)>(d2);
+
+        $d12 = $d11 - d2;
+
+        d3 = $d10 * $d12;
+
+        $d13 = neg d1;
+
+        $d15 = $d13 * 5.2421875;
+
+        $d14 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shiftedShape>;
+
+        $d16 = $d15 / $d14;
+
+        $d17 = $d16 + 4.7421875;
+
+        d4 = $d17 + d3;
+
+        $d18 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double densityPrefactor2>;
+
+        $d19 = $d18 / d0;
+
+        $d20 = staticinvoke <org.apache.commons.math3.util.FastMath: double exp(double)>(d4);
+
+        $d21 = $d19 * $d20;
+
+        return $d21;
+
+     label3:
+        $d25 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double densityPrefactor1>;
+
+        $d24 = neg d1;
+
+        $d26 = staticinvoke <org.apache.commons.math3.util.FastMath: double exp(double)>($d24);
+
+        $d29 = $d25 * $d26;
+
+        $d27 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shape>;
+
+        $d28 = $d27 - 1.0;
+
+        $d30 = staticinvoke <org.apache.commons.math3.util.FastMath: double pow(double,double)>(d1, $d28);
+
+        $d31 = $d29 * $d30;
+
+        return $d31;
+    }
+
+    public double logDensity(double)
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30;
+        byte $b0, $b1, $b2;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        d0 := @parameter0: double;
+
+        $b0 = d0 cmpg 0.0;
+
+        if $b0 >= 0 goto label1;
+
+        return #-Infinity;
+
+     label1:
+        $d5 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double scale>;
+
+        d1 = d0 / $d5;
+
+        $d6 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double minY>;
+
+        $b1 = d1 cmpg $d6;
+
+        if $b1 <= 0 goto label2;
+
+        $d22 = staticinvoke <org.apache.commons.math3.util.FastMath: double log(double)>(d1);
+
+        $d23 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double maxLogY>;
+
+        $b2 = $d22 cmpl $d23;
+
+        if $b2 < 0 goto label3;
+
+     label2:
+        $d7 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shiftedShape>;
+
+        $d9 = d1 - $d7;
+
+        $d8 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shiftedShape>;
+
+        d2 = $d9 / $d8;
+
+        $d10 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shape>;
+
+        $d11 = staticinvoke <org.apache.commons.math3.util.FastMath: double log1p(double)>(d2);
+
+        $d12 = $d11 - d2;
+
+        d3 = $d10 * $d12;
+
+        $d13 = neg d1;
+
+        $d15 = $d13 * 5.2421875;
+
+        $d14 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shiftedShape>;
+
+        $d16 = $d15 / $d14;
+
+        $d17 = $d16 + 4.7421875;
+
+        d4 = $d17 + d3;
+
+        $d18 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double logDensityPrefactor2>;
+
+        $d19 = staticinvoke <org.apache.commons.math3.util.FastMath: double log(double)>(d0);
+
+        $d20 = $d18 - $d19;
+
+        $d21 = $d20 + d4;
+
+        return $d21;
+
+     label3:
+        $d24 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double logDensityPrefactor1>;
+
+        $d25 = $d24 - d1;
+
+        $d26 = staticinvoke <org.apache.commons.math3.util.FastMath: double log(double)>(d1);
+
+        $d27 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shape>;
+
+        $d28 = $d27 - 1.0;
+
+        $d29 = $d26 * $d28;
+
+        $d30 = $d25 + $d29;
+
+        return $d30;
+    }
+
+    public double cumulativeProbability(double)
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+        double d0, $d1, $d2, $d3, d4;
+        byte $b0;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        d0 := @parameter0: double;
+
+        $b0 = d0 cmpg 0.0;
+
+        if $b0 > 0 goto label1;
+
+        d4 = 0.0;
+
+        goto label2;
+
+     label1:
+        $d3 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shape>;
+
+        $d1 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double scale>;
+
+        $d2 = d0 / $d1;
+
+        d4 = staticinvoke <org.apache.commons.math3.special.Gamma: double regularizedGammaP(double,double)>($d3, $d2);
+
+     label2:
+        return d4;
+    }
+
+    protected double getSolverAbsoluteAccuracy()
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        $d0 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double solverAbsoluteAccuracy>;
+
+        return $d0;
+    }
+
+    public double getNumericalMean()
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+        double $d0, $d1, $d2;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        $d1 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shape>;
+
+        $d0 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double scale>;
+
+        $d2 = $d1 * $d0;
+
+        return $d2;
+    }
+
+    public double getNumericalVariance()
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+        double $d0, $d1, $d2, $d3, $d4;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        $d1 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shape>;
+
+        $d0 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double scale>;
+
+        $d3 = $d1 * $d0;
+
+        $d2 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double scale>;
+
+        $d4 = $d3 * $d2;
+
+        return $d4;
+    }
+
+    public double getSupportLowerBound()
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        return 0.0;
+    }
+
+    public double getSupportUpperBound()
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        return #Infinity;
+    }
+
+    public boolean isSupportLowerBoundInclusive()
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        return 1;
+    }
+
+    public boolean isSupportUpperBoundInclusive()
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        return 0;
+    }
+
+    public boolean isSupportConnected()
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        return 1;
+    }
+
+    public double sample()
+    {
+        org.apache.commons.math3.distribution.GammaDistribution r0;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, d36, $d37, $d38, d39, d40, d41, d42, d43, d44, d45, d46, d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, d55, d56;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6;
+        org.apache.commons.math3.random.RandomGenerator $r1, $r2, $r3, $r4, $r5;
+
+        r0 := @this: org.apache.commons.math3.distribution.GammaDistribution;
+
+        $d1 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shape>;
+
+        $b0 = $d1 cmpg 1.0;
+
+        if $b0 >= 0 goto label5;
+
+     label1:
+        $r4 = r0.<org.apache.commons.math3.distribution.GammaDistribution: org.apache.commons.math3.random.RandomGenerator random>;
+
+        d36 = interfaceinvoke $r4.<org.apache.commons.math3.random.RandomGenerator: double nextDouble()>();
+
+        $d37 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shape>;
+
+        $d38 = $d37 / 2.718281828459045;
+
+        d39 = 1.0 + $d38;
+
+        d40 = d39 * d36;
+
+        $b5 = d40 cmpg 1.0;
+
+        if $b5 > 0 goto label3;
+
+        $d30 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shape>;
+
+        $d31 = 1.0 / $d30;
+
+        d41 = staticinvoke <org.apache.commons.math3.util.FastMath: double pow(double,double)>(d40, $d31);
+
+        $r3 = r0.<org.apache.commons.math3.distribution.GammaDistribution: org.apache.commons.math3.random.RandomGenerator random>;
+
+        d42 = interfaceinvoke $r3.<org.apache.commons.math3.random.RandomGenerator: double nextDouble()>();
+
+        $d32 = neg d41;
+
+        $d33 = staticinvoke <org.apache.commons.math3.util.FastMath: double exp(double)>($d32);
+
+        $b4 = d42 cmpl $d33;
+
+        if $b4 <= 0 goto label2;
+
+        goto label1;
+
+     label2:
+        $d34 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double scale>;
+
+        $d35 = $d34 * d41;
+
+        return $d35;
+
+     label3:
+        $d22 = d39 - d40;
+
+        $d21 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shape>;
+
+        $d23 = $d22 / $d21;
+
+        $d24 = staticinvoke <org.apache.commons.math3.util.FastMath: double log(double)>($d23);
+
+        d43 = -1.0 * $d24;
+
+        $r2 = r0.<org.apache.commons.math3.distribution.GammaDistribution: org.apache.commons.math3.random.RandomGenerator random>;
+
+        d44 = interfaceinvoke $r2.<org.apache.commons.math3.random.RandomGenerator: double nextDouble()>();
+
+        $d25 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shape>;
+
+        $d26 = $d25 - 1.0;
+
+        $d27 = staticinvoke <org.apache.commons.math3.util.FastMath: double pow(double,double)>(d43, $d26);
+
+        $b3 = d44 cmpl $d27;
+
+        if $b3 <= 0 goto label4;
+
+        goto label1;
+
+     label4:
+        $d28 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double scale>;
+
+        $d29 = $d28 * d43;
+
+        return $d29;
+
+     label5:
+        $d2 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double shape>;
+
+        d45 = $d2 - 0.3333333333333333;
+
+        $d3 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>(d45);
+
+        $d4 = 3.0 * $d3;
+
+        d46 = 1.0 / $d4;
+
+     label6:
+        $r5 = r0.<org.apache.commons.math3.distribution.GammaDistribution: org.apache.commons.math3.random.RandomGenerator random>;
+
+        d47 = interfaceinvoke $r5.<org.apache.commons.math3.random.RandomGenerator: double nextGaussian()>();
+
+        $d48 = d46 * d47;
+
+        $d49 = 1.0 + $d48;
+
+        $d50 = d46 * d47;
+
+        $d51 = 1.0 + $d50;
+
+        $d52 = $d49 * $d51;
+
+        $d53 = d46 * d47;
+
+        $d54 = 1.0 + $d53;
+
+        d55 = $d52 * $d54;
+
+        $b6 = d55 cmpg 0.0;
+
+        if $b6 > 0 goto label7;
+
+        goto label6;
+
+     label7:
+        d56 = d47 * d47;
+
+        $r1 = r0.<org.apache.commons.math3.distribution.GammaDistribution: org.apache.commons.math3.random.RandomGenerator random>;
+
+        d0 = interfaceinvoke $r1.<org.apache.commons.math3.random.RandomGenerator: double nextDouble()>();
+
+        $d5 = 0.0331 * d56;
+
+        $d6 = $d5 * d56;
+
+        $d7 = 1.0 - $d6;
+
+        $b1 = d0 cmpg $d7;
+
+        if $b1 >= 0 goto label8;
+
+        $d18 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double scale>;
+
+        $d19 = $d18 * d45;
+
+        $d20 = $d19 * d55;
+
+        return $d20;
+
+     label8:
+        $d8 = staticinvoke <org.apache.commons.math3.util.FastMath: double log(double)>(d0);
+
+        $d9 = 0.5 * d56;
+
+        $d10 = 1.0 - d55;
+
+        $d11 = staticinvoke <org.apache.commons.math3.util.FastMath: double log(double)>(d55);
+
+        $d12 = $d10 + $d11;
+
+        $d13 = d45 * $d12;
+
+        $d14 = $d9 + $d13;
+
+        $b2 = $d8 cmpg $d14;
+
+        if $b2 >= 0 goto label9;
+
+        $d15 = r0.<org.apache.commons.math3.distribution.GammaDistribution: double scale>;
+
+        $d16 = $d15 * d45;
+
+        $d17 = $d16 * d55;
+
+        return $d17;
+
+     label9:
+        goto label6;
+    }
+
+    public static void <clinit>()
+    {
+        <org.apache.commons.math3.distribution.GammaDistribution: long serialVersionUID> = 20120524L;
+
+        <org.apache.commons.math3.distribution.GammaDistribution: double DEFAULT_INVERSE_ABSOLUTE_ACCURACY> = 1.0E-9;
+
+        return;
+    }
+}

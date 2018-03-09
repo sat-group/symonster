@@ -1,0 +1,3729 @@
+public class org.apache.commons.math3.optimization.direct.CMAESOptimizer extends org.apache.commons.math3.optimization.direct.BaseAbstractMultivariateSimpleBoundsOptimizer implements org.apache.commons.math3.optimization.MultivariateOptimizer
+{
+    public static final int DEFAULT_CHECKFEASABLECOUNT;
+    public static final double DEFAULT_STOPFITNESS;
+    public static final boolean DEFAULT_ISACTIVECMA;
+    public static final int DEFAULT_MAXITERATIONS;
+    public static final int DEFAULT_DIAGONALONLY;
+    public static final org.apache.commons.math3.random.RandomGenerator DEFAULT_RANDOMGENERATOR;
+    private int lambda;
+    private boolean isActiveCMA;
+    private int checkFeasableCount;
+    private double[] inputSigma;
+    private int dimension;
+    private int diagonalOnly;
+    private boolean isMinimize;
+    private boolean generateStatistics;
+    private int maxIterations;
+    private double stopFitness;
+    private double stopTolUpX;
+    private double stopTolX;
+    private double stopTolFun;
+    private double stopTolHistFun;
+    private int mu;
+    private double logMu2;
+    private org.apache.commons.math3.linear.RealMatrix weights;
+    private double mueff;
+    private double sigma;
+    private double cc;
+    private double cs;
+    private double damps;
+    private double ccov1;
+    private double ccovmu;
+    private double chiN;
+    private double ccov1Sep;
+    private double ccovmuSep;
+    private org.apache.commons.math3.linear.RealMatrix xmean;
+    private org.apache.commons.math3.linear.RealMatrix pc;
+    private org.apache.commons.math3.linear.RealMatrix ps;
+    private double normps;
+    private org.apache.commons.math3.linear.RealMatrix B;
+    private org.apache.commons.math3.linear.RealMatrix D;
+    private org.apache.commons.math3.linear.RealMatrix BD;
+    private org.apache.commons.math3.linear.RealMatrix diagD;
+    private org.apache.commons.math3.linear.RealMatrix C;
+    private org.apache.commons.math3.linear.RealMatrix diagC;
+    private int iterations;
+    private double[] fitnessHistory;
+    private int historySize;
+    private org.apache.commons.math3.random.RandomGenerator random;
+    private java.util.List statisticsSigmaHistory;
+    private java.util.List statisticsMeanHistory;
+    private java.util.List statisticsFitnessHistory;
+    private java.util.List statisticsDHistory;
+
+    public void <init>()
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        specialinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: void <init>(int)>(0);
+
+        return;
+    }
+
+    public void <init>(int)
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        int i0;
+        org.apache.commons.math3.random.RandomGenerator $r1;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        i0 := @parameter0: int;
+
+        $r1 = <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.random.RandomGenerator DEFAULT_RANDOMGENERATOR>;
+
+        specialinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: void <init>(int,double[],int,double,boolean,int,int,org.apache.commons.math3.random.RandomGenerator,boolean,org.apache.commons.math3.optimization.ConvergenceChecker)>(i0, null, 30000, 0.0, 1, 0, 0, $r1, 0, null);
+
+        return;
+    }
+
+    public void <init>(int, double[])
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        int i0;
+        double[] r1;
+        org.apache.commons.math3.random.RandomGenerator $r2;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        i0 := @parameter0: int;
+
+        r1 := @parameter1: double[];
+
+        $r2 = <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.random.RandomGenerator DEFAULT_RANDOMGENERATOR>;
+
+        specialinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: void <init>(int,double[],int,double,boolean,int,int,org.apache.commons.math3.random.RandomGenerator,boolean)>(i0, r1, 30000, 0.0, 1, 0, 0, $r2, 0);
+
+        return;
+    }
+
+    public void <init>(int, double[], int, double, boolean, int, int, org.apache.commons.math3.random.RandomGenerator, boolean)
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        int i0, i1, i2, i3;
+        double[] r1;
+        double d0;
+        boolean z0, z1;
+        org.apache.commons.math3.random.RandomGenerator r2;
+        org.apache.commons.math3.optimization.SimpleValueChecker $r3;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        i0 := @parameter0: int;
+
+        r1 := @parameter1: double[];
+
+        i1 := @parameter2: int;
+
+        d0 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        i2 := @parameter5: int;
+
+        i3 := @parameter6: int;
+
+        r2 := @parameter7: org.apache.commons.math3.random.RandomGenerator;
+
+        z1 := @parameter8: boolean;
+
+        $r3 = new org.apache.commons.math3.optimization.SimpleValueChecker;
+
+        specialinvoke $r3.<org.apache.commons.math3.optimization.SimpleValueChecker: void <init>()>();
+
+        specialinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: void <init>(int,double[],int,double,boolean,int,int,org.apache.commons.math3.random.RandomGenerator,boolean,org.apache.commons.math3.optimization.ConvergenceChecker)>(i0, r1, i1, d0, z0, i2, i3, r2, z1, $r3);
+
+        return;
+    }
+
+    public void <init>(int, double[], int, double, boolean, int, int, org.apache.commons.math3.random.RandomGenerator, boolean, org.apache.commons.math3.optimization.ConvergenceChecker)
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        int i0, i1, i2, i3;
+        double[] r1, $r9, $r11;
+        double d0;
+        boolean z0, z1;
+        org.apache.commons.math3.random.RandomGenerator r2;
+        org.apache.commons.math3.optimization.ConvergenceChecker r3;
+        java.util.ArrayList $r4, $r5, $r6, $r7;
+        java.lang.Object $r8;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        i0 := @parameter0: int;
+
+        r1 := @parameter1: double[];
+
+        i1 := @parameter2: int;
+
+        d0 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        i2 := @parameter5: int;
+
+        i3 := @parameter6: int;
+
+        r2 := @parameter7: org.apache.commons.math3.random.RandomGenerator;
+
+        z1 := @parameter8: boolean;
+
+        r3 := @parameter9: org.apache.commons.math3.optimization.ConvergenceChecker;
+
+        specialinvoke r0.<org.apache.commons.math3.optimization.direct.BaseAbstractMultivariateSimpleBoundsOptimizer: void <init>(org.apache.commons.math3.optimization.ConvergenceChecker)>(r3);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int diagonalOnly> = 0;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean isMinimize> = 1;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean generateStatistics> = 0;
+
+        $r4 = new java.util.ArrayList;
+
+        specialinvoke $r4.<java.util.ArrayList: void <init>()>();
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: java.util.List statisticsSigmaHistory> = $r4;
+
+        $r5 = new java.util.ArrayList;
+
+        specialinvoke $r5.<java.util.ArrayList: void <init>()>();
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: java.util.List statisticsMeanHistory> = $r5;
+
+        $r6 = new java.util.ArrayList;
+
+        specialinvoke $r6.<java.util.ArrayList: void <init>()>();
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: java.util.List statisticsFitnessHistory> = $r6;
+
+        $r7 = new java.util.ArrayList;
+
+        specialinvoke $r7.<java.util.ArrayList: void <init>()>();
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: java.util.List statisticsDHistory> = $r7;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int lambda> = i0;
+
+        if r1 != null goto label1;
+
+        $r11 = null;
+
+        goto label2;
+
+     label1:
+        $r8 = virtualinvoke r1.<java.lang.Object: java.lang.Object clone()>();
+
+        $r9 = (double[]) $r8;
+
+        $r11 = (double[]) $r9;
+
+     label2:
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] inputSigma> = $r11;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int maxIterations> = i1;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double stopFitness> = d0;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean isActiveCMA> = z0;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int diagonalOnly> = i2;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int checkFeasableCount> = i3;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.random.RandomGenerator random> = r2;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean generateStatistics> = z1;
+
+        return;
+    }
+
+    public void <init>(int, double, boolean, int, int, org.apache.commons.math3.random.RandomGenerator, boolean, org.apache.commons.math3.optimization.ConvergenceChecker)
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        int i0, i1, i2;
+        double d0;
+        boolean z0, z1;
+        org.apache.commons.math3.random.RandomGenerator r1;
+        org.apache.commons.math3.optimization.ConvergenceChecker r2;
+        java.util.ArrayList $r3, $r4, $r5, $r6;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        i0 := @parameter0: int;
+
+        d0 := @parameter1: double;
+
+        z0 := @parameter2: boolean;
+
+        i1 := @parameter3: int;
+
+        i2 := @parameter4: int;
+
+        r1 := @parameter5: org.apache.commons.math3.random.RandomGenerator;
+
+        z1 := @parameter6: boolean;
+
+        r2 := @parameter7: org.apache.commons.math3.optimization.ConvergenceChecker;
+
+        specialinvoke r0.<org.apache.commons.math3.optimization.direct.BaseAbstractMultivariateSimpleBoundsOptimizer: void <init>(org.apache.commons.math3.optimization.ConvergenceChecker)>(r2);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int diagonalOnly> = 0;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean isMinimize> = 1;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean generateStatistics> = 0;
+
+        $r3 = new java.util.ArrayList;
+
+        specialinvoke $r3.<java.util.ArrayList: void <init>()>();
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: java.util.List statisticsSigmaHistory> = $r3;
+
+        $r4 = new java.util.ArrayList;
+
+        specialinvoke $r4.<java.util.ArrayList: void <init>()>();
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: java.util.List statisticsMeanHistory> = $r4;
+
+        $r5 = new java.util.ArrayList;
+
+        specialinvoke $r5.<java.util.ArrayList: void <init>()>();
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: java.util.List statisticsFitnessHistory> = $r5;
+
+        $r6 = new java.util.ArrayList;
+
+        specialinvoke $r6.<java.util.ArrayList: void <init>()>();
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: java.util.List statisticsDHistory> = $r6;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int maxIterations> = i0;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double stopFitness> = d0;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean isActiveCMA> = z0;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int diagonalOnly> = i1;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int checkFeasableCount> = i2;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.random.RandomGenerator random> = r1;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean generateStatistics> = z1;
+
+        return;
+    }
+
+    public java.util.List getStatisticsSigmaHistory()
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        java.util.List $r1;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        $r1 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: java.util.List statisticsSigmaHistory>;
+
+        return $r1;
+    }
+
+    public java.util.List getStatisticsMeanHistory()
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        java.util.List $r1;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        $r1 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: java.util.List statisticsMeanHistory>;
+
+        return $r1;
+    }
+
+    public java.util.List getStatisticsFitnessHistory()
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        java.util.List $r1;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        $r1 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: java.util.List statisticsFitnessHistory>;
+
+        return $r1;
+    }
+
+    public java.util.List getStatisticsDHistory()
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        java.util.List $r1;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        $r1 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: java.util.List statisticsDHistory>;
+
+        return $r1;
+    }
+
+    protected transient org.apache.commons.math3.optimization.PointValuePair optimizeInternal(int, org.apache.commons.math3.analysis.MultivariateFunction, org.apache.commons.math3.optimization.GoalType, org.apache.commons.math3.optimization.OptimizationData[])
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        int i0;
+        org.apache.commons.math3.analysis.MultivariateFunction r1;
+        org.apache.commons.math3.optimization.GoalType r2;
+        org.apache.commons.math3.optimization.OptimizationData[] r3;
+        org.apache.commons.math3.optimization.PointValuePair $r4;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        i0 := @parameter0: int;
+
+        r1 := @parameter1: org.apache.commons.math3.analysis.MultivariateFunction;
+
+        r2 := @parameter2: org.apache.commons.math3.optimization.GoalType;
+
+        r3 := @parameter3: org.apache.commons.math3.optimization.OptimizationData[];
+
+        specialinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: void parseOptimizationData(org.apache.commons.math3.optimization.OptimizationData[])>(r3);
+
+        $r4 = specialinvoke r0.<org.apache.commons.math3.optimization.direct.BaseAbstractMultivariateSimpleBoundsOptimizer: org.apache.commons.math3.optimization.PointValuePair optimizeInternal(int,org.apache.commons.math3.analysis.MultivariateFunction,org.apache.commons.math3.optimization.GoalType,org.apache.commons.math3.optimization.OptimizationData[])>(i0, r1, r2, r3);
+
+        return $r4;
+    }
+
+    protected org.apache.commons.math3.optimization.PointValuePair doOptimize()
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        double[] r2, r5, r8, r9, $r14, $r16, $r25, $r26, $r27, $r44, $r47, $r48, $r57, $r58, $r68, $r73;
+        org.apache.commons.math3.linear.RealMatrix r3, r4, r6, r7, $r18, $r19, $r21, $r22, $r23, $r24, $r28, $r29, $r35, $r37, $r38, $r40, $r41, $r52, $r53, $r54, $r55, $r56, $r59, $r60, $r61, $r62, $r63, r67, r71, r72;
+        boolean z0, $z1, $z2, $z7, $z8, $z9, $z10, $z11, $z12, $z13;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d55, $d56, d57, $d58, $d59, $d60, $d61, $d62, d63, $d64, $d65, $d66, $d67, $d68, $d69;
+        org.apache.commons.math3.optimization.GoalType $r11, $r12;
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer$FitnessFunction $r13;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i15, $i16, $i17, $i19, $i20, $i21, $i23, $i28, $i29, $i31, $i32, $i33, $i34, $i35, $i36, $i37, $i38, i39, i40, i42, $i43, i44, $i45, $i46, $i47, $i48;
+        org.apache.commons.math3.optimization.PointValuePair $r15, $r43, $r46, r65, r66;
+        int[] $r17, $r20, r70;
+        byte $b14, $b18, $b22, $b24, $b25, $b26, $b27, $b30, $b41, $b49;
+        org.apache.commons.math3.optimization.ConvergenceChecker $r30, $r45, $r49, $r50;
+        java.util.List $r31, $r33, $r36, $r39;
+        java.lang.Double $r32, $r34;
+        org.apache.commons.math3.exception.TooManyEvaluationsException $r64;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        specialinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: void checkParameters()>();
+
+        $r11 = virtualinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.optimization.GoalType getGoalType()>();
+
+        $r12 = <org.apache.commons.math3.optimization.GoalType: org.apache.commons.math3.optimization.GoalType MINIMIZE>;
+
+        $z1 = virtualinvoke $r11.<org.apache.commons.math3.optimization.GoalType: boolean equals(java.lang.Object)>($r12);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean isMinimize> = $z1;
+
+        $r13 = new org.apache.commons.math3.optimization.direct.CMAESOptimizer$FitnessFunction;
+
+        specialinvoke $r13.<org.apache.commons.math3.optimization.direct.CMAESOptimizer$FitnessFunction: void <init>(org.apache.commons.math3.optimization.direct.CMAESOptimizer)>(r0);
+
+        r2 = virtualinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] getStartPoint()>();
+
+        $i0 = lengthof r2;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension> = $i0;
+
+        specialinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: void initializeCMA(double[])>(r2);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int iterations> = 0;
+
+        d57 = virtualinvoke $r13.<org.apache.commons.math3.optimization.direct.CMAESOptimizer$FitnessFunction: double value(double[])>(r2);
+
+        $r14 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] fitnessHistory>;
+
+        staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: void push(double[],double)>($r14, d57);
+
+        $r15 = new org.apache.commons.math3.optimization.PointValuePair;
+
+        $r16 = virtualinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] getStartPoint()>();
+
+        $z2 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean isMinimize>;
+
+        if $z2 == 0 goto label01;
+
+        $d58 = d57;
+
+        goto label02;
+
+     label01:
+        $d58 = neg d57;
+
+     label02:
+        specialinvoke $r15.<org.apache.commons.math3.optimization.PointValuePair: void <init>(double[],double)>($r16, $d58);
+
+        r65 = $r15;
+
+        r66 = null;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int iterations> = 1;
+
+     label03:
+        $i37 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int iterations>;
+
+        $i38 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int maxIterations>;
+
+        if $i37 > $i38 goto label40;
+
+        $i2 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $i1 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int lambda>;
+
+        r3 = specialinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix randn1(int,int)>($i2, $i1);
+
+        $i4 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $i3 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int lambda>;
+
+        r4 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix zeros(int,int)>($i4, $i3);
+
+        $i5 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int lambda>;
+
+        r5 = newarray (double)[$i5];
+
+        i39 = 0;
+
+     label04:
+        $i6 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int lambda>;
+
+        if i39 >= $i6 goto label14;
+
+        r67 = null;
+
+        i40 = 0;
+
+     label05:
+        $i32 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int checkFeasableCount>;
+
+        $i33 = $i32 + 1;
+
+        if i40 >= $i33 goto label09;
+
+        $i34 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int diagonalOnly>;
+
+        if $i34 > 0 goto label06;
+
+        $r59 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix xmean>;
+
+        $r60 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix BD>;
+
+        $r61 = interfaceinvoke r3.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix getColumnMatrix(int)>(i39);
+
+        $r62 = interfaceinvoke $r60.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>($r61);
+
+        $d56 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double sigma>;
+
+        $r63 = interfaceinvoke $r62.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>($d56);
+
+        r67 = interfaceinvoke $r59.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix add(org.apache.commons.math3.linear.RealMatrix)>($r63);
+
+        goto label07;
+
+     label06:
+        $r52 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix xmean>;
+
+        $r53 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $r54 = interfaceinvoke r3.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix getColumnMatrix(int)>(i39);
+
+        $r55 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix times(org.apache.commons.math3.linear.RealMatrix,org.apache.commons.math3.linear.RealMatrix)>($r53, $r54);
+
+        $d55 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double sigma>;
+
+        $r56 = interfaceinvoke $r55.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>($d55);
+
+        r67 = interfaceinvoke $r52.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix add(org.apache.commons.math3.linear.RealMatrix)>($r56);
+
+     label07:
+        $i35 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int checkFeasableCount>;
+
+        if i40 >= $i35 goto label09;
+
+        $r57 = interfaceinvoke r67.<org.apache.commons.math3.linear.RealMatrix: double[] getColumn(int)>(0);
+
+        $z12 = virtualinvoke $r13.<org.apache.commons.math3.optimization.direct.CMAESOptimizer$FitnessFunction: boolean isFeasible(double[])>($r57);
+
+        if $z12 == 0 goto label08;
+
+        goto label09;
+
+     label08:
+        $i36 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $r58 = specialinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] randn(int)>($i36);
+
+        interfaceinvoke r3.<org.apache.commons.math3.linear.RealMatrix: void setColumn(int,double[])>(i39, $r58);
+
+        i40 = i40 + 1;
+
+        goto label05;
+
+     label09:
+        staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: void copyColumn(org.apache.commons.math3.linear.RealMatrix,int,org.apache.commons.math3.linear.RealMatrix,int)>(r67, 0, r4, i39);
+
+     label10:
+        $r68 = interfaceinvoke r4.<org.apache.commons.math3.linear.RealMatrix: double[] getColumn(int)>(i39);
+
+        $d59 = virtualinvoke $r13.<org.apache.commons.math3.optimization.direct.CMAESOptimizer$FitnessFunction: double value(double[])>($r68);
+
+        r5[i39] = $d59;
+
+     label11:
+        goto label13;
+
+     label12:
+        $r64 := @caughtexception;
+
+        goto label40;
+
+     label13:
+        i39 = i39 + 1;
+
+        goto label04;
+
+     label14:
+        r70 = specialinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int[] sortedIndices(double[])>(r5);
+
+        r71 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix xmean>;
+
+        $i7 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int mu>;
+
+        $r17 = staticinvoke <org.apache.commons.math3.util.MathArrays: int[] copyOf(int[],int)>(r70, $i7);
+
+        r72 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix selectColumns(org.apache.commons.math3.linear.RealMatrix,int[])>(r4, $r17);
+
+        $r18 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix weights>;
+
+        $r19 = interfaceinvoke r72.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>($r18);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix xmean> = $r19;
+
+        $i8 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int mu>;
+
+        $r20 = staticinvoke <org.apache.commons.math3.util.MathArrays: int[] copyOf(int[],int)>(r70, $i8);
+
+        r6 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix selectColumns(org.apache.commons.math3.linear.RealMatrix,int[])>(r3, $r20);
+
+        $r21 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix weights>;
+
+        r7 = interfaceinvoke r6.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>($r21);
+
+        z0 = specialinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean updateEvolutionPaths(org.apache.commons.math3.linear.RealMatrix,org.apache.commons.math3.linear.RealMatrix)>(r7, r71);
+
+        $i9 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int diagonalOnly>;
+
+        if $i9 > 0 goto label15;
+
+        specialinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: void updateCovariance(boolean,org.apache.commons.math3.linear.RealMatrix,org.apache.commons.math3.linear.RealMatrix,int[],org.apache.commons.math3.linear.RealMatrix)>(z0, r72, r3, r70, r71);
+
+        goto label16;
+
+     label15:
+        specialinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: void updateCovarianceDiagonalOnly(boolean,org.apache.commons.math3.linear.RealMatrix)>(z0, r6);
+
+     label16:
+        $d11 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double sigma>;
+
+        $d4 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double normps>;
+
+        $d3 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double chiN>;
+
+        $d5 = $d4 / $d3;
+
+        $d7 = $d5 - 1.0;
+
+        $d6 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double cs>;
+
+        $d9 = $d7 * $d6;
+
+        $d8 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double damps>;
+
+        $d10 = $d9 / $d8;
+
+        $d12 = staticinvoke <org.apache.commons.math3.util.FastMath: double min(double,double)>(1.0, $d10);
+
+        $d13 = staticinvoke <org.apache.commons.math3.util.FastMath: double exp(double)>($d12);
+
+        $d14 = $d11 * $d13;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double sigma> = $d14;
+
+        $i10 = r70[0];
+
+        d0 = r5[$i10];
+
+        $i11 = lengthof r70;
+
+        $i12 = $i11 - 1;
+
+        $i13 = r70[$i12];
+
+        d1 = r5[$i13];
+
+        $b14 = d57 cmpl d0;
+
+        if $b14 <= 0 goto label19;
+
+        d57 = d0;
+
+        r66 = r65;
+
+        $r46 = new org.apache.commons.math3.optimization.PointValuePair;
+
+        $r47 = interfaceinvoke r72.<org.apache.commons.math3.linear.RealMatrix: double[] getColumn(int)>(0);
+
+        $r48 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer$FitnessFunction: double[] access$000(org.apache.commons.math3.optimization.direct.CMAESOptimizer$FitnessFunction,double[])>($r13, $r47);
+
+        $z10 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean isMinimize>;
+
+        if $z10 == 0 goto label17;
+
+        $d60 = d0;
+
+        goto label18;
+
+     label17:
+        $d60 = neg d0;
+
+     label18:
+        specialinvoke $r46.<org.apache.commons.math3.optimization.PointValuePair: void <init>(double[],double)>($r48, $d60);
+
+        r65 = $r46;
+
+        $r49 = virtualinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.optimization.ConvergenceChecker getConvergenceChecker()>();
+
+        if $r49 == null goto label19;
+
+        if r66 == null goto label19;
+
+        $r50 = virtualinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.optimization.ConvergenceChecker getConvergenceChecker()>();
+
+        $i31 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int iterations>;
+
+        $z11 = interfaceinvoke $r50.<org.apache.commons.math3.optimization.ConvergenceChecker: boolean converged(int,java.lang.Object,java.lang.Object)>($i31, $r46, r66);
+
+        if $z11 == 0 goto label19;
+
+        goto label40;
+
+     label19:
+        $d61 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double stopFitness>;
+
+        $b41 = $d61 cmpl 0.0;
+
+        if $b41 == 0 goto label22;
+
+        $z9 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean isMinimize>;
+
+        if $z9 == 0 goto label20;
+
+        $d62 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double stopFitness>;
+
+        goto label21;
+
+     label20:
+        $d53 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double stopFitness>;
+
+        $d62 = neg $d53;
+
+     label21:
+        $b30 = d0 cmpg $d62;
+
+        if $b30 >= 0 goto label22;
+
+        goto label40;
+
+     label22:
+        $r22 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagC>;
+
+        $r23 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix sqrt(org.apache.commons.math3.linear.RealMatrix)>($r22);
+
+        r8 = interfaceinvoke $r23.<org.apache.commons.math3.linear.RealMatrix: double[] getColumn(int)>(0);
+
+        $r24 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix pc>;
+
+        r9 = interfaceinvoke $r24.<org.apache.commons.math3.linear.RealMatrix: double[] getColumn(int)>(0);
+
+        i42 = 0;
+
+     label23:
+        $i43 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        if i42 >= $i43 goto label26;
+
+        $d47 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double sigma>;
+
+        $d46 = r9[i42];
+
+        $d48 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d46);
+
+        $d49 = r8[i42];
+
+        $d50 = staticinvoke <org.apache.commons.math3.util.FastMath: double max(double,double)>($d48, $d49);
+
+        $d52 = $d47 * $d50;
+
+        $d51 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double stopTolX>;
+
+        $b27 = $d52 cmpl $d51;
+
+        if $b27 <= 0 goto label24;
+
+        goto label26;
+
+     label24:
+        $i28 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $i29 = $i28 - 1;
+
+        if i42 < $i29 goto label25;
+
+        goto label40;
+
+     label25:
+        i42 = i42 + 1;
+
+        goto label23;
+
+     label26:
+        i44 = 0;
+
+     label27:
+        $i45 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        if i44 >= $i45 goto label29;
+
+        $d43 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double sigma>;
+
+        $d42 = r8[i44];
+
+        $d45 = $d43 * $d42;
+
+        $d44 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double stopTolUpX>;
+
+        $b26 = $d45 cmpl $d44;
+
+        if $b26 <= 0 goto label28;
+
+        goto label40;
+
+     label28:
+        i44 = i44 + 1;
+
+        goto label27;
+
+     label29:
+        $r25 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] fitnessHistory>;
+
+        d63 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: double min(double[])>($r25);
+
+        $r26 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] fitnessHistory>;
+
+        d2 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: double max(double[])>($r26);
+
+        $i15 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int iterations>;
+
+        if $i15 <= 2 goto label30;
+
+        $d38 = staticinvoke <org.apache.commons.math3.util.FastMath: double max(double,double)>(d2, d1);
+
+        $d39 = staticinvoke <org.apache.commons.math3.util.FastMath: double min(double,double)>(d63, d0);
+
+        $d41 = $d38 - $d39;
+
+        $d40 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double stopTolFun>;
+
+        $b25 = $d41 cmpg $d40;
+
+        if $b25 >= 0 goto label30;
+
+        goto label40;
+
+     label30:
+        $i17 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int iterations>;
+
+        $r27 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] fitnessHistory>;
+
+        $i16 = lengthof $r27;
+
+        if $i17 <= $i16 goto label31;
+
+        $d37 = d2 - d63;
+
+        $d36 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double stopTolHistFun>;
+
+        $b24 = $d37 cmpg $d36;
+
+        if $b24 >= 0 goto label31;
+
+        goto label40;
+
+     label31:
+        $r28 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $d15 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: double max(org.apache.commons.math3.linear.RealMatrix)>($r28);
+
+        $r29 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $d16 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: double min(org.apache.commons.math3.linear.RealMatrix)>($r29);
+
+        $d17 = $d15 / $d16;
+
+        $b18 = $d17 cmpl 1.0E7;
+
+        if $b18 <= 0 goto label32;
+
+        goto label40;
+
+     label32:
+        $r30 = virtualinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.optimization.ConvergenceChecker getConvergenceChecker()>();
+
+        if $r30 == null goto label36;
+
+        $r43 = new org.apache.commons.math3.optimization.PointValuePair;
+
+        $r44 = interfaceinvoke r72.<org.apache.commons.math3.linear.RealMatrix: double[] getColumn(int)>(0);
+
+        $z7 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean isMinimize>;
+
+        if $z7 == 0 goto label33;
+
+        $d64 = d0;
+
+        goto label34;
+
+     label33:
+        $d64 = neg d0;
+
+     label34:
+        specialinvoke $r43.<org.apache.commons.math3.optimization.PointValuePair: void <init>(double[],double)>($r44, $d64);
+
+        if r66 == null goto label35;
+
+        $r45 = virtualinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.optimization.ConvergenceChecker getConvergenceChecker()>();
+
+        $i23 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int iterations>;
+
+        $z8 = interfaceinvoke $r45.<org.apache.commons.math3.optimization.ConvergenceChecker: boolean converged(int,java.lang.Object,java.lang.Object)>($i23, $r43, r66);
+
+        if $z8 == 0 goto label35;
+
+        goto label40;
+
+     label35:
+        r66 = $r43;
+
+     label36:
+        $i46 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int lambda>;
+
+        $d65 = (double) $i46;
+
+        $d66 = $d65 / 4.0;
+
+        $d67 = 0.1 + $d66;
+
+        $i47 = (int) $d67;
+
+        $i48 = r70[$i47];
+
+        $d68 = r5[$i48];
+
+        $b49 = d57 cmpl $d68;
+
+        if $b49 != 0 goto label37;
+
+        $d33 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double sigma>;
+
+        $d30 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double cs>;
+
+        $d29 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double damps>;
+
+        $d31 = $d30 / $d29;
+
+        $d32 = 0.2 + $d31;
+
+        $d34 = staticinvoke <org.apache.commons.math3.util.FastMath: double exp(double)>($d32);
+
+        $d35 = $d33 * $d34;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double sigma> = $d35;
+
+     label37:
+        $i19 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int iterations>;
+
+        if $i19 <= 2 goto label38;
+
+        $d19 = staticinvoke <org.apache.commons.math3.util.FastMath: double max(double,double)>(d2, d0);
+
+        $d20 = staticinvoke <org.apache.commons.math3.util.FastMath: double min(double,double)>(d63, d0);
+
+        $d21 = $d19 - $d20;
+
+        $b22 = $d21 cmpl 0.0;
+
+        if $b22 != 0 goto label38;
+
+        $d26 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double sigma>;
+
+        $d23 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double cs>;
+
+        $d22 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double damps>;
+
+        $d24 = $d23 / $d22;
+
+        $d25 = 0.2 + $d24;
+
+        $d27 = staticinvoke <org.apache.commons.math3.util.FastMath: double exp(double)>($d25);
+
+        $d28 = $d26 * $d27;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double sigma> = $d28;
+
+     label38:
+        $r73 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] fitnessHistory>;
+
+        staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: void push(double[],double)>($r73, d0);
+
+        $d69 = d1 - d0;
+
+        virtualinvoke $r13.<org.apache.commons.math3.optimization.direct.CMAESOptimizer$FitnessFunction: void setValueRange(double)>($d69);
+
+        $z13 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean generateStatistics>;
+
+        if $z13 == 0 goto label39;
+
+        $r31 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: java.util.List statisticsSigmaHistory>;
+
+        $d18 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double sigma>;
+
+        $r32 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d18);
+
+        interfaceinvoke $r31.<java.util.List: boolean add(java.lang.Object)>($r32);
+
+        $r33 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: java.util.List statisticsFitnessHistory>;
+
+        $r34 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        interfaceinvoke $r33.<java.util.List: boolean add(java.lang.Object)>($r34);
+
+        $r36 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: java.util.List statisticsMeanHistory>;
+
+        $r35 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix xmean>;
+
+        $r37 = interfaceinvoke $r35.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix transpose()>();
+
+        interfaceinvoke $r36.<java.util.List: boolean add(java.lang.Object)>($r37);
+
+        $r39 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: java.util.List statisticsDHistory>;
+
+        $r38 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $r40 = interfaceinvoke $r38.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix transpose()>();
+
+        $r41 = interfaceinvoke $r40.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>(100000.0);
+
+        interfaceinvoke $r39.<java.util.List: boolean add(java.lang.Object)>($r41);
+
+     label39:
+        $i20 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int iterations>;
+
+        $i21 = $i20 + 1;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int iterations> = $i21;
+
+        goto label03;
+
+     label40:
+        return r65;
+
+        catch org.apache.commons.math3.exception.TooManyEvaluationsException from label10 to label11 with label12;
+    }
+
+    private transient void parseOptimizationData(org.apache.commons.math3.optimization.OptimizationData[])
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        org.apache.commons.math3.optimization.OptimizationData[] r1;
+        int i0, $i1, i2;
+        org.apache.commons.math3.optimization.OptimizationData r3;
+        boolean $z0, $z1;
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer$PopulationSize $r4;
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer$Sigma $r5;
+        double[] $r6;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        r1 := @parameter0: org.apache.commons.math3.optimization.OptimizationData[];
+
+        i0 = lengthof r1;
+
+        i2 = 0;
+
+     label1:
+        if i2 >= i0 goto label4;
+
+        r3 = r1[i2];
+
+        $z0 = r3 instanceof org.apache.commons.math3.optimization.direct.CMAESOptimizer$Sigma;
+
+        if $z0 == 0 goto label2;
+
+        $r5 = (org.apache.commons.math3.optimization.direct.CMAESOptimizer$Sigma) r3;
+
+        $r6 = virtualinvoke $r5.<org.apache.commons.math3.optimization.direct.CMAESOptimizer$Sigma: double[] getSigma()>();
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] inputSigma> = $r6;
+
+        goto label3;
+
+     label2:
+        $z1 = r3 instanceof org.apache.commons.math3.optimization.direct.CMAESOptimizer$PopulationSize;
+
+        if $z1 == 0 goto label3;
+
+        $r4 = (org.apache.commons.math3.optimization.direct.CMAESOptimizer$PopulationSize) r3;
+
+        $i1 = virtualinvoke $r4.<org.apache.commons.math3.optimization.direct.CMAESOptimizer$PopulationSize: int getPopulationSize()>();
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int lambda> = $i1;
+
+        goto label3;
+
+     label3:
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label4:
+        return;
+    }
+
+    private void checkParameters()
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        double[] r1, r2, r3, $r4, $r5, $r6, $r7, $r9, $r14, $r17;
+        int $i0, $i1, $i2, $i5, $i6, i7;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9;
+        byte $b3, $b4;
+        org.apache.commons.math3.exception.OutOfRangeException $r8;
+        java.lang.Double $r10, $r12, $r15;
+        java.lang.Integer $r11;
+        org.apache.commons.math3.exception.NotPositiveException $r13;
+        org.apache.commons.math3.exception.DimensionMismatchException $r16;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        r1 = virtualinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] getStartPoint()>();
+
+        r2 = virtualinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] getLowerBound()>();
+
+        r3 = virtualinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] getUpperBound()>();
+
+        $r4 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] inputSigma>;
+
+        if $r4 == null goto label5;
+
+        $r5 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] inputSigma>;
+
+        $i1 = lengthof $r5;
+
+        $i0 = lengthof r1;
+
+        if $i1 == $i0 goto label1;
+
+        $r16 = new org.apache.commons.math3.exception.DimensionMismatchException;
+
+        $r17 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] inputSigma>;
+
+        $i6 = lengthof $r17;
+
+        $i5 = lengthof r1;
+
+        specialinvoke $r16.<org.apache.commons.math3.exception.DimensionMismatchException: void <init>(int,int)>($i6, $i5);
+
+        throw $r16;
+
+     label1:
+        i7 = 0;
+
+     label2:
+        $i2 = lengthof r1;
+
+        if i7 >= $i2 goto label5;
+
+        $r6 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] inputSigma>;
+
+        $d0 = $r6[i7];
+
+        $b3 = $d0 cmpg 0.0;
+
+        if $b3 >= 0 goto label3;
+
+        $r13 = new org.apache.commons.math3.exception.NotPositiveException;
+
+        $r14 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] inputSigma>;
+
+        $d9 = $r14[i7];
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d9);
+
+        specialinvoke $r13.<org.apache.commons.math3.exception.NotPositiveException: void <init>(java.lang.Number)>($r15);
+
+        throw $r13;
+
+     label3:
+        $r7 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] inputSigma>;
+
+        $d4 = $r7[i7];
+
+        $d2 = r3[i7];
+
+        $d1 = r2[i7];
+
+        $d3 = $d2 - $d1;
+
+        $b4 = $d4 cmpl $d3;
+
+        if $b4 <= 0 goto label4;
+
+        $r8 = new org.apache.commons.math3.exception.OutOfRangeException;
+
+        $r9 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] inputSigma>;
+
+        $d5 = $r9[i7];
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d5);
+
+        $r11 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(0);
+
+        $d7 = r3[i7];
+
+        $d6 = r2[i7];
+
+        $d8 = $d7 - $d6;
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d8);
+
+        specialinvoke $r8.<org.apache.commons.math3.exception.OutOfRangeException: void <init>(java.lang.Number,java.lang.Number,java.lang.Number)>($r10, $r11, $r12);
+
+        throw $r8;
+
+     label4:
+        i7 = i7 + 1;
+
+        goto label2;
+
+     label5:
+        return;
+    }
+
+    private void initializeCMA(double[])
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        double[] r1, $r32, $r33, $r35, $r36, $r37;
+        double[][] r2;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, $d80, $d81, $d82, $d83, $d84, $d85, $d86, $d87, $d88, $d89, $d90, $d91, $d92, $d93, $d94, $d95, $d96, $d97, $d98, $d99, $d100, $d101, $d102, $d103, $d104, $d105, $d106, $d107, $d108, d109, d110;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, $i25, $i26, $i27, $i28, $i29, $i30, $i31, $i32, $i33, $i34, $i35, $i36, $i37, $i38, $i39, $i40, $i41, $i43, $i44, $i45, i46, $i47, i48, i49;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r3;
+        org.apache.commons.math3.linear.RealMatrix $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r30, $r31, $r34;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        r1 := @parameter0: double[];
+
+        $i0 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int lambda>;
+
+        if $i0 > 0 goto label1;
+
+        $i43 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $d105 = (double) $i43;
+
+        $d106 = staticinvoke <org.apache.commons.math3.util.FastMath: double log(double)>($d105);
+
+        $d107 = 3.0 * $d106;
+
+        $i44 = (int) $d107;
+
+        $i45 = 4 + $i44;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int lambda> = $i45;
+
+     label1:
+        $i1 = lengthof r1;
+
+        r2 = newmultiarray (double)[$i1][1];
+
+        i46 = 0;
+
+     label2:
+        $i47 = lengthof r1;
+
+        if i46 >= $i47 goto label5;
+
+        $r37 = r2[i46];
+
+        $r35 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] inputSigma>;
+
+        if $r35 != null goto label3;
+
+        $d108 = 0.3;
+
+        goto label4;
+
+     label3:
+        $r36 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] inputSigma>;
+
+        $d108 = $r36[i46];
+
+     label4:
+        $r37[0] = $d108;
+
+        i46 = i46 + 1;
+
+        goto label2;
+
+     label5:
+        $r3 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r3.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r2, 0);
+
+        $d1 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: double max(org.apache.commons.math3.linear.RealMatrix)>($r3);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double sigma> = $d1;
+
+        $d2 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: double max(org.apache.commons.math3.linear.RealMatrix)>($r3);
+
+        $d3 = 1000.0 * $d2;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double stopTolUpX> = $d3;
+
+        $d4 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: double max(org.apache.commons.math3.linear.RealMatrix)>($r3);
+
+        $d5 = 1.0E-11 * $d4;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double stopTolX> = $d5;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double stopTolFun> = 1.0E-12;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double stopTolHistFun> = 1.0E-13;
+
+        $i2 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int lambda>;
+
+        $i3 = $i2 / 2;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int mu> = $i3;
+
+        $i4 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int mu>;
+
+        $d6 = (double) $i4;
+
+        $d7 = $d6 + 0.5;
+
+        $d8 = staticinvoke <org.apache.commons.math3.util.FastMath: double log(double)>($d7);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double logMu2> = $d8;
+
+        $i5 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int mu>;
+
+        $d9 = (double) $i5;
+
+        $r4 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix sequence(double,double,double)>(1.0, $d9, 1.0);
+
+        $r5 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix log(org.apache.commons.math3.linear.RealMatrix)>($r4);
+
+        $r6 = interfaceinvoke $r5.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>(-1.0);
+
+        $d10 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double logMu2>;
+
+        $r7 = interfaceinvoke $r6.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarAdd(double)>($d10);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix weights> = $r7;
+
+        d109 = 0.0;
+
+        d110 = 0.0;
+
+        i48 = 0;
+
+     label6:
+        $i6 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int mu>;
+
+        if i48 >= $i6 goto label7;
+
+        $r34 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix weights>;
+
+        d0 = interfaceinvoke $r34.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i48, 0);
+
+        d109 = d109 + d0;
+
+        $d104 = d0 * d0;
+
+        d110 = d110 + $d104;
+
+        i48 = i48 + 1;
+
+        goto label6;
+
+     label7:
+        $r8 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix weights>;
+
+        $d11 = 1.0 / d109;
+
+        $r9 = interfaceinvoke $r8.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>($d11);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix weights> = $r9;
+
+        $d12 = d109 * d109;
+
+        $d13 = $d12 / d110;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double mueff> = $d13;
+
+        $d15 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double mueff>;
+
+        $i7 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $d14 = (double) $i7;
+
+        $d16 = $d15 / $d14;
+
+        $d23 = 4.0 + $d16;
+
+        $i8 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $i9 = $i8 + 4;
+
+        $d21 = (double) $i9;
+
+        $d17 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double mueff>;
+
+        $d19 = 2.0 * $d17;
+
+        $i10 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $d18 = (double) $i10;
+
+        $d20 = $d19 / $d18;
+
+        $d22 = $d21 + $d20;
+
+        $d24 = $d23 / $d22;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double cc> = $d24;
+
+        $d25 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double mueff>;
+
+        $d30 = $d25 + 2.0;
+
+        $i11 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $d27 = (double) $i11;
+
+        $d26 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double mueff>;
+
+        $d28 = $d27 + $d26;
+
+        $d29 = $d28 + 3.0;
+
+        $d31 = $d30 / $d29;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double cs> = $d31;
+
+        $d32 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double mueff>;
+
+        $d34 = $d32 - 1.0;
+
+        $i12 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $i13 = $i12 + 1;
+
+        $d33 = (double) $i13;
+
+        $d35 = $d34 / $d33;
+
+        $d36 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d35);
+
+        $d37 = $d36 - 1.0;
+
+        $d38 = staticinvoke <org.apache.commons.math3.util.FastMath: double max(double,double)>(0.0, $d37);
+
+        $d39 = 2.0 * $d38;
+
+        $d45 = 1.0 + $d39;
+
+        $i14 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $d42 = (double) $i14;
+
+        $i15 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int maxIterations>;
+
+        $d40 = (double) $i15;
+
+        $d41 = 1.0E-6 + $d40;
+
+        $d43 = $d42 / $d41;
+
+        $d44 = 1.0 - $d43;
+
+        $d46 = staticinvoke <org.apache.commons.math3.util.FastMath: double max(double,double)>(0.3, $d44);
+
+        $d48 = $d45 * $d46;
+
+        $d47 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double cs>;
+
+        $d49 = $d48 + $d47;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double damps> = $d49;
+
+        $i16 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $d50 = (double) $i16;
+
+        $d53 = $d50 + 1.3;
+
+        $i17 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $d51 = (double) $i17;
+
+        $d52 = $d51 + 1.3;
+
+        $d55 = $d53 * $d52;
+
+        $d54 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double mueff>;
+
+        $d56 = $d55 + $d54;
+
+        $d57 = 2.0 / $d56;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccov1> = $d57;
+
+        $d58 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccov1>;
+
+        $d69 = 1.0 - $d58;
+
+        $d59 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double mueff>;
+
+        $d62 = $d59 - 2.0;
+
+        $d60 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double mueff>;
+
+        $d61 = 1.0 / $d60;
+
+        $d63 = $d62 + $d61;
+
+        $d67 = 2.0 * $d63;
+
+        $i18 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $i21 = $i18 + 2;
+
+        $i19 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $i20 = $i19 + 2;
+
+        $i22 = $i21 * $i20;
+
+        $d65 = (double) $i22;
+
+        $d64 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double mueff>;
+
+        $d66 = $d65 + $d64;
+
+        $d68 = $d67 / $d66;
+
+        $d70 = staticinvoke <org.apache.commons.math3.util.FastMath: double min(double,double)>($d69, $d68);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccovmu> = $d70;
+
+        $d73 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccov1>;
+
+        $i23 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $d71 = (double) $i23;
+
+        $d72 = $d71 + 1.5;
+
+        $d74 = $d73 * $d72;
+
+        $d75 = $d74 / 3.0;
+
+        $d76 = staticinvoke <org.apache.commons.math3.util.FastMath: double min(double,double)>(1.0, $d75);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccov1Sep> = $d76;
+
+        $d77 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccov1>;
+
+        $d83 = 1.0 - $d77;
+
+        $d80 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccovmu>;
+
+        $i24 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $d78 = (double) $i24;
+
+        $d79 = $d78 + 1.5;
+
+        $d81 = $d80 * $d79;
+
+        $d82 = $d81 / 3.0;
+
+        $d84 = staticinvoke <org.apache.commons.math3.util.FastMath: double min(double,double)>($d83, $d82);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccovmuSep> = $d84;
+
+        $i25 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $d85 = (double) $i25;
+
+        $d86 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d85);
+
+        $i26 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $d87 = (double) $i26;
+
+        $d88 = 4.0 * $d87;
+
+        $d89 = 1.0 / $d88;
+
+        $d95 = 1.0 - $d89;
+
+        $i27 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $d90 = (double) $i27;
+
+        $d92 = 21.0 * $d90;
+
+        $i28 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $d91 = (double) $i28;
+
+        $d93 = $d92 * $d91;
+
+        $d94 = 1.0 / $d93;
+
+        $d96 = $d95 + $d94;
+
+        $d97 = $d86 * $d96;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double chiN> = $d97;
+
+        $r10 = staticinvoke <org.apache.commons.math3.linear.MatrixUtils: org.apache.commons.math3.linear.RealMatrix createColumnRealMatrix(double[])>(r1);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix xmean> = $r10;
+
+        $d98 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double sigma>;
+
+        $d99 = 1.0 / $d98;
+
+        $r11 = interfaceinvoke $r3.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>($d99);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD> = $r11;
+
+        $r12 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $r13 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix square(org.apache.commons.math3.linear.RealMatrix)>($r12);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagC> = $r13;
+
+        $i29 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $r14 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix zeros(int,int)>($i29, 1);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix pc> = $r14;
+
+        $i30 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $r15 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix zeros(int,int)>($i30, 1);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix ps> = $r15;
+
+        $r16 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix ps>;
+
+        $d100 = interfaceinvoke $r16.<org.apache.commons.math3.linear.RealMatrix: double getFrobeniusNorm()>();
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double normps> = $d100;
+
+        $i32 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $i31 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $r17 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix eye(int,int)>($i32, $i31);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix B> = $r17;
+
+        $i33 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $r18 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix ones(int,int)>($i33, 1);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix D> = $r18;
+
+        $r20 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix B>;
+
+        $r19 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $r21 = interfaceinvoke $r19.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix transpose()>();
+
+        $i34 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $r22 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix repmat(org.apache.commons.math3.linear.RealMatrix,int,int)>($r21, $i34, 1);
+
+        $r23 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix times(org.apache.commons.math3.linear.RealMatrix,org.apache.commons.math3.linear.RealMatrix)>($r20, $r22);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix BD> = $r23;
+
+        $r25 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix B>;
+
+        $r24 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix D>;
+
+        $r26 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix square(org.apache.commons.math3.linear.RealMatrix)>($r24);
+
+        $r27 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diag(org.apache.commons.math3.linear.RealMatrix)>($r26);
+
+        $r28 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix B>;
+
+        $r29 = interfaceinvoke $r28.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix transpose()>();
+
+        $r30 = interfaceinvoke $r27.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>($r29);
+
+        $r31 = interfaceinvoke $r25.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>($r30);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix C> = $r31;
+
+        $i35 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $i36 = 30 * $i35;
+
+        $d102 = (double) $i36;
+
+        $i37 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int lambda>;
+
+        $d101 = (double) $i37;
+
+        $d103 = $d102 / $d101;
+
+        $i38 = (int) $d103;
+
+        $i39 = 10 + $i38;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int historySize> = $i39;
+
+        $i40 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int historySize>;
+
+        $r32 = newarray (double)[$i40];
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] fitnessHistory> = $r32;
+
+        i49 = 0;
+
+     label8:
+        $i41 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int historySize>;
+
+        if i49 >= $i41 goto label9;
+
+        $r33 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double[] fitnessHistory>;
+
+        $r33[i49] = 1.7976931348623157E308;
+
+        i49 = i49 + 1;
+
+        goto label8;
+
+     label9:
+        return;
+    }
+
+    private boolean updateEvolutionPaths(org.apache.commons.math3.linear.RealMatrix, org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        org.apache.commons.math3.linear.RealMatrix r1, r2, $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16;
+        boolean z0, $z1;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33;
+        int $i0, $i1, $i2;
+        byte $b3;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        r1 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        r2 := @parameter1: org.apache.commons.math3.linear.RealMatrix;
+
+        $r3 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix ps>;
+
+        $d0 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double cs>;
+
+        $d1 = 1.0 - $d0;
+
+        $r4 = interfaceinvoke $r3.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>($d1);
+
+        $r5 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix B>;
+
+        $r6 = interfaceinvoke $r5.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>(r1);
+
+        $d4 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double cs>;
+
+        $d2 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double cs>;
+
+        $d3 = 2.0 - $d2;
+
+        $d6 = $d4 * $d3;
+
+        $d5 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double mueff>;
+
+        $d7 = $d6 * $d5;
+
+        $d8 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d7);
+
+        $r7 = interfaceinvoke $r6.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>($d8);
+
+        $r8 = interfaceinvoke $r4.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix add(org.apache.commons.math3.linear.RealMatrix)>($r7);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix ps> = $r8;
+
+        $r9 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix ps>;
+
+        $d9 = interfaceinvoke $r9.<org.apache.commons.math3.linear.RealMatrix: double getFrobeniusNorm()>();
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double normps> = $d9;
+
+        $d12 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double normps>;
+
+        $d10 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double cs>;
+
+        $d11 = 1.0 - $d10;
+
+        $i0 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int iterations>;
+
+        $i1 = 2 * $i0;
+
+        $d13 = staticinvoke <org.apache.commons.math3.util.FastMath: double pow(double,int)>($d11, $i1);
+
+        $d14 = 1.0 - $d13;
+
+        $d15 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d14);
+
+        $d17 = $d12 / $d15;
+
+        $d16 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double chiN>;
+
+        $d22 = $d17 / $d16;
+
+        $i2 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $d18 = (double) $i2;
+
+        $d19 = $d18 + 1.0;
+
+        $d20 = 2.0 / $d19;
+
+        $d21 = 1.4 + $d20;
+
+        $b3 = $d22 cmpg $d21;
+
+        if $b3 >= 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        z0 = $z1;
+
+        $r10 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix pc>;
+
+        $d23 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double cc>;
+
+        $d24 = 1.0 - $d23;
+
+        $r11 = interfaceinvoke $r10.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>($d24);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix pc> = $r11;
+
+        if $z1 == 0 goto label3;
+
+        $r13 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix pc>;
+
+        $r12 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix xmean>;
+
+        $r14 = interfaceinvoke $r12.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix subtract(org.apache.commons.math3.linear.RealMatrix)>(r2);
+
+        $d27 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double cc>;
+
+        $d25 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double cc>;
+
+        $d26 = 2.0 - $d25;
+
+        $d29 = $d27 * $d26;
+
+        $d28 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double mueff>;
+
+        $d30 = $d29 * $d28;
+
+        $d31 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d30);
+
+        $d32 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double sigma>;
+
+        $d33 = $d31 / $d32;
+
+        $r15 = interfaceinvoke $r14.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>($d33);
+
+        $r16 = interfaceinvoke $r13.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix add(org.apache.commons.math3.linear.RealMatrix)>($r15);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix pc> = $r16;
+
+     label3:
+        return z0;
+    }
+
+    private void updateCovarianceDiagonalOnly(boolean, org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        boolean z0;
+        org.apache.commons.math3.linear.RealMatrix r1, $r2, $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, d13;
+        int $i0, $i1, $i2, $i3, $i4;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        z0 := @parameter0: boolean;
+
+        r1 := @parameter1: org.apache.commons.math3.linear.RealMatrix;
+
+        if z0 == 0 goto label1;
+
+        $d11 = 0.0;
+
+        goto label2;
+
+     label1:
+        $d1 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccov1Sep>;
+
+        $d0 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double cc>;
+
+        $d4 = $d1 * $d0;
+
+        $d2 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double cc>;
+
+        $d3 = 2.0 - $d2;
+
+        $d11 = $d4 * $d3;
+
+     label2:
+        $d5 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccov1Sep>;
+
+        $d7 = 1.0 - $d5;
+
+        $d6 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccovmuSep>;
+
+        $d8 = $d7 - $d6;
+
+        d13 = $d11 + $d8;
+
+        $r2 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagC>;
+
+        $r3 = interfaceinvoke $r2.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>(d13);
+
+        $r4 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix pc>;
+
+        $r5 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix square(org.apache.commons.math3.linear.RealMatrix)>($r4);
+
+        $d9 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccov1Sep>;
+
+        $r6 = interfaceinvoke $r5.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>($d9);
+
+        $r7 = interfaceinvoke $r3.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix add(org.apache.commons.math3.linear.RealMatrix)>($r6);
+
+        $r8 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagC>;
+
+        $r9 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix square(org.apache.commons.math3.linear.RealMatrix)>(r1);
+
+        $r10 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix weights>;
+
+        $r11 = interfaceinvoke $r9.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>($r10);
+
+        $r12 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix times(org.apache.commons.math3.linear.RealMatrix,org.apache.commons.math3.linear.RealMatrix)>($r8, $r11);
+
+        $d10 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccovmuSep>;
+
+        $r13 = interfaceinvoke $r12.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>($d10);
+
+        $r14 = interfaceinvoke $r7.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix add(org.apache.commons.math3.linear.RealMatrix)>($r13);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagC> = $r14;
+
+        $r15 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagC>;
+
+        $r16 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix sqrt(org.apache.commons.math3.linear.RealMatrix)>($r15);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD> = $r16;
+
+        $i0 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int diagonalOnly>;
+
+        if $i0 <= 1 goto label3;
+
+        $i2 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int iterations>;
+
+        $i1 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int diagonalOnly>;
+
+        if $i2 <= $i1 goto label3;
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int diagonalOnly> = 0;
+
+        $i4 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $i3 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $r17 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix eye(int,int)>($i4, $i3);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix B> = $r17;
+
+        $r18 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $r19 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diag(org.apache.commons.math3.linear.RealMatrix)>($r18);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix BD> = $r19;
+
+        $r20 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagC>;
+
+        $r21 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diag(org.apache.commons.math3.linear.RealMatrix)>($r20);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix C> = $r21;
+
+     label3:
+        return;
+    }
+
+    private void updateCovariance(boolean, org.apache.commons.math3.linear.RealMatrix, org.apache.commons.math3.linear.RealMatrix, int[], org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        boolean z0, $z1;
+        org.apache.commons.math3.linear.RealMatrix r1, r2, r4, r5, r6, r9, r11, r13, r14, r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r30, $r31, $r33, $r34, $r36, $r37, $r38, $r39, $r40, $r41, $r42, $r43, $r44, $r45, $r46, $r47, $r48, $r49, $r50, $r51, $r52, $r53, $r54, $r55, $r56, r57, r58, r59, r60;
+        int[] r3, r7, r8, r10, r12, $r32;
+        double d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, d34, $d35, d37, d38;
+        byte $b0, $b6;
+        int $i1, $i2, $i3, $i4, $i5, $i7, $i8;
+        double[] $r35;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        z0 := @parameter0: boolean;
+
+        r1 := @parameter1: org.apache.commons.math3.linear.RealMatrix;
+
+        r2 := @parameter2: org.apache.commons.math3.linear.RealMatrix;
+
+        r3 := @parameter3: int[];
+
+        r4 := @parameter4: org.apache.commons.math3.linear.RealMatrix;
+
+        d34 = 0.0;
+
+        $d4 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccov1>;
+
+        $d3 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccovmu>;
+
+        $d5 = $d4 + $d3;
+
+        $b0 = $d5 cmpl 0.0;
+
+        if $b0 <= 0 goto label5;
+
+        $i1 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int mu>;
+
+        $r16 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix repmat(org.apache.commons.math3.linear.RealMatrix,int,int)>(r4, 1, $i1);
+
+        $r17 = interfaceinvoke r1.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix subtract(org.apache.commons.math3.linear.RealMatrix)>($r16);
+
+        $d6 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double sigma>;
+
+        $d7 = 1.0 / $d6;
+
+        r5 = interfaceinvoke $r17.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>($d7);
+
+        $r19 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix pc>;
+
+        $r18 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix pc>;
+
+        $r20 = interfaceinvoke $r18.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix transpose()>();
+
+        $r21 = interfaceinvoke $r19.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>($r20);
+
+        $d8 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccov1>;
+
+        r6 = interfaceinvoke $r21.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>($d8);
+
+        if z0 == 0 goto label1;
+
+        $d35 = 0.0;
+
+        goto label2;
+
+     label1:
+        $d10 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccov1>;
+
+        $d9 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double cc>;
+
+        $d13 = $d10 * $d9;
+
+        $d11 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double cc>;
+
+        $d12 = 2.0 - $d11;
+
+        $d35 = $d13 * $d12;
+
+     label2:
+        $d14 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccov1>;
+
+        $d16 = 1.0 - $d14;
+
+        $d15 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccovmu>;
+
+        $d17 = $d16 - $d15;
+
+        d37 = $d35 + $d17;
+
+        $z1 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean isActiveCMA>;
+
+        if $z1 == 0 goto label4;
+
+        $d19 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccovmu>;
+
+        $d20 = 1.0 - $d19;
+
+        $d22 = $d20 * 0.25;
+
+        $d21 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double mueff>;
+
+        $d24 = $d22 * $d21;
+
+        $i3 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $i4 = $i3 + 2;
+
+        $d23 = (double) $i4;
+
+        $d25 = staticinvoke <org.apache.commons.math3.util.FastMath: double pow(double,double)>($d23, 1.5);
+
+        $d26 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double mueff>;
+
+        $d27 = 2.0 * $d26;
+
+        $d28 = $d25 + $d27;
+
+        d34 = $d24 / $d28;
+
+        r7 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: int[] reverse(int[])>(r3);
+
+        $i5 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int mu>;
+
+        $r32 = staticinvoke <org.apache.commons.math3.util.MathArrays: int[] copyOf(int[],int)>(r7, $i5);
+
+        r57 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix selectColumns(org.apache.commons.math3.linear.RealMatrix,int[])>(r2, $r32);
+
+        $r33 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix square(org.apache.commons.math3.linear.RealMatrix)>(r57);
+
+        $r34 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix sumRows(org.apache.commons.math3.linear.RealMatrix)>($r33);
+
+        r58 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix sqrt(org.apache.commons.math3.linear.RealMatrix)>($r34);
+
+        $r35 = interfaceinvoke r58.<org.apache.commons.math3.linear.RealMatrix: double[] getRow(int)>(0);
+
+        r8 = specialinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int[] sortedIndices(double[])>($r35);
+
+        r9 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix selectColumns(org.apache.commons.math3.linear.RealMatrix,int[])>(r58, r8);
+
+        r10 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: int[] reverse(int[])>(r8);
+
+        r11 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix selectColumns(org.apache.commons.math3.linear.RealMatrix,int[])>(r58, r10);
+
+        r59 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix divide(org.apache.commons.math3.linear.RealMatrix,org.apache.commons.math3.linear.RealMatrix)>(r11, r9);
+
+        r12 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: int[] inverse(int[])>(r8);
+
+        r13 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix selectColumns(org.apache.commons.math3.linear.RealMatrix,int[])>(r59, r12);
+
+        $r36 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix square(org.apache.commons.math3.linear.RealMatrix)>(r13);
+
+        $r37 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix weights>;
+
+        $r38 = interfaceinvoke $r36.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>($r37);
+
+        $d29 = interfaceinvoke $r38.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(0, 0);
+
+        d2 = 0.33999999999999997 / $d29;
+
+        $b6 = d34 cmpl d2;
+
+        if $b6 <= 0 goto label3;
+
+        d34 = d2;
+
+     label3:
+        $i7 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $r39 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix repmat(org.apache.commons.math3.linear.RealMatrix,int,int)>(r13, $i7, 1);
+
+        r60 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix times(org.apache.commons.math3.linear.RealMatrix,org.apache.commons.math3.linear.RealMatrix)>(r57, $r39);
+
+        $r40 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix BD>;
+
+        r14 = interfaceinvoke $r40.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>(r60);
+
+        $r41 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix weights>;
+
+        $r42 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diag(org.apache.commons.math3.linear.RealMatrix)>($r41);
+
+        $r43 = interfaceinvoke r14.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>($r42);
+
+        $r44 = interfaceinvoke r14.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix transpose()>();
+
+        r15 = interfaceinvoke $r43.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>($r44);
+
+        $d30 = 0.5 * d34;
+
+        d38 = d37 + $d30;
+
+        $r45 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix C>;
+
+        $r46 = interfaceinvoke $r45.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>(d38);
+
+        $r47 = interfaceinvoke $r46.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix add(org.apache.commons.math3.linear.RealMatrix)>(r6);
+
+        $d32 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccovmu>;
+
+        $d31 = 0.5 * d34;
+
+        $d33 = $d32 + $d31;
+
+        $r48 = interfaceinvoke r5.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>($d33);
+
+        $r49 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix weights>;
+
+        $i8 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $r50 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix repmat(org.apache.commons.math3.linear.RealMatrix,int,int)>($r49, 1, $i8);
+
+        $r51 = interfaceinvoke r5.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix transpose()>();
+
+        $r52 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix times(org.apache.commons.math3.linear.RealMatrix,org.apache.commons.math3.linear.RealMatrix)>($r50, $r51);
+
+        $r53 = interfaceinvoke $r48.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>($r52);
+
+        $r54 = interfaceinvoke $r47.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix add(org.apache.commons.math3.linear.RealMatrix)>($r53);
+
+        $r55 = interfaceinvoke r15.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>(d34);
+
+        $r56 = interfaceinvoke $r54.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix subtract(org.apache.commons.math3.linear.RealMatrix)>($r55);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix C> = $r56;
+
+        goto label5;
+
+     label4:
+        $r22 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix C>;
+
+        $r23 = interfaceinvoke $r22.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>(d37);
+
+        $r24 = interfaceinvoke $r23.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix add(org.apache.commons.math3.linear.RealMatrix)>(r6);
+
+        $d18 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccovmu>;
+
+        $r25 = interfaceinvoke r5.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>($d18);
+
+        $r26 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix weights>;
+
+        $i2 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $r27 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix repmat(org.apache.commons.math3.linear.RealMatrix,int,int)>($r26, 1, $i2);
+
+        $r28 = interfaceinvoke r5.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix transpose()>();
+
+        $r29 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix times(org.apache.commons.math3.linear.RealMatrix,org.apache.commons.math3.linear.RealMatrix)>($r27, $r28);
+
+        $r30 = interfaceinvoke $r25.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>($r29);
+
+        $r31 = interfaceinvoke $r24.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix add(org.apache.commons.math3.linear.RealMatrix)>($r30);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix C> = $r31;
+
+     label5:
+        specialinvoke r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: void updateBD(double)>(d34);
+
+        return;
+    }
+
+    private void updateBD(double)
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, d24, d25;
+        byte $b0, $b3, $b4, $b5, $b14;
+        int $i1, $i2, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, i15;
+        org.apache.commons.math3.linear.RealMatrix $r2, $r3, $r4, $r5, $r6, $r7, $r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r30, $r31, $r32, $r33, $r34, $r35, $r36, $r37, $r38, $r39, $r40, $r41, $r42, $r43, $r44, $r45, $r46;
+        org.apache.commons.math3.linear.EigenDecomposition $r8;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        d0 := @parameter0: double;
+
+        $d2 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccov1>;
+
+        $d1 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccovmu>;
+
+        $d3 = $d2 + $d1;
+
+        $d4 = $d3 + d0;
+
+        $b0 = $d4 cmpl 0.0;
+
+        if $b0 <= 0 goto label6;
+
+        $i1 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int iterations>;
+
+        $d5 = (double) $i1;
+
+        $d10 = $d5 % 1.0;
+
+        $d7 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccov1>;
+
+        $d6 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: double ccovmu>;
+
+        $d8 = $d7 + $d6;
+
+        $d9 = $d8 + d0;
+
+        $d12 = $d10 / $d9;
+
+        $i2 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $d11 = (double) $i2;
+
+        $d13 = $d12 / $d11;
+
+        $d14 = $d13 / 10.0;
+
+        $b3 = $d14 cmpg 1.0;
+
+        if $b3 >= 0 goto label6;
+
+        $r2 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix C>;
+
+        $r3 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix triu(org.apache.commons.math3.linear.RealMatrix,int)>($r2, 0);
+
+        $r4 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix C>;
+
+        $r5 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix triu(org.apache.commons.math3.linear.RealMatrix,int)>($r4, 1);
+
+        $r6 = interfaceinvoke $r5.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix transpose()>();
+
+        $r7 = interfaceinvoke $r3.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix add(org.apache.commons.math3.linear.RealMatrix)>($r6);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix C> = $r7;
+
+        $r8 = new org.apache.commons.math3.linear.EigenDecomposition;
+
+        $r9 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix C>;
+
+        specialinvoke $r8.<org.apache.commons.math3.linear.EigenDecomposition: void <init>(org.apache.commons.math3.linear.RealMatrix)>($r9);
+
+        $r10 = virtualinvoke $r8.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix getV()>();
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix B> = $r10;
+
+        $r11 = virtualinvoke $r8.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix getD()>();
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix D> = $r11;
+
+        $r12 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix D>;
+
+        $r13 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diag(org.apache.commons.math3.linear.RealMatrix)>($r12);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD> = $r13;
+
+        $r14 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $d15 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: double min(org.apache.commons.math3.linear.RealMatrix)>($r14);
+
+        $b4 = $d15 cmpg 0.0;
+
+        if $b4 > 0 goto label4;
+
+        i15 = 0;
+
+     label1:
+        $i10 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        if i15 >= $i10 goto label3;
+
+        $r45 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $d23 = interfaceinvoke $r45.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i15, 0);
+
+        $b14 = $d23 cmpg 0.0;
+
+        if $b14 >= 0 goto label2;
+
+        $r46 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        interfaceinvoke $r46.<org.apache.commons.math3.linear.RealMatrix: void setEntry(int,int,double)>(i15, 0, 0.0);
+
+     label2:
+        i15 = i15 + 1;
+
+        goto label1;
+
+     label3:
+        $r36 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $d22 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: double max(org.apache.commons.math3.linear.RealMatrix)>($r36);
+
+        d24 = $d22 / 1.0E14;
+
+        $r37 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix C>;
+
+        $i12 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $i11 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $r38 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix eye(int,int)>($i12, $i11);
+
+        $r39 = interfaceinvoke $r38.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>(d24);
+
+        $r40 = interfaceinvoke $r37.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix add(org.apache.commons.math3.linear.RealMatrix)>($r39);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix C> = $r40;
+
+        $r41 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $i13 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $r42 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix ones(int,int)>($i13, 1);
+
+        $r43 = interfaceinvoke $r42.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>(d24);
+
+        $r44 = interfaceinvoke $r41.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix add(org.apache.commons.math3.linear.RealMatrix)>($r43);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD> = $r44;
+
+     label4:
+        $r15 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $d16 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: double max(org.apache.commons.math3.linear.RealMatrix)>($r15);
+
+        $r16 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $d17 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: double min(org.apache.commons.math3.linear.RealMatrix)>($r16);
+
+        $d18 = 1.0E14 * $d17;
+
+        $b5 = $d16 cmpl $d18;
+
+        if $b5 <= 0 goto label5;
+
+        $r26 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $d19 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: double max(org.apache.commons.math3.linear.RealMatrix)>($r26);
+
+        $d20 = $d19 / 1.0E14;
+
+        $r27 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $d21 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: double min(org.apache.commons.math3.linear.RealMatrix)>($r27);
+
+        d25 = $d20 - $d21;
+
+        $r28 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix C>;
+
+        $i8 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $i7 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $r29 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix eye(int,int)>($i8, $i7);
+
+        $r30 = interfaceinvoke $r29.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>(d25);
+
+        $r31 = interfaceinvoke $r28.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix add(org.apache.commons.math3.linear.RealMatrix)>($r30);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix C> = $r31;
+
+        $r32 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $i9 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $r33 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix ones(int,int)>($i9, 1);
+
+        $r34 = interfaceinvoke $r33.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix scalarMultiply(double)>(d25);
+
+        $r35 = interfaceinvoke $r32.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix add(org.apache.commons.math3.linear.RealMatrix)>($r34);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD> = $r35;
+
+     label5:
+        $r17 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix C>;
+
+        $r18 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diag(org.apache.commons.math3.linear.RealMatrix)>($r17);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagC> = $r18;
+
+        $r19 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $r20 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix sqrt(org.apache.commons.math3.linear.RealMatrix)>($r19);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD> = $r20;
+
+        $r22 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix B>;
+
+        $r21 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix diagD>;
+
+        $r23 = interfaceinvoke $r21.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix transpose()>();
+
+        $i6 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: int dimension>;
+
+        $r24 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix repmat(org.apache.commons.math3.linear.RealMatrix,int,int)>($r23, $i6, 1);
+
+        $r25 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix times(org.apache.commons.math3.linear.RealMatrix,org.apache.commons.math3.linear.RealMatrix)>($r22, $r24);
+
+        r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.linear.RealMatrix BD> = $r25;
+
+     label6:
+        return;
+    }
+
+    private static void push(double[], double)
+    {
+        double[] r0;
+        double d0, $d1;
+        int $i0, $i1, i2;
+
+        r0 := @parameter0: double[];
+
+        d0 := @parameter1: double;
+
+        $i0 = lengthof r0;
+
+        i2 = $i0 - 1;
+
+     label1:
+        if i2 <= 0 goto label2;
+
+        $i1 = i2 - 1;
+
+        $d1 = r0[$i1];
+
+        r0[i2] = $d1;
+
+        i2 = i2 + -1;
+
+        goto label1;
+
+     label2:
+        r0[0] = d0;
+
+        return;
+    }
+
+    private int[] sortedIndices(double[])
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        double[] r1;
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer$DoubleIndex[] r2;
+        int $i0, $i1, $i2, $i3, $i4, i5, i6;
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer$DoubleIndex $r3, $r4;
+        double $d0;
+        int[] r5;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        r1 := @parameter0: double[];
+
+        $i0 = lengthof r1;
+
+        r2 = newarray (org.apache.commons.math3.optimization.direct.CMAESOptimizer$DoubleIndex)[$i0];
+
+        i5 = 0;
+
+     label1:
+        $i1 = lengthof r1;
+
+        if i5 >= $i1 goto label2;
+
+        $r4 = new org.apache.commons.math3.optimization.direct.CMAESOptimizer$DoubleIndex;
+
+        $d0 = r1[i5];
+
+        specialinvoke $r4.<org.apache.commons.math3.optimization.direct.CMAESOptimizer$DoubleIndex: void <init>(double,int)>($d0, i5);
+
+        r2[i5] = $r4;
+
+        i5 = i5 + 1;
+
+        goto label1;
+
+     label2:
+        staticinvoke <java.util.Arrays: void sort(java.lang.Object[])>(r2);
+
+        $i2 = lengthof r1;
+
+        r5 = newarray (int)[$i2];
+
+        i6 = 0;
+
+     label3:
+        $i3 = lengthof r1;
+
+        if i6 >= $i3 goto label4;
+
+        $r3 = r2[i6];
+
+        $i4 = staticinvoke <org.apache.commons.math3.optimization.direct.CMAESOptimizer$DoubleIndex: int access$100(org.apache.commons.math3.optimization.direct.CMAESOptimizer$DoubleIndex)>($r3);
+
+        r5[i6] = $i4;
+
+        i6 = i6 + 1;
+
+        goto label3;
+
+     label4:
+        return r5;
+    }
+
+    private static org.apache.commons.math3.linear.RealMatrix log(org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.linear.RealMatrix r0;
+        double[][] r1;
+        int $i0, $i1, $i2, $i3, i4, i5;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r2;
+        double[] $r3;
+        double $d0, $d1;
+
+        r0 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        $i0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        $i1 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        r1 = newmultiarray (double)[$i0][$i1];
+
+        i4 = 0;
+
+     label1:
+        $i2 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        if i4 >= $i2 goto label4;
+
+        i5 = 0;
+
+     label2:
+        $i3 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        if i5 >= $i3 goto label3;
+
+        $r3 = r1[i4];
+
+        $d0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i4, i5);
+
+        $d1 = staticinvoke <org.apache.commons.math3.util.FastMath: double log(double)>($d0);
+
+        $r3[i5] = $d1;
+
+        i5 = i5 + 1;
+
+        goto label2;
+
+     label3:
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label4:
+        $r2 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r2.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r1, 0);
+
+        return $r2;
+    }
+
+    private static org.apache.commons.math3.linear.RealMatrix sqrt(org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.linear.RealMatrix r0;
+        double[][] r1;
+        int $i0, $i1, $i2, $i3, i4, i5;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r2;
+        double[] $r3;
+        double $d0, $d1;
+
+        r0 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        $i0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        $i1 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        r1 = newmultiarray (double)[$i0][$i1];
+
+        i4 = 0;
+
+     label1:
+        $i2 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        if i4 >= $i2 goto label4;
+
+        i5 = 0;
+
+     label2:
+        $i3 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        if i5 >= $i3 goto label3;
+
+        $r3 = r1[i4];
+
+        $d0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i4, i5);
+
+        $d1 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d0);
+
+        $r3[i5] = $d1;
+
+        i5 = i5 + 1;
+
+        goto label2;
+
+     label3:
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label4:
+        $r2 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r2.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r1, 0);
+
+        return $r2;
+    }
+
+    private static org.apache.commons.math3.linear.RealMatrix square(org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.linear.RealMatrix r0;
+        double[][] r1;
+        double d0, $d1;
+        int $i0, $i1, $i2, $i3, i4, i5;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r2;
+        double[] $r3;
+
+        r0 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        $i0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        $i1 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        r1 = newmultiarray (double)[$i0][$i1];
+
+        i4 = 0;
+
+     label1:
+        $i2 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        if i4 >= $i2 goto label4;
+
+        i5 = 0;
+
+     label2:
+        $i3 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        if i5 >= $i3 goto label3;
+
+        d0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i4, i5);
+
+        $r3 = r1[i4];
+
+        $d1 = d0 * d0;
+
+        $r3[i5] = $d1;
+
+        i5 = i5 + 1;
+
+        goto label2;
+
+     label3:
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label4:
+        $r2 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r2.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r1, 0);
+
+        return $r2;
+    }
+
+    private static org.apache.commons.math3.linear.RealMatrix times(org.apache.commons.math3.linear.RealMatrix, org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.linear.RealMatrix r0, r1;
+        double[][] r2;
+        int $i0, $i1, $i2, $i3, i4, i5;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r3;
+        double[] $r4;
+        double $d0, $d1, $d2;
+
+        r0 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        r1 := @parameter1: org.apache.commons.math3.linear.RealMatrix;
+
+        $i0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        $i1 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        r2 = newmultiarray (double)[$i0][$i1];
+
+        i4 = 0;
+
+     label1:
+        $i2 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        if i4 >= $i2 goto label4;
+
+        i5 = 0;
+
+     label2:
+        $i3 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        if i5 >= $i3 goto label3;
+
+        $r4 = r2[i4];
+
+        $d0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i4, i5);
+
+        $d1 = interfaceinvoke r1.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i4, i5);
+
+        $d2 = $d0 * $d1;
+
+        $r4[i5] = $d2;
+
+        i5 = i5 + 1;
+
+        goto label2;
+
+     label3:
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label4:
+        $r3 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r3.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r2, 0);
+
+        return $r3;
+    }
+
+    private static org.apache.commons.math3.linear.RealMatrix divide(org.apache.commons.math3.linear.RealMatrix, org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.linear.RealMatrix r0, r1;
+        double[][] r2;
+        int $i0, $i1, $i2, $i3, i4, i5;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r3;
+        double[] $r4;
+        double $d0, $d1, $d2;
+
+        r0 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        r1 := @parameter1: org.apache.commons.math3.linear.RealMatrix;
+
+        $i0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        $i1 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        r2 = newmultiarray (double)[$i0][$i1];
+
+        i4 = 0;
+
+     label1:
+        $i2 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        if i4 >= $i2 goto label4;
+
+        i5 = 0;
+
+     label2:
+        $i3 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        if i5 >= $i3 goto label3;
+
+        $r4 = r2[i4];
+
+        $d0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i4, i5);
+
+        $d1 = interfaceinvoke r1.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i4, i5);
+
+        $d2 = $d0 / $d1;
+
+        $r4[i5] = $d2;
+
+        i5 = i5 + 1;
+
+        goto label2;
+
+     label3:
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label4:
+        $r3 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r3.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r2, 0);
+
+        return $r3;
+    }
+
+    private static org.apache.commons.math3.linear.RealMatrix selectColumns(org.apache.commons.math3.linear.RealMatrix, int[])
+    {
+        org.apache.commons.math3.linear.RealMatrix r0;
+        int[] r1;
+        double[][] r2;
+        int $i0, $i1, $i2, $i3, $i4, i5, i6;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r3;
+        double[] $r4;
+        double $d0;
+
+        r0 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        r1 := @parameter1: int[];
+
+        $i0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        $i1 = lengthof r1;
+
+        r2 = newmultiarray (double)[$i0][$i1];
+
+        i5 = 0;
+
+     label1:
+        $i2 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        if i5 >= $i2 goto label4;
+
+        i6 = 0;
+
+     label2:
+        $i3 = lengthof r1;
+
+        if i6 >= $i3 goto label3;
+
+        $r4 = r2[i5];
+
+        $i4 = r1[i6];
+
+        $d0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i5, $i4);
+
+        $r4[i6] = $d0;
+
+        i6 = i6 + 1;
+
+        goto label2;
+
+     label3:
+        i5 = i5 + 1;
+
+        goto label1;
+
+     label4:
+        $r3 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r3.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r2, 0);
+
+        return $r3;
+    }
+
+    private static org.apache.commons.math3.linear.RealMatrix triu(org.apache.commons.math3.linear.RealMatrix, int)
+    {
+        org.apache.commons.math3.linear.RealMatrix r0;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, i7, i8;
+        double[][] r1;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r2;
+        double[] $r3;
+        double $d0;
+
+        r0 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        i0 := @parameter1: int;
+
+        $i1 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        $i2 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        r1 = newmultiarray (double)[$i1][$i2];
+
+        i7 = 0;
+
+     label1:
+        $i3 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        if i7 >= $i3 goto label6;
+
+        i8 = 0;
+
+     label2:
+        $i4 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        if i8 >= $i4 goto label5;
+
+        $r3 = r1[i7];
+
+        $i6 = i8;
+
+        $i5 = i8 - i0;
+
+        if i7 > $i5 goto label3;
+
+        $d0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i7, i8);
+
+        goto label4;
+
+     label3:
+        $d0 = 0.0;
+
+     label4:
+        $r3[$i6] = $d0;
+
+        i8 = i8 + 1;
+
+        goto label2;
+
+     label5:
+        i7 = i7 + 1;
+
+        goto label1;
+
+     label6:
+        $r2 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r2.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r1, 0);
+
+        return $r2;
+    }
+
+    private static org.apache.commons.math3.linear.RealMatrix sumRows(org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.linear.RealMatrix r0;
+        double[][] r1;
+        int $i0, $i1, $i2, i3, i4;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r2;
+        double[] $r3;
+        double $d0, d1;
+
+        r0 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        $i0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        r1 = newmultiarray (double)[1][$i0];
+
+        i3 = 0;
+
+     label1:
+        $i1 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        if i3 >= $i1 goto label4;
+
+        d1 = 0.0;
+
+        i4 = 0;
+
+     label2:
+        $i2 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        if i4 >= $i2 goto label3;
+
+        $d0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i4, i3);
+
+        d1 = d1 + $d0;
+
+        i4 = i4 + 1;
+
+        goto label2;
+
+     label3:
+        $r3 = r1[0];
+
+        $r3[i3] = d1;
+
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label4:
+        $r2 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r2.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r1, 0);
+
+        return $r2;
+    }
+
+    private static org.apache.commons.math3.linear.RealMatrix diag(org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.linear.RealMatrix r0;
+        int $i0, $i1, $i2, $i3, $i4, $i5, i6, i7;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r1, $r3;
+        double[] $r2, $r4;
+        double $d0, $d1;
+        double[][] r5, r6;
+
+        r0 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        $i0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        if $i0 != 1 goto label3;
+
+        $i3 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        $i4 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        r5 = newmultiarray (double)[$i3][$i4];
+
+        i6 = 0;
+
+     label1:
+        $i5 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        if i6 >= $i5 goto label2;
+
+        $r4 = r5[i6];
+
+        $d1 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i6, 0);
+
+        $r4[i6] = $d1;
+
+        i6 = i6 + 1;
+
+        goto label1;
+
+     label2:
+        $r3 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r3.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r5, 0);
+
+        return $r3;
+
+     label3:
+        $i1 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        r6 = newmultiarray (double)[$i1][1];
+
+        i7 = 0;
+
+     label4:
+        $i2 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        if i7 >= $i2 goto label5;
+
+        $r2 = r6[i7];
+
+        $d0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i7, i7);
+
+        $r2[0] = $d0;
+
+        i7 = i7 + 1;
+
+        goto label4;
+
+     label5:
+        $r1 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r1.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r6, 0);
+
+        return $r1;
+    }
+
+    private static void copyColumn(org.apache.commons.math3.linear.RealMatrix, int, org.apache.commons.math3.linear.RealMatrix, int)
+    {
+        org.apache.commons.math3.linear.RealMatrix r0, r1;
+        int i0, i1, $i2, i3;
+        double $d0;
+
+        r0 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        i0 := @parameter1: int;
+
+        r1 := @parameter2: org.apache.commons.math3.linear.RealMatrix;
+
+        i1 := @parameter3: int;
+
+        i3 = 0;
+
+     label1:
+        $i2 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        if i3 >= $i2 goto label2;
+
+        $d0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i3, i0);
+
+        interfaceinvoke r1.<org.apache.commons.math3.linear.RealMatrix: void setEntry(int,int,double)>(i3, i1, $d0);
+
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label2:
+        return;
+    }
+
+    private static org.apache.commons.math3.linear.RealMatrix ones(int, int)
+    {
+        int i0, i1, i2;
+        double[][] r0;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r1;
+        double[] $r2;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        r0 = newmultiarray (double)[i0][i1];
+
+        i2 = 0;
+
+     label1:
+        if i2 >= i0 goto label2;
+
+        $r2 = r0[i2];
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>($r2, 1.0);
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        $r1 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r1.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r0, 0);
+
+        return $r1;
+    }
+
+    private static org.apache.commons.math3.linear.RealMatrix eye(int, int)
+    {
+        int i0, i1, i2;
+        double[][] r0;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r1;
+        double[] $r2;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        r0 = newmultiarray (double)[i0][i1];
+
+        i2 = 0;
+
+     label1:
+        if i2 >= i0 goto label3;
+
+        if i2 >= i1 goto label2;
+
+        $r2 = r0[i2];
+
+        $r2[i2] = 1.0;
+
+     label2:
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label3:
+        $r1 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r1.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r0, 0);
+
+        return $r1;
+    }
+
+    private static org.apache.commons.math3.linear.RealMatrix zeros(int, int)
+    {
+        int i0, i1;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r0;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        $r0 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r0.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(int,int)>(i0, i1);
+
+        return $r0;
+    }
+
+    private static org.apache.commons.math3.linear.RealMatrix repmat(org.apache.commons.math3.linear.RealMatrix, int, int)
+    {
+        org.apache.commons.math3.linear.RealMatrix r0;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i7, $i8, $i9, i10, i11;
+        double[][] r1;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r2;
+        double[] $r3;
+        double $d0;
+
+        r0 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        i2 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        i3 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        $i5 = i0 * i2;
+
+        $i4 = i1 * i3;
+
+        r1 = newmultiarray (double)[$i5][$i4];
+
+        i10 = 0;
+
+     label1:
+        $i6 = i0 * i2;
+
+        if i10 >= $i6 goto label4;
+
+        i11 = 0;
+
+     label2:
+        $i7 = i1 * i3;
+
+        if i11 >= $i7 goto label3;
+
+        $r3 = r1[i10];
+
+        $i9 = i10 % i2;
+
+        $i8 = i11 % i3;
+
+        $d0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>($i9, $i8);
+
+        $r3[i11] = $d0;
+
+        i11 = i11 + 1;
+
+        goto label2;
+
+     label3:
+        i10 = i10 + 1;
+
+        goto label1;
+
+     label4:
+        $r2 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r2.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r1, 0);
+
+        return $r2;
+    }
+
+    private static org.apache.commons.math3.linear.RealMatrix sequence(double, double, double)
+    {
+        double d0, d1, d2, $d3, $d4, $d5, d6;
+        int i0, i1;
+        double[][] r0;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r1;
+        double[] $r2;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        $d3 = d1 - d0;
+
+        $d4 = $d3 / d2;
+
+        $d5 = $d4 + 1.0;
+
+        i0 = (int) $d5;
+
+        r0 = newmultiarray (double)[i0][1];
+
+        d6 = d0;
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $r2 = r0[i1];
+
+        $r2[0] = d6;
+
+        d6 = d6 + d2;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        $r1 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r1.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r0, 0);
+
+        return $r1;
+    }
+
+    private static double max(org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.linear.RealMatrix r0;
+        double d0, d1;
+        int $i0, $i1, i3, i4;
+        byte $b2;
+
+        r0 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        d1 = -1.7976931348623157E308;
+
+        i3 = 0;
+
+     label1:
+        $i0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        if i3 >= $i0 goto label5;
+
+        i4 = 0;
+
+     label2:
+        $i1 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        if i4 >= $i1 goto label4;
+
+        d0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i3, i4);
+
+        $b2 = d1 cmpg d0;
+
+        if $b2 >= 0 goto label3;
+
+        d1 = d0;
+
+     label3:
+        i4 = i4 + 1;
+
+        goto label2;
+
+     label4:
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label5:
+        return d1;
+    }
+
+    private static double min(org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.linear.RealMatrix r0;
+        double d0, d1;
+        int $i0, $i1, i3, i4;
+        byte $b2;
+
+        r0 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        d1 = 1.7976931348623157E308;
+
+        i3 = 0;
+
+     label1:
+        $i0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        if i3 >= $i0 goto label5;
+
+        i4 = 0;
+
+     label2:
+        $i1 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        if i4 >= $i1 goto label4;
+
+        d0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i3, i4);
+
+        $b2 = d1 cmpl d0;
+
+        if $b2 <= 0 goto label3;
+
+        d1 = d0;
+
+     label3:
+        i4 = i4 + 1;
+
+        goto label2;
+
+     label4:
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label5:
+        return d1;
+    }
+
+    private static double max(double[])
+    {
+        double[] r0;
+        int $i0, i2;
+        double $d0, d1;
+        byte $b1;
+
+        r0 := @parameter0: double[];
+
+        d1 = -1.7976931348623157E308;
+
+        i2 = 0;
+
+     label1:
+        $i0 = lengthof r0;
+
+        if i2 >= $i0 goto label3;
+
+        $d0 = r0[i2];
+
+        $b1 = d1 cmpg $d0;
+
+        if $b1 >= 0 goto label2;
+
+        d1 = r0[i2];
+
+     label2:
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label3:
+        return d1;
+    }
+
+    private static double min(double[])
+    {
+        double[] r0;
+        int $i0, i2;
+        double $d0, d1;
+        byte $b1;
+
+        r0 := @parameter0: double[];
+
+        d1 = 1.7976931348623157E308;
+
+        i2 = 0;
+
+     label1:
+        $i0 = lengthof r0;
+
+        if i2 >= $i0 goto label3;
+
+        $d0 = r0[i2];
+
+        $b1 = d1 cmpl $d0;
+
+        if $b1 <= 0 goto label2;
+
+        d1 = r0[i2];
+
+     label2:
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label3:
+        return d1;
+    }
+
+    private static int[] inverse(int[])
+    {
+        int[] r0, r1;
+        int $i0, $i1, $i2, i3;
+
+        r0 := @parameter0: int[];
+
+        $i0 = lengthof r0;
+
+        r1 = newarray (int)[$i0];
+
+        i3 = 0;
+
+     label1:
+        $i1 = lengthof r0;
+
+        if i3 >= $i1 goto label2;
+
+        $i2 = r0[i3];
+
+        r1[$i2] = i3;
+
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label2:
+        return r1;
+    }
+
+    private static int[] reverse(int[])
+    {
+        int[] r0, r1;
+        int $i0, $i1, $i2, $i3, $i4, $i5, i6;
+
+        r0 := @parameter0: int[];
+
+        $i0 = lengthof r0;
+
+        r1 = newarray (int)[$i0];
+
+        i6 = 0;
+
+     label1:
+        $i1 = lengthof r0;
+
+        if i6 >= $i1 goto label2;
+
+        $i2 = lengthof r0;
+
+        $i3 = $i2 - i6;
+
+        $i4 = $i3 - 1;
+
+        $i5 = r0[$i4];
+
+        r1[i6] = $i5;
+
+        i6 = i6 + 1;
+
+        goto label1;
+
+     label2:
+        return r1;
+    }
+
+    private double[] randn(int)
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        int i0, i1;
+        double[] r1;
+        org.apache.commons.math3.random.RandomGenerator $r2;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        i0 := @parameter0: int;
+
+        r1 = newarray (double)[i0];
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $r2 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.random.RandomGenerator random>;
+
+        $d0 = interfaceinvoke $r2.<org.apache.commons.math3.random.RandomGenerator: double nextGaussian()>();
+
+        r1[i1] = $d0;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return r1;
+    }
+
+    private org.apache.commons.math3.linear.RealMatrix randn1(int, int)
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        int i0, i1, i2, i3;
+        double[][] r1;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r2;
+        org.apache.commons.math3.random.RandomGenerator $r3;
+        double[] $r4;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        r1 = newmultiarray (double)[i0][i1];
+
+        i2 = 0;
+
+     label1:
+        if i2 >= i0 goto label4;
+
+        i3 = 0;
+
+     label2:
+        if i3 >= i1 goto label3;
+
+        $r4 = r1[i2];
+
+        $r3 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.random.RandomGenerator random>;
+
+        $d0 = interfaceinvoke $r3.<org.apache.commons.math3.random.RandomGenerator: double nextGaussian()>();
+
+        $r4[i3] = $d0;
+
+        i3 = i3 + 1;
+
+        goto label2;
+
+     label3:
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label4:
+        $r2 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r2.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r1, 0);
+
+        return $r2;
+    }
+
+    static boolean access$200(org.apache.commons.math3.optimization.direct.CMAESOptimizer)
+    {
+        org.apache.commons.math3.optimization.direct.CMAESOptimizer r0;
+        boolean $z0;
+
+        r0 := @parameter0: org.apache.commons.math3.optimization.direct.CMAESOptimizer;
+
+        $z0 = r0.<org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean isMinimize>;
+
+        return $z0;
+    }
+
+    static void <clinit>()
+    {
+        org.apache.commons.math3.random.MersenneTwister $r0;
+
+        <org.apache.commons.math3.optimization.direct.CMAESOptimizer: int DEFAULT_DIAGONALONLY> = 0;
+
+        <org.apache.commons.math3.optimization.direct.CMAESOptimizer: int DEFAULT_MAXITERATIONS> = 30000;
+
+        <org.apache.commons.math3.optimization.direct.CMAESOptimizer: boolean DEFAULT_ISACTIVECMA> = 1;
+
+        <org.apache.commons.math3.optimization.direct.CMAESOptimizer: double DEFAULT_STOPFITNESS> = 0.0;
+
+        <org.apache.commons.math3.optimization.direct.CMAESOptimizer: int DEFAULT_CHECKFEASABLECOUNT> = 0;
+
+        $r0 = new org.apache.commons.math3.random.MersenneTwister;
+
+        specialinvoke $r0.<org.apache.commons.math3.random.MersenneTwister: void <init>()>();
+
+        <org.apache.commons.math3.optimization.direct.CMAESOptimizer: org.apache.commons.math3.random.RandomGenerator DEFAULT_RANDOMGENERATOR> = $r0;
+
+        return;
+    }
+}

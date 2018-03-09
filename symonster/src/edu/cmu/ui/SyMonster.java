@@ -86,13 +86,11 @@ public class SyMonster {
         Set<String> acceptableSuperClasses = new HashSet<>();
         acceptableSuperClasses.addAll(jsonConfig.acceptableSuperClasses);
 
-
-
         // 1. Read input from the user
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/tests/10/test10.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/geometry/10/benchmark10.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -115,7 +113,7 @@ public class SyMonster {
 
 
 		// 2. Parse library
-        List<MethodSignature> sigs = JarParser.parseJar(libs);
+        List<MethodSignature> sigs = JarParser.parseJar(libs,jsonInput.packages);
         Map<String,Set<String>> superclassMap = JarParser.getSuperClasses(acceptableSuperClasses);
         Map<String,Set<String>> subclassMap = new HashMap<>();
         for (String key : superclassMap.keySet()){

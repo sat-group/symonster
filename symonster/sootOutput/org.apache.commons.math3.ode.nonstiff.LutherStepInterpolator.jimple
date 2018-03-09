@@ -1,0 +1,778 @@
+class org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator extends org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator
+{
+    private static final long serialVersionUID;
+    private static final double Q;
+
+    public void <init>()
+    {
+        org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator r0;
+
+        r0 := @this: org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator;
+
+        specialinvoke r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator: void <init>()>();
+
+        return;
+    }
+
+    public void <init>(org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator)
+    {
+        org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator r0, r1;
+
+        r0 := @this: org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator;
+
+        r1 := @parameter0: org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator;
+
+        specialinvoke r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator: void <init>(org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator)>(r1);
+
+        return;
+    }
+
+    protected org.apache.commons.math3.ode.sampling.StepInterpolator doCopy()
+    {
+        org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator r0, $r1;
+
+        r0 := @this: org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator;
+
+        $r1 = new org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator;
+
+        specialinvoke $r1.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: void <init>(org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator)>(r0);
+
+        return $r1;
+    }
+
+    protected void computeInterpolatedStateAndDerivatives(double, double)
+    {
+        org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator r0;
+        double d0, d1, d2, d4, d5, d6, d7, d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, $d80, $d81, $d82, $d83, $d84, $d85, $d86, $d87, $d88, $d89, $d90, $d91, $d92, $d93, $d94, $d95, $d96, $d97, $d98, $d99, $d100, $d101, $d102, $d103, $d104, $d105, $d106, $d107, $d108, $d109, $d110, $d111, $d112, $d113, $d114, $d115, $d116, $d117, $d118, $d119, $d120, $d121, $d122, $d123, $d124, $d125, $d126, $d127, $d128, $d129, $d130, $d131, $d132, $d133, $d134, $d135, $d136, $d137, $d138, $d139, $d140, $d141, $d142, $d143, $d144, $d145, $d146, $d147, $d148, $d149, $d150, $d151, $d152, $d153, $d154, $d155, $d156, $d157, $d158, $d159, $d160, $d161, $d162, $d163, $d164, $d165, $d166, $d167, $d168, $d169, $d170, $d171, $d172, $d173, $d174, $d175, $d176, $d177, $d178, $d179, $d180, $d181, $d182, $d183, $d184, $d185, $d186, $d187, $d188, $d189, $d190, $d191, $d192, $d193, $d194, $d195, $d196, $d197, $d198, $d199, $d200, $d201, $d202, $d203, $d204, $d205, $d206, $d207, $d208, $d209, $d210, $d211, $d212, $d213, $d214, $d215, $d216, $d217, $d218, $d219, $d220, $d221, $d222, $d223, $d224, $d225, $d226, $d227, $d228, $d229, $d230, $d231, $d232, $d233, $d234, $d235, $d236, $d237, $d238, $d239, $d240, $d241, $d242, $d243, $d244, $d245, $d246, $d247, $d248, $d249, $d250, $d251, $d252, $d253, $d254, $d255, $d256, $d257, $d258, $d259, $d260, $d261, $d262, $d263, $d264, $d265, $d266, $d267, $d268, $d269, $d270, $d271, d272, d274, d275, d276, d277, d278, d279, d280, d281, d282, d283, d284, d285, d286, d288, d289, d290, d291, d292, d293, d294, d295, d296, d297, d298, d299;
+        double[] $r1, $r3, $r5, $r7, $r9, $r11, $r13, $r15, $r16, $r17, $r18, $r19, $r21, $r23, $r25, $r27, $r29, $r31, $r33, $r34, $r35, $r36, $r37;
+        double[][] $r2, $r4, $r6, $r8, $r10, $r12, $r14, $r20, $r22, $r24, $r26, $r28, $r30, $r32;
+        byte $b0;
+        int $i1, i2, i3, $i4;
+
+        r0 := @this: org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $d9 = d0 * 21.0;
+
+        $d10 = -47.0 + $d9;
+
+        $d11 = d0 * $d10;
+
+        $d12 = 36.0 + $d11;
+
+        $d13 = d0 * $d12;
+
+        $d14 = -10.8 + $d13;
+
+        $d15 = d0 * $d14;
+
+        d2 = 1.0 + $d15;
+
+        $d16 = d0 * 112.0;
+
+        $d17 = -202.66666666666666 + $d16;
+
+        $d18 = d0 * $d17;
+
+        $d19 = 106.66666666666667 + $d18;
+
+        $d20 = d0 * $d19;
+
+        $d21 = -13.866666666666667 + $d20;
+
+        d4 = d0 * $d21;
+
+        $d22 = d0 * -567.0;
+
+        $d23 = $d22 / 5.0;
+
+        $d24 = 194.4 + $d23;
+
+        $d25 = d0 * $d24;
+
+        $d26 = -97.2 + $d25;
+
+        $d27 = d0 * $d26;
+
+        $d28 = 12.96 + $d27;
+
+        d5 = d0 * $d28;
+
+        $d29 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d30 = 343.0 * $d29;
+
+        $d31 = 833.0 + $d30;
+
+        $d49 = $d31 / 150.0;
+
+        $d32 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d33 = 357.0 * $d32;
+
+        $d34 = -637.0 - $d33;
+
+        $d46 = $d34 / 30.0;
+
+        $d35 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d36 = 287.0 * $d35;
+
+        $d37 = 392.0 + $d36;
+
+        $d43 = $d37 / 15.0;
+
+        $d38 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d39 = 49.0 * $d38;
+
+        $d40 = -49.0 - $d39;
+
+        $d41 = d0 * $d40;
+
+        $d42 = $d41 / 5.0;
+
+        $d44 = $d43 + $d42;
+
+        $d45 = d0 * $d44;
+
+        $d47 = $d46 + $d45;
+
+        $d48 = d0 * $d47;
+
+        $d50 = $d49 + $d48;
+
+        d6 = d0 * $d50;
+
+        $d51 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d52 = 343.0 * $d51;
+
+        $d53 = 833.0 - $d52;
+
+        $d71 = $d53 / 150.0;
+
+        $d54 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d55 = 357.0 * $d54;
+
+        $d56 = -637.0 + $d55;
+
+        $d68 = $d56 / 30.0;
+
+        $d57 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d58 = 287.0 * $d57;
+
+        $d59 = 392.0 - $d58;
+
+        $d65 = $d59 / 15.0;
+
+        $d60 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d61 = 49.0 * $d60;
+
+        $d62 = -49.0 + $d61;
+
+        $d63 = d0 * $d62;
+
+        $d64 = $d63 / 5.0;
+
+        $d66 = $d65 + $d64;
+
+        $d67 = d0 * $d66;
+
+        $d69 = $d68 + $d67;
+
+        $d70 = d0 * $d69;
+
+        $d72 = $d71 + $d70;
+
+        d7 = d0 * $d72;
+
+        $d73 = d0 * 3.0;
+
+        $d74 = -3.0 + $d73;
+
+        $d75 = d0 * $d74;
+
+        $d76 = 0.6 + $d75;
+
+        d8 = d0 * $d76;
+
+        $r1 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[] previousState>;
+
+        if $r1 == null goto label3;
+
+        $b0 = d0 cmpg 0.5;
+
+        if $b0 > 0 goto label3;
+
+        $d171 = d0 * 21.0;
+
+        $d172 = $d171 / 5.0;
+
+        $d173 = -11.75 + $d172;
+
+        $d174 = d0 * $d173;
+
+        $d175 = 12.0 + $d174;
+
+        $d176 = d0 * $d175;
+
+        $d177 = -5.4 + $d176;
+
+        $d178 = d0 * $d177;
+
+        d272 = 1.0 + $d178;
+
+        $d179 = d0 * 112.0;
+
+        $d180 = $d179 / 5.0;
+
+        $d181 = -50.666666666666664 + $d180;
+
+        $d182 = d0 * $d181;
+
+        $d183 = 35.55555555555556 + $d182;
+
+        $d184 = d0 * $d183;
+
+        $d185 = -6.933333333333334 + $d184;
+
+        d274 = d0 * $d185;
+
+        $d186 = d0 * -567.0;
+
+        $d187 = $d186 / 25.0;
+
+        $d188 = 48.6 + $d187;
+
+        $d189 = d0 * $d188;
+
+        $d190 = -32.4 + $d189;
+
+        $d191 = d0 * $d190;
+
+        $d192 = 6.48 + $d191;
+
+        d275 = d0 * $d192;
+
+        $d193 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d194 = 343.0 * $d193;
+
+        $d195 = 833.0 + $d194;
+
+        $d213 = $d195 / 300.0;
+
+        $d196 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d197 = 357.0 * $d196;
+
+        $d198 = -637.0 - $d197;
+
+        $d210 = $d198 / 90.0;
+
+        $d199 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d200 = 287.0 * $d199;
+
+        $d201 = 392.0 + $d200;
+
+        $d207 = $d201 / 60.0;
+
+        $d202 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d203 = 49.0 * $d202;
+
+        $d204 = -49.0 - $d203;
+
+        $d205 = d0 * $d204;
+
+        $d206 = $d205 / 25.0;
+
+        $d208 = $d207 + $d206;
+
+        $d209 = d0 * $d208;
+
+        $d211 = $d210 + $d209;
+
+        $d212 = d0 * $d211;
+
+        $d214 = $d213 + $d212;
+
+        d276 = d0 * $d214;
+
+        $d215 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d216 = 343.0 * $d215;
+
+        $d217 = 833.0 - $d216;
+
+        $d235 = $d217 / 300.0;
+
+        $d218 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d219 = 357.0 * $d218;
+
+        $d220 = -637.0 + $d219;
+
+        $d232 = $d220 / 90.0;
+
+        $d221 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d222 = 287.0 * $d221;
+
+        $d223 = 392.0 - $d222;
+
+        $d229 = $d223 / 60.0;
+
+        $d224 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d225 = 49.0 * $d224;
+
+        $d226 = -49.0 + $d225;
+
+        $d227 = d0 * $d226;
+
+        $d228 = $d227 / 25.0;
+
+        $d230 = $d229 + $d228;
+
+        $d231 = d0 * $d230;
+
+        $d233 = $d232 + $d231;
+
+        $d234 = d0 * $d233;
+
+        $d236 = $d235 + $d234;
+
+        d277 = d0 * $d236;
+
+        $d237 = d0 * 0.75;
+
+        $d238 = -1.0 + $d237;
+
+        $d239 = d0 * $d238;
+
+        $d240 = 0.3 + $d239;
+
+        d278 = d0 * $d240;
+
+        i2 = 0;
+
+     label1:
+        $r19 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[] interpolatedState>;
+
+        $i1 = lengthof $r19;
+
+        if i2 >= $i1 goto label2;
+
+        $r20 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[][] yDotK>;
+
+        $r21 = $r20[0];
+
+        d279 = $r21[i2];
+
+        $r22 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[][] yDotK>;
+
+        $r23 = $r22[1];
+
+        d280 = $r23[i2];
+
+        $r24 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[][] yDotK>;
+
+        $r25 = $r24[2];
+
+        d281 = $r25[i2];
+
+        $r26 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[][] yDotK>;
+
+        $r27 = $r26[3];
+
+        d282 = $r27[i2];
+
+        $r28 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[][] yDotK>;
+
+        $r29 = $r28[4];
+
+        d283 = $r29[i2];
+
+        $r30 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[][] yDotK>;
+
+        $r31 = $r30[5];
+
+        d284 = $r31[i2];
+
+        $r32 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[][] yDotK>;
+
+        $r33 = $r32[6];
+
+        d285 = $r33[i2];
+
+        $r35 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[] interpolatedState>;
+
+        $r34 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[] previousState>;
+
+        $d257 = $r34[i2];
+
+        $d241 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double h>;
+
+        $d255 = d0 * $d241;
+
+        $d243 = d272 * d279;
+
+        $d242 = 0.0 * d280;
+
+        $d245 = $d243 + $d242;
+
+        $d244 = d274 * d281;
+
+        $d247 = $d245 + $d244;
+
+        $d246 = d275 * d282;
+
+        $d249 = $d247 + $d246;
+
+        $d248 = d276 * d283;
+
+        $d251 = $d249 + $d248;
+
+        $d250 = d277 * d284;
+
+        $d253 = $d251 + $d250;
+
+        $d252 = d278 * d285;
+
+        $d254 = $d253 + $d252;
+
+        $d256 = $d255 * $d254;
+
+        $d258 = $d257 + $d256;
+
+        $r35[i2] = $d258;
+
+        $r36 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[] interpolatedDerivatives>;
+
+        $d260 = d2 * d279;
+
+        $d259 = 0.0 * d280;
+
+        $d262 = $d260 + $d259;
+
+        $d261 = d4 * d281;
+
+        $d264 = $d262 + $d261;
+
+        $d263 = d5 * d282;
+
+        $d266 = $d264 + $d263;
+
+        $d265 = d6 * d283;
+
+        $d268 = $d266 + $d265;
+
+        $d267 = d7 * d284;
+
+        $d270 = $d268 + $d267;
+
+        $d269 = d8 * d285;
+
+        $d271 = $d270 + $d269;
+
+        $r36[i2] = $d271;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        goto label5;
+
+     label3:
+        $d77 = d0 * -21.0;
+
+        $d78 = $d77 / 5.0;
+
+        $d79 = 7.55 + $d78;
+
+        $d80 = d0 * $d79;
+
+        $d81 = -4.45 + $d80;
+
+        $d82 = d0 * $d81;
+
+        $d83 = 0.95 + $d82;
+
+        $d84 = d0 * $d83;
+
+        d286 = -0.05 + $d84;
+
+        $d85 = d0 * -112.0;
+
+        $d86 = $d85 / 5.0;
+
+        $d87 = 28.266666666666666 + $d86;
+
+        $d88 = d0 * $d87;
+
+        $d89 = -7.288888888888889 + $d88;
+
+        $d90 = d0 * $d89;
+
+        $d91 = -0.35555555555555557 + $d90;
+
+        $d92 = d0 * $d91;
+
+        d288 = -0.35555555555555557 + $d92;
+
+        $d93 = d0 * 567.0;
+
+        $d94 = $d93 / 25.0;
+
+        $d95 = -25.92 + $d94;
+
+        $d96 = d0 * $d95;
+
+        $d97 = 6.48 + $d96;
+
+        $d98 = d0 * $d97;
+
+        d289 = d0 * $d98;
+
+        $d99 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d100 = 1029.0 * $d99;
+
+        $d101 = 2254.0 + $d100;
+
+        $d113 = $d101 / 900.0;
+
+        $d102 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d103 = 847.0 * $d102;
+
+        $d104 = -1372.0 - $d103;
+
+        $d110 = $d104 / 300.0;
+
+        $d105 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d106 = 49.0 * $d105;
+
+        $d107 = 49.0 + $d106;
+
+        $d108 = d0 * $d107;
+
+        $d109 = $d108 / 25.0;
+
+        $d111 = $d110 + $d109;
+
+        $d112 = d0 * $d111;
+
+        $d114 = $d113 + $d112;
+
+        $d115 = d0 * $d114;
+
+        $d116 = -0.2722222222222222 + $d115;
+
+        $d117 = d0 * $d116;
+
+        d290 = -0.2722222222222222 + $d117;
+
+        $d118 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d119 = 1029.0 * $d118;
+
+        $d120 = 2254.0 - $d119;
+
+        $d132 = $d120 / 900.0;
+
+        $d121 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d122 = 847.0 * $d121;
+
+        $d123 = -1372.0 + $d122;
+
+        $d129 = $d123 / 300.0;
+
+        $d124 = <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q>;
+
+        $d125 = 49.0 * $d124;
+
+        $d126 = 49.0 - $d125;
+
+        $d127 = d0 * $d126;
+
+        $d128 = $d127 / 25.0;
+
+        $d130 = $d129 + $d128;
+
+        $d131 = d0 * $d130;
+
+        $d133 = $d132 + $d131;
+
+        $d134 = d0 * $d133;
+
+        $d135 = -0.2722222222222222 + $d134;
+
+        $d136 = d0 * $d135;
+
+        d291 = -0.2722222222222222 + $d136;
+
+        $d137 = d0 * -0.75;
+
+        $d138 = 0.25 + $d137;
+
+        $d139 = d0 * $d138;
+
+        $d140 = -0.05 + $d139;
+
+        $d141 = d0 * $d140;
+
+        d292 = -0.05 + $d141;
+
+        i3 = 0;
+
+     label4:
+        $r37 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[] interpolatedState>;
+
+        $i4 = lengthof $r37;
+
+        if i3 >= $i4 goto label5;
+
+        $r2 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[][] yDotK>;
+
+        $r3 = $r2[0];
+
+        d293 = $r3[i3];
+
+        $r4 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[][] yDotK>;
+
+        $r5 = $r4[1];
+
+        d294 = $r5[i3];
+
+        $r6 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[][] yDotK>;
+
+        $r7 = $r6[2];
+
+        d295 = $r7[i3];
+
+        $r8 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[][] yDotK>;
+
+        $r9 = $r8[3];
+
+        d296 = $r9[i3];
+
+        $r10 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[][] yDotK>;
+
+        $r11 = $r10[4];
+
+        d297 = $r11[i3];
+
+        $r12 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[][] yDotK>;
+
+        $r13 = $r12[5];
+
+        d298 = $r13[i3];
+
+        $r14 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[][] yDotK>;
+
+        $r15 = $r14[6];
+
+        d299 = $r15[i3];
+
+        $r17 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[] interpolatedState>;
+
+        $r16 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[] currentState>;
+
+        $d156 = $r16[i3];
+
+        $d143 = d286 * d293;
+
+        $d142 = 0.0 * d294;
+
+        $d145 = $d143 + $d142;
+
+        $d144 = d288 * d295;
+
+        $d147 = $d145 + $d144;
+
+        $d146 = d289 * d296;
+
+        $d149 = $d147 + $d146;
+
+        $d148 = d290 * d297;
+
+        $d151 = $d149 + $d148;
+
+        $d150 = d291 * d298;
+
+        $d153 = $d151 + $d150;
+
+        $d152 = d292 * d299;
+
+        $d154 = $d153 + $d152;
+
+        $d155 = d1 * $d154;
+
+        $d157 = $d156 + $d155;
+
+        $r17[i3] = $d157;
+
+        $r18 = r0.<org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double[] interpolatedDerivatives>;
+
+        $d159 = d2 * d293;
+
+        $d158 = 0.0 * d294;
+
+        $d161 = $d159 + $d158;
+
+        $d160 = d4 * d295;
+
+        $d163 = $d161 + $d160;
+
+        $d162 = d5 * d296;
+
+        $d165 = $d163 + $d162;
+
+        $d164 = d6 * d297;
+
+        $d167 = $d165 + $d164;
+
+        $d166 = d7 * d298;
+
+        $d169 = $d167 + $d166;
+
+        $d168 = d8 * d299;
+
+        $d170 = $d169 + $d168;
+
+        $r18[i3] = $d170;
+
+        i3 = i3 + 1;
+
+        goto label4;
+
+     label5:
+        return;
+    }
+
+    static void <clinit>()
+    {
+        double $d0;
+
+        <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: long serialVersionUID> = 20140416L;
+
+        $d0 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>(21.0);
+
+        <org.apache.commons.math3.ode.nonstiff.LutherStepInterpolator: double Q> = $d0;
+
+        return;
+    }
+}

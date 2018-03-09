@@ -1,0 +1,2474 @@
+public class org.apache.commons.math3.linear.EigenDecomposition extends java.lang.Object
+{
+    private static final double EPSILON;
+    private byte maxIter;
+    private double[] main;
+    private double[] secondary;
+    private org.apache.commons.math3.linear.TriDiagonalTransformer transformer;
+    private double[] realEigenvalues;
+    private double[] imagEigenvalues;
+    private org.apache.commons.math3.linear.ArrayRealVector[] eigenvectors;
+    private org.apache.commons.math3.linear.RealMatrix cachedV;
+    private org.apache.commons.math3.linear.RealMatrix cachedD;
+    private org.apache.commons.math3.linear.RealMatrix cachedVt;
+    private final boolean isSymmetric;
+
+    public void <init>(org.apache.commons.math3.linear.RealMatrix) throws org.apache.commons.math3.exception.MathArithmeticException
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        org.apache.commons.math3.linear.RealMatrix r1, $r4;
+        double d0, $d1, $d2;
+        org.apache.commons.math3.linear.SchurTransformer r2;
+        int $i0, $i1, $i2, $i3;
+        boolean $z0, $z1;
+        org.apache.commons.math3.linear.TriDiagonalTransformer $r3;
+        double[][] $r5;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        r1 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: byte maxIter> = 30;
+
+        $i0 = interfaceinvoke r1.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        $i1 = 10 * $i0;
+
+        $i2 = interfaceinvoke r1.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        $i3 = $i1 * $i2;
+
+        $d2 = (double) $i3;
+
+        $d1 = <org.apache.commons.math3.util.Precision: double EPSILON>;
+
+        d0 = $d2 * $d1;
+
+        $z0 = staticinvoke <org.apache.commons.math3.linear.MatrixUtils: boolean isSymmetric(org.apache.commons.math3.linear.RealMatrix,double)>(r1, d0);
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: boolean isSymmetric> = $z0;
+
+        $z1 = r0.<org.apache.commons.math3.linear.EigenDecomposition: boolean isSymmetric>;
+
+        if $z1 == 0 goto label1;
+
+        specialinvoke r0.<org.apache.commons.math3.linear.EigenDecomposition: void transformToTridiagonal(org.apache.commons.math3.linear.RealMatrix)>(r1);
+
+        $r3 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.TriDiagonalTransformer transformer>;
+
+        $r4 = virtualinvoke $r3.<org.apache.commons.math3.linear.TriDiagonalTransformer: org.apache.commons.math3.linear.RealMatrix getQ()>();
+
+        $r5 = interfaceinvoke $r4.<org.apache.commons.math3.linear.RealMatrix: double[][] getData()>();
+
+        specialinvoke r0.<org.apache.commons.math3.linear.EigenDecomposition: void findEigenVectors(double[][])>($r5);
+
+        goto label2;
+
+     label1:
+        r2 = specialinvoke r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.SchurTransformer transformToSchur(org.apache.commons.math3.linear.RealMatrix)>(r1);
+
+        specialinvoke r0.<org.apache.commons.math3.linear.EigenDecomposition: void findEigenVectorsFromSchur(org.apache.commons.math3.linear.SchurTransformer)>(r2);
+
+     label2:
+        return;
+    }
+
+    public void <init>(org.apache.commons.math3.linear.RealMatrix, double) throws org.apache.commons.math3.exception.MathArithmeticException
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        org.apache.commons.math3.linear.RealMatrix r1;
+        double d0;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        r1 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        d0 := @parameter1: double;
+
+        specialinvoke r0.<org.apache.commons.math3.linear.EigenDecomposition: void <init>(org.apache.commons.math3.linear.RealMatrix)>(r1);
+
+        return;
+    }
+
+    public void <init>(double[], double[])
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        double[] r1, r2, $r5, $r7, $r8;
+        int i0, i1;
+        double[][] r3;
+        java.lang.Object $r4, $r6;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: byte maxIter> = 30;
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: boolean isSymmetric> = 1;
+
+        $r4 = virtualinvoke r1.<java.lang.Object: java.lang.Object clone()>();
+
+        $r5 = (double[]) $r4;
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] main> = $r5;
+
+        $r6 = virtualinvoke r2.<java.lang.Object: java.lang.Object clone()>();
+
+        $r7 = (double[]) $r6;
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] secondary> = $r7;
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.TriDiagonalTransformer transformer> = null;
+
+        i0 = lengthof r1;
+
+        r3 = newmultiarray (double)[i0][i0];
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $r8 = r3[i1];
+
+        $r8[i1] = 1.0;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        specialinvoke r0.<org.apache.commons.math3.linear.EigenDecomposition: void findEigenVectors(double[][])>(r3);
+
+        return;
+    }
+
+    public void <init>(double[], double[], double)
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        double[] r1, r2;
+        double d0;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        d0 := @parameter2: double;
+
+        specialinvoke r0.<org.apache.commons.math3.linear.EigenDecomposition: void <init>(double[],double[])>(r1, r2);
+
+        return;
+    }
+
+    public org.apache.commons.math3.linear.RealMatrix getV()
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        int i0, i1;
+        org.apache.commons.math3.linear.RealMatrix $r1, $r2, $r4, $r7;
+        org.apache.commons.math3.linear.ArrayRealVector[] $r3, $r5;
+        org.apache.commons.math3.linear.ArrayRealVector $r6;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        $r1 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix cachedV>;
+
+        if $r1 != null goto label2;
+
+        $r3 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.ArrayRealVector[] eigenvectors>;
+
+        i0 = lengthof $r3;
+
+        $r4 = staticinvoke <org.apache.commons.math3.linear.MatrixUtils: org.apache.commons.math3.linear.RealMatrix createRealMatrix(int,int)>(i0, i0);
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix cachedV> = $r4;
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $r7 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix cachedV>;
+
+        $r5 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.ArrayRealVector[] eigenvectors>;
+
+        $r6 = $r5[i1];
+
+        interfaceinvoke $r7.<org.apache.commons.math3.linear.RealMatrix: void setColumnVector(int,org.apache.commons.math3.linear.RealVector)>(i1, $r6);
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        $r2 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix cachedV>;
+
+        return $r2;
+    }
+
+    public org.apache.commons.math3.linear.RealMatrix getD()
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        org.apache.commons.math3.linear.RealMatrix $r1, $r2, $r4, $r9, $r11;
+        double[] $r3, $r5, $r6, $r7, $r8, $r10;
+        int $i0, $i1, $i2, $i3, $i4, i5;
+        double $d0, $d1, $d2, $d3;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        $r1 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix cachedD>;
+
+        if $r1 != null goto label4;
+
+        $r3 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $r4 = staticinvoke <org.apache.commons.math3.linear.MatrixUtils: org.apache.commons.math3.linear.RealMatrix createRealDiagonalMatrix(double[])>($r3);
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix cachedD> = $r4;
+
+        i5 = 0;
+
+     label1:
+        $r5 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $i0 = lengthof $r5;
+
+        if i5 >= $i0 goto label4;
+
+        $r6 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $d0 = $r6[i5];
+
+        $i1 = staticinvoke <org.apache.commons.math3.util.Precision: int compareTo(double,double,double)>($d0, 0.0, 1.0E-12);
+
+        if $i1 <= 0 goto label2;
+
+        $r11 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix cachedD>;
+
+        $i4 = i5 + 1;
+
+        $r10 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $d3 = $r10[i5];
+
+        interfaceinvoke $r11.<org.apache.commons.math3.linear.RealMatrix: void setEntry(int,int,double)>(i5, $i4, $d3);
+
+        goto label3;
+
+     label2:
+        $r7 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $d1 = $r7[i5];
+
+        $i2 = staticinvoke <org.apache.commons.math3.util.Precision: int compareTo(double,double,double)>($d1, 0.0, 1.0E-12);
+
+        if $i2 >= 0 goto label3;
+
+        $r9 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix cachedD>;
+
+        $i3 = i5 - 1;
+
+        $r8 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $d2 = $r8[i5];
+
+        interfaceinvoke $r9.<org.apache.commons.math3.linear.RealMatrix: void setEntry(int,int,double)>(i5, $i3, $d2);
+
+     label3:
+        i5 = i5 + 1;
+
+        goto label1;
+
+     label4:
+        $r2 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix cachedD>;
+
+        return $r2;
+    }
+
+    public org.apache.commons.math3.linear.RealMatrix getVT()
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        int i0, i1;
+        org.apache.commons.math3.linear.RealMatrix $r1, $r2, $r4, $r7;
+        org.apache.commons.math3.linear.ArrayRealVector[] $r3, $r5;
+        org.apache.commons.math3.linear.ArrayRealVector $r6;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        $r1 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix cachedVt>;
+
+        if $r1 != null goto label2;
+
+        $r3 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.ArrayRealVector[] eigenvectors>;
+
+        i0 = lengthof $r3;
+
+        $r4 = staticinvoke <org.apache.commons.math3.linear.MatrixUtils: org.apache.commons.math3.linear.RealMatrix createRealMatrix(int,int)>(i0, i0);
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix cachedVt> = $r4;
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $r7 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix cachedVt>;
+
+        $r5 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.ArrayRealVector[] eigenvectors>;
+
+        $r6 = $r5[i1];
+
+        interfaceinvoke $r7.<org.apache.commons.math3.linear.RealMatrix: void setRowVector(int,org.apache.commons.math3.linear.RealVector)>(i1, $r6);
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        $r2 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix cachedVt>;
+
+        return $r2;
+    }
+
+    public boolean hasComplexEigenvalues()
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        double[] $r1, $r2;
+        int $i0, i1;
+        double $d0;
+        boolean $z0;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        i1 = 0;
+
+     label1:
+        $r1 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $i0 = lengthof $r1;
+
+        if i1 >= $i0 goto label3;
+
+        $r2 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $d0 = $r2[i1];
+
+        $z0 = staticinvoke <org.apache.commons.math3.util.Precision: boolean equals(double,double,double)>($d0, 0.0, 1.0E-12);
+
+        if $z0 != 0 goto label2;
+
+        return 1;
+
+     label2:
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label3:
+        return 0;
+    }
+
+    public double[] getRealEigenvalues()
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        double[] $r1, $r3;
+        java.lang.Object $r2;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        $r1 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $r2 = virtualinvoke $r1.<java.lang.Object: java.lang.Object clone()>();
+
+        $r3 = (double[]) $r2;
+
+        return $r3;
+    }
+
+    public double getRealEigenvalue(int)
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        int i0;
+        double[] $r1;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d0 = $r1[i0];
+
+        return $d0;
+    }
+
+    public double[] getImagEigenvalues()
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        double[] $r1, $r3;
+        java.lang.Object $r2;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        $r1 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $r2 = virtualinvoke $r1.<java.lang.Object: java.lang.Object clone()>();
+
+        $r3 = (double[]) $r2;
+
+        return $r3;
+    }
+
+    public double getImagEigenvalue(int)
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        int i0;
+        double[] $r1;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $d0 = $r1[i0];
+
+        return $d0;
+    }
+
+    public org.apache.commons.math3.linear.RealVector getEigenvector(int)
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        int i0;
+        org.apache.commons.math3.linear.ArrayRealVector[] $r1;
+        org.apache.commons.math3.linear.ArrayRealVector $r2, $r3;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.ArrayRealVector[] eigenvectors>;
+
+        $r2 = $r1[i0];
+
+        $r3 = virtualinvoke $r2.<org.apache.commons.math3.linear.ArrayRealVector: org.apache.commons.math3.linear.ArrayRealVector copy()>();
+
+        return $r3;
+    }
+
+    public double getDeterminant()
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        double[] r1;
+        int i0, i1;
+        double d0, d1;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        d1 = 1.0;
+
+        r1 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        i0 = lengthof r1;
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        d0 = r1[i1];
+
+        d1 = d1 * d0;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return d1;
+    }
+
+    public org.apache.commons.math3.linear.RealMatrix getSquareRoot()
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        double[] r1, $r3, $r4, $r7;
+        org.apache.commons.math3.linear.RealMatrix r2, $r5, $r6, r10, r11;
+        boolean $z0;
+        int $i0, $i1, i3;
+        byte $b2;
+        double $d0, d1;
+        org.apache.commons.math3.exception.MathUnsupportedOperationException $r8, $r9;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        $z0 = r0.<org.apache.commons.math3.linear.EigenDecomposition: boolean isSymmetric>;
+
+        if $z0 != 0 goto label1;
+
+        $r9 = new org.apache.commons.math3.exception.MathUnsupportedOperationException;
+
+        specialinvoke $r9.<org.apache.commons.math3.exception.MathUnsupportedOperationException: void <init>()>();
+
+        throw $r9;
+
+     label1:
+        $r3 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $i0 = lengthof $r3;
+
+        r1 = newarray (double)[$i0];
+
+        i3 = 0;
+
+     label2:
+        $r4 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $i1 = lengthof $r4;
+
+        if i3 >= $i1 goto label4;
+
+        $r7 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        d1 = $r7[i3];
+
+        $b2 = d1 cmpg 0.0;
+
+        if $b2 > 0 goto label3;
+
+        $r8 = new org.apache.commons.math3.exception.MathUnsupportedOperationException;
+
+        specialinvoke $r8.<org.apache.commons.math3.exception.MathUnsupportedOperationException: void <init>()>();
+
+        throw $r8;
+
+     label3:
+        $d0 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>(d1);
+
+        r1[i3] = $d0;
+
+        i3 = i3 + 1;
+
+        goto label2;
+
+     label4:
+        r10 = staticinvoke <org.apache.commons.math3.linear.MatrixUtils: org.apache.commons.math3.linear.RealMatrix createRealDiagonalMatrix(double[])>(r1);
+
+        r11 = virtualinvoke r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix getV()>();
+
+        r2 = virtualinvoke r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealMatrix getVT()>();
+
+        $r5 = interfaceinvoke r11.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>(r10);
+
+        $r6 = interfaceinvoke $r5.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>(r2);
+
+        return $r6;
+    }
+
+    public org.apache.commons.math3.linear.DecompositionSolver getSolver()
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        boolean $z0;
+        org.apache.commons.math3.linear.EigenDecomposition$Solver $r1;
+        org.apache.commons.math3.linear.ArrayRealVector[] $r2;
+        double[] $r3, $r4;
+        org.apache.commons.math3.exception.MathUnsupportedOperationException $r5;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        $z0 = virtualinvoke r0.<org.apache.commons.math3.linear.EigenDecomposition: boolean hasComplexEigenvalues()>();
+
+        if $z0 == 0 goto label1;
+
+        $r5 = new org.apache.commons.math3.exception.MathUnsupportedOperationException;
+
+        specialinvoke $r5.<org.apache.commons.math3.exception.MathUnsupportedOperationException: void <init>()>();
+
+        throw $r5;
+
+     label1:
+        $r1 = new org.apache.commons.math3.linear.EigenDecomposition$Solver;
+
+        $r4 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $r3 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $r2 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.ArrayRealVector[] eigenvectors>;
+
+        specialinvoke $r1.<org.apache.commons.math3.linear.EigenDecomposition$Solver: void <init>(double[],double[],org.apache.commons.math3.linear.ArrayRealVector[],org.apache.commons.math3.linear.EigenDecomposition$1)>($r4, $r3, $r2, null);
+
+        return $r1;
+    }
+
+    private void transformToTridiagonal(org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        org.apache.commons.math3.linear.RealMatrix r1;
+        org.apache.commons.math3.linear.TriDiagonalTransformer $r2, $r3, $r5;
+        double[] $r4, $r6;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        r1 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        $r2 = new org.apache.commons.math3.linear.TriDiagonalTransformer;
+
+        specialinvoke $r2.<org.apache.commons.math3.linear.TriDiagonalTransformer: void <init>(org.apache.commons.math3.linear.RealMatrix)>(r1);
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.TriDiagonalTransformer transformer> = $r2;
+
+        $r3 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.TriDiagonalTransformer transformer>;
+
+        $r4 = virtualinvoke $r3.<org.apache.commons.math3.linear.TriDiagonalTransformer: double[] getMainDiagonalRef()>();
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] main> = $r4;
+
+        $r5 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.TriDiagonalTransformer transformer>;
+
+        $r6 = virtualinvoke $r5.<org.apache.commons.math3.linear.TriDiagonalTransformer: double[] getSecondaryDiagonalRef()>();
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] secondary> = $r6;
+
+        return;
+    }
+
+    private void findEigenVectors(double[][])
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        double[][] r1, r2;
+        int i0, $i1, $i2, $i3, $i4, $i11, $i16, $i17, $i19, $i20, $i21, $i22, $i23, $i24, $i26, i32, i33, i34, i35, i36, i37, $i38, i39, i40, i41, i42, i43, i44, i45, i46, i47, i48;
+        double[] r3, $r5, $r6, $r7, $r8, $r9, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r30, $r31, $r32, $r33, $r34, $r35, $r36, $r37, $r38, $r39, $r40, $r41, $r42, $r43, $r48, $r49, $r50, $r51, $r52, $r53, $r54, $r55, $r56, r57;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, $d80, $d81, $d82, $d83, $d84, $d85, d86, d87, d88, d89, d90, d91, d92, d93, d94, d95, d96, d97, d98, d99, d100, d101;
+        java.lang.Object $r4;
+        byte $b5, $b6, $b7, $b8, $b9, $b10, $b12, $b13, $b15, $b18, $b25, $b27, $b28, $b29, $b30, $b31;
+        org.apache.commons.math3.linear.ArrayRealVector[] $r10, $r12;
+        org.apache.commons.math3.linear.ArrayRealVector $r11;
+        org.apache.commons.math3.exception.MaxCountExceededException $r44;
+        org.apache.commons.math3.exception.util.LocalizedFormats $r45;
+        java.lang.Byte $r46;
+        java.lang.Object[] $r47;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        r1 := @parameter0: double[][];
+
+        $r4 = virtualinvoke r1.<java.lang.Object: java.lang.Object clone()>();
+
+        r2 = (double[][]) $r4;
+
+        $r5 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] main>;
+
+        i0 = lengthof $r5;
+
+        $r6 = newarray (double)[i0];
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues> = $r6;
+
+        $r7 = newarray (double)[i0];
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues> = $r7;
+
+        r3 = newarray (double)[i0];
+
+        i32 = 0;
+
+     label01:
+        $i1 = i0 - 1;
+
+        if i32 >= $i1 goto label02;
+
+        $r55 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $r54 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] main>;
+
+        $d84 = $r54[i32];
+
+        $r55[i32] = $d84;
+
+        $r56 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] secondary>;
+
+        $d85 = $r56[i32];
+
+        r3[i32] = $d85;
+
+        i32 = i32 + 1;
+
+        goto label01;
+
+     label02:
+        $r9 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $i3 = i0 - 1;
+
+        $r8 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] main>;
+
+        $i2 = i0 - 1;
+
+        $d1 = $r8[$i2];
+
+        $r9[$i3] = $d1;
+
+        $i4 = i0 - 1;
+
+        r3[$i4] = 0.0;
+
+        d86 = 0.0;
+
+        i33 = 0;
+
+     label03:
+        if i33 >= i0 goto label06;
+
+        $r52 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d78 = $r52[i33];
+
+        $d79 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d78);
+
+        $b30 = $d79 cmpl d86;
+
+        if $b30 <= 0 goto label04;
+
+        $r53 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d83 = $r53[i33];
+
+        d86 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d83);
+
+     label04:
+        $d80 = r3[i33];
+
+        $d81 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d80);
+
+        $b31 = $d81 cmpl d86;
+
+        if $b31 <= 0 goto label05;
+
+        $d82 = r3[i33];
+
+        d86 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d82);
+
+     label05:
+        i33 = i33 + 1;
+
+        goto label03;
+
+     label06:
+        $b5 = d86 cmpl 0.0;
+
+        if $b5 == 0 goto label10;
+
+        i34 = 0;
+
+     label07:
+        if i34 >= i0 goto label10;
+
+        $r50 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d70 = $r50[i34];
+
+        $d71 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d70);
+
+        $d72 = <org.apache.commons.math3.util.Precision: double EPSILON>;
+
+        $d73 = $d72 * d86;
+
+        $b28 = $d71 cmpg $d73;
+
+        if $b28 > 0 goto label08;
+
+        $r51 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $r51[i34] = 0.0;
+
+     label08:
+        $d74 = r3[i34];
+
+        $d75 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d74);
+
+        $d76 = <org.apache.commons.math3.util.Precision: double EPSILON>;
+
+        $d77 = $d76 * d86;
+
+        $b29 = $d75 cmpg $d77;
+
+        if $b29 > 0 goto label09;
+
+        r3[i34] = 0.0;
+
+     label09:
+        i34 = i34 + 1;
+
+        goto label07;
+
+     label10:
+        i35 = 0;
+
+     label11:
+        if i35 >= i0 goto label28;
+
+        i36 = 0;
+
+     label12:
+        i37 = i35;
+
+     label13:
+        $i38 = i0 - 1;
+
+        if i37 >= $i38 goto label15;
+
+        $r48 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d63 = $r48[i37];
+
+        $d64 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d63);
+
+        $r49 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $i26 = i37 + 1;
+
+        $d65 = $r49[$i26];
+
+        $d66 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d65);
+
+        d87 = $d64 + $d66;
+
+        $d67 = r3[i37];
+
+        $d68 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d67);
+
+        $d69 = $d68 + d87;
+
+        $b27 = $d69 cmpl d87;
+
+        if $b27 != 0 goto label14;
+
+        goto label15;
+
+     label14:
+        i37 = i37 + 1;
+
+        goto label13;
+
+     label15:
+        if i37 == i35 goto label27;
+
+        $b10 = r0.<org.apache.commons.math3.linear.EigenDecomposition: byte maxIter>;
+
+        if i36 != $b10 goto label16;
+
+        $r44 = new org.apache.commons.math3.exception.MaxCountExceededException;
+
+        $r45 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats CONVERGENCE_FAILED>;
+
+        $b25 = r0.<org.apache.commons.math3.linear.EigenDecomposition: byte maxIter>;
+
+        $r46 = staticinvoke <java.lang.Byte: java.lang.Byte valueOf(byte)>($b25);
+
+        $r47 = newarray (java.lang.Object)[0];
+
+        specialinvoke $r44.<org.apache.commons.math3.exception.MaxCountExceededException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Number,java.lang.Object[])>($r45, $r46, $r47);
+
+        throw $r44;
+
+     label16:
+        i36 = i36 + 1;
+
+        $r28 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $i11 = i35 + 1;
+
+        $d14 = $r28[$i11];
+
+        $r29 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d13 = $r29[i35];
+
+        $d17 = $d14 - $d13;
+
+        $d15 = r3[i35];
+
+        $d16 = 2.0 * $d15;
+
+        d88 = $d17 / $d16;
+
+        $d18 = d88 * d88;
+
+        $d19 = 1.0 + $d18;
+
+        d89 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d19);
+
+        $b12 = d88 cmpg 0.0;
+
+        if $b12 >= 0 goto label17;
+
+        $r42 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d58 = $r42[i37];
+
+        $r43 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d57 = $r43[i35];
+
+        $d62 = $d58 - $d57;
+
+        $d60 = r3[i35];
+
+        $d59 = d88 - d89;
+
+        $d61 = $d60 / $d59;
+
+        d90 = $d62 + $d61;
+
+        goto label18;
+
+     label17:
+        $r30 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d21 = $r30[i37];
+
+        $r31 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d20 = $r31[i35];
+
+        $d25 = $d21 - $d20;
+
+        $d23 = r3[i35];
+
+        $d22 = d88 + d89;
+
+        $d24 = $d23 / $d22;
+
+        d90 = $d25 + $d24;
+
+     label18:
+        d91 = 0.0;
+
+        d92 = 1.0;
+
+        d93 = 1.0;
+
+        i39 = i37 - 1;
+
+     label19:
+        if i39 < i35 goto label25;
+
+        $d28 = r3[i39];
+
+        d94 = d92 * $d28;
+
+        $d29 = r3[i39];
+
+        d0 = d93 * $d29;
+
+        $d30 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d94);
+
+        $d31 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d90);
+
+        $b15 = $d30 cmpl $d31;
+
+        if $b15 < 0 goto label20;
+
+        d95 = d90 / d94;
+
+        $d54 = d95 * d95;
+
+        $d55 = $d54 + 1.0;
+
+        d89 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d55);
+
+        $i24 = i39 + 1;
+
+        $d56 = d94 * d89;
+
+        r3[$i24] = $d56;
+
+        d92 = 1.0 / d89;
+
+        d93 = d95 * d92;
+
+        goto label21;
+
+     label20:
+        d96 = d94 / d90;
+
+        $d32 = d96 * d96;
+
+        $d33 = $d32 + 1.0;
+
+        d89 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d33);
+
+        $i16 = i39 + 1;
+
+        $d34 = d90 * d89;
+
+        r3[$i16] = $d34;
+
+        d93 = 1.0 / d89;
+
+        d92 = d96 * d93;
+
+     label21:
+        $i17 = i39 + 1;
+
+        $d35 = r3[$i17];
+
+        $b18 = $d35 cmpl 0.0;
+
+        if $b18 != 0 goto label22;
+
+        $r41 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $i23 = i39 + 1;
+
+        $d52 = $r41[$i23];
+
+        $d53 = $d52 - d91;
+
+        $r41[$i23] = $d53;
+
+        r3[i37] = 0.0;
+
+        goto label25;
+
+     label22:
+        $r33 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $i19 = i39 + 1;
+
+        $d36 = $r33[$i19];
+
+        d97 = $d36 - d91;
+
+        $r34 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d37 = $r34[i39];
+
+        $d38 = $d37 - d97;
+
+        $d41 = $d38 * d92;
+
+        $d39 = 2.0 * d93;
+
+        $d40 = $d39 * d0;
+
+        d89 = $d41 + $d40;
+
+        d91 = d92 * d89;
+
+        $r35 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $i20 = i39 + 1;
+
+        $d42 = d97 + d91;
+
+        $r35[$i20] = $d42;
+
+        $d43 = d93 * d89;
+
+        d90 = $d43 - d0;
+
+        i40 = 0;
+
+     label23:
+        if i40 >= i0 goto label24;
+
+        $r36 = r2[i40];
+
+        $i21 = i39 + 1;
+
+        d98 = $r36[$i21];
+
+        $r38 = r2[i40];
+
+        $i22 = i39 + 1;
+
+        $r37 = r2[i40];
+
+        $d44 = $r37[i39];
+
+        $d46 = d92 * $d44;
+
+        $d45 = d93 * d98;
+
+        $d47 = $d46 + $d45;
+
+        $r38[$i22] = $d47;
+
+        $r40 = r2[i40];
+
+        $r39 = r2[i40];
+
+        $d48 = $r39[i39];
+
+        $d50 = d93 * $d48;
+
+        $d49 = d92 * d98;
+
+        $d51 = $d50 - $d49;
+
+        $r40[i39] = $d51;
+
+        i40 = i40 + 1;
+
+        goto label23;
+
+     label24:
+        i39 = i39 + -1;
+
+        goto label19;
+
+     label25:
+        $b13 = d89 cmpl 0.0;
+
+        if $b13 != 0 goto label26;
+
+        if i39 < i35 goto label26;
+
+        goto label27;
+
+     label26:
+        $r32 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d26 = $r32[i35];
+
+        $d27 = $d26 - d91;
+
+        $r32[i35] = $d27;
+
+        r3[i35] = d90;
+
+        r3[i37] = 0.0;
+
+     label27:
+        if i37 != i35 goto label12;
+
+        i35 = i35 + 1;
+
+        goto label11;
+
+     label28:
+        i41 = 0;
+
+     label29:
+        if i41 >= i0 goto label35;
+
+        i42 = i41;
+
+        $r18 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        d99 = $r18[i41];
+
+        i43 = i41 + 1;
+
+     label30:
+        if i43 >= i0 goto label32;
+
+        $r26 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d12 = $r26[i43];
+
+        $b9 = $d12 cmpl d99;
+
+        if $b9 <= 0 goto label31;
+
+        i42 = i43;
+
+        $r27 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        d99 = $r27[i43];
+
+     label31:
+        i43 = i43 + 1;
+
+        goto label30;
+
+     label32:
+        if i42 == i41 goto label34;
+
+        $r20 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $r19 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d10 = $r19[i41];
+
+        $r20[i42] = $d10;
+
+        $r21 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $r21[i41] = d99;
+
+        i44 = 0;
+
+     label33:
+        if i44 >= i0 goto label34;
+
+        $r22 = r2[i44];
+
+        d100 = $r22[i41];
+
+        $r24 = r2[i44];
+
+        $r23 = r2[i44];
+
+        $d11 = $r23[i42];
+
+        $r24[i41] = $d11;
+
+        $r25 = r2[i44];
+
+        $r25[i42] = d100;
+
+        i44 = i44 + 1;
+
+        goto label33;
+
+     label34:
+        i41 = i41 + 1;
+
+        goto label29;
+
+     label35:
+        d101 = 0.0;
+
+        i45 = 0;
+
+     label36:
+        if i45 >= i0 goto label38;
+
+        $r16 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d7 = $r16[i45];
+
+        $d8 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d7);
+
+        $b8 = $d8 cmpl d101;
+
+        if $b8 <= 0 goto label37;
+
+        $r17 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d9 = $r17[i45];
+
+        d101 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d9);
+
+     label37:
+        i45 = i45 + 1;
+
+        goto label36;
+
+     label38:
+        $b6 = d101 cmpl 0.0;
+
+        if $b6 == 0 goto label41;
+
+        i46 = 0;
+
+     label39:
+        if i46 >= i0 goto label41;
+
+        $r14 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d3 = $r14[i46];
+
+        $d4 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d3);
+
+        $d5 = <org.apache.commons.math3.util.Precision: double EPSILON>;
+
+        $d6 = $d5 * d101;
+
+        $b7 = $d4 cmpg $d6;
+
+        if $b7 >= 0 goto label40;
+
+        $r15 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $r15[i46] = 0.0;
+
+     label40:
+        i46 = i46 + 1;
+
+        goto label39;
+
+     label41:
+        $r10 = newarray (org.apache.commons.math3.linear.ArrayRealVector)[i0];
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.ArrayRealVector[] eigenvectors> = $r10;
+
+        r57 = newarray (double)[i0];
+
+        i47 = 0;
+
+     label42:
+        if i47 >= i0 goto label45;
+
+        i48 = 0;
+
+     label43:
+        if i48 >= i0 goto label44;
+
+        $r13 = r2[i48];
+
+        $d2 = $r13[i47];
+
+        r57[i48] = $d2;
+
+        i48 = i48 + 1;
+
+        goto label43;
+
+     label44:
+        $r12 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.ArrayRealVector[] eigenvectors>;
+
+        $r11 = new org.apache.commons.math3.linear.ArrayRealVector;
+
+        specialinvoke $r11.<org.apache.commons.math3.linear.ArrayRealVector: void <init>(double[])>(r57);
+
+        $r12[i47] = $r11;
+
+        i47 = i47 + 1;
+
+        goto label42;
+
+     label45:
+        return;
+    }
+
+    private org.apache.commons.math3.linear.SchurTransformer transformToSchur(org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        org.apache.commons.math3.linear.RealMatrix r1, $r5;
+        double[][] r3;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15;
+        org.apache.commons.math3.linear.SchurTransformer $r4;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, i12;
+        double[] $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20;
+        boolean $z0;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        r1 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        $r4 = new org.apache.commons.math3.linear.SchurTransformer;
+
+        specialinvoke $r4.<org.apache.commons.math3.linear.SchurTransformer: void <init>(org.apache.commons.math3.linear.RealMatrix)>(r1);
+
+        $r5 = virtualinvoke $r4.<org.apache.commons.math3.linear.SchurTransformer: org.apache.commons.math3.linear.RealMatrix getT()>();
+
+        r3 = interfaceinvoke $r5.<org.apache.commons.math3.linear.RealMatrix: double[][] getData()>();
+
+        $i0 = lengthof r3;
+
+        $r6 = newarray (double)[$i0];
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues> = $r6;
+
+        $i1 = lengthof r3;
+
+        $r7 = newarray (double)[$i1];
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues> = $r7;
+
+        i12 = 0;
+
+     label1:
+        $r8 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $i2 = lengthof $r8;
+
+        if i12 >= $i2 goto label5;
+
+        $r9 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $i3 = lengthof $r9;
+
+        $i4 = $i3 - 1;
+
+        if i12 == $i4 goto label2;
+
+        $i5 = i12 + 1;
+
+        $r12 = r3[$i5];
+
+        $d4 = $r12[i12];
+
+        $z0 = staticinvoke <org.apache.commons.math3.util.Precision: boolean equals(double,double,double)>($d4, 0.0, 1.0E-12);
+
+        if $z0 == 0 goto label3;
+
+     label2:
+        $r11 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $r10 = r3[i12];
+
+        $d3 = $r10[i12];
+
+        $r11[i12] = $d3;
+
+        goto label4;
+
+     label3:
+        $i6 = i12 + 1;
+
+        $r13 = r3[$i6];
+
+        $i7 = i12 + 1;
+
+        d0 = $r13[$i7];
+
+        $r14 = r3[i12];
+
+        $d5 = $r14[i12];
+
+        $d6 = $d5 - d0;
+
+        d1 = 0.5 * $d6;
+
+        $d10 = d1 * d1;
+
+        $i8 = i12 + 1;
+
+        $r15 = r3[$i8];
+
+        $d8 = $r15[i12];
+
+        $r16 = r3[i12];
+
+        $i9 = i12 + 1;
+
+        $d7 = $r16[$i9];
+
+        $d9 = $d8 * $d7;
+
+        $d11 = $d10 + $d9;
+
+        $d12 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d11);
+
+        d2 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d12);
+
+        $r17 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d13 = d0 + d1;
+
+        $r17[i12] = $d13;
+
+        $r18 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $r18[i12] = d2;
+
+        $r19 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $i10 = i12 + 1;
+
+        $d14 = d0 + d1;
+
+        $r19[$i10] = $d14;
+
+        $r20 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $i11 = i12 + 1;
+
+        $d15 = neg d2;
+
+        $r20[$i11] = $d15;
+
+        i12 = i12 + 1;
+
+     label4:
+        i12 = i12 + 1;
+
+        goto label1;
+
+     label5:
+        return $r4;
+    }
+
+    private org.apache.commons.math3.complex.Complex cdiv(double, double, double, double)
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        double d0, d1, d2, d3;
+        org.apache.commons.math3.complex.Complex $r1, $r2, $r3;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $r1 = new org.apache.commons.math3.complex.Complex;
+
+        specialinvoke $r1.<org.apache.commons.math3.complex.Complex: void <init>(double,double)>(d0, d1);
+
+        $r2 = new org.apache.commons.math3.complex.Complex;
+
+        specialinvoke $r2.<org.apache.commons.math3.complex.Complex: void <init>(double,double)>(d2, d3);
+
+        $r3 = virtualinvoke $r1.<org.apache.commons.math3.complex.Complex: org.apache.commons.math3.complex.Complex divide(org.apache.commons.math3.complex.Complex)>($r2);
+
+        return $r3;
+    }
+
+    private void findEigenVectorsFromSchur(org.apache.commons.math3.linear.SchurTransformer) throws org.apache.commons.math3.exception.MathArithmeticException
+    {
+        org.apache.commons.math3.linear.EigenDecomposition r0;
+        org.apache.commons.math3.linear.SchurTransformer r1;
+        double[][] r2, r3;
+        int i0, $i1, $i2, $i3, $i5, $i6, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, $i25, $i26, $i27, $i28, $i29, $i30, $i31, $i32, $i33, $i34, $i35, $i36, $i37, $i39, $i40, $i42, i43, i44, i45, i46, i47, i48, i50, i51, i52, i53, $i54, $i56, i58, i59, i60, i61, i62, i63;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, $d80, $d81, $d82, $d83, $d84, $d85, $d86, $d87, $d88, $d89, $d90, $d91, $d92, $d93, $d94, $d95, $d96, $d97, $d98, $d99, $d100, $d101, $d102, $d103, $d104, $d105, $d106, $d107, $d108, $d109, $d110, $d111, $d112, $d113, $d114, $d115, $d116, $d117, $d118, $d119, $d120, $d121, $d122, $d123, $d124, $d125, d126, d127, d128, d129, d130, d131, d132, d133, d134, d135, d136, $d137, d138, $d139, $d140, $d141, d142, d143, d144, d145, d146, d147, $d148, $d149, $d150, $d151, $d152, $d153, $d154, $d155, $d156, $d157, $d158, $d159, $d160, $d161, $d162, $d163, $d164, $d165, $d166, $d167, d168, $d169, $d170, $d171, d172;
+        org.apache.commons.math3.complex.Complex r4, r5, r81, r82;
+        org.apache.commons.math3.linear.RealMatrix $r6, $r7;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5;
+        org.apache.commons.math3.linear.ArrayRealVector[] $r8, $r10;
+        org.apache.commons.math3.linear.ArrayRealVector $r9;
+        double[] $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r30, $r31, $r32, $r33, $r34, $r35, $r36, $r37, $r38, $r39, $r40, $r41, $r42, $r43, $r44, $r45, $r46, $r47, $r48, $r49, $r50, $r51, $r52, $r53, $r54, $r55, $r56, $r57, $r58, $r59, $r60, $r61, $r62, $r63, $r64, $r65, $r66, $r67, $r68, $r69, $r70, $r71, $r72, $r73, $r74, $r75, $r79, $r80, $r83, $r84, $r85, $r86, r87;
+        byte $b4, $b7, $b38, $b41, $b49, $b55, $b57;
+        org.apache.commons.math3.exception.MathArithmeticException $r76;
+        java.lang.Object[] $r77;
+        org.apache.commons.math3.exception.util.LocalizedFormats $r78;
+
+        r0 := @this: org.apache.commons.math3.linear.EigenDecomposition;
+
+        r1 := @parameter0: org.apache.commons.math3.linear.SchurTransformer;
+
+        $r6 = virtualinvoke r1.<org.apache.commons.math3.linear.SchurTransformer: org.apache.commons.math3.linear.RealMatrix getT()>();
+
+        r2 = interfaceinvoke $r6.<org.apache.commons.math3.linear.RealMatrix: double[][] getData()>();
+
+        $r7 = virtualinvoke r1.<org.apache.commons.math3.linear.SchurTransformer: org.apache.commons.math3.linear.RealMatrix getP()>();
+
+        r3 = interfaceinvoke $r7.<org.apache.commons.math3.linear.RealMatrix: double[][] getData()>();
+
+        i0 = lengthof r2;
+
+        d126 = 0.0;
+
+        i43 = 0;
+
+     label01:
+        if i43 >= i0 goto label04;
+
+        $i42 = i43 - 1;
+
+        i44 = staticinvoke <org.apache.commons.math3.util.FastMath: int max(int,int)>($i42, 0);
+
+     label02:
+        if i44 >= i0 goto label03;
+
+        $r79 = r2[i43];
+
+        $d124 = $r79[i44];
+
+        $d125 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d124);
+
+        d126 = d126 + $d125;
+
+        i44 = i44 + 1;
+
+        goto label02;
+
+     label03:
+        i43 = i43 + 1;
+
+        goto label01;
+
+     label04:
+        $z0 = staticinvoke <org.apache.commons.math3.util.Precision: boolean equals(double,double,double)>(d126, 0.0, 1.0E-12);
+
+        if $z0 == 0 goto label05;
+
+        $r76 = new org.apache.commons.math3.exception.MathArithmeticException;
+
+        $r78 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats ZERO_NORM>;
+
+        $r77 = newarray (java.lang.Object)[0];
+
+        specialinvoke $r76.<org.apache.commons.math3.exception.MathArithmeticException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Object[])>($r78, $r77);
+
+        throw $r76;
+
+     label05:
+        d127 = 0.0;
+
+        d128 = 0.0;
+
+        d129 = 0.0;
+
+        i45 = i0 - 1;
+
+     label06:
+        if i45 < 0 goto label32;
+
+        $r15 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        d130 = $r15[i45];
+
+        $r16 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        d131 = $r16[i45];
+
+        $z1 = staticinvoke <org.apache.commons.math3.util.Precision: boolean equals(double,double)>(d131, 0.0);
+
+        if $z1 == 0 goto label18;
+
+        i46 = i45;
+
+        $r58 = r2[i45];
+
+        $r58[i45] = 1.0;
+
+        i47 = i45 - 1;
+
+     label07:
+        if i47 < 0 goto label17;
+
+        $r59 = r2[i47];
+
+        $d89 = $r59[i47];
+
+        d132 = $d89 - d130;
+
+        d127 = 0.0;
+
+        i48 = i46;
+
+     label08:
+        if i48 > i45 goto label09;
+
+        $r74 = r2[i47];
+
+        $d122 = $r74[i48];
+
+        $r75 = r2[i48];
+
+        $d121 = $r75[i45];
+
+        $d123 = $d122 * $d121;
+
+        d127 = d127 + $d123;
+
+        i48 = i48 + 1;
+
+        goto label08;
+
+     label09:
+        $r60 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $d90 = $r60[i47];
+
+        $i35 = staticinvoke <org.apache.commons.math3.util.Precision: int compareTo(double,double,double)>($d90, 0.0, 1.0E-12);
+
+        if $i35 >= 0 goto label10;
+
+        d129 = d132;
+
+        d128 = d127;
+
+        goto label16;
+
+     label10:
+        i46 = i47;
+
+        $r61 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $d91 = $r61[i47];
+
+        $z5 = staticinvoke <org.apache.commons.math3.util.Precision: boolean equals(double,double)>($d91, 0.0);
+
+        if $z5 == 0 goto label12;
+
+        $b41 = d132 cmpl 0.0;
+
+        if $b41 == 0 goto label11;
+
+        $r73 = r2[i47];
+
+        $d119 = neg d127;
+
+        $d120 = $d119 / d132;
+
+        $r73[i45] = $d120;
+
+        goto label14;
+
+     label11:
+        $r72 = r2[i47];
+
+        $d117 = neg d127;
+
+        $d115 = <org.apache.commons.math3.util.Precision: double EPSILON>;
+
+        $d116 = $d115 * d126;
+
+        $d118 = $d117 / $d116;
+
+        $r72[i45] = $d118;
+
+        goto label14;
+
+     label12:
+        $r62 = r2[i47];
+
+        $i36 = i47 + 1;
+
+        d133 = $r62[$i36];
+
+        $i37 = i47 + 1;
+
+        $r63 = r2[$i37];
+
+        d134 = $r63[i47];
+
+        $r64 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d92 = $r64[i47];
+
+        $d95 = $d92 - d130;
+
+        $r65 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d93 = $r65[i47];
+
+        $d94 = $d93 - d130;
+
+        $d99 = $d95 * $d94;
+
+        $r66 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $d97 = $r66[i47];
+
+        $r67 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $d96 = $r67[i47];
+
+        $d98 = $d97 * $d96;
+
+        d135 = $d99 + $d98;
+
+        $d101 = d133 * d128;
+
+        $d100 = d129 * d127;
+
+        $d102 = $d101 - $d100;
+
+        d136 = $d102 / d135;
+
+        $r68 = r2[i47];
+
+        $r68[i45] = d136;
+
+        $d103 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d133);
+
+        $d104 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d129);
+
+        $b38 = $d103 cmpl $d104;
+
+        if $b38 <= 0 goto label13;
+
+        $i40 = i47 + 1;
+
+        $r71 = r2[$i40];
+
+        $d112 = neg d127;
+
+        $d111 = d132 * d136;
+
+        $d113 = $d112 - $d111;
+
+        $d114 = $d113 / d133;
+
+        $r71[i45] = $d114;
+
+        goto label14;
+
+     label13:
+        $i39 = i47 + 1;
+
+        $r69 = r2[$i39];
+
+        $d106 = neg d128;
+
+        $d105 = d134 * d136;
+
+        $d107 = $d106 - $d105;
+
+        $d108 = $d107 / d129;
+
+        $r69[i45] = $d108;
+
+     label14:
+        $r80 = r2[i47];
+
+        $d137 = $r80[i45];
+
+        d138 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d137);
+
+        $d139 = <org.apache.commons.math3.util.Precision: double EPSILON>;
+
+        $d140 = $d139 * d138;
+
+        $d141 = $d140 * d138;
+
+        $b49 = $d141 cmpl 1.0;
+
+        if $b49 <= 0 goto label16;
+
+        i50 = i47;
+
+     label15:
+        if i50 > i45 goto label16;
+
+        $r70 = r2[i50];
+
+        $d109 = $r70[i45];
+
+        $d110 = $d109 / d138;
+
+        $r70[i45] = $d110;
+
+        i50 = i50 + 1;
+
+        goto label15;
+
+     label16:
+        i47 = i47 + -1;
+
+        goto label07;
+
+     label17:
+        goto label31;
+
+     label18:
+        $b4 = d131 cmpg 0.0;
+
+        if $b4 >= 0 goto label31;
+
+        i51 = i45 - 1;
+
+        $r17 = r2[i45];
+
+        $i5 = i45 - 1;
+
+        $d5 = $r17[$i5];
+
+        $d6 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d5);
+
+        $i6 = i45 - 1;
+
+        $r18 = r2[$i6];
+
+        $d7 = $r18[i45];
+
+        $d8 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d7);
+
+        $b7 = $d6 cmpl $d8;
+
+        if $b7 <= 0 goto label19;
+
+        $i30 = i45 - 1;
+
+        $r54 = r2[$i30];
+
+        $i32 = i45 - 1;
+
+        $r53 = r2[i45];
+
+        $i31 = i45 - 1;
+
+        $d82 = $r53[$i31];
+
+        $d83 = d131 / $d82;
+
+        $r54[$i32] = $d83;
+
+        $i33 = i45 - 1;
+
+        $r57 = r2[$i33];
+
+        $r55 = r2[i45];
+
+        $d84 = $r55[i45];
+
+        $d85 = $d84 - d130;
+
+        $d87 = neg $d85;
+
+        $r56 = r2[i45];
+
+        $i34 = i45 - 1;
+
+        $d86 = $r56[$i34];
+
+        $d88 = $d87 / $d86;
+
+        $r57[i45] = $d88;
+
+        goto label20;
+
+     label19:
+        $i8 = i45 - 1;
+
+        $r19 = r2[$i8];
+
+        $d9 = $r19[i45];
+
+        $d12 = neg $d9;
+
+        $i9 = i45 - 1;
+
+        $r20 = r2[$i9];
+
+        $i10 = i45 - 1;
+
+        $d10 = $r20[$i10];
+
+        $d11 = $d10 - d130;
+
+        r81 = specialinvoke r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.complex.Complex cdiv(double,double,double,double)>(0.0, $d12, $d11, d131);
+
+        $i11 = i45 - 1;
+
+        $r21 = r2[$i11];
+
+        $i12 = i45 - 1;
+
+        $d13 = virtualinvoke r81.<org.apache.commons.math3.complex.Complex: double getReal()>();
+
+        $r21[$i12] = $d13;
+
+        $i13 = i45 - 1;
+
+        $r22 = r2[$i13];
+
+        $d14 = virtualinvoke r81.<org.apache.commons.math3.complex.Complex: double getImaginary()>();
+
+        $r22[i45] = $d14;
+
+     label20:
+        $r23 = r2[i45];
+
+        $i14 = i45 - 1;
+
+        $r23[$i14] = 0.0;
+
+        $r24 = r2[i45];
+
+        $r24[i45] = 1.0;
+
+        i52 = i45 - 2;
+
+     label21:
+        if i52 < 0 goto label31;
+
+        d142 = 0.0;
+
+        d143 = 0.0;
+
+        i53 = i51;
+
+     label22:
+        if i53 > i45 goto label23;
+
+        $r49 = r2[i52];
+
+        $d77 = $r49[i53];
+
+        $r50 = r2[i53];
+
+        $i29 = i45 - 1;
+
+        $d76 = $r50[$i29];
+
+        $d78 = $d77 * $d76;
+
+        d142 = d142 + $d78;
+
+        $r51 = r2[i52];
+
+        $d80 = $r51[i53];
+
+        $r52 = r2[i53];
+
+        $d79 = $r52[i45];
+
+        $d81 = $d80 * $d79;
+
+        d143 = d143 + $d81;
+
+        i53 = i53 + 1;
+
+        goto label22;
+
+     label23:
+        $r25 = r2[i52];
+
+        $d15 = $r25[i52];
+
+        d144 = $d15 - d130;
+
+        $r26 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $d16 = $r26[i52];
+
+        $i15 = staticinvoke <org.apache.commons.math3.util.Precision: int compareTo(double,double,double)>($d16, 0.0, 1.0E-12);
+
+        if $i15 >= 0 goto label24;
+
+        d129 = d144;
+
+        d127 = d142;
+
+        d128 = d143;
+
+        goto label30;
+
+     label24:
+        i51 = i52;
+
+        $r27 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $d17 = $r27[i52];
+
+        $z2 = staticinvoke <org.apache.commons.math3.util.Precision: boolean equals(double,double)>($d17, 0.0);
+
+        if $z2 == 0 goto label25;
+
+        $d73 = neg d142;
+
+        $d72 = neg d143;
+
+        r82 = specialinvoke r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.complex.Complex cdiv(double,double,double,double)>($d73, $d72, d144, d131);
+
+        $r47 = r2[i52];
+
+        $i28 = i45 - 1;
+
+        $d74 = virtualinvoke r82.<org.apache.commons.math3.complex.Complex: double getReal()>();
+
+        $r47[$i28] = $d74;
+
+        $r48 = r2[i52];
+
+        $d75 = virtualinvoke r82.<org.apache.commons.math3.complex.Complex: double getImaginary()>();
+
+        $r48[i45] = $d75;
+
+        goto label28;
+
+     label25:
+        $r28 = r2[i52];
+
+        $i16 = i52 + 1;
+
+        d145 = $r28[$i16];
+
+        $i17 = i52 + 1;
+
+        $r29 = r2[$i17];
+
+        d146 = $r29[i52];
+
+        $r30 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d18 = $r30[i52];
+
+        $d21 = $d18 - d130;
+
+        $r31 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d19 = $r31[i52];
+
+        $d20 = $d19 - d130;
+
+        $d25 = $d21 * $d20;
+
+        $r32 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $d23 = $r32[i52];
+
+        $r33 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] imagEigenvalues>;
+
+        $d22 = $r33[i52];
+
+        $d24 = $d23 * $d22;
+
+        $d27 = $d25 + $d24;
+
+        $d26 = d131 * d131;
+
+        d147 = $d27 - $d26;
+
+        $r34 = r0.<org.apache.commons.math3.linear.EigenDecomposition: double[] realEigenvalues>;
+
+        $d28 = $r34[i52];
+
+        $d29 = $d28 - d130;
+
+        $d30 = $d29 * 2.0;
+
+        d0 = $d30 * d131;
+
+        $z3 = staticinvoke <org.apache.commons.math3.util.Precision: boolean equals(double,double)>(d147, 0.0);
+
+        if $z3 == 0 goto label26;
+
+        $z4 = staticinvoke <org.apache.commons.math3.util.Precision: boolean equals(double,double)>(d0, 0.0);
+
+        if $z4 == 0 goto label26;
+
+        $d61 = <org.apache.commons.math3.util.Precision: double EPSILON>;
+
+        $d62 = $d61 * d126;
+
+        $d63 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d144);
+
+        $d64 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d131);
+
+        $d65 = $d63 + $d64;
+
+        $d66 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d145);
+
+        $d67 = $d65 + $d66;
+
+        $d68 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d146);
+
+        $d69 = $d67 + $d68;
+
+        $d70 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d129);
+
+        $d71 = $d69 + $d70;
+
+        d147 = $d62 * $d71;
+
+     label26:
+        $d148 = d145 * d127;
+
+        $d149 = d129 * d142;
+
+        $d150 = $d148 - $d149;
+
+        $d151 = d131 * d143;
+
+        $d152 = $d150 + $d151;
+
+        $d153 = d145 * d128;
+
+        $d154 = d129 * d143;
+
+        $d155 = $d153 - $d154;
+
+        $d156 = d131 * d142;
+
+        $d157 = $d155 - $d156;
+
+        r4 = specialinvoke r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.complex.Complex cdiv(double,double,double,double)>($d152, $d157, d147, d0);
+
+        $r83 = r2[i52];
+
+        $i54 = i45 - 1;
+
+        $d158 = virtualinvoke r4.<org.apache.commons.math3.complex.Complex: double getReal()>();
+
+        $r83[$i54] = $d158;
+
+        $r84 = r2[i52];
+
+        $d159 = virtualinvoke r4.<org.apache.commons.math3.complex.Complex: double getImaginary()>();
+
+        $r84[i45] = $d159;
+
+        $d160 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d145);
+
+        $d161 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d129);
+
+        $d162 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d131);
+
+        $d163 = $d161 + $d162;
+
+        $b55 = $d160 cmpl $d163;
+
+        if $b55 <= 0 goto label27;
+
+        $i23 = i52 + 1;
+
+        $r43 = r2[$i23];
+
+        $i25 = i45 - 1;
+
+        $d47 = neg d142;
+
+        $r41 = r2[i52];
+
+        $i24 = i45 - 1;
+
+        $d45 = $r41[$i24];
+
+        $d46 = d144 * $d45;
+
+        $d50 = $d47 - $d46;
+
+        $r42 = r2[i52];
+
+        $d48 = $r42[i45];
+
+        $d49 = d131 * $d48;
+
+        $d51 = $d50 + $d49;
+
+        $d52 = $d51 / d145;
+
+        $r43[$i25] = $d52;
+
+        $i26 = i52 + 1;
+
+        $r46 = r2[$i26];
+
+        $d55 = neg d143;
+
+        $r44 = r2[i52];
+
+        $d53 = $r44[i45];
+
+        $d54 = d144 * $d53;
+
+        $d58 = $d55 - $d54;
+
+        $r45 = r2[i52];
+
+        $i27 = i45 - 1;
+
+        $d56 = $r45[$i27];
+
+        $d57 = d131 * $d56;
+
+        $d59 = $d58 - $d57;
+
+        $d60 = $d59 / d145;
+
+        $r46[i45] = $d60;
+
+        goto label28;
+
+     label27:
+        $d33 = neg d127;
+
+        $r35 = r2[i52];
+
+        $i18 = i45 - 1;
+
+        $d31 = $r35[$i18];
+
+        $d32 = d146 * $d31;
+
+        $d38 = $d33 - $d32;
+
+        $d36 = neg d128;
+
+        $r36 = r2[i52];
+
+        $d34 = $r36[i45];
+
+        $d35 = d146 * $d34;
+
+        $d37 = $d36 - $d35;
+
+        r5 = specialinvoke r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.complex.Complex cdiv(double,double,double,double)>($d38, $d37, d129, d131);
+
+        $i19 = i52 + 1;
+
+        $r37 = r2[$i19];
+
+        $i20 = i45 - 1;
+
+        $d39 = virtualinvoke r5.<org.apache.commons.math3.complex.Complex: double getReal()>();
+
+        $r37[$i20] = $d39;
+
+        $i21 = i52 + 1;
+
+        $r38 = r2[$i21];
+
+        $d40 = virtualinvoke r5.<org.apache.commons.math3.complex.Complex: double getImaginary()>();
+
+        $r38[i45] = $d40;
+
+     label28:
+        $r85 = r2[i52];
+
+        $i56 = i45 - 1;
+
+        $d164 = $r85[$i56];
+
+        $d165 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d164);
+
+        $r86 = r2[i52];
+
+        $d166 = $r86[i45];
+
+        $d167 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d166);
+
+        d168 = staticinvoke <org.apache.commons.math3.util.FastMath: double max(double,double)>($d165, $d167);
+
+        $d169 = <org.apache.commons.math3.util.Precision: double EPSILON>;
+
+        $d170 = $d169 * d168;
+
+        $d171 = $d170 * d168;
+
+        $b57 = $d171 cmpl 1.0;
+
+        if $b57 <= 0 goto label30;
+
+        i58 = i52;
+
+     label29:
+        if i58 > i45 goto label30;
+
+        $r39 = r2[i58];
+
+        $i22 = i45 - 1;
+
+        $d41 = $r39[$i22];
+
+        $d42 = $d41 / d168;
+
+        $r39[$i22] = $d42;
+
+        $r40 = r2[i58];
+
+        $d43 = $r40[i45];
+
+        $d44 = $d43 / d168;
+
+        $r40[i45] = $d44;
+
+        i58 = i58 + 1;
+
+        goto label29;
+
+     label30:
+        i52 = i52 + -1;
+
+        goto label21;
+
+     label31:
+        i45 = i45 + -1;
+
+        goto label06;
+
+     label32:
+        i59 = i0 - 1;
+
+     label33:
+        if i59 < 0 goto label38;
+
+        i60 = 0;
+
+     label34:
+        $i1 = i0 - 1;
+
+        if i60 > $i1 goto label37;
+
+        d172 = 0.0;
+
+        i61 = 0;
+
+     label35:
+        $i2 = i0 - 1;
+
+        $i3 = staticinvoke <org.apache.commons.math3.util.FastMath: int min(int,int)>(i59, $i2);
+
+        if i61 > $i3 goto label36;
+
+        $r13 = r3[i60];
+
+        $d3 = $r13[i61];
+
+        $r14 = r2[i61];
+
+        $d2 = $r14[i59];
+
+        $d4 = $d3 * $d2;
+
+        d172 = d172 + $d4;
+
+        i61 = i61 + 1;
+
+        goto label35;
+
+     label36:
+        $r12 = r3[i60];
+
+        $r12[i59] = d172;
+
+        i60 = i60 + 1;
+
+        goto label34;
+
+     label37:
+        i59 = i59 + -1;
+
+        goto label33;
+
+     label38:
+        $r8 = newarray (org.apache.commons.math3.linear.ArrayRealVector)[i0];
+
+        r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.ArrayRealVector[] eigenvectors> = $r8;
+
+        r87 = newarray (double)[i0];
+
+        i62 = 0;
+
+     label39:
+        if i62 >= i0 goto label42;
+
+        i63 = 0;
+
+     label40:
+        if i63 >= i0 goto label41;
+
+        $r11 = r3[i63];
+
+        $d1 = $r11[i62];
+
+        r87[i63] = $d1;
+
+        i63 = i63 + 1;
+
+        goto label40;
+
+     label41:
+        $r10 = r0.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.ArrayRealVector[] eigenvectors>;
+
+        $r9 = new org.apache.commons.math3.linear.ArrayRealVector;
+
+        specialinvoke $r9.<org.apache.commons.math3.linear.ArrayRealVector: void <init>(double[])>(r87);
+
+        $r10[i62] = $r9;
+
+        i62 = i62 + 1;
+
+        goto label39;
+
+     label42:
+        return;
+    }
+
+    public static void <clinit>()
+    {
+        <org.apache.commons.math3.linear.EigenDecomposition: double EPSILON> = 1.0E-12;
+
+        return;
+    }
+}

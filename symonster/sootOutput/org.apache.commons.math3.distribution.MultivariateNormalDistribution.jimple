@@ -1,0 +1,454 @@
+public class org.apache.commons.math3.distribution.MultivariateNormalDistribution extends org.apache.commons.math3.distribution.AbstractMultivariateRealDistribution
+{
+    private final double[] means;
+    private final org.apache.commons.math3.linear.RealMatrix covarianceMatrix;
+    private final org.apache.commons.math3.linear.RealMatrix covarianceMatrixInverse;
+    private final double covarianceMatrixDeterminant;
+    private final org.apache.commons.math3.linear.RealMatrix samplingMatrix;
+
+    public void <init>(double[], double[][]) throws org.apache.commons.math3.linear.SingularMatrixException, org.apache.commons.math3.exception.DimensionMismatchException, org.apache.commons.math3.linear.NonPositiveDefiniteMatrixException
+    {
+        org.apache.commons.math3.distribution.MultivariateNormalDistribution r0;
+        double[] r1;
+        double[][] r2;
+        org.apache.commons.math3.random.Well19937c $r3;
+
+        r0 := @this: org.apache.commons.math3.distribution.MultivariateNormalDistribution;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[][];
+
+        $r3 = new org.apache.commons.math3.random.Well19937c;
+
+        specialinvoke $r3.<org.apache.commons.math3.random.Well19937c: void <init>()>();
+
+        specialinvoke r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: void <init>(org.apache.commons.math3.random.RandomGenerator,double[],double[][])>($r3, r1, r2);
+
+        return;
+    }
+
+    public void <init>(org.apache.commons.math3.random.RandomGenerator, double[], double[][]) throws org.apache.commons.math3.linear.SingularMatrixException, org.apache.commons.math3.exception.DimensionMismatchException, org.apache.commons.math3.linear.NonPositiveDefiniteMatrixException
+    {
+        org.apache.commons.math3.distribution.MultivariateNormalDistribution r0;
+        org.apache.commons.math3.random.RandomGenerator r1;
+        double[] r2, r4, $r5, $r15, $r17, r21;
+        double[][] r3;
+        int i0, $i1, $i2, $i3, $i5, $i6, $i7, i8, i9, i10, i11, i12;
+        double d0, $d1, $d2, $d3, $d4;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r6, $r11;
+        org.apache.commons.math3.linear.EigenDecomposition $r7;
+        org.apache.commons.math3.linear.RealMatrix $r8, $r10, $r12, r22;
+        org.apache.commons.math3.linear.DecompositionSolver $r9;
+        org.apache.commons.math3.linear.RealVector $r13;
+        byte $b4;
+        org.apache.commons.math3.linear.NonPositiveDefiniteMatrixException $r14;
+        org.apache.commons.math3.exception.DimensionMismatchException $r16, $r18;
+
+        r0 := @this: org.apache.commons.math3.distribution.MultivariateNormalDistribution;
+
+        r1 := @parameter0: org.apache.commons.math3.random.RandomGenerator;
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[][];
+
+        $i1 = lengthof r2;
+
+        specialinvoke r0.<org.apache.commons.math3.distribution.AbstractMultivariateRealDistribution: void <init>(org.apache.commons.math3.random.RandomGenerator,int)>(r1, $i1);
+
+        i0 = lengthof r2;
+
+        $i2 = lengthof r3;
+
+        if $i2 == i0 goto label01;
+
+        $r18 = new org.apache.commons.math3.exception.DimensionMismatchException;
+
+        $i7 = lengthof r3;
+
+        specialinvoke $r18.<org.apache.commons.math3.exception.DimensionMismatchException: void <init>(int,int)>($i7, i0);
+
+        throw $r18;
+
+     label01:
+        i8 = 0;
+
+     label02:
+        if i8 >= i0 goto label04;
+
+        $r15 = r3[i8];
+
+        $i5 = lengthof $r15;
+
+        if i0 == $i5 goto label03;
+
+        $r16 = new org.apache.commons.math3.exception.DimensionMismatchException;
+
+        $r17 = r3[i8];
+
+        $i6 = lengthof $r17;
+
+        specialinvoke $r16.<org.apache.commons.math3.exception.DimensionMismatchException: void <init>(int,int)>($i6, i0);
+
+        throw $r16;
+
+     label03:
+        i8 = i8 + 1;
+
+        goto label02;
+
+     label04:
+        $r5 = staticinvoke <org.apache.commons.math3.util.MathArrays: double[] copyOf(double[])>(r2);
+
+        r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: double[] means> = $r5;
+
+        $r6 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r6.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][])>(r3);
+
+        r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: org.apache.commons.math3.linear.RealMatrix covarianceMatrix> = $r6;
+
+        $r7 = new org.apache.commons.math3.linear.EigenDecomposition;
+
+        $r8 = r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: org.apache.commons.math3.linear.RealMatrix covarianceMatrix>;
+
+        specialinvoke $r7.<org.apache.commons.math3.linear.EigenDecomposition: void <init>(org.apache.commons.math3.linear.RealMatrix)>($r8);
+
+        $r9 = virtualinvoke $r7.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.DecompositionSolver getSolver()>();
+
+        $r10 = interfaceinvoke $r9.<org.apache.commons.math3.linear.DecompositionSolver: org.apache.commons.math3.linear.RealMatrix getInverse()>();
+
+        r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: org.apache.commons.math3.linear.RealMatrix covarianceMatrixInverse> = $r10;
+
+        $d1 = virtualinvoke $r7.<org.apache.commons.math3.linear.EigenDecomposition: double getDeterminant()>();
+
+        r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: double covarianceMatrixDeterminant> = $d1;
+
+        r4 = virtualinvoke $r7.<org.apache.commons.math3.linear.EigenDecomposition: double[] getRealEigenvalues()>();
+
+        i9 = 0;
+
+     label05:
+        $i3 = lengthof r4;
+
+        if i9 >= $i3 goto label07;
+
+        $d3 = r4[i9];
+
+        $b4 = $d3 cmpg 0.0;
+
+        if $b4 >= 0 goto label06;
+
+        $r14 = new org.apache.commons.math3.linear.NonPositiveDefiniteMatrixException;
+
+        $d4 = r4[i9];
+
+        specialinvoke $r14.<org.apache.commons.math3.linear.NonPositiveDefiniteMatrixException: void <init>(double,int,double)>($d4, i9, 0.0);
+
+        throw $r14;
+
+     label06:
+        i9 = i9 + 1;
+
+        goto label05;
+
+     label07:
+        $r11 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r11.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(int,int)>(i0, i0);
+
+        i10 = 0;
+
+     label08:
+        if i10 >= i0 goto label09;
+
+        $r13 = virtualinvoke $r7.<org.apache.commons.math3.linear.EigenDecomposition: org.apache.commons.math3.linear.RealVector getEigenvector(int)>(i10);
+
+        r21 = virtualinvoke $r13.<org.apache.commons.math3.linear.RealVector: double[] toArray()>();
+
+        virtualinvoke $r11.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void setColumn(int,double[])>(i10, r21);
+
+        i10 = i10 + 1;
+
+        goto label08;
+
+     label09:
+        r22 = virtualinvoke $r11.<org.apache.commons.math3.linear.Array2DRowRealMatrix: org.apache.commons.math3.linear.RealMatrix transpose()>();
+
+        i11 = 0;
+
+     label10:
+        if i11 >= i0 goto label13;
+
+        $d2 = r4[i11];
+
+        d0 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d2);
+
+        i12 = 0;
+
+     label11:
+        if i12 >= i0 goto label12;
+
+        interfaceinvoke r22.<org.apache.commons.math3.linear.RealMatrix: void multiplyEntry(int,int,double)>(i11, i12, d0);
+
+        i12 = i12 + 1;
+
+        goto label11;
+
+     label12:
+        i11 = i11 + 1;
+
+        goto label10;
+
+     label13:
+        $r12 = virtualinvoke $r11.<org.apache.commons.math3.linear.Array2DRowRealMatrix: org.apache.commons.math3.linear.RealMatrix multiply(org.apache.commons.math3.linear.RealMatrix)>(r22);
+
+        r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: org.apache.commons.math3.linear.RealMatrix samplingMatrix> = $r12;
+
+        return;
+    }
+
+    public double[] getMeans()
+    {
+        org.apache.commons.math3.distribution.MultivariateNormalDistribution r0;
+        double[] $r1, $r2;
+
+        r0 := @this: org.apache.commons.math3.distribution.MultivariateNormalDistribution;
+
+        $r1 = r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: double[] means>;
+
+        $r2 = staticinvoke <org.apache.commons.math3.util.MathArrays: double[] copyOf(double[])>($r1);
+
+        return $r2;
+    }
+
+    public org.apache.commons.math3.linear.RealMatrix getCovariances()
+    {
+        org.apache.commons.math3.distribution.MultivariateNormalDistribution r0;
+        org.apache.commons.math3.linear.RealMatrix $r1, $r2;
+
+        r0 := @this: org.apache.commons.math3.distribution.MultivariateNormalDistribution;
+
+        $r1 = r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: org.apache.commons.math3.linear.RealMatrix covarianceMatrix>;
+
+        $r2 = interfaceinvoke $r1.<org.apache.commons.math3.linear.RealMatrix: org.apache.commons.math3.linear.RealMatrix copy()>();
+
+        return $r2;
+    }
+
+    public double density(double[]) throws org.apache.commons.math3.exception.DimensionMismatchException
+    {
+        org.apache.commons.math3.distribution.MultivariateNormalDistribution r0;
+        double[] r1;
+        int i0, $i1, $i2;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7;
+        org.apache.commons.math3.exception.DimensionMismatchException $r2;
+
+        r0 := @this: org.apache.commons.math3.distribution.MultivariateNormalDistribution;
+
+        r1 := @parameter0: double[];
+
+        i0 = virtualinvoke r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: int getDimension()>();
+
+        $i1 = lengthof r1;
+
+        if $i1 == i0 goto label1;
+
+        $r2 = new org.apache.commons.math3.exception.DimensionMismatchException;
+
+        $i2 = lengthof r1;
+
+        specialinvoke $r2.<org.apache.commons.math3.exception.DimensionMismatchException: void <init>(int,int)>($i2, i0);
+
+        throw $r2;
+
+     label1:
+        $d0 = (double) i0;
+
+        $d1 = -0.5 * $d0;
+
+        $d2 = staticinvoke <org.apache.commons.math3.util.FastMath: double pow(double,double)>(6.283185307179586, $d1);
+
+        $d3 = r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: double covarianceMatrixDeterminant>;
+
+        $d4 = staticinvoke <org.apache.commons.math3.util.FastMath: double pow(double,double)>($d3, -0.5);
+
+        $d5 = $d2 * $d4;
+
+        $d6 = specialinvoke r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: double getExponentTerm(double[])>(r1);
+
+        $d7 = $d5 * $d6;
+
+        return $d7;
+    }
+
+    public double[] getStandardDeviations()
+    {
+        org.apache.commons.math3.distribution.MultivariateNormalDistribution r0;
+        int i0, i1;
+        double[] r1, $r4;
+        double[][] r2;
+        org.apache.commons.math3.linear.RealMatrix $r3;
+        double $d0, $d1;
+
+        r0 := @this: org.apache.commons.math3.distribution.MultivariateNormalDistribution;
+
+        i0 = virtualinvoke r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: int getDimension()>();
+
+        r1 = newarray (double)[i0];
+
+        $r3 = r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: org.apache.commons.math3.linear.RealMatrix covarianceMatrix>;
+
+        r2 = interfaceinvoke $r3.<org.apache.commons.math3.linear.RealMatrix: double[][] getData()>();
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $r4 = r2[i1];
+
+        $d0 = $r4[i1];
+
+        $d1 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d0);
+
+        r1[i1] = $d1;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return r1;
+    }
+
+    public double[] sample()
+    {
+        org.apache.commons.math3.distribution.MultivariateNormalDistribution r0;
+        int i0, i1, i2;
+        double[] r1, $r3, r5;
+        org.apache.commons.math3.linear.RealMatrix $r2;
+        double $d0, $d1, $d2, $d3;
+        org.apache.commons.math3.random.RandomGenerator $r4;
+
+        r0 := @this: org.apache.commons.math3.distribution.MultivariateNormalDistribution;
+
+        i0 = virtualinvoke r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: int getDimension()>();
+
+        r1 = newarray (double)[i0];
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $r4 = r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: org.apache.commons.math3.random.RandomGenerator random>;
+
+        $d3 = interfaceinvoke $r4.<org.apache.commons.math3.random.RandomGenerator: double nextGaussian()>();
+
+        r1[i1] = $d3;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        $r2 = r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: org.apache.commons.math3.linear.RealMatrix samplingMatrix>;
+
+        r5 = interfaceinvoke $r2.<org.apache.commons.math3.linear.RealMatrix: double[] operate(double[])>(r1);
+
+        i2 = 0;
+
+     label3:
+        if i2 >= i0 goto label4;
+
+        $d1 = r5[i2];
+
+        $r3 = r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: double[] means>;
+
+        $d0 = $r3[i2];
+
+        $d2 = $d1 + $d0;
+
+        r5[i2] = $d2;
+
+        i2 = i2 + 1;
+
+        goto label3;
+
+     label4:
+        return r5;
+    }
+
+    private double getExponentTerm(double[])
+    {
+        org.apache.commons.math3.distribution.MultivariateNormalDistribution r0;
+        double[] r1, r2, $r4, r5;
+        int $i0, $i1, $i2, i3, i4;
+        org.apache.commons.math3.linear.RealMatrix $r3;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, d8;
+
+        r0 := @this: org.apache.commons.math3.distribution.MultivariateNormalDistribution;
+
+        r1 := @parameter0: double[];
+
+        $i0 = lengthof r1;
+
+        r2 = newarray (double)[$i0];
+
+        i3 = 0;
+
+     label1:
+        $i1 = lengthof r2;
+
+        if i3 >= $i1 goto label2;
+
+        $d5 = r1[i3];
+
+        $r4 = virtualinvoke r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: double[] getMeans()>();
+
+        $d6 = $r4[i3];
+
+        $d7 = $d5 - $d6;
+
+        r2[i3] = $d7;
+
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label2:
+        $r3 = r0.<org.apache.commons.math3.distribution.MultivariateNormalDistribution: org.apache.commons.math3.linear.RealMatrix covarianceMatrixInverse>;
+
+        r5 = interfaceinvoke $r3.<org.apache.commons.math3.linear.RealMatrix: double[] preMultiply(double[])>(r2);
+
+        d8 = 0.0;
+
+        i4 = 0;
+
+     label3:
+        $i2 = lengthof r5;
+
+        if i4 >= $i2 goto label4;
+
+        $d3 = r5[i4];
+
+        $d2 = r2[i4];
+
+        $d4 = $d3 * $d2;
+
+        d8 = d8 + $d4;
+
+        i4 = i4 + 1;
+
+        goto label3;
+
+     label4:
+        $d0 = -0.5 * d8;
+
+        $d1 = staticinvoke <org.apache.commons.math3.util.FastMath: double exp(double)>($d0);
+
+        return $d1;
+    }
+}

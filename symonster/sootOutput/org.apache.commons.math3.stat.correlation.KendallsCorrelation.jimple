@@ -1,0 +1,518 @@
+public class org.apache.commons.math3.stat.correlation.KendallsCorrelation extends java.lang.Object
+{
+    private final org.apache.commons.math3.linear.RealMatrix correlationMatrix;
+
+    public void <init>()
+    {
+        org.apache.commons.math3.stat.correlation.KendallsCorrelation r0;
+
+        r0 := @this: org.apache.commons.math3.stat.correlation.KendallsCorrelation;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<org.apache.commons.math3.stat.correlation.KendallsCorrelation: org.apache.commons.math3.linear.RealMatrix correlationMatrix> = null;
+
+        return;
+    }
+
+    public void <init>(double[][])
+    {
+        org.apache.commons.math3.stat.correlation.KendallsCorrelation r0;
+        double[][] r1;
+        org.apache.commons.math3.linear.RealMatrix $r2;
+
+        r0 := @this: org.apache.commons.math3.stat.correlation.KendallsCorrelation;
+
+        r1 := @parameter0: double[][];
+
+        $r2 = staticinvoke <org.apache.commons.math3.linear.MatrixUtils: org.apache.commons.math3.linear.RealMatrix createRealMatrix(double[][])>(r1);
+
+        specialinvoke r0.<org.apache.commons.math3.stat.correlation.KendallsCorrelation: void <init>(org.apache.commons.math3.linear.RealMatrix)>($r2);
+
+        return;
+    }
+
+    public void <init>(org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.stat.correlation.KendallsCorrelation r0;
+        org.apache.commons.math3.linear.RealMatrix r1, $r2;
+
+        r0 := @this: org.apache.commons.math3.stat.correlation.KendallsCorrelation;
+
+        r1 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $r2 = virtualinvoke r0.<org.apache.commons.math3.stat.correlation.KendallsCorrelation: org.apache.commons.math3.linear.RealMatrix computeCorrelationMatrix(org.apache.commons.math3.linear.RealMatrix)>(r1);
+
+        r0.<org.apache.commons.math3.stat.correlation.KendallsCorrelation: org.apache.commons.math3.linear.RealMatrix correlationMatrix> = $r2;
+
+        return;
+    }
+
+    public org.apache.commons.math3.linear.RealMatrix getCorrelationMatrix()
+    {
+        org.apache.commons.math3.stat.correlation.KendallsCorrelation r0;
+        org.apache.commons.math3.linear.RealMatrix $r1;
+
+        r0 := @this: org.apache.commons.math3.stat.correlation.KendallsCorrelation;
+
+        $r1 = r0.<org.apache.commons.math3.stat.correlation.KendallsCorrelation: org.apache.commons.math3.linear.RealMatrix correlationMatrix>;
+
+        return $r1;
+    }
+
+    public org.apache.commons.math3.linear.RealMatrix computeCorrelationMatrix(org.apache.commons.math3.linear.RealMatrix)
+    {
+        org.apache.commons.math3.stat.correlation.KendallsCorrelation r0;
+        org.apache.commons.math3.linear.RealMatrix r1;
+        int i0, i1, i2;
+        double d0;
+        org.apache.commons.math3.linear.BlockRealMatrix $r3;
+        double[] $r4, $r5;
+
+        r0 := @this: org.apache.commons.math3.stat.correlation.KendallsCorrelation;
+
+        r1 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        i0 = interfaceinvoke r1.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        $r3 = new org.apache.commons.math3.linear.BlockRealMatrix;
+
+        specialinvoke $r3.<org.apache.commons.math3.linear.BlockRealMatrix: void <init>(int,int)>(i0, i0);
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label4;
+
+        i2 = 0;
+
+     label2:
+        if i2 >= i1 goto label3;
+
+        $r4 = interfaceinvoke r1.<org.apache.commons.math3.linear.RealMatrix: double[] getColumn(int)>(i1);
+
+        $r5 = interfaceinvoke r1.<org.apache.commons.math3.linear.RealMatrix: double[] getColumn(int)>(i2);
+
+        d0 = virtualinvoke r0.<org.apache.commons.math3.stat.correlation.KendallsCorrelation: double correlation(double[],double[])>($r4, $r5);
+
+        interfaceinvoke $r3.<org.apache.commons.math3.linear.RealMatrix: void setEntry(int,int,double)>(i1, i2, d0);
+
+        interfaceinvoke $r3.<org.apache.commons.math3.linear.RealMatrix: void setEntry(int,int,double)>(i2, i1, d0);
+
+        i2 = i2 + 1;
+
+        goto label2;
+
+     label3:
+        interfaceinvoke $r3.<org.apache.commons.math3.linear.RealMatrix: void setEntry(int,int,double)>(i1, i1, 1.0);
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label4:
+        return $r3;
+    }
+
+    public org.apache.commons.math3.linear.RealMatrix computeCorrelationMatrix(double[][])
+    {
+        org.apache.commons.math3.stat.correlation.KendallsCorrelation r0;
+        double[][] r1;
+        org.apache.commons.math3.linear.BlockRealMatrix $r2;
+        org.apache.commons.math3.linear.RealMatrix $r3;
+
+        r0 := @this: org.apache.commons.math3.stat.correlation.KendallsCorrelation;
+
+        r1 := @parameter0: double[][];
+
+        $r2 = new org.apache.commons.math3.linear.BlockRealMatrix;
+
+        specialinvoke $r2.<org.apache.commons.math3.linear.BlockRealMatrix: void <init>(double[][])>(r1);
+
+        $r3 = virtualinvoke r0.<org.apache.commons.math3.stat.correlation.KendallsCorrelation: org.apache.commons.math3.linear.RealMatrix computeCorrelationMatrix(org.apache.commons.math3.linear.RealMatrix)>($r2);
+
+        return $r3;
+    }
+
+    public double correlation(double[], double[]) throws org.apache.commons.math3.exception.DimensionMismatchException
+    {
+        org.apache.commons.math3.stat.correlation.KendallsCorrelation r0;
+        double[] r1, r2;
+        int i0, i2, $i3, $i4, $i5, $i15, $i22, $i23, $i24, $i25, $i26, $i33, $i34, i35, i40, i43, i44, i45, i46, i47, i48, i49, i52;
+        long l1, $l6, $l7, $l8, $l9, $l10, $l11, $l12, $l13, $l14, $l16, $l17, $l18, $l19, $l20, $l21, $l27, $l28, $l29, $l30, $l31, $l32, l36, l37, l38, l39, l41, l42, l50, l51, l53, l54;
+        org.apache.commons.math3.stat.correlation.KendallsCorrelation$1 $r3;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, d7;
+        java.lang.Object $r4, $r6, $r10, $r13, $r17, $r19, $r20, $r22;
+        java.lang.Double $r5, $r12, $r14, $r18, $r21, $r24, $r25;
+        boolean $z0, $z1, $z2;
+        org.apache.commons.math3.util.Pair $r7, $r8, $r9, $r11, $r15, $r16, $r23, r28, r29, r32, r33;
+        org.apache.commons.math3.exception.DimensionMismatchException $r26;
+        org.apache.commons.math3.util.Pair[] r27, r30, r31;
+
+        r0 := @this: org.apache.commons.math3.stat.correlation.KendallsCorrelation;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        $i4 = lengthof r1;
+
+        $i3 = lengthof r2;
+
+        if $i4 == $i3 goto label01;
+
+        $r26 = new org.apache.commons.math3.exception.DimensionMismatchException;
+
+        $i34 = lengthof r1;
+
+        $i33 = lengthof r2;
+
+        specialinvoke $r26.<org.apache.commons.math3.exception.DimensionMismatchException: void <init>(int,int)>($i34, $i33);
+
+        throw $r26;
+
+     label01:
+        i0 = lengthof r1;
+
+        $i5 = i0 - 1;
+
+        $l6 = (long) $i5;
+
+        l1 = staticinvoke <org.apache.commons.math3.stat.correlation.KendallsCorrelation: long sum(long)>($l6);
+
+        r27 = newarray (org.apache.commons.math3.util.Pair)[i0];
+
+        i35 = 0;
+
+     label02:
+        if i35 >= i0 goto label03;
+
+        $r23 = new org.apache.commons.math3.util.Pair;
+
+        $d5 = r1[i35];
+
+        $r24 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d5);
+
+        $d6 = r2[i35];
+
+        $r25 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d6);
+
+        specialinvoke $r23.<org.apache.commons.math3.util.Pair: void <init>(java.lang.Object,java.lang.Object)>($r24, $r25);
+
+        r27[i35] = $r23;
+
+        i35 = i35 + 1;
+
+        goto label02;
+
+     label03:
+        $r3 = new org.apache.commons.math3.stat.correlation.KendallsCorrelation$1;
+
+        specialinvoke $r3.<org.apache.commons.math3.stat.correlation.KendallsCorrelation$1: void <init>(org.apache.commons.math3.stat.correlation.KendallsCorrelation)>(r0);
+
+        staticinvoke <java.util.Arrays: void sort(java.lang.Object[],java.util.Comparator)>(r27, $r3);
+
+        l36 = 0L;
+
+        l37 = 0L;
+
+        l38 = 1L;
+
+        l39 = 1L;
+
+        r28 = r27[0];
+
+        i40 = 1;
+
+     label04:
+        if i40 >= i0 goto label08;
+
+        r29 = r27[i40];
+
+        $r17 = virtualinvoke r29.<org.apache.commons.math3.util.Pair: java.lang.Object getFirst()>();
+
+        $r18 = (java.lang.Double) $r17;
+
+        $r19 = virtualinvoke r28.<org.apache.commons.math3.util.Pair: java.lang.Object getFirst()>();
+
+        $z1 = virtualinvoke $r18.<java.lang.Double: boolean equals(java.lang.Object)>($r19);
+
+        if $z1 == 0 goto label06;
+
+        l38 = l38 + 1L;
+
+        $r20 = virtualinvoke r29.<org.apache.commons.math3.util.Pair: java.lang.Object getSecond()>();
+
+        $r21 = (java.lang.Double) $r20;
+
+        $r22 = virtualinvoke r28.<org.apache.commons.math3.util.Pair: java.lang.Object getSecond()>();
+
+        $z2 = virtualinvoke $r21.<java.lang.Double: boolean equals(java.lang.Object)>($r22);
+
+        if $z2 == 0 goto label05;
+
+        l39 = l39 + 1L;
+
+        goto label07;
+
+     label05:
+        $l31 = l39 - 1L;
+
+        $l32 = staticinvoke <org.apache.commons.math3.stat.correlation.KendallsCorrelation: long sum(long)>($l31);
+
+        l37 = l37 + $l32;
+
+        l39 = 1L;
+
+        goto label07;
+
+     label06:
+        $l27 = l38 - 1L;
+
+        $l28 = staticinvoke <org.apache.commons.math3.stat.correlation.KendallsCorrelation: long sum(long)>($l27);
+
+        l36 = l36 + $l28;
+
+        l38 = 1L;
+
+        $l29 = l39 - 1L;
+
+        $l30 = staticinvoke <org.apache.commons.math3.stat.correlation.KendallsCorrelation: long sum(long)>($l29);
+
+        l37 = l37 + $l30;
+
+        l39 = 1L;
+
+     label07:
+        r28 = r29;
+
+        i40 = i40 + 1;
+
+        goto label04;
+
+     label08:
+        $l7 = l38 - 1L;
+
+        $l8 = staticinvoke <org.apache.commons.math3.stat.correlation.KendallsCorrelation: long sum(long)>($l7);
+
+        l41 = l36 + $l8;
+
+        $l9 = l39 - 1L;
+
+        $l10 = staticinvoke <org.apache.commons.math3.stat.correlation.KendallsCorrelation: long sum(long)>($l9);
+
+        l42 = l37 + $l10;
+
+        i43 = 0;
+
+        r30 = newarray (org.apache.commons.math3.util.Pair)[i0];
+
+        i44 = 1;
+
+     label09:
+        if i44 >= i0 goto label19;
+
+        i45 = 0;
+
+     label10:
+        if i45 >= i0 goto label18;
+
+        i46 = i45;
+
+        $i22 = i45 + i44;
+
+        i2 = staticinvoke <org.apache.commons.math3.util.FastMath: int min(int,int)>($i22, i0);
+
+        i47 = i2;
+
+        $i23 = i2 + i44;
+
+        i48 = staticinvoke <org.apache.commons.math3.util.FastMath: int min(int,int)>($i23, i0);
+
+        i49 = i45;
+
+     label11:
+        if i46 < i2 goto label12;
+
+        if i47 >= i48 goto label17;
+
+     label12:
+        if i46 >= i2 goto label15;
+
+        if i47 >= i48 goto label14;
+
+        $r9 = r27[i46];
+
+        $r10 = virtualinvoke $r9.<org.apache.commons.math3.util.Pair: java.lang.Object getSecond()>();
+
+        $r12 = (java.lang.Double) $r10;
+
+        $r11 = r27[i47];
+
+        $r13 = virtualinvoke $r11.<org.apache.commons.math3.util.Pair: java.lang.Object getSecond()>();
+
+        $r14 = (java.lang.Double) $r13;
+
+        $i24 = virtualinvoke $r12.<java.lang.Double: int compareTo(java.lang.Double)>($r14);
+
+        if $i24 > 0 goto label13;
+
+        $r16 = r27[i46];
+
+        r30[i49] = $r16;
+
+        i46 = i46 + 1;
+
+        goto label16;
+
+     label13:
+        $r15 = r27[i47];
+
+        r30[i49] = $r15;
+
+        i47 = i47 + 1;
+
+        $i25 = i2 - i46;
+
+        i43 = i43 + $i25;
+
+        goto label16;
+
+     label14:
+        $r8 = r27[i46];
+
+        r30[i49] = $r8;
+
+        i46 = i46 + 1;
+
+        goto label16;
+
+     label15:
+        $r7 = r27[i47];
+
+        r30[i49] = $r7;
+
+        i47 = i47 + 1;
+
+     label16:
+        i49 = i49 + 1;
+
+        goto label11;
+
+     label17:
+        $i26 = 2 * i44;
+
+        i45 = i45 + $i26;
+
+        goto label10;
+
+     label18:
+        r31 = r27;
+
+        r27 = r30;
+
+        r30 = r31;
+
+        i44 = i44 << 1;
+
+        goto label09;
+
+     label19:
+        l50 = 0L;
+
+        l51 = 1L;
+
+        r32 = r27[0];
+
+        i52 = 1;
+
+     label20:
+        if i52 >= i0 goto label23;
+
+        r33 = r27[i52];
+
+        $r4 = virtualinvoke r33.<org.apache.commons.math3.util.Pair: java.lang.Object getSecond()>();
+
+        $r5 = (java.lang.Double) $r4;
+
+        $r6 = virtualinvoke r32.<org.apache.commons.math3.util.Pair: java.lang.Object getSecond()>();
+
+        $z0 = virtualinvoke $r5.<java.lang.Double: boolean equals(java.lang.Object)>($r6);
+
+        if $z0 == 0 goto label21;
+
+        l51 = l51 + 1L;
+
+        goto label22;
+
+     label21:
+        $l20 = l51 - 1L;
+
+        $l21 = staticinvoke <org.apache.commons.math3.stat.correlation.KendallsCorrelation: long sum(long)>($l20);
+
+        l50 = l50 + $l21;
+
+        l51 = 1L;
+
+     label22:
+        r32 = r33;
+
+        i52 = i52 + 1;
+
+        goto label20;
+
+     label23:
+        $l11 = l51 - 1L;
+
+        $l12 = staticinvoke <org.apache.commons.math3.stat.correlation.KendallsCorrelation: long sum(long)>($l11);
+
+        l53 = l50 + $l12;
+
+        $l13 = l1 - l41;
+
+        $l14 = $l13 - l53;
+
+        $l17 = $l14 + l42;
+
+        $i15 = 2 * i43;
+
+        $l16 = (long) $i15;
+
+        l54 = $l17 - $l16;
+
+        $l18 = l1 - l41;
+
+        $d1 = (double) $l18;
+
+        $l19 = l1 - l53;
+
+        $d0 = (double) $l19;
+
+        d7 = $d1 * $d0;
+
+        $d2 = (double) l54;
+
+        $d3 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>(d7);
+
+        $d4 = $d2 / $d3;
+
+        return $d4;
+    }
+
+    private static long sum(long)
+    {
+        long l0, $l1, $l2, $l3;
+
+        l0 := @parameter0: long;
+
+        $l1 = l0 + 1L;
+
+        $l2 = l0 * $l1;
+
+        $l3 = $l2 / 2L;
+
+        return $l3;
+    }
+}

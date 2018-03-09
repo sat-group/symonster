@@ -1,0 +1,1433 @@
+public final class org.jcp.xml.dsig.internal.dom.DOMXMLSignature extends org.jcp.xml.dsig.internal.dom.DOMStructure implements javax.xml.crypto.dsig.XMLSignature
+{
+    private static java.util.logging.Logger log;
+    private java.lang.String id;
+    private javax.xml.crypto.dsig.XMLSignature$SignatureValue sv;
+    private javax.xml.crypto.dsig.keyinfo.KeyInfo ki;
+    private java.util.List objects;
+    private javax.xml.crypto.dsig.SignedInfo si;
+    private org.w3c.dom.Document ownerDoc;
+    private org.w3c.dom.Element localSigElem;
+    private org.w3c.dom.Element sigElem;
+    private boolean validationStatus;
+    private boolean validated;
+    private javax.xml.crypto.KeySelectorResult ksr;
+    private java.util.HashMap signatureIdMap;
+
+    public void <init>(javax.xml.crypto.dsig.SignedInfo, javax.xml.crypto.dsig.keyinfo.KeyInfo, java.util.List, java.lang.String, java.lang.String)
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        javax.xml.crypto.dsig.SignedInfo r1;
+        javax.xml.crypto.dsig.keyinfo.KeyInfo r2;
+        java.util.List r3, $r9, $r17;
+        java.lang.String r4, r5, $r16;
+        int i0, i1;
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature$DOMSignatureValue $r7;
+        java.util.ArrayList $r8;
+        java.lang.Object $r10;
+        boolean $z0;
+        java.lang.ClassCastException $r11;
+        java.lang.StringBuilder $r12, $r13, $r14, $r15;
+        java.lang.NullPointerException $r18;
+
+        r0 := @this: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        r1 := @parameter0: javax.xml.crypto.dsig.SignedInfo;
+
+        r2 := @parameter1: javax.xml.crypto.dsig.keyinfo.KeyInfo;
+
+        r3 := @parameter2: java.util.List;
+
+        r4 := @parameter3: java.lang.String;
+
+        r5 := @parameter4: java.lang.String;
+
+        specialinvoke r0.<org.jcp.xml.dsig.internal.dom.DOMStructure: void <init>()>();
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Document ownerDoc> = null;
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element localSigElem> = null;
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element sigElem> = null;
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: boolean validated> = 0;
+
+        if r1 != null goto label1;
+
+        $r18 = new java.lang.NullPointerException;
+
+        specialinvoke $r18.<java.lang.NullPointerException: void <init>(java.lang.String)>("signedInfo cannot be null");
+
+        throw $r18;
+
+     label1:
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.SignedInfo si> = r1;
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.lang.String id> = r4;
+
+        $r7 = new org.jcp.xml.dsig.internal.dom.DOMXMLSignature$DOMSignatureValue;
+
+        specialinvoke $r7.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature$DOMSignatureValue: void <init>(org.jcp.xml.dsig.internal.dom.DOMXMLSignature,java.lang.String)>(r0, r5);
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.XMLSignature$SignatureValue sv> = $r7;
+
+        if r3 != null goto label2;
+
+        $r17 = <java.util.Collections: java.util.List EMPTY_LIST>;
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.List objects> = $r17;
+
+        goto label6;
+
+     label2:
+        $r8 = new java.util.ArrayList;
+
+        specialinvoke $r8.<java.util.ArrayList: void <init>(java.util.Collection)>(r3);
+
+        i1 = 0;
+
+        i0 = interfaceinvoke $r8.<java.util.List: int size()>();
+
+     label3:
+        if i1 >= i0 goto label5;
+
+        $r10 = interfaceinvoke $r8.<java.util.List: java.lang.Object get(int)>(i1);
+
+        $z0 = $r10 instanceof javax.xml.crypto.dsig.XMLObject;
+
+        if $z0 != 0 goto label4;
+
+        $r11 = new java.lang.ClassCastException;
+
+        $r12 = new java.lang.StringBuilder;
+
+        specialinvoke $r12.<java.lang.StringBuilder: void <init>()>();
+
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("objs[");
+
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i1);
+
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("] is not an XMLObject");
+
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r11.<java.lang.ClassCastException: void <init>(java.lang.String)>($r16);
+
+        throw $r11;
+
+     label4:
+        i1 = i1 + 1;
+
+        goto label3;
+
+     label5:
+        $r9 = staticinvoke <java.util.Collections: java.util.List unmodifiableList(java.util.List)>($r8);
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.List objects> = $r9;
+
+     label6:
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.keyinfo.KeyInfo ki> = r2;
+
+        return;
+    }
+
+    public void <init>(org.w3c.dom.Element, javax.xml.crypto.XMLCryptoContext, java.security.Provider) throws javax.xml.crypto.MarshalException
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        org.w3c.dom.Element r1, r4, r5, $r7, $r9, $r11, r20;
+        javax.xml.crypto.XMLCryptoContext r2;
+        java.security.Provider r3;
+        org.w3c.dom.Document $r8;
+        java.lang.String $r10, $r18;
+        org.jcp.xml.dsig.internal.dom.DOMSignedInfo $r12;
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature$DOMSignatureValue $r13;
+        java.util.ArrayList $r14;
+        java.util.List $r15, $r17;
+        org.jcp.xml.dsig.internal.dom.DOMXMLObject $r16;
+        boolean $z1;
+        org.jcp.xml.dsig.internal.dom.DOMKeyInfo $r19;
+
+        r0 := @this: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        r1 := @parameter0: org.w3c.dom.Element;
+
+        r2 := @parameter1: javax.xml.crypto.XMLCryptoContext;
+
+        r3 := @parameter2: java.security.Provider;
+
+        specialinvoke r0.<org.jcp.xml.dsig.internal.dom.DOMStructure: void <init>()>();
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Document ownerDoc> = null;
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element localSigElem> = null;
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element sigElem> = null;
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: boolean validated> = 0;
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element localSigElem> = r1;
+
+        $r7 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element localSigElem>;
+
+        $r8 = interfaceinvoke $r7.<org.w3c.dom.Element: org.w3c.dom.Document getOwnerDocument()>();
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Document ownerDoc> = $r8;
+
+        $r9 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element localSigElem>;
+
+        $r10 = staticinvoke <org.jcp.xml.dsig.internal.dom.DOMUtils: java.lang.String getAttributeValue(org.w3c.dom.Element,java.lang.String)>($r9, "Id");
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.lang.String id> = $r10;
+
+        $r11 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element localSigElem>;
+
+        r4 = staticinvoke <org.jcp.xml.dsig.internal.dom.DOMUtils: org.w3c.dom.Element getFirstChildElement(org.w3c.dom.Node)>($r11);
+
+        $r12 = new org.jcp.xml.dsig.internal.dom.DOMSignedInfo;
+
+        specialinvoke $r12.<org.jcp.xml.dsig.internal.dom.DOMSignedInfo: void <init>(org.w3c.dom.Element,javax.xml.crypto.XMLCryptoContext,java.security.Provider)>(r4, r2, r3);
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.SignedInfo si> = $r12;
+
+        r5 = staticinvoke <org.jcp.xml.dsig.internal.dom.DOMUtils: org.w3c.dom.Element getNextSiblingElement(org.w3c.dom.Node)>(r4);
+
+        $r13 = new org.jcp.xml.dsig.internal.dom.DOMXMLSignature$DOMSignatureValue;
+
+        specialinvoke $r13.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature$DOMSignatureValue: void <init>(org.jcp.xml.dsig.internal.dom.DOMXMLSignature,org.w3c.dom.Element)>(r0, r5);
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.XMLSignature$SignatureValue sv> = $r13;
+
+        r20 = staticinvoke <org.jcp.xml.dsig.internal.dom.DOMUtils: org.w3c.dom.Element getNextSiblingElement(org.w3c.dom.Node)>(r5);
+
+        if r20 == null goto label1;
+
+        $r18 = interfaceinvoke r20.<org.w3c.dom.Element: java.lang.String getLocalName()>();
+
+        $z1 = virtualinvoke $r18.<java.lang.String: boolean equals(java.lang.Object)>("KeyInfo");
+
+        if $z1 == 0 goto label1;
+
+        $r19 = new org.jcp.xml.dsig.internal.dom.DOMKeyInfo;
+
+        specialinvoke $r19.<org.jcp.xml.dsig.internal.dom.DOMKeyInfo: void <init>(org.w3c.dom.Element,javax.xml.crypto.XMLCryptoContext,java.security.Provider)>(r20, r2, r3);
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.keyinfo.KeyInfo ki> = $r19;
+
+        r20 = staticinvoke <org.jcp.xml.dsig.internal.dom.DOMUtils: org.w3c.dom.Element getNextSiblingElement(org.w3c.dom.Node)>(r20);
+
+     label1:
+        if r20 != null goto label2;
+
+        $r17 = <java.util.Collections: java.util.List EMPTY_LIST>;
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.List objects> = $r17;
+
+        goto label5;
+
+     label2:
+        $r14 = new java.util.ArrayList;
+
+        specialinvoke $r14.<java.util.ArrayList: void <init>()>();
+
+     label3:
+        if r20 == null goto label4;
+
+        $r16 = new org.jcp.xml.dsig.internal.dom.DOMXMLObject;
+
+        specialinvoke $r16.<org.jcp.xml.dsig.internal.dom.DOMXMLObject: void <init>(org.w3c.dom.Element,javax.xml.crypto.XMLCryptoContext,java.security.Provider)>(r20, r2, r3);
+
+        interfaceinvoke $r14.<java.util.List: boolean add(java.lang.Object)>($r16);
+
+        r20 = staticinvoke <org.jcp.xml.dsig.internal.dom.DOMUtils: org.w3c.dom.Element getNextSiblingElement(org.w3c.dom.Node)>(r20);
+
+        goto label3;
+
+     label4:
+        $r15 = staticinvoke <java.util.Collections: java.util.List unmodifiableList(java.util.List)>($r14);
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.List objects> = $r15;
+
+     label5:
+        return;
+    }
+
+    public java.lang.String getId()
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        $r1 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.lang.String id>;
+
+        return $r1;
+    }
+
+    public javax.xml.crypto.dsig.keyinfo.KeyInfo getKeyInfo()
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        javax.xml.crypto.dsig.keyinfo.KeyInfo $r1;
+
+        r0 := @this: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        $r1 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.keyinfo.KeyInfo ki>;
+
+        return $r1;
+    }
+
+    public javax.xml.crypto.dsig.SignedInfo getSignedInfo()
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        javax.xml.crypto.dsig.SignedInfo $r1;
+
+        r0 := @this: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        $r1 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.SignedInfo si>;
+
+        return $r1;
+    }
+
+    public java.util.List getObjects()
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        java.util.List $r1;
+
+        r0 := @this: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        $r1 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.List objects>;
+
+        return $r1;
+    }
+
+    public javax.xml.crypto.dsig.XMLSignature$SignatureValue getSignatureValue()
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        javax.xml.crypto.dsig.XMLSignature$SignatureValue $r1;
+
+        r0 := @this: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        $r1 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.XMLSignature$SignatureValue sv>;
+
+        return $r1;
+    }
+
+    public javax.xml.crypto.KeySelectorResult getKeySelectorResult()
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        javax.xml.crypto.KeySelectorResult $r1;
+
+        r0 := @this: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        $r1 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.KeySelectorResult ksr>;
+
+        return $r1;
+    }
+
+    public void marshal(org.w3c.dom.Node, java.lang.String, javax.xml.crypto.dom.DOMCryptoContext) throws javax.xml.crypto.MarshalException
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        org.w3c.dom.Node r1;
+        java.lang.String r2;
+        javax.xml.crypto.dom.DOMCryptoContext r3;
+
+        r0 := @this: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        r1 := @parameter0: org.w3c.dom.Node;
+
+        r2 := @parameter1: java.lang.String;
+
+        r3 := @parameter2: javax.xml.crypto.dom.DOMCryptoContext;
+
+        virtualinvoke r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: void marshal(org.w3c.dom.Node,org.w3c.dom.Node,java.lang.String,javax.xml.crypto.dom.DOMCryptoContext)>(r1, null, r2, r3);
+
+        return;
+    }
+
+    public void marshal(org.w3c.dom.Node, org.w3c.dom.Node, java.lang.String, javax.xml.crypto.dom.DOMCryptoContext) throws javax.xml.crypto.MarshalException
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        org.w3c.dom.Node r1, r2;
+        java.lang.String r3, $r17, $r32;
+        javax.xml.crypto.dom.DOMCryptoContext r4;
+        int i0, $i1, i2;
+        org.w3c.dom.Document $r5, $r6;
+        org.w3c.dom.Element $r7, $r8, $r10, $r13, $r18, $r19, $r23, $r26, $r29;
+        javax.xml.crypto.dsig.SignedInfo $r9;
+        org.jcp.xml.dsig.internal.dom.DOMSignedInfo $r11;
+        javax.xml.crypto.dsig.XMLSignature$SignatureValue $r12;
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature$DOMSignatureValue $r14;
+        javax.xml.crypto.dsig.keyinfo.KeyInfo $r15, $r25;
+        java.util.List $r16, $r21;
+        java.lang.Object $r22;
+        org.jcp.xml.dsig.internal.dom.DOMXMLObject $r24;
+        org.jcp.xml.dsig.internal.dom.DOMKeyInfo $r27;
+        java.lang.StringBuilder $r28, $r30, $r31;
+
+        r0 := @this: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        r1 := @parameter0: org.w3c.dom.Node;
+
+        r2 := @parameter1: org.w3c.dom.Node;
+
+        r3 := @parameter2: java.lang.String;
+
+        r4 := @parameter3: javax.xml.crypto.dom.DOMCryptoContext;
+
+        $r5 = staticinvoke <org.jcp.xml.dsig.internal.dom.DOMUtils: org.w3c.dom.Document getOwnerDocument(org.w3c.dom.Node)>(r1);
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Document ownerDoc> = $r5;
+
+        $r6 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Document ownerDoc>;
+
+        $r7 = staticinvoke <org.jcp.xml.dsig.internal.dom.DOMUtils: org.w3c.dom.Element createElement(org.w3c.dom.Document,java.lang.String,java.lang.String,java.lang.String)>($r6, "Signature", "http://www.w3.org/2000/09/xmldsig#", r3);
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element sigElem> = $r7;
+
+        if r3 == null goto label1;
+
+        $i1 = virtualinvoke r3.<java.lang.String: int length()>();
+
+        if $i1 != 0 goto label2;
+
+     label1:
+        $r8 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element sigElem>;
+
+        interfaceinvoke $r8.<org.w3c.dom.Element: void setAttributeNS(java.lang.String,java.lang.String,java.lang.String)>("http://www.w3.org/2000/xmlns/", "xmlns", "http://www.w3.org/2000/09/xmldsig#");
+
+        goto label3;
+
+     label2:
+        $r29 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element sigElem>;
+
+        $r28 = new java.lang.StringBuilder;
+
+        specialinvoke $r28.<java.lang.StringBuilder: void <init>()>();
+
+        $r30 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("xmlns:");
+
+        $r31 = virtualinvoke $r30.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r3);
+
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        interfaceinvoke $r29.<org.w3c.dom.Element: void setAttributeNS(java.lang.String,java.lang.String,java.lang.String)>("http://www.w3.org/2000/xmlns/", $r32, "http://www.w3.org/2000/09/xmldsig#");
+
+     label3:
+        $r9 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.SignedInfo si>;
+
+        $r11 = (org.jcp.xml.dsig.internal.dom.DOMSignedInfo) $r9;
+
+        $r10 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element sigElem>;
+
+        virtualinvoke $r11.<org.jcp.xml.dsig.internal.dom.DOMSignedInfo: void marshal(org.w3c.dom.Node,java.lang.String,javax.xml.crypto.dom.DOMCryptoContext)>($r10, r3, r4);
+
+        $r12 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.XMLSignature$SignatureValue sv>;
+
+        $r14 = (org.jcp.xml.dsig.internal.dom.DOMXMLSignature$DOMSignatureValue) $r12;
+
+        $r13 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element sigElem>;
+
+        virtualinvoke $r14.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature$DOMSignatureValue: void marshal(org.w3c.dom.Node,java.lang.String,javax.xml.crypto.dom.DOMCryptoContext)>($r13, r3, r4);
+
+        $r15 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.keyinfo.KeyInfo ki>;
+
+        if $r15 == null goto label4;
+
+        $r25 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.keyinfo.KeyInfo ki>;
+
+        $r27 = (org.jcp.xml.dsig.internal.dom.DOMKeyInfo) $r25;
+
+        $r26 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element sigElem>;
+
+        virtualinvoke $r27.<org.jcp.xml.dsig.internal.dom.DOMKeyInfo: void marshal(org.w3c.dom.Node,org.w3c.dom.Node,java.lang.String,javax.xml.crypto.dom.DOMCryptoContext)>($r26, null, r3, r4);
+
+     label4:
+        i2 = 0;
+
+        $r16 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.List objects>;
+
+        i0 = interfaceinvoke $r16.<java.util.List: int size()>();
+
+     label5:
+        if i2 >= i0 goto label6;
+
+        $r21 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.List objects>;
+
+        $r22 = interfaceinvoke $r21.<java.util.List: java.lang.Object get(int)>(i2);
+
+        $r24 = (org.jcp.xml.dsig.internal.dom.DOMXMLObject) $r22;
+
+        $r23 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element sigElem>;
+
+        virtualinvoke $r24.<org.jcp.xml.dsig.internal.dom.DOMXMLObject: void marshal(org.w3c.dom.Node,java.lang.String,javax.xml.crypto.dom.DOMCryptoContext)>($r23, r3, r4);
+
+        i2 = i2 + 1;
+
+        goto label5;
+
+     label6:
+        $r18 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element sigElem>;
+
+        $r17 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.lang.String id>;
+
+        staticinvoke <org.jcp.xml.dsig.internal.dom.DOMUtils: void setAttributeID(org.w3c.dom.Element,java.lang.String,java.lang.String)>($r18, "Id", $r17);
+
+        $r19 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element sigElem>;
+
+        interfaceinvoke r1.<org.w3c.dom.Node: org.w3c.dom.Node insertBefore(org.w3c.dom.Node,org.w3c.dom.Node)>($r19, r2);
+
+        return;
+    }
+
+    public boolean validate(javax.xml.crypto.dsig.XMLValidateContext) throws javax.xml.crypto.dsig.XMLSignatureException
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        javax.xml.crypto.dsig.XMLValidateContext r1;
+        boolean z0, z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, z13, z14, z15, $z16;
+        java.util.List r2, r3, r6, $r12, $r13;
+        int i0, i1, i2, i3, i4, i5, i6, i7;
+        javax.xml.crypto.XMLStructure r4;
+        javax.xml.crypto.dsig.Manifest r5;
+        javax.xml.crypto.dsig.Reference r7, r50;
+        javax.xml.crypto.dsig.XMLSignature$SignatureValue $r8;
+        javax.xml.crypto.dsig.SignedInfo $r9;
+        java.lang.Boolean $r10;
+        java.lang.Object $r11, $r14, $r15, $r18, $r36;
+        java.util.logging.Level $r16, $r19, $r23, $r30, $r32, $r34, $r37, $r41;
+        java.util.logging.Logger $r17, $r20, $r22, $r31, $r33, $r35, $r38, $r40;
+        java.lang.StringBuilder $r21, $r24, $r26, $r27, $r28, $r39, $r42, $r44, $r45, $r46;
+        java.lang.String $r25, $r29, $r43, $r47;
+        java.lang.ClassCastException $r48;
+        java.lang.NullPointerException $r49;
+        javax.xml.crypto.dsig.XMLObject r51;
+
+        r0 := @this: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        r1 := @parameter0: javax.xml.crypto.dsig.XMLValidateContext;
+
+        if r1 != null goto label01;
+
+        $r49 = new java.lang.NullPointerException;
+
+        specialinvoke $r49.<java.lang.NullPointerException: void <init>(java.lang.String)>("validateContext is null");
+
+        throw $r49;
+
+     label01:
+        $z2 = r1 instanceof javax.xml.crypto.dsig.dom.DOMValidateContext;
+
+        if $z2 != 0 goto label02;
+
+        $r48 = new java.lang.ClassCastException;
+
+        specialinvoke $r48.<java.lang.ClassCastException: void <init>(java.lang.String)>("validateContext must be of type DOMValidateContext");
+
+        throw $r48;
+
+     label02:
+        $z3 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: boolean validated>;
+
+        if $z3 == 0 goto label03;
+
+        $z12 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: boolean validationStatus>;
+
+        return $z12;
+
+     label03:
+        $r8 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.XMLSignature$SignatureValue sv>;
+
+        z0 = interfaceinvoke $r8.<javax.xml.crypto.dsig.XMLSignature$SignatureValue: boolean validate(javax.xml.crypto.dsig.XMLValidateContext)>(r1);
+
+        if z0 != 0 goto label04;
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: boolean validationStatus> = 0;
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: boolean validated> = 1;
+
+        $z11 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: boolean validationStatus>;
+
+        return $z11;
+
+     label04:
+        $r9 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.SignedInfo si>;
+
+        r2 = interfaceinvoke $r9.<javax.xml.crypto.dsig.SignedInfo: java.util.List getReferences()>();
+
+        z13 = 1;
+
+        i2 = 0;
+
+        i3 = interfaceinvoke r2.<java.util.List: int size()>();
+
+     label05:
+        if z13 == 0 goto label07;
+
+        if i2 >= i3 goto label07;
+
+        $r36 = interfaceinvoke r2.<java.util.List: java.lang.Object get(int)>(i2);
+
+        r50 = (javax.xml.crypto.dsig.Reference) $r36;
+
+        z14 = interfaceinvoke r50.<javax.xml.crypto.dsig.Reference: boolean validate(javax.xml.crypto.dsig.XMLValidateContext)>(r1);
+
+        $r38 = <org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.logging.Logger log>;
+
+        $r37 = <java.util.logging.Level: java.util.logging.Level FINE>;
+
+        $z10 = virtualinvoke $r38.<java.util.logging.Logger: boolean isLoggable(java.util.logging.Level)>($r37);
+
+        if $z10 == 0 goto label06;
+
+        $r40 = <org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.logging.Logger log>;
+
+        $r41 = <java.util.logging.Level: java.util.logging.Level FINE>;
+
+        $r39 = new java.lang.StringBuilder;
+
+        specialinvoke $r39.<java.lang.StringBuilder: void <init>()>();
+
+        $r42 = virtualinvoke $r39.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Reference[");
+
+        $r43 = interfaceinvoke r50.<javax.xml.crypto.dsig.Reference: java.lang.String getURI()>();
+
+        $r44 = virtualinvoke $r42.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r43);
+
+        $r45 = virtualinvoke $r44.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("] is valid: ");
+
+        $r46 = virtualinvoke $r45.<java.lang.StringBuilder: java.lang.StringBuilder append(boolean)>(z14);
+
+        $r47 = virtualinvoke $r46.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        virtualinvoke $r40.<java.util.logging.Logger: void log(java.util.logging.Level,java.lang.String)>($r41, $r47);
+
+     label06:
+        z13 = z13 & z14;
+
+        i2 = i2 + 1;
+
+        goto label05;
+
+     label07:
+        if z13 != 0 goto label09;
+
+        $r33 = <org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.logging.Logger log>;
+
+        $r32 = <java.util.logging.Level: java.util.logging.Level FINE>;
+
+        $z8 = virtualinvoke $r33.<java.util.logging.Logger: boolean isLoggable(java.util.logging.Level)>($r32);
+
+        if $z8 == 0 goto label08;
+
+        $r35 = <org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.logging.Logger log>;
+
+        $r34 = <java.util.logging.Level: java.util.logging.Level FINE>;
+
+        virtualinvoke $r35.<java.util.logging.Logger: void log(java.util.logging.Level,java.lang.String)>($r34, "Couldn\'t validate the References");
+
+     label08:
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: boolean validationStatus> = 0;
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: boolean validated> = 1;
+
+        $z9 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: boolean validationStatus>;
+
+        return $z9;
+
+     label09:
+        z15 = 1;
+
+        $r10 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+
+        $r11 = interfaceinvoke r1.<javax.xml.crypto.dsig.XMLValidateContext: java.lang.Object getProperty(java.lang.String)>("org.jcp.xml.dsig.validateManifests");
+
+        $z4 = virtualinvoke $r10.<java.lang.Boolean: boolean equals(java.lang.Object)>($r11);
+
+        if $z4 == 0 goto label17;
+
+        i4 = 0;
+
+        $r12 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.List objects>;
+
+        i5 = interfaceinvoke $r12.<java.util.List: int size()>();
+
+     label10:
+        if z15 == 0 goto label17;
+
+        if i4 >= i5 goto label17;
+
+        $r13 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.List objects>;
+
+        $r14 = interfaceinvoke $r13.<java.util.List: java.lang.Object get(int)>(i4);
+
+        r51 = (javax.xml.crypto.dsig.XMLObject) $r14;
+
+        r3 = interfaceinvoke r51.<javax.xml.crypto.dsig.XMLObject: java.util.List getContent()>();
+
+        i0 = interfaceinvoke r3.<java.util.List: int size()>();
+
+        i6 = 0;
+
+     label11:
+        if z15 == 0 goto label16;
+
+        if i6 >= i0 goto label16;
+
+        $r15 = interfaceinvoke r3.<java.util.List: java.lang.Object get(int)>(i6);
+
+        r4 = (javax.xml.crypto.XMLStructure) $r15;
+
+        $z5 = r4 instanceof javax.xml.crypto.dsig.Manifest;
+
+        if $z5 == 0 goto label15;
+
+        $r17 = <org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.logging.Logger log>;
+
+        $r16 = <java.util.logging.Level: java.util.logging.Level FINE>;
+
+        $z6 = virtualinvoke $r17.<java.util.logging.Logger: boolean isLoggable(java.util.logging.Level)>($r16);
+
+        if $z6 == 0 goto label12;
+
+        $r31 = <org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.logging.Logger log>;
+
+        $r30 = <java.util.logging.Level: java.util.logging.Level FINE>;
+
+        virtualinvoke $r31.<java.util.logging.Logger: void log(java.util.logging.Level,java.lang.String)>($r30, "validating manifest");
+
+     label12:
+        r5 = (javax.xml.crypto.dsig.Manifest) r4;
+
+        r6 = interfaceinvoke r5.<javax.xml.crypto.dsig.Manifest: java.util.List getReferences()>();
+
+        i1 = interfaceinvoke r6.<java.util.List: int size()>();
+
+        i7 = 0;
+
+     label13:
+        if z15 == 0 goto label15;
+
+        if i7 >= i1 goto label15;
+
+        $r18 = interfaceinvoke r6.<java.util.List: java.lang.Object get(int)>(i7);
+
+        r7 = (javax.xml.crypto.dsig.Reference) $r18;
+
+        z1 = interfaceinvoke r7.<javax.xml.crypto.dsig.Reference: boolean validate(javax.xml.crypto.dsig.XMLValidateContext)>(r1);
+
+        $r20 = <org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.logging.Logger log>;
+
+        $r19 = <java.util.logging.Level: java.util.logging.Level FINE>;
+
+        $z7 = virtualinvoke $r20.<java.util.logging.Logger: boolean isLoggable(java.util.logging.Level)>($r19);
+
+        if $z7 == 0 goto label14;
+
+        $r22 = <org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.logging.Logger log>;
+
+        $r23 = <java.util.logging.Level: java.util.logging.Level FINE>;
+
+        $r21 = new java.lang.StringBuilder;
+
+        specialinvoke $r21.<java.lang.StringBuilder: void <init>()>();
+
+        $r24 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Manifest ref[");
+
+        $r25 = interfaceinvoke r7.<javax.xml.crypto.dsig.Reference: java.lang.String getURI()>();
+
+        $r26 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r25);
+
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("] is valid: ");
+
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.StringBuilder append(boolean)>(z1);
+
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        virtualinvoke $r22.<java.util.logging.Logger: void log(java.util.logging.Level,java.lang.String)>($r23, $r29);
+
+     label14:
+        z15 = z15 & z1;
+
+        i7 = i7 + 1;
+
+        goto label13;
+
+     label15:
+        i6 = i6 + 1;
+
+        goto label11;
+
+     label16:
+        i4 = i4 + 1;
+
+        goto label10;
+
+     label17:
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: boolean validationStatus> = z15;
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: boolean validated> = 1;
+
+        $z16 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: boolean validationStatus>;
+
+        return $z16;
+    }
+
+    public void sign(javax.xml.crypto.dsig.XMLSignContext) throws javax.xml.crypto.MarshalException, javax.xml.crypto.dsig.XMLSignatureException
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        javax.xml.crypto.dsig.XMLSignContext r1;
+        javax.xml.crypto.dsig.dom.DOMSignContext r2;
+        java.util.List r4, r7, $r18, $r20, $r45, r68;
+        int i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11;
+        javax.xml.crypto.XMLStructure r5;
+        javax.xml.crypto.dsig.Manifest r6;
+        javax.xml.crypto.dsig.Reference r8, r66;
+        java.util.ArrayList $r9;
+        java.util.HashMap $r10, $r12, $r14, $r47, $r50, $r53, $r56;
+        java.lang.String $r11, $r15, $r41, $r48, $r51, $r54, $r57, $r60;
+        javax.xml.crypto.dsig.SignedInfo $r13, $r16, $r17, $r19, $r22, $r26, $r28;
+        javax.xml.crypto.KeySelector $r21;
+        javax.xml.crypto.dsig.keyinfo.KeyInfo $r23;
+        javax.xml.crypto.KeySelector$Purpose $r24;
+        javax.xml.crypto.dsig.SignatureMethod $r25, $r27;
+        org.jcp.xml.dsig.internal.dom.DOMSignedInfo $r29;
+        org.jcp.xml.dsig.internal.dom.DOMSignatureMethod $r30;
+        java.util.logging.Level $r31, $r38;
+        java.util.logging.Logger $r32, $r37;
+        boolean $z0, $z1, $z2;
+        javax.xml.crypto.dsig.XMLSignature$SignatureValue $r33;
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature$DOMSignatureValue $r34;
+        org.w3c.dom.Element $r35;
+        java.lang.StringBuilder $r36, $r39, $r40;
+        javax.xml.crypto.dsig.XMLSignatureException $r42, $r63, $r65;
+        java.lang.Object $r43, $r44, $r46, $r49, $r52, $r55;
+        org.w3c.dom.Node $r58, $r59;
+        java.lang.NullPointerException $r61;
+        javax.xml.crypto.KeySelectorException $r62;
+        java.security.InvalidKeyException $r64;
+        javax.xml.crypto.dsig.XMLObject r67;
+        org.jcp.xml.dsig.internal.dom.DOMReference r69, r70;
+        javax.xml.crypto.KeySelectorResult r71;
+        java.security.Key r72;
+        byte[] r74;
+
+        r0 := @this: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        r1 := @parameter0: javax.xml.crypto.dsig.XMLSignContext;
+
+        if r1 != null goto label01;
+
+        $r61 = new java.lang.NullPointerException;
+
+        specialinvoke $r61.<java.lang.NullPointerException: void <init>(java.lang.String)>("signContext cannot be null");
+
+        throw $r61;
+
+     label01:
+        r2 = (javax.xml.crypto.dsig.dom.DOMSignContext) r1;
+
+        if r2 == null goto label02;
+
+        $r58 = virtualinvoke r2.<javax.xml.crypto.dsig.dom.DOMSignContext: org.w3c.dom.Node getParent()>();
+
+        $r59 = virtualinvoke r2.<javax.xml.crypto.dsig.dom.DOMSignContext: org.w3c.dom.Node getNextSibling()>();
+
+        $r60 = staticinvoke <org.jcp.xml.dsig.internal.dom.DOMUtils: java.lang.String getSignaturePrefix(javax.xml.crypto.XMLCryptoContext)>(r2);
+
+        virtualinvoke r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: void marshal(org.w3c.dom.Node,org.w3c.dom.Node,java.lang.String,javax.xml.crypto.dom.DOMCryptoContext)>($r58, $r59, $r60, r2);
+
+     label02:
+        $r9 = new java.util.ArrayList;
+
+        specialinvoke $r9.<java.util.ArrayList: void <init>()>();
+
+        $r10 = new java.util.HashMap;
+
+        specialinvoke $r10.<java.util.HashMap: void <init>()>();
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.HashMap signatureIdMap> = $r10;
+
+        $r12 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.HashMap signatureIdMap>;
+
+        $r11 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.lang.String id>;
+
+        virtualinvoke $r12.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>($r11, r0);
+
+        $r14 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.HashMap signatureIdMap>;
+
+        $r13 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.SignedInfo si>;
+
+        $r15 = interfaceinvoke $r13.<javax.xml.crypto.dsig.SignedInfo: java.lang.String getId()>();
+
+        $r16 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.SignedInfo si>;
+
+        virtualinvoke $r14.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>($r15, $r16);
+
+        $r17 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.SignedInfo si>;
+
+        r4 = interfaceinvoke $r17.<javax.xml.crypto.dsig.SignedInfo: java.util.List getReferences()>();
+
+        i2 = 0;
+
+        i3 = interfaceinvoke r4.<java.util.List: int size()>();
+
+     label03:
+        if i2 >= i3 goto label04;
+
+        $r55 = interfaceinvoke r4.<java.util.List: java.lang.Object get(int)>(i2);
+
+        r66 = (javax.xml.crypto.dsig.Reference) $r55;
+
+        $r56 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.HashMap signatureIdMap>;
+
+        $r57 = interfaceinvoke r66.<javax.xml.crypto.dsig.Reference: java.lang.String getId()>();
+
+        virtualinvoke $r56.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>($r57, r66);
+
+        i2 = i2 + 1;
+
+        goto label03;
+
+     label04:
+        i4 = 0;
+
+        $r18 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.List objects>;
+
+        i5 = interfaceinvoke $r18.<java.util.List: int size()>();
+
+     label05:
+        if i4 >= i5 goto label10;
+
+        $r45 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.List objects>;
+
+        $r46 = interfaceinvoke $r45.<java.util.List: java.lang.Object get(int)>(i4);
+
+        r67 = (javax.xml.crypto.dsig.XMLObject) $r46;
+
+        $r47 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.HashMap signatureIdMap>;
+
+        $r48 = interfaceinvoke r67.<javax.xml.crypto.dsig.XMLObject: java.lang.String getId()>();
+
+        virtualinvoke $r47.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>($r48, r67);
+
+        r68 = interfaceinvoke r67.<javax.xml.crypto.dsig.XMLObject: java.util.List getContent()>();
+
+        i6 = 0;
+
+        i0 = interfaceinvoke r68.<java.util.List: int size()>();
+
+     label06:
+        if i6 >= i0 goto label09;
+
+        $r49 = interfaceinvoke r68.<java.util.List: java.lang.Object get(int)>(i6);
+
+        r5 = (javax.xml.crypto.XMLStructure) $r49;
+
+        $z2 = r5 instanceof javax.xml.crypto.dsig.Manifest;
+
+        if $z2 == 0 goto label08;
+
+        r6 = (javax.xml.crypto.dsig.Manifest) r5;
+
+        $r50 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.HashMap signatureIdMap>;
+
+        $r51 = interfaceinvoke r6.<javax.xml.crypto.dsig.Manifest: java.lang.String getId()>();
+
+        virtualinvoke $r50.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>($r51, r6);
+
+        r7 = interfaceinvoke r6.<javax.xml.crypto.dsig.Manifest: java.util.List getReferences()>();
+
+        i7 = 0;
+
+        i1 = interfaceinvoke r7.<java.util.List: int size()>();
+
+     label07:
+        if i7 >= i1 goto label08;
+
+        $r52 = interfaceinvoke r7.<java.util.List: java.lang.Object get(int)>(i7);
+
+        r8 = (javax.xml.crypto.dsig.Reference) $r52;
+
+        interfaceinvoke $r9.<java.util.List: boolean add(java.lang.Object)>(r8);
+
+        $r53 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.HashMap signatureIdMap>;
+
+        $r54 = interfaceinvoke r8.<javax.xml.crypto.dsig.Reference: java.lang.String getId()>();
+
+        virtualinvoke $r53.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>($r54, r8);
+
+        i7 = i7 + 1;
+
+        goto label07;
+
+     label08:
+        i6 = i6 + 1;
+
+        goto label06;
+
+     label09:
+        i4 = i4 + 1;
+
+        goto label05;
+
+     label10:
+        $r19 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.SignedInfo si>;
+
+        $r20 = interfaceinvoke $r19.<javax.xml.crypto.dsig.SignedInfo: java.util.List getReferences()>();
+
+        interfaceinvoke $r9.<java.util.List: boolean addAll(java.util.Collection)>($r20);
+
+        i8 = 0;
+
+        i9 = interfaceinvoke $r9.<java.util.List: int size()>();
+
+     label11:
+        if i8 >= i9 goto label12;
+
+        $r44 = interfaceinvoke $r9.<java.util.List: java.lang.Object get(int)>(i8);
+
+        r69 = (org.jcp.xml.dsig.internal.dom.DOMReference) $r44;
+
+        specialinvoke r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: void digestReference(org.jcp.xml.dsig.internal.dom.DOMReference,javax.xml.crypto.dsig.XMLSignContext)>(r69, r1);
+
+        i8 = i8 + 1;
+
+        goto label11;
+
+     label12:
+        i10 = 0;
+
+        i11 = interfaceinvoke $r9.<java.util.List: int size()>();
+
+     label13:
+        if i10 >= i11 goto label16;
+
+        $r43 = interfaceinvoke $r9.<java.util.List: java.lang.Object get(int)>(i10);
+
+        r70 = (org.jcp.xml.dsig.internal.dom.DOMReference) $r43;
+
+        $z1 = virtualinvoke r70.<org.jcp.xml.dsig.internal.dom.DOMReference: boolean isDigested()>();
+
+        if $z1 == 0 goto label14;
+
+        goto label15;
+
+     label14:
+        virtualinvoke r70.<org.jcp.xml.dsig.internal.dom.DOMReference: void digest(javax.xml.crypto.dsig.XMLSignContext)>(r1);
+
+     label15:
+        i10 = i10 + 1;
+
+        goto label13;
+
+     label16:
+        $r21 = interfaceinvoke r1.<javax.xml.crypto.dsig.XMLSignContext: javax.xml.crypto.KeySelector getKeySelector()>();
+
+        $r23 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.keyinfo.KeyInfo ki>;
+
+        $r24 = <javax.xml.crypto.KeySelector$Purpose: javax.xml.crypto.KeySelector$Purpose SIGN>;
+
+        $r22 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.SignedInfo si>;
+
+        $r25 = interfaceinvoke $r22.<javax.xml.crypto.dsig.SignedInfo: javax.xml.crypto.dsig.SignatureMethod getSignatureMethod()>();
+
+        r71 = virtualinvoke $r21.<javax.xml.crypto.KeySelector: javax.xml.crypto.KeySelectorResult select(javax.xml.crypto.dsig.keyinfo.KeyInfo,javax.xml.crypto.KeySelector$Purpose,javax.xml.crypto.AlgorithmMethod,javax.xml.crypto.XMLCryptoContext)>($r23, $r24, $r25, r1);
+
+        r72 = interfaceinvoke r71.<javax.xml.crypto.KeySelectorResult: java.security.Key getKey()>();
+
+        if r72 != null goto label17;
+
+        $r42 = new javax.xml.crypto.dsig.XMLSignatureException;
+
+        specialinvoke $r42.<javax.xml.crypto.dsig.XMLSignatureException: void <init>(java.lang.String)>("the keySelector did not find a signing key");
+
+        throw $r42;
+
+     label17:
+        goto label19;
+
+     label18:
+        $r62 := @caughtexception;
+
+        $r63 = new javax.xml.crypto.dsig.XMLSignatureException;
+
+        specialinvoke $r63.<javax.xml.crypto.dsig.XMLSignatureException: void <init>(java.lang.String,java.lang.Throwable)>("cannot find signing key", $r62);
+
+        throw $r63;
+
+     label19:
+        $r26 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.SignedInfo si>;
+
+        $r27 = interfaceinvoke $r26.<javax.xml.crypto.dsig.SignedInfo: javax.xml.crypto.dsig.SignatureMethod getSignatureMethod()>();
+
+        $r30 = (org.jcp.xml.dsig.internal.dom.DOMSignatureMethod) $r27;
+
+        $r28 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.SignedInfo si>;
+
+        $r29 = (org.jcp.xml.dsig.internal.dom.DOMSignedInfo) $r28;
+
+        r74 = virtualinvoke $r30.<org.jcp.xml.dsig.internal.dom.DOMSignatureMethod: byte[] sign(java.security.Key,org.jcp.xml.dsig.internal.dom.DOMSignedInfo,javax.xml.crypto.dsig.XMLSignContext)>(r72, $r29, r1);
+
+     label20:
+        goto label22;
+
+     label21:
+        $r64 := @caughtexception;
+
+        $r65 = new javax.xml.crypto.dsig.XMLSignatureException;
+
+        specialinvoke $r65.<javax.xml.crypto.dsig.XMLSignatureException: void <init>(java.lang.Throwable)>($r64);
+
+        throw $r65;
+
+     label22:
+        $r32 = <org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.logging.Logger log>;
+
+        $r31 = <java.util.logging.Level: java.util.logging.Level FINE>;
+
+        $z0 = virtualinvoke $r32.<java.util.logging.Logger: boolean isLoggable(java.util.logging.Level)>($r31);
+
+        if $z0 == 0 goto label23;
+
+        $r37 = <org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.logging.Logger log>;
+
+        $r38 = <java.util.logging.Level: java.util.logging.Level FINE>;
+
+        $r36 = new java.lang.StringBuilder;
+
+        specialinvoke $r36.<java.lang.StringBuilder: void <init>()>();
+
+        $r39 = virtualinvoke $r36.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("SignatureValue = ");
+
+        $r40 = virtualinvoke $r39.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r74);
+
+        $r41 = virtualinvoke $r40.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        virtualinvoke $r37.<java.util.logging.Logger: void log(java.util.logging.Level,java.lang.String)>($r38, $r41);
+
+     label23:
+        $r33 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.XMLSignature$SignatureValue sv>;
+
+        $r34 = (org.jcp.xml.dsig.internal.dom.DOMXMLSignature$DOMSignatureValue) $r33;
+
+        virtualinvoke $r34.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature$DOMSignatureValue: void setValue(byte[])>(r74);
+
+        $r35 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element sigElem>;
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Element localSigElem> = $r35;
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.KeySelectorResult ksr> = r71;
+
+        return;
+
+        catch javax.xml.crypto.KeySelectorException from label16 to label17 with label18;
+        catch java.security.InvalidKeyException from label19 to label20 with label21;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        java.lang.Object r1;
+        javax.xml.crypto.dsig.XMLSignature r2;
+        boolean z0, $z2, $z3, $z4, $z5, $z6, $z7, $z8;
+        java.lang.String $r3, $r4, $r5, $r15;
+        javax.xml.crypto.dsig.keyinfo.KeyInfo $r6, $r7, $r14, $r16;
+        javax.xml.crypto.dsig.XMLSignature$SignatureValue $r8, $r9;
+        javax.xml.crypto.dsig.SignedInfo $r10, $r11;
+        java.util.List $r12, $r13;
+
+        r0 := @this: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label01;
+
+        return 1;
+
+     label01:
+        $z2 = r1 instanceof javax.xml.crypto.dsig.XMLSignature;
+
+        if $z2 != 0 goto label02;
+
+        return 0;
+
+     label02:
+        r2 = (javax.xml.crypto.dsig.XMLSignature) r1;
+
+        $r3 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.lang.String id>;
+
+        if $r3 != null goto label04;
+
+        $r15 = interfaceinvoke r2.<javax.xml.crypto.dsig.XMLSignature: java.lang.String getId()>();
+
+        if $r15 != null goto label03;
+
+        $z6 = 1;
+
+        goto label05;
+
+     label03:
+        $z6 = 0;
+
+        goto label05;
+
+     label04:
+        $r4 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.lang.String id>;
+
+        $r5 = interfaceinvoke r2.<javax.xml.crypto.dsig.XMLSignature: java.lang.String getId()>();
+
+        $z6 = virtualinvoke $r4.<java.lang.String: boolean equals(java.lang.Object)>($r5);
+
+     label05:
+        z0 = $z6;
+
+        $r16 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.keyinfo.KeyInfo ki>;
+
+        if $r16 != null goto label07;
+
+        $r14 = interfaceinvoke r2.<javax.xml.crypto.dsig.XMLSignature: javax.xml.crypto.dsig.keyinfo.KeyInfo getKeyInfo()>();
+
+        if $r14 != null goto label06;
+
+        $z7 = 1;
+
+        goto label08;
+
+     label06:
+        $z7 = 0;
+
+        goto label08;
+
+     label07:
+        $r6 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.keyinfo.KeyInfo ki>;
+
+        $r7 = interfaceinvoke r2.<javax.xml.crypto.dsig.XMLSignature: javax.xml.crypto.dsig.keyinfo.KeyInfo getKeyInfo()>();
+
+        $z7 = virtualinvoke $r6.<java.lang.Object: boolean equals(java.lang.Object)>($r7);
+
+     label08:
+        if z0 == 0 goto label09;
+
+        if $z7 == 0 goto label09;
+
+        $r8 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.XMLSignature$SignatureValue sv>;
+
+        $r9 = interfaceinvoke r2.<javax.xml.crypto.dsig.XMLSignature: javax.xml.crypto.dsig.XMLSignature$SignatureValue getSignatureValue()>();
+
+        $z3 = virtualinvoke $r8.<java.lang.Object: boolean equals(java.lang.Object)>($r9);
+
+        if $z3 == 0 goto label09;
+
+        $r10 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.SignedInfo si>;
+
+        $r11 = interfaceinvoke r2.<javax.xml.crypto.dsig.XMLSignature: javax.xml.crypto.dsig.SignedInfo getSignedInfo()>();
+
+        $z4 = virtualinvoke $r10.<java.lang.Object: boolean equals(java.lang.Object)>($r11);
+
+        if $z4 == 0 goto label09;
+
+        $r12 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.List objects>;
+
+        $r13 = interfaceinvoke r2.<javax.xml.crypto.dsig.XMLSignature: java.util.List getObjects()>();
+
+        $z5 = interfaceinvoke $r12.<java.util.List: boolean equals(java.lang.Object)>($r13);
+
+        if $z5 == 0 goto label09;
+
+        $z8 = 1;
+
+        goto label10;
+
+     label09:
+        $z8 = 0;
+
+     label10:
+        return $z8;
+    }
+
+    private void digestReference(org.jcp.xml.dsig.internal.dom.DOMReference, javax.xml.crypto.dsig.XMLSignContext) throws javax.xml.crypto.dsig.XMLSignatureException
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        org.jcp.xml.dsig.internal.dom.DOMReference r1, $r9, $r10;
+        javax.xml.crypto.dsig.XMLSignContext r2;
+        java.lang.String r3, r4, r16;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6;
+        java.lang.Object $r5, $r8, r11;
+        java.util.HashMap $r6, $r7;
+        javax.xml.crypto.dsig.Manifest r12;
+        java.util.List r13, r14;
+        int i0, i1, $i2, i3, i4;
+        javax.xml.crypto.dsig.Transform r15;
+
+        r0 := @this: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        r1 := @parameter0: org.jcp.xml.dsig.internal.dom.DOMReference;
+
+        r2 := @parameter1: javax.xml.crypto.dsig.XMLSignContext;
+
+        $z0 = virtualinvoke r1.<org.jcp.xml.dsig.internal.dom.DOMReference: boolean isDigested()>();
+
+        if $z0 == 0 goto label1;
+
+        return;
+
+     label1:
+        r3 = virtualinvoke r1.<org.jcp.xml.dsig.internal.dom.DOMReference: java.lang.String getURI()>();
+
+        $z1 = staticinvoke <org.jcp.xml.dsig.internal.dom.Utils: boolean sameDocumentURI(java.lang.String)>(r3);
+
+        if $z1 == 0 goto label8;
+
+        r4 = staticinvoke <org.jcp.xml.dsig.internal.dom.Utils: java.lang.String parseIdFromSameDocumentURI(java.lang.String)>(r3);
+
+        if r4 == null goto label4;
+
+        $r6 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.HashMap signatureIdMap>;
+
+        $z4 = virtualinvoke $r6.<java.util.HashMap: boolean containsKey(java.lang.Object)>(r4);
+
+        if $z4 == 0 goto label4;
+
+        $r7 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.HashMap signatureIdMap>;
+
+        r11 = virtualinvoke $r7.<java.util.HashMap: java.lang.Object get(java.lang.Object)>(r4);
+
+        $z5 = r11 instanceof org.jcp.xml.dsig.internal.dom.DOMReference;
+
+        if $z5 == 0 goto label2;
+
+        $r10 = (org.jcp.xml.dsig.internal.dom.DOMReference) r11;
+
+        specialinvoke r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: void digestReference(org.jcp.xml.dsig.internal.dom.DOMReference,javax.xml.crypto.dsig.XMLSignContext)>($r10, r2);
+
+        goto label4;
+
+     label2:
+        $z6 = r11 instanceof javax.xml.crypto.dsig.Manifest;
+
+        if $z6 == 0 goto label4;
+
+        r12 = (javax.xml.crypto.dsig.Manifest) r11;
+
+        r13 = interfaceinvoke r12.<javax.xml.crypto.dsig.Manifest: java.util.List getReferences()>();
+
+        i0 = 0;
+
+        i1 = interfaceinvoke r13.<java.util.List: int size()>();
+
+     label3:
+        if i0 >= i1 goto label4;
+
+        $r8 = interfaceinvoke r13.<java.util.List: java.lang.Object get(int)>(i0);
+
+        $r9 = (org.jcp.xml.dsig.internal.dom.DOMReference) $r8;
+
+        specialinvoke r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: void digestReference(org.jcp.xml.dsig.internal.dom.DOMReference,javax.xml.crypto.dsig.XMLSignContext)>($r9, r2);
+
+        i0 = i0 + 1;
+
+        goto label3;
+
+     label4:
+        $i2 = virtualinvoke r3.<java.lang.String: int length()>();
+
+        if $i2 != 0 goto label8;
+
+        r14 = virtualinvoke r1.<org.jcp.xml.dsig.internal.dom.DOMReference: java.util.List getTransforms()>();
+
+        i3 = 0;
+
+        i4 = interfaceinvoke r14.<java.util.List: int size()>();
+
+     label5:
+        if i3 >= i4 goto label8;
+
+        $r5 = interfaceinvoke r14.<java.util.List: java.lang.Object get(int)>(i3);
+
+        r15 = (javax.xml.crypto.dsig.Transform) $r5;
+
+        r16 = interfaceinvoke r15.<javax.xml.crypto.dsig.Transform: java.lang.String getAlgorithm()>();
+
+        $z2 = virtualinvoke r16.<java.lang.String: boolean equals(java.lang.Object)>("http://www.w3.org/TR/1999/REC-xpath-19991116");
+
+        if $z2 != 0 goto label6;
+
+        $z3 = virtualinvoke r16.<java.lang.String: boolean equals(java.lang.Object)>("http://www.w3.org/2002/06/xmldsig-filter2");
+
+        if $z3 == 0 goto label7;
+
+     label6:
+        return;
+
+     label7:
+        i3 = i3 + 1;
+
+        goto label5;
+
+     label8:
+        virtualinvoke r1.<org.jcp.xml.dsig.internal.dom.DOMReference: void digest(javax.xml.crypto.dsig.XMLSignContext)>(r2);
+
+        return;
+    }
+
+    static javax.xml.crypto.dsig.SignedInfo access$000(org.jcp.xml.dsig.internal.dom.DOMXMLSignature)
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        javax.xml.crypto.dsig.SignedInfo $r1;
+
+        r0 := @parameter0: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        $r1 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.SignedInfo si>;
+
+        return $r1;
+    }
+
+    static javax.xml.crypto.dsig.keyinfo.KeyInfo access$100(org.jcp.xml.dsig.internal.dom.DOMXMLSignature)
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        javax.xml.crypto.dsig.keyinfo.KeyInfo $r1;
+
+        r0 := @parameter0: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        $r1 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.dsig.keyinfo.KeyInfo ki>;
+
+        return $r1;
+    }
+
+    static javax.xml.crypto.KeySelectorResult access$202(org.jcp.xml.dsig.internal.dom.DOMXMLSignature, javax.xml.crypto.KeySelectorResult)
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        javax.xml.crypto.KeySelectorResult r1;
+
+        r0 := @parameter0: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        r1 := @parameter1: javax.xml.crypto.KeySelectorResult;
+
+        r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: javax.xml.crypto.KeySelectorResult ksr> = r1;
+
+        return r1;
+    }
+
+    static org.w3c.dom.Document access$300(org.jcp.xml.dsig.internal.dom.DOMXMLSignature)
+    {
+        org.jcp.xml.dsig.internal.dom.DOMXMLSignature r0;
+        org.w3c.dom.Document $r1;
+
+        r0 := @parameter0: org.jcp.xml.dsig.internal.dom.DOMXMLSignature;
+
+        $r1 = r0.<org.jcp.xml.dsig.internal.dom.DOMXMLSignature: org.w3c.dom.Document ownerDoc>;
+
+        return $r1;
+    }
+
+    static void <clinit>()
+    {
+        java.util.logging.Logger $r0;
+
+        $r0 = staticinvoke <java.util.logging.Logger: java.util.logging.Logger getLogger(java.lang.String)>("org.jcp.xml.dsig.internal.dom");
+
+        <org.jcp.xml.dsig.internal.dom.DOMXMLSignature: java.util.logging.Logger log> = $r0;
+
+        staticinvoke <com.sun.org.apache.xml.internal.security.Init: void init()>();
+
+        return;
+    }
+}

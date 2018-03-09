@@ -1,0 +1,895 @@
+public class org.apache.commons.math3.stat.descriptive.rank.Percentile extends org.apache.commons.math3.stat.descriptive.AbstractUnivariateStatistic implements java.io.Serializable
+{
+    private static final long serialVersionUID;
+    private static final int MAX_CACHED_LEVELS;
+    private static final int PIVOTS_HEAP_LENGTH;
+    private final org.apache.commons.math3.util.KthSelector kthSelector;
+    private final org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType estimationType;
+    private final org.apache.commons.math3.stat.ranking.NaNStrategy nanStrategy;
+    private double quantile;
+    private int[] cachedPivots;
+
+    public void <init>()
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        specialinvoke r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: void <init>(double)>(50.0);
+
+        return;
+    }
+
+    public void <init>(double) throws org.apache.commons.math3.exception.MathIllegalArgumentException
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+        double d0;
+        org.apache.commons.math3.util.KthSelector $r1;
+        org.apache.commons.math3.util.MedianOf3PivotingStrategy $r2;
+        org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType $r3;
+        org.apache.commons.math3.stat.ranking.NaNStrategy $r4;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        d0 := @parameter0: double;
+
+        $r3 = <org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType: org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType LEGACY>;
+
+        $r4 = <org.apache.commons.math3.stat.ranking.NaNStrategy: org.apache.commons.math3.stat.ranking.NaNStrategy REMOVED>;
+
+        $r1 = new org.apache.commons.math3.util.KthSelector;
+
+        $r2 = new org.apache.commons.math3.util.MedianOf3PivotingStrategy;
+
+        specialinvoke $r2.<org.apache.commons.math3.util.MedianOf3PivotingStrategy: void <init>()>();
+
+        specialinvoke $r1.<org.apache.commons.math3.util.KthSelector: void <init>(org.apache.commons.math3.util.PivotingStrategyInterface)>($r2);
+
+        specialinvoke r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: void <init>(double,org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType,org.apache.commons.math3.stat.ranking.NaNStrategy,org.apache.commons.math3.util.KthSelector)>(d0, $r3, $r4, $r1);
+
+        return;
+    }
+
+    public void <init>(org.apache.commons.math3.stat.descriptive.rank.Percentile) throws org.apache.commons.math3.exception.NullArgumentException
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0, r1;
+        org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType $r2;
+        org.apache.commons.math3.stat.ranking.NaNStrategy $r3;
+        org.apache.commons.math3.util.KthSelector $r4;
+        double[] $r5;
+        int[] $r6, $r7, $r8, $r9;
+        double $d0;
+        int $i0;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        r1 := @parameter0: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        specialinvoke r0.<org.apache.commons.math3.stat.descriptive.AbstractUnivariateStatistic: void <init>()>();
+
+        staticinvoke <org.apache.commons.math3.util.MathUtils: void checkNotNull(java.lang.Object)>(r1);
+
+        $r2 = virtualinvoke r1.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType getEstimationType()>();
+
+        r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType estimationType> = $r2;
+
+        $r3 = virtualinvoke r1.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.stat.ranking.NaNStrategy getNaNStrategy()>();
+
+        r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.stat.ranking.NaNStrategy nanStrategy> = $r3;
+
+        $r4 = virtualinvoke r1.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.util.KthSelector getKthSelector()>();
+
+        r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.util.KthSelector kthSelector> = $r4;
+
+        $r5 = virtualinvoke r1.<org.apache.commons.math3.stat.descriptive.rank.Percentile: double[] getDataRef()>();
+
+        virtualinvoke r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: void setData(double[])>($r5);
+
+        $r6 = r1.<org.apache.commons.math3.stat.descriptive.rank.Percentile: int[] cachedPivots>;
+
+        if $r6 == null goto label1;
+
+        $r9 = r1.<org.apache.commons.math3.stat.descriptive.rank.Percentile: int[] cachedPivots>;
+
+        $r8 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: int[] cachedPivots>;
+
+        $r7 = r1.<org.apache.commons.math3.stat.descriptive.rank.Percentile: int[] cachedPivots>;
+
+        $i0 = lengthof $r7;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r9, 0, $r8, 0, $i0);
+
+     label1:
+        $d0 = r1.<org.apache.commons.math3.stat.descriptive.rank.Percentile: double quantile>;
+
+        virtualinvoke r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: void setQuantile(double)>($d0);
+
+        return;
+    }
+
+    protected void <init>(double, org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType, org.apache.commons.math3.stat.ranking.NaNStrategy, org.apache.commons.math3.util.KthSelector) throws org.apache.commons.math3.exception.MathIllegalArgumentException
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+        double d0;
+        org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType r1;
+        org.apache.commons.math3.stat.ranking.NaNStrategy r2;
+        org.apache.commons.math3.util.KthSelector r3;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType;
+
+        r2 := @parameter2: org.apache.commons.math3.stat.ranking.NaNStrategy;
+
+        r3 := @parameter3: org.apache.commons.math3.util.KthSelector;
+
+        specialinvoke r0.<org.apache.commons.math3.stat.descriptive.AbstractUnivariateStatistic: void <init>()>();
+
+        virtualinvoke r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: void setQuantile(double)>(d0);
+
+        r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: int[] cachedPivots> = null;
+
+        staticinvoke <org.apache.commons.math3.util.MathUtils: void checkNotNull(java.lang.Object)>(r1);
+
+        staticinvoke <org.apache.commons.math3.util.MathUtils: void checkNotNull(java.lang.Object)>(r2);
+
+        staticinvoke <org.apache.commons.math3.util.MathUtils: void checkNotNull(java.lang.Object)>(r3);
+
+        r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType estimationType> = r1;
+
+        r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.stat.ranking.NaNStrategy nanStrategy> = r2;
+
+        r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.util.KthSelector kthSelector> = r3;
+
+        return;
+    }
+
+    public void setData(double[])
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+        double[] r1;
+        int[] $r2, $r3;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        r1 := @parameter0: double[];
+
+        if r1 != null goto label1;
+
+        r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: int[] cachedPivots> = null;
+
+        goto label2;
+
+     label1:
+        $r2 = newarray (int)[512];
+
+        r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: int[] cachedPivots> = $r2;
+
+        $r3 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: int[] cachedPivots>;
+
+        staticinvoke <java.util.Arrays: void fill(int[],int)>($r3, -1);
+
+     label2:
+        specialinvoke r0.<org.apache.commons.math3.stat.descriptive.AbstractUnivariateStatistic: void setData(double[])>(r1);
+
+        return;
+    }
+
+    public void setData(double[], int, int) throws org.apache.commons.math3.exception.MathIllegalArgumentException
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+        double[] r1;
+        int i0, i1;
+        int[] $r2, $r3;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        r1 := @parameter0: double[];
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        if r1 != null goto label1;
+
+        r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: int[] cachedPivots> = null;
+
+        goto label2;
+
+     label1:
+        $r2 = newarray (int)[512];
+
+        r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: int[] cachedPivots> = $r2;
+
+        $r3 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: int[] cachedPivots>;
+
+        staticinvoke <java.util.Arrays: void fill(int[],int)>($r3, -1);
+
+     label2:
+        specialinvoke r0.<org.apache.commons.math3.stat.descriptive.AbstractUnivariateStatistic: void setData(double[],int,int)>(r1, i0, i1);
+
+        return;
+    }
+
+    public double evaluate(double) throws org.apache.commons.math3.exception.MathIllegalArgumentException
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+        double d0, $d1;
+        double[] $r1;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        d0 := @parameter0: double;
+
+        $r1 = virtualinvoke r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: double[] getDataRef()>();
+
+        $d1 = virtualinvoke r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: double evaluate(double[],double)>($r1, d0);
+
+        return $d1;
+    }
+
+    public double evaluate(double[], double) throws org.apache.commons.math3.exception.MathIllegalArgumentException
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+        double[] r1;
+        double d0, $d1;
+        int $i0;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        r1 := @parameter0: double[];
+
+        d0 := @parameter1: double;
+
+        virtualinvoke r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: boolean test(double[],int,int)>(r1, 0, 0);
+
+        $i0 = lengthof r1;
+
+        $d1 = virtualinvoke r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: double evaluate(double[],int,int,double)>(r1, 0, $i0, d0);
+
+        return $d1;
+    }
+
+    public double evaluate(double[], int, int) throws org.apache.commons.math3.exception.MathIllegalArgumentException
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+        double[] r1;
+        int i0, i1;
+        double $d0, $d1;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        r1 := @parameter0: double[];
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        $d0 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: double quantile>;
+
+        $d1 = virtualinvoke r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: double evaluate(double[],int,int,double)>(r1, i0, i1, $d0);
+
+        return $d1;
+    }
+
+    public double evaluate(double[], int, int, double) throws org.apache.commons.math3.exception.MathIllegalArgumentException
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+        double[] r1, r2;
+        int i0, i1, $i4;
+        double d0, $d1, $d2;
+        int[] r3;
+        byte $b2, $b3;
+        org.apache.commons.math3.exception.OutOfRangeException $r4;
+        org.apache.commons.math3.exception.util.LocalizedFormats $r5;
+        java.lang.Double $r6;
+        java.lang.Integer $r7, $r8;
+        org.apache.commons.math3.util.KthSelector $r9;
+        org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType $r10;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        r1 := @parameter0: double[];
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        d0 := @parameter3: double;
+
+        virtualinvoke r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: boolean test(double[],int,int)>(r1, i0, i1);
+
+        $b2 = d0 cmpl 100.0;
+
+        if $b2 > 0 goto label1;
+
+        $b3 = d0 cmpg 0.0;
+
+        if $b3 > 0 goto label2;
+
+     label1:
+        $r4 = new org.apache.commons.math3.exception.OutOfRangeException;
+
+        $r5 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats OUT_OF_BOUNDS_QUANTILE_VALUE>;
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(0);
+
+        $r8 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(100);
+
+        specialinvoke $r4.<org.apache.commons.math3.exception.OutOfRangeException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Number,java.lang.Number,java.lang.Number)>($r5, $r6, $r7, $r8);
+
+        throw $r4;
+
+     label2:
+        if i1 != 0 goto label3;
+
+        return #NaN;
+
+     label3:
+        if i1 != 1 goto label4;
+
+        $d1 = r1[i0];
+
+        return $d1;
+
+     label4:
+        r2 = virtualinvoke r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: double[] getWorkArray(double[],int,int)>(r1, i0, i1);
+
+        r3 = specialinvoke r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: int[] getPivots(double[])>(r1);
+
+        $i4 = lengthof r2;
+
+        if $i4 != 0 goto label5;
+
+        $d2 = #NaN;
+
+        goto label6;
+
+     label5:
+        $r10 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType estimationType>;
+
+        $r9 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.util.KthSelector kthSelector>;
+
+        $d2 = virtualinvoke $r10.<org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType: double evaluate(double[],int[],double,org.apache.commons.math3.util.KthSelector)>(r2, r3, d0, $r9);
+
+     label6:
+        return $d2;
+    }
+
+    int medianOf3(double[], int, int)
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+        double[] r1;
+        int i0, i1, $i2;
+        org.apache.commons.math3.util.MedianOf3PivotingStrategy $r2;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        r1 := @parameter0: double[];
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        $r2 = new org.apache.commons.math3.util.MedianOf3PivotingStrategy;
+
+        specialinvoke $r2.<org.apache.commons.math3.util.MedianOf3PivotingStrategy: void <init>()>();
+
+        $i2 = virtualinvoke $r2.<org.apache.commons.math3.util.MedianOf3PivotingStrategy: int pivotIndex(double[],int,int)>(r1, i0, i1);
+
+        return $i2;
+    }
+
+    public double getQuantile()
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        $d0 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: double quantile>;
+
+        return $d0;
+    }
+
+    public void setQuantile(double) throws org.apache.commons.math3.exception.MathIllegalArgumentException
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+        double d0;
+        byte $b0, $b1;
+        org.apache.commons.math3.exception.OutOfRangeException $r1;
+        org.apache.commons.math3.exception.util.LocalizedFormats $r2;
+        java.lang.Double $r3;
+        java.lang.Integer $r4, $r5;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        d0 := @parameter0: double;
+
+        $b0 = d0 cmpg 0.0;
+
+        if $b0 <= 0 goto label1;
+
+        $b1 = d0 cmpl 100.0;
+
+        if $b1 <= 0 goto label2;
+
+     label1:
+        $r1 = new org.apache.commons.math3.exception.OutOfRangeException;
+
+        $r2 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats OUT_OF_BOUNDS_QUANTILE_VALUE>;
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r4 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(0);
+
+        $r5 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(100);
+
+        specialinvoke $r1.<org.apache.commons.math3.exception.OutOfRangeException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Number,java.lang.Number,java.lang.Number)>($r2, $r3, $r4, $r5);
+
+        throw $r1;
+
+     label2:
+        r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: double quantile> = d0;
+
+        return;
+    }
+
+    public org.apache.commons.math3.stat.descriptive.rank.Percentile copy()
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0, $r1;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        $r1 = new org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        specialinvoke $r1.<org.apache.commons.math3.stat.descriptive.rank.Percentile: void <init>(org.apache.commons.math3.stat.descriptive.rank.Percentile)>(r0);
+
+        return $r1;
+    }
+
+    public static void copy(org.apache.commons.math3.stat.descriptive.rank.Percentile, org.apache.commons.math3.stat.descriptive.rank.Percentile) throws org.apache.commons.math3.exception.MathUnsupportedOperationException
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0, r1;
+        org.apache.commons.math3.exception.MathUnsupportedOperationException $r2;
+
+        r0 := @parameter0: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        r1 := @parameter1: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        $r2 = new org.apache.commons.math3.exception.MathUnsupportedOperationException;
+
+        specialinvoke $r2.<org.apache.commons.math3.exception.MathUnsupportedOperationException: void <init>()>();
+
+        throw $r2;
+    }
+
+    protected double[] getWorkArray(double[], int, int)
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+        double[] r1, $r2, r5;
+        int i0, i1, $i2, $i3;
+        org.apache.commons.math3.stat.ranking.NaNStrategy $r3;
+        int[] $r4;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        r1 := @parameter0: double[];
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        $r2 = virtualinvoke r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: double[] getDataRef()>();
+
+        if r1 != $r2 goto label1;
+
+        r5 = virtualinvoke r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: double[] getDataRef()>();
+
+        goto label7;
+
+     label1:
+        $r4 = <org.apache.commons.math3.stat.descriptive.rank.Percentile$1: int[] $SwitchMap$org$apache$commons$math3$stat$ranking$NaNStrategy>;
+
+        $r3 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.stat.ranking.NaNStrategy nanStrategy>;
+
+        $i2 = virtualinvoke $r3.<org.apache.commons.math3.stat.ranking.NaNStrategy: int ordinal()>();
+
+        $i3 = $r4[$i2];
+
+        tableswitch($i3)
+        {
+            case 1: goto label2;
+            case 2: goto label3;
+            case 3: goto label4;
+            case 4: goto label5;
+            default: goto label6;
+        };
+
+     label2:
+        r5 = staticinvoke <org.apache.commons.math3.stat.descriptive.rank.Percentile: double[] replaceAndSlice(double[],int,int,double,double)>(r1, i0, i1, #NaN, #Infinity);
+
+        goto label7;
+
+     label3:
+        r5 = staticinvoke <org.apache.commons.math3.stat.descriptive.rank.Percentile: double[] replaceAndSlice(double[],int,int,double,double)>(r1, i0, i1, #NaN, #-Infinity);
+
+        goto label7;
+
+     label4:
+        r5 = staticinvoke <org.apache.commons.math3.stat.descriptive.rank.Percentile: double[] removeAndSlice(double[],int,int,double)>(r1, i0, i1, #NaN);
+
+        goto label7;
+
+     label5:
+        r5 = staticinvoke <org.apache.commons.math3.stat.descriptive.rank.Percentile: double[] copyOf(double[],int,int)>(r1, i0, i1);
+
+        staticinvoke <org.apache.commons.math3.util.MathArrays: void checkNotNaN(double[])>(r5);
+
+        goto label7;
+
+     label6:
+        r5 = staticinvoke <org.apache.commons.math3.stat.descriptive.rank.Percentile: double[] copyOf(double[],int,int)>(r1, i0, i1);
+
+     label7:
+        return r5;
+    }
+
+    private static double[] copyOf(double[], int, int)
+    {
+        double[] r0, $r1;
+        int i0, i1, $i2;
+
+        r0 := @parameter0: double[];
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        staticinvoke <org.apache.commons.math3.util.MathArrays: boolean verifyValues(double[],int,int)>(r0, i0, i1);
+
+        $i2 = i0 + i1;
+
+        $r1 = staticinvoke <org.apache.commons.math3.util.MathArrays: double[] copyOfRange(double[],int,int)>(r0, i0, $i2);
+
+        return $r1;
+    }
+
+    private static double[] replaceAndSlice(double[], int, int, double, double)
+    {
+        double[] r0, r1;
+        int i0, i1, $i2, i3;
+        double d0, d1, $d2, $d3;
+        boolean $z0;
+
+        r0 := @parameter0: double[];
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        d0 := @parameter3: double;
+
+        d1 := @parameter4: double;
+
+        r1 = staticinvoke <org.apache.commons.math3.stat.descriptive.rank.Percentile: double[] copyOf(double[],int,int)>(r0, i0, i1);
+
+        i3 = 0;
+
+     label1:
+        if i3 >= i1 goto label4;
+
+        $i2 = i3;
+
+        $d2 = r1[i3];
+
+        $z0 = staticinvoke <org.apache.commons.math3.util.Precision: boolean equalsIncludingNaN(double,double)>(d0, $d2);
+
+        if $z0 == 0 goto label2;
+
+        $d3 = d1;
+
+        goto label3;
+
+     label2:
+        $d3 = r1[i3];
+
+     label3:
+        r1[$i2] = $d3;
+
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label4:
+        return r1;
+    }
+
+    private static double[] removeAndSlice(double[], int, int, double)
+    {
+        double[] r0, r3;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, i13, i14, i15, i17;
+        double d0, $d1;
+        java.util.BitSet $r2;
+        boolean $z1, $z2;
+
+        r0 := @parameter0: double[];
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        d0 := @parameter3: double;
+
+        staticinvoke <org.apache.commons.math3.util.MathArrays: boolean verifyValues(double[],int,int)>(r0, i0, i1);
+
+        $r2 = new java.util.BitSet;
+
+        specialinvoke $r2.<java.util.BitSet: void <init>(int)>(i1);
+
+        i13 = i0;
+
+     label1:
+        $i3 = i0 + i1;
+
+        if i13 >= $i3 goto label3;
+
+        $d1 = r0[i13];
+
+        $z2 = staticinvoke <org.apache.commons.math3.util.Precision: boolean equalsIncludingNaN(double,double)>(d0, $d1);
+
+        if $z2 == 0 goto label2;
+
+        $i12 = i13 - i0;
+
+        virtualinvoke $r2.<java.util.BitSet: void set(int)>($i12);
+
+     label2:
+        i13 = i13 + 1;
+
+        goto label1;
+
+     label3:
+        $z1 = virtualinvoke $r2.<java.util.BitSet: boolean isEmpty()>();
+
+        if $z1 == 0 goto label4;
+
+        r3 = staticinvoke <org.apache.commons.math3.stat.descriptive.rank.Percentile: double[] copyOf(double[],int,int)>(r0, i0, i1);
+
+        goto label8;
+
+     label4:
+        $i4 = virtualinvoke $r2.<java.util.BitSet: int cardinality()>();
+
+        if $i4 != i1 goto label5;
+
+        r3 = newarray (double)[0];
+
+        goto label8;
+
+     label5:
+        $i5 = virtualinvoke $r2.<java.util.BitSet: int cardinality()>();
+
+        $i6 = i1 - $i5;
+
+        r3 = newarray (double)[$i6];
+
+        i14 = i0;
+
+        i15 = 0;
+
+        i17 = 0;
+
+     label6:
+        $i7 = virtualinvoke $r2.<java.util.BitSet: int nextSetBit(int)>(i17);
+
+        if $i7 == -1 goto label7;
+
+        i2 = $i7 - i17;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r0, i14, r3, i15, i2);
+
+        i15 = i15 + i2;
+
+        $i11 = virtualinvoke $r2.<java.util.BitSet: int nextClearBit(int)>($i7);
+
+        i17 = $i11;
+
+        i14 = i0 + $i11;
+
+        goto label6;
+
+     label7:
+        $i8 = i0 + i1;
+
+        if i14 >= $i8 goto label8;
+
+        $i9 = i0 + i1;
+
+        $i10 = $i9 - i14;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r0, i14, r3, i15, $i10);
+
+     label8:
+        return r3;
+    }
+
+    private int[] getPivots(double[])
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+        double[] r1, $r2;
+        int[] r3;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        r1 := @parameter0: double[];
+
+        $r2 = virtualinvoke r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: double[] getDataRef()>();
+
+        if r1 != $r2 goto label1;
+
+        r3 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: int[] cachedPivots>;
+
+        goto label2;
+
+     label1:
+        r3 = newarray (int)[512];
+
+        staticinvoke <java.util.Arrays: void fill(int[],int)>(r3, -1);
+
+     label2:
+        return r3;
+    }
+
+    public org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType getEstimationType()
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+        org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType $r1;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        $r1 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType estimationType>;
+
+        return $r1;
+    }
+
+    public org.apache.commons.math3.stat.descriptive.rank.Percentile withEstimationType(org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType)
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0, $r2;
+        org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType r1;
+        org.apache.commons.math3.util.KthSelector $r3;
+        org.apache.commons.math3.stat.ranking.NaNStrategy $r4;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        r1 := @parameter0: org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType;
+
+        $r2 = new org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        $d0 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: double quantile>;
+
+        $r4 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.stat.ranking.NaNStrategy nanStrategy>;
+
+        $r3 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.util.KthSelector kthSelector>;
+
+        specialinvoke $r2.<org.apache.commons.math3.stat.descriptive.rank.Percentile: void <init>(double,org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType,org.apache.commons.math3.stat.ranking.NaNStrategy,org.apache.commons.math3.util.KthSelector)>($d0, r1, $r4, $r3);
+
+        return $r2;
+    }
+
+    public org.apache.commons.math3.stat.ranking.NaNStrategy getNaNStrategy()
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+        org.apache.commons.math3.stat.ranking.NaNStrategy $r1;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        $r1 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.stat.ranking.NaNStrategy nanStrategy>;
+
+        return $r1;
+    }
+
+    public org.apache.commons.math3.stat.descriptive.rank.Percentile withNaNStrategy(org.apache.commons.math3.stat.ranking.NaNStrategy)
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0, $r2;
+        org.apache.commons.math3.stat.ranking.NaNStrategy r1;
+        org.apache.commons.math3.util.KthSelector $r3;
+        org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType $r4;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        r1 := @parameter0: org.apache.commons.math3.stat.ranking.NaNStrategy;
+
+        $r2 = new org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        $d0 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: double quantile>;
+
+        $r4 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType estimationType>;
+
+        $r3 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.util.KthSelector kthSelector>;
+
+        specialinvoke $r2.<org.apache.commons.math3.stat.descriptive.rank.Percentile: void <init>(double,org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType,org.apache.commons.math3.stat.ranking.NaNStrategy,org.apache.commons.math3.util.KthSelector)>($d0, $r4, r1, $r3);
+
+        return $r2;
+    }
+
+    public org.apache.commons.math3.util.KthSelector getKthSelector()
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+        org.apache.commons.math3.util.KthSelector $r1;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        $r1 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.util.KthSelector kthSelector>;
+
+        return $r1;
+    }
+
+    public org.apache.commons.math3.util.PivotingStrategyInterface getPivotingStrategy()
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0;
+        org.apache.commons.math3.util.KthSelector $r1;
+        org.apache.commons.math3.util.PivotingStrategyInterface $r2;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        $r1 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.util.KthSelector kthSelector>;
+
+        $r2 = virtualinvoke $r1.<org.apache.commons.math3.util.KthSelector: org.apache.commons.math3.util.PivotingStrategyInterface getPivotingStrategy()>();
+
+        return $r2;
+    }
+
+    public org.apache.commons.math3.stat.descriptive.rank.Percentile withKthSelector(org.apache.commons.math3.util.KthSelector)
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0, $r2;
+        org.apache.commons.math3.util.KthSelector r1;
+        org.apache.commons.math3.stat.ranking.NaNStrategy $r3;
+        org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType $r4;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        r1 := @parameter0: org.apache.commons.math3.util.KthSelector;
+
+        $r2 = new org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        $d0 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: double quantile>;
+
+        $r4 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType estimationType>;
+
+        $r3 = r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.stat.ranking.NaNStrategy nanStrategy>;
+
+        specialinvoke $r2.<org.apache.commons.math3.stat.descriptive.rank.Percentile: void <init>(double,org.apache.commons.math3.stat.descriptive.rank.Percentile$EstimationType,org.apache.commons.math3.stat.ranking.NaNStrategy,org.apache.commons.math3.util.KthSelector)>($d0, $r4, $r3, r1);
+
+        return $r2;
+    }
+
+    public volatile org.apache.commons.math3.stat.descriptive.UnivariateStatistic copy()
+    {
+        org.apache.commons.math3.stat.descriptive.rank.Percentile r0, $r1;
+
+        r0 := @this: org.apache.commons.math3.stat.descriptive.rank.Percentile;
+
+        $r1 = virtualinvoke r0.<org.apache.commons.math3.stat.descriptive.rank.Percentile: org.apache.commons.math3.stat.descriptive.rank.Percentile copy()>();
+
+        return $r1;
+    }
+
+    public static void <clinit>()
+    {
+        <org.apache.commons.math3.stat.descriptive.rank.Percentile: int PIVOTS_HEAP_LENGTH> = 512;
+
+        <org.apache.commons.math3.stat.descriptive.rank.Percentile: int MAX_CACHED_LEVELS> = 10;
+
+        <org.apache.commons.math3.stat.descriptive.rank.Percentile: long serialVersionUID> = -8091216485095130416L;
+
+        return;
+    }
+}

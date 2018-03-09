@@ -22,41 +22,13 @@ public class JarParser extends BodyTransformer{
     private static DependencyMap dependencyMap = new DependencyMap();
     private static Map<SootMethod,Body> bodies = new HashMap<>();
     private static Set<MethodSignature> workings = new HashSet<>();
-    /**
-     * Sample main function
-     * @param args no use at all
-     */
-    public static void main(String[] args) {
-        List<String> libs = new ArrayList<>();
-        libs.add("lib/point.jar");
-        //libs.add("../benchmarks/examples/geometry/geometry.jar");
-        //libs.add("lib/hamcrest-core-1.3.jar");
-        //libs.add("lib/junit-4.11.jar");
-        List<MethodSignature> sigs = parseJar(libs);
-        DependencyMap depmap = createDependencyMap();
-        List<MethodSignature> testlist = new ArrayList<>();
-        testlist.add(sigs.get(7));
-        testlist.add(sigs.get(5));
-        testlist.add(sigs.get(6));
-        testlist.add(sigs.get(3));
-        testlist.add(sigs.get(4));
-        testlist.add(sigs.get(0));
-        List<List<MethodSignature>> result = depmap.findAllTopSorts(testlist);
-        System.out.println("Found "+result.size() + " results.");
-        SymonsterConfig config = JsonParser.parseJsonConfig("config/config.json");
-        Set<String> acceptableSuperClasses = new HashSet<>();
-        acceptableSuperClasses.addAll(config.acceptableSuperClasses);
-        for (Set<String> set : getSuperClasses(acceptableSuperClasses).values()){
-            System.out.println(set);
-        }
-    }
 
     /**
      * Parse a list of given jar files, and produce a list of method signatures.
      * @param libs physical addresses of libraries. e.g. "lib/hamcrest-core-1.3.jar"
      * @return the list of method signature contained in the given libraries
      */
-    public static List<MethodSignature> parseJar(List<String> libs) {
+    public static List<MethodSignature> parseJar(List<String> libs,List<String> pkgs) {
         PackManager.v().getPack("jap").add(new Transform(ANALYSIS_NAME, new JarParser()));
         SootUtils.runSoot(SootUtils.getSootArgs(libs));
         List<MethodSignature> sigs = new LinkedList<>();
@@ -67,7 +39,14 @@ public class JarParser extends BodyTransformer{
                 List<SootMethod> methods = clazz.getMethods();
                 for (SootMethod method : methods) {
                     if (method.isPublic()){
-                        sigs.add(getMethodSignature(method));
+                        boolean sat = false;
+                        for (String pkg : pkgs){
+                            if (method.getName().startsWith(pkg)){
+                                sat = true;
+                                break;
+                            }
+                        }
+                        if (sat) sigs.add(getMethodSignature(method));
                     }
                 }
             }
@@ -219,7 +198,7 @@ public class JarParser extends BodyTransformer{
             result.add(ref.resolve());
         }
         else if (value instanceof FieldRef){
-            JInstanceFieldRef ref = (JInstanceFieldRef)value;
+            FieldRef ref = (FieldRef)value;
             result.add(ref.getField());
         }
         else if (value instanceof InvokeExpr){

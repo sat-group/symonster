@@ -1,0 +1,1012 @@
+public class org.apache.commons.math3.util.OpenIntToDoubleHashMap extends java.lang.Object implements java.io.Serializable
+{
+    protected static final byte FREE;
+    protected static final byte FULL;
+    protected static final byte REMOVED;
+    private static final long serialVersionUID;
+    private static final float LOAD_FACTOR;
+    private static final int DEFAULT_EXPECTED_SIZE;
+    private static final int RESIZE_MULTIPLIER;
+    private static final int PERTURB_SHIFT;
+    private int[] keys;
+    private double[] values;
+    private byte[] states;
+    private final double missingEntries;
+    private int size;
+    private int mask;
+    private transient int count;
+
+    public void <init>()
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+
+        r0 := @this: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        specialinvoke r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: void <init>(int,double)>(16, #NaN);
+
+        return;
+    }
+
+    public void <init>(double)
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        d0 := @parameter0: double;
+
+        specialinvoke r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: void <init>(int,double)>(16, d0);
+
+        return;
+    }
+
+    public void <init>(int)
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        int i0;
+
+        r0 := @this: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        i0 := @parameter0: int;
+
+        specialinvoke r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: void <init>(int,double)>(i0, #NaN);
+
+        return;
+    }
+
+    public void <init>(int, double)
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        int i0, i1, $i2;
+        double d0;
+        int[] $r1;
+        double[] $r2;
+        byte[] $r3;
+
+        r0 := @this: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        i0 := @parameter0: int;
+
+        d0 := @parameter1: double;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        i1 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int computeCapacity(int)>(i0);
+
+        $r1 = newarray (int)[i1];
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int[] keys> = $r1;
+
+        $r2 = newarray (double)[i1];
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double[] values> = $r2;
+
+        $r3 = newarray (byte)[i1];
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states> = $r3;
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double missingEntries> = d0;
+
+        $i2 = i1 - 1;
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int mask> = $i2;
+
+        return;
+    }
+
+    public void <init>(org.apache.commons.math3.util.OpenIntToDoubleHashMap)
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0, r1;
+        int i0, $i1, $i2, $i3;
+        int[] $r2, $r3, $r4, $r5;
+        double[] $r6, $r7, $r8;
+        byte[] $r9, $r10, $r11;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        r1 := @parameter0: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $r2 = r1.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int[] keys>;
+
+        i0 = lengthof $r2;
+
+        $r3 = newarray (int)[i0];
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int[] keys> = $r3;
+
+        $r5 = r1.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int[] keys>;
+
+        $r4 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int[] keys>;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r5, 0, $r4, 0, i0);
+
+        $r6 = newarray (double)[i0];
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double[] values> = $r6;
+
+        $r8 = r1.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double[] values>;
+
+        $r7 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double[] values>;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r8, 0, $r7, 0, i0);
+
+        $r9 = newarray (byte)[i0];
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states> = $r9;
+
+        $r11 = r1.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states>;
+
+        $r10 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states>;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r11, 0, $r10, 0, i0);
+
+        $d0 = r1.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double missingEntries>;
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double missingEntries> = $d0;
+
+        $i1 = r1.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int size>;
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int size> = $i1;
+
+        $i2 = r1.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int mask>;
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int mask> = $i2;
+
+        $i3 = r1.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int count>;
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int count> = $i3;
+
+        return;
+    }
+
+    private static int computeCapacity(int)
+    {
+        int i0, i1, i2, $i3;
+        float $f0, $f1;
+        double $d0, $d1;
+
+        i0 := @parameter0: int;
+
+        if i0 != 0 goto label1;
+
+        return 1;
+
+     label1:
+        $f0 = (float) i0;
+
+        $f1 = $f0 / 0.5F;
+
+        $d0 = (double) $f1;
+
+        $d1 = staticinvoke <org.apache.commons.math3.util.FastMath: double ceil(double)>($d0);
+
+        i1 = (int) $d1;
+
+        i2 = staticinvoke <java.lang.Integer: int highestOneBit(int)>(i1);
+
+        if i2 != i1 goto label2;
+
+        return i1;
+
+     label2:
+        $i3 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int nextPowerOfTwo(int)>(i1);
+
+        return $i3;
+    }
+
+    private static int nextPowerOfTwo(int)
+    {
+        int i0, $i1, $i2;
+
+        i0 := @parameter0: int;
+
+        $i1 = staticinvoke <java.lang.Integer: int highestOneBit(int)>(i0);
+
+        $i2 = $i1 << 1;
+
+        return $i2;
+    }
+
+    public double get(int)
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        int i0, i1, $i2, $i5, i6, i7, i8;
+        boolean $z0, $z1;
+        byte[] $r1, $r2;
+        byte $b3, $b4;
+        double $d0, $d1, $d2, $d3;
+        double[] $r3, $r4;
+
+        r0 := @this: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        i0 := @parameter0: int;
+
+        i1 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int hashOf(int)>(i0);
+
+        $i2 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int mask>;
+
+        i6 = i1 & $i2;
+
+        $z0 = specialinvoke r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: boolean containsKey(int,int)>(i0, i6);
+
+        if $z0 == 0 goto label1;
+
+        $r4 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double[] values>;
+
+        $d3 = $r4[i6];
+
+        return $d3;
+
+     label1:
+        $r1 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states>;
+
+        $b3 = $r1[i6];
+
+        if $b3 != 0 goto label2;
+
+        $d2 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double missingEntries>;
+
+        return $d2;
+
+     label2:
+        i7 = i6;
+
+        i8 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int perturb(int)>(i1);
+
+     label3:
+        $r2 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states>;
+
+        $b4 = $r2[i6];
+
+        if $b4 == 0 goto label5;
+
+        i7 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int probe(int,int)>(i8, i7);
+
+        $i5 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int mask>;
+
+        i6 = i7 & $i5;
+
+        $z1 = specialinvoke r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: boolean containsKey(int,int)>(i0, i6);
+
+        if $z1 == 0 goto label4;
+
+        $r3 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double[] values>;
+
+        $d1 = $r3[i6];
+
+        return $d1;
+
+     label4:
+        i8 = i8 >> 5;
+
+        goto label3;
+
+     label5:
+        $d0 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double missingEntries>;
+
+        return $d0;
+    }
+
+    public boolean containsKey(int)
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        int i0, i1, $i2, $i5, i6, i7, i8;
+        boolean $z0, $z1;
+        byte[] $r1, $r2;
+        byte $b3, $b4;
+
+        r0 := @this: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        i0 := @parameter0: int;
+
+        i1 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int hashOf(int)>(i0);
+
+        $i2 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int mask>;
+
+        i6 = i1 & $i2;
+
+        $z0 = specialinvoke r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: boolean containsKey(int,int)>(i0, i6);
+
+        if $z0 == 0 goto label1;
+
+        return 1;
+
+     label1:
+        $r1 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states>;
+
+        $b3 = $r1[i6];
+
+        if $b3 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        i7 = i6;
+
+        i8 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int perturb(int)>(i1);
+
+     label3:
+        $r2 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states>;
+
+        $b4 = $r2[i6];
+
+        if $b4 == 0 goto label5;
+
+        i7 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int probe(int,int)>(i8, i7);
+
+        $i5 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int mask>;
+
+        i6 = i7 & $i5;
+
+        $z1 = specialinvoke r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: boolean containsKey(int,int)>(i0, i6);
+
+        if $z1 == 0 goto label4;
+
+        return 1;
+
+     label4:
+        i8 = i8 >> 5;
+
+        goto label3;
+
+     label5:
+        return 0;
+    }
+
+    public org.apache.commons.math3.util.OpenIntToDoubleHashMap$Iterator iterator()
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap$Iterator $r1;
+
+        r0 := @this: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        $r1 = new org.apache.commons.math3.util.OpenIntToDoubleHashMap$Iterator;
+
+        specialinvoke $r1.<org.apache.commons.math3.util.OpenIntToDoubleHashMap$Iterator: void <init>(org.apache.commons.math3.util.OpenIntToDoubleHashMap,org.apache.commons.math3.util.OpenIntToDoubleHashMap$1)>(r0, null);
+
+        return $r1;
+    }
+
+    private static int perturb(int)
+    {
+        int i0, $i1;
+
+        i0 := @parameter0: int;
+
+        $i1 = i0 & 2147483647;
+
+        return $i1;
+    }
+
+    private int findInsertionIndex(int)
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        int i0, $i1, $i2;
+        byte[] $r1;
+        int[] $r2;
+
+        r0 := @this: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        i0 := @parameter0: int;
+
+        $r2 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int[] keys>;
+
+        $r1 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states>;
+
+        $i1 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int mask>;
+
+        $i2 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int findInsertionIndex(int[],byte[],int,int)>($r2, $r1, i0, $i1);
+
+        return $i2;
+    }
+
+    private static int findInsertionIndex(int[], byte[], int, int)
+    {
+        int[] r0;
+        byte[] r1;
+        int i0, i1, i2, i3, $i10, $i11, $i12, $i14, $i15, $i16, i17, i18, i19, i21;
+        byte $b4, $b5, $b6, $b7, $b8, $b9, $b13, $b20;
+
+        r0 := @parameter0: int[];
+
+        r1 := @parameter1: byte[];
+
+        i0 := @parameter2: int;
+
+        i1 := @parameter3: int;
+
+        i2 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int hashOf(int)>(i0);
+
+        i17 = i2 & i1;
+
+        $b4 = r1[i17];
+
+        if $b4 != 0 goto label1;
+
+        return i17;
+
+     label1:
+        $b5 = r1[i17];
+
+        if $b5 != 1 goto label2;
+
+        $i15 = r0[i17];
+
+        if $i15 != i0 goto label2;
+
+        $i16 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int changeIndexSign(int)>(i17);
+
+        return $i16;
+
+     label2:
+        i18 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int perturb(int)>(i2);
+
+        i19 = i17;
+
+        $b6 = r1[i17];
+
+        if $b6 != 1 goto label4;
+
+     label3:
+        i19 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int probe(int,int)>(i18, i19);
+
+        i17 = i19 & i1;
+
+        i18 = i18 >> 5;
+
+        $b13 = r1[i17];
+
+        if $b13 != 1 goto label4;
+
+        $i14 = r0[i17];
+
+        if $i14 != i0 goto label3;
+
+        goto label4;
+
+     label4:
+        $b20 = r1[i17];
+
+        if $b20 != 0 goto label5;
+
+        return i17;
+
+     label5:
+        $b7 = r1[i17];
+
+        if $b7 != 1 goto label6;
+
+        $i12 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int changeIndexSign(int)>(i17);
+
+        return $i12;
+
+     label6:
+        i3 = i17;
+
+     label7:
+        i19 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int probe(int,int)>(i18, i19);
+
+        i21 = i19 & i1;
+
+        $b8 = r1[i21];
+
+        if $b8 != 0 goto label8;
+
+        return i3;
+
+     label8:
+        $b9 = r1[i21];
+
+        if $b9 != 1 goto label9;
+
+        $i10 = r0[i21];
+
+        if $i10 != i0 goto label9;
+
+        $i11 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int changeIndexSign(int)>(i21);
+
+        return $i11;
+
+     label9:
+        i18 = i18 >> 5;
+
+        goto label7;
+    }
+
+    private static int probe(int, int)
+    {
+        int i0, i1, $i2, $i3, $i4, $i5;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        $i2 = i1 << 2;
+
+        $i3 = $i2 + i1;
+
+        $i4 = $i3 + i0;
+
+        $i5 = $i4 + 1;
+
+        return $i5;
+    }
+
+    private static int changeIndexSign(int)
+    {
+        int i0, $i1, $i2;
+
+        i0 := @parameter0: int;
+
+        $i1 = neg i0;
+
+        $i2 = $i1 - 1;
+
+        return $i2;
+    }
+
+    public int size()
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        int $i0;
+
+        r0 := @this: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        $i0 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int size>;
+
+        return $i0;
+    }
+
+    public double remove(int)
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        int i0, i1, $i2, $i5, i6, i7, i8;
+        boolean $z0, $z1;
+        byte[] $r1, $r2;
+        byte $b3, $b4;
+        double $d0, $d1, $d2, $d3;
+
+        r0 := @this: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        i0 := @parameter0: int;
+
+        i1 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int hashOf(int)>(i0);
+
+        $i2 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int mask>;
+
+        i6 = i1 & $i2;
+
+        $z0 = specialinvoke r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: boolean containsKey(int,int)>(i0, i6);
+
+        if $z0 == 0 goto label1;
+
+        $d3 = specialinvoke r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double doRemove(int)>(i6);
+
+        return $d3;
+
+     label1:
+        $r1 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states>;
+
+        $b3 = $r1[i6];
+
+        if $b3 != 0 goto label2;
+
+        $d2 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double missingEntries>;
+
+        return $d2;
+
+     label2:
+        i7 = i6;
+
+        i8 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int perturb(int)>(i1);
+
+     label3:
+        $r2 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states>;
+
+        $b4 = $r2[i6];
+
+        if $b4 == 0 goto label5;
+
+        i7 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int probe(int,int)>(i8, i7);
+
+        $i5 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int mask>;
+
+        i6 = i7 & $i5;
+
+        $z1 = specialinvoke r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: boolean containsKey(int,int)>(i0, i6);
+
+        if $z1 == 0 goto label4;
+
+        $d1 = specialinvoke r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double doRemove(int)>(i6);
+
+        return $d1;
+
+     label4:
+        i8 = i8 >> 5;
+
+        goto label3;
+
+     label5:
+        $d0 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double missingEntries>;
+
+        return $d0;
+    }
+
+    private boolean containsKey(int, int)
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        int i0, i1, $i2;
+        int[] $r1;
+        byte[] $r2;
+        byte $b3;
+        boolean $z0;
+
+        r0 := @this: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        if i0 != 0 goto label1;
+
+        $r2 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states>;
+
+        $b3 = $r2[i1];
+
+        if $b3 != 1 goto label2;
+
+     label1:
+        $r1 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int[] keys>;
+
+        $i2 = $r1[i1];
+
+        if $i2 != i0 goto label2;
+
+        $z0 = 1;
+
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        return $z0;
+    }
+
+    private double doRemove(int)
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        int i0, $i1, $i2, $i3, $i4;
+        double d0, $d1;
+        int[] $r1;
+        byte[] $r2;
+        double[] $r3, $r4;
+
+        r0 := @this: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int[] keys>;
+
+        $r1[i0] = 0;
+
+        $r2 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states>;
+
+        $r2[i0] = 2;
+
+        $r3 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double[] values>;
+
+        d0 = $r3[i0];
+
+        $r4 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double[] values>;
+
+        $d1 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double missingEntries>;
+
+        $r4[i0] = $d1;
+
+        $i1 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int size>;
+
+        $i2 = $i1 - 1;
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int size> = $i2;
+
+        $i3 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int count>;
+
+        $i4 = $i3 + 1;
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int count> = $i4;
+
+        return d0;
+    }
+
+    public double put(int, double)
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        int i0, $i1, $i2, $i3, $i4, i5;
+        double d0, d1;
+        int[] $r1;
+        byte[] $r2;
+        double[] $r3, $r5;
+        boolean $z0, z1;
+
+        r0 := @this: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        i0 := @parameter0: int;
+
+        d0 := @parameter1: double;
+
+        i5 = specialinvoke r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int findInsertionIndex(int)>(i0);
+
+        d1 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double missingEntries>;
+
+        z1 = 1;
+
+        if i5 >= 0 goto label1;
+
+        i5 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int changeIndexSign(int)>(i5);
+
+        $r5 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double[] values>;
+
+        d1 = $r5[i5];
+
+        z1 = 0;
+
+     label1:
+        $r1 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int[] keys>;
+
+        $r1[i5] = i0;
+
+        $r2 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states>;
+
+        $r2[i5] = 1;
+
+        $r3 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double[] values>;
+
+        $r3[i5] = d0;
+
+        if z1 == 0 goto label3;
+
+        $i1 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int size>;
+
+        $i2 = $i1 + 1;
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int size> = $i2;
+
+        $z0 = specialinvoke r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: boolean shouldGrowTable()>();
+
+        if $z0 == 0 goto label2;
+
+        specialinvoke r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: void growTable()>();
+
+     label2:
+        $i3 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int count>;
+
+        $i4 = $i3 + 1;
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int count> = $i4;
+
+     label3:
+        return d1;
+    }
+
+    private void growTable()
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        int i0, i1, i2, i3, i4, i6;
+        int[] r1, r4;
+        double[] r2, r5;
+        byte[] r3, r6, $r7;
+        byte $b5;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        $r7 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states>;
+
+        i0 = lengthof $r7;
+
+        r1 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int[] keys>;
+
+        r2 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double[] values>;
+
+        r3 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states>;
+
+        i1 = 2 * i0;
+
+        r4 = newarray (int)[i1];
+
+        r5 = newarray (double)[i1];
+
+        r6 = newarray (byte)[i1];
+
+        i2 = i1 - 1;
+
+        i6 = 0;
+
+     label1:
+        if i6 >= i0 goto label3;
+
+        $b5 = r3[i6];
+
+        if $b5 != 1 goto label2;
+
+        i3 = r1[i6];
+
+        i4 = staticinvoke <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int findInsertionIndex(int[],byte[],int,int)>(r4, r6, i3, i2);
+
+        r4[i4] = i3;
+
+        $d0 = r2[i6];
+
+        r5[i4] = $d0;
+
+        r6[i4] = 1;
+
+     label2:
+        i6 = i6 + 1;
+
+        goto label1;
+
+     label3:
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int mask> = i2;
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int[] keys> = r4;
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double[] values> = r5;
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states> = r6;
+
+        return;
+    }
+
+    private boolean shouldGrowTable()
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        int $i0, $i1, $i2;
+        float $f0, $f1, $f2;
+        byte $b3;
+        boolean $z0;
+
+        r0 := @this: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        $i0 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int size>;
+
+        $f2 = (float) $i0;
+
+        $i1 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int mask>;
+
+        $i2 = $i1 + 1;
+
+        $f0 = (float) $i2;
+
+        $f1 = $f0 * 0.5F;
+
+        $b3 = $f2 cmpl $f1;
+
+        if $b3 <= 0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    private static int hashOf(int)
+    {
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8;
+
+        i0 := @parameter0: int;
+
+        $i3 = i0 >>> 20;
+
+        $i2 = i0 >>> 12;
+
+        $i4 = $i3 ^ $i2;
+
+        i1 = i0 ^ $i4;
+
+        $i5 = i1 >>> 7;
+
+        $i7 = i1 ^ $i5;
+
+        $i6 = i1 >>> 4;
+
+        $i8 = $i7 ^ $i6;
+
+        return $i8;
+    }
+
+    private void readObject(java.io.ObjectInputStream) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        java.io.ObjectInputStream r1;
+
+        r0 := @this: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        r1 := @parameter0: java.io.ObjectInputStream;
+
+        virtualinvoke r1.<java.io.ObjectInputStream: void defaultReadObject()>();
+
+        r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int count> = 0;
+
+        return;
+    }
+
+    static int access$100(org.apache.commons.math3.util.OpenIntToDoubleHashMap)
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        int $i0;
+
+        r0 := @parameter0: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        $i0 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int count>;
+
+        return $i0;
+    }
+
+    static int[] access$200(org.apache.commons.math3.util.OpenIntToDoubleHashMap)
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        int[] $r1;
+
+        r0 := @parameter0: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        $r1 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: int[] keys>;
+
+        return $r1;
+    }
+
+    static double[] access$300(org.apache.commons.math3.util.OpenIntToDoubleHashMap)
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        double[] $r1;
+
+        r0 := @parameter0: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        $r1 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: double[] values>;
+
+        return $r1;
+    }
+
+    static byte[] access$400(org.apache.commons.math3.util.OpenIntToDoubleHashMap)
+    {
+        org.apache.commons.math3.util.OpenIntToDoubleHashMap r0;
+        byte[] $r1;
+
+        r0 := @parameter0: org.apache.commons.math3.util.OpenIntToDoubleHashMap;
+
+        $r1 = r0.<org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte[] states>;
+
+        return $r1;
+    }
+
+    public static void <clinit>()
+    {
+        <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int PERTURB_SHIFT> = 5;
+
+        <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int RESIZE_MULTIPLIER> = 2;
+
+        <org.apache.commons.math3.util.OpenIntToDoubleHashMap: int DEFAULT_EXPECTED_SIZE> = 16;
+
+        <org.apache.commons.math3.util.OpenIntToDoubleHashMap: float LOAD_FACTOR> = 0.5F;
+
+        <org.apache.commons.math3.util.OpenIntToDoubleHashMap: long serialVersionUID> = -3646337053166149105L;
+
+        <org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte REMOVED> = 2;
+
+        <org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte FULL> = 1;
+
+        <org.apache.commons.math3.util.OpenIntToDoubleHashMap: byte FREE> = 0;
+
+        return;
+    }
+}

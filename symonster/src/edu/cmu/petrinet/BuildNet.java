@@ -25,38 +25,6 @@ public class BuildNet {
     // A map that encodes the polymorphism
     static private Map<String, List<String>> poly = new HashMap<>();
 
-    public static void main(String[] args) {
-        List<String> libs = new ArrayList<>();
-        libs.add("lib/point.jar");
-        // 2. Parse library
-        // TODO: use the code to parse the library here
-        List<MethodSignature> sigs = JarParser.parseJar(libs);
-        System.out.println(sigs);
-        build(sigs);
-
-        Set<Place> pl = petrinet.getPlaces();
-        Set<Transition> tl = petrinet.getTransitions();
-        for (Place p : pl) {
-            System.out.println(p.toString());
-            System.out.println(p.getMaxToken());
-            for(Transition t : tl) {
-                try {
-                    System.out.println(petrinet.getFlow(p.getId(), t.getId()));
-                } catch (NoSuchEdgeException e) {
-
-                }
-            }
-        }
-        for (Transition t : tl) {
-            System.out.println(t.toString());
-            for(Place p : pl) {
-                try {
-                    System.out.println(petrinet.getFlow(t.getId(), p.getId()));
-                } catch (NoSuchEdgeException e) {}
-            }
-        }
-    }
-
     private static void handlePolymorphism() {
         // This method handles polymorphism by creating methods that transforms each
         // subclass into its super class

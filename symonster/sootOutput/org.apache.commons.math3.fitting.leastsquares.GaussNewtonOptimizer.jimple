@@ -1,0 +1,310 @@
+public class org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer extends java.lang.Object implements org.apache.commons.math3.fitting.leastsquares.LeastSquaresOptimizer
+{
+    private static final double SINGULARITY_THRESHOLD;
+    private final org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition decomposition;
+
+    public void <init>()
+    {
+        org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer r0;
+        org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition $r1;
+
+        r0 := @this: org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer;
+
+        $r1 = <org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition: org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition QR>;
+
+        specialinvoke r0.<org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer: void <init>(org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition)>($r1);
+
+        return;
+    }
+
+    public void <init>(org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition)
+    {
+        org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer r0;
+        org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition r1;
+
+        r0 := @this: org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer;
+
+        r1 := @parameter0: org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer: org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition decomposition> = r1;
+
+        return;
+    }
+
+    public org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition getDecomposition()
+    {
+        org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer r0;
+        org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition $r1;
+
+        r0 := @this: org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer;
+
+        $r1 = r0.<org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer: org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition decomposition>;
+
+        return $r1;
+    }
+
+    public org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer withDecomposition(org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition)
+    {
+        org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer r0, $r2;
+        org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition r1;
+
+        r0 := @this: org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer;
+
+        r1 := @parameter0: org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition;
+
+        $r2 = new org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer;
+
+        specialinvoke $r2.<org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer: void <init>(org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition)>(r1);
+
+        return $r2;
+    }
+
+    public org.apache.commons.math3.fitting.leastsquares.LeastSquaresOptimizer$Optimum optimize(org.apache.commons.math3.fitting.leastsquares.LeastSquaresProblem)
+    {
+        org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer r0;
+        org.apache.commons.math3.fitting.leastsquares.LeastSquaresProblem r1;
+        org.apache.commons.math3.util.Incrementor r2, r3;
+        org.apache.commons.math3.optim.ConvergenceChecker r4;
+        org.apache.commons.math3.fitting.leastsquares.LeastSquaresProblem$Evaluation r5, r13;
+        org.apache.commons.math3.linear.RealVector r6, r8, r12, r14;
+        org.apache.commons.math3.linear.RealMatrix r7;
+        org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition $r9;
+        int $i0, $i1, $i2;
+        boolean $z0;
+        org.apache.commons.math3.fitting.leastsquares.OptimumImpl $r10;
+        org.apache.commons.math3.exception.NullArgumentException $r11;
+
+        r0 := @this: org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer;
+
+        r1 := @parameter0: org.apache.commons.math3.fitting.leastsquares.LeastSquaresProblem;
+
+        r2 = interfaceinvoke r1.<org.apache.commons.math3.fitting.leastsquares.LeastSquaresProblem: org.apache.commons.math3.util.Incrementor getEvaluationCounter()>();
+
+        r3 = interfaceinvoke r1.<org.apache.commons.math3.fitting.leastsquares.LeastSquaresProblem: org.apache.commons.math3.util.Incrementor getIterationCounter()>();
+
+        r4 = interfaceinvoke r1.<org.apache.commons.math3.fitting.leastsquares.LeastSquaresProblem: org.apache.commons.math3.optim.ConvergenceChecker getConvergenceChecker()>();
+
+        if r4 != null goto label1;
+
+        $r11 = new org.apache.commons.math3.exception.NullArgumentException;
+
+        specialinvoke $r11.<org.apache.commons.math3.exception.NullArgumentException: void <init>()>();
+
+        throw $r11;
+
+     label1:
+        r12 = interfaceinvoke r1.<org.apache.commons.math3.fitting.leastsquares.LeastSquaresProblem: org.apache.commons.math3.linear.RealVector getStart()>();
+
+        r13 = null;
+
+     label2:
+        virtualinvoke r3.<org.apache.commons.math3.util.Incrementor: void incrementCount()>();
+
+        r5 = r13;
+
+        virtualinvoke r2.<org.apache.commons.math3.util.Incrementor: void incrementCount()>();
+
+        r13 = interfaceinvoke r1.<org.apache.commons.math3.fitting.leastsquares.LeastSquaresProblem: org.apache.commons.math3.fitting.leastsquares.LeastSquaresProblem$Evaluation evaluate(org.apache.commons.math3.linear.RealVector)>(r12);
+
+        r6 = interfaceinvoke r13.<org.apache.commons.math3.fitting.leastsquares.LeastSquaresProblem$Evaluation: org.apache.commons.math3.linear.RealVector getResiduals()>();
+
+        r7 = interfaceinvoke r13.<org.apache.commons.math3.fitting.leastsquares.LeastSquaresProblem$Evaluation: org.apache.commons.math3.linear.RealMatrix getJacobian()>();
+
+        r14 = interfaceinvoke r13.<org.apache.commons.math3.fitting.leastsquares.LeastSquaresProblem$Evaluation: org.apache.commons.math3.linear.RealVector getPoint()>();
+
+        if r5 == null goto label3;
+
+        $i0 = virtualinvoke r3.<org.apache.commons.math3.util.Incrementor: int getCount()>();
+
+        $z0 = interfaceinvoke r4.<org.apache.commons.math3.optim.ConvergenceChecker: boolean converged(int,java.lang.Object,java.lang.Object)>($i0, r5, r13);
+
+        if $z0 == 0 goto label3;
+
+        $r10 = new org.apache.commons.math3.fitting.leastsquares.OptimumImpl;
+
+        $i1 = virtualinvoke r2.<org.apache.commons.math3.util.Incrementor: int getCount()>();
+
+        $i2 = virtualinvoke r3.<org.apache.commons.math3.util.Incrementor: int getCount()>();
+
+        specialinvoke $r10.<org.apache.commons.math3.fitting.leastsquares.OptimumImpl: void <init>(org.apache.commons.math3.fitting.leastsquares.LeastSquaresProblem$Evaluation,int,int)>(r13, $i1, $i2);
+
+        return $r10;
+
+     label3:
+        $r9 = r0.<org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer: org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition decomposition>;
+
+        r8 = virtualinvoke $r9.<org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition: org.apache.commons.math3.linear.RealVector solve(org.apache.commons.math3.linear.RealMatrix,org.apache.commons.math3.linear.RealVector)>(r7, r6);
+
+        r12 = virtualinvoke r14.<org.apache.commons.math3.linear.RealVector: org.apache.commons.math3.linear.RealVector add(org.apache.commons.math3.linear.RealVector)>(r8);
+
+        goto label2;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer r0;
+        java.lang.StringBuilder $r1, $r2, $r4, $r5;
+        org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition $r3;
+        java.lang.String $r6;
+
+        r0 := @this: org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer;
+
+        $r1 = new java.lang.StringBuilder;
+
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+
+        $r2 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("GaussNewtonOptimizer{decomposition=");
+
+        $r3 = r0.<org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer: org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer$Decomposition decomposition>;
+
+        $r4 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r3);
+
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(125);
+
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        return $r6;
+    }
+
+    private static org.apache.commons.math3.util.Pair computeNormalMatrix(org.apache.commons.math3.linear.RealMatrix, org.apache.commons.math3.linear.RealVector)
+    {
+        org.apache.commons.math3.linear.RealMatrix r0, r2;
+        org.apache.commons.math3.linear.RealVector r1;
+        int i0, i1, i2, i3, i4, i5, i6, i7;
+        org.apache.commons.math3.linear.ArrayRealVector $r4;
+        org.apache.commons.math3.util.Pair $r5;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10;
+
+        r0 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        r1 := @parameter1: org.apache.commons.math3.linear.RealVector;
+
+        i0 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        i1 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        r2 = staticinvoke <org.apache.commons.math3.linear.MatrixUtils: org.apache.commons.math3.linear.RealMatrix createRealMatrix(int,int)>(i1, i1);
+
+        $r4 = new org.apache.commons.math3.linear.ArrayRealVector;
+
+        specialinvoke $r4.<org.apache.commons.math3.linear.ArrayRealVector: void <init>(int)>(i1);
+
+        i2 = 0;
+
+     label01:
+        if i2 >= i0 goto label08;
+
+        i3 = 0;
+
+     label02:
+        if i3 >= i1 goto label03;
+
+        $d6 = virtualinvoke $r4.<org.apache.commons.math3.linear.RealVector: double getEntry(int)>(i3);
+
+        $d7 = virtualinvoke r1.<org.apache.commons.math3.linear.RealVector: double getEntry(int)>(i2);
+
+        $d8 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i2, i3);
+
+        $d9 = $d7 * $d8;
+
+        $d10 = $d6 + $d9;
+
+        virtualinvoke $r4.<org.apache.commons.math3.linear.RealVector: void setEntry(int,double)>(i3, $d10);
+
+        i3 = i3 + 1;
+
+        goto label02;
+
+     label03:
+        i4 = 0;
+
+     label04:
+        if i4 >= i1 goto label07;
+
+        i5 = i4;
+
+     label05:
+        if i5 >= i1 goto label06;
+
+        $d1 = interfaceinvoke r2.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i4, i5);
+
+        $d2 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i2, i4);
+
+        $d3 = interfaceinvoke r0.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i2, i5);
+
+        $d4 = $d2 * $d3;
+
+        $d5 = $d1 + $d4;
+
+        interfaceinvoke r2.<org.apache.commons.math3.linear.RealMatrix: void setEntry(int,int,double)>(i4, i5, $d5);
+
+        i5 = i5 + 1;
+
+        goto label05;
+
+     label06:
+        i4 = i4 + 1;
+
+        goto label04;
+
+     label07:
+        i2 = i2 + 1;
+
+        goto label01;
+
+     label08:
+        i6 = 0;
+
+     label09:
+        if i6 >= i1 goto label12;
+
+        i7 = 0;
+
+     label10:
+        if i7 >= i6 goto label11;
+
+        $d0 = interfaceinvoke r2.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i7, i6);
+
+        interfaceinvoke r2.<org.apache.commons.math3.linear.RealMatrix: void setEntry(int,int,double)>(i6, i7, $d0);
+
+        i7 = i7 + 1;
+
+        goto label10;
+
+     label11:
+        i6 = i6 + 1;
+
+        goto label09;
+
+     label12:
+        $r5 = new org.apache.commons.math3.util.Pair;
+
+        specialinvoke $r5.<org.apache.commons.math3.util.Pair: void <init>(java.lang.Object,java.lang.Object)>(r2, $r4);
+
+        return $r5;
+    }
+
+    static org.apache.commons.math3.util.Pair access$100(org.apache.commons.math3.linear.RealMatrix, org.apache.commons.math3.linear.RealVector)
+    {
+        org.apache.commons.math3.linear.RealMatrix r0;
+        org.apache.commons.math3.linear.RealVector r1;
+        org.apache.commons.math3.util.Pair $r2;
+
+        r0 := @parameter0: org.apache.commons.math3.linear.RealMatrix;
+
+        r1 := @parameter1: org.apache.commons.math3.linear.RealVector;
+
+        $r2 = staticinvoke <org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer: org.apache.commons.math3.util.Pair computeNormalMatrix(org.apache.commons.math3.linear.RealMatrix,org.apache.commons.math3.linear.RealVector)>(r0, r1);
+
+        return $r2;
+    }
+
+    public static void <clinit>()
+    {
+        <org.apache.commons.math3.fitting.leastsquares.GaussNewtonOptimizer: double SINGULARITY_THRESHOLD> = 1.0E-11;
+
+        return;
+    }
+}

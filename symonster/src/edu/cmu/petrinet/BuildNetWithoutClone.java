@@ -28,38 +28,6 @@ public class BuildNetWithoutClone {
     static private Map<String, List<String>> superDict = new HashMap<>();
     static private Map<String, List<String>> subDict = new HashMap<>();
 
-    public static void main(String[] args) throws java.io.IOException{
-        List<String> libs = new ArrayList<>();
-        libs.add("lib/point.jar");
-        List<MethodSignature> sigs = JarParser.parseJar(libs);
-        build(sigs);
-
-        Set<Place> pl = petrinet.getPlaces();
-        Set<Transition> tl = petrinet.getTransitions();
-        for (Place p : pl) {
-            System.out.println(p.toString());
-            System.out.println("max token: " + p.getMaxToken());
-            //output all methods that take p as an argument
-            for (Transition t : tl) {
-                try {
-                    System.out.println(petrinet.getFlow(p.getId(), t.getId()));
-                } catch (NoSuchEdgeException e) {
-                }
-            }
-        }
-        for (Transition t : tl) {
-            System.out.println(t.toString());
-            for (Place p : pl) {
-                try {
-                    System.out.println(petrinet.getFlow(t.getId(), p.getId()));
-                } catch (NoSuchEdgeException e) {
-                }
-            }
-        }
-
-        Visualization.translate(petrinet);
-    }
-
     private static void handlePolymorphism() {
         // This method handles polymorphism by creating methods that transforms each
         // subclass into its super class

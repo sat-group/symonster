@@ -1,0 +1,1483 @@
+public class org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction extends java.lang.Object implements org.apache.commons.math3.analysis.BivariateFunction
+{
+    private static final int NUM_COEFF;
+    private static final double[][] AINV;
+    private final double[] xval;
+    private final double[] yval;
+    private final org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction[][] splines;
+    private final org.apache.commons.math3.analysis.BivariateFunction[][][] partialDerivatives;
+
+    public void <init>(double[], double[], double[][], double[][], double[][], double[][]) throws org.apache.commons.math3.exception.DimensionMismatchException, org.apache.commons.math3.exception.NoDataException, org.apache.commons.math3.exception.NonMonotonicSequenceException
+    {
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction r0;
+        double[] r1, r2;
+        double[][] r3, r4, r5, r6;
+
+        r0 := @this: org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[][];
+
+        r4 := @parameter3: double[][];
+
+        r5 := @parameter4: double[][];
+
+        r6 := @parameter5: double[][];
+
+        specialinvoke r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: void <init>(double[],double[],double[][],double[][],double[][],double[][],boolean)>(r1, r2, r3, r4, r5, r6, 0);
+
+        return;
+    }
+
+    public void <init>(double[], double[], double[][], double[][], double[][], double[][], boolean) throws org.apache.commons.math3.exception.DimensionMismatchException, org.apache.commons.math3.exception.NoDataException, org.apache.commons.math3.exception.NonMonotonicSequenceException
+    {
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction r0;
+        double[] r1, r2, $r8, $r10, $r12, $r38, $r39, $r40, $r41, $r42, $r43, $r44, $r45, $r46, $r47, $r48, $r49, $r50, $r51, $r52, $r53, $r54, $r55, $r56, $r57, $r58, $r62, $r64, $r66, $r68, $r70;
+        double[][] r3, r4, r5, r6;
+        boolean z0;
+        int i0, i1, i2, i3, i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, i23, i24, i25, i26, i27;
+        java.lang.Object $r9, $r11;
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction[][] $r13, $r16, $r59;
+        org.apache.commons.math3.analysis.BivariateFunction[][][] $r14, $r15, $r18, $r22, $r26, $r30, $r34;
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction[] $r17, $r61;
+        org.apache.commons.math3.analysis.BivariateFunction[][] $r19, $r23, $r27, $r31, $r35;
+        org.apache.commons.math3.analysis.BivariateFunction[] $r20, $r24, $r28, $r32, $r36;
+        org.apache.commons.math3.analysis.BivariateFunction $r21, $r25, $r29, $r33, $r37;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15;
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction $r60, r76;
+        org.apache.commons.math3.exception.DimensionMismatchException $r63, $r65, $r67, $r69, $r71, $r72, $r73, $r74;
+        org.apache.commons.math3.exception.NoDataException $r75;
+
+        r0 := @this: org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[][];
+
+        r4 := @parameter3: double[][];
+
+        r5 := @parameter4: double[][];
+
+        r6 := @parameter5: double[][];
+
+        z0 := @parameter6: boolean;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        i0 = lengthof r1;
+
+        i1 = lengthof r2;
+
+        if i0 == 0 goto label01;
+
+        if i1 == 0 goto label01;
+
+        $i5 = lengthof r3;
+
+        if $i5 == 0 goto label01;
+
+        $r8 = r3[0];
+
+        $i6 = lengthof $r8;
+
+        if $i6 != 0 goto label02;
+
+     label01:
+        $r75 = new org.apache.commons.math3.exception.NoDataException;
+
+        specialinvoke $r75.<org.apache.commons.math3.exception.NoDataException: void <init>()>();
+
+        throw $r75;
+
+     label02:
+        $i7 = lengthof r3;
+
+        if i0 == $i7 goto label03;
+
+        $r74 = new org.apache.commons.math3.exception.DimensionMismatchException;
+
+        $i22 = lengthof r3;
+
+        specialinvoke $r74.<org.apache.commons.math3.exception.DimensionMismatchException: void <init>(int,int)>(i0, $i22);
+
+        throw $r74;
+
+     label03:
+        $i8 = lengthof r4;
+
+        if i0 == $i8 goto label04;
+
+        $r73 = new org.apache.commons.math3.exception.DimensionMismatchException;
+
+        $i21 = lengthof r4;
+
+        specialinvoke $r73.<org.apache.commons.math3.exception.DimensionMismatchException: void <init>(int,int)>(i0, $i21);
+
+        throw $r73;
+
+     label04:
+        $i9 = lengthof r5;
+
+        if i0 == $i9 goto label05;
+
+        $r72 = new org.apache.commons.math3.exception.DimensionMismatchException;
+
+        $i20 = lengthof r5;
+
+        specialinvoke $r72.<org.apache.commons.math3.exception.DimensionMismatchException: void <init>(int,int)>(i0, $i20);
+
+        throw $r72;
+
+     label05:
+        $i10 = lengthof r6;
+
+        if i0 == $i10 goto label06;
+
+        $r71 = new org.apache.commons.math3.exception.DimensionMismatchException;
+
+        $i19 = lengthof r6;
+
+        specialinvoke $r71.<org.apache.commons.math3.exception.DimensionMismatchException: void <init>(int,int)>(i0, $i19);
+
+        throw $r71;
+
+     label06:
+        staticinvoke <org.apache.commons.math3.util.MathArrays: void checkOrder(double[])>(r1);
+
+        staticinvoke <org.apache.commons.math3.util.MathArrays: void checkOrder(double[])>(r2);
+
+        $r9 = virtualinvoke r1.<java.lang.Object: java.lang.Object clone()>();
+
+        $r10 = (double[]) $r9;
+
+        r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] xval> = $r10;
+
+        $r11 = virtualinvoke r2.<java.lang.Object: java.lang.Object clone()>();
+
+        $r12 = (double[]) $r11;
+
+        r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] yval> = $r12;
+
+        i2 = i0 - 1;
+
+        i3 = i1 - 1;
+
+        $r13 = newmultiarray (org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction)[i2][i3];
+
+        r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction[][] splines> = $r13;
+
+        i23 = 0;
+
+     label07:
+        if i23 >= i2 goto label14;
+
+        $r38 = r3[i23];
+
+        $i11 = lengthof $r38;
+
+        if $i11 == i1 goto label08;
+
+        $r69 = new org.apache.commons.math3.exception.DimensionMismatchException;
+
+        $r70 = r3[i23];
+
+        $i18 = lengthof $r70;
+
+        specialinvoke $r69.<org.apache.commons.math3.exception.DimensionMismatchException: void <init>(int,int)>($i18, i1);
+
+        throw $r69;
+
+     label08:
+        $r39 = r4[i23];
+
+        $i12 = lengthof $r39;
+
+        if $i12 == i1 goto label09;
+
+        $r67 = new org.apache.commons.math3.exception.DimensionMismatchException;
+
+        $r68 = r4[i23];
+
+        $i17 = lengthof $r68;
+
+        specialinvoke $r67.<org.apache.commons.math3.exception.DimensionMismatchException: void <init>(int,int)>($i17, i1);
+
+        throw $r67;
+
+     label09:
+        $r40 = r5[i23];
+
+        $i13 = lengthof $r40;
+
+        if $i13 == i1 goto label10;
+
+        $r65 = new org.apache.commons.math3.exception.DimensionMismatchException;
+
+        $r66 = r5[i23];
+
+        $i16 = lengthof $r66;
+
+        specialinvoke $r65.<org.apache.commons.math3.exception.DimensionMismatchException: void <init>(int,int)>($i16, i1);
+
+        throw $r65;
+
+     label10:
+        $r41 = r6[i23];
+
+        $i14 = lengthof $r41;
+
+        if $i14 == i1 goto label11;
+
+        $r63 = new org.apache.commons.math3.exception.DimensionMismatchException;
+
+        $r64 = r6[i23];
+
+        $i15 = lengthof $r64;
+
+        specialinvoke $r63.<org.apache.commons.math3.exception.DimensionMismatchException: void <init>(int,int)>($i15, i1);
+
+        throw $r63;
+
+     label11:
+        i24 = i23 + 1;
+
+        i25 = 0;
+
+     label12:
+        if i25 >= i3 goto label13;
+
+        i4 = i25 + 1;
+
+        $r42 = newarray (double)[16];
+
+        $r43 = r3[i23];
+
+        $d0 = $r43[i25];
+
+        $r42[0] = $d0;
+
+        $r44 = r3[i24];
+
+        $d1 = $r44[i25];
+
+        $r42[1] = $d1;
+
+        $r45 = r3[i23];
+
+        $d2 = $r45[i4];
+
+        $r42[2] = $d2;
+
+        $r46 = r3[i24];
+
+        $d3 = $r46[i4];
+
+        $r42[3] = $d3;
+
+        $r47 = r4[i23];
+
+        $d4 = $r47[i25];
+
+        $r42[4] = $d4;
+
+        $r48 = r4[i24];
+
+        $d5 = $r48[i25];
+
+        $r42[5] = $d5;
+
+        $r49 = r4[i23];
+
+        $d6 = $r49[i4];
+
+        $r42[6] = $d6;
+
+        $r50 = r4[i24];
+
+        $d7 = $r50[i4];
+
+        $r42[7] = $d7;
+
+        $r51 = r5[i23];
+
+        $d8 = $r51[i25];
+
+        $r42[8] = $d8;
+
+        $r52 = r5[i24];
+
+        $d9 = $r52[i25];
+
+        $r42[9] = $d9;
+
+        $r53 = r5[i23];
+
+        $d10 = $r53[i4];
+
+        $r42[10] = $d10;
+
+        $r54 = r5[i24];
+
+        $d11 = $r54[i4];
+
+        $r42[11] = $d11;
+
+        $r55 = r6[i23];
+
+        $d12 = $r55[i25];
+
+        $r42[12] = $d12;
+
+        $r56 = r6[i24];
+
+        $d13 = $r56[i25];
+
+        $r42[13] = $d13;
+
+        $r57 = r6[i23];
+
+        $d14 = $r57[i4];
+
+        $r42[14] = $d14;
+
+        $r58 = r6[i24];
+
+        $d15 = $r58[i4];
+
+        $r42[15] = $d15;
+
+        $r59 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction[][] splines>;
+
+        $r61 = $r59[i23];
+
+        $r60 = new org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction;
+
+        $r62 = specialinvoke r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] computeSplineCoefficients(double[])>($r42);
+
+        specialinvoke $r60.<org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction: void <init>(double[],boolean)>($r62, z0);
+
+        $r61[i25] = $r60;
+
+        i25 = i25 + 1;
+
+        goto label12;
+
+     label13:
+        i23 = i23 + 1;
+
+        goto label07;
+
+     label14:
+        if z0 == 0 goto label19;
+
+        $r15 = newmultiarray (org.apache.commons.math3.analysis.BivariateFunction)[5][i2][i3];
+
+        r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: org.apache.commons.math3.analysis.BivariateFunction[][][] partialDerivatives> = $r15;
+
+        i26 = 0;
+
+     label15:
+        if i26 >= i2 goto label18;
+
+        i27 = 0;
+
+     label16:
+        if i27 >= i3 goto label17;
+
+        $r16 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction[][] splines>;
+
+        $r17 = $r16[i26];
+
+        r76 = $r17[i27];
+
+        $r18 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: org.apache.commons.math3.analysis.BivariateFunction[][][] partialDerivatives>;
+
+        $r19 = $r18[0];
+
+        $r20 = $r19[i26];
+
+        $r21 = virtualinvoke r76.<org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction: org.apache.commons.math3.analysis.BivariateFunction partialDerivativeX()>();
+
+        $r20[i27] = $r21;
+
+        $r22 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: org.apache.commons.math3.analysis.BivariateFunction[][][] partialDerivatives>;
+
+        $r23 = $r22[1];
+
+        $r24 = $r23[i26];
+
+        $r25 = virtualinvoke r76.<org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction: org.apache.commons.math3.analysis.BivariateFunction partialDerivativeY()>();
+
+        $r24[i27] = $r25;
+
+        $r26 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: org.apache.commons.math3.analysis.BivariateFunction[][][] partialDerivatives>;
+
+        $r27 = $r26[2];
+
+        $r28 = $r27[i26];
+
+        $r29 = virtualinvoke r76.<org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction: org.apache.commons.math3.analysis.BivariateFunction partialDerivativeXX()>();
+
+        $r28[i27] = $r29;
+
+        $r30 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: org.apache.commons.math3.analysis.BivariateFunction[][][] partialDerivatives>;
+
+        $r31 = $r30[3];
+
+        $r32 = $r31[i26];
+
+        $r33 = virtualinvoke r76.<org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction: org.apache.commons.math3.analysis.BivariateFunction partialDerivativeYY()>();
+
+        $r32[i27] = $r33;
+
+        $r34 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: org.apache.commons.math3.analysis.BivariateFunction[][][] partialDerivatives>;
+
+        $r35 = $r34[4];
+
+        $r36 = $r35[i26];
+
+        $r37 = virtualinvoke r76.<org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction: org.apache.commons.math3.analysis.BivariateFunction partialDerivativeXY()>();
+
+        $r36[i27] = $r37;
+
+        i27 = i27 + 1;
+
+        goto label16;
+
+     label17:
+        i26 = i26 + 1;
+
+        goto label15;
+
+     label18:
+        goto label20;
+
+     label19:
+        $r14 = (org.apache.commons.math3.analysis.BivariateFunction[][][]) null;
+
+        r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: org.apache.commons.math3.analysis.BivariateFunction[][][] partialDerivatives> = $r14;
+
+     label20:
+        return;
+    }
+
+    public double value(double, double) throws org.apache.commons.math3.exception.OutOfRangeException
+    {
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction r0;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14;
+        int i0, i1, $i2, $i3;
+        double[] $r1, $r2, $r3, $r4, $r5, $r6, $r7, $r8;
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction[][] $r9;
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction[] $r10;
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction $r11;
+
+        r0 := @this: org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $r1 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] xval>;
+
+        i0 = specialinvoke r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: int searchIndex(double,double[])>(d0, $r1);
+
+        $r2 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] yval>;
+
+        i1 = specialinvoke r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: int searchIndex(double,double[])>(d1, $r2);
+
+        $r3 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] xval>;
+
+        $d4 = $r3[i0];
+
+        $d8 = d0 - $d4;
+
+        $r4 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] xval>;
+
+        $i2 = i0 + 1;
+
+        $d6 = $r4[$i2];
+
+        $r5 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] xval>;
+
+        $d5 = $r5[i0];
+
+        $d7 = $d6 - $d5;
+
+        d2 = $d8 / $d7;
+
+        $r6 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] yval>;
+
+        $d9 = $r6[i1];
+
+        $d13 = d1 - $d9;
+
+        $r7 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] yval>;
+
+        $i3 = i1 + 1;
+
+        $d11 = $r7[$i3];
+
+        $r8 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] yval>;
+
+        $d10 = $r8[i1];
+
+        $d12 = $d11 - $d10;
+
+        d3 = $d13 / $d12;
+
+        $r9 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction[][] splines>;
+
+        $r10 = $r9[i0];
+
+        $r11 = $r10[i1];
+
+        $d14 = virtualinvoke $r11.<org.apache.commons.math3.analysis.interpolation.BicubicSplineFunction: double value(double,double)>(d2, d3);
+
+        return $d14;
+    }
+
+    public boolean isValidPoint(double, double)
+    {
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction r0;
+        double d0, d1, $d2, $d3, $d4, $d5;
+        double[] $r1, $r2, $r3, $r4, $r5, $r6;
+        byte $b0, $b3, $b4, $b7;
+        int $i1, $i2, $i5, $i6;
+
+        r0 := @this: org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $r1 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] xval>;
+
+        $d2 = $r1[0];
+
+        $b0 = d0 cmpg $d2;
+
+        if $b0 < 0 goto label1;
+
+        $r3 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] xval>;
+
+        $r2 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] xval>;
+
+        $i1 = lengthof $r2;
+
+        $i2 = $i1 - 1;
+
+        $d3 = $r3[$i2];
+
+        $b3 = d0 cmpl $d3;
+
+        if $b3 > 0 goto label1;
+
+        $r4 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] yval>;
+
+        $d4 = $r4[0];
+
+        $b4 = d1 cmpg $d4;
+
+        if $b4 < 0 goto label1;
+
+        $r6 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] yval>;
+
+        $r5 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] yval>;
+
+        $i5 = lengthof $r5;
+
+        $i6 = $i5 - 1;
+
+        $d5 = $r6[$i6];
+
+        $b7 = d1 cmpl $d5;
+
+        if $b7 <= 0 goto label2;
+
+     label1:
+        return 0;
+
+     label2:
+        return 1;
+    }
+
+    public double partialDerivativeX(double, double) throws org.apache.commons.math3.exception.OutOfRangeException
+    {
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction r0;
+        double d0, d1, $d2;
+
+        r0 := @this: org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $d2 = specialinvoke r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double partialDerivative(int,double,double)>(0, d0, d1);
+
+        return $d2;
+    }
+
+    public double partialDerivativeY(double, double) throws org.apache.commons.math3.exception.OutOfRangeException
+    {
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction r0;
+        double d0, d1, $d2;
+
+        r0 := @this: org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $d2 = specialinvoke r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double partialDerivative(int,double,double)>(1, d0, d1);
+
+        return $d2;
+    }
+
+    public double partialDerivativeXX(double, double) throws org.apache.commons.math3.exception.OutOfRangeException
+    {
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction r0;
+        double d0, d1, $d2;
+
+        r0 := @this: org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $d2 = specialinvoke r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double partialDerivative(int,double,double)>(2, d0, d1);
+
+        return $d2;
+    }
+
+    public double partialDerivativeYY(double, double) throws org.apache.commons.math3.exception.OutOfRangeException
+    {
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction r0;
+        double d0, d1, $d2;
+
+        r0 := @this: org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $d2 = specialinvoke r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double partialDerivative(int,double,double)>(3, d0, d1);
+
+        return $d2;
+    }
+
+    public double partialDerivativeXY(double, double) throws org.apache.commons.math3.exception.OutOfRangeException
+    {
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction r0;
+        double d0, d1, $d2;
+
+        r0 := @this: org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $d2 = specialinvoke r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double partialDerivative(int,double,double)>(4, d0, d1);
+
+        return $d2;
+    }
+
+    private double partialDerivative(int, double, double) throws org.apache.commons.math3.exception.OutOfRangeException
+    {
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction r0;
+        int i0, i1, i2, $i3, $i4;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14;
+        double[] $r1, $r2, $r3, $r4, $r5, $r6, $r7, $r8;
+        org.apache.commons.math3.analysis.BivariateFunction[][][] $r9;
+        org.apache.commons.math3.analysis.BivariateFunction[][] $r10;
+        org.apache.commons.math3.analysis.BivariateFunction[] $r11;
+        org.apache.commons.math3.analysis.BivariateFunction $r12;
+
+        r0 := @this: org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction;
+
+        i0 := @parameter0: int;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        $r1 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] xval>;
+
+        i1 = specialinvoke r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: int searchIndex(double,double[])>(d0, $r1);
+
+        $r2 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] yval>;
+
+        i2 = specialinvoke r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: int searchIndex(double,double[])>(d1, $r2);
+
+        $r3 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] xval>;
+
+        $d4 = $r3[i1];
+
+        $d8 = d0 - $d4;
+
+        $r4 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] xval>;
+
+        $i3 = i1 + 1;
+
+        $d6 = $r4[$i3];
+
+        $r5 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] xval>;
+
+        $d5 = $r5[i1];
+
+        $d7 = $d6 - $d5;
+
+        d2 = $d8 / $d7;
+
+        $r6 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] yval>;
+
+        $d9 = $r6[i2];
+
+        $d13 = d1 - $d9;
+
+        $r7 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] yval>;
+
+        $i4 = i2 + 1;
+
+        $d11 = $r7[$i4];
+
+        $r8 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[] yval>;
+
+        $d10 = $r8[i2];
+
+        $d12 = $d11 - $d10;
+
+        d3 = $d13 / $d12;
+
+        $r9 = r0.<org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: org.apache.commons.math3.analysis.BivariateFunction[][][] partialDerivatives>;
+
+        $r10 = $r9[i0];
+
+        $r11 = $r10[i1];
+
+        $r12 = $r11[i2];
+
+        $d14 = interfaceinvoke $r12.<org.apache.commons.math3.analysis.BivariateFunction: double value(double,double)>(d2, d3);
+
+        return $d14;
+    }
+
+    private int searchIndex(double, double[])
+    {
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction r0;
+        double d0, $d1, $d2;
+        double[] r1;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10;
+        org.apache.commons.math3.exception.OutOfRangeException $r2;
+        java.lang.Double $r3, $r4, $r5;
+
+        r0 := @this: org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        i0 = staticinvoke <java.util.Arrays: int binarySearch(double[],double)>(r1, d0);
+
+        if i0 == -1 goto label1;
+
+        $i4 = lengthof r1;
+
+        $i5 = neg $i4;
+
+        $i6 = $i5 - 1;
+
+        if i0 != $i6 goto label2;
+
+     label1:
+        $r2 = new org.apache.commons.math3.exception.OutOfRangeException;
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $d1 = r1[0];
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d1);
+
+        $i2 = lengthof r1;
+
+        $i3 = $i2 - 1;
+
+        $d2 = r1[$i3];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d2);
+
+        specialinvoke $r2.<org.apache.commons.math3.exception.OutOfRangeException: void <init>(java.lang.Number,java.lang.Number,java.lang.Number)>($r3, $r4, $r5);
+
+        throw $r2;
+
+     label2:
+        if i0 >= 0 goto label3;
+
+        $i9 = neg i0;
+
+        $i10 = $i9 - 2;
+
+        return $i10;
+
+     label3:
+        $i7 = lengthof r1;
+
+        i1 = $i7 - 1;
+
+        if i0 != i1 goto label4;
+
+        $i8 = i1 - 1;
+
+        return $i8;
+
+     label4:
+        return i0;
+    }
+
+    private double[] computeSplineCoefficients(double[])
+    {
+        org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction r0;
+        double[] r1, r2, r3;
+        double[][] $r4;
+        double $d0, $d1, $d2, d3;
+        int i0, i1;
+
+        r0 := @this: org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction;
+
+        r1 := @parameter0: double[];
+
+        r2 = newarray (double)[16];
+
+        i0 = 0;
+
+     label1:
+        if i0 >= 16 goto label4;
+
+        d3 = 0.0;
+
+        $r4 = <org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[][] AINV>;
+
+        r3 = $r4[i0];
+
+        i1 = 0;
+
+     label2:
+        if i1 >= 16 goto label3;
+
+        $d1 = r3[i1];
+
+        $d0 = r1[i1];
+
+        $d2 = $d1 * $d0;
+
+        d3 = d3 + $d2;
+
+        i1 = i1 + 1;
+
+        goto label2;
+
+     label3:
+        r2[i0] = d3;
+
+        i0 = i0 + 1;
+
+        goto label1;
+
+     label4:
+        return r2;
+    }
+
+    static void <clinit>()
+    {
+        double[][] $r0;
+        double[] $r1, $r2, $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16;
+
+        <org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: int NUM_COEFF> = 16;
+
+        $r0 = newarray (double[])[16];
+
+        $r1 = newarray (double)[16];
+
+        $r1[0] = 1.0;
+
+        $r1[1] = 0.0;
+
+        $r1[2] = 0.0;
+
+        $r1[3] = 0.0;
+
+        $r1[4] = 0.0;
+
+        $r1[5] = 0.0;
+
+        $r1[6] = 0.0;
+
+        $r1[7] = 0.0;
+
+        $r1[8] = 0.0;
+
+        $r1[9] = 0.0;
+
+        $r1[10] = 0.0;
+
+        $r1[11] = 0.0;
+
+        $r1[12] = 0.0;
+
+        $r1[13] = 0.0;
+
+        $r1[14] = 0.0;
+
+        $r1[15] = 0.0;
+
+        $r0[0] = $r1;
+
+        $r2 = newarray (double)[16];
+
+        $r2[0] = 0.0;
+
+        $r2[1] = 0.0;
+
+        $r2[2] = 0.0;
+
+        $r2[3] = 0.0;
+
+        $r2[4] = 1.0;
+
+        $r2[5] = 0.0;
+
+        $r2[6] = 0.0;
+
+        $r2[7] = 0.0;
+
+        $r2[8] = 0.0;
+
+        $r2[9] = 0.0;
+
+        $r2[10] = 0.0;
+
+        $r2[11] = 0.0;
+
+        $r2[12] = 0.0;
+
+        $r2[13] = 0.0;
+
+        $r2[14] = 0.0;
+
+        $r2[15] = 0.0;
+
+        $r0[1] = $r2;
+
+        $r3 = newarray (double)[16];
+
+        $r3[0] = -3.0;
+
+        $r3[1] = 3.0;
+
+        $r3[2] = 0.0;
+
+        $r3[3] = 0.0;
+
+        $r3[4] = -2.0;
+
+        $r3[5] = -1.0;
+
+        $r3[6] = 0.0;
+
+        $r3[7] = 0.0;
+
+        $r3[8] = 0.0;
+
+        $r3[9] = 0.0;
+
+        $r3[10] = 0.0;
+
+        $r3[11] = 0.0;
+
+        $r3[12] = 0.0;
+
+        $r3[13] = 0.0;
+
+        $r3[14] = 0.0;
+
+        $r3[15] = 0.0;
+
+        $r0[2] = $r3;
+
+        $r4 = newarray (double)[16];
+
+        $r4[0] = 2.0;
+
+        $r4[1] = -2.0;
+
+        $r4[2] = 0.0;
+
+        $r4[3] = 0.0;
+
+        $r4[4] = 1.0;
+
+        $r4[5] = 1.0;
+
+        $r4[6] = 0.0;
+
+        $r4[7] = 0.0;
+
+        $r4[8] = 0.0;
+
+        $r4[9] = 0.0;
+
+        $r4[10] = 0.0;
+
+        $r4[11] = 0.0;
+
+        $r4[12] = 0.0;
+
+        $r4[13] = 0.0;
+
+        $r4[14] = 0.0;
+
+        $r4[15] = 0.0;
+
+        $r0[3] = $r4;
+
+        $r5 = newarray (double)[16];
+
+        $r5[0] = 0.0;
+
+        $r5[1] = 0.0;
+
+        $r5[2] = 0.0;
+
+        $r5[3] = 0.0;
+
+        $r5[4] = 0.0;
+
+        $r5[5] = 0.0;
+
+        $r5[6] = 0.0;
+
+        $r5[7] = 0.0;
+
+        $r5[8] = 1.0;
+
+        $r5[9] = 0.0;
+
+        $r5[10] = 0.0;
+
+        $r5[11] = 0.0;
+
+        $r5[12] = 0.0;
+
+        $r5[13] = 0.0;
+
+        $r5[14] = 0.0;
+
+        $r5[15] = 0.0;
+
+        $r0[4] = $r5;
+
+        $r6 = newarray (double)[16];
+
+        $r6[0] = 0.0;
+
+        $r6[1] = 0.0;
+
+        $r6[2] = 0.0;
+
+        $r6[3] = 0.0;
+
+        $r6[4] = 0.0;
+
+        $r6[5] = 0.0;
+
+        $r6[6] = 0.0;
+
+        $r6[7] = 0.0;
+
+        $r6[8] = 0.0;
+
+        $r6[9] = 0.0;
+
+        $r6[10] = 0.0;
+
+        $r6[11] = 0.0;
+
+        $r6[12] = 1.0;
+
+        $r6[13] = 0.0;
+
+        $r6[14] = 0.0;
+
+        $r6[15] = 0.0;
+
+        $r0[5] = $r6;
+
+        $r7 = newarray (double)[16];
+
+        $r7[0] = 0.0;
+
+        $r7[1] = 0.0;
+
+        $r7[2] = 0.0;
+
+        $r7[3] = 0.0;
+
+        $r7[4] = 0.0;
+
+        $r7[5] = 0.0;
+
+        $r7[6] = 0.0;
+
+        $r7[7] = 0.0;
+
+        $r7[8] = -3.0;
+
+        $r7[9] = 3.0;
+
+        $r7[10] = 0.0;
+
+        $r7[11] = 0.0;
+
+        $r7[12] = -2.0;
+
+        $r7[13] = -1.0;
+
+        $r7[14] = 0.0;
+
+        $r7[15] = 0.0;
+
+        $r0[6] = $r7;
+
+        $r8 = newarray (double)[16];
+
+        $r8[0] = 0.0;
+
+        $r8[1] = 0.0;
+
+        $r8[2] = 0.0;
+
+        $r8[3] = 0.0;
+
+        $r8[4] = 0.0;
+
+        $r8[5] = 0.0;
+
+        $r8[6] = 0.0;
+
+        $r8[7] = 0.0;
+
+        $r8[8] = 2.0;
+
+        $r8[9] = -2.0;
+
+        $r8[10] = 0.0;
+
+        $r8[11] = 0.0;
+
+        $r8[12] = 1.0;
+
+        $r8[13] = 1.0;
+
+        $r8[14] = 0.0;
+
+        $r8[15] = 0.0;
+
+        $r0[7] = $r8;
+
+        $r9 = newarray (double)[16];
+
+        $r9[0] = -3.0;
+
+        $r9[1] = 0.0;
+
+        $r9[2] = 3.0;
+
+        $r9[3] = 0.0;
+
+        $r9[4] = 0.0;
+
+        $r9[5] = 0.0;
+
+        $r9[6] = 0.0;
+
+        $r9[7] = 0.0;
+
+        $r9[8] = -2.0;
+
+        $r9[9] = 0.0;
+
+        $r9[10] = -1.0;
+
+        $r9[11] = 0.0;
+
+        $r9[12] = 0.0;
+
+        $r9[13] = 0.0;
+
+        $r9[14] = 0.0;
+
+        $r9[15] = 0.0;
+
+        $r0[8] = $r9;
+
+        $r10 = newarray (double)[16];
+
+        $r10[0] = 0.0;
+
+        $r10[1] = 0.0;
+
+        $r10[2] = 0.0;
+
+        $r10[3] = 0.0;
+
+        $r10[4] = -3.0;
+
+        $r10[5] = 0.0;
+
+        $r10[6] = 3.0;
+
+        $r10[7] = 0.0;
+
+        $r10[8] = 0.0;
+
+        $r10[9] = 0.0;
+
+        $r10[10] = 0.0;
+
+        $r10[11] = 0.0;
+
+        $r10[12] = -2.0;
+
+        $r10[13] = 0.0;
+
+        $r10[14] = -1.0;
+
+        $r10[15] = 0.0;
+
+        $r0[9] = $r10;
+
+        $r11 = newarray (double)[16];
+
+        $r11[0] = 9.0;
+
+        $r11[1] = -9.0;
+
+        $r11[2] = -9.0;
+
+        $r11[3] = 9.0;
+
+        $r11[4] = 6.0;
+
+        $r11[5] = 3.0;
+
+        $r11[6] = -6.0;
+
+        $r11[7] = -3.0;
+
+        $r11[8] = 6.0;
+
+        $r11[9] = -6.0;
+
+        $r11[10] = 3.0;
+
+        $r11[11] = -3.0;
+
+        $r11[12] = 4.0;
+
+        $r11[13] = 2.0;
+
+        $r11[14] = 2.0;
+
+        $r11[15] = 1.0;
+
+        $r0[10] = $r11;
+
+        $r12 = newarray (double)[16];
+
+        $r12[0] = -6.0;
+
+        $r12[1] = 6.0;
+
+        $r12[2] = 6.0;
+
+        $r12[3] = -6.0;
+
+        $r12[4] = -3.0;
+
+        $r12[5] = -3.0;
+
+        $r12[6] = 3.0;
+
+        $r12[7] = 3.0;
+
+        $r12[8] = -4.0;
+
+        $r12[9] = 4.0;
+
+        $r12[10] = -2.0;
+
+        $r12[11] = 2.0;
+
+        $r12[12] = -2.0;
+
+        $r12[13] = -2.0;
+
+        $r12[14] = -1.0;
+
+        $r12[15] = -1.0;
+
+        $r0[11] = $r12;
+
+        $r13 = newarray (double)[16];
+
+        $r13[0] = 2.0;
+
+        $r13[1] = 0.0;
+
+        $r13[2] = -2.0;
+
+        $r13[3] = 0.0;
+
+        $r13[4] = 0.0;
+
+        $r13[5] = 0.0;
+
+        $r13[6] = 0.0;
+
+        $r13[7] = 0.0;
+
+        $r13[8] = 1.0;
+
+        $r13[9] = 0.0;
+
+        $r13[10] = 1.0;
+
+        $r13[11] = 0.0;
+
+        $r13[12] = 0.0;
+
+        $r13[13] = 0.0;
+
+        $r13[14] = 0.0;
+
+        $r13[15] = 0.0;
+
+        $r0[12] = $r13;
+
+        $r14 = newarray (double)[16];
+
+        $r14[0] = 0.0;
+
+        $r14[1] = 0.0;
+
+        $r14[2] = 0.0;
+
+        $r14[3] = 0.0;
+
+        $r14[4] = 2.0;
+
+        $r14[5] = 0.0;
+
+        $r14[6] = -2.0;
+
+        $r14[7] = 0.0;
+
+        $r14[8] = 0.0;
+
+        $r14[9] = 0.0;
+
+        $r14[10] = 0.0;
+
+        $r14[11] = 0.0;
+
+        $r14[12] = 1.0;
+
+        $r14[13] = 0.0;
+
+        $r14[14] = 1.0;
+
+        $r14[15] = 0.0;
+
+        $r0[13] = $r14;
+
+        $r15 = newarray (double)[16];
+
+        $r15[0] = -6.0;
+
+        $r15[1] = 6.0;
+
+        $r15[2] = 6.0;
+
+        $r15[3] = -6.0;
+
+        $r15[4] = -4.0;
+
+        $r15[5] = -2.0;
+
+        $r15[6] = 4.0;
+
+        $r15[7] = 2.0;
+
+        $r15[8] = -3.0;
+
+        $r15[9] = 3.0;
+
+        $r15[10] = -3.0;
+
+        $r15[11] = 3.0;
+
+        $r15[12] = -2.0;
+
+        $r15[13] = -1.0;
+
+        $r15[14] = -2.0;
+
+        $r15[15] = -1.0;
+
+        $r0[14] = $r15;
+
+        $r16 = newarray (double)[16];
+
+        $r16[0] = 4.0;
+
+        $r16[1] = -4.0;
+
+        $r16[2] = -4.0;
+
+        $r16[3] = 4.0;
+
+        $r16[4] = 2.0;
+
+        $r16[5] = 2.0;
+
+        $r16[6] = -2.0;
+
+        $r16[7] = -2.0;
+
+        $r16[8] = 2.0;
+
+        $r16[9] = -2.0;
+
+        $r16[10] = 2.0;
+
+        $r16[11] = -2.0;
+
+        $r16[12] = 1.0;
+
+        $r16[13] = 1.0;
+
+        $r16[14] = 1.0;
+
+        $r16[15] = 1.0;
+
+        $r0[15] = $r16;
+
+        <org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction: double[][] AINV> = $r0;
+
+        return;
+    }
+}

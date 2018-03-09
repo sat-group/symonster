@@ -1,0 +1,3558 @@
+public class org.apache.commons.math3.stat.regression.MillerUpdatingRegression extends java.lang.Object implements org.apache.commons.math3.stat.regression.UpdatingMultipleLinearRegression
+{
+    private final int nvars;
+    private final double[] d;
+    private final double[] rhs;
+    private final double[] r;
+    private final double[] tol;
+    private final double[] rss;
+    private final int[] vorder;
+    private final double[] work_tolset;
+    private long nobs;
+    private double sserr;
+    private boolean rss_set;
+    private boolean tol_set;
+    private final boolean[] lindep;
+    private final double[] x_sing;
+    private final double[] work_sing;
+    private double sumy;
+    private double sumsqy;
+    private boolean hasIntercept;
+    private final double epsilon;
+
+    private void <init>()
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: void <init>(int,boolean,double)>(-1, 0, #NaN);
+
+        return;
+    }
+
+    public void <init>(int, boolean, double) throws org.apache.commons.math3.stat.regression.ModelSpecificationException
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i16, i17, $i18;
+        boolean z0;
+        double d0, $d1;
+        double[] $r1, $r2, $r3, $r4, $r5, $r7, $r8, $r9;
+        int[] $r6, $r11;
+        boolean[] $r10;
+        byte $b15;
+        org.apache.commons.math3.stat.regression.ModelSpecificationException $r12;
+        java.lang.Object[] $r13;
+        org.apache.commons.math3.exception.util.LocalizedFormats $r14;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        i0 := @parameter0: int;
+
+        z0 := @parameter1: boolean;
+
+        d0 := @parameter2: double;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: long nobs> = 0L;
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sserr> = 0.0;
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean rss_set> = 0;
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean tol_set> = 0;
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sumy> = 0.0;
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sumsqy> = 0.0;
+
+        if i0 >= 1 goto label1;
+
+        $r12 = new org.apache.commons.math3.stat.regression.ModelSpecificationException;
+
+        $r14 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats NO_REGRESSORS>;
+
+        $r13 = newarray (java.lang.Object)[0];
+
+        specialinvoke $r12.<org.apache.commons.math3.stat.regression.ModelSpecificationException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Object[])>($r14, $r13);
+
+        throw $r12;
+
+     label1:
+        if z0 == 0 goto label2;
+
+        $i16 = i0 + 1;
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars> = $i16;
+
+        goto label3;
+
+     label2:
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars> = i0;
+
+     label3:
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean hasIntercept> = z0;
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: long nobs> = 0L;
+
+        $i1 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $r1 = newarray (double)[$i1];
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d> = $r1;
+
+        $i2 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $r2 = newarray (double)[$i2];
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs> = $r2;
+
+        $i5 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i3 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i4 = $i3 - 1;
+
+        $i6 = $i5 * $i4;
+
+        $i7 = $i6 / 2;
+
+        $r3 = newarray (double)[$i7];
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r> = $r3;
+
+        $i8 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $r4 = newarray (double)[$i8];
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] tol> = $r4;
+
+        $i9 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $r5 = newarray (double)[$i9];
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rss> = $r5;
+
+        $i10 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $r6 = newarray (int)[$i10];
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int[] vorder> = $r6;
+
+        $i11 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $r7 = newarray (double)[$i11];
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] x_sing> = $r7;
+
+        $i12 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $r8 = newarray (double)[$i12];
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] work_sing> = $r8;
+
+        $i13 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $r9 = newarray (double)[$i13];
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] work_tolset> = $r9;
+
+        $i14 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $r10 = newarray (boolean)[$i14];
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean[] lindep> = $r10;
+
+        i17 = 0;
+
+     label4:
+        $i18 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i17 >= $i18 goto label5;
+
+        $r11 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int[] vorder>;
+
+        $r11[i17] = i17;
+
+        i17 = i17 + 1;
+
+        goto label4;
+
+     label5:
+        $b15 = d0 cmpl 0.0;
+
+        if $b15 <= 0 goto label6;
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double epsilon> = d0;
+
+        goto label7;
+
+     label6:
+        $d1 = neg d0;
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double epsilon> = $d1;
+
+     label7:
+        return;
+    }
+
+    public void <init>(int, boolean) throws org.apache.commons.math3.stat.regression.ModelSpecificationException
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        int i0;
+        boolean z0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        i0 := @parameter0: int;
+
+        z0 := @parameter1: boolean;
+
+        $d0 = <org.apache.commons.math3.util.Precision: double EPSILON>;
+
+        specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: void <init>(int,boolean,double)>(i0, z0, $d0);
+
+        return;
+    }
+
+    public boolean hasIntercept()
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        $z0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean hasIntercept>;
+
+        return $z0;
+    }
+
+    public long getN()
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        long $l0;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        $l0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: long nobs>;
+
+        return $l0;
+    }
+
+    public void addObservation(double[], double) throws org.apache.commons.math3.stat.regression.ModelSpecificationException
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        double[] r1, r2, $r3;
+        double d0;
+        boolean $z0, $z1, $z2;
+        int $i0, $i1, $i2, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12;
+        long $l3, $l4;
+        org.apache.commons.math3.stat.regression.ModelSpecificationException $r5;
+        java.lang.Object[] $r6;
+        org.apache.commons.math3.exception.util.LocalizedFormats $r7;
+        java.lang.Integer $r8, $r9;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        r1 := @parameter0: double[];
+
+        d0 := @parameter1: double;
+
+        $z0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean hasIntercept>;
+
+        if $z0 != 0 goto label1;
+
+        $i12 = lengthof r1;
+
+        $i11 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if $i12 != $i11 goto label2;
+
+     label1:
+        $z1 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean hasIntercept>;
+
+        if $z1 == 0 goto label3;
+
+        $i6 = lengthof r1;
+
+        $i8 = $i6 + 1;
+
+        $i7 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if $i8 == $i7 goto label3;
+
+     label2:
+        $r5 = new org.apache.commons.math3.stat.regression.ModelSpecificationException;
+
+        $r7 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats INVALID_REGRESSION_OBSERVATION>;
+
+        $r6 = newarray (java.lang.Object)[2];
+
+        $i9 = lengthof r1;
+
+        $r8 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i9);
+
+        $r6[0] = $r8;
+
+        $i10 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $r9 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i10);
+
+        $r6[1] = $r9;
+
+        specialinvoke $r5.<org.apache.commons.math3.stat.regression.ModelSpecificationException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Object[])>($r7, $r6);
+
+        throw $r5;
+
+     label3:
+        $z2 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean hasIntercept>;
+
+        if $z2 != 0 goto label4;
+
+        $i5 = lengthof r1;
+
+        $r3 = staticinvoke <org.apache.commons.math3.util.MathArrays: double[] copyOf(double[],int)>(r1, $i5);
+
+        specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: void include(double[],double,double)>($r3, 1.0, d0);
+
+        goto label5;
+
+     label4:
+        $i0 = lengthof r1;
+
+        $i1 = $i0 + 1;
+
+        r2 = newarray (double)[$i1];
+
+        $i2 = lengthof r1;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r1, 0, r2, 1, $i2);
+
+        r2[0] = 1.0;
+
+        specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: void include(double[],double,double)>(r2, 1.0, d0);
+
+     label5:
+        $l3 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: long nobs>;
+
+        $l4 = $l3 + 1L;
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: long nobs> = $l4;
+
+        return;
+    }
+
+    public void addObservations(double[][], double[]) throws org.apache.commons.math3.stat.regression.ModelSpecificationException
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        double[][] r1;
+        double[] r2, $r8, $r9, $r14;
+        org.apache.commons.math3.stat.regression.ModelSpecificationException $r3, $r10, $r16;
+        java.lang.Object[] $r4, $r11, $r17;
+        org.apache.commons.math3.exception.util.LocalizedFormats $r5, $r12, $r18;
+        java.lang.Integer $r6, $r7, $r13, $r15;
+        int $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, i13;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        r1 := @parameter0: double[][];
+
+        r2 := @parameter1: double[];
+
+        if r1 == null goto label01;
+
+        if r2 == null goto label01;
+
+        $i3 = lengthof r1;
+
+        $i2 = lengthof r2;
+
+        if $i3 == $i2 goto label06;
+
+     label01:
+        $r3 = new org.apache.commons.math3.stat.regression.ModelSpecificationException;
+
+        $r5 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats DIMENSIONS_MISMATCH_SIMPLE>;
+
+        $r4 = newarray (java.lang.Object)[2];
+
+        if r1 != null goto label02;
+
+        $i11 = 0;
+
+        goto label03;
+
+     label02:
+        $i11 = lengthof r1;
+
+     label03:
+        $r6 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i11);
+
+        $r4[0] = $r6;
+
+        if r2 != null goto label04;
+
+        $i12 = 0;
+
+        goto label05;
+
+     label04:
+        $i12 = lengthof r2;
+
+     label05:
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i12);
+
+        $r4[1] = $r7;
+
+        specialinvoke $r3.<org.apache.commons.math3.stat.regression.ModelSpecificationException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Object[])>($r5, $r4);
+
+        throw $r3;
+
+     label06:
+        $i4 = lengthof r1;
+
+        if $i4 != 0 goto label07;
+
+        $r16 = new org.apache.commons.math3.stat.regression.ModelSpecificationException;
+
+        $r18 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats NO_DATA>;
+
+        $r17 = newarray (java.lang.Object)[0];
+
+        specialinvoke $r16.<org.apache.commons.math3.stat.regression.ModelSpecificationException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Object[])>($r18, $r17);
+
+        throw $r16;
+
+     label07:
+        $r8 = r1[0];
+
+        $i5 = lengthof $r8;
+
+        $i7 = $i5 + 1;
+
+        $i6 = lengthof r1;
+
+        if $i7 <= $i6 goto label08;
+
+        $r10 = new org.apache.commons.math3.stat.regression.ModelSpecificationException;
+
+        $r12 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats NOT_ENOUGH_DATA_FOR_NUMBER_OF_PREDICTORS>;
+
+        $r11 = newarray (java.lang.Object)[2];
+
+        $i9 = lengthof r1;
+
+        $r13 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i9);
+
+        $r11[0] = $r13;
+
+        $r14 = r1[0];
+
+        $i10 = lengthof $r14;
+
+        $r15 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i10);
+
+        $r11[1] = $r15;
+
+        specialinvoke $r10.<org.apache.commons.math3.stat.regression.ModelSpecificationException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Object[])>($r12, $r11);
+
+        throw $r10;
+
+     label08:
+        i13 = 0;
+
+     label09:
+        $i8 = lengthof r1;
+
+        if i13 >= $i8 goto label10;
+
+        $r9 = r1[i13];
+
+        $d0 = r2[i13];
+
+        virtualinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: void addObservation(double[],double)>($r9, $d0);
+
+        i13 = i13 + 1;
+
+        goto label09;
+
+     label10:
+        return;
+    }
+
+    private void include(double[], double, double)
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        double[] r1, $r2, $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, d40, d41, d42, d43, d44, d45;
+        int $i0, $i7, $i8, $i9, i10, i11, i12, $i13;
+        byte $b1, $b2, $b3, $b4, $b5, $b6;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        r1 := @parameter0: double[];
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        i10 = 0;
+
+        d40 = d0;
+
+        d41 = d1;
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean rss_set> = 0;
+
+        $d6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sumy>;
+
+        $d7 = specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double smartAdd(double,double)>(d1, $d6);
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sumy> = $d7;
+
+        $d9 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sumsqy>;
+
+        $d8 = d1 * d1;
+
+        $d10 = specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double smartAdd(double,double)>($d9, $d8);
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sumsqy> = $d10;
+
+        i11 = 0;
+
+     label01:
+        $i0 = lengthof r1;
+
+        if i11 >= $i0 goto label13;
+
+        $b1 = d40 cmpl 0.0;
+
+        if $b1 != 0 goto label02;
+
+        return;
+
+     label02:
+        d2 = r1[i11];
+
+        $b2 = d2 cmpl 0.0;
+
+        if $b2 != 0 goto label03;
+
+        $i7 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i8 = $i7 - i11;
+
+        $i9 = $i8 - 1;
+
+        i10 = i10 + $i9;
+
+        goto label12;
+
+     label03:
+        $r2 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        d3 = $r2[i11];
+
+        d4 = d40 * d2;
+
+        d5 = d40;
+
+        $b3 = d3 cmpl 0.0;
+
+        if $b3 == 0 goto label05;
+
+        $d35 = d4 * d2;
+
+        d42 = specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double smartAdd(double,double)>(d3, $d35);
+
+        $d36 = d4 * d2;
+
+        d43 = $d36 / d3;
+
+        $d37 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d43);
+
+        $d38 = <org.apache.commons.math3.util.Precision: double EPSILON>;
+
+        $b6 = $d37 cmpl $d38;
+
+        if $b6 <= 0 goto label04;
+
+        $d39 = d3 * d40;
+
+        d40 = $d39 / d42;
+
+     label04:
+        goto label06;
+
+     label05:
+        d42 = d4 * d2;
+
+        d40 = 0.0;
+
+     label06:
+        $r3 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $r3[i11] = d42;
+
+        i12 = i11 + 1;
+
+     label07:
+        $i13 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i12 >= $i13 goto label10;
+
+        d44 = r1[i12];
+
+        $d25 = neg d2;
+
+        $r8 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d24 = $r8[i10];
+
+        $d26 = $d25 * $d24;
+
+        $d27 = specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double smartAdd(double,double)>(d44, $d26);
+
+        r1[i12] = $d27;
+
+        $b5 = d3 cmpl 0.0;
+
+        if $b5 == 0 goto label08;
+
+        $r11 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $r10 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d29 = $r10[i10];
+
+        $d32 = d3 * $d29;
+
+        $d30 = d5 * d2;
+
+        $d31 = $d30 * d44;
+
+        $d33 = specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double smartAdd(double,double)>($d32, $d31);
+
+        $d34 = $d33 / d42;
+
+        $r11[i10] = $d34;
+
+        goto label09;
+
+     label08:
+        $r9 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d28 = d44 / d2;
+
+        $r9[i10] = $d28;
+
+     label09:
+        i10 = i10 + 1;
+
+        i12 = i12 + 1;
+
+        goto label07;
+
+     label10:
+        d45 = d41;
+
+        $d16 = neg d2;
+
+        $r4 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d15 = $r4[i11];
+
+        $d17 = $d16 * $d15;
+
+        d41 = specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double smartAdd(double,double)>(d41, $d17);
+
+        $b4 = d3 cmpl 0.0;
+
+        if $b4 == 0 goto label11;
+
+        $r7 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $r6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d19 = $r6[i11];
+
+        $d21 = d3 * $d19;
+
+        $d20 = d4 * d45;
+
+        $d22 = specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double smartAdd(double,double)>($d21, $d20);
+
+        $d23 = $d22 / d42;
+
+        $r7[i11] = $d23;
+
+        goto label12;
+
+     label11:
+        $r5 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d18 = d45 / d2;
+
+        $r5[i11] = $d18;
+
+     label12:
+        i11 = i11 + 1;
+
+        goto label01;
+
+     label13:
+        $d13 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sserr>;
+
+        $d11 = d40 * d41;
+
+        $d12 = $d11 * d41;
+
+        $d14 = specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double smartAdd(double,double)>($d13, $d12);
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sserr> = $d14;
+
+        return;
+    }
+
+    private double smartAdd(double, double)
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, d8, d9;
+        byte $b0, $b1, $b2;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d0);
+
+        d3 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d1);
+
+        $b0 = d2 cmpl d3;
+
+        if $b0 <= 0 goto label2;
+
+        $d6 = <org.apache.commons.math3.util.Precision: double EPSILON>;
+
+        d8 = d2 * $d6;
+
+        $b2 = d3 cmpl d8;
+
+        if $b2 <= 0 goto label1;
+
+        $d7 = d0 + d1;
+
+        return $d7;
+
+     label1:
+        return d0;
+
+     label2:
+        $d4 = <org.apache.commons.math3.util.Precision: double EPSILON>;
+
+        d9 = d3 * $d4;
+
+        $b1 = d2 cmpl d9;
+
+        if $b1 <= 0 goto label3;
+
+        $d5 = d0 + d1;
+
+        return $d5;
+
+     label3:
+        return d1;
+    }
+
+    public void clear()
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        double[] $r1, $r2, $r3, $r4, $r5, $r6, $r7, $r8;
+        boolean[] $r9;
+        int $i0, i1;
+        int[] $r10;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        $r1 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>($r1, 0.0);
+
+        $r2 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>($r2, 0.0);
+
+        $r3 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>($r3, 0.0);
+
+        $r4 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] tol>;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>($r4, 0.0);
+
+        $r5 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rss>;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>($r5, 0.0);
+
+        $r6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] work_tolset>;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>($r6, 0.0);
+
+        $r7 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] work_sing>;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>($r7, 0.0);
+
+        $r8 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] x_sing>;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>($r8, 0.0);
+
+        $r9 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean[] lindep>;
+
+        staticinvoke <java.util.Arrays: void fill(boolean[],boolean)>($r9, 0);
+
+        i1 = 0;
+
+     label1:
+        $i0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i1 >= $i0 goto label2;
+
+        $r10 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int[] vorder>;
+
+        $r10[i1] = i1;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: long nobs> = 0L;
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sserr> = 0.0;
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sumy> = 0.0;
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sumsqy> = 0.0;
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean rss_set> = 0;
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean tol_set> = 0;
+
+        return;
+    }
+
+    private void tolset()
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, d10;
+        int $i0, $i1, $i2, $i3, $i4, i5, i6, i7, i8;
+        double[] $r1, $r2, $r3, $r4, $r5, $r6, $r7, $r8;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        d0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double epsilon>;
+
+        i5 = 0;
+
+     label1:
+        $i0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i5 >= $i0 goto label2;
+
+        $r8 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] work_tolset>;
+
+        $r7 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d8 = $r7[i5];
+
+        $d9 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d8);
+
+        $r8[i5] = $d9;
+
+        i5 = i5 + 1;
+
+        goto label1;
+
+     label2:
+        $r2 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] tol>;
+
+        $r1 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] work_tolset>;
+
+        $d1 = $r1[0];
+
+        $d2 = d0 * $d1;
+
+        $r2[0] = $d2;
+
+        i6 = 1;
+
+     label3:
+        $i1 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i6 >= $i1 goto label6;
+
+        i7 = i6 - 1;
+
+        $r3 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] work_tolset>;
+
+        d10 = $r3[i6];
+
+        i8 = 0;
+
+     label4:
+        if i8 >= i6 goto label5;
+
+        $r5 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d4 = $r5[i7];
+
+        $d5 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d4);
+
+        $r6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] work_tolset>;
+
+        $d6 = $r6[i8];
+
+        $d7 = $d5 * $d6;
+
+        d10 = d10 + $d7;
+
+        $i2 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i3 = $i2 - i8;
+
+        $i4 = $i3 - 2;
+
+        i7 = i7 + $i4;
+
+        i8 = i8 + 1;
+
+        goto label4;
+
+     label5:
+        $r4 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] tol>;
+
+        $d3 = d0 * d10;
+
+        $r4[i6] = $d3;
+
+        i6 = i6 + 1;
+
+        goto label3;
+
+     label6:
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean tol_set> = 1;
+
+        return;
+    }
+
+    private double[] regcf(int) throws org.apache.commons.math3.stat.regression.ModelSpecificationException
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        int i0, $i1, $i3, $i4, $i5, $i6, $i7, $i8, $i9, i10, i11, i12, i13;
+        double[] r1, $r3, $r4, $r5, $r6, $r7;
+        boolean $z0, $z1, z2;
+        boolean[] $r2;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9;
+        byte $b2;
+        org.apache.commons.math3.stat.regression.ModelSpecificationException $r8, $r13;
+        java.lang.Object[] $r9, $r14;
+        org.apache.commons.math3.exception.util.LocalizedFormats $r10, $r15;
+        java.lang.Integer $r11, $r12;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        i0 := @parameter0: int;
+
+        if i0 >= 1 goto label01;
+
+        $r13 = new org.apache.commons.math3.stat.regression.ModelSpecificationException;
+
+        $r15 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats NO_REGRESSORS>;
+
+        $r14 = newarray (java.lang.Object)[0];
+
+        specialinvoke $r13.<org.apache.commons.math3.stat.regression.ModelSpecificationException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Object[])>($r15, $r14);
+
+        throw $r13;
+
+     label01:
+        $i1 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i0 <= $i1 goto label02;
+
+        $r8 = new org.apache.commons.math3.stat.regression.ModelSpecificationException;
+
+        $r10 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats TOO_MANY_REGRESSORS>;
+
+        $r9 = newarray (java.lang.Object)[2];
+
+        $r11 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        $r9[0] = $r11;
+
+        $i9 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $r12 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i9);
+
+        $r9[1] = $r12;
+
+        specialinvoke $r8.<org.apache.commons.math3.stat.regression.ModelSpecificationException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Object[])>($r10, $r9);
+
+        throw $r8;
+
+     label02:
+        $z0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean tol_set>;
+
+        if $z0 != 0 goto label03;
+
+        specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: void tolset()>();
+
+     label03:
+        r1 = newarray (double)[i0];
+
+        z2 = 0;
+
+        i10 = i0 - 1;
+
+     label04:
+        if i10 <= -1 goto label08;
+
+        $r3 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d0 = $r3[i10];
+
+        $d1 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d0);
+
+        $r4 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] tol>;
+
+        $d2 = $r4[i10];
+
+        $b2 = $d1 cmpg $d2;
+
+        if $b2 >= 0 goto label05;
+
+        r1[i10] = 0.0;
+
+        $r7 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $r7[i10] = 0.0;
+
+        z2 = 1;
+
+        goto label07;
+
+     label05:
+        $r5 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d3 = $r5[i10];
+
+        r1[i10] = $d3;
+
+        $i4 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i3 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i5 = $i4 + $i3;
+
+        $i6 = $i5 - i10;
+
+        $i7 = $i6 - 1;
+
+        $i8 = i10 * $i7;
+
+        i11 = $i8 / 2;
+
+        i12 = i10 + 1;
+
+     label06:
+        if i12 >= i0 goto label07;
+
+        $d8 = r1[i10];
+
+        $r6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d4 = $r6[i11];
+
+        $d6 = neg $d4;
+
+        $d5 = r1[i12];
+
+        $d7 = $d6 * $d5;
+
+        $d9 = specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double smartAdd(double,double)>($d8, $d7);
+
+        r1[i10] = $d9;
+
+        i11 = i11 + 1;
+
+        i12 = i12 + 1;
+
+        goto label06;
+
+     label07:
+        i10 = i10 + -1;
+
+        goto label04;
+
+     label08:
+        if z2 == 0 goto label11;
+
+        i13 = 0;
+
+     label09:
+        if i13 >= i0 goto label11;
+
+        $r2 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean[] lindep>;
+
+        $z1 = $r2[i13];
+
+        if $z1 == 0 goto label10;
+
+        r1[i13] = #NaN;
+
+     label10:
+        i13 = i13 + 1;
+
+        goto label09;
+
+     label11:
+        return r1;
+    }
+
+    private void singcheck()
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, d17;
+        int $i0, $i1, $i2, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i14, $i15, $i16, i17, i18, i19, i20, i21, i22;
+        double[] $r1, $r3, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21;
+        boolean[] $r2, $r4;
+        byte $b3, $b13;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        i17 = 0;
+
+     label01:
+        $i0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i17 >= $i0 goto label02;
+
+        $r21 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] work_sing>;
+
+        $r20 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d15 = $r20[i17];
+
+        $d16 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d15);
+
+        $r21[i17] = $d16;
+
+        i17 = i17 + 1;
+
+        goto label01;
+
+     label02:
+        i18 = 0;
+
+     label03:
+        $i1 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i18 >= $i1 goto label11;
+
+        $r1 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] tol>;
+
+        d0 = $r1[i18];
+
+        i19 = i18 - 1;
+
+        i20 = 0;
+
+     label04:
+        $i2 = i18 - 1;
+
+        if i20 >= $i2 goto label06;
+
+        $r17 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d11 = $r17[i19];
+
+        $d12 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>($d11);
+
+        $r18 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] work_sing>;
+
+        $d13 = $r18[i20];
+
+        $d14 = $d12 * $d13;
+
+        $b13 = $d14 cmpg d0;
+
+        if $b13 >= 0 goto label05;
+
+        $r19 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $r19[i19] = 0.0;
+
+     label05:
+        $i14 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i15 = $i14 - i20;
+
+        $i16 = $i15 - 2;
+
+        i19 = i19 + $i16;
+
+        i20 = i20 + 1;
+
+        goto label04;
+
+     label06:
+        $r2 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean[] lindep>;
+
+        $r2[i18] = 0;
+
+        $r3 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] work_sing>;
+
+        $d2 = $r3[i18];
+
+        $b3 = $d2 cmpg d0;
+
+        if $b3 >= 0 goto label10;
+
+        $r4 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean[] lindep>;
+
+        $r4[i18] = 1;
+
+        $i4 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i5 = $i4 - 1;
+
+        if i18 >= $i5 goto label09;
+
+        $r8 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] x_sing>;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>($r8, 0.0);
+
+        $i7 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i8 = $i7 + $i6;
+
+        $i9 = $i8 - i18;
+
+        $i10 = $i9 - 1;
+
+        $i11 = i18 * $i10;
+
+        i21 = $i11 / 2;
+
+        i22 = i18 + 1;
+
+     label07:
+        $i12 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i22 >= $i12 goto label08;
+
+        $r15 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] x_sing>;
+
+        $r14 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d10 = $r14[i21];
+
+        $r15[i22] = $d10;
+
+        $r16 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $r16[i21] = 0.0;
+
+        i22 = i22 + 1;
+
+        i21 = i21 + 1;
+
+        goto label07;
+
+     label08:
+        $r9 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        d17 = $r9[i18];
+
+        $r10 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        d1 = $r10[i18];
+
+        $r11 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $r11[i18] = 0.0;
+
+        $r12 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $r12[i18] = 0.0;
+
+        $r13 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] x_sing>;
+
+        specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: void include(double[],double,double)>($r13, d1, d17);
+
+        goto label10;
+
+     label09:
+        $d8 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sserr>;
+
+        $r5 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d4 = $r5[i18];
+
+        $r6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d3 = $r6[i18];
+
+        $d6 = $d4 * $d3;
+
+        $r7 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d5 = $r7[i18];
+
+        $d7 = $d6 * $d5;
+
+        $d9 = $d8 + $d7;
+
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sserr> = $d9;
+
+     label10:
+        i18 = i18 + 1;
+
+        goto label03;
+
+     label11:
+        return;
+    }
+
+    private void ss()
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        int $i0, $i1, $i2, $i3, i4;
+        double $d0, $d1, $d2, $d3, $d4, $d5, d6;
+        double[] $r1, $r2, $r3, $r4, $r5;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        d6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sserr>;
+
+        $r1 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rss>;
+
+        $i0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i1 = $i0 - 1;
+
+        $d0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sserr>;
+
+        $r1[$i1] = $d0;
+
+        $i2 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        i4 = $i2 - 1;
+
+     label1:
+        if i4 <= 0 goto label2;
+
+        $r2 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d2 = $r2[i4];
+
+        $r3 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d1 = $r3[i4];
+
+        $d4 = $d2 * $d1;
+
+        $r4 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d3 = $r4[i4];
+
+        $d5 = $d4 * $d3;
+
+        d6 = d6 + $d5;
+
+        $r5 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rss>;
+
+        $i3 = i4 - 1;
+
+        $r5[$i3] = d6;
+
+        i4 = i4 + -1;
+
+        goto label1;
+
+     label2:
+        r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean rss_set> = 1;
+
+        return;
+    }
+
+    private double[] cov(int)
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        int i0, $i4, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, i22, i23, i24, i25, i26, i27, i28;
+        double[] r1, r2, $r3, $r6, $r8, $r9;
+        long $l1, $l2, $l5;
+        byte $b3;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, d12, d13, d15;
+        boolean[] $r4, $r5, $r7, $r10;
+        boolean $z0, $z1, $z2, $z3;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        i0 := @parameter0: int;
+
+        $l2 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: long nobs>;
+
+        $l1 = (long) i0;
+
+        $b3 = $l2 cmp $l1;
+
+        if $b3 > 0 goto label01;
+
+        return null;
+
+     label01:
+        d12 = 0.0;
+
+        i22 = 0;
+
+     label02:
+        if i22 >= i0 goto label04;
+
+        $r10 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean[] lindep>;
+
+        $z3 = $r10[i22];
+
+        if $z3 != 0 goto label03;
+
+        d12 = d12 + 1.0;
+
+     label03:
+        i22 = i22 + 1;
+
+        goto label02;
+
+     label04:
+        $r3 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rss>;
+
+        $i4 = i0 - 1;
+
+        $d2 = $r3[$i4];
+
+        $l5 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: long nobs>;
+
+        $d0 = (double) $l5;
+
+        $d1 = $d0 - d12;
+
+        d13 = $d2 / $d1;
+
+        $i6 = i0 - 1;
+
+        $i7 = i0 * $i6;
+
+        $i8 = $i7 / 2;
+
+        r1 = newarray (double)[$i8];
+
+        specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: void inverse(double[],int)>(r1, i0);
+
+        $i9 = i0 + 1;
+
+        $i10 = i0 * $i9;
+
+        $i11 = $i10 / 2;
+
+        r2 = newarray (double)[$i11];
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>(r2, #NaN);
+
+        i23 = 0;
+
+        i24 = 0;
+
+     label05:
+        if i24 >= i0 goto label15;
+
+        i25 = i23;
+
+        $r4 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean[] lindep>;
+
+        $z0 = $r4[i24];
+
+        if $z0 != 0 goto label14;
+
+        i26 = i24;
+
+     label06:
+        if i26 >= i0 goto label14;
+
+        $r5 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean[] lindep>;
+
+        $z1 = $r5[i26];
+
+        if $z1 != 0 goto label12;
+
+        $i16 = i23 + i26;
+
+        i27 = $i16 - i24;
+
+        if i24 != i26 goto label07;
+
+        $r9 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d11 = $r9[i26];
+
+        d15 = 1.0 / $d11;
+
+        goto label08;
+
+     label07:
+        $i17 = i27 - 1;
+
+        $d4 = r1[$i17];
+
+        $r6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d3 = $r6[i26];
+
+        d15 = $d4 / $d3;
+
+     label08:
+        i28 = i26 + 1;
+
+     label09:
+        if i28 >= i0 goto label11;
+
+        $r7 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean[] lindep>;
+
+        $z2 = $r7[i28];
+
+        if $z2 != 0 goto label10;
+
+        $d7 = r1[i27];
+
+        $d6 = r1[i25];
+
+        $d9 = $d7 * $d6;
+
+        $r8 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d8 = $r8[i28];
+
+        $d10 = $d9 / $d8;
+
+        d15 = d15 + $d10;
+
+     label10:
+        i27 = i27 + 1;
+
+        i25 = i25 + 1;
+
+        i28 = i28 + 1;
+
+        goto label09;
+
+     label11:
+        $i18 = i26 + 1;
+
+        $i19 = $i18 * i26;
+
+        $i20 = $i19 / 2;
+
+        $i21 = $i20 + i24;
+
+        $d5 = d15 * d13;
+
+        r2[$i21] = $d5;
+
+        goto label13;
+
+     label12:
+        $i14 = i0 - i26;
+
+        $i15 = $i14 - 1;
+
+        i25 = i25 + $i15;
+
+     label13:
+        i26 = i26 + 1;
+
+        goto label06;
+
+     label14:
+        $i12 = i0 - i24;
+
+        $i13 = $i12 - 1;
+
+        i23 = i23 + $i13;
+
+        i24 = i24 + 1;
+
+        goto label05;
+
+     label15:
+        return r2;
+    }
+
+    private void inverse(double[], int)
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        double[] r1, $r3, $r5;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, i15, i18, i19, i20, i21, i22;
+        boolean[] $r2, $r4;
+        boolean $z0, $z1;
+        double $d0, $d1, $d2, $d3, $d4, $d5, d7;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        r1 := @parameter0: double[];
+
+        i0 := @parameter1: int;
+
+        $i2 = i0 - 1;
+
+        $i3 = i0 * $i2;
+
+        $i4 = $i3 / 2;
+
+        i15 = $i4 - 1;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>(r1, #NaN);
+
+        i18 = i0 - 1;
+
+     label1:
+        if i18 <= 0 goto label9;
+
+        $r2 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean[] lindep>;
+
+        $z0 = $r2[i18];
+
+        if $z0 != 0 goto label7;
+
+        $i10 = i18 - 1;
+
+        $i7 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i8 = $i7 + $i6;
+
+        $i9 = $i8 - i18;
+
+        $i11 = $i10 * $i9;
+
+        i1 = $i11 / 2;
+
+        i19 = i0;
+
+     label2:
+        if i19 <= i18 goto label6;
+
+        i20 = i1;
+
+        i21 = i15;
+
+        d7 = 0.0;
+
+        i22 = i18;
+
+     label3:
+        $i12 = i19 - 1;
+
+        if i22 >= $i12 goto label5;
+
+        $i13 = i0 - i22;
+
+        $i14 = $i13 - 1;
+
+        i21 = i21 + $i14;
+
+        $r4 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean[] lindep>;
+
+        $z1 = $r4[i22];
+
+        if $z1 != 0 goto label4;
+
+        $r5 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d2 = $r5[i20];
+
+        $d4 = neg $d2;
+
+        $d3 = r1[i21];
+
+        $d5 = $d4 * $d3;
+
+        d7 = d7 + $d5;
+
+     label4:
+        i20 = i20 + 1;
+
+        i22 = i22 + 1;
+
+        goto label3;
+
+     label5:
+        $r3 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d0 = $r3[i20];
+
+        $d1 = d7 - $d0;
+
+        r1[i15] = $d1;
+
+        i15 = i15 + -1;
+
+        i19 = i19 + -1;
+
+        goto label2;
+
+     label6:
+        goto label8;
+
+     label7:
+        $i5 = i0 - i18;
+
+        i15 = i15 - $i5;
+
+     label8:
+        i18 = i18 + -1;
+
+        goto label1;
+
+     label9:
+        return;
+    }
+
+    public double[] getPartialCorrelations(int)
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        int i0, i1, i2, i3, i4, i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, $i25, $i26, $i27, $i28, $i29, $i30, $i31, $i32, $i34, $i36, $i37, $i38, $i39, $i40, $i41, $i42, $i43, $i44, $i45, $i46, $i47, $i48, $i49, $i50, $i51, $i52, $i53, $i54, $i55, $i56, $i57, $i58, $i59, $i61, $i62, $i63, $i64, $i65, $i66, i67, $i68, i69, i70, i71, i73, $i74, i75, i76, i77, i78, i79, i80;
+        double[] r1, r2, r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, d45, d46, d47, d48;
+        byte $b33, $b35, $b60;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        i0 := @parameter0: int;
+
+        $i6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i7 = $i6 - i0;
+
+        $i10 = $i7 + 1;
+
+        $i8 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i9 = $i8 - i0;
+
+        $i11 = $i10 * $i9;
+
+        $i12 = $i11 / 2;
+
+        r1 = newarray (double)[$i12];
+
+        i1 = neg i0;
+
+        $i13 = i0 + 1;
+
+        i2 = neg $i13;
+
+        $i14 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i15 = $i14 - i0;
+
+        r2 = newarray (double)[$i15];
+
+        $i16 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i17 = $i16 - i0;
+
+        $i18 = $i17 - 1;
+
+        r3 = newarray (double)[$i18];
+
+        $i19 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i23 = $i19 - i0;
+
+        $i20 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i21 = $i20 - i0;
+
+        $i22 = $i21 - 1;
+
+        $i24 = $i23 * $i22;
+
+        i3 = $i24 / 2;
+
+        if i0 < -1 goto label01;
+
+        $i25 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i0 < $i25 goto label02;
+
+     label01:
+        return null;
+
+     label02:
+        $i26 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        i4 = $i26 - 1;
+
+        $r4 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $i32 = lengthof $r4;
+
+        $i29 = i4 - i0;
+
+        $i27 = i4 - i0;
+
+        $i28 = $i27 + 1;
+
+        $i30 = $i29 * $i28;
+
+        $i31 = $i30 / 2;
+
+        i5 = $i32 - $i31;
+
+        $r5 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d0 = $r5[i0];
+
+        $b33 = $d0 cmpl 0.0;
+
+        if $b33 <= 0 goto label03;
+
+        $i66 = i0 + i1;
+
+        $r23 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d42 = $r23[i0];
+
+        $d43 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d42);
+
+        $d44 = 1.0 / $d43;
+
+        r2[$i66] = $d44;
+
+     label03:
+        i67 = i0 + 1;
+
+     label04:
+        $i68 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i67 >= $i68 goto label09;
+
+        $i58 = i5 + i67;
+
+        $i59 = $i58 - 1;
+
+        i69 = $i59 - i0;
+
+        $r19 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        d45 = $r19[i67];
+
+        i70 = i0;
+
+     label05:
+        if i70 >= i67 goto label06;
+
+        $r20 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d38 = $r20[i70];
+
+        $r21 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d37 = $r21[i69];
+
+        $d40 = $d38 * $d37;
+
+        $r22 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d39 = $r22[i69];
+
+        $d41 = $d40 * $d39;
+
+        d45 = d45 + $d41;
+
+        $i63 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i64 = $i63 - i70;
+
+        $i65 = $i64 - 2;
+
+        i69 = i69 + $i65;
+
+        i70 = i70 + 1;
+
+        goto label05;
+
+     label06:
+        $b60 = d45 cmpl 0.0;
+
+        if $b60 <= 0 goto label07;
+
+        $i62 = i67 + i1;
+
+        $d35 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>(d45);
+
+        $d36 = 1.0 / $d35;
+
+        r2[$i62] = $d36;
+
+        goto label08;
+
+     label07:
+        $i61 = i67 + i1;
+
+        r2[$i61] = 0.0;
+
+     label08:
+        i67 = i67 + 1;
+
+        goto label04;
+
+     label09:
+        d46 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sserr>;
+
+        i71 = i0;
+
+     label10:
+        $i34 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i71 >= $i34 goto label11;
+
+        $r16 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d31 = $r16[i71];
+
+        $r17 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d30 = $r17[i71];
+
+        $d33 = $d31 * $d30;
+
+        $r18 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d32 = $r18[i71];
+
+        $d34 = $d33 * $d32;
+
+        d46 = d46 + $d34;
+
+        i71 = i71 + 1;
+
+        goto label10;
+
+     label11:
+        $b35 = d46 cmpl 0.0;
+
+        if $b35 <= 0 goto label12;
+
+        $d29 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>(d46);
+
+        d46 = 1.0 / $d29;
+
+     label12:
+        i73 = i0;
+
+     label13:
+        $i74 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i73 >= $i74 goto label20;
+
+        d47 = 0.0;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>(r3, 0.0);
+
+        $i36 = i5 + i73;
+
+        $i37 = $i36 - i0;
+
+        i75 = $i37 - 1;
+
+        i76 = i0;
+
+     label14:
+        if i76 >= i73 goto label17;
+
+        i77 = i75 + 1;
+
+        i78 = i73 + 1;
+
+     label15:
+        $i53 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i78 >= $i53 goto label16;
+
+        $i57 = i78 + i2;
+
+        $d27 = r3[$i57];
+
+        $r13 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d23 = $r13[i76];
+
+        $r14 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d22 = $r14[i75];
+
+        $d25 = $d23 * $d22;
+
+        $r15 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d24 = $r15[i77];
+
+        $d26 = $d25 * $d24;
+
+        $d28 = $d27 + $d26;
+
+        r3[$i57] = $d28;
+
+        i77 = i77 + 1;
+
+        i78 = i78 + 1;
+
+        goto label15;
+
+     label16:
+        $r10 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d18 = $r10[i76];
+
+        $r11 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d17 = $r11[i75];
+
+        $d20 = $d18 * $d17;
+
+        $r12 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d19 = $r12[i76];
+
+        $d21 = $d20 * $d19;
+
+        d47 = d47 + $d21;
+
+        $i54 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i55 = $i54 - i76;
+
+        $i56 = $i55 - 2;
+
+        i75 = i75 + $i56;
+
+        i76 = i76 + 1;
+
+        goto label14;
+
+     label17:
+        i79 = i75 + 1;
+
+        i80 = i73 + 1;
+
+     label18:
+        $i38 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i80 >= $i38 goto label19;
+
+        $i42 = i80 + i2;
+
+        $d10 = r3[$i42];
+
+        $r8 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d8 = $r8[i73];
+
+        $r9 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d7 = $r9[i79];
+
+        $d9 = $d8 * $d7;
+
+        $d11 = $d10 + $d9;
+
+        r3[$i42] = $d11;
+
+        i79 = i79 + 1;
+
+        $i43 = i80 - 1;
+
+        $i45 = $i43 - i0;
+
+        $i44 = i80 - i0;
+
+        $i46 = $i45 * $i44;
+
+        $i47 = $i46 / 2;
+
+        $i48 = $i47 + i73;
+
+        $i52 = $i48 - i0;
+
+        $i49 = i80 + i2;
+
+        $d13 = r3[$i49];
+
+        $i50 = i73 + i1;
+
+        $d12 = r2[$i50];
+
+        $d15 = $d13 * $d12;
+
+        $i51 = i80 + i1;
+
+        $d14 = r2[$i51];
+
+        $d16 = $d15 * $d14;
+
+        r1[$i52] = $d16;
+
+        i80 = i80 + 1;
+
+        goto label18;
+
+     label19:
+        $r6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d2 = $r6[i73];
+
+        $r7 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d1 = $r7[i73];
+
+        $d3 = $d2 * $d1;
+
+        d48 = d47 + $d3;
+
+        $i39 = i73 + i1;
+
+        $i41 = $i39 + i3;
+
+        $i40 = i73 + i1;
+
+        $d4 = r2[$i40];
+
+        $d5 = d48 * $d4;
+
+        $d6 = $d5 * d46;
+
+        r1[$i41] = $d6;
+
+        i73 = i73 + 1;
+
+        goto label13;
+
+     label20:
+        return r1;
+    }
+
+    private void vmove(int, int)
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i24, $i25, $i26, $i27, i29, i31, i32, i33, i34, i35, i36, $i37, i38, i39, i40, i41, i42;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, d51, d52, d53, d54, d55, d56;
+        boolean $z0, z1;
+        double[] $r1, $r2, $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r30, $r31, $r32, $r33, $r34, $r35, $r36, $r37, $r38, $r39, $r40, $r41, $r42, $r43, $r44, $r45, $r46, $r47, $r48, $r49;
+        byte $b12, $b13, $b14, $b22, $b23, $b28, b30;
+        int[] $r12, $r13, $r14, $r15;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        z1 = 0;
+
+        if i0 != i1 goto label01;
+
+        return;
+
+     label01:
+        $z0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean rss_set>;
+
+        if $z0 != 0 goto label02;
+
+        specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: void ss()>();
+
+     label02:
+        if i0 >= i1 goto label03;
+
+        i29 = i0;
+
+        b30 = 1;
+
+        i31 = i1 - i0;
+
+        goto label04;
+
+     label03:
+        i29 = i0 - 1;
+
+        b30 = -1;
+
+        i31 = i0 - i1;
+
+     label04:
+        i32 = i29;
+
+        i33 = 0;
+
+     label05:
+        if i33 >= i31 goto label20;
+
+        $i4 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i3 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i5 = $i4 + $i3;
+
+        $i6 = $i5 - i32;
+
+        $i7 = $i6 - 1;
+
+        $i8 = i32 * $i7;
+
+        i34 = $i8 / 2;
+
+        $i9 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i10 = i34 + $i9;
+
+        $i11 = $i10 - i32;
+
+        i35 = $i11 - 1;
+
+        i2 = i32 + 1;
+
+        $r1 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        d0 = $r1[i32];
+
+        $r2 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        d1 = $r2[i2];
+
+        $d6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double epsilon>;
+
+        $b12 = d0 cmpl $d6;
+
+        if $b12 > 0 goto label06;
+
+        $d50 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double epsilon>;
+
+        $b28 = d1 cmpl $d50;
+
+        if $b28 <= 0 goto label17;
+
+     label06:
+        $r3 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        d51 = $r3[i34];
+
+        $d7 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d51);
+
+        $d8 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>(d0);
+
+        $d10 = $d7 * $d8;
+
+        $r4 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] tol>;
+
+        $d9 = $r4[i2];
+
+        $b13 = $d10 cmpg $d9;
+
+        if $b13 >= 0 goto label07;
+
+        d51 = 0.0;
+
+     label07:
+        $d11 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double epsilon>;
+
+        $b14 = d0 cmpg $d11;
+
+        if $b14 < 0 goto label08;
+
+        $d40 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d51);
+
+        $d41 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double epsilon>;
+
+        $b22 = $d40 cmpg $d41;
+
+        if $b22 >= 0 goto label11;
+
+     label08:
+        $r5 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $r5[i32] = d1;
+
+        $r6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $r6[i2] = d0;
+
+        $r7 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $r7[i34] = 0.0;
+
+        i36 = i32 + 2;
+
+     label09:
+        $i37 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i36 >= $i37 goto label10;
+
+        i34 = i34 + 1;
+
+        $r42 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        d52 = $r42[i34];
+
+        $r44 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $r43 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d39 = $r43[i35];
+
+        $r44[i34] = $d39;
+
+        $r45 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $r45[i35] = d52;
+
+        i35 = i35 + 1;
+
+        i36 = i36 + 1;
+
+        goto label09;
+
+     label10:
+        $r8 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        d51 = $r8[i32];
+
+        $r10 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $r9 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d12 = $r9[i2];
+
+        $r10[i32] = $d12;
+
+        $r11 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $r11[i2] = d51;
+
+        z1 = 1;
+
+        goto label14;
+
+     label11:
+        $d42 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double epsilon>;
+
+        $b23 = d1 cmpg $d42;
+
+        if $b23 >= 0 goto label14;
+
+        $r46 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d43 = d0 * d51;
+
+        $d44 = $d43 * d51;
+
+        $r46[i32] = $d44;
+
+        $r47 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d45 = 1.0 / d51;
+
+        $r47[i34] = $d45;
+
+        i38 = i34 + 1;
+
+     label12:
+        $i24 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i25 = i34 + $i24;
+
+        $i26 = $i25 - i32;
+
+        $i27 = $i26 - 1;
+
+        if i38 >= $i27 goto label13;
+
+        $r49 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d48 = $r49[i38];
+
+        $d49 = $d48 / d51;
+
+        $r49[i38] = $d49;
+
+        i38 = i38 + 1;
+
+        goto label12;
+
+     label13:
+        $r48 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d46 = $r48[i32];
+
+        $d47 = $d46 / d51;
+
+        $r48[i32] = $d47;
+
+        z1 = 1;
+
+     label14:
+        if z1 != 0 goto label17;
+
+        $d22 = d0 * d51;
+
+        $d23 = $d22 * d51;
+
+        d2 = d1 + $d23;
+
+        d4 = d1 / d2;
+
+        $d24 = d51 * d0;
+
+        d5 = $d24 / d2;
+
+        d3 = d0 * d4;
+
+        $r29 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $r29[i32] = d2;
+
+        $r30 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $r30[i2] = d3;
+
+        $r31 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $r31[i34] = d5;
+
+        i39 = i32 + 2;
+
+     label15:
+        $i21 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i39 >= $i21 goto label16;
+
+        i34 = i34 + 1;
+
+        $r37 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        d53 = $r37[i34];
+
+        $r39 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $r38 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d32 = $r38[i35];
+
+        $d34 = d4 * $d32;
+
+        $d33 = d5 * d53;
+
+        $d35 = $d34 + $d33;
+
+        $r39[i34] = $d35;
+
+        $r41 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $r40 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d36 = $r40[i35];
+
+        $d37 = d51 * $d36;
+
+        $d38 = d53 - $d37;
+
+        $r41[i35] = $d38;
+
+        i35 = i35 + 1;
+
+        i39 = i39 + 1;
+
+        goto label15;
+
+     label16:
+        $r32 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        d54 = $r32[i32];
+
+        $r34 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $r33 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d25 = $r33[i2];
+
+        $d27 = d4 * $d25;
+
+        $d26 = d5 * d54;
+
+        $d28 = $d27 + $d26;
+
+        $r34[i32] = $d28;
+
+        $r36 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $r35 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d29 = $r35[i2];
+
+        $d30 = d51 * $d29;
+
+        $d31 = d54 - $d30;
+
+        $r36[i2] = $d31;
+
+     label17:
+        if i32 <= 0 goto label19;
+
+        i40 = i32;
+
+        i41 = 0;
+
+     label18:
+        if i41 >= i32 goto label19;
+
+        $r25 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        d55 = $r25[i40];
+
+        $r27 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $r26 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $i16 = i40 - 1;
+
+        $d21 = $r26[$i16];
+
+        $r27[i40] = $d21;
+
+        $r28 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $i17 = i40 - 1;
+
+        $r28[$i17] = d55;
+
+        $i18 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i19 = $i18 - i41;
+
+        $i20 = $i19 - 2;
+
+        i40 = i40 + $i20;
+
+        i41 = i41 + 1;
+
+        goto label18;
+
+     label19:
+        $r12 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int[] vorder>;
+
+        i42 = $r12[i32];
+
+        $r14 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int[] vorder>;
+
+        $r13 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int[] vorder>;
+
+        $i15 = $r13[i2];
+
+        $r14[i32] = $i15;
+
+        $r15 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int[] vorder>;
+
+        $r15[i2] = i42;
+
+        $r16 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] tol>;
+
+        d56 = $r16[i32];
+
+        $r18 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] tol>;
+
+        $r17 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] tol>;
+
+        $d13 = $r17[i2];
+
+        $r18[i32] = $d13;
+
+        $r19 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] tol>;
+
+        $r19[i2] = d56;
+
+        $r24 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rss>;
+
+        $r20 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rss>;
+
+        $d19 = $r20[i2];
+
+        $r21 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d15 = $r21[i2];
+
+        $r22 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d14 = $r22[i2];
+
+        $d17 = $d15 * $d14;
+
+        $r23 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] rhs>;
+
+        $d16 = $r23[i2];
+
+        $d18 = $d17 * $d16;
+
+        $d20 = $d19 + $d18;
+
+        $r24[i32] = $d20;
+
+        i32 = i32 + b30;
+
+        i33 = i33 + 1;
+
+        goto label05;
+
+     label20:
+        return;
+    }
+
+    private int reorderRegressors(int[], int)
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        int[] r1, $r2;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, i12, i13, i14;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        r1 := @parameter0: int[];
+
+        i0 := @parameter1: int;
+
+        $i2 = lengthof r1;
+
+        if $i2 < 1 goto label1;
+
+        $i6 = lengthof r1;
+
+        $i3 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i4 = $i3 + 1;
+
+        $i5 = $i4 - i0;
+
+        if $i6 <= $i5 goto label2;
+
+     label1:
+        return -1;
+
+     label2:
+        i12 = i0;
+
+        i13 = i0;
+
+     label3:
+        $i7 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i13 >= $i7 goto label7;
+
+        $r2 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int[] vorder>;
+
+        i1 = $r2[i13];
+
+        i14 = 0;
+
+     label4:
+        $i8 = lengthof r1;
+
+        if i14 >= $i8 goto label6;
+
+        $i9 = r1[i14];
+
+        if i1 != $i9 goto label5;
+
+        if i13 <= i12 goto label5;
+
+        specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: void vmove(int,int)>(i13, i12);
+
+        i12 = i12 + 1;
+
+        $i10 = lengthof r1;
+
+        $i11 = $i10 + i0;
+
+        if i12 < $i11 goto label6;
+
+        return 0;
+
+     label5:
+        i14 = i14 + 1;
+
+        goto label4;
+
+     label6:
+        i13 = i13 + 1;
+
+        goto label3;
+
+     label7:
+        return 0;
+    }
+
+    public double getDiagonalOfHatMatrix(double[])
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        double[] r1, r2, $r3, $r4, $r5, $r6, r7;
+        int $i0, $i1, $i2, $i4, $i5, $i6, $i7, $i8, $i9, i10, $i11, i12, i13;
+        boolean $z0;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, d10, d11;
+        byte $b3;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        r1 := @parameter0: double[];
+
+        $i0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        r2 = newarray (double)[$i0];
+
+        $i2 = lengthof r1;
+
+        $i1 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if $i2 <= $i1 goto label1;
+
+        return #NaN;
+
+     label1:
+        $z0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean hasIntercept>;
+
+        if $z0 == 0 goto label2;
+
+        $i7 = lengthof r1;
+
+        $i8 = $i7 + 1;
+
+        r7 = newarray (double)[$i8];
+
+        r7[0] = 1.0;
+
+        $i9 = lengthof r1;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r1, 0, r7, 1, $i9);
+
+        goto label3;
+
+     label2:
+        r7 = r1;
+
+     label3:
+        d10 = 0.0;
+
+        i10 = 0;
+
+     label4:
+        $i11 = lengthof r7;
+
+        if i10 >= $i11 goto label9;
+
+        $r3 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d0 = $r3[i10];
+
+        $d1 = staticinvoke <org.apache.commons.math3.util.FastMath: double sqrt(double)>($d0);
+
+        $r4 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] tol>;
+
+        $d2 = $r4[i10];
+
+        $b3 = $d1 cmpg $d2;
+
+        if $b3 >= 0 goto label5;
+
+        r2[i10] = 0.0;
+
+        goto label8;
+
+     label5:
+        i12 = i10 - 1;
+
+        d11 = r7[i10];
+
+        i13 = 0;
+
+     label6:
+        if i13 >= i10 goto label7;
+
+        $d6 = r2[i13];
+
+        $d8 = neg $d6;
+
+        $r6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] r>;
+
+        $d7 = $r6[i12];
+
+        $d9 = $d8 * $d7;
+
+        d11 = specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double smartAdd(double,double)>(d11, $d9);
+
+        $i4 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $i5 = $i4 - i13;
+
+        $i6 = $i5 - 2;
+
+        i12 = i12 + $i6;
+
+        i13 = i13 + 1;
+
+        goto label6;
+
+     label7:
+        r2[i10] = d11;
+
+        $d4 = d11 * d11;
+
+        $r5 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] d>;
+
+        $d3 = $r5[i10];
+
+        $d5 = $d4 / $d3;
+
+        d10 = specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double smartAdd(double,double)>(d10, $d5);
+
+     label8:
+        i10 = i10 + 1;
+
+        goto label4;
+
+     label9:
+        return d10;
+    }
+
+    public int[] getOrderOfRegressors()
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        int[] $r1, $r2;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        $r1 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int[] vorder>;
+
+        $r2 = staticinvoke <org.apache.commons.math3.util.MathArrays: int[] copyOf(int[])>($r1);
+
+        return $r2;
+    }
+
+    public org.apache.commons.math3.stat.regression.RegressionResults regress() throws org.apache.commons.math3.stat.regression.ModelSpecificationException
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        int $i0;
+        org.apache.commons.math3.stat.regression.RegressionResults $r1;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        $i0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $r1 = virtualinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: org.apache.commons.math3.stat.regression.RegressionResults regress(int)>($i0);
+
+        return $r1;
+    }
+
+    public org.apache.commons.math3.stat.regression.RegressionResults regress(int) throws org.apache.commons.math3.stat.regression.ModelSpecificationException
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        int i0, i1, i2, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i22, $i23, i25, i26, i27, i28, i29, i30, i31, i32, i33;
+        double[] r1, r2, r3, r23;
+        int[] r4, $r8, $r11;
+        long $l3, $l4, $l13, $l21, $l24;
+        byte $b5;
+        boolean[] $r5, $r12;
+        org.apache.commons.math3.stat.regression.RegressionResults $r6, $r9;
+        double[][] $r7, $r10;
+        boolean $z0, $z1, $z2, z3;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7;
+        org.apache.commons.math3.stat.regression.ModelSpecificationException $r13, $r18;
+        java.lang.Object[] $r14, $r19;
+        org.apache.commons.math3.exception.util.LocalizedFormats $r15, $r20;
+        java.lang.Integer $r16, $r17, $r22;
+        java.lang.Long $r21;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        i0 := @parameter0: int;
+
+        $l4 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: long nobs>;
+
+        $l3 = (long) i0;
+
+        $b5 = $l4 cmp $l3;
+
+        if $b5 > 0 goto label01;
+
+        $r18 = new org.apache.commons.math3.stat.regression.ModelSpecificationException;
+
+        $r20 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats NOT_ENOUGH_DATA_FOR_NUMBER_OF_PREDICTORS>;
+
+        $r19 = newarray (java.lang.Object)[2];
+
+        $l24 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: long nobs>;
+
+        $r21 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>($l24);
+
+        $r19[0] = $r21;
+
+        $r22 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        $r19[1] = $r22;
+
+        specialinvoke $r18.<org.apache.commons.math3.stat.regression.ModelSpecificationException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Object[])>($r20, $r19);
+
+        throw $r18;
+
+     label01:
+        $i6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i0 <= $i6 goto label02;
+
+        $r13 = new org.apache.commons.math3.stat.regression.ModelSpecificationException;
+
+        $r15 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats TOO_MANY_REGRESSORS>;
+
+        $r14 = newarray (java.lang.Object)[2];
+
+        $r16 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        $r14[0] = $r16;
+
+        $i23 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $r17 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i23);
+
+        $r14[1] = $r17;
+
+        specialinvoke $r13.<org.apache.commons.math3.stat.regression.ModelSpecificationException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Object[])>($r15, $r14);
+
+        throw $r13;
+
+     label02:
+        specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: void tolset()>();
+
+        specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: void singcheck()>();
+
+        r1 = specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] regcf(int)>(i0);
+
+        specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: void ss()>();
+
+        r2 = specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] cov(int)>(i0);
+
+        i25 = 0;
+
+        i26 = 0;
+
+     label03:
+        $r5 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean[] lindep>;
+
+        $i7 = lengthof $r5;
+
+        if i26 >= $i7 goto label05;
+
+        $r12 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean[] lindep>;
+
+        $z2 = $r12[i26];
+
+        if $z2 != 0 goto label04;
+
+        i25 = i25 + 1;
+
+     label04:
+        i26 = i26 + 1;
+
+        goto label03;
+
+     label05:
+        z3 = 0;
+
+        i27 = 0;
+
+     label06:
+        if i27 >= i0 goto label08;
+
+        $r11 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int[] vorder>;
+
+        $i22 = $r11[i27];
+
+        if $i22 == i27 goto label07;
+
+        z3 = 1;
+
+        goto label08;
+
+     label07:
+        i27 = i27 + 1;
+
+        goto label06;
+
+     label08:
+        if z3 != 0 goto label09;
+
+        $r9 = new org.apache.commons.math3.stat.regression.RegressionResults;
+
+        $r10 = newarray (double[])[1];
+
+        $r10[0] = r2;
+
+        $l21 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: long nobs>;
+
+        $d7 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sumy>;
+
+        $d6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sumsqy>;
+
+        $d5 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sserr>;
+
+        $z1 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean hasIntercept>;
+
+        specialinvoke $r9.<org.apache.commons.math3.stat.regression.RegressionResults: void <init>(double[],double[][],boolean,long,int,double,double,double,boolean,boolean)>(r1, $r10, 1, $l21, i25, $d7, $d6, $d5, $z1, 0);
+
+        return $r9;
+
+     label09:
+        $i8 = lengthof r1;
+
+        r23 = newarray (double)[$i8];
+
+        $i9 = lengthof r2;
+
+        r3 = newarray (double)[$i9];
+
+        $i10 = lengthof r1;
+
+        r4 = newarray (int)[$i10];
+
+        i28 = 0;
+
+     label10:
+        $i11 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i28 >= $i11 goto label14;
+
+        i29 = 0;
+
+     label11:
+        if i29 >= i0 goto label13;
+
+        $r8 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int[] vorder>;
+
+        $i20 = $r8[i29];
+
+        if $i20 != i28 goto label12;
+
+        $d4 = r1[i29];
+
+        r23[i28] = $d4;
+
+        r4[i28] = i29;
+
+     label12:
+        i29 = i29 + 1;
+
+        goto label11;
+
+     label13:
+        i28 = i28 + 1;
+
+        goto label10;
+
+     label14:
+        i30 = 0;
+
+        i31 = 0;
+
+     label15:
+        $i12 = lengthof r1;
+
+        if i31 >= $i12 goto label20;
+
+        i1 = r4[i31];
+
+        i32 = 0;
+
+     label16:
+        if i32 > i31 goto label19;
+
+        i2 = r4[i32];
+
+        if i1 <= i2 goto label17;
+
+        $i17 = i1 + 1;
+
+        $i18 = i1 * $i17;
+
+        $i19 = $i18 / 2;
+
+        i33 = $i19 + i2;
+
+        goto label18;
+
+     label17:
+        $i14 = i2 + 1;
+
+        $i15 = i2 * $i14;
+
+        $i16 = $i15 / 2;
+
+        i33 = $i16 + i1;
+
+     label18:
+        $d3 = r2[i33];
+
+        r3[i30] = $d3;
+
+        i32 = i32 + 1;
+
+        i30 = i30 + 1;
+
+        goto label16;
+
+     label19:
+        i31 = i31 + 1;
+
+        goto label15;
+
+     label20:
+        $r6 = new org.apache.commons.math3.stat.regression.RegressionResults;
+
+        $r7 = newarray (double[])[1];
+
+        $r7[0] = r3;
+
+        $l13 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: long nobs>;
+
+        $d2 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sumy>;
+
+        $d1 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sumsqy>;
+
+        $d0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sserr>;
+
+        $z0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean hasIntercept>;
+
+        specialinvoke $r6.<org.apache.commons.math3.stat.regression.RegressionResults: void <init>(double[],double[][],boolean,long,int,double,double,double,boolean,boolean)>(r23, $r7, 1, $l13, i25, $d2, $d1, $d0, $z0, 0);
+
+        return $r6;
+    }
+
+    public org.apache.commons.math3.stat.regression.RegressionResults regress(int[]) throws org.apache.commons.math3.stat.regression.ModelSpecificationException
+    {
+        org.apache.commons.math3.stat.regression.MillerUpdatingRegression r0;
+        int[] r1, r2, $r5, $r6, $r9, r26;
+        int i0, i1, $i2, $i3, $i4, $i8, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i19, $i20, $i21, $i22, $i23, $i24, $i25, $i26, $i27, $i29, $i30, $i31, $i32, $i33, $i34, $i35, $i36, $i37, $i38, $i39, $i40, $i42, $i43, $i44, i45, i46, i47, i48, i49, i50, $i51, i52, i53, i54, i55, i56, i57, i58;
+        long $l5, $l6, $l18, $l28, $l41;
+        byte $b7;
+        org.apache.commons.math3.stat.regression.RegressionResults $r3, $r7;
+        double[][] $r4, $r8;
+        boolean $z0, $z1, $z2, z3;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7;
+        boolean[] $r10, $r29;
+        org.apache.commons.math3.stat.regression.ModelSpecificationException $r11, $r16, $r21;
+        java.lang.Object[] $r12, $r17, $r22;
+        org.apache.commons.math3.exception.util.LocalizedFormats $r13, $r18, $r23;
+        java.lang.Integer $r14, $r15, $r20, $r24, $r25;
+        java.lang.Long $r19;
+        double[] r27, r28, r30, r31;
+
+        r0 := @this: org.apache.commons.math3.stat.regression.MillerUpdatingRegression;
+
+        r1 := @parameter0: int[];
+
+        $i3 = lengthof r1;
+
+        $i2 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if $i3 <= $i2 goto label01;
+
+        $r21 = new org.apache.commons.math3.stat.regression.ModelSpecificationException;
+
+        $r23 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats TOO_MANY_REGRESSORS>;
+
+        $r22 = newarray (java.lang.Object)[2];
+
+        $i43 = lengthof r1;
+
+        $r24 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i43);
+
+        $r22[0] = $r24;
+
+        $i44 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $r25 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i44);
+
+        $r22[1] = $r25;
+
+        specialinvoke $r21.<org.apache.commons.math3.stat.regression.ModelSpecificationException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Object[])>($r23, $r22);
+
+        throw $r21;
+
+     label01:
+        $l6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: long nobs>;
+
+        $i4 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $l5 = (long) $i4;
+
+        $b7 = $l6 cmp $l5;
+
+        if $b7 > 0 goto label02;
+
+        $r16 = new org.apache.commons.math3.stat.regression.ModelSpecificationException;
+
+        $r18 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats NOT_ENOUGH_DATA_FOR_NUMBER_OF_PREDICTORS>;
+
+        $r17 = newarray (java.lang.Object)[2];
+
+        $l41 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: long nobs>;
+
+        $r19 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>($l41);
+
+        $r17[0] = $r19;
+
+        $i42 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $r20 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i42);
+
+        $r17[1] = $r20;
+
+        specialinvoke $r16.<org.apache.commons.math3.stat.regression.ModelSpecificationException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Object[])>($r18, $r17);
+
+        throw $r16;
+
+     label02:
+        staticinvoke <java.util.Arrays: void sort(int[])>(r1);
+
+        i45 = 0;
+
+        i46 = 0;
+
+     label03:
+        $i8 = lengthof r1;
+
+        if i46 >= $i8 goto label06;
+
+        $i36 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i46 < $i36 goto label04;
+
+        $r11 = new org.apache.commons.math3.stat.regression.ModelSpecificationException;
+
+        $r13 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats INDEX_LARGER_THAN_MAX>;
+
+        $r12 = newarray (java.lang.Object)[2];
+
+        $r14 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i46);
+
+        $r12[0] = $r14;
+
+        $i40 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        $r15 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i40);
+
+        $r12[1] = $r15;
+
+        specialinvoke $r11.<org.apache.commons.math3.stat.regression.ModelSpecificationException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Object[])>($r13, $r12);
+
+        throw $r11;
+
+     label04:
+        if i46 <= 0 goto label05;
+
+        $i39 = r1[i46];
+
+        $i37 = i46 - 1;
+
+        $i38 = r1[$i37];
+
+        if $i39 != $i38 goto label05;
+
+        r1[i46] = -1;
+
+        i45 = i45 + 1;
+
+     label05:
+        i46 = i46 + 1;
+
+        goto label03;
+
+     label06:
+        if i45 <= 0 goto label10;
+
+        i47 = 0;
+
+        $i31 = lengthof r1;
+
+        $i32 = $i31 - i45;
+
+        r26 = newarray (int)[$i32];
+
+        i48 = 0;
+
+     label07:
+        $i33 = lengthof r1;
+
+        if i48 >= $i33 goto label09;
+
+        $i34 = r1[i48];
+
+        if $i34 <= -1 goto label08;
+
+        $i35 = r1[i48];
+
+        r26[i47] = $i35;
+
+        i47 = i47 + 1;
+
+     label08:
+        i48 = i48 + 1;
+
+        goto label07;
+
+     label09:
+        goto label11;
+
+     label10:
+        r26 = r1;
+
+     label11:
+        specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int reorderRegressors(int[],int)>(r26, 0);
+
+        specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: void tolset()>();
+
+        specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: void singcheck()>();
+
+        $i10 = lengthof r26;
+
+        r27 = specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] regcf(int)>($i10);
+
+        specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: void ss()>();
+
+        $i11 = lengthof r26;
+
+        r28 = specialinvoke r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double[] cov(int)>($i11);
+
+        i49 = 0;
+
+        i50 = 0;
+
+     label12:
+        $r29 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean[] lindep>;
+
+        $i51 = lengthof $r29;
+
+        if i50 >= $i51 goto label14;
+
+        $r10 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean[] lindep>;
+
+        $z2 = $r10[i50];
+
+        if $z2 != 0 goto label13;
+
+        i49 = i49 + 1;
+
+     label13:
+        i50 = i50 + 1;
+
+        goto label12;
+
+     label14:
+        z3 = 0;
+
+        i52 = 0;
+
+     label15:
+        $i12 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int nvars>;
+
+        if i52 >= $i12 goto label17;
+
+        $r9 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int[] vorder>;
+
+        $i30 = $r9[i52];
+
+        $i29 = r26[i52];
+
+        if $i30 == $i29 goto label16;
+
+        z3 = 1;
+
+        goto label17;
+
+     label16:
+        i52 = i52 + 1;
+
+        goto label15;
+
+     label17:
+        if z3 != 0 goto label18;
+
+        $r7 = new org.apache.commons.math3.stat.regression.RegressionResults;
+
+        $r8 = newarray (double[])[1];
+
+        $r8[0] = r28;
+
+        $l28 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: long nobs>;
+
+        $d7 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sumy>;
+
+        $d6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sumsqy>;
+
+        $d5 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sserr>;
+
+        $z1 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean hasIntercept>;
+
+        specialinvoke $r7.<org.apache.commons.math3.stat.regression.RegressionResults: void <init>(double[],double[][],boolean,long,int,double,double,double,boolean,boolean)>(r27, $r8, 1, $l28, i49, $d7, $d6, $d5, $z1, 0);
+
+        return $r7;
+
+     label18:
+        $i13 = lengthof r27;
+
+        r30 = newarray (double)[$i13];
+
+        $i14 = lengthof r27;
+
+        r2 = newarray (int)[$i14];
+
+        i53 = 0;
+
+     label19:
+        $i15 = lengthof r26;
+
+        if i53 >= $i15 goto label23;
+
+        i54 = 0;
+
+     label20:
+        $r5 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int[] vorder>;
+
+        $i25 = lengthof $r5;
+
+        if i54 >= $i25 goto label22;
+
+        $r6 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: int[] vorder>;
+
+        $i27 = $r6[i54];
+
+        $i26 = r26[i53];
+
+        if $i27 != $i26 goto label21;
+
+        $d4 = r27[i54];
+
+        r30[i53] = $d4;
+
+        r2[i53] = i54;
+
+     label21:
+        i54 = i54 + 1;
+
+        goto label20;
+
+     label22:
+        i53 = i53 + 1;
+
+        goto label19;
+
+     label23:
+        $i16 = lengthof r28;
+
+        r31 = newarray (double)[$i16];
+
+        i55 = 0;
+
+        i56 = 0;
+
+     label24:
+        $i17 = lengthof r27;
+
+        if i56 >= $i17 goto label29;
+
+        i0 = r2[i56];
+
+        i57 = 0;
+
+     label25:
+        if i57 > i56 goto label28;
+
+        i1 = r2[i57];
+
+        if i0 <= i1 goto label26;
+
+        $i22 = i0 + 1;
+
+        $i23 = i0 * $i22;
+
+        $i24 = $i23 / 2;
+
+        i58 = $i24 + i1;
+
+        goto label27;
+
+     label26:
+        $i19 = i1 + 1;
+
+        $i20 = i1 * $i19;
+
+        $i21 = $i20 / 2;
+
+        i58 = $i21 + i0;
+
+     label27:
+        $d3 = r28[i58];
+
+        r31[i55] = $d3;
+
+        i57 = i57 + 1;
+
+        i55 = i55 + 1;
+
+        goto label25;
+
+     label28:
+        i56 = i56 + 1;
+
+        goto label24;
+
+     label29:
+        $r3 = new org.apache.commons.math3.stat.regression.RegressionResults;
+
+        $r4 = newarray (double[])[1];
+
+        $r4[0] = r31;
+
+        $l18 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: long nobs>;
+
+        $d2 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sumy>;
+
+        $d1 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sumsqy>;
+
+        $d0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: double sserr>;
+
+        $z0 = r0.<org.apache.commons.math3.stat.regression.MillerUpdatingRegression: boolean hasIntercept>;
+
+        specialinvoke $r3.<org.apache.commons.math3.stat.regression.RegressionResults: void <init>(double[],double[][],boolean,long,int,double,double,double,boolean,boolean)>(r30, $r4, 1, $l18, i49, $d2, $d1, $d0, $z0, 0);
+
+        return $r3;
+    }
+}

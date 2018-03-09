@@ -1,0 +1,612 @@
+public class org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator extends org.apache.commons.math3.ode.sampling.AbstractStepInterpolator
+{
+    private static final long serialVersionUID;
+    protected double[] stateVariation;
+    private double scalingH;
+    private double referenceTime;
+    private double[] scaled;
+    private org.apache.commons.math3.linear.Array2DRowRealMatrix nordsieck;
+
+    public void <init>()
+    {
+        org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator r0;
+
+        r0 := @this: org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator;
+
+        specialinvoke r0.<org.apache.commons.math3.ode.sampling.AbstractStepInterpolator: void <init>()>();
+
+        return;
+    }
+
+    public void <init>(org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator)
+    {
+        org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator r0, r1;
+        double $d0, $d1;
+        double[] $r2, $r4, $r5, $r7, $r11, $r13;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r3, $r8, $r9;
+        java.lang.Object $r6, $r12;
+        double[][] $r10;
+
+        r0 := @this: org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator;
+
+        r1 := @parameter0: org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator;
+
+        specialinvoke r0.<org.apache.commons.math3.ode.sampling.AbstractStepInterpolator: void <init>(org.apache.commons.math3.ode.sampling.AbstractStepInterpolator)>(r1);
+
+        $d0 = r1.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double scalingH>;
+
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double scalingH> = $d0;
+
+        $d1 = r1.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double referenceTime>;
+
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double referenceTime> = $d1;
+
+        $r2 = r1.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] scaled>;
+
+        if $r2 == null goto label1;
+
+        $r11 = r1.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] scaled>;
+
+        $r12 = virtualinvoke $r11.<java.lang.Object: java.lang.Object clone()>();
+
+        $r13 = (double[]) $r12;
+
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] scaled> = $r13;
+
+     label1:
+        $r3 = r1.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: org.apache.commons.math3.linear.Array2DRowRealMatrix nordsieck>;
+
+        if $r3 == null goto label2;
+
+        $r8 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        $r9 = r1.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: org.apache.commons.math3.linear.Array2DRowRealMatrix nordsieck>;
+
+        $r10 = virtualinvoke $r9.<org.apache.commons.math3.linear.Array2DRowRealMatrix: double[][] getDataRef()>();
+
+        specialinvoke $r8.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>($r10, 1);
+
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: org.apache.commons.math3.linear.Array2DRowRealMatrix nordsieck> = $r8;
+
+     label2:
+        $r4 = r1.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] stateVariation>;
+
+        if $r4 == null goto label3;
+
+        $r5 = r1.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] stateVariation>;
+
+        $r6 = virtualinvoke $r5.<java.lang.Object: java.lang.Object clone()>();
+
+        $r7 = (double[]) $r6;
+
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] stateVariation> = $r7;
+
+     label3:
+        return;
+    }
+
+    protected org.apache.commons.math3.ode.sampling.StepInterpolator doCopy()
+    {
+        org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator r0, $r1;
+
+        r0 := @this: org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator;
+
+        $r1 = new org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator;
+
+        specialinvoke $r1.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: void <init>(org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator)>(r0);
+
+        return $r1;
+    }
+
+    public void reinitialize(double[], boolean, org.apache.commons.math3.ode.EquationsMapper, org.apache.commons.math3.ode.EquationsMapper[])
+    {
+        org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator r0;
+        double[] r1, $r4;
+        boolean z0;
+        org.apache.commons.math3.ode.EquationsMapper r2;
+        org.apache.commons.math3.ode.EquationsMapper[] r3;
+        int $i0;
+
+        r0 := @this: org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator;
+
+        r1 := @parameter0: double[];
+
+        z0 := @parameter1: boolean;
+
+        r2 := @parameter2: org.apache.commons.math3.ode.EquationsMapper;
+
+        r3 := @parameter3: org.apache.commons.math3.ode.EquationsMapper[];
+
+        specialinvoke r0.<org.apache.commons.math3.ode.sampling.AbstractStepInterpolator: void reinitialize(double[],boolean,org.apache.commons.math3.ode.EquationsMapper,org.apache.commons.math3.ode.EquationsMapper[])>(r1, z0, r2, r3);
+
+        $i0 = lengthof r1;
+
+        $r4 = newarray (double)[$i0];
+
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] stateVariation> = $r4;
+
+        return;
+    }
+
+    public void reinitialize(double, double, double[], org.apache.commons.math3.linear.Array2DRowRealMatrix)
+    {
+        org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator r0;
+        double d0, d1, $d2;
+        double[] r1;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix r2;
+
+        r0 := @this: org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        r1 := @parameter2: double[];
+
+        r2 := @parameter3: org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double referenceTime> = d0;
+
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double scalingH> = d1;
+
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] scaled> = r1;
+
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: org.apache.commons.math3.linear.Array2DRowRealMatrix nordsieck> = r2;
+
+        $d2 = virtualinvoke r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double getInterpolatedTime()>();
+
+        virtualinvoke r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: void setInterpolatedTime(double)>($d2);
+
+        return;
+    }
+
+    public void rescale(double)
+    {
+        org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator r0;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, d7;
+        double[] r1, $r2, $r4;
+        int $i0, $i1, $i2, i3, i4, i5;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r3;
+        double[][] r5;
+
+        r0 := @this: org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator;
+
+        d0 := @parameter0: double;
+
+        $d2 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double scalingH>;
+
+        d1 = d0 / $d2;
+
+        i3 = 0;
+
+     label1:
+        $r2 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] scaled>;
+
+        $i0 = lengthof $r2;
+
+        if i3 >= $i0 goto label2;
+
+        $r4 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] scaled>;
+
+        $d5 = $r4[i3];
+
+        $d6 = $d5 * d1;
+
+        $r4[i3] = $d6;
+
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label2:
+        $r3 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: org.apache.commons.math3.linear.Array2DRowRealMatrix nordsieck>;
+
+        r5 = virtualinvoke $r3.<org.apache.commons.math3.linear.Array2DRowRealMatrix: double[][] getDataRef()>();
+
+        d7 = d1;
+
+        i4 = 0;
+
+     label3:
+        $i1 = lengthof r5;
+
+        if i4 >= $i1 goto label6;
+
+        d7 = d7 * d1;
+
+        r1 = r5[i4];
+
+        i5 = 0;
+
+     label4:
+        $i2 = lengthof r1;
+
+        if i5 >= $i2 goto label5;
+
+        $d3 = r1[i5];
+
+        $d4 = $d3 * d7;
+
+        r1[i5] = $d4;
+
+        i5 = i5 + 1;
+
+        goto label4;
+
+     label5:
+        i4 = i4 + 1;
+
+        goto label3;
+
+     label6:
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double scalingH> = d0;
+
+        return;
+    }
+
+    public double[] getInterpolatedStateVariation() throws org.apache.commons.math3.exception.MaxCountExceededException
+    {
+        org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator r0;
+        double[] $r2;
+
+        r0 := @this: org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator;
+
+        virtualinvoke r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] getInterpolatedState()>();
+
+        $r2 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] stateVariation>;
+
+        return $r2;
+    }
+
+    protected void computeInterpolatedStateAndDerivatives(double, double)
+    {
+        org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator r0;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27;
+        double[][] r1;
+        int i0, $i1, $i2, $i3, i4, i5, i6;
+        double[] r2, $r3, $r4, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r5;
+
+        r0 := @this: org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $d7 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double interpolatedTime>;
+
+        $d6 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double referenceTime>;
+
+        d2 = $d7 - $d6;
+
+        $d8 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double scalingH>;
+
+        d3 = d2 / $d8;
+
+        $r3 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] stateVariation>;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>($r3, 0.0);
+
+        $r4 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] interpolatedDerivatives>;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>($r4, 0.0);
+
+        $r5 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: org.apache.commons.math3.linear.Array2DRowRealMatrix nordsieck>;
+
+        r1 = virtualinvoke $r5.<org.apache.commons.math3.linear.Array2DRowRealMatrix: double[][] getDataRef()>();
+
+        $i1 = lengthof r1;
+
+        i4 = $i1 - 1;
+
+     label1:
+        if i4 < 0 goto label4;
+
+        i0 = i4 + 2;
+
+        r2 = r1[i4];
+
+        d4 = staticinvoke <org.apache.commons.math3.util.FastMath: double pow(double,int)>(d3, i0);
+
+        i5 = 0;
+
+     label2:
+        $i3 = lengthof r2;
+
+        if i5 >= $i3 goto label3;
+
+        $d21 = r2[i5];
+
+        d5 = $d21 * d4;
+
+        $r15 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] stateVariation>;
+
+        $d22 = $r15[i5];
+
+        $d23 = $d22 + d5;
+
+        $r15[i5] = $d23;
+
+        $r16 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] interpolatedDerivatives>;
+
+        $d26 = $r16[i5];
+
+        $d24 = (double) i0;
+
+        $d25 = $d24 * d5;
+
+        $d27 = $d26 + $d25;
+
+        $r16[i5] = $d27;
+
+        i5 = i5 + 1;
+
+        goto label2;
+
+     label3:
+        i4 = i4 + -1;
+
+        goto label1;
+
+     label4:
+        i6 = 0;
+
+     label5:
+        $r6 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] currentState>;
+
+        $i2 = lengthof $r6;
+
+        if i6 >= $i2 goto label6;
+
+        $r7 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] stateVariation>;
+
+        $d11 = $r7[i6];
+
+        $r8 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] scaled>;
+
+        $d9 = $r8[i6];
+
+        $d10 = $d9 * d3;
+
+        $d12 = $d11 + $d10;
+
+        $r7[i6] = $d12;
+
+        $r11 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] interpolatedState>;
+
+        $r9 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] currentState>;
+
+        $d14 = $r9[i6];
+
+        $r10 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] stateVariation>;
+
+        $d13 = $r10[i6];
+
+        $d15 = $d14 + $d13;
+
+        $r11[i6] = $d15;
+
+        $r14 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] interpolatedDerivatives>;
+
+        $r12 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] interpolatedDerivatives>;
+
+        $d18 = $r12[i6];
+
+        $r13 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] scaled>;
+
+        $d16 = $r13[i6];
+
+        $d17 = $d16 * d3;
+
+        $d19 = $d18 + $d17;
+
+        $d20 = $d19 / d2;
+
+        $r14[i6] = $d20;
+
+        i6 = i6 + 1;
+
+        goto label5;
+
+     label6:
+        return;
+    }
+
+    public void writeExternal(java.io.ObjectOutput) throws java.io.IOException
+    {
+        org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator r0;
+        java.io.ObjectOutput r1;
+        int i0, $i1, i2;
+        double $d0, $d1, $d2;
+        double[] $r2, $r3, $r4, $r7;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r5, $r6;
+
+        r0 := @this: org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator;
+
+        r1 := @parameter0: java.io.ObjectOutput;
+
+        virtualinvoke r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: void writeBaseExternal(java.io.ObjectOutput)>(r1);
+
+        $d0 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double scalingH>;
+
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeDouble(double)>($d0);
+
+        $d1 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double referenceTime>;
+
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeDouble(double)>($d1);
+
+        $r2 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] currentState>;
+
+        if $r2 != null goto label1;
+
+        $i1 = -1;
+
+        goto label2;
+
+     label1:
+        $r3 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] currentState>;
+
+        $i1 = lengthof $r3;
+
+     label2:
+        i0 = $i1;
+
+        $r4 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] scaled>;
+
+        if $r4 != null goto label3;
+
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeBoolean(boolean)>(0);
+
+        goto label5;
+
+     label3:
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeBoolean(boolean)>(1);
+
+        i2 = 0;
+
+     label4:
+        if i2 >= i0 goto label5;
+
+        $r7 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] scaled>;
+
+        $d2 = $r7[i2];
+
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeDouble(double)>($d2);
+
+        i2 = i2 + 1;
+
+        goto label4;
+
+     label5:
+        $r5 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: org.apache.commons.math3.linear.Array2DRowRealMatrix nordsieck>;
+
+        if $r5 != null goto label6;
+
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeBoolean(boolean)>(0);
+
+        goto label7;
+
+     label6:
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeBoolean(boolean)>(1);
+
+        $r6 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: org.apache.commons.math3.linear.Array2DRowRealMatrix nordsieck>;
+
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeObject(java.lang.Object)>($r6);
+
+     label7:
+        return;
+    }
+
+    public void readExternal(java.io.ObjectInput) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator r0;
+        java.io.ObjectInput r1;
+        double d0, $d1, $d2, $d3;
+        int i0, $i1, i2;
+        boolean z0, z1;
+        double[] $r2, $r3, $r4, $r7, $r8;
+        java.lang.Object $r5;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r6;
+
+        r0 := @this: org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator;
+
+        r1 := @parameter0: java.io.ObjectInput;
+
+        d0 = virtualinvoke r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double readBaseExternal(java.io.ObjectInput)>(r1);
+
+        $d1 = interfaceinvoke r1.<java.io.ObjectInput: double readDouble()>();
+
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double scalingH> = $d1;
+
+        $d2 = interfaceinvoke r1.<java.io.ObjectInput: double readDouble()>();
+
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double referenceTime> = $d2;
+
+        $r2 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] currentState>;
+
+        if $r2 != null goto label01;
+
+        $i1 = -1;
+
+        goto label02;
+
+     label01:
+        $r3 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] currentState>;
+
+        $i1 = lengthof $r3;
+
+     label02:
+        i0 = $i1;
+
+        z0 = interfaceinvoke r1.<java.io.ObjectInput: boolean readBoolean()>();
+
+        if z0 == 0 goto label05;
+
+        $r7 = newarray (double)[$i1];
+
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] scaled> = $r7;
+
+        i2 = 0;
+
+     label03:
+        if i2 >= i0 goto label04;
+
+        $r8 = r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] scaled>;
+
+        $d3 = interfaceinvoke r1.<java.io.ObjectInput: double readDouble()>();
+
+        $r8[i2] = $d3;
+
+        i2 = i2 + 1;
+
+        goto label03;
+
+     label04:
+        goto label06;
+
+     label05:
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] scaled> = null;
+
+     label06:
+        z1 = interfaceinvoke r1.<java.io.ObjectInput: boolean readBoolean()>();
+
+        if z1 == 0 goto label07;
+
+        $r5 = interfaceinvoke r1.<java.io.ObjectInput: java.lang.Object readObject()>();
+
+        $r6 = (org.apache.commons.math3.linear.Array2DRowRealMatrix) $r5;
+
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: org.apache.commons.math3.linear.Array2DRowRealMatrix nordsieck> = $r6;
+
+        goto label08;
+
+     label07:
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: org.apache.commons.math3.linear.Array2DRowRealMatrix nordsieck> = null;
+
+     label08:
+        if z0 == 0 goto label09;
+
+        if z1 == 0 goto label09;
+
+        $r4 = newarray (double)[i0];
+
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] stateVariation> = $r4;
+
+        virtualinvoke r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: void setInterpolatedTime(double)>(d0);
+
+        goto label10;
+
+     label09:
+        r0.<org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: double[] stateVariation> = null;
+
+     label10:
+        return;
+    }
+
+    public static void <clinit>()
+    {
+        <org.apache.commons.math3.ode.sampling.NordsieckStepInterpolator: long serialVersionUID> = -7179861704951334960L;
+
+        return;
+    }
+}

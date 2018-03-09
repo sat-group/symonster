@@ -1,0 +1,1711 @@
+class org.apache.commons.math3.optimization.linear.SimplexTableau extends java.lang.Object implements java.io.Serializable
+{
+    private static final java.lang.String NEGATIVE_VAR_COLUMN_LABEL;
+    private static final int DEFAULT_ULPS;
+    private static final double CUTOFF_THRESHOLD;
+    private static final long serialVersionUID;
+    private final org.apache.commons.math3.optimization.linear.LinearObjectiveFunction f;
+    private final java.util.List constraints;
+    private final boolean restrictToNonNegative;
+    private final java.util.List columnLabels;
+    private transient org.apache.commons.math3.linear.RealMatrix tableau;
+    private final int numDecisionVariables;
+    private final int numSlackVariables;
+    private int numArtificialVariables;
+    private final double epsilon;
+    private final int maxUlps;
+
+    void <init>(org.apache.commons.math3.optimization.linear.LinearObjectiveFunction, java.util.Collection, org.apache.commons.math3.optimization.GoalType, boolean, double)
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        org.apache.commons.math3.optimization.linear.LinearObjectiveFunction r1;
+        java.util.Collection r2;
+        org.apache.commons.math3.optimization.GoalType r3;
+        boolean z0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        r1 := @parameter0: org.apache.commons.math3.optimization.linear.LinearObjectiveFunction;
+
+        r2 := @parameter1: java.util.Collection;
+
+        r3 := @parameter2: org.apache.commons.math3.optimization.GoalType;
+
+        z0 := @parameter3: boolean;
+
+        d0 := @parameter4: double;
+
+        specialinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: void <init>(org.apache.commons.math3.optimization.linear.LinearObjectiveFunction,java.util.Collection,org.apache.commons.math3.optimization.GoalType,boolean,double,int)>(r1, r2, r3, z0, d0, 10);
+
+        return;
+    }
+
+    void <init>(org.apache.commons.math3.optimization.linear.LinearObjectiveFunction, java.util.Collection, org.apache.commons.math3.optimization.GoalType, boolean, double, int)
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        org.apache.commons.math3.optimization.linear.LinearObjectiveFunction r1;
+        java.util.Collection r2;
+        org.apache.commons.math3.optimization.GoalType r3, $r11;
+        boolean z0, $z1;
+        double d0;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8;
+        java.util.ArrayList $r4;
+        java.util.List $r5;
+        org.apache.commons.math3.linear.RealVector $r6;
+        org.apache.commons.math3.optimization.linear.Relationship $r7, $r8, $r9, $r10;
+        org.apache.commons.math3.linear.RealMatrix $r12;
+        byte $b9;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        r1 := @parameter0: org.apache.commons.math3.optimization.linear.LinearObjectiveFunction;
+
+        r2 := @parameter1: java.util.Collection;
+
+        r3 := @parameter2: org.apache.commons.math3.optimization.GoalType;
+
+        z0 := @parameter3: boolean;
+
+        d0 := @parameter4: double;
+
+        i0 := @parameter5: int;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $r4 = new java.util.ArrayList;
+
+        specialinvoke $r4.<java.util.ArrayList: void <init>()>();
+
+        r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List columnLabels> = $r4;
+
+        r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.optimization.linear.LinearObjectiveFunction f> = r1;
+
+        $r5 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List normalizeConstraints(java.util.Collection)>(r2);
+
+        r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List constraints> = $r5;
+
+        r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: boolean restrictToNonNegative> = z0;
+
+        r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: double epsilon> = d0;
+
+        r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int maxUlps> = i0;
+
+        $r6 = virtualinvoke r1.<org.apache.commons.math3.optimization.linear.LinearObjectiveFunction: org.apache.commons.math3.linear.RealVector getCoefficients()>();
+
+        $i1 = virtualinvoke $r6.<org.apache.commons.math3.linear.RealVector: int getDimension()>();
+
+        if z0 == 0 goto label1;
+
+        $b9 = 0;
+
+        goto label2;
+
+     label1:
+        $b9 = 1;
+
+     label2:
+        $i2 = $i1 + $b9;
+
+        r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numDecisionVariables> = $i2;
+
+        $r7 = <org.apache.commons.math3.optimization.linear.Relationship: org.apache.commons.math3.optimization.linear.Relationship LEQ>;
+
+        $i3 = specialinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getConstraintTypeCounts(org.apache.commons.math3.optimization.linear.Relationship)>($r7);
+
+        $r8 = <org.apache.commons.math3.optimization.linear.Relationship: org.apache.commons.math3.optimization.linear.Relationship GEQ>;
+
+        $i4 = specialinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getConstraintTypeCounts(org.apache.commons.math3.optimization.linear.Relationship)>($r8);
+
+        $i5 = $i3 + $i4;
+
+        r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numSlackVariables> = $i5;
+
+        $r9 = <org.apache.commons.math3.optimization.linear.Relationship: org.apache.commons.math3.optimization.linear.Relationship EQ>;
+
+        $i6 = specialinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getConstraintTypeCounts(org.apache.commons.math3.optimization.linear.Relationship)>($r9);
+
+        $r10 = <org.apache.commons.math3.optimization.linear.Relationship: org.apache.commons.math3.optimization.linear.Relationship GEQ>;
+
+        $i7 = specialinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getConstraintTypeCounts(org.apache.commons.math3.optimization.linear.Relationship)>($r10);
+
+        $i8 = $i6 + $i7;
+
+        r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numArtificialVariables> = $i8;
+
+        $r11 = <org.apache.commons.math3.optimization.GoalType: org.apache.commons.math3.optimization.GoalType MAXIMIZE>;
+
+        if r3 != $r11 goto label3;
+
+        $z1 = 1;
+
+        goto label4;
+
+     label3:
+        $z1 = 0;
+
+     label4:
+        $r12 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix createTableau(boolean)>($z1);
+
+        r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau> = $r12;
+
+        virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: void initializeColumnLabels()>();
+
+        return;
+    }
+
+    protected void initializeColumnLabels()
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        int $i0, $i1, i2, $i3, i4, $i5, i6;
+        java.util.List $r1, $r2, $r4, $r9, $r13, $r15, $r19;
+        boolean $z1;
+        java.lang.StringBuilder $r3, $r5, $r6, $r8, $r10, $r11, $r14, $r16, $r17;
+        java.lang.String $r7, $r12, $r18;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        $i0 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getNumObjectiveFunctions()>();
+
+        if $i0 != 2 goto label1;
+
+        $r19 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List columnLabels>;
+
+        interfaceinvoke $r19.<java.util.List: boolean add(java.lang.Object)>("W");
+
+     label1:
+        $r1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List columnLabels>;
+
+        interfaceinvoke $r1.<java.util.List: boolean add(java.lang.Object)>("Z");
+
+        i2 = 0;
+
+     label2:
+        $i3 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getOriginalNumDecisionVariables()>();
+
+        if i2 >= $i3 goto label3;
+
+        $r15 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List columnLabels>;
+
+        $r14 = new java.lang.StringBuilder;
+
+        specialinvoke $r14.<java.lang.StringBuilder: void <init>()>();
+
+        $r16 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("x");
+
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i2);
+
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        interfaceinvoke $r15.<java.util.List: boolean add(java.lang.Object)>($r18);
+
+        i2 = i2 + 1;
+
+        goto label2;
+
+     label3:
+        $z1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: boolean restrictToNonNegative>;
+
+        if $z1 != 0 goto label4;
+
+        $r13 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List columnLabels>;
+
+        interfaceinvoke $r13.<java.util.List: boolean add(java.lang.Object)>("x-");
+
+     label4:
+        i4 = 0;
+
+     label5:
+        $i5 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getNumSlackVariables()>();
+
+        if i4 >= $i5 goto label6;
+
+        $r9 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List columnLabels>;
+
+        $r8 = new java.lang.StringBuilder;
+
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>()>();
+
+        $r10 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("s");
+
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i4);
+
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        interfaceinvoke $r9.<java.util.List: boolean add(java.lang.Object)>($r12);
+
+        i4 = i4 + 1;
+
+        goto label5;
+
+     label6:
+        i6 = 0;
+
+     label7:
+        $i1 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getNumArtificialVariables()>();
+
+        if i6 >= $i1 goto label8;
+
+        $r4 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List columnLabels>;
+
+        $r3 = new java.lang.StringBuilder;
+
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>()>();
+
+        $r5 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("a");
+
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i6);
+
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        interfaceinvoke $r4.<java.util.List: boolean add(java.lang.Object)>($r7);
+
+        i6 = i6 + 1;
+
+        goto label7;
+
+     label8:
+        $r2 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List columnLabels>;
+
+        interfaceinvoke $r2.<java.util.List: boolean add(java.lang.Object)>("RHS");
+
+        return;
+    }
+
+    protected org.apache.commons.math3.linear.RealMatrix createTableau(boolean)
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        boolean z0, $z1, $z2;
+        int i0, i1, i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, $i25, $i26, $i27, $i28, $i29, $i30, $i31, $i32, i37, i38, i39, $i40;
+        byte b2, $b36;
+        org.apache.commons.math3.linear.RealVector r2, $r13, $r21, $r22, $r23, $r26, $r30, $r32;
+        org.apache.commons.math3.optimization.linear.LinearConstraint r3;
+        java.util.List $r4, $r11, $r33;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r5;
+        org.apache.commons.math3.optimization.linear.LinearObjectiveFunction $r6, $r10, $r27, $r29;
+        double[] $r7, $r9, $r14, $r16;
+        double[][] $r8, $r15;
+        double $d0, $d1, $d2, $d3, $d4, $d5;
+        java.lang.Object $r12;
+        org.apache.commons.math3.optimization.linear.Relationship $r17, $r18, $r19, $r20, $r24, $r25, $r34, $r35;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        z0 := @parameter0: boolean;
+
+        $i5 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numDecisionVariables>;
+
+        $i4 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numSlackVariables>;
+
+        $i7 = $i5 + $i4;
+
+        $i6 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numArtificialVariables>;
+
+        $i8 = $i7 + $i6;
+
+        $i9 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getNumObjectiveFunctions()>();
+
+        $i10 = $i8 + $i9;
+
+        i0 = $i10 + 1;
+
+        $r4 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List constraints>;
+
+        $i11 = interfaceinvoke $r4.<java.util.List: int size()>();
+
+        $i12 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getNumObjectiveFunctions()>();
+
+        i1 = $i11 + $i12;
+
+        $r5 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r5.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(int,int)>(i1, i0);
+
+        $i13 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getNumObjectiveFunctions()>();
+
+        if $i13 != 2 goto label01;
+
+        virtualinvoke $r5.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void setEntry(int,int,double)>(0, 0, -1.0);
+
+     label01:
+        $i14 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getNumObjectiveFunctions()>();
+
+        if $i14 != 1 goto label02;
+
+        $b36 = 0;
+
+        goto label03;
+
+     label02:
+        $b36 = 1;
+
+     label03:
+        b2 = $b36;
+
+        if z0 == 0 goto label04;
+
+        $d4 = 1.0;
+
+        goto label05;
+
+     label04:
+        $d4 = -1.0;
+
+     label05:
+        virtualinvoke $r5.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void setEntry(int,int,double)>(b2, b2, $d4);
+
+        if z0 == 0 goto label06;
+
+        $r29 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.optimization.linear.LinearObjectiveFunction f>;
+
+        $r30 = virtualinvoke $r29.<org.apache.commons.math3.optimization.linear.LinearObjectiveFunction: org.apache.commons.math3.linear.RealVector getCoefficients()>();
+
+        $r32 = virtualinvoke $r30.<org.apache.commons.math3.linear.RealVector: org.apache.commons.math3.linear.RealVector mapMultiply(double)>(-1.0);
+
+        goto label07;
+
+     label06:
+        $r6 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.optimization.linear.LinearObjectiveFunction f>;
+
+        $r32 = virtualinvoke $r6.<org.apache.commons.math3.optimization.linear.LinearObjectiveFunction: org.apache.commons.math3.linear.RealVector getCoefficients()>();
+
+     label07:
+        r2 = $r32;
+
+        $r7 = virtualinvoke $r32.<org.apache.commons.math3.linear.RealVector: double[] toArray()>();
+
+        $r8 = virtualinvoke $r5.<org.apache.commons.math3.linear.Array2DRowRealMatrix: double[][] getDataRef()>();
+
+        $r9 = $r8[b2];
+
+        specialinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: void copyArray(double[],double[])>($r7, $r9);
+
+        $i15 = i0 - 1;
+
+        if z0 == 0 goto label08;
+
+        $r27 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.optimization.linear.LinearObjectiveFunction f>;
+
+        $d5 = virtualinvoke $r27.<org.apache.commons.math3.optimization.linear.LinearObjectiveFunction: double getConstantTerm()>();
+
+        goto label09;
+
+     label08:
+        $r10 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.optimization.linear.LinearObjectiveFunction f>;
+
+        $d0 = virtualinvoke $r10.<org.apache.commons.math3.optimization.linear.LinearObjectiveFunction: double getConstantTerm()>();
+
+        $d5 = -1.0 * $d0;
+
+     label09:
+        virtualinvoke $r5.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void setEntry(int,int,double)>(b2, $i15, $d5);
+
+        $z1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: boolean restrictToNonNegative>;
+
+        if $z1 != 0 goto label10;
+
+        $i31 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getSlackVariableOffset()>();
+
+        $i32 = $i31 - 1;
+
+        $d3 = staticinvoke <org.apache.commons.math3.optimization.linear.SimplexTableau: double getInvertedCoefficientSum(org.apache.commons.math3.linear.RealVector)>(r2);
+
+        virtualinvoke $r5.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void setEntry(int,int,double)>(b2, $i32, $d3);
+
+     label10:
+        i37 = 0;
+
+        i38 = 0;
+
+        i39 = 0;
+
+     label11:
+        $r33 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List constraints>;
+
+        $i40 = interfaceinvoke $r33.<java.util.List: int size()>();
+
+        if i39 >= $i40 goto label17;
+
+        $r11 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List constraints>;
+
+        $r12 = interfaceinvoke $r11.<java.util.List: java.lang.Object get(int)>(i39);
+
+        r3 = (org.apache.commons.math3.optimization.linear.LinearConstraint) $r12;
+
+        $i16 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getNumObjectiveFunctions()>();
+
+        i3 = $i16 + i39;
+
+        $r13 = virtualinvoke r3.<org.apache.commons.math3.optimization.linear.LinearConstraint: org.apache.commons.math3.linear.RealVector getCoefficients()>();
+
+        $r14 = virtualinvoke $r13.<org.apache.commons.math3.linear.RealVector: double[] toArray()>();
+
+        $r15 = virtualinvoke $r5.<org.apache.commons.math3.linear.Array2DRowRealMatrix: double[][] getDataRef()>();
+
+        $r16 = $r15[i3];
+
+        specialinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: void copyArray(double[],double[])>($r14, $r16);
+
+        $z2 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: boolean restrictToNonNegative>;
+
+        if $z2 != 0 goto label12;
+
+        $i29 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getSlackVariableOffset()>();
+
+        $i30 = $i29 - 1;
+
+        $r26 = virtualinvoke r3.<org.apache.commons.math3.optimization.linear.LinearConstraint: org.apache.commons.math3.linear.RealVector getCoefficients()>();
+
+        $d2 = staticinvoke <org.apache.commons.math3.optimization.linear.SimplexTableau: double getInvertedCoefficientSum(org.apache.commons.math3.linear.RealVector)>($r26);
+
+        virtualinvoke $r5.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void setEntry(int,int,double)>(i3, $i30, $d2);
+
+     label12:
+        $i17 = i0 - 1;
+
+        $d1 = virtualinvoke r3.<org.apache.commons.math3.optimization.linear.LinearConstraint: double getValue()>();
+
+        virtualinvoke $r5.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void setEntry(int,int,double)>(i3, $i17, $d1);
+
+        $r17 = virtualinvoke r3.<org.apache.commons.math3.optimization.linear.LinearConstraint: org.apache.commons.math3.optimization.linear.Relationship getRelationship()>();
+
+        $r18 = <org.apache.commons.math3.optimization.linear.Relationship: org.apache.commons.math3.optimization.linear.Relationship LEQ>;
+
+        if $r17 != $r18 goto label13;
+
+        $i26 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getSlackVariableOffset()>();
+
+        $i27 = i37;
+
+        i37 = i37 + 1;
+
+        $i28 = $i26 + $i27;
+
+        virtualinvoke $r5.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void setEntry(int,int,double)>(i3, $i28, 1.0);
+
+        goto label14;
+
+     label13:
+        $r19 = virtualinvoke r3.<org.apache.commons.math3.optimization.linear.LinearConstraint: org.apache.commons.math3.optimization.linear.Relationship getRelationship()>();
+
+        $r20 = <org.apache.commons.math3.optimization.linear.Relationship: org.apache.commons.math3.optimization.linear.Relationship GEQ>;
+
+        if $r19 != $r20 goto label14;
+
+        $i23 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getSlackVariableOffset()>();
+
+        $i24 = i37;
+
+        i37 = i37 + 1;
+
+        $i25 = $i23 + $i24;
+
+        virtualinvoke $r5.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void setEntry(int,int,double)>(i3, $i25, -1.0);
+
+     label14:
+        $r34 = virtualinvoke r3.<org.apache.commons.math3.optimization.linear.LinearConstraint: org.apache.commons.math3.optimization.linear.Relationship getRelationship()>();
+
+        $r35 = <org.apache.commons.math3.optimization.linear.Relationship: org.apache.commons.math3.optimization.linear.Relationship EQ>;
+
+        if $r34 == $r35 goto label15;
+
+        $r24 = virtualinvoke r3.<org.apache.commons.math3.optimization.linear.LinearConstraint: org.apache.commons.math3.optimization.linear.Relationship getRelationship()>();
+
+        $r25 = <org.apache.commons.math3.optimization.linear.Relationship: org.apache.commons.math3.optimization.linear.Relationship GEQ>;
+
+        if $r24 != $r25 goto label16;
+
+     label15:
+        $i18 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getArtificialVariableOffset()>();
+
+        $i19 = $i18 + i38;
+
+        virtualinvoke $r5.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void setEntry(int,int,double)>(0, $i19, 1.0);
+
+        $i20 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getArtificialVariableOffset()>();
+
+        $i21 = i38;
+
+        i38 = i38 + 1;
+
+        $i22 = $i20 + $i21;
+
+        virtualinvoke $r5.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void setEntry(int,int,double)>(i3, $i22, 1.0);
+
+        $r21 = virtualinvoke $r5.<org.apache.commons.math3.linear.Array2DRowRealMatrix: org.apache.commons.math3.linear.RealVector getRowVector(int)>(0);
+
+        $r22 = virtualinvoke $r5.<org.apache.commons.math3.linear.Array2DRowRealMatrix: org.apache.commons.math3.linear.RealVector getRowVector(int)>(i3);
+
+        $r23 = virtualinvoke $r21.<org.apache.commons.math3.linear.RealVector: org.apache.commons.math3.linear.RealVector subtract(org.apache.commons.math3.linear.RealVector)>($r22);
+
+        virtualinvoke $r5.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void setRowVector(int,org.apache.commons.math3.linear.RealVector)>(0, $r23);
+
+     label16:
+        i39 = i39 + 1;
+
+        goto label11;
+
+     label17:
+        return $r5;
+    }
+
+    public java.util.List normalizeConstraints(java.util.Collection)
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        java.util.Collection r1;
+        java.util.Iterator r3;
+        org.apache.commons.math3.optimization.linear.LinearConstraint r4, $r7;
+        java.util.ArrayList $r5;
+        int $i0;
+        boolean $z0;
+        java.lang.Object $r6;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        r1 := @parameter0: java.util.Collection;
+
+        $r5 = new java.util.ArrayList;
+
+        $i0 = interfaceinvoke r1.<java.util.Collection: int size()>();
+
+        specialinvoke $r5.<java.util.ArrayList: void <init>(int)>($i0);
+
+        r3 = interfaceinvoke r1.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label2;
+
+        $r6 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+
+        r4 = (org.apache.commons.math3.optimization.linear.LinearConstraint) $r6;
+
+        $r7 = specialinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.optimization.linear.LinearConstraint normalize(org.apache.commons.math3.optimization.linear.LinearConstraint)>(r4);
+
+        interfaceinvoke $r5.<java.util.List: boolean add(java.lang.Object)>($r7);
+
+        goto label1;
+
+     label2:
+        return $r5;
+    }
+
+    private org.apache.commons.math3.optimization.linear.LinearConstraint normalize(org.apache.commons.math3.optimization.linear.LinearConstraint)
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        org.apache.commons.math3.optimization.linear.LinearConstraint r1, $r2, $r5;
+        double $d0, $d1, $d2, $d3;
+        byte $b0;
+        org.apache.commons.math3.linear.RealVector $r3, $r6, $r7;
+        org.apache.commons.math3.optimization.linear.Relationship $r4, $r8, $r9;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        r1 := @parameter0: org.apache.commons.math3.optimization.linear.LinearConstraint;
+
+        $d0 = virtualinvoke r1.<org.apache.commons.math3.optimization.linear.LinearConstraint: double getValue()>();
+
+        $b0 = $d0 cmpg 0.0;
+
+        if $b0 >= 0 goto label1;
+
+        $r5 = new org.apache.commons.math3.optimization.linear.LinearConstraint;
+
+        $r6 = virtualinvoke r1.<org.apache.commons.math3.optimization.linear.LinearConstraint: org.apache.commons.math3.linear.RealVector getCoefficients()>();
+
+        $r7 = virtualinvoke $r6.<org.apache.commons.math3.linear.RealVector: org.apache.commons.math3.linear.RealVector mapMultiply(double)>(-1.0);
+
+        $r8 = virtualinvoke r1.<org.apache.commons.math3.optimization.linear.LinearConstraint: org.apache.commons.math3.optimization.linear.Relationship getRelationship()>();
+
+        $r9 = virtualinvoke $r8.<org.apache.commons.math3.optimization.linear.Relationship: org.apache.commons.math3.optimization.linear.Relationship oppositeRelationship()>();
+
+        $d2 = virtualinvoke r1.<org.apache.commons.math3.optimization.linear.LinearConstraint: double getValue()>();
+
+        $d3 = -1.0 * $d2;
+
+        specialinvoke $r5.<org.apache.commons.math3.optimization.linear.LinearConstraint: void <init>(org.apache.commons.math3.linear.RealVector,org.apache.commons.math3.optimization.linear.Relationship,double)>($r7, $r9, $d3);
+
+        return $r5;
+
+     label1:
+        $r2 = new org.apache.commons.math3.optimization.linear.LinearConstraint;
+
+        $r3 = virtualinvoke r1.<org.apache.commons.math3.optimization.linear.LinearConstraint: org.apache.commons.math3.linear.RealVector getCoefficients()>();
+
+        $r4 = virtualinvoke r1.<org.apache.commons.math3.optimization.linear.LinearConstraint: org.apache.commons.math3.optimization.linear.Relationship getRelationship()>();
+
+        $d1 = virtualinvoke r1.<org.apache.commons.math3.optimization.linear.LinearConstraint: double getValue()>();
+
+        specialinvoke $r2.<org.apache.commons.math3.optimization.linear.LinearConstraint: void <init>(org.apache.commons.math3.linear.RealVector,org.apache.commons.math3.optimization.linear.Relationship,double)>($r3, $r4, $d1);
+
+        return $r2;
+    }
+
+    protected final int getNumObjectiveFunctions()
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        int $i0;
+        byte $b1;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        $i0 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numArtificialVariables>;
+
+        if $i0 <= 0 goto label1;
+
+        $b1 = 2;
+
+        goto label2;
+
+     label1:
+        $b1 = 1;
+
+     label2:
+        return $b1;
+    }
+
+    private int getConstraintTypeCounts(org.apache.commons.math3.optimization.linear.Relationship)
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        org.apache.commons.math3.optimization.linear.Relationship r1, $r6;
+        java.util.Iterator r2;
+        org.apache.commons.math3.optimization.linear.LinearConstraint r3;
+        java.util.List $r4;
+        boolean $z0;
+        java.lang.Object $r5;
+        int i0;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        r1 := @parameter0: org.apache.commons.math3.optimization.linear.Relationship;
+
+        i0 = 0;
+
+        $r4 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List constraints>;
+
+        r2 = interfaceinvoke $r4.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r2.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label3;
+
+        $r5 = interfaceinvoke r2.<java.util.Iterator: java.lang.Object next()>();
+
+        r3 = (org.apache.commons.math3.optimization.linear.LinearConstraint) $r5;
+
+        $r6 = virtualinvoke r3.<org.apache.commons.math3.optimization.linear.LinearConstraint: org.apache.commons.math3.optimization.linear.Relationship getRelationship()>();
+
+        if $r6 != r1 goto label2;
+
+        i0 = i0 + 1;
+
+     label2:
+        goto label1;
+
+     label3:
+        return i0;
+    }
+
+    protected static double getInvertedCoefficientSum(org.apache.commons.math3.linear.RealVector)
+    {
+        org.apache.commons.math3.linear.RealVector r0;
+        double[] r1;
+        int i0, i1;
+        double d0, d1;
+
+        r0 := @parameter0: org.apache.commons.math3.linear.RealVector;
+
+        d1 = 0.0;
+
+        r1 = virtualinvoke r0.<org.apache.commons.math3.linear.RealVector: double[] toArray()>();
+
+        i0 = lengthof r1;
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        d0 = r1[i1];
+
+        d1 = d1 - d0;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return d1;
+    }
+
+    protected java.lang.Integer getBasicRow(int)
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        int i0, $i1, $i2, $i3, i4;
+        double d0;
+        boolean $z0, $z1;
+        java.lang.Integer r1;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        i0 := @parameter0: int;
+
+        r1 = null;
+
+        i4 = 0;
+
+     label1:
+        $i1 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getHeight()>();
+
+        if i4 >= $i1 goto label4;
+
+        d0 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: double getEntry(int,int)>(i4, i0);
+
+        $i2 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int maxUlps>;
+
+        $z0 = staticinvoke <org.apache.commons.math3.util.Precision: boolean equals(double,double,int)>(d0, 1.0, $i2);
+
+        if $z0 == 0 goto label2;
+
+        if r1 != null goto label2;
+
+        r1 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i4);
+
+        goto label3;
+
+     label2:
+        $i3 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int maxUlps>;
+
+        $z1 = staticinvoke <org.apache.commons.math3.util.Precision: boolean equals(double,double,int)>(d0, 0.0, $i3);
+
+        if $z1 != 0 goto label3;
+
+        return null;
+
+     label3:
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label4:
+        return r1;
+    }
+
+    protected void dropPhase1Objective()
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, i17, i18, i19, i20, i21, i22, i23;
+        java.util.TreeSet $r2;
+        java.lang.Integer $r3, $r7, $r10, $r13, $r14, $r16;
+        java.lang.Integer[] $r4, r18;
+        java.lang.Object[] $r5;
+        org.apache.commons.math3.linear.Array2DRowRealMatrix $r6;
+        java.util.List $r8;
+        boolean $z1;
+        org.apache.commons.math3.linear.RealMatrix $r11, $r15;
+        double[] $r12;
+        double $d0, $d1, d2;
+        double[][] r17;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        $i0 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getNumObjectiveFunctions()>();
+
+        if $i0 != 1 goto label01;
+
+        return;
+
+     label01:
+        $r2 = new java.util.TreeSet;
+
+        specialinvoke $r2.<java.util.TreeSet: void <init>()>();
+
+        $r3 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(0);
+
+        interfaceinvoke $r2.<java.util.Set: boolean add(java.lang.Object)>($r3);
+
+        i17 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getNumObjectiveFunctions()>();
+
+     label02:
+        $i1 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getArtificialVariableOffset()>();
+
+        if i17 >= $i1 goto label04;
+
+        $r15 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau>;
+
+        d2 = interfaceinvoke $r15.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(0, i17);
+
+        $d1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: double epsilon>;
+
+        $i16 = staticinvoke <org.apache.commons.math3.util.Precision: int compareTo(double,double,double)>(d2, 0.0, $d1);
+
+        if $i16 <= 0 goto label03;
+
+        $r16 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i17);
+
+        interfaceinvoke $r2.<java.util.Set: boolean add(java.lang.Object)>($r16);
+
+     label03:
+        i17 = i17 + 1;
+
+        goto label02;
+
+     label04:
+        i18 = 0;
+
+     label05:
+        $i2 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getNumArtificialVariables()>();
+
+        if i18 >= $i2 goto label07;
+
+        $i15 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getArtificialVariableOffset()>();
+
+        i19 = i18 + $i15;
+
+        $r13 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.lang.Integer getBasicRow(int)>(i19);
+
+        if $r13 != null goto label06;
+
+        $r14 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i19);
+
+        interfaceinvoke $r2.<java.util.Set: boolean add(java.lang.Object)>($r14);
+
+     label06:
+        i18 = i18 + 1;
+
+        goto label05;
+
+     label07:
+        $i3 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getHeight()>();
+
+        $i4 = $i3 - 1;
+
+        $i5 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getWidth()>();
+
+        $i6 = interfaceinvoke $r2.<java.util.Set: int size()>();
+
+        $i7 = $i5 - $i6;
+
+        r17 = newmultiarray (double)[$i4][$i7];
+
+        i20 = 1;
+
+     label08:
+        $i8 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getHeight()>();
+
+        if i20 >= $i8 goto label12;
+
+        i21 = 0;
+
+        i22 = 0;
+
+     label09:
+        $i12 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getWidth()>();
+
+        if i22 >= $i12 goto label11;
+
+        $r10 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i22);
+
+        $z1 = interfaceinvoke $r2.<java.util.Set: boolean contains(java.lang.Object)>($r10);
+
+        if $z1 != 0 goto label10;
+
+        $i13 = i20 - 1;
+
+        $r12 = r17[$i13];
+
+        $i14 = i21;
+
+        i21 = i21 + 1;
+
+        $r11 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau>;
+
+        $d0 = interfaceinvoke $r11.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i20, i22);
+
+        $r12[$i14] = $d0;
+
+     label10:
+        i22 = i22 + 1;
+
+        goto label09;
+
+     label11:
+        i20 = i20 + 1;
+
+        goto label08;
+
+     label12:
+        $i9 = interfaceinvoke $r2.<java.util.Set: int size()>();
+
+        $r4 = newarray (java.lang.Integer)[$i9];
+
+        $r5 = interfaceinvoke $r2.<java.util.Set: java.lang.Object[] toArray(java.lang.Object[])>($r4);
+
+        r18 = (java.lang.Integer[]) $r5;
+
+        $i10 = lengthof r18;
+
+        i23 = $i10 - 1;
+
+     label13:
+        if i23 < 0 goto label14;
+
+        $r8 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List columnLabels>;
+
+        $r7 = r18[i23];
+
+        $i11 = virtualinvoke $r7.<java.lang.Integer: int intValue()>();
+
+        interfaceinvoke $r8.<java.util.List: java.lang.Object remove(int)>($i11);
+
+        i23 = i23 + -1;
+
+        goto label13;
+
+     label14:
+        $r6 = new org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r6.<org.apache.commons.math3.linear.Array2DRowRealMatrix: void <init>(double[][])>(r17);
+
+        r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau> = $r6;
+
+        r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numArtificialVariables> = 0;
+
+        return;
+    }
+
+    private void copyArray(double[], double[])
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        double[] r1, r2;
+        int $i0, $i1;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        $i0 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getNumObjectiveFunctions()>();
+
+        $i1 = lengthof r1;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r1, 0, r2, $i0, $i1);
+
+        return;
+    }
+
+    boolean isOptimal()
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        double d0, $d1;
+        int $i0, $i1, $i2, i3;
+        org.apache.commons.math3.linear.RealMatrix $r1;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        i3 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getNumObjectiveFunctions()>();
+
+     label1:
+        $i0 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getWidth()>();
+
+        $i1 = $i0 - 1;
+
+        if i3 >= $i1 goto label3;
+
+        $r1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau>;
+
+        d0 = interfaceinvoke $r1.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(0, i3);
+
+        $d1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: double epsilon>;
+
+        $i2 = staticinvoke <org.apache.commons.math3.util.Precision: int compareTo(double,double,double)>(d0, 0.0, $d1);
+
+        if $i2 >= 0 goto label2;
+
+        return 0;
+
+     label2:
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label3:
+        return 1;
+    }
+
+    protected org.apache.commons.math3.optimization.PointValuePair getSolution()
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, i9, $i10, $i11;
+        double d0, $d1, $d2, $d4, $d5, $d6, $d7, $d8;
+        double[] r3;
+        java.lang.Integer r4, $r15;
+        java.util.List $r5, $r10;
+        java.util.HashSet $r6;
+        org.apache.commons.math3.optimization.PointValuePair $r7;
+        org.apache.commons.math3.optimization.linear.LinearObjectiveFunction $r8;
+        java.lang.StringBuilder $r9, $r11, $r12;
+        java.lang.String $r13;
+        boolean $z0, $z2, $z3;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        $r5 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List columnLabels>;
+
+        i0 = interfaceinvoke $r5.<java.util.List: int indexOf(java.lang.Object)>("x-");
+
+        if i0 <= 0 goto label01;
+
+        $r15 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.lang.Integer getBasicRow(int)>(i0);
+
+        goto label02;
+
+     label01:
+        $r15 = null;
+
+     label02:
+        if $r15 != null goto label03;
+
+        $d4 = 0.0;
+
+        goto label04;
+
+     label03:
+        $i2 = virtualinvoke $r15.<java.lang.Integer: int intValue()>();
+
+        $i3 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getRhsOffset()>();
+
+        $d4 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: double getEntry(int,int)>($i2, $i3);
+
+     label04:
+        d0 = $d4;
+
+        $r6 = new java.util.HashSet;
+
+        specialinvoke $r6.<java.util.HashSet: void <init>()>();
+
+        $i4 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getOriginalNumDecisionVariables()>();
+
+        r3 = newarray (double)[$i4];
+
+        i9 = 0;
+
+     label05:
+        $i10 = lengthof r3;
+
+        if i9 >= $i10 goto label16;
+
+        $r10 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List columnLabels>;
+
+        $r9 = new java.lang.StringBuilder;
+
+        specialinvoke $r9.<java.lang.StringBuilder: void <init>()>();
+
+        $r11 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("x");
+
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i9);
+
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        i1 = interfaceinvoke $r10.<java.util.List: int indexOf(java.lang.Object)>($r13);
+
+        if i1 >= 0 goto label06;
+
+        r3[i9] = 0.0;
+
+        goto label15;
+
+     label06:
+        r4 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.lang.Integer getBasicRow(int)>(i1);
+
+        if r4 == null goto label07;
+
+        $i8 = virtualinvoke r4.<java.lang.Integer: int intValue()>();
+
+        if $i8 != 0 goto label07;
+
+        r3[i9] = 0.0;
+
+        goto label15;
+
+     label07:
+        $z0 = interfaceinvoke $r6.<java.util.Set: boolean contains(java.lang.Object)>(r4);
+
+        if $z0 == 0 goto label10;
+
+        $i7 = i9;
+
+        $z3 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: boolean restrictToNonNegative>;
+
+        if $z3 == 0 goto label08;
+
+        $d5 = 0.0;
+
+        goto label09;
+
+     label08:
+        $d5 = d0;
+
+     label09:
+        $d2 = 0.0 - $d5;
+
+        r3[$i7] = $d2;
+
+        goto label15;
+
+     label10:
+        interfaceinvoke $r6.<java.util.Set: boolean add(java.lang.Object)>(r4);
+
+        $i11 = i9;
+
+        if r4 != null goto label11;
+
+        $d6 = 0.0;
+
+        goto label12;
+
+     label11:
+        $i5 = virtualinvoke r4.<java.lang.Integer: int intValue()>();
+
+        $i6 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getRhsOffset()>();
+
+        $d6 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: double getEntry(int,int)>($i5, $i6);
+
+     label12:
+        $z2 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: boolean restrictToNonNegative>;
+
+        if $z2 == 0 goto label13;
+
+        $d7 = 0.0;
+
+        goto label14;
+
+     label13:
+        $d7 = d0;
+
+     label14:
+        $d8 = $d6 - $d7;
+
+        r3[$i11] = $d8;
+
+     label15:
+        i9 = i9 + 1;
+
+        goto label05;
+
+     label16:
+        $r7 = new org.apache.commons.math3.optimization.PointValuePair;
+
+        $r8 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.optimization.linear.LinearObjectiveFunction f>;
+
+        $d1 = virtualinvoke $r8.<org.apache.commons.math3.optimization.linear.LinearObjectiveFunction: double getValue(double[])>(r3);
+
+        specialinvoke $r7.<org.apache.commons.math3.optimization.PointValuePair: void <init>(double[],double)>(r3, $d1);
+
+        return $r7;
+    }
+
+    protected void divideRow(int, double)
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        int i0, $i1, i2;
+        double d0, $d1, $d2;
+        org.apache.commons.math3.linear.RealMatrix $r1, $r2;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        i0 := @parameter0: int;
+
+        d0 := @parameter1: double;
+
+        i2 = 0;
+
+     label1:
+        $i1 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getWidth()>();
+
+        if i2 >= $i1 goto label2;
+
+        $r2 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau>;
+
+        $r1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau>;
+
+        $d1 = interfaceinvoke $r1.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i0, i2);
+
+        $d2 = $d1 / d0;
+
+        interfaceinvoke $r2.<org.apache.commons.math3.linear.RealMatrix: void setEntry(int,int,double)>(i0, i2, $d2);
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        return;
+    }
+
+    protected void subtractRow(int, int, double)
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        int i0, i1, $i2, i4;
+        double d0, $d1, $d2, $d3, $d4, d5;
+        org.apache.commons.math3.linear.RealMatrix $r1, $r2, $r3;
+        byte $b3;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        d0 := @parameter2: double;
+
+        i4 = 0;
+
+     label1:
+        $i2 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getWidth()>();
+
+        if i4 >= $i2 goto label3;
+
+        $r1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau>;
+
+        $d1 = interfaceinvoke $r1.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i0, i4);
+
+        $r2 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau>;
+
+        $d2 = interfaceinvoke $r2.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i1, i4);
+
+        $d3 = $d2 * d0;
+
+        d5 = $d1 - $d3;
+
+        $d4 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d5);
+
+        $b3 = $d4 cmpg 1.0E-12;
+
+        if $b3 >= 0 goto label2;
+
+        d5 = 0.0;
+
+     label2:
+        $r3 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau>;
+
+        interfaceinvoke $r3.<org.apache.commons.math3.linear.RealMatrix: void setEntry(int,int,double)>(i0, i4, d5);
+
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label3:
+        return;
+    }
+
+    protected final int getWidth()
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        org.apache.commons.math3.linear.RealMatrix $r1;
+        int $i0;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        $r1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau>;
+
+        $i0 = interfaceinvoke $r1.<org.apache.commons.math3.linear.RealMatrix: int getColumnDimension()>();
+
+        return $i0;
+    }
+
+    protected final int getHeight()
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        org.apache.commons.math3.linear.RealMatrix $r1;
+        int $i0;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        $r1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau>;
+
+        $i0 = interfaceinvoke $r1.<org.apache.commons.math3.linear.RealMatrix: int getRowDimension()>();
+
+        return $i0;
+    }
+
+    protected final double getEntry(int, int)
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        int i0, i1;
+        org.apache.commons.math3.linear.RealMatrix $r1;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        $r1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau>;
+
+        $d0 = interfaceinvoke $r1.<org.apache.commons.math3.linear.RealMatrix: double getEntry(int,int)>(i0, i1);
+
+        return $d0;
+    }
+
+    protected final void setEntry(int, int, double)
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        int i0, i1;
+        double d0;
+        org.apache.commons.math3.linear.RealMatrix $r1;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        d0 := @parameter2: double;
+
+        $r1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau>;
+
+        interfaceinvoke $r1.<org.apache.commons.math3.linear.RealMatrix: void setEntry(int,int,double)>(i0, i1, d0);
+
+        return;
+    }
+
+    protected final int getSlackVariableOffset()
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        int $i0, $i1, $i2;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        $i0 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getNumObjectiveFunctions()>();
+
+        $i1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numDecisionVariables>;
+
+        $i2 = $i0 + $i1;
+
+        return $i2;
+    }
+
+    protected final int getArtificialVariableOffset()
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        int $i0, $i1, $i2, $i3, $i4;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        $i0 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getNumObjectiveFunctions()>();
+
+        $i1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numDecisionVariables>;
+
+        $i3 = $i0 + $i1;
+
+        $i2 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numSlackVariables>;
+
+        $i4 = $i3 + $i2;
+
+        return $i4;
+    }
+
+    protected final int getRhsOffset()
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        int $i0, $i1;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        $i0 = virtualinvoke r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int getWidth()>();
+
+        $i1 = $i0 - 1;
+
+        return $i1;
+    }
+
+    protected final int getNumDecisionVariables()
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        int $i0;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        $i0 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numDecisionVariables>;
+
+        return $i0;
+    }
+
+    protected final int getOriginalNumDecisionVariables()
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        org.apache.commons.math3.optimization.linear.LinearObjectiveFunction $r1;
+        org.apache.commons.math3.linear.RealVector $r2;
+        int $i0;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        $r1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.optimization.linear.LinearObjectiveFunction f>;
+
+        $r2 = virtualinvoke $r1.<org.apache.commons.math3.optimization.linear.LinearObjectiveFunction: org.apache.commons.math3.linear.RealVector getCoefficients()>();
+
+        $i0 = virtualinvoke $r2.<org.apache.commons.math3.linear.RealVector: int getDimension()>();
+
+        return $i0;
+    }
+
+    protected final int getNumSlackVariables()
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        int $i0;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        $i0 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numSlackVariables>;
+
+        return $i0;
+    }
+
+    protected final int getNumArtificialVariables()
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        int $i0;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        $i0 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numArtificialVariables>;
+
+        return $i0;
+    }
+
+    protected final double[][] getData()
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        org.apache.commons.math3.linear.RealMatrix $r1;
+        double[][] $r2;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        $r1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau>;
+
+        $r2 = interfaceinvoke $r1.<org.apache.commons.math3.linear.RealMatrix: double[][] getData()>();
+
+        return $r2;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0, r2;
+        java.lang.Object r1;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i7, $i8;
+        double $d0, $d1;
+        byte $b6;
+        org.apache.commons.math3.optimization.linear.LinearObjectiveFunction $r3, $r4;
+        java.util.List $r5, $r6;
+        org.apache.commons.math3.linear.RealMatrix $r7, $r8;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        $z0 = r1 instanceof org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        if $z0 == 0 goto label4;
+
+        r2 = (org.apache.commons.math3.optimization.linear.SimplexTableau) r1;
+
+        $z2 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: boolean restrictToNonNegative>;
+
+        $z1 = r2.<org.apache.commons.math3.optimization.linear.SimplexTableau: boolean restrictToNonNegative>;
+
+        if $z2 != $z1 goto label2;
+
+        $i1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numDecisionVariables>;
+
+        $i0 = r2.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numDecisionVariables>;
+
+        if $i1 != $i0 goto label2;
+
+        $i3 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numSlackVariables>;
+
+        $i2 = r2.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numSlackVariables>;
+
+        if $i3 != $i2 goto label2;
+
+        $i5 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numArtificialVariables>;
+
+        $i4 = r2.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numArtificialVariables>;
+
+        if $i5 != $i4 goto label2;
+
+        $d1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: double epsilon>;
+
+        $d0 = r2.<org.apache.commons.math3.optimization.linear.SimplexTableau: double epsilon>;
+
+        $b6 = $d1 cmpl $d0;
+
+        if $b6 != 0 goto label2;
+
+        $i8 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int maxUlps>;
+
+        $i7 = r2.<org.apache.commons.math3.optimization.linear.SimplexTableau: int maxUlps>;
+
+        if $i8 != $i7 goto label2;
+
+        $r4 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.optimization.linear.LinearObjectiveFunction f>;
+
+        $r3 = r2.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.optimization.linear.LinearObjectiveFunction f>;
+
+        $z3 = virtualinvoke $r4.<org.apache.commons.math3.optimization.linear.LinearObjectiveFunction: boolean equals(java.lang.Object)>($r3);
+
+        if $z3 == 0 goto label2;
+
+        $r6 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List constraints>;
+
+        $r5 = r2.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List constraints>;
+
+        $z4 = virtualinvoke $r6.<java.lang.Object: boolean equals(java.lang.Object)>($r5);
+
+        if $z4 == 0 goto label2;
+
+        $r8 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau>;
+
+        $r7 = r2.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau>;
+
+        $z5 = virtualinvoke $r8.<java.lang.Object: boolean equals(java.lang.Object)>($r7);
+
+        if $z5 == 0 goto label2;
+
+        $z6 = 1;
+
+        goto label3;
+
+     label2:
+        $z6 = 0;
+
+     label3:
+        return $z6;
+
+     label4:
+        return 0;
+    }
+
+    public int hashCode()
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        boolean $z0;
+        java.lang.Boolean $r1;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16;
+        double $d0;
+        java.lang.Double $r2;
+        org.apache.commons.math3.optimization.linear.LinearObjectiveFunction $r3;
+        java.util.List $r4;
+        org.apache.commons.math3.linear.RealMatrix $r5;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        $z0 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: boolean restrictToNonNegative>;
+
+        $r1 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>($z0);
+
+        $i0 = virtualinvoke $r1.<java.lang.Boolean: int hashCode()>();
+
+        $i1 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numDecisionVariables>;
+
+        $i3 = $i0 ^ $i1;
+
+        $i2 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numSlackVariables>;
+
+        $i5 = $i3 ^ $i2;
+
+        $i4 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int numArtificialVariables>;
+
+        $i6 = $i5 ^ $i4;
+
+        $d0 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: double epsilon>;
+
+        $r2 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        $i7 = virtualinvoke $r2.<java.lang.Double: int hashCode()>();
+
+        $i9 = $i6 ^ $i7;
+
+        $i8 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: int maxUlps>;
+
+        $i10 = $i9 ^ $i8;
+
+        $r3 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.optimization.linear.LinearObjectiveFunction f>;
+
+        $i11 = virtualinvoke $r3.<org.apache.commons.math3.optimization.linear.LinearObjectiveFunction: int hashCode()>();
+
+        $i12 = $i10 ^ $i11;
+
+        $r4 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: java.util.List constraints>;
+
+        $i13 = virtualinvoke $r4.<java.lang.Object: int hashCode()>();
+
+        $i14 = $i12 ^ $i13;
+
+        $r5 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau>;
+
+        $i15 = virtualinvoke $r5.<java.lang.Object: int hashCode()>();
+
+        $i16 = $i14 ^ $i15;
+
+        return $i16;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream) throws java.io.IOException
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        java.io.ObjectOutputStream r1;
+        org.apache.commons.math3.linear.RealMatrix $r2;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        r1 := @parameter0: java.io.ObjectOutputStream;
+
+        virtualinvoke r1.<java.io.ObjectOutputStream: void defaultWriteObject()>();
+
+        $r2 = r0.<org.apache.commons.math3.optimization.linear.SimplexTableau: org.apache.commons.math3.linear.RealMatrix tableau>;
+
+        staticinvoke <org.apache.commons.math3.linear.MatrixUtils: void serializeRealMatrix(org.apache.commons.math3.linear.RealMatrix,java.io.ObjectOutputStream)>($r2, r1);
+
+        return;
+    }
+
+    private void readObject(java.io.ObjectInputStream) throws java.lang.ClassNotFoundException, java.io.IOException
+    {
+        org.apache.commons.math3.optimization.linear.SimplexTableau r0;
+        java.io.ObjectInputStream r1;
+
+        r0 := @this: org.apache.commons.math3.optimization.linear.SimplexTableau;
+
+        r1 := @parameter0: java.io.ObjectInputStream;
+
+        virtualinvoke r1.<java.io.ObjectInputStream: void defaultReadObject()>();
+
+        staticinvoke <org.apache.commons.math3.linear.MatrixUtils: void deserializeRealMatrix(java.lang.Object,java.lang.String,java.io.ObjectInputStream)>(r0, "tableau", r1);
+
+        return;
+    }
+
+    public static void <clinit>()
+    {
+        <org.apache.commons.math3.optimization.linear.SimplexTableau: long serialVersionUID> = -1369660067587938365L;
+
+        <org.apache.commons.math3.optimization.linear.SimplexTableau: double CUTOFF_THRESHOLD> = 1.0E-12;
+
+        <org.apache.commons.math3.optimization.linear.SimplexTableau: int DEFAULT_ULPS> = 10;
+
+        <org.apache.commons.math3.optimization.linear.SimplexTableau: java.lang.String NEGATIVE_VAR_COLUMN_LABEL> = "x-";
+
+        return;
+    }
+}

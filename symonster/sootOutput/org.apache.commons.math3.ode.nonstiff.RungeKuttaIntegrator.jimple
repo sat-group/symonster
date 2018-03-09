@@ -1,0 +1,650 @@
+public abstract class org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator extends org.apache.commons.math3.ode.AbstractIntegrator
+{
+    private final double[] c;
+    private final double[][] a;
+    private final double[] b;
+    private final org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator prototype;
+    private final double step;
+
+    protected void <init>(java.lang.String, double[], double[][], double[], org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator, double)
+    {
+        org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator r0;
+        java.lang.String r1;
+        double[] r2, r4;
+        double[][] r3;
+        org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator r5;
+        double d0, $d1;
+
+        r0 := @this: org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator;
+
+        r1 := @parameter0: java.lang.String;
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[][];
+
+        r4 := @parameter3: double[];
+
+        r5 := @parameter4: org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator;
+
+        d0 := @parameter5: double;
+
+        specialinvoke r0.<org.apache.commons.math3.ode.AbstractIntegrator: void <init>(java.lang.String)>(r1);
+
+        r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double[] c> = r2;
+
+        r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double[][] a> = r3;
+
+        r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double[] b> = r4;
+
+        r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator prototype> = r5;
+
+        $d1 = staticinvoke <org.apache.commons.math3.util.FastMath: double abs(double)>(d0);
+
+        r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double step> = $d1;
+
+        return;
+    }
+
+    public void integrate(org.apache.commons.math3.ode.ExpandableStatefulODE, double) throws org.apache.commons.math3.exception.NumberIsTooSmallException, org.apache.commons.math3.exception.DimensionMismatchException, org.apache.commons.math3.exception.MaxCountExceededException, org.apache.commons.math3.exception.NoBracketingException
+    {
+        org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator r0;
+        org.apache.commons.math3.ode.ExpandableStatefulODE r1;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, d52, d53, d54;
+        boolean z0, $z1, $z2, $z3, $z5;
+        double[] r2, r3, r5, $r8, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r22, $r23, $r25, $r26, $r27, r28, $r29;
+        int i0, $i2, $i3, $i5, $i6, $i7, $i8, $i11, $i12, $i13, $i14, $i16, i17, i18, i19, i20, i21, i22;
+        double[][] r4, $r21, $r24;
+        org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator r6, $r10;
+        byte $b1, $b4, $b9, $b10, $b15;
+        java.lang.Object $r7, $r9;
+        org.apache.commons.math3.ode.sampling.StepInterpolator $r11;
+        org.apache.commons.math3.ode.EquationsMapper $r12;
+        org.apache.commons.math3.ode.EquationsMapper[] $r13;
+
+        r0 := @this: org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator;
+
+        r1 := @parameter0: org.apache.commons.math3.ode.ExpandableStatefulODE;
+
+        d0 := @parameter1: double;
+
+        virtualinvoke r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: void sanityChecks(org.apache.commons.math3.ode.ExpandableStatefulODE,double)>(r1, d0);
+
+        virtualinvoke r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: void setEquations(org.apache.commons.math3.ode.ExpandableStatefulODE)>(r1);
+
+        $d1 = virtualinvoke r1.<org.apache.commons.math3.ode.ExpandableStatefulODE: double getTime()>();
+
+        $b1 = d0 cmpl $d1;
+
+        if $b1 <= 0 goto label01;
+
+        $z2 = 1;
+
+        goto label02;
+
+     label01:
+        $z2 = 0;
+
+     label02:
+        z0 = $z2;
+
+        r2 = virtualinvoke r1.<org.apache.commons.math3.ode.ExpandableStatefulODE: double[] getCompleteState()>();
+
+        $r7 = virtualinvoke r2.<java.lang.Object: java.lang.Object clone()>();
+
+        r3 = (double[]) $r7;
+
+        $r8 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double[] c>;
+
+        $i2 = lengthof $r8;
+
+        i0 = $i2 + 1;
+
+        r4 = newarray (double[])[i0];
+
+        i17 = 0;
+
+     label03:
+        if i17 >= i0 goto label04;
+
+        $i16 = lengthof r2;
+
+        $r27 = newarray (double)[$i16];
+
+        r4[i17] = $r27;
+
+        i17 = i17 + 1;
+
+        goto label03;
+
+     label04:
+        $r9 = virtualinvoke r2.<java.lang.Object: java.lang.Object clone()>();
+
+        r28 = (double[]) $r9;
+
+        $i3 = lengthof r2;
+
+        r5 = newarray (double)[$i3];
+
+        $r10 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator prototype>;
+
+        $r11 = virtualinvoke $r10.<org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator: org.apache.commons.math3.ode.sampling.StepInterpolator copy()>();
+
+        r6 = (org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator) $r11;
+
+        $r12 = virtualinvoke r1.<org.apache.commons.math3.ode.ExpandableStatefulODE: org.apache.commons.math3.ode.EquationsMapper getPrimaryMapper()>();
+
+        $r13 = virtualinvoke r1.<org.apache.commons.math3.ode.ExpandableStatefulODE: org.apache.commons.math3.ode.EquationsMapper[] getSecondaryMappers()>();
+
+        virtualinvoke r6.<org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator: void reinitialize(org.apache.commons.math3.ode.AbstractIntegrator,double[],double[][],boolean,org.apache.commons.math3.ode.EquationsMapper,org.apache.commons.math3.ode.EquationsMapper[])>(r0, r28, r4, z0, $r12, $r13);
+
+        $d2 = virtualinvoke r1.<org.apache.commons.math3.ode.ExpandableStatefulODE: double getTime()>();
+
+        virtualinvoke r6.<org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator: void storeTime(double)>($d2);
+
+        $d3 = virtualinvoke r1.<org.apache.commons.math3.ode.ExpandableStatefulODE: double getTime()>();
+
+        r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepStart> = $d3;
+
+        if z0 == 0 goto label06;
+
+        $d45 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepStart>;
+
+        $d44 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double step>;
+
+        $d46 = $d45 + $d44;
+
+        $b15 = $d46 cmpl d0;
+
+        if $b15 < 0 goto label05;
+
+        $d48 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepStart>;
+
+        $d49 = d0 - $d48;
+
+        r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepSize> = $d49;
+
+        goto label08;
+
+     label05:
+        $d47 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double step>;
+
+        r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepSize> = $d47;
+
+        goto label08;
+
+     label06:
+        $d5 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepStart>;
+
+        $d4 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double step>;
+
+        $d6 = $d5 - $d4;
+
+        $b4 = $d6 cmpg d0;
+
+        if $b4 > 0 goto label07;
+
+        $d42 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepStart>;
+
+        $d43 = d0 - $d42;
+
+        r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepSize> = $d43;
+
+        goto label08;
+
+     label07:
+        $d7 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double step>;
+
+        $d8 = neg $d7;
+
+        r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepSize> = $d8;
+
+     label08:
+        $d50 = virtualinvoke r1.<org.apache.commons.math3.ode.ExpandableStatefulODE: double getTime()>();
+
+        virtualinvoke r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: void initIntegration(double,double[],double)>($d50, r2, d0);
+
+        r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: boolean isLastStep> = 0;
+
+     label09:
+        virtualinvoke r6.<org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator: void shift()>();
+
+        $d51 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepStart>;
+
+        $r29 = r4[0];
+
+        virtualinvoke r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: void computeDerivatives(double,double[],double[])>($d51, r3, $r29);
+
+        i18 = 1;
+
+     label10:
+        if i18 >= i0 goto label15;
+
+        i19 = 0;
+
+     label11:
+        $i11 = lengthof r2;
+
+        if i19 >= $i11 goto label14;
+
+        $r21 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double[][] a>;
+
+        $i13 = i18 - 1;
+
+        $r22 = $r21[$i13];
+
+        $d34 = $r22[0];
+
+        $r23 = r4[0];
+
+        $d33 = $r23[i19];
+
+        d52 = $d34 * $d33;
+
+        i20 = 1;
+
+     label12:
+        if i20 >= i18 goto label13;
+
+        $r24 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double[][] a>;
+
+        $i14 = i18 - 1;
+
+        $r25 = $r24[$i14];
+
+        $d40 = $r25[i20];
+
+        $r26 = r4[i20];
+
+        $d39 = $r26[i19];
+
+        $d41 = $d40 * $d39;
+
+        d52 = d52 + $d41;
+
+        i20 = i20 + 1;
+
+        goto label12;
+
+     label13:
+        $d37 = r3[i19];
+
+        $d35 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepSize>;
+
+        $d36 = $d35 * d52;
+
+        $d38 = $d37 + $d36;
+
+        r28[i19] = $d38;
+
+        i19 = i19 + 1;
+
+        goto label11;
+
+     label14:
+        $d31 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepStart>;
+
+        $r19 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double[] c>;
+
+        $i12 = i18 - 1;
+
+        $d29 = $r19[$i12];
+
+        $d28 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepSize>;
+
+        $d30 = $d29 * $d28;
+
+        $d32 = $d31 + $d30;
+
+        $r20 = r4[i18];
+
+        virtualinvoke r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: void computeDerivatives(double,double[],double[])>($d32, r28, $r20);
+
+        i18 = i18 + 1;
+
+        goto label10;
+
+     label15:
+        i21 = 0;
+
+     label16:
+        $i5 = lengthof r2;
+
+        if i21 >= $i5 goto label19;
+
+        $r15 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double[] b>;
+
+        $d20 = $r15[0];
+
+        $r16 = r4[0];
+
+        $d19 = $r16[i21];
+
+        d53 = $d20 * $d19;
+
+        i22 = 1;
+
+     label17:
+        if i22 >= i0 goto label18;
+
+        $r17 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double[] b>;
+
+        $d26 = $r17[i22];
+
+        $r18 = r4[i22];
+
+        $d25 = $r18[i21];
+
+        $d27 = $d26 * $d25;
+
+        d53 = d53 + $d27;
+
+        i22 = i22 + 1;
+
+        goto label17;
+
+     label18:
+        $d23 = r3[i21];
+
+        $d21 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepSize>;
+
+        $d22 = $d21 * d53;
+
+        $d24 = $d23 + $d22;
+
+        r28[i21] = $d24;
+
+        i21 = i21 + 1;
+
+        goto label16;
+
+     label19:
+        $d10 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepStart>;
+
+        $d9 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepSize>;
+
+        $d11 = $d10 + $d9;
+
+        virtualinvoke r6.<org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator: void storeTime(double)>($d11);
+
+        $i6 = lengthof r2;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r28, 0, r3, 0, $i6);
+
+        $i7 = i0 - 1;
+
+        $r14 = r4[$i7];
+
+        $i8 = lengthof r2;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r14, 0, r5, 0, $i8);
+
+        $d12 = virtualinvoke r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double acceptStep(org.apache.commons.math3.ode.sampling.AbstractStepInterpolator,double[],double[],double)>(r6, r3, r5, d0);
+
+        r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepStart> = $d12;
+
+        $z1 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: boolean isLastStep>;
+
+        if $z1 != 0 goto label24;
+
+        $d14 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepStart>;
+
+        virtualinvoke r6.<org.apache.commons.math3.ode.nonstiff.RungeKuttaStepInterpolator: void storeTime(double)>($d14);
+
+        $d16 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepStart>;
+
+        $d15 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepSize>;
+
+        d54 = $d16 + $d15;
+
+        if z0 == 0 goto label21;
+
+        $b10 = d54 cmpl d0;
+
+        if $b10 < 0 goto label20;
+
+        $z3 = 1;
+
+        goto label23;
+
+     label20:
+        $z3 = 0;
+
+        goto label23;
+
+     label21:
+        $b9 = d54 cmpg d0;
+
+        if $b9 > 0 goto label22;
+
+        $z3 = 1;
+
+        goto label23;
+
+     label22:
+        $z3 = 0;
+
+     label23:
+        if $z3 == 0 goto label24;
+
+        $d17 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepStart>;
+
+        $d18 = d0 - $d17;
+
+        r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepSize> = $d18;
+
+     label24:
+        $z5 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: boolean isLastStep>;
+
+        if $z5 == 0 goto label09;
+
+        $d13 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepStart>;
+
+        virtualinvoke r1.<org.apache.commons.math3.ode.ExpandableStatefulODE: void setTime(double)>($d13);
+
+        virtualinvoke r1.<org.apache.commons.math3.ode.ExpandableStatefulODE: void setCompleteState(double[])>(r3);
+
+        r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepStart> = #NaN;
+
+        r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double stepSize> = #NaN;
+
+        return;
+    }
+
+    public double[] singleStep(org.apache.commons.math3.ode.FirstOrderDifferentialEquations, double, double[], double)
+    {
+        org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator r0;
+        org.apache.commons.math3.ode.FirstOrderDifferentialEquations r1;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, d22, d23;
+        double[] r2, r3, $r6, $r8, $r9, $r10, $r11, $r12, $r13, $r14, $r16, $r17, $r19, $r20, $r21, r22;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, i8, i9, i10, i11, i12, i13;
+        double[][] r4, $r15, $r18;
+        java.lang.Object $r5, $r7;
+
+        r0 := @this: org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator;
+
+        r1 := @parameter0: org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
+
+        d0 := @parameter1: double;
+
+        r2 := @parameter2: double[];
+
+        d1 := @parameter3: double;
+
+        $r5 = virtualinvoke r2.<java.lang.Object: java.lang.Object clone()>();
+
+        r3 = (double[]) $r5;
+
+        $r6 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double[] c>;
+
+        $i1 = lengthof $r6;
+
+        i0 = $i1 + 1;
+
+        r4 = newarray (double[])[i0];
+
+        i8 = 0;
+
+     label01:
+        if i8 >= i0 goto label02;
+
+        $i7 = lengthof r2;
+
+        $r21 = newarray (double)[$i7];
+
+        r4[i8] = $r21;
+
+        i8 = i8 + 1;
+
+        goto label01;
+
+     label02:
+        $r7 = virtualinvoke r2.<java.lang.Object: java.lang.Object clone()>();
+
+        r22 = (double[]) $r7;
+
+        d2 = d1 - d0;
+
+        $r8 = r4[0];
+
+        interfaceinvoke r1.<org.apache.commons.math3.ode.FirstOrderDifferentialEquations: void computeDerivatives(double,double[],double[])>(d0, r3, $r8);
+
+        i9 = 1;
+
+     label03:
+        if i9 >= i0 goto label08;
+
+        i10 = 0;
+
+     label04:
+        $i3 = lengthof r2;
+
+        if i10 >= $i3 goto label07;
+
+        $r15 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double[][] a>;
+
+        $i5 = i9 - 1;
+
+        $r16 = $r15[$i5];
+
+        $d15 = $r16[0];
+
+        $r17 = r4[0];
+
+        $d14 = $r17[i10];
+
+        d22 = $d15 * $d14;
+
+        i11 = 1;
+
+     label05:
+        if i11 >= i9 goto label06;
+
+        $r18 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double[][] a>;
+
+        $i6 = i9 - 1;
+
+        $r19 = $r18[$i6];
+
+        $d20 = $r19[i11];
+
+        $r20 = r4[i11];
+
+        $d19 = $r20[i10];
+
+        $d21 = $d20 * $d19;
+
+        d22 = d22 + $d21;
+
+        i11 = i11 + 1;
+
+        goto label05;
+
+     label06:
+        $d17 = r3[i10];
+
+        $d16 = d2 * d22;
+
+        $d18 = $d17 + $d16;
+
+        r22[i10] = $d18;
+
+        i10 = i10 + 1;
+
+        goto label04;
+
+     label07:
+        $r13 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double[] c>;
+
+        $i4 = i9 - 1;
+
+        $d11 = $r13[$i4];
+
+        $d12 = $d11 * d2;
+
+        $d13 = d0 + $d12;
+
+        $r14 = r4[i9];
+
+        interfaceinvoke r1.<org.apache.commons.math3.ode.FirstOrderDifferentialEquations: void computeDerivatives(double,double[],double[])>($d13, r22, $r14);
+
+        i9 = i9 + 1;
+
+        goto label03;
+
+     label08:
+        i12 = 0;
+
+     label09:
+        $i2 = lengthof r2;
+
+        if i12 >= $i2 goto label12;
+
+        $r9 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double[] b>;
+
+        $d4 = $r9[0];
+
+        $r10 = r4[0];
+
+        $d3 = $r10[i12];
+
+        d23 = $d4 * $d3;
+
+        i13 = 1;
+
+     label10:
+        if i13 >= i0 goto label11;
+
+        $r11 = r0.<org.apache.commons.math3.ode.nonstiff.RungeKuttaIntegrator: double[] b>;
+
+        $d9 = $r11[i13];
+
+        $r12 = r4[i13];
+
+        $d8 = $r12[i12];
+
+        $d10 = $d9 * $d8;
+
+        d23 = d23 + $d10;
+
+        i13 = i13 + 1;
+
+        goto label10;
+
+     label11:
+        $d6 = r3[i12];
+
+        $d5 = d2 * d23;
+
+        $d7 = $d6 + $d5;
+
+        r3[i12] = $d7;
+
+        i12 = i12 + 1;
+
+        goto label09;
+
+     label12:
+        return r3;
+    }
+}

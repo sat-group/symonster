@@ -1,0 +1,386 @@
+public class org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer extends org.apache.commons.math3.optim.univariate.UnivariateOptimizer
+{
+    private final org.apache.commons.math3.optim.univariate.UnivariateOptimizer optimizer;
+    private int totalEvaluations;
+    private int starts;
+    private org.apache.commons.math3.random.RandomGenerator generator;
+    private org.apache.commons.math3.optim.univariate.UnivariatePointValuePair[] optima;
+    private org.apache.commons.math3.optim.OptimizationData[] optimData;
+    private int maxEvalIndex;
+    private int searchIntervalIndex;
+
+    public void <init>(org.apache.commons.math3.optim.univariate.UnivariateOptimizer, int, org.apache.commons.math3.random.RandomGenerator)
+    {
+        org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer r0;
+        org.apache.commons.math3.optim.univariate.UnivariateOptimizer r1;
+        int i0;
+        org.apache.commons.math3.random.RandomGenerator r2;
+        org.apache.commons.math3.optim.ConvergenceChecker $r3;
+        org.apache.commons.math3.exception.NotStrictlyPositiveException $r4;
+        java.lang.Integer $r5;
+
+        r0 := @this: org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer;
+
+        r1 := @parameter0: org.apache.commons.math3.optim.univariate.UnivariateOptimizer;
+
+        i0 := @parameter1: int;
+
+        r2 := @parameter2: org.apache.commons.math3.random.RandomGenerator;
+
+        $r3 = virtualinvoke r1.<org.apache.commons.math3.optim.univariate.UnivariateOptimizer: org.apache.commons.math3.optim.ConvergenceChecker getConvergenceChecker()>();
+
+        specialinvoke r0.<org.apache.commons.math3.optim.univariate.UnivariateOptimizer: void <init>(org.apache.commons.math3.optim.ConvergenceChecker)>($r3);
+
+        r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: int maxEvalIndex> = -1;
+
+        r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: int searchIntervalIndex> = -1;
+
+        if i0 >= 1 goto label1;
+
+        $r4 = new org.apache.commons.math3.exception.NotStrictlyPositiveException;
+
+        $r5 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        specialinvoke $r4.<org.apache.commons.math3.exception.NotStrictlyPositiveException: void <init>(java.lang.Number)>($r5);
+
+        throw $r4;
+
+     label1:
+        r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.univariate.UnivariateOptimizer optimizer> = r1;
+
+        r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: int starts> = i0;
+
+        r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.random.RandomGenerator generator> = r2;
+
+        return;
+    }
+
+    public int getEvaluations()
+    {
+        org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer r0;
+        int $i0;
+
+        r0 := @this: org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer;
+
+        $i0 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: int totalEvaluations>;
+
+        return $i0;
+    }
+
+    public org.apache.commons.math3.optim.univariate.UnivariatePointValuePair[] getOptima()
+    {
+        org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer r0;
+        org.apache.commons.math3.optim.univariate.UnivariatePointValuePair[] $r1, $r2, $r4;
+        java.lang.Object $r3;
+        org.apache.commons.math3.exception.MathIllegalStateException $r5;
+        java.lang.Object[] $r6;
+        org.apache.commons.math3.exception.util.LocalizedFormats $r7;
+
+        r0 := @this: org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer;
+
+        $r1 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.univariate.UnivariatePointValuePair[] optima>;
+
+        if $r1 != null goto label1;
+
+        $r5 = new org.apache.commons.math3.exception.MathIllegalStateException;
+
+        $r7 = <org.apache.commons.math3.exception.util.LocalizedFormats: org.apache.commons.math3.exception.util.LocalizedFormats NO_OPTIMUM_COMPUTED_YET>;
+
+        $r6 = newarray (java.lang.Object)[0];
+
+        specialinvoke $r5.<org.apache.commons.math3.exception.MathIllegalStateException: void <init>(org.apache.commons.math3.exception.util.Localizable,java.lang.Object[])>($r7, $r6);
+
+        throw $r5;
+
+     label1:
+        $r2 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.univariate.UnivariatePointValuePair[] optima>;
+
+        $r3 = virtualinvoke $r2.<java.lang.Object: java.lang.Object clone()>();
+
+        $r4 = (org.apache.commons.math3.optim.univariate.UnivariatePointValuePair[]) $r3;
+
+        return $r4;
+    }
+
+    public transient org.apache.commons.math3.optim.univariate.UnivariatePointValuePair optimize(org.apache.commons.math3.optim.OptimizationData[])
+    {
+        org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer r0;
+        org.apache.commons.math3.optim.OptimizationData[] r1;
+        org.apache.commons.math3.optim.univariate.UnivariatePointValuePair $r2;
+
+        r0 := @this: org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer;
+
+        r1 := @parameter0: org.apache.commons.math3.optim.OptimizationData[];
+
+        r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.OptimizationData[] optimData> = r1;
+
+        $r2 = specialinvoke r0.<org.apache.commons.math3.optim.univariate.UnivariateOptimizer: org.apache.commons.math3.optim.univariate.UnivariatePointValuePair optimize(org.apache.commons.math3.optim.OptimizationData[])>(r1);
+
+        return $r2;
+    }
+
+    protected org.apache.commons.math3.optim.univariate.UnivariatePointValuePair doOptimize()
+    {
+        org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer r0;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, i13, i14;
+        double d0, d1, d2, $d3, $d4, $d5, $d6;
+        org.apache.commons.math3.optim.OptimizationData[] $r1, $r9, $r12, $r13, $r20, $r22, $r24, $r25;
+        org.apache.commons.math3.optim.univariate.UnivariatePointValuePair[] $r2, $r4, $r6, $r15, $r27;
+        org.apache.commons.math3.optim.nonlinear.scalar.GoalType $r3;
+        org.apache.commons.math3.optim.univariate.UnivariatePointValuePair $r5, $r7, $r16;
+        org.apache.commons.math3.optim.MaxEval $r8;
+        org.apache.commons.math3.random.RandomGenerator $r10;
+        org.apache.commons.math3.optim.univariate.SearchInterval $r11;
+        org.apache.commons.math3.optim.univariate.UnivariateOptimizer $r14, $r17;
+        org.apache.commons.math3.exception.MathIllegalStateException $r18, $r19;
+        org.apache.commons.math3.optim.OptimizationData $r21, $r23;
+        boolean $z0, $z1;
+        java.lang.RuntimeException $r26, r29;
+
+        r0 := @this: org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer;
+
+        i13 = 0;
+
+     label01:
+        $r1 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.OptimizationData[] optimData>;
+
+        $i1 = lengthof $r1;
+
+        if i13 >= $i1 goto label04;
+
+        $r20 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.OptimizationData[] optimData>;
+
+        $r21 = $r20[i13];
+
+        $z0 = $r21 instanceof org.apache.commons.math3.optim.MaxEval;
+
+        if $z0 == 0 goto label02;
+
+        $r25 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.OptimizationData[] optimData>;
+
+        $r25[i13] = null;
+
+        r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: int maxEvalIndex> = i13;
+
+        goto label03;
+
+     label02:
+        $r22 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.OptimizationData[] optimData>;
+
+        $r23 = $r22[i13];
+
+        $z1 = $r23 instanceof org.apache.commons.math3.optim.univariate.SearchInterval;
+
+        if $z1 == 0 goto label03;
+
+        $r24 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.OptimizationData[] optimData>;
+
+        $r24[i13] = null;
+
+        r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: int searchIntervalIndex> = i13;
+
+     label03:
+        i13 = i13 + 1;
+
+        goto label01;
+
+     label04:
+        $i2 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: int maxEvalIndex>;
+
+        if $i2 != -1 goto label05;
+
+        $r19 = new org.apache.commons.math3.exception.MathIllegalStateException;
+
+        specialinvoke $r19.<org.apache.commons.math3.exception.MathIllegalStateException: void <init>()>();
+
+        throw $r19;
+
+     label05:
+        $i3 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: int searchIntervalIndex>;
+
+        if $i3 != -1 goto label06;
+
+        $r18 = new org.apache.commons.math3.exception.MathIllegalStateException;
+
+        specialinvoke $r18.<org.apache.commons.math3.exception.MathIllegalStateException: void <init>()>();
+
+        throw $r18;
+
+     label06:
+        r29 = null;
+
+        $i4 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: int starts>;
+
+        $r2 = newarray (org.apache.commons.math3.optim.univariate.UnivariatePointValuePair)[$i4];
+
+        r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.univariate.UnivariatePointValuePair[] optima> = $r2;
+
+        r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: int totalEvaluations> = 0;
+
+        i0 = virtualinvoke r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: int getMaxEvaluations()>();
+
+        d0 = virtualinvoke r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: double getMin()>();
+
+        d1 = virtualinvoke r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: double getMax()>();
+
+        d2 = virtualinvoke r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: double getStartValue()>();
+
+        i14 = 0;
+
+     label07:
+        $i5 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: int starts>;
+
+        if i14 >= $i5 goto label14;
+
+     label08:
+        $r9 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.OptimizationData[] optimData>;
+
+        $i8 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: int maxEvalIndex>;
+
+        $r8 = new org.apache.commons.math3.optim.MaxEval;
+
+        $i6 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: int totalEvaluations>;
+
+        $i7 = i0 - $i6;
+
+        specialinvoke $r8.<org.apache.commons.math3.optim.MaxEval: void <init>(int)>($i7);
+
+        $r9[$i8] = $r8;
+
+        if i14 != 0 goto label09;
+
+        $d6 = d2;
+
+        goto label10;
+
+     label09:
+        $r10 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.random.RandomGenerator generator>;
+
+        $d3 = interfaceinvoke $r10.<org.apache.commons.math3.random.RandomGenerator: double nextDouble()>();
+
+        $d4 = d1 - d0;
+
+        $d5 = $d3 * $d4;
+
+        $d6 = d0 + $d5;
+
+     label10:
+        $r12 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.OptimizationData[] optimData>;
+
+        $i9 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: int searchIntervalIndex>;
+
+        $r11 = new org.apache.commons.math3.optim.univariate.SearchInterval;
+
+        specialinvoke $r11.<org.apache.commons.math3.optim.univariate.SearchInterval: void <init>(double,double,double)>(d0, d1, $d6);
+
+        $r12[$i9] = $r11;
+
+        $r15 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.univariate.UnivariatePointValuePair[] optima>;
+
+        $r14 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.univariate.UnivariateOptimizer optimizer>;
+
+        $r13 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.OptimizationData[] optimData>;
+
+        $r16 = virtualinvoke $r14.<org.apache.commons.math3.optim.univariate.UnivariateOptimizer: org.apache.commons.math3.optim.univariate.UnivariatePointValuePair optimize(org.apache.commons.math3.optim.OptimizationData[])>($r13);
+
+        $r15[i14] = $r16;
+
+     label11:
+        goto label13;
+
+     label12:
+        $r26 := @caughtexception;
+
+        r29 = $r26;
+
+        $r27 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.univariate.UnivariatePointValuePair[] optima>;
+
+        $r27[i14] = null;
+
+     label13:
+        $i10 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: int totalEvaluations>;
+
+        $r17 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.univariate.UnivariateOptimizer optimizer>;
+
+        $i11 = virtualinvoke $r17.<org.apache.commons.math3.optim.univariate.UnivariateOptimizer: int getEvaluations()>();
+
+        $i12 = $i10 + $i11;
+
+        r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: int totalEvaluations> = $i12;
+
+        i14 = i14 + 1;
+
+        goto label07;
+
+     label14:
+        $r3 = virtualinvoke r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.nonlinear.scalar.GoalType getGoalType()>();
+
+        specialinvoke r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: void sortPairs(org.apache.commons.math3.optim.nonlinear.scalar.GoalType)>($r3);
+
+        $r4 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.univariate.UnivariatePointValuePair[] optima>;
+
+        $r5 = $r4[0];
+
+        if $r5 != null goto label15;
+
+        throw r29;
+
+     label15:
+        $r6 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.univariate.UnivariatePointValuePair[] optima>;
+
+        $r7 = $r6[0];
+
+        return $r7;
+
+        catch java.lang.RuntimeException from label08 to label11 with label12;
+    }
+
+    private void sortPairs(org.apache.commons.math3.optim.nonlinear.scalar.GoalType)
+    {
+        org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer r0;
+        org.apache.commons.math3.optim.nonlinear.scalar.GoalType r1;
+        org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer$1 $r2;
+        org.apache.commons.math3.optim.univariate.UnivariatePointValuePair[] $r3;
+
+        r0 := @this: org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer;
+
+        r1 := @parameter0: org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
+
+        $r3 = r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.univariate.UnivariatePointValuePair[] optima>;
+
+        $r2 = new org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer$1;
+
+        specialinvoke $r2.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer$1: void <init>(org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer,org.apache.commons.math3.optim.nonlinear.scalar.GoalType)>(r0, r1);
+
+        staticinvoke <java.util.Arrays: void sort(java.lang.Object[],java.util.Comparator)>($r3, $r2);
+
+        return;
+    }
+
+    protected volatile java.lang.Object doOptimize()
+    {
+        org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer r0;
+        org.apache.commons.math3.optim.univariate.UnivariatePointValuePair $r1;
+
+        r0 := @this: org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer;
+
+        $r1 = virtualinvoke r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.univariate.UnivariatePointValuePair doOptimize()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object optimize(org.apache.commons.math3.optim.OptimizationData[]) throws org.apache.commons.math3.exception.TooManyEvaluationsException, org.apache.commons.math3.exception.TooManyIterationsException
+    {
+        org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer r0;
+        org.apache.commons.math3.optim.OptimizationData[] r1;
+        org.apache.commons.math3.optim.univariate.UnivariatePointValuePair $r2;
+
+        r0 := @this: org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer;
+
+        r1 := @parameter0: org.apache.commons.math3.optim.OptimizationData[];
+
+        $r2 = virtualinvoke r0.<org.apache.commons.math3.optim.univariate.MultiStartUnivariateOptimizer: org.apache.commons.math3.optim.univariate.UnivariatePointValuePair optimize(org.apache.commons.math3.optim.OptimizationData[])>(r1);
+
+        return $r2;
+    }
+}
