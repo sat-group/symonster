@@ -1,6 +1,7 @@
 package knn;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * k-Nearest Neighbors, finds nearest neighbor through frequency
@@ -10,9 +11,6 @@ public class KNN {
     private Map<String, Integer> labelMap;
     private List<int[]> values;
     private int labelSize;
-    private float[] freqTable;
-    private List<Integer> sortedFreqIndexTable;
-    boolean isSorted = false;
 
     public KNN(Set<String> labels) {
         if (labels.size() <= 0) {
@@ -30,8 +28,6 @@ public class KNN {
                 labelMap.put(this.labels[i], i);
             }
             this.values = new ArrayList<>();
-            this.freqTable = new float[labelSize];
-            Arrays.fill(freqTable, -1);
             for (String label : labelMap.keySet()) {
                 System.out.println(label);
             }
@@ -51,8 +47,6 @@ public class KNN {
             labelMap.put(this.labels[i], i);
         }
         this.values = preTrained;
-        this.freqTable = new float[labelSize];
-        Arrays.fill(freqTable, -1);
     }
 
 
@@ -68,8 +62,6 @@ public class KNN {
         }
         if(hasOne) {
             values.add(vector);
-            // needs update
-            isSorted = false;
         }
     }
 
@@ -140,82 +132,80 @@ public class KNN {
     }
 
     public LinkedHashMap<String, Float> predict(Set<String> appearances) {
-        int size = appearances.size();
-        if(isSorted){
-            // Pre-sorted, just sieve out those that are not in appearnces
-            List<Integer> candidates = new ArrayList<>(sortedFreqIndexTable);
-            System.out.println("tag3:"+candidates.size());
-            for (int i = 0; i < labelSize; i++) {
-                if (appearances.contains(labels[i])) {
-                    candidates.remove((Integer)i);
+        List<Float> sumVector = new ArrayList<>(labelSize);
+        for(int i=0; i<labelSize; i++){
+            sumVector.add((float) 0);
+        }
+        int count = 0;
+        List<Integer> indexList = appearances.stream().map(s -> labelMap.get(s)).collect(Collectors.toList());
+        for(int[] row : values) {
+            boolean containsAll = true;
+            for (int i : indexList) {
+                if (row[i] != 1) {
+                    containsAll = false;
                 }
             }
-            LinkedHashMap<String, Float> result = new LinkedHashMap<>();
-            for (int c : candidates) {
-                result.put(labels[c], freqTable[c]);
-            }
-            return result;
-        }
-        // else
-        List<Integer> candidates = new ArrayList<>(labelSize - appearances.size());
-        for (int i = 0; i < labelSize; i++) {
-            if (!appearances.contains(labels[i])) {
-                candidates.add(i);
-                if (freqTable[i] == -1) {
-                    freqTable[i] = average(i);
+            if (containsAll) {
+                for(int i : indexList){
+                    sumVector.set(i, sumVector.get(i) - 1);
                 }
+                for (int i = 0; i < labelSize; i++) {
+                    sumVector.set(i, sumVector.get(i)+row[i]);
+                }
+                count++;
             }
         }
-        candidates.sort(new FreqComparator());
+        if(count == 0){
+            System.out.println("nothing!");
+            return new LinkedHashMap<>();
+        }
+        List<Entry> entryList = new ArrayList<>(labelSize);
+
+        for(int i=0; i<labelSize; i++){
+            sumVector.set(i, sumVector.get(i)/count);
+            entryList.add(new Entry(labels[i], sumVector.get(i)));
+        }
+
+        entryList.sort(new EntryComparator());
+
         LinkedHashMap<String, Float> result = new LinkedHashMap<>();
-        for (int c : candidates) {
-            result.put(labels[c], freqTable[c]);
+        for(Entry e : entryList){
+            result.put(e.label, e.freq);
         }
+
         return result;
     }
 
-    private class FreqComparator implements Comparator<Integer> {
+    class Entry{
+        String label;
+        Float freq;
+
+        Entry(String label, Float freq){
+            this.label = label;
+            this.freq = freq;
+        }
+    }
+
+    class EntryComparator implements Comparator {
 
         @Override
-        public int compare(Integer o1, Integer o2) {
-            // descending order
-            return Float.compare(freqTable[o2],freqTable[o1]);
-        }
-    }
-
-    private float average(int col) {
-        int[] colVector = new int[getTrainSetSize()];
-        int i = 0;
-        for (int[] row : values) {
-            colVector[i] = row[col];
-            i++;
-        }
-        return (float) Arrays.stream(colVector).sum() / (float) labelSize;
-    }
-
-    public float getFreq(String label){
-        int i = labelMap.get(label);
-        if(freqTable[i]==-1){
-            freqTable[i] = average(i);
-        }
-        return freqTable[i];
-    }
-
-    public void preSort(){
-        sortedFreqIndexTable = new ArrayList<>();
-        for (int i = 0; i < labelSize; i++) {
-            if (freqTable[i] == -1) {
-                freqTable[i] = average(i);
+        public int compare(Object o1, Object o2) {
+            if(!(o1 instanceof Entry) || !(o2 instanceof Entry)){
+                return 0;
+            }else{
+                Entry e1 = (Entry) o1;
+                Entry e2 = (Entry) o2;
+                return -e1.freq.compareTo(e2.freq);
             }
-            sortedFreqIndexTable.add(i);
         }
-        System.out.println("tag:"+sortedFreqIndexTable.size());
-        System.out.println("tag2:"+freqTable.length);
 
-        sortedFreqIndexTable.sort(new FreqComparator());
-        isSorted = true;
+        @Override
+        public boolean equals(Object obj) {
+            return false;
+        }
     }
 
+    /*
     public String getSortedFreqString(){
         StringBuilder result = new StringBuilder();
         for(int index : sortedFreqIndexTable){
@@ -223,5 +213,5 @@ public class KNN {
             .append("<").append(freqTable[index]).append(",");
         }
         return result.toString();
-    }
+    }*/
 }

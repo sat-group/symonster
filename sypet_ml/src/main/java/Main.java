@@ -47,7 +47,7 @@ public class Main {
         }
         pw.write("final result:");
         pw.write(knn.getTrainDenseString());
-        pw.write(knn.getSortedFreqString());
+        //pw.write(knn.getSortedFreqString());
         pw.close();
 
         // add training data (var independent)
@@ -96,14 +96,12 @@ public class Main {
                     knn.addTrainVector(t);
                 }
             }
-            knn.preSort();
         }else{
             for (Map<String, Set<String>> s : varData.values()) {
                 for (Set<String> t : s.values()) {
                     experimentKnn.addTrainVector(t);
                 }
             }
-            experimentKnn.preSort();
         }
     }
 
@@ -115,13 +113,11 @@ public class Main {
                 knn.addTrainVector(set);
             }
 
-            knn.preSort();
         }else{
             for (Set<String> set : data.values()) {
                 experimentKnn.addTrainVector(set);
             }
 
-            experimentKnn.preSort();
         }
     }
 
