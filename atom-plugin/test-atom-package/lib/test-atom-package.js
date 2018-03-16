@@ -42,7 +42,7 @@ export default {
   http(config) {
     return new Promise((resolve, reject ) => {
         testj = {
-                  "methodName": "scale",
+                  "methodName": "shear",
                   "paramNames": [
                     "sypet_arg0",
                     "sypet_arg1",
@@ -57,17 +57,19 @@ export default {
                   "packages": [
                     "java.awt.geom"
                   ],
-                  "testBody": "public static boolean test() throws Throwable { java.awt.geom.Rectangle2D rec = new java.awt.geom.Rectangle2D.Double(10, 20, 10, 2); java.awt.geom.Rectangle2D target = new java.awt.geom.Rectangle2D.Double(20, 60, 20, 6); java.awt.geom.Rectangle2D result = scale(rec, 2, 3); return (target.equals(result));}"
+                  "testBody": "public static boolean test() throws Throwable { java.awt.geom.Rectangle2D area = new java.awt.geom.Rectangle2D.Double(10, 20, 10, 10); java.awt.geom.Rectangle2D target = new java.awt.geom.Rectangle2D.Double(20, 24, 15, 14); java.awt.geom.Rectangle2D result = shear(area, 0.5, 0.4); return (target.equals(result));}"
                 }
         console.log(JSON.stringify(config))
         console.log(JSON.stringify(testj))
+
+
         options = {
             url: 'http://128.83.122.134:9092',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(config)
+            body: JSON.stringify(testj)
         };
         //console.log(JSON.stringify(testj))
         request.post(options, function (err, response, body) {
@@ -93,22 +95,33 @@ toggle() {
     const words = editor.getText().split('\n');
     console.log(words)
     w = []
+    test  =[]
+    intest = false
     for(var x =0; x < words.length ; x++) {
         if (words[x].slice(0,3) == "//#") {
             w.push(words[x].slice(3).trim())
             x++;
             w.push(words[x].slice(3).trim())
             x++;
-            w.push(words[x].slice(3).trim())
-            x++;
             w.push(words[x])
-
-
-
         }
+       if ( words[x].slice(0,7) == "// # //") {
+           if(intest) {
+               intest  = false
+           }
+           else {
+              intest = true
+           }
+       }
+       else if(intest) {
+            test.push(words[x])
+        }
+
     }
+    test = test.join('').replace(/\r/g, "")
+    console.log(test)
     var regex = /((?:(?:public|private|protected|static|final|abstract|synchronized|volatile)\s+)*)\s*(\w+)\s*(\w+)\((.*?)\)\s*/g
-    var match = regex.exec(w[3])
+    var match = regex.exec(w[2])
 
     console.log(w[3])
     console.log(match[1])
@@ -121,7 +134,7 @@ toggle() {
 
     match[4] = match[4].replace(/,/g, "" )
     l = match[4].split(" ")
-    console.log(l)
+    //console.log(l)
     args = []
     types = []
     packages = w[0].split(" ")
@@ -145,20 +158,25 @@ toggle() {
     config["srcTypes"] = types
     config["packages"] = packages
     config["tgtType"] = tgtType
-    config["testBody"] = w[2]
+    config["testBody"] = test
 
     console.log(config)
 
 
 
     //this.testAtomPackageView.setCount(w.join("\n"));
-    var blob = new Blob([w.join("\n")], {type: "text/plain;charset=utf-8"});
+    /*var blob = new Blob([w.join("\n")], {type: "text/plain;charset=utf-8"});
     console.log(w.join("\n"))
     FileSaver.saveAs(blob, "hello.txt");
+    */
 
     this.http(config).then((code) => {
         console.log("Returned!")
         console.log(code)
+        editor.scan(/\/\/#Sypet/g, (match) => {
+            console.log(match)
+            match.replace(code)
+        })
     })
     //this.modalPanel.show();
     }
