@@ -2,7 +2,7 @@
 
 import TestAtomPackageView from './test-atom-package-view';
 import { CompositeDisposable } from 'atom';
-import FileSaver from 'file-saver'
+//import FileSaver from 'file-saver'
 import request from 'request'
 //import java-parser from 'java-parser'
 
@@ -64,7 +64,7 @@ export default {
 
 
         options = {
-            url: 'http://128.83.122.134:9092',
+            url: 'http://localhost:9092/',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -87,9 +87,7 @@ export default {
 
 },
 toggle() {
-  if (this.modalPanel.isVisible()) {
-    this.modalPanel.hide();
-  } else {
+  try {
     const editor = atom.workspace.getActiveTextEditor();
 
     const words = editor.getText().split('\n');
@@ -161,6 +159,10 @@ toggle() {
     config["testBody"] = test
 
     console.log(config)
+} catch(error) {
+    console.log("error")
+    atom.notifications.addError("Error! Please recheck selection and syntax.")
+}
 
 
 
@@ -180,6 +182,6 @@ toggle() {
     })
     //this.modalPanel.show();
     }
-}
+
 
 };
