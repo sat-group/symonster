@@ -69,7 +69,7 @@ export default {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(testj)
+            body: JSON.stringify(config)
         };
         //console.log(JSON.stringify(testj))
         request.post(options, function (err, response, body) {
