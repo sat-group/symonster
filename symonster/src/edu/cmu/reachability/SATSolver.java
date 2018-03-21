@@ -98,7 +98,7 @@ public class SATSolver {
 						res.add(id2variable.get(id));
 					}
 				}
-				
+
 				// block model
 				try {
 					solver.addClause(block);
@@ -106,8 +106,7 @@ public class SATSolver {
 				catch (ContradictionException e) {
 					unsat = true;
 				}
-				
-				
+
 			}
 		} catch (TimeoutException e) {
 			// consider as it did not find a solution
@@ -118,7 +117,5 @@ public class SATSolver {
 		Collections.sort(res);
 		
 		return res;
-		
 	}
-
 }
