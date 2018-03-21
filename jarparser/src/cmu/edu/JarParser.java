@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.Iterator;
 
 import soot.CompilationDeathException;
 import soot.Scene;
@@ -16,7 +17,7 @@ public class JarParser {
 	
 	public static Set<SootMethod> parse(String lib, ArrayList<String> pkg, boolean visible){
 		Set<SootMethod> methods = new HashSet<>();
-		
+		Set<String> hash_Set = new HashSet<String>();
 		for (String cl : SourceLocator.v().getClassesUnder(lib)) {
 			SootClass clazz = Scene.v().getSootClass(cl);
 		
@@ -25,8 +26,10 @@ public class JarParser {
 				
 				// Only considers method that start with the package that we are interested on
 				boolean skip = !pkg.isEmpty();
+				hash_Set.add(method.getDeclaringClass().getPackageName());
 				for (String pName : pkg) {
 					if (cl.startsWith(pName)) {
+						
 						skip = false;
 						break;
 					}
@@ -44,6 +47,9 @@ public class JarParser {
 				methods.add(method);
 			}
 		}
+        Iterator<String> i = hash_Set.iterator();
+        while (i.hasNext())
+            System.out.println(i.next());
 		
 		return methods;
 	}
