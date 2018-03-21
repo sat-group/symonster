@@ -64,7 +64,7 @@ export default {
 
 
         options = {
-            url: 'http://localhost:9092/',
+            url: 'http://128.83.122.134:9092',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -89,17 +89,19 @@ export default {
 toggle() {
   try {
     const editor = atom.workspace.getActiveTextEditor();
-
-    const words = editor.getText().split('\n');
+    const buf =  editor.getSelectedBufferRange()
+    const words = editor.getSelectedText().split('\n');
     console.log(words)
     w = []
     test  =[]
     intest = false
     for(var x =0; x < words.length ; x++) {
         if (words[x].slice(0,3) == "//#") {
-            w.push(words[x].slice(3).trim())
+            w.push(words[x].slice(4).trim())
             x++;
-            w.push(words[x].slice(3).trim())
+            w.push(words[x].slice(4).trim())
+            x++;
+            w.push(words[x].slice(4).trim())
             x++;
             w.push(words[x])
         }
@@ -116,10 +118,10 @@ toggle() {
         }
 
     }
-    test = test.join('').replace(/\r/g, "")
+    test = test.join('').replace(/\r/g, "").replace(w[2] + "(" , "test(")
     console.log(test)
     var regex = /((?:(?:public|private|protected|static|final|abstract|synchronized|volatile)\s+)*)\s*(\w+)\s*(\w+)\((.*?)\)\s*/g
-    var match = regex.exec(w[2])
+    var match = regex.exec(w[3])
 
     console.log(w[3])
     console.log(match[1])
@@ -128,7 +130,7 @@ toggle() {
     console.log(match[4])
 
     var regex2 = /{(.*)}/g
-    var match2 = regex2.exec(w[2])
+    var match2 = regex2.exec(w[3])
 
     match[4] = match[4].replace(/,/g, "" )
     l = match[4].split(" ")
@@ -159,10 +161,6 @@ toggle() {
     config["testBody"] = test
 
     console.log(config)
-} catch(error) {
-    console.log("error")
-    atom.notifications.addError("Error! Please recheck selection and syntax.")
-}
 
 
 
@@ -175,11 +173,15 @@ toggle() {
     this.http(config).then((code) => {
         console.log("Returned!")
         console.log(code)
-        editor.scan(/\/\/#Sypet/g, (match) => {
+        editor.scanInBufferRange(/\/\/#Sypet/g,  buf, (match) => {
             console.log(match)
             match.replace(code)
         })
     })
+    } catch(error) {
+        console.log(error)
+        atom.notifications.addError("Error! Please recheck selection and syntax.")
+    }
     //this.modalPanel.show();
     }
 
