@@ -225,7 +225,7 @@ public class CodeFormer {
                 slotCount ++;
                 int returnedValue = calculateReturnedValue(id);
                 int slotValue = calculateSlotValue(id);
-                assert (slotValue == slotCount);
+                //assert (slotValue == slotCount);
                 builder.append(convVarName(returnedValue));
                 builder.append(".");
             }
@@ -237,7 +237,7 @@ public class CodeFormer {
                 slotCount ++;
                 int returnedValue = calculateReturnedValue(id);
                 int slotValue = calculateSlotValue(id);
-                assert (slotValue == slotCount);
+                //assert (slotValue == slotCount);
 
                 builder.append(convVarName(returnedValue));
                 if (i != sig.getArgTypes().size() - 1){
@@ -253,7 +253,7 @@ public class CodeFormer {
             slotCount ++;
             int returnedValue = calculateReturnedValue(id);
             int slotValue = calculateSlotValue(id);
-            assert (slotValue == slotCount);
+            //assert (slotValue == slotCount);
             builder.append(convVarName(returnedValue));
             builder.append(";\n");
         }

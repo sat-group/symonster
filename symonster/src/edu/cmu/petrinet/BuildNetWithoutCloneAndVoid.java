@@ -18,22 +18,17 @@ import java.util.Map;
 /*
    An reimplementation of BuildNet, but eliminates all clone edges by creating
    a copy for each method that returns its own arguments.
+   Completely eliminate void.
  */
-public class BuildNetWithoutClone {
-    static public PetriNet petrinet;
+public class BuildNetWithoutCloneAndVoid {
+    static public PetriNet petrinet = new PetriNet("net");
     //map from transition name to a method signature
-    static public Map<String, MethodSignature> dict;
+    static public Map<String, MethodSignature> dict = new HashMap<String, MethodSignature>();
 
-    static private Map<String, List<String>> superDict;
-    static private Map<String, List<String>> subDict;
-    static private boolean onlyOneVoid;
+    static private Map<String, List<String>> superDict = new HashMap<>();
+    static private Map<String, List<String>> subDict = new HashMap<>();
 
-    public BuildNetWithoutClone(boolean noVoid) {
-        petrinet = new PetriNet("net");
-        dict = new HashMap<String, MethodSignature>();
-        superDict = new HashMap<>();
-        subDict = new HashMap<>();
-        onlyOneVoid = noVoid;
+    public static void main(String[] args) {
     }
 
     private static void handlePolymorphism() {
@@ -50,26 +45,6 @@ public class BuildNetWithoutClone {
                 petrinet.createFlow(subClass, methodName);
                 petrinet.createFlow(methodName, superClass);
             }
-        }
-    }
-
-    /*
-      Post process all transitions in the petrinet so that
-      No transition return a single void
-     */
-    private static void postProcess() {
-        Set<Transition> ts = petrinet.getTransitions();
-        for(Transition t : ts) {
-            List<Flow> outEdges = new ArrayList<Flow>(t.getPostsetEdges());
-            List<Flow> inEdges = new ArrayList<Flow>(t.getPresetEdges());
-            try {
-                Flow f = petrinet.getFlow(t.getId(), "void");
-                System.out.println("contain void!");
-                assert(f.getWeight() == 1);
-                //if (outEdges.size() == 1) { // Delete the transition.
-                    f.setWeight(0);
-                //}
-            } catch (NoSuchEdgeException e) {}
         }
     }
 
@@ -233,8 +208,8 @@ public class BuildNetWithoutClone {
             }
         }
 
-        //create void type
-        petrinet.createPlace("void");
+        // We don't have void type
+        //petrinet.createPlace("void");
 
         //iterate through each method
         for (MethodSignature k : result) {
@@ -290,12 +265,16 @@ public class BuildNetWithoutClone {
             //add method signatures into map
             dict.put(transitionName, k);
 
-            //If method has no argument and is static , create flow with void
-            if(args.size() == 0 && (isStatic || isConstructor)) {
-                petrinet.createFlow("void", transitionName);
-            }
+            // If method has no argument and is static , leave it as it is
+            //if(args.size() == 0 && (isStatic || isConstructor)) {
+            //    petrinet.createFlow("void", transitionName);
+            //}
 
             for (Type t : args) {
+                if(t.toString() == "void") { // Skip void type !
+                    System.out.println("This should not happen");
+                    continue;
+                }
                 //add place for each argument
                 try {
                     petrinet.getPlace(t.toString());
@@ -315,16 +294,15 @@ public class BuildNetWithoutClone {
 
             //add place for the return type
             Type retType = k.getRetType();
-
-            try {
-                petrinet.getPlace(retType.toString());
-            } catch (NoSuchNodeException e) {
-                petrinet.createPlace(retType.toString());
+            if(!retType.toString().equals("void")) { // Return type should not be void
+                try {
+                    petrinet.getPlace(retType.toString());
+                } catch (NoSuchNodeException e) {
+                    petrinet.createPlace(retType.toString());
+                }
+                //add flows for the return type
+                petrinet.createFlow(transitionName, retType.toString(), 1);
             }
-
-            //add flows for the return type
-            petrinet.createFlow(transitionName, retType.toString(), 1);
-
         }
 
         handlePolymorphismAlt();
@@ -333,7 +311,6 @@ public class BuildNetWithoutClone {
             createCopies(t);
         }
         //handlePolymorphism();
-
 
         //Set max tokens for each place
         for (Place p : petrinet.getPlaces()) {
@@ -350,9 +327,6 @@ public class BuildNetWithoutClone {
                 p.setMaxToken(count);
             } else {
                 p.setMaxToken(1);
-            }
-            if(p.getId() == "void") {
-                assert(p.getMaxToken() == 1);
             }
         }
 

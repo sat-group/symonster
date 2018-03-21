@@ -23,20 +23,13 @@ public class BuildNet {
 
     // TODO polymorphism information is currently hardcoded
     // A map that encodes the polymorphism
-    static private Map<String, List<String>> poly = new HashMap<>();
+    static private Map<String, List<String>> superDict = new HashMap<>();
 
     private static void handlePolymorphism() {
         // This method handles polymorphism by creating methods that transforms each
         // subclass into its super class
-        // TODO polymorphism information is currently hardcoded
-        List<String> l1 = new ArrayList<>();
-        l1.add("cmu.symonster.Shape");
-
-        poly.put("cmu.symonster.Rectangle", l1);
-        poly.put("cmu.symonster.Triangle", l1);
-
-        for(String subClass : poly.keySet()) {
-            for (String superClass : poly.get(subClass)) {
+        for(String subClass : superDict.keySet()) {
+            for (String superClass : superDict.get(subClass)) {
                 assert (petrinet.containsNode(subClass));
                 assert (petrinet.containsNode(superClass));
                 String methodName = subClass + "=" + superClass;
@@ -51,16 +44,22 @@ public class BuildNet {
         // This method handles polymorphism by creating altered version for
         // each existing method that work on polymorphic types
         // TODO polymorphism information is currently hardcoded
-        List<String> l1 = new ArrayList<>();
-        poly.put("cmu.symonster.Rectangle", l1);
-        poly.put("cmu.symonster.Triangle", l1);
-
         // TODO First check if method is non-static, if so, add an argument
-        // Iterate each argument to check if has a polymophism, if so, create a new version
 
     }
 
-    public static PetriNet build (List<MethodSignature> result) {
+    public static PetriNet build(List<MethodSignature> result,
+                                 Map<String, Set<String>> superClassMap,
+                                 Map<String, Set<String>> subClassMap) {
+        // Create polymorphism dicts
+        for(String s : superClassMap.keySet()) {
+            Set<String> superClasses = superClassMap.get(s);
+            List<String> li = new ArrayList<>(superClasses);
+            if(li.size() != 0) {
+                superDict.put(s, li);
+            }
+        }
+
         //create void type
         petrinet.createPlace("void");
         petrinet.createTransition("voidClone");
@@ -162,7 +161,7 @@ public class BuildNet {
 
 
         // Create methods that handle polymorphism
-        //handlePolymorphism();
+        handlePolymorphism();
 
         //Set max tokens for each place
         for (Place p : petrinet.getPlaces()) {
@@ -177,7 +176,6 @@ public class BuildNet {
             }
             p.setMaxToken(count);
         }
-
         return petrinet;
     }
 }
