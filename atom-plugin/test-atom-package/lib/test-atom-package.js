@@ -64,7 +64,7 @@ export default {
 
 
         options = {
-            url: 'http://128.83.122.134:9092',
+            url: 'http://128.83.122.134:9093',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -80,9 +80,9 @@ export default {
                 reject({
                     'error': err
                 })
+           atom.notifications.addError("Server Error")
             }
            console.log(err, body);
-           atom.notifications.addError("Server Error")
        });
     })
 
