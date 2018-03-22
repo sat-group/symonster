@@ -82,6 +82,7 @@ export default {
                 })
             }
            console.log(err, body);
+           atom.notifications.addError("Server Error")
        });
     })
 
