@@ -32,7 +32,7 @@ public class SyMonster {
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
             //jsonInput = JsonParser.parseJsonInput("benchmarks/tests/8/test8.json");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/point/point.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/geometry/10/benchmark10.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -72,8 +72,8 @@ public class SyMonster {
         // 3. build a petrinet and signatureMap of library
         // Currently built without clone edges
 		//BuildNet b = new BuildNet();
-		BuildNet b = new BuildNet();                          // Set petrinet
-		//BuildNetWithoutClone b = new BuildNetWithoutClone(noVoid);
+		BuildNetNoVoid b = new BuildNetNoVoid();                          // Set petrinet
+		//BuildNetWithoutClone b = new BuildNetWithoutClone();
 		PetriNet net = b.build(sigs, superclassMap, subclassMap);
 		Map<String, MethodSignature> signatureMap = b.dict;
 
@@ -113,7 +113,7 @@ public class SyMonster {
 					}
 				}
 
-                if (!repeatSolutions.contains(signatures)){
+                if (true){
                     List<List<MethodSignature>> repeated = dependencyMap.findAllTopSorts(signatures);
 
                     repeatSolutions.addAll(repeated);

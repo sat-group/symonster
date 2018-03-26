@@ -324,7 +324,7 @@ public class BuildNetNoVoid{
             }
         }
 
-        //handlePolymorphismAlt();
+        handlePolymorphismAlt();
         // TODO check the logic here
         for(Transition t : petrinet.getTransitions()) {
             createCopies(t);
