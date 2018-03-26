@@ -32,7 +32,7 @@ public class SyMonster {
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
             //jsonInput = JsonParser.parseJsonInput("benchmarks/tests/8/test8.json");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/geometry/10/benchmark10.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/geometry/12/benchmark12.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -75,6 +75,9 @@ public class SyMonster {
 		BuildNetNoVoid b = new BuildNetNoVoid();                          // Set petrinet
 		//BuildNetWithoutClone b = new BuildNetWithoutClone();
 		PetriNet net = b.build(sigs, superclassMap, subclassMap);
+        System.out.println(superclassMap);
+        System.out.println(subclassMap);
+        System.out.println("ok");
 		Map<String, MethodSignature> signatureMap = b.dict;
 
 		int loc = 1;

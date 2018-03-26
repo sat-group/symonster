@@ -42,7 +42,8 @@ public class BuildNetNoVoid{
             for (String superClass : superDict.get(subClass)) {
                 assert (petrinet.containsNode(subClass));
                 assert (petrinet.containsNode(superClass));
-                String methodName = subClass + "=" + superClass;
+                System.out.println("handled");
+                String methodName = subClass + "IsPolymorphicTo" + superClass;
                 petrinet.createTransition(methodName);
                 petrinet.createFlow(subClass, methodName);
                 petrinet.createFlow(methodName, superClass);
@@ -324,12 +325,12 @@ public class BuildNetNoVoid{
             }
         }
 
-        handlePolymorphismAlt();
+        //handlePolymorphismAlt();
         // TODO check the logic here
         for(Transition t : petrinet.getTransitions()) {
             createCopies(t);
         }
-        //handlePolymorphism();
+        handlePolymorphism();
 
         postProcess();
 
@@ -352,6 +353,7 @@ public class BuildNetNoVoid{
         }
 
         Visualization.translate(petrinet);
+        /*
         for(Transition t : petrinet.getTransitions()) {
             System.out.println(t.getId());
             System.out.println("in:");
@@ -364,6 +366,7 @@ public class BuildNetNoVoid{
             }
             System.out.println();
         }
+        */
         return petrinet;
     }
 }
