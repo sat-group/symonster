@@ -26,14 +26,12 @@ public class BuildNetNoVoid{
 
     static private Map<String, List<String>> superDict;
     static private Map<String, List<String>> subDict;
-    static private boolean onlyOneVoid;
 
-    public BuildNetNoVoid(boolean noVoid) {
+    public BuildNetNoVoid() {
         petrinet = new PetriNet("net");
         dict = new HashMap<String, MethodSignature>();
         superDict = new HashMap<>();
         subDict = new HashMap<>();
-        onlyOneVoid = noVoid;
     }
 
     private static void handlePolymorphism() {

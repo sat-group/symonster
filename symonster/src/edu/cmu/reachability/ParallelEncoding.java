@@ -88,7 +88,6 @@ public class ParallelEncoding implements Encoding {
                         continue;
                     }
                     if(isIndependent(tr1, tr2)) { // same transition...
-                        System.out.println("Independent!");
                         continue;
                     }
                     VecInt constraintDependent = new VecInt();

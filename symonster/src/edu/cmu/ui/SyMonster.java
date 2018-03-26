@@ -5,6 +5,7 @@ import edu.cmu.equivprogram.DependencyMap;
 import edu.cmu.parser.*;
 import edu.cmu.petrinet.BuildNetWithoutClone;
 import edu.cmu.petrinet.BuildNetNoVoid;
+import edu.cmu.petrinet.BuildNet;
 import edu.cmu.reachability.*;
 import edu.cmu.utils.TimerUtils;
 import org.sat4j.specs.TimeoutException;
@@ -30,6 +31,7 @@ public class SyMonster {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
+            //jsonInput = JsonParser.parseJsonInput("benchmarks/tests/8/test8.json");
             jsonInput = JsonParser.parseJsonInput("benchmarks/point/point.json");
         }
         else{
@@ -69,8 +71,8 @@ public class SyMonster {
 
         // 3. build a petrinet and signatureMap of library
         // Currently built without clone edges
-        boolean noVoid = true;  // if enabled, no method returns a single void
-		BuildNetWithoutClone b = new BuildNetWithoutClone(noVoid);
+		//BuildNet b = new BuildNet();
+		BuildNet b = new BuildNet();                          // Set petrinet
 		//BuildNetWithoutClone b = new BuildNetWithoutClone(noVoid);
 		PetriNet net = b.build(sigs, superclassMap, subclassMap);
 		Map<String, MethodSignature> signatureMap = b.dict;
@@ -86,7 +88,7 @@ public class SyMonster {
         DependencyMap dependencyMap = JarParser.createDependencyMap();
 		while (!solution) {
 			// create a formula that has the same semantics as the petri-net
-			Encoding encoding = new ParallelEncoding(net, loc);
+			Encoding encoding = new SequentialEncoding(net, loc);                     // Set encoding
 			
 			// set initial state and final state
 			encoding.setState(EncodingUtil.setInitialState(net, inputs),  0);

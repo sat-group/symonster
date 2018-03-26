@@ -26,14 +26,12 @@ public class BuildNetWithoutClone {
 
     static private Map<String, List<String>> superDict;
     static private Map<String, List<String>> subDict;
-    static private boolean onlyOneVoid;
 
-    public BuildNetWithoutClone(boolean noVoid) {
+    public BuildNetWithoutClone() {
         petrinet = new PetriNet("net");
         dict = new HashMap<String, MethodSignature>();
         superDict = new HashMap<>();
         subDict = new HashMap<>();
-        onlyOneVoid = noVoid;
     }
 
     private static void handlePolymorphism() {
@@ -41,7 +39,6 @@ public class BuildNetWithoutClone {
         // subclass into its super class
 
         for(String subClass : superDict.keySet()) {
-            System.out.println(subClass);
             for (String superClass : superDict.get(subClass)) {
                 assert (petrinet.containsNode(subClass));
                 assert (petrinet.containsNode(superClass));
@@ -237,6 +234,16 @@ public class BuildNetWithoutClone {
         petrinet.createPlace("void");
 
         //iterate through each method
+        for(MethodSignature k : result) {
+            if(k.getHostClass().toString() == "org.apache.commons.math3.linear.BlockRealMatrix") {
+                System.out.println(k);
+                System.out.println(k.getIsStatic());
+                System.out.println(k.getHostClass());
+                System.out.println(k.getArgTypes());
+                System.out.println();
+            }
+        }
+
         for (MethodSignature k : result) {
             String methodname = k.getName();
             boolean isStatic = k.getIsStatic();
