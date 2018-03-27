@@ -75,14 +75,15 @@ public class MethodSignature {
             i += 1;
         }
         result += ")";
-        return name;
+        return hostClass + ":"+ name;
     }
 
     @Override
     public boolean equals(Object o){
         if (!(o instanceof MethodSignature)) return false;
         MethodSignature sig = (MethodSignature)o;
-        return sig.method.equals(method);
+        return sig.name.equals(name) && sig.hostClass.equals(hostClass) && sig.retType.equals(retType) &&
+                sig.isStatic == isStatic && sig.argTypes.equals(argTypes) && sig.isConstructor == isConstructor;
     }
 
     @Override

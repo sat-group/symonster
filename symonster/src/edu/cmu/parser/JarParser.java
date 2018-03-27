@@ -22,13 +22,15 @@ public class JarParser extends BodyTransformer{
     private static DependencyMap dependencyMap = new DependencyMap();
     private static Map<SootMethod,Body> bodies = new HashMap<>();
     private static Set<MethodSignature> workings = new HashSet<>();
+    private static List<String> pkgs;
 
     /**
      * Parse a list of given jar files, and produce a list of method signatures.
      * @param libs physical addresses of libraries. e.g. "lib/hamcrest-core-1.3.jar"
      * @return the list of method signature contained in the given libraries
      */
-    public static List<MethodSignature> parseJar(List<String> libs,List<String> pkgs) {
+    public static List<MethodSignature> parseJar(List<String> libs,List<String> pkgss, List<String> blacklist) {
+        pkgs = pkgss;
         PackManager.v().getPack("jap").add(new Transform(ANALYSIS_NAME, new JarParser()));
         SootUtils.runSoot(SootUtils.getSootArgs(libs));
         List<MethodSignature> sigs = new LinkedList<>();
@@ -43,6 +45,12 @@ public class JarParser extends BodyTransformer{
                         for (String pkg : pkgs){
                             if (method.getDeclaringClass().getName().startsWith(pkg)){
                                 sat = true;
+                                break;
+                            }
+                        }
+                        for (String bl : blacklist){
+                            if (method.getName().endsWith(bl)) {
+                                sat = false;
                                 break;
                             }
                         }
@@ -62,8 +70,14 @@ public class JarParser extends BodyTransformer{
      */
     public static Map<String,Set<String>> getSuperClasses(Set<String> acceptableSuperClasses){
         Map<String,Set<String>> result = new HashMap<>();
-        for (SootClass cl : Scene.v().getApplicationClasses()){
-            result.put(cl.getName(),getSuperClassesOfClass(acceptableSuperClasses,cl));
+        for (SootClass cl : Scene.v().getClasses()){
+            for (String pkg : pkgs){
+                if (cl.getName().startsWith(pkg)){
+                    System.out.println("accept: "+acceptableSuperClasses);
+                    result.put(cl.getName(),getSuperClassesOfClass(acceptableSuperClasses,cl));
+                    break;
+                }
+            }
         }
         return result;
     }
@@ -79,7 +93,8 @@ public class JarParser extends BodyTransformer{
             res = new HashSet<>();
         }
         for (SootClass interf:cl.getInterfaces()){
-            if (acceptableSuperClasses.contains(interf.getName())) res.add(cl.getSuperclass().getName());
+            String name = interf.getName();
+            if (acceptableSuperClasses.contains(name)) res.add(name);
             res.addAll(getSuperClassesOfClass(acceptableSuperClasses,interf));
         }
         return res;
