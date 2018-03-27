@@ -7,7 +7,6 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.IVecInt;
 import org.sat4j.specs.TimeoutException;
-import soot.SootClass;
 import soot.Type;
 
 import java.util.*;
@@ -28,6 +27,7 @@ public class CodeFormer {
     private final String methodName;
     private final Map<Integer,Integer> lastValueOfSlot = new HashMap<>();
     private final Map<String,Set<String>> subclassMap;
+    private final Map<String,Set<String>> superclassMap;
     ISolver solver = SolverFactory.newDefault();
 
     /**
@@ -36,15 +36,17 @@ public class CodeFormer {
      * @param sigs requires a sequence of signatures in the expected order.
      * @param varNames
      * @param methodName
+     * @param superclassMap
      */
     public CodeFormer(List<MethodSignature> sigs, List<String> inputTypes, String retType, List<String> varNames,
-                      String methodName, Map<String,Set<String>> subclassMap) {
+                      String methodName, Map<String, Set<String>> subclassMap, Map<String, Set<String>> superclassMap) {
         this.sigs = sigs;
         this.inputTypes = inputTypes;
         this.retType = retType;
         this.varNames = varNames;
         this.methodName = methodName;
         this.subclassMap = subclassMap;
+        this.superclassMap = superclassMap;
         solver.setTimeout(1000000);
         //Setup
         //Add method input
@@ -163,11 +165,16 @@ public class CodeFormer {
 
     //Each returned value used at least once
     private void addAtLeastOneSlot(){
-        //TODO Constrain by the order
         for (int returnedValue = 0; returnedValue < retNumber ; returnedValue += 1) {
             IVecInt vec = new VecInt();
-            for (int slotValue : slotTypes.getEntries(returnedValTypes.getType(returnedValue))) {
-                vec.push(calculateID(returnedValue,slotValue));
+            List<String> possibleSlotTypes = new LinkedList<>();
+            String returnedType = returnedValTypes.getType(returnedValue);
+            if (superclassMap.containsKey(returnedType)) possibleSlotTypes.addAll(superclassMap.get(returnedType));
+            possibleSlotTypes.add(returnedType);
+            for (String slotType : possibleSlotTypes){
+                for (int slotValue : slotTypes.getEntries(slotType)) {
+                    vec.push(calculateID(returnedValue,slotValue));
+                }
             }
             try {
                 solver.addAtLeast(vec,1);
@@ -205,7 +212,7 @@ public class CodeFormer {
 
         for (MethodSignature sig : sigs){
             if (!sig.getRetType().toString().equals("void")){
-                builder.append(sig.getRetType().toString());
+                builder.append(sig.getRetType().toString().replace('$','.'));
                 builder.append(" ");
                 builder.append(convVarName(varCount));
                 varCount += 1;
@@ -216,7 +223,8 @@ public class CodeFormer {
                 builder.append(" new ");
             }
             else if (sig.getIsStatic()){
-                builder.append(sig.getHostClass());
+                String hostclstr = sig.getHostClass().toString();
+                builder.append(hostclstr.replace('$','.'));
                 builder.append(".");
             }
 
@@ -224,13 +232,11 @@ public class CodeFormer {
                 int id = satResult.get(slotCount);
                 slotCount ++;
                 int returnedValue = calculateReturnedValue(id);
-                int slotValue = calculateSlotValue(id);
-                //assert (slotValue == slotCount);
                 builder.append(convVarName(returnedValue));
                 builder.append(".");
             }
 
-            builder.append(sig.getName());
+            builder.append(sig.getName().replace('$','.'));
             builder.append("(");
             for (int i = 0; i < sig.getArgTypes().size() ; i++){
                 int id = satResult.get(slotCount);

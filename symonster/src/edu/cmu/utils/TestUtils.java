@@ -123,8 +123,7 @@ public class TestUtils {
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
-            System.out.println("bug3");
+            //Produced by the target program
         }
         return false;
     }

@@ -3,9 +3,7 @@ import edu.cmu.codeformer.CodeFormer;
 import edu.cmu.compilation.Test;
 import edu.cmu.equivprogram.DependencyMap;
 import edu.cmu.parser.*;
-import edu.cmu.petrinet.BuildNetWithoutClone;
 import edu.cmu.petrinet.BuildNetNoVoid;
-import edu.cmu.petrinet.BuildNet;
 import edu.cmu.reachability.*;
 import edu.cmu.utils.TimerUtils;
 import org.sat4j.specs.TimeoutException;
@@ -31,7 +29,6 @@ public class SyMonster {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            //jsonInput = JsonParser.parseJsonInput("benchmarks/tests/8/test8.json");
             jsonInput = JsonParser.parseJsonInput("benchmarks/geometry/12/benchmark12.json");
         }
         else{
@@ -57,7 +54,6 @@ public class SyMonster {
 		// 2. Parse library
         List<MethodSignature> sigs = JarParser.parseJar(libs,jsonInput.packages,jsonConfig.blacklist);
         Map<String,Set<String>> superclassMap = JarParser.getSuperClasses(acceptableSuperClasses);
-        System.out.println("super:"+superclassMap);
         Map<String,Set<String>> subclassMap = new HashMap<>();
         for (String key : superclassMap.keySet()){
             for (String value :superclassMap.get(key)){
@@ -67,15 +63,10 @@ public class SyMonster {
                 subclassMap.get(value).add(key);
             }
         }
-        int sigc = 0;
-        for (MethodSignature sig : sigs){
-            System.out.println(sigc + ":" + sig.toString());
-            sigc+=1;
-        }
         // 3. build a petrinet and signatureMap of library
         // Currently built without clone edges
 		//BuildNet b = new BuildNet();
-		BuildNetWithoutClone b = new BuildNetWithoutClone();                          // Set petrinet
+		BuildNetNoVoid b = new BuildNetNoVoid();                          // Set petrinet
 		//BuildNetWithoutClone b = new BuildNetWithoutClone(noVoid);
 		PetriNet net = b.build(sigs, superclassMap, subclassMap);
 		Map<String, MethodSignature> signatureMap = b.dict;
@@ -117,20 +108,11 @@ public class SyMonster {
 				}
                 if (true){
                     List<List<MethodSignature>> repeated = dependencyMap.findAllTopSorts(signatures);
-                    List<MethodSignature> target  = new ArrayList<>();
-                    target.add(sigs.get(23));
-                    target.add(sigs.get(1));
-                    target.add(sigs.get(2));
-                    target.add(sigs.get(13));
-                    target.add(sigs.get(14));
-                    if (repeated.contains(target)) System.out.println("BLABLABLA: "+signatures);
                     repeatSolutions.addAll(repeated);
                     // 5. Convert a path to a program
                     // NOTE: one path may correspond to multiple programs and we may need a loop here!
                     boolean sat = true;
-                    CodeFormer former = new CodeFormer(signatures,inputs,retType, varNames, methodName,subclassMap);
-                    //System.out.println(path);
-                    //System.out.println(signatures);
+                    CodeFormer former = new CodeFormer(signatures,inputs,retType, varNames, methodName,subclassMap, superclassMap);
                     while (sat){
                         //TODO Replace the null pointers with inputs/output types
                         String code;
