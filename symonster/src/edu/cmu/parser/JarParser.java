@@ -43,7 +43,7 @@ public class JarParser extends BodyTransformer{
                     if (method.isPublic()){
                         boolean sat = false;
                         for (String pkg : pkgs){
-                            if (method.getDeclaringClass().getName().startsWith(pkg)){
+                            if (clazz.getName().startsWith(pkg)){
                                 sat = true;
                                 break;
                             }
@@ -73,7 +73,6 @@ public class JarParser extends BodyTransformer{
         for (SootClass cl : Scene.v().getClasses()){
             for (String pkg : pkgs){
                 if (cl.getName().startsWith(pkg)){
-                    System.out.println("accept: "+acceptableSuperClasses);
                     result.put(cl.getName(),getSuperClassesOfClass(acceptableSuperClasses,cl));
                     break;
                 }
@@ -126,6 +125,12 @@ public class JarParser extends BodyTransformer{
                 }
                 if (intersect){
                     dependencyMap.addDep(s1,s2);
+                }
+                else{
+                    if (s2.getArgTypes().contains(s1.getRetType()) ||
+                            s1.getArgTypes().contains(s2.getRetType())){
+                        dependencyMap.addDep(s1,s2);
+                    }
                 }
             }
         }

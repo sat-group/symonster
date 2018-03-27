@@ -29,7 +29,7 @@ public class SyMonster {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/geometry/12/benchmark12.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/geometry/15/benchmark15.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -53,6 +53,7 @@ public class SyMonster {
 
 		// 2. Parse library
         List<MethodSignature> sigs = JarParser.parseJar(libs,jsonInput.packages,jsonConfig.blacklist);
+        System.out.println(sigs);
         Map<String,Set<String>> superclassMap = JarParser.getSuperClasses(acceptableSuperClasses);
         Map<String,Set<String>> subclassMap = new HashMap<>();
         for (String key : superclassMap.keySet()){
@@ -65,7 +66,6 @@ public class SyMonster {
         }
         // 3. build a petrinet and signatureMap of library
         // Currently built without clone edges
-		//BuildNet b = new BuildNet();
 		BuildNetNoVoid b = new BuildNetNoVoid();                          // Set petrinet
 		//BuildNetWithoutClone b = new BuildNetWithoutClone(noVoid);
 		PetriNet net = b.build(sigs, superclassMap, subclassMap);
@@ -106,7 +106,7 @@ public class SyMonster {
 						signatures.add(sig);
 					}
 				}
-                if (true){
+                if (!repeatSolutions.contains(signatures)){
                     List<List<MethodSignature>> repeated = dependencyMap.findAllTopSorts(signatures);
                     repeatSolutions.addAll(repeated);
                     // 5. Convert a path to a program

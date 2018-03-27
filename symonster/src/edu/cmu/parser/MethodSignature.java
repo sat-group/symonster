@@ -65,9 +65,8 @@ public class MethodSignature {
 
     @Override
     public String toString(){
-        String result =  retType + " " + name + "(";
+        String result =  retType + " " +  hostClass + "."+name + "(";
         if (isStatic) result = "static "+result;
-        result = hostClass + ": " + result;
         int i = 0;
         for (Type t : argTypes){
             if (i != argTypes.size()-1) result += t + ", ";
@@ -75,7 +74,7 @@ public class MethodSignature {
             i += 1;
         }
         result += ")";
-        return hostClass + ":"+ name;
+        return result;
     }
 
     @Override
