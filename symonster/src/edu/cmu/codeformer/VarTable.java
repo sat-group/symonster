@@ -2,6 +2,9 @@ package edu.cmu.codeformer;
 
 import java.util.*;
 
+/**
+ * Stores variable names specifically for CodeFormer.
+ */
 public class VarTable {
     final Map<String,List<Integer>> table = new HashMap<>();
     private final Map<Integer, String> lookupTable = new HashMap<>();

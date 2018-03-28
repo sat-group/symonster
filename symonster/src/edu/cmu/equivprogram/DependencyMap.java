@@ -4,8 +4,17 @@ import edu.cmu.parser.MethodSignature;
 
 import java.util.*;
 
+/**
+ * Provide a data structure to store dependent methods: methods that cannot be exchanged in order.
+ */
 public class DependencyMap {
     private final Map<MethodSignature,Set<MethodSignature>> map = new HashMap<>();
+
+    /**
+     * Create a dependency between 2 method signatures.
+     * @param m1 method 1
+     * @param m2 method 2
+     */
     public void addDep(MethodSignature m1, MethodSignature m2){
         if (map.containsKey(m1)) map.get(m1).add(m2);
         else{
@@ -21,6 +30,11 @@ public class DependencyMap {
         }
     }
 
+    /**
+     * Find all topological sort of a given sequence of method signatures.
+     * @param signatures sequence
+     * @return the set of all possible sequences
+     */
     public List<List<MethodSignature>> findAllTopSorts(List<MethodSignature> signatures){
         if (signatures.size() == 0) return new LinkedList<>();
         List<List<Integer>> inGraph = new LinkedList<>();
@@ -62,6 +76,7 @@ public class DependencyMap {
             }
         }
         List<List<Integer>> bigResult = new LinkedList<>();
+        //Base case
         if (starts.size() == 0) {
             if (length == 0){
                 bigResult.add(new LinkedList<>());

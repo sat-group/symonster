@@ -34,9 +34,8 @@ public class CodeFormer {
      *
      * The initial setup for the class.
      * @param sigs requires a sequence of signatures in the expected order.
-     * @param varNames
-     * @param methodName
-     * @param superclassMap
+     * @param varNames parameter names of the method
+     * @param methodName method name of the method
      */
     public CodeFormer(List<MethodSignature> sigs, List<String> inputTypes, String retType, List<String> varNames,
                       String methodName, Map<String, Set<String>> subclassMap, Map<String, Set<String>> superclassMap) {

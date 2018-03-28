@@ -16,9 +16,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class SyMonster {
-	
 	public static void main(String[] args) throws IOException {
-		
 		Test test = new Test();
         // 0. Read config
         SymonsterConfig jsonConfig = JsonParser.parseJsonConfig("config/config.json");
@@ -29,7 +27,7 @@ public class SyMonster {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/geometry/15/benchmark15.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/geometry/14/benchmark14.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -140,6 +138,7 @@ public class SyMonster {
                         if (test.runTest(code,testCode)) {
                             solution = true;
                             System.out.println("Programs explored = " + programs);
+                            System.out.println("Paths explored = " + paths);
                             System.out.println("code:");
                             System.out.println(code);
                             TimerUtils.stopTimer("total");
