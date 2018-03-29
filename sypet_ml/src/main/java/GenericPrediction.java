@@ -10,6 +10,11 @@ import java.util.*;
  */
 public class GenericPrediction {
 
+    /**
+     * Output prediction for jar file using given csv
+     * @param args first argument is input file(absolute path), second argument is output file(under resources by def)
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         // Use Analyzer to generate kNN
         Analyzer.init();
@@ -19,7 +24,7 @@ public class GenericPrediction {
         libs.add(args[0]);
         JarParser.parseJar(libs, DataSource.targetPackages());
 
-        // Use kNN to predict and generate report
+        // Use kNN to predict and generate report1
         Map<String, LinkedHashSet<String>> data = JarParser.getMethodToAppearancesMap();
 
         // Generate test reports

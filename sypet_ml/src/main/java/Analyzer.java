@@ -246,5 +246,17 @@ public class Analyzer {
                     "\n TEST: "+testData+"\n"+
                     "\n PREDICTION: "+predictionStringBuilder+"\n";
         }
+
+        /**
+         * Indicates whether the method has been matched or not.
+         * @return >0 if perfectly matched, =0 if matched within 10, <0 if not matched
+         */
+        public int matched(){
+            if(matched == 0){
+                return 1;
+            }else{
+                return matched;
+            }
+        }
     }
 }

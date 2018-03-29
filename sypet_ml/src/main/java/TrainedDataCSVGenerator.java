@@ -36,20 +36,20 @@ public class TrainedDataCSVGenerator {
         // Initialize
         completeKnn = new KNN(LibraryJarParser.getLabelSet());
         dummyKnn = new KNN(LibraryJarParser.getLabelSet());
-        List<String> libs = DataSource.generateTrain();
+        List<String> trainData = DataSource.generateTrain();
         PrintWriter pw = new PrintWriter(new File("src/resources/data.csv"));
 
         // Header
         pw.write("name,parsed,rows,average\n");
 
         // For each jar
-        for (String s : libs) {
+        for (String s : trainData) {
             JarParser.parseJar(Collections.singletonList(s), DataSource.targetPackages());
             pw.write(s);
             if (JarParser.getMethodToAppearancesMap().size() != 0) {
 
                 // Train dummy kNN
-                trainVarIndependent(libs, dummyKnn);
+                trainVarIndependent(trainData, dummyKnn);
                 String resultString = dummyKnn.getTrainAnalysisInfoString();
                 pw.write(",true,");
                 pw.write(resultString);
@@ -58,7 +58,7 @@ public class TrainedDataCSVGenerator {
                 dummyKnn = new KNN(LibraryJarParser.getLabelSet());
 
                 // Train actual kNN
-                trainVarIndependent(libs, completeKnn);
+                trainVarIndependent(trainData, completeKnn);
 
             } else {
 
