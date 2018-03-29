@@ -33,7 +33,7 @@ public class Main {
             pw.write(s);
             if(JarParser.getMethodToAppearancesMap().size() != 0){
                 trainVarIndependent(libs, false);
-                String resultString = experimentKnn.getTrainSparseString();
+                String resultString = experimentKnn.getTrainAnalysisInfoString();
                 pw.write(",true,");
                 pw.write(resultString);
 

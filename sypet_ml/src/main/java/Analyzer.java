@@ -1,4 +1,3 @@
-import com.sun.org.apache.regexp.internal.RE;
 import knn.KNN;
 
 import java.io.*;
@@ -6,6 +5,9 @@ import java.util.*;
 
 import static java.lang.Boolean.parseBoolean;
 
+/**
+ * Rae
+ */
 public class Analyzer {
     static List<TrainData> goodDataList = new ArrayList<>();
     static List<BadData> badDataList = new ArrayList<>();
@@ -14,10 +16,13 @@ public class Analyzer {
     public static void main(String[] args) throws IOException {
         read();
         write();
+
         JarParserLib.init(Main.generateLib(), Main.packages, false);
         KNN knn = new KNN(JarParserLib.getLabelSet(),vectors);
-        //knn.preSort();
 
+        //PrintWriter pw = new PrintWriter(new File("src/resources/vector_sparse.txt"));
+        //pw.write(knn.getTrainSparseString());
+        //pw.close();
         // mock test on geometry
         List<String> libs = Main.generateTest();
         JarParserTest.parseJar(libs, Main.packages);
@@ -32,10 +37,17 @@ public class Analyzer {
             System.out.println("=============end=============");
         }
 
+        List<String> tmp = Arrays.asList("<java.awt.geom.Point2D: double getY()>","<java.awt.geom.AffineTransform: java.awt.geom.AffineTransform getQuadrantRotateInstance(int)>","<java.awt.geom.Point2D$Double: void <init>(double,double)>");
+        List<TrainReport> reports = generateReport(tmp, knn);
+        System.out.println("============start ss============");
+        for(TrainReport report : reports){
+            System.out.println(report);
+        }
+        System.out.println("=============end=============");
         //sampleRotate.remove("<java.awt.geom.Area: java.awt.geom.Area createTransformedArea(java.awt.geom.AffineTransform)>");
         //System.out.println("prob: "+knn.getFreq(""));
 
-        System.out.println(knn.getTrainSetSize());
+        //System.out.println(knn.getTrainSetSize());
     }
 
     public static void write() throws FileNotFoundException {
@@ -62,7 +74,7 @@ public class Analyzer {
             if(line.startsWith("final result:")){
                 // first line of vector
                 String s = line.split(":")[1];
-                stringToVector(s);
+                vectors.add(stringToVector(s));
             } else if(line.startsWith("name")){
                 // do nothing
             }else if(line.startsWith("<j")){
@@ -92,10 +104,12 @@ public class Analyzer {
     static List<TrainReport> generateReport(List<String> program, KNN knn){
         Set<String> set = new HashSet<>();
         List<TrainReport> reports = new ArrayList<>();
-        for(int i=0; i<program.size()-1; i++){
-            set.add(program.get(i));
+        for(int i=0; i<program.size(); i++){
             LinkedHashMap<String, Float> map = knn.predict(set);
-            TrainReport report = new TrainReport(program.get(i+1),map,set);
+            TrainReport report = new TrainReport(program.get(i),map,set);
+            if(!program.get(i).equals("<java.awt.geom.Area: void <init>(java.awt.Shape)>")) {
+            set.add(program.get(i));
+            }
             reports.add(report);
         }
         return reports;
