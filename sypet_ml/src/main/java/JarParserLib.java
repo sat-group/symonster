@@ -78,7 +78,7 @@ public class JarParserLib {
             System.out.println("#methods = " + labelSet.size());
         }
         if(notify)
-            Main.onParseLibComplete();
+            TrainedDataCSVGenerator.onParseLibComplete();
     }
 
     public static Set<String> getLabelSet() {

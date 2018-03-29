@@ -5,7 +5,7 @@ import soot.util.ArraySet;
 import java.util.*;
 
 /**
- * k-Nearest Neighbors, finds nearest neighbor through frequency
+ * k-Nearest Neighbors, finds nearest neighbor through frequency as distance.
  */
 public class KNN {
     private String[] labels;
@@ -14,6 +14,10 @@ public class KNN {
     private int labelSize;
     private Map<Integer, Set<Integer>> idMap;
 
+    /**
+     * Constructor that starts with method names as columns
+     * @param labels one method name for each column
+     */
     public KNN(Set<String> labels) {
         if (labels.size() <= 0) {
             throw new IllegalArgumentException();
@@ -34,15 +38,16 @@ public class KNN {
                 System.out.println(label);
             }
 
-            postProcessLabels();
+            // Union lables that are actually the same
+            unionDollarLabels();
         }
     }
 
     /**
      * Labels from Soot somehow have two representations... One with "$" sign, and one without.
-     * I am going to just assume these two are the same, so I need to process my lablels this way.
+     * I am going to just assume these two are the same, so I need to bind those labels into a union structure.
      */
-    private void postProcessLabels(){
+    private void unionDollarLabels(){
         Map<Integer, Set<Integer>> sameLabelMap = new HashMap<>();
         for(int i=0; i<labelSize-1; i++){
             for(int j=i+1; j<labelSize; j++){
@@ -134,7 +139,7 @@ public class KNN {
     }
 
     /**
-     * Printout dense representaion of trained data
+     * Prints out dense representaion of trained data
      */
     public void showTrainSetDense() {
         for (int[] vec : values) {
@@ -208,6 +213,9 @@ public class KNN {
         return vecString.toString();
     }
 
+    /**
+     * Prints out sparse representaion of trained data
+     */
     public void showTrainSetSparse() {
         for (int[] vec : values) {
             StringBuilder vecString = new StringBuilder();
@@ -224,15 +232,14 @@ public class KNN {
         }
     }
 
-    public int getLabelsCount() {
-        return labelSize;
-    }
-
-    public int getTrainSetSize() {
-        return values.size();
-    }
-
+    /**
+     * Gives a prediction based on given vector using KNN
+     * @param appearances given test data vector
+     * @return a sorted mapping of possible methods with probabilities
+     */
     public LinkedHashMap<String, Float> predict(Set<String> appearances) {
+
+        // Initialize
         List<Float> sumVector = new ArrayList<>(labelSize);
         for(int i=0; i<labelSize; i++){
             sumVector.add((float) 0);
@@ -245,12 +252,11 @@ public class KNN {
                 indexList.add(labelMap.get(s));
             }
         }
-        System.out.println(indexList);
-        for(int i : indexList){
-            System.out.println("label: "+labels[i]);
-            System.out.println("eq set: "+equivLabels(i));
-        }
+
+        // For every trained data
         for(int[] vec : values) {
+
+            // Check to see if a row vector has 1 in all columns matching given test data
             boolean containsAll = true;
             for (int i : indexList) {
                 boolean someUnitContains = false;
@@ -265,7 +271,10 @@ public class KNN {
                     break;
                 }
             }
+
             if (containsAll) {
+
+                // Matches, update sum
                 for(int i : indexList){
                     for(int k : equivLabels(i)) {
                         sumVector.set(k, sumVector.get(k) - 1);
@@ -278,11 +287,12 @@ public class KNN {
             }
         }
 
+        // Does not exit, abort
         if(count == 0){
-            System.out.println("nothing!");
             return new LinkedHashMap<>();
         }
-        System.out.println("total: "+count);
+
+        // Add tuples to list for sorting
         List<Entry> entryList = new ArrayList<>(labelSize);
 
         for(int i=0; i<labelSize; i++){
@@ -292,6 +302,7 @@ public class KNN {
 
         entryList.sort(new EntryComparator());
 
+        // Generate map result
         LinkedHashMap<String, Float> result = new LinkedHashMap<>();
         for(Entry e : entryList){
             result.put(e.label, e.freq);
@@ -300,6 +311,7 @@ public class KNN {
         return result;
     }
 
+    // Check if 2 labels are equivalent ($ and not $)
     private Set<Integer> equivLabels(int i){
         if(idMap.containsKey(i)) {
             Set<Integer> l = idMap.get(i);
@@ -309,6 +321,9 @@ public class KNN {
         return Collections.singleton(i);
     }
 
+    /**
+     * Represents a method associated with its kNN distance value(frequency)
+     */
     class Entry{
         String label;
         Float freq;
@@ -319,6 +334,9 @@ public class KNN {
         }
     }
 
+    /**
+     * Comparator for sorting methods by kNN distance
+     */
     class EntryComparator implements Comparator {
 
         @Override
@@ -337,14 +355,4 @@ public class KNN {
             return false;
         }
     }
-
-    /*
-    public String getSortedFreqString(){
-        StringBuilder result = new StringBuilder();
-        for(int index : sortedFreqIndexTable){
-            result.append(labels[index])
-            .append("<").append(freqTable[index]).append(",");
-        }
-        return result.toString();
-    }*/
 }

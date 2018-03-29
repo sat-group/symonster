@@ -17,15 +17,15 @@ public class Analyzer {
         read();
         write();
 
-        JarParserLib.init(Main.generateLib(), Main.packages, false);
+        JarParserLib.init(DataSource.generateLib(), TrainedDataCSVGenerator.packages, false);
         KNN knn = new KNN(JarParserLib.getLabelSet(),vectors);
 
         //PrintWriter pw = new PrintWriter(new File("src/resources/vector_sparse.txt"));
         //pw.write(knn.getTrainSparseString());
         //pw.close();
         // mock test on geometry
-        List<String> libs = Main.generateTest();
-        JarParserTest.parseJar(libs, Main.packages);
+        List<String> libs = DataSource.generateTest();
+        JarParserTest.parseJar(libs, TrainedDataCSVGenerator.packages);
         Map<String, List<String>> dataT = JarParserTest.getMethodToAppearancesMap();
 
         for(List<String> program : dataT.values()){

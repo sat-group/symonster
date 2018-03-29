@@ -19,6 +19,7 @@ public class JarParser extends BodyTransformer {
      * @param libs physical addresses of libraries. e.g. "lib/hamcrest-core-1.3.jar"
      */
     public static void parseJar(List<String> libs, List<String> packg) {
+        clear();
         String[] args = SootUtils.getSootArgs(libs);
         pckg = packg;
         G.reset();
@@ -37,7 +38,7 @@ public class JarParser extends BodyTransformer {
         return methodToVarAppearancesMap;
     }
 
-    public static void refresh(){
+    private static void clear(){
         methodToAppearancesMap.clear();
         methodToVarAppearancesMap.clear();
         methodToVarFreqMap.clear();
