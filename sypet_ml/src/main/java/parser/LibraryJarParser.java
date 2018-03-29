@@ -10,7 +10,10 @@ import soot.SootMethod;
 import soot.SourceLocator;
 import soot.options.Options;
 
-public class JarParserLibrary {
+/**
+ * Parser for library jar files used as labesl
+ */
+public class LibraryJarParser {
 
     private static Set<String> labelSet = new HashSet<>();
 

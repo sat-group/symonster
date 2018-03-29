@@ -1,6 +1,6 @@
 import knn.KNN;
 import parser.JarParser;
-import parser.JarParserLibrary;
+import parser.LibraryJarParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,11 +31,11 @@ public class TrainedDataCSVGenerator {
      */
     public static void main(String[] args) throws FileNotFoundException {
         // Parse lib
-        JarParserLibrary.init(DataSource.generateLib(), DataSource.targetPackages());
+        LibraryJarParser.init(DataSource.generateLib(), DataSource.targetPackages());
 
         // Initialize
-        completeKnn = new KNN(JarParserLibrary.getLabelSet());
-        dummyKnn = new KNN(JarParserLibrary.getLabelSet());
+        completeKnn = new KNN(LibraryJarParser.getLabelSet());
+        dummyKnn = new KNN(LibraryJarParser.getLabelSet());
         List<String> libs = DataSource.generateTrain();
         PrintWriter pw = new PrintWriter(new File("src/resources/data.csv"));
 
@@ -55,7 +55,7 @@ public class TrainedDataCSVGenerator {
                 pw.write(resultString);
 
                 // Reload dummy
-                dummyKnn = new KNN(JarParserLibrary.getLabelSet());
+                dummyKnn = new KNN(LibraryJarParser.getLabelSet());
 
                 // Train actual kNN
                 trainVarIndependent(libs, completeKnn);

@@ -1,6 +1,5 @@
 import knn.KNN;
-import parser.JarParser;
-import parser.JarParserLibrary;
+import parser.LibraryJarParser;
 
 import java.io.*;
 import java.util.*;
@@ -11,49 +10,43 @@ import static java.lang.Boolean.parseBoolean;
  * Reads from data csvs and provides analysis csvs & testing results with kNN in STDOUT.
  */
 public class Analyzer {
-    static List<TrainData> goodDataList = new ArrayList<>();
-    static List<BadData> badDataList = new ArrayList<>();
-    static List<int[]> vectors = new ArrayList<>();
+    private static List<TrainData> goodDataList = new ArrayList<>();
+    private static List<BadData> badDataList = new ArrayList<>();
+    private static List<int[]> vectors = new ArrayList<>();
+    private static KNN knn;
 
     /**
      * Main function that reads from data csvs and provides analysis csvs & testing results in STDOUT.
-     * @param args
      * @throws IOException
      */
-    public static void main(String[] args) throws IOException {
+    public static void init() throws IOException {
         read();
         write();
 
         // Get labels from library
-        JarParserLibrary.init(DataSource.generateLib(), DataSource.targetPackages());
+        LibraryJarParser.init(DataSource.generateLib(), DataSource.targetPackages());
 
         // initialize kNN
-        KNN knn = new KNN(JarParserLibrary.getLabelSet(),vectors);
+        knn = new KNN(LibraryJarParser.getLabelSet(),vectors);
+    }
 
-        //PrintWriter pw = new PrintWriter(new File("src/resources/vector_sparse.txt"));
-        //pw.write(knn.getTrainSparseString());
-        //pw.close();
+    public static List<List<TestReport>> getTestReports(Collection<LinkedHashSet<String>> testData,
+                                                        boolean accumulative, boolean strict){
+        List<List<TestReport>> testReportsList = new ArrayList<>();
 
-        // Mock test on geometry.jar
-        JarParser.parseJar(DataSource.generateTest(), DataSource.targetPackages());
-
-        // Use kNN to predict and generate report
-        Map<String, LinkedHashSet<String>> data = JarParser.getMethodToAppearancesMap();
-        for(LinkedHashSet<String> program : data.values()){
-            List<TrainReport> reports = generateReport(program, knn);
-            System.out.println("============start============");
-            for(TrainReport report : reports){
-                System.out.println(report);
-            }
-            System.out.println("=============end=============");
+        for(LinkedHashSet<String> program : testData){
+            List<TestReport> reports = generateReport(program, knn, accumulative, strict);
+            testReportsList.add(reports);
         }
+
+        return testReportsList;
     }
 
     /**
      * Write analytical results to filepath
      * @throws FileNotFoundException file not found
      */
-    public static void write() throws FileNotFoundException {
+    private static void write() throws FileNotFoundException {
         PrintWriter pw = new PrintWriter(new File("src/resources/analysis.txt"));
         pw.write("bad data: "+badDataList.size()+"\n");
         for(BadData badData : badDataList){
@@ -71,7 +64,7 @@ public class Analyzer {
      * Read csv data from filepath
      * @throws IOException file not found
      */
-    public static void read() throws IOException {
+    private static void read() throws IOException {
         String line = "";
         String cvsSplitBy = ",";
 
@@ -114,21 +107,26 @@ public class Analyzer {
      * @param knn trained kNN
      * @return report containing predicted results for the program
      */
-    static List<TrainReport> generateReport(LinkedHashSet<String> program, KNN knn){
-        Set<String> set = new HashSet<>();
-        List<TrainReport> reports = new ArrayList<>();
+    private static List<TestReport> generateReport(LinkedHashSet<String> program, KNN knn, boolean accumulative, boolean strict){
+        Set<String> testData = new HashSet<>();
+        List<TestReport> reports = new ArrayList<>();
         for(String method : program){
-            LinkedHashMap<String, Float> map = knn.predict(set);
-            TrainReport report = new TrainReport(method,map,set);
+            LinkedHashMap<String, Float> predictedResults = knn.predict(testData);
+            TestReport report = new TestReport("", predictedResults, testData, strict);
             if(!method.equals("<java.awt.geom.Area: void <init>(java.awt.Shape)>")) {
-                set.add(method);
+                if(accumulative) {
+                    testData.add(method);
+                }else{
+                    testData = new HashSet<>();
+                    testData.add(method);
+                }
             }
             reports.add(report);
         }
         return reports;
     }
 
-    static int[] stringToVector(String s){
+    private static int[] stringToVector(String s){
         s = s.substring(1,s.length()-1);
         String[] strings = s.split(",");
         int[] vec = new int[strings.length];
@@ -138,7 +136,8 @@ public class Analyzer {
         return vec;
     }
 
-    static class TrainData{
+    // Represents training data
+    private static class TrainData{
         String name;
         boolean parsed;
         int rows;
@@ -157,7 +156,8 @@ public class Analyzer {
         }
     }
 
-    static class BadData{
+    // This is a bad data that has problems!
+    private static class BadData{
         String name;
         String problem;
 
@@ -175,46 +175,68 @@ public class Analyzer {
     /**
      * Contains ranking given by prediction from a set of test data
      */
-    static class TrainReport{
-        Set<String> train;
-        String originalMethod;
-        LinkedHashMap<String, Float> predictedMethods; // sorted predicted entries
-        String type; // expected prediction type
-        int matched = -1;
+    static class TestReport {
+        private Set<String> testData;
+        private String originalMethod;
+        private String type; // expected prediction type
+        private StringBuilder predictionStringBuilder;
+        private int matched = -1;
+        private boolean strict;
 
         /**
          * Generates a train report
          * @param originalMethod expected method
          * @param predictedMethods sorted predicted methods
          * @param testData give test data
+         * @param strict whether toString should restrict matching and type
          */
-        TrainReport(String originalMethod, LinkedHashMap<String, Float> predictedMethods, Set<String> testData){
+        TestReport(String originalMethod, LinkedHashMap<String, Float> predictedMethods, Set<String> testData, boolean strict){
             this.originalMethod = originalMethod;
-            this.predictedMethods = predictedMethods;
-            String[] splitted = originalMethod.split(" ");
-            this.type = splitted[0]+" "+splitted[1];
-            this.train = new HashSet<>(testData);
-        }
+            if(strict) {
+                String[] splitted = originalMethod.split(" ");
+                this.type = splitted[0] + " " + splitted[1];
+            }
+            this.testData = new HashSet<>(testData);
 
-        @Override
-        public String toString(){
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("===== Top 10 Prediction =====\n");
+            this.predictionStringBuilder = new StringBuilder();
+            this.strict = strict;
             int k = 0;
             for(String method : predictedMethods.keySet()) {
                 if (k < 10) {
-                    if(method.contains(type)) {
-                        if(method.equals(originalMethod)){
-                            matched = k;
+                    if(strict) {
+                        if (method.contains(type)) {
+                            if (method.equals(originalMethod)) {
+                                matched = k;
+                            }
+                            predictionStringBuilder.append(method + "=" + predictedMethods.get(method)+"|");
+                            k++;
                         }
-                        stringBuilder.append(method + " -> " + predictedMethods.get(method) + "\n");
+                    }else{
+                        predictionStringBuilder.append(method + "=" + predictedMethods.get(method) + "|");
                         k++;
                     }
                 }
             }
+        }
+
+        public String testDataString(){
+            return testData.toString();
+        }
+
+        public String predictionString(){
+            return predictionStringBuilder.toString();
+        }
+
+        @Override
+        public String toString(){
+
+            if(!strict){
+                return "TEST: "+testData+"\n"+
+                        "\n PREDICTION: "+predictionStringBuilder+"\n";
+            }
             return "MATCH: "+matched+", ORIGINAL: "+originalMethod+
-                    "\n TRAIN: "+train+"\n"+
-                    "\n PREDICTION: "+stringBuilder+"\n";
+                    "\n TEST: "+testData+"\n"+
+                    "\n PREDICTION: "+predictionStringBuilder+"\n";
         }
     }
 }

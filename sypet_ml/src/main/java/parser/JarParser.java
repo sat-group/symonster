@@ -13,16 +13,16 @@ public class JarParser extends BodyTransformer {
     private static Map<String, LinkedHashSet<String>> methodToAppearancesMap = new HashMap<>();
     private static Map<String, Map<String, Set<String>>> methodToVarAppearancesMap = new HashMap<>();
     private static Map<String, Map<String, Integer>> methodToVarFreqMap = new HashMap<>();
-    private static List<String> pckg;
+    private static List<String> targetPackage;
 
     /**
      * Parse a list of given jar files, and stores the result in methodDict and methodVarDict
      * @param libs physical addresses of libraries. e.g. "lib/hamcrest-core-1.3.jar"
      */
-    public static void parseJar(List<String> libs, List<String> packg) {
+    public static void parseJar(List<String> libs, List<String> targetPackage) {
         clear();
         String[] args = parser.SootUtils.getSootArgs(libs);
-        pckg = packg;
+        JarParser.targetPackage = targetPackage;
         G.reset();
         PackManager.v().getPack("jap").add(new Transform(ANALYSIS_NAME, new JarParser()));
         methodToVarAppearancesMap = new HashMap<>();
@@ -87,7 +87,7 @@ public class JarParser extends BodyTransformer {
                         InvokeExpr invokeExp = ((InvokeExpr) assignExpr);
                         String method = invokeExp.getMethod().toString();
                         boolean fitsPackage = false;
-                        for(String pck : pckg){
+                        for(String pck : targetPackage){
                             if(method.contains(pck)){
                                 methodSet.add(method);
                                 fitsPackage = true;
@@ -125,7 +125,7 @@ public class JarParser extends BodyTransformer {
                     // if is purely a functional invocation
                     InvokeStmt invokeStmt = (InvokeStmt) stmt;
                     String method = invokeStmt.getInvokeExpr().getMethod().toString();
-                    for(String pck : pckg){
+                    for(String pck : targetPackage){
                         if(method.contains(pck)){
                             methodSet.add(method);
                             break;

@@ -44,6 +44,29 @@ public class KNN {
     }
 
     /**
+     * Constructor if we already have all the trained data available
+     * @param labels method names that serve as columns
+     * @param preTrained pre-trained data
+     */
+    public KNN(Set<String> labels, List<int[]> preTrained){
+        this.labelSize = labels.size();
+        this.labels = new String[labelSize];
+        int j = 0;
+        for (String s : labels) {
+            this.labels[j] = s;
+            j++;
+        }
+        this.labelMap = new HashMap<>();
+        for (int i = 0; i < this.labels.length; i++) {
+            labelMap.put(this.labels[i], i);
+        }
+        this.values = preTrained;
+
+        // Union lables that are actually the same
+        unionDollarLabels();
+    }
+
+    /**
      * Labels from Soot somehow have two representations... One with "$" sign, and one without.
      * I am going to just assume these two are the same, so I need to bind those labels into a union structure.
      */
@@ -95,28 +118,8 @@ public class KNN {
                 }
             }
         }
-        System.out.println(sameLabelMap);
+        System.out.println("gg: "+sameLabelMap);
         this.idMap = sameLabelMap;
-    }
-
-    /**
-     * Constructor if we already have all the trained data available
-     * @param labels method names that serve as columns
-     * @param preTrained pre-trained data
-     */
-    public KNN(Set<String> labels, List<int[]> preTrained){
-        this.labelSize = labels.size();
-        this.labels = new String[labelSize];
-        int j = 0;
-        for (String s : labels) {
-            this.labels[j] = s;
-            j++;
-        }
-        this.labelMap = new HashMap<>();
-        for (int i = 0; i < this.labels.length; i++) {
-            labelMap.put(this.labels[i], i);
-        }
-        this.values = preTrained;
     }
 
     /**
