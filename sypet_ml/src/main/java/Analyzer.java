@@ -112,7 +112,7 @@ public class Analyzer {
         List<TestReport> reports = new ArrayList<>();
         for(String method : program){
             LinkedHashMap<String, Float> predictedResults = knn.predict(testData);
-            TestReport report = new TestReport("", predictedResults, testData, strict);
+            TestReport report = new TestReport(method, predictedResults, testData, strict);
             if(!method.equals("<java.awt.geom.Area: void <init>(java.awt.Shape)>")) {
                 if(accumulative) {
                     testData.add(method);
@@ -219,10 +219,18 @@ public class Analyzer {
             }
         }
 
+        /**
+         * Returns String representation of test data
+         * @return String representation of test data
+         */
         public String testDataString(){
             return testData.toString();
         }
 
+        /**
+         * Returns String representation of prediction result
+         * @return String represnetation of prediction result
+         */
         public String predictionString(){
             return predictionStringBuilder.toString();
         }

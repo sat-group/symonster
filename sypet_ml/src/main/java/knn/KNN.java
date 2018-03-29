@@ -118,7 +118,6 @@ public class KNN {
                 }
             }
         }
-        System.out.println("gg: "+sameLabelMap);
         this.idMap = sameLabelMap;
     }
 
