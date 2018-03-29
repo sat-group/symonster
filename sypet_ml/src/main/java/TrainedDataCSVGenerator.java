@@ -1,4 +1,6 @@
 import knn.KNN;
+import parser.JarParser;
+import parser.JarParserLibrary;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,7 +23,6 @@ public class TrainedDataCSVGenerator {
 
     private static KNN completeKnn; // kNN for all jars
     private static KNN dummyKnn; // dummy kNN that changes for every different jar
-    protected static List<String> packages = Collections.singletonList("java.awt.geom");
 
     /**
      * Sample main function
@@ -29,18 +30,12 @@ public class TrainedDataCSVGenerator {
      * @param args no use at all
      */
     public static void main(String[] args) throws FileNotFoundException {
-        JarParserLib.init(DataSource.generateLib(), packages, true);
-    }
-
-    /**
-     * Called when parse is copmlete, main function for training and generating csv
-     * @throws FileNotFoundException file not found
-     */
-    public static void onParseLibComplete() throws FileNotFoundException {
+        // Parse lib
+        JarParserLibrary.init(DataSource.generateLib(), DataSource.targetPackages());
 
         // Initialize
-        completeKnn = new KNN(JarParserLib.getLabelSet());
-        dummyKnn = new KNN(JarParserLib.getLabelSet());
+        completeKnn = new KNN(JarParserLibrary.getLabelSet());
+        dummyKnn = new KNN(JarParserLibrary.getLabelSet());
         List<String> libs = DataSource.generateTrain();
         PrintWriter pw = new PrintWriter(new File("src/resources/data.csv"));
 
@@ -49,7 +44,7 @@ public class TrainedDataCSVGenerator {
 
         // For each jar
         for (String s : libs) {
-            JarParser.parseJar(Collections.singletonList(s), packages);
+            JarParser.parseJar(Collections.singletonList(s), DataSource.targetPackages());
             pw.write(s);
             if (JarParser.getMethodToAppearancesMap().size() != 0) {
 
@@ -60,7 +55,7 @@ public class TrainedDataCSVGenerator {
                 pw.write(resultString);
 
                 // Reload dummy
-                dummyKnn = new KNN(JarParserLib.getLabelSet());
+                dummyKnn = new KNN(JarParserLibrary.getLabelSet());
 
                 // Train actual kNN
                 trainVarIndependent(libs, completeKnn);
@@ -76,10 +71,10 @@ public class TrainedDataCSVGenerator {
         pw.close();
     }
 
-    // Adds var dependent traning data from JarParser
+    // Adds var dependent traning data from parser.JarParser
     private static void trainVarDependent(List<String> libs, KNN knn) {
         Map<String, Map<String, Set<String>>> varData = JarParser.getMethodToVarAppearancesMap();
-        Map<String, Set<String>> data = JarParser.getMethodToAppearancesMap();
+        Map<String, LinkedHashSet<String>> data = JarParser.getMethodToAppearancesMap();
         for (Map<String, Set<String>> s : varData.values()) {
             for (Set<String> t : s.values()) {
                 knn.addTrainVector(t);
@@ -90,9 +85,9 @@ public class TrainedDataCSVGenerator {
         }
     }
 
-    // Adds var independent traning data from JarParser
+    // Adds var independent traning data from parser.JarParser
     private static void trainVarIndependent(List<String> libs, KNN knn) {
-        Map<String, Set<String>> data = JarParser.getMethodToAppearancesMap();
+        Map<String, LinkedHashSet<String>> data = JarParser.getMethodToAppearancesMap();
 
         for (Set<String> set : data.values()) {
             knn.addTrainVector(set);

@@ -1,18 +1,19 @@
+package parser;
+
 import soot.*;
 import soot.jimple.*;
 
 import java.util.*;
 
 /**
- * Parses bundles of jar files for ml purposes
+ * Parses bundles of jar files and stores them in various map
  */
 public class JarParser extends BodyTransformer {
     public static final String ANALYSIS_NAME = "jap.analysis";
-    private static Map<String, Set<String>> methodToAppearancesMap = new HashMap<>();
+    private static Map<String, LinkedHashSet<String>> methodToAppearancesMap = new HashMap<>();
     private static Map<String, Map<String, Set<String>>> methodToVarAppearancesMap = new HashMap<>();
     private static Map<String, Map<String, Integer>> methodToVarFreqMap = new HashMap<>();
     private static List<String> pckg;
-    private static boolean parseOK;
 
     /**
      * Parse a list of given jar files, and stores the result in methodDict and methodVarDict
@@ -20,7 +21,7 @@ public class JarParser extends BodyTransformer {
      */
     public static void parseJar(List<String> libs, List<String> packg) {
         clear();
-        String[] args = SootUtils.getSootArgs(libs);
+        String[] args = parser.SootUtils.getSootArgs(libs);
         pckg = packg;
         G.reset();
         PackManager.v().getPack("jap").add(new Transform(ANALYSIS_NAME, new JarParser()));
@@ -30,7 +31,7 @@ public class JarParser extends BodyTransformer {
         SootUtils.runSoot(args);
     }
 
-    public static Map<String, Set<String>> getMethodToAppearancesMap(){
+    public static Map<String, LinkedHashSet<String>> getMethodToAppearancesMap(){
         return methodToAppearancesMap;
     }
 
@@ -52,7 +53,7 @@ public class JarParser extends BodyTransformer {
             //System.out.println("main: " + body.getMethod());
 
             // keep track of all the methods in the body
-            Set<String> methodSet = new HashSet<>();
+            LinkedHashSet<String> methodSet = new LinkedHashSet<>();
 
             // keep track of all the variables appeared in the methods
             Map<String, Integer> hashMap = new HashMap<>();

@@ -1,4 +1,6 @@
 import knn.KNN;
+import parser.JarParser;
+import parser.JarParserLibrary;
 
 import java.io.*;
 import java.util.*;
@@ -6,29 +8,38 @@ import java.util.*;
 import static java.lang.Boolean.parseBoolean;
 
 /**
- * Rae
+ * Reads from data csvs and provides analysis csvs & testing results with kNN in STDOUT.
  */
 public class Analyzer {
     static List<TrainData> goodDataList = new ArrayList<>();
     static List<BadData> badDataList = new ArrayList<>();
     static List<int[]> vectors = new ArrayList<>();
 
+    /**
+     * Main function that reads from data csvs and provides analysis csvs & testing results in STDOUT.
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         read();
         write();
 
-        JarParserLib.init(DataSource.generateLib(), TrainedDataCSVGenerator.packages, false);
-        KNN knn = new KNN(JarParserLib.getLabelSet(),vectors);
+        // Get labels from library
+        JarParserLibrary.init(DataSource.generateLib(), DataSource.targetPackages());
+
+        // initialize kNN
+        KNN knn = new KNN(JarParserLibrary.getLabelSet(),vectors);
 
         //PrintWriter pw = new PrintWriter(new File("src/resources/vector_sparse.txt"));
         //pw.write(knn.getTrainSparseString());
         //pw.close();
-        // mock test on geometry
-        List<String> libs = DataSource.generateTest();
-        JarParserTest.parseJar(libs, TrainedDataCSVGenerator.packages);
-        Map<String, List<String>> dataT = JarParserTest.getMethodToAppearancesMap();
 
-        for(List<String> program : dataT.values()){
+        // Mock test on geometry.jar
+        JarParser.parseJar(DataSource.generateTest(), DataSource.targetPackages());
+
+        // Use kNN to predict and generate report
+        Map<String, LinkedHashSet<String>> data = JarParser.getMethodToAppearancesMap();
+        for(LinkedHashSet<String> program : data.values()){
             List<TrainReport> reports = generateReport(program, knn);
             System.out.println("============start============");
             for(TrainReport report : reports){
@@ -36,20 +47,12 @@ public class Analyzer {
             }
             System.out.println("=============end=============");
         }
-
-        List<String> tmp = Arrays.asList("<java.awt.geom.Point2D: double getY()>","<java.awt.geom.AffineTransform: java.awt.geom.AffineTransform getQuadrantRotateInstance(int)>","<java.awt.geom.Point2D$Double: void <init>(double,double)>");
-        List<TrainReport> reports = generateReport(tmp, knn);
-        System.out.println("============start ss============");
-        for(TrainReport report : reports){
-            System.out.println(report);
-        }
-        System.out.println("=============end=============");
-        //sampleRotate.remove("<java.awt.geom.Area: java.awt.geom.Area createTransformedArea(java.awt.geom.AffineTransform)>");
-        //System.out.println("prob: "+knn.getFreq(""));
-
-        //System.out.println(knn.getTrainSetSize());
     }
 
+    /**
+     * Write analytical results to filepath
+     * @throws FileNotFoundException file not found
+     */
     public static void write() throws FileNotFoundException {
         PrintWriter pw = new PrintWriter(new File("src/resources/analysis.txt"));
         pw.write("bad data: "+badDataList.size()+"\n");
@@ -64,6 +67,10 @@ public class Analyzer {
         pw.close();
     }
 
+    /**
+     * Read csv data from filepath
+     * @throws IOException file not found
+     */
     public static void read() throws IOException {
         String line = "";
         String cvsSplitBy = ",";
@@ -101,14 +108,20 @@ public class Analyzer {
         }
     }
 
-    static List<TrainReport> generateReport(List<String> program, KNN knn){
+    /**
+     * Generates a report from a given set of program lines using kNN
+     * @param program set of program methods
+     * @param knn trained kNN
+     * @return report containing predicted results for the program
+     */
+    static List<TrainReport> generateReport(LinkedHashSet<String> program, KNN knn){
         Set<String> set = new HashSet<>();
         List<TrainReport> reports = new ArrayList<>();
-        for(int i=0; i<program.size(); i++){
+        for(String method : program){
             LinkedHashMap<String, Float> map = knn.predict(set);
-            TrainReport report = new TrainReport(program.get(i),map,set);
-            if(!program.get(i).equals("<java.awt.geom.Area: void <init>(java.awt.Shape)>")) {
-            set.add(program.get(i));
+            TrainReport report = new TrainReport(method,map,set);
+            if(!method.equals("<java.awt.geom.Area: void <init>(java.awt.Shape)>")) {
+                set.add(method);
             }
             reports.add(report);
         }
@@ -159,19 +172,28 @@ public class Analyzer {
         }
     }
 
+    /**
+     * Contains ranking given by prediction from a set of test data
+     */
     static class TrainReport{
         Set<String> train;
         String originalMethod;
-        LinkedHashMap<String, Float> predictedMethods;
-        String type;
+        LinkedHashMap<String, Float> predictedMethods; // sorted predicted entries
+        String type; // expected prediction type
         int matched = -1;
 
-        TrainReport(String originalMethod, LinkedHashMap<String, Float> predictedMethods, Set<String> train){
+        /**
+         * Generates a train report
+         * @param originalMethod expected method
+         * @param predictedMethods sorted predicted methods
+         * @param testData give test data
+         */
+        TrainReport(String originalMethod, LinkedHashMap<String, Float> predictedMethods, Set<String> testData){
             this.originalMethod = originalMethod;
             this.predictedMethods = predictedMethods;
             String[] splitted = originalMethod.split(" ");
             this.type = splitted[0]+" "+splitted[1];
-            this.train = new HashSet<>(train);
+            this.train = new HashSet<>(testData);
         }
 
         @Override

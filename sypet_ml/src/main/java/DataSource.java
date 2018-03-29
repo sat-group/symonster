@@ -1,5 +1,7 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Sources for all datas
@@ -30,5 +32,10 @@ public class DataSource {
         ArrayList<String> libs = new ArrayList<>();
         libs.add("../sypet_ml/lib/geometry.jar");
         return libs;
+    }
+
+    // Generates a list of target packages
+    public static List<String> targetPackages(){
+        return Collections.singletonList("java.awt.geom");
     }
 }
