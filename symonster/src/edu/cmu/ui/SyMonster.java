@@ -4,6 +4,7 @@ import edu.cmu.compilation.Test;
 import edu.cmu.equivprogram.DependencyMap;
 import edu.cmu.parser.*;
 import edu.cmu.petrinet.BuildNetNoVoid;
+import edu.cmu.petrinet.BuildNet;
 import edu.cmu.reachability.*;
 import edu.cmu.utils.TimerUtils;
 import org.sat4j.specs.TimeoutException;
@@ -27,14 +28,14 @@ public class SyMonster {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/geometry/14/benchmark14.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/joda/18/benchmark18.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
         }
 
         String methodName = jsonInput.methodName;
-        List<String> libs =jsonInput.libs;
+        List<String> libs = jsonInput.libs;
 		List<String> inputs = jsonInput.srcTypes;
         List<String> varNames = jsonInput.paramNames;
         String retType = jsonInput.tgtType;
@@ -48,7 +49,7 @@ public class SyMonster {
         }
         String testCode = fileContents.toString();
 
-
+        System.out.println(0);
 		// 2. Parse library
         List<MethodSignature> sigs = JarParser.parseJar(libs,jsonInput.packages,jsonConfig.blacklist);
         System.out.println(sigs);
@@ -62,11 +63,13 @@ public class SyMonster {
                 subclassMap.get(value).add(key);
             }
         }
+        System.out.println(1);
         // 3. build a petrinet and signatureMap of library
         // Currently built without clone edges
 		BuildNetNoVoid b = new BuildNetNoVoid();                          // Set petrinet
 		//BuildNetWithoutClone b = new BuildNetWithoutClone(noVoid);
 		PetriNet net = b.build(sigs, superclassMap, subclassMap);
+        System.out.println(1.5);
 		Map<String, MethodSignature> signatureMap = b.dict;
 
 		int loc = 1;
@@ -77,7 +80,8 @@ public class SyMonster {
         TimerUtils.startTimer("total");
 
         Set<List<MethodSignature>> repeatSolutions = new HashSet<>();
-        DependencyMap dependencyMap = JarParser.createDependencyMap();
+        //DependencyMap dependencyMap = JarParser.createDependencyMap();
+        System.out.println(2);
 		while (!solution) {
 			// create a formula that has the same semantics as the petri-net
 			Encoding encoding = new SequentialEncoding(net, loc);                     // Set encoding
@@ -90,6 +94,7 @@ public class SyMonster {
 			
 			// for each loc find all possible programs
 			List<Variable> result = Encoding.solver.findPath();
+            System.out.println(result.size());
             while(!result.isEmpty() && !solution){
 				paths++;
 				String path = "Path #" + paths + " =\n";
@@ -104,9 +109,10 @@ public class SyMonster {
 						signatures.add(sig);
 					}
 				}
-                if (!repeatSolutions.contains(signatures)){
-                    List<List<MethodSignature>> repeated = dependencyMap.findAllTopSorts(signatures);
-                    repeatSolutions.addAll(repeated);
+                System.out.println(path);
+                if (true){//!repeatSolutions.contains(signatures)){
+                    //List<List<MethodSignature>> repeated = dependencyMap.findAllTopSorts(signatures);
+                    //repeatSolutions.addAll(repeated);
                     // 5. Convert a path to a program
                     // NOTE: one path may correspond to multiple programs and we may need a loop here!
                     boolean sat = true;
@@ -122,7 +128,7 @@ public class SyMonster {
                         }
                         sat = !former.isUnsat();
                         programs++;
-                        if (programs % 50 == 1)
+                        if (true)
                         {
                             System.out.println(path);
                             System.out.println("programs: "+programs);

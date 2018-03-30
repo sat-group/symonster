@@ -156,6 +156,7 @@ public class JarParser extends BodyTransformer{
         for (SootMethod method : bodies.keySet()){
             Body body = bodies.get(method);
             if (body != null){
+                System.out.println(body.getMethod());
                 Set<SootField> result = addProgramMethod(body,getMethodSignature(method));
                 usedFieldDict.put(getMethodSignature(body.getMethod()),result);
             }
@@ -171,21 +172,26 @@ public class JarParser extends BodyTransformer{
     private static Set<SootField> addProgramMethod(Body body,MethodSignature methodSignature){
         if (usedFieldDict.keySet().contains(methodSignature))return usedFieldDict.get(methodSignature);
         if (workings.contains(methodSignature)) return new HashSet<>();
+        System.out.println(workings.size());
         workings.add(methodSignature);
         Set<SootField> result = new HashSet<>();
         for (Unit unit : body.getUnits()){
             if (unit instanceof Stmt){
                 Stmt stmt = (Stmt)unit;
+                System.out.println("stmts");
                 result.addAll(addAllFieldInUnit(stmt));
+                System.out.println("stmtt");
             }
         }
         workings.remove(methodSignature);
+        usedFieldDict.put(methodSignature,result);
         return result;
 
     }
 
     // Return all fields reference in a unit
     private static Set<SootField> addAllFieldInUnit(Unit unit){
+        System.out.println("unit");
         Set<SootField> result = new HashSet<>();
         List<ValueBox> boxes = unit.getUseAndDefBoxes();
         if (unit instanceof JInstanceFieldRef){
@@ -207,6 +213,7 @@ public class JarParser extends BodyTransformer{
 
     // Return all fields reference in a value
     private static Set<SootField> addAllFieldInValue(Value value){
+        System.out.println("val");
         Set<SootField> result = new HashSet<>();
         List<ValueBox> boxes = value.getUseBoxes();
         if (value instanceof JInstanceFieldRef){

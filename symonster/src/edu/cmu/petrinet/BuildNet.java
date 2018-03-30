@@ -90,6 +90,7 @@ public class BuildNet {
                     transitionName += t.toString() + " ";
                 }
                 transitionName += ")";
+                transitionName += k.getRetType();
                 petrinet.createTransition(transitionName);
             } else { //The method is not static, so it has an extra argument
                 transitionName = className + "." + methodname + "(";
@@ -97,6 +98,7 @@ public class BuildNet {
                     transitionName += t.toString() + " ";
                 }
                 transitionName += ")";
+                transitionName += k.getRetType();
                 petrinet.createTransition(transitionName);
 
                 //creating the place and flow for class instance
