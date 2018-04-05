@@ -9,16 +9,16 @@ import java.util.*;
 public class JarFilter {
 
     public static void main(String[] args) throws FileNotFoundException {
-        parseInfo();
+        parseInfo(args);
     }
 
-    public static void parseInfo() throws FileNotFoundException {
+    public static void parseInfo(String[] args) throws FileNotFoundException {
 
         // Get all libs
         List<String> jars = new ArrayList<>();
-        File libFolder = new File("lib/corpus/");
+        File libFolder = new File(args[0]);
         for (final File fileEntry : libFolder.listFiles()) {
-            jars.add("lib/corpus/"+fileEntry.getName());
+            jars.add(args[0]+fileEntry.getName());
         }
 
         // Parse
@@ -40,7 +40,7 @@ public class JarFilter {
         }
 
         // Output
-        PrintWriter pw = new PrintWriter(new File("src/resources/package_info.csv"));
+        PrintWriter pw = new PrintWriter(new File("src/resources/package_info_"+args[1]+".csv"));
 
         // Header
         pw.write("name,count\n");

@@ -16,24 +16,33 @@ public class GenericPrediction {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
+
+        // jar to predict, name of result csv, package of concern, name pretrained data csv, name of output analysis csv, filepath of lib if not rt
+        // comment this out if you want to input from command line
+        args = new String[]{"lib/corpus/java.awt.geom/geometry.jar", "result_geom_k=3", "java.awt.geom", "data_geom", "analysis_geom"};
+
         // Use Analyzer to generate kNN
-        Analyzer.init();
+        if(args.length > 5) {
+            Analyzer.init(new String[]{args[2], args[3], args[4], args[5]});
+        }else{
+            Analyzer.init(new String[]{args[2], args[3], args[4]});
+        }
 
         // Mock test on geometry.jar
         ArrayList<String> libs = new ArrayList<>();
         libs.add(args[0]);
-        JarParser.parseJar(libs, DataSource.targetPackages());
+        JarParser.parseJar(libs, DataSource.generateCustomLib(args[2]));
 
         // Use kNN to predict and generate report1
         Map<String, LinkedHashSet<String>> data = JarParser.getMethodToAppearancesMap();
 
         // Generate test reports
-        List<List<Analyzer.TestReport>> testReports = Analyzer.getTestReports(data.values(), true, true);
-        PrintWriter pw = new PrintWriter(new File("src/resources/"+args[1]));
-        pw.write("method,prediction\n");
+        List<List<Analyzer.TestReport>> testReports = Analyzer.getTestReports(data.values(), 3, true);
+        PrintWriter pw = new PrintWriter(new File("src/resources/"+args[1]+".csv"));
+        pw.write("match,method,prediction\n");
         for(List<Analyzer.TestReport> reports : testReports){
             for(Analyzer.TestReport report : reports){
-                pw.write(report.testDataString()+","+report.predictionString());
+                pw.write(report.getMatched()+","+report.testDataString()+","+report.predictionString());
                 pw.write("\n");
             }
         }

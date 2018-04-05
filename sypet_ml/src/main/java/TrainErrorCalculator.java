@@ -12,7 +12,7 @@ public class TrainErrorCalculator {
 
     public static void main(String[] args) throws IOException {
         // Initialize trained kNN
-        Analyzer.init();
+        Analyzer.init(new String[]{"java.awt.geom, data, analysis_geom"});
 
         // Get train data jars
         List<String> trainData = DataSource.generateTrain();
@@ -23,10 +23,10 @@ public class TrainErrorCalculator {
         int error_10 = 0;
         Map<String, LinkedHashSet<String>> data;
         for(String jar : trainData){
-            JarParser.parseJar(Collections.singletonList(jar), DataSource.targetPackages());
+            JarParser.parseJar(Collections.singletonList(jar), DataSource.javaAWTGeomPackage());
             data = JarParser.getMethodToAppearancesMap();
             if(data.size() != 0) {
-                List<List<Analyzer.TestReport>> testReports = Analyzer.getTestReports(data.values(), false, true);
+                List<List<Analyzer.TestReport>> testReports = Analyzer.getTestReports(data.values(), 10, true);
                 for (List<Analyzer.TestReport> reports : testReports) {
                     for (Analyzer.TestReport report : reports) {
                         if (report.matched() == 0) {

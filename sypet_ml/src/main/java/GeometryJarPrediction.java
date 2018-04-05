@@ -13,16 +13,16 @@ public class GeometryJarPrediction {
     public static void main(String[] args) throws IOException {
 
         // Use Analyzer to generate kNN
-        Analyzer.init();
+        Analyzer.init(new String[]{"java.awt.geom, data, analysis"});
 
         // Mock test on geometry.jar
-        JarParser.parseJar(DataSource.generateTest(), DataSource.targetPackages());
+        JarParser.parseJar(DataSource.generateTest(), DataSource.javaAWTGeomPackage());
 
         // Use kNN to predict and generate report
         Map<String, LinkedHashSet<String>> data = JarParser.getMethodToAppearancesMap();
 
         // Generate test reports
-        List<List<Analyzer.TestReport>> testReports = Analyzer.getTestReports(data.values(), true, true);
+        List<List<Analyzer.TestReport>> testReports = Analyzer.getTestReports(data.values(), 10, true);
         for(List<Analyzer.TestReport> reports : testReports){
             System.out.println("============start============");
             for(Analyzer.TestReport report : reports){

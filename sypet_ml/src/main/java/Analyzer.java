@@ -17,25 +17,30 @@ public class Analyzer {
 
     /**
      * Main function that reads from data csvs and provides analysis csvs & testing results in STDOUT.
+     *
      * @throws IOException
      */
-    public static void init() throws IOException {
-        read();
-        write();
+    public static void init(String[] args) throws IOException {
+        read(args[1]);
+        write(args[2]);
 
         // Get labels from library
-        LibraryJarParser.init(DataSource.generateLib(), DataSource.targetPackages());
+        if(args.length > 3) {
+            LibraryJarParser.init(DataSource.generateLib(args[3]), DataSource.generateCustomLib(args[0]));
+        }else {
+            LibraryJarParser.init(DataSource.generateLib(""), DataSource.generateCustomLib(args[0]));
+        }
 
         // initialize kNN
-        knn = new KNN(LibraryJarParser.getLabelSet(),vectors);
+        knn = new KNN(LibraryJarParser.getLabelSet(), vectors);
     }
 
     public static List<List<TestReport>> getTestReports(Collection<LinkedHashSet<String>> testData,
-                                                        boolean accumulative, boolean strict){
+                                                        int k, boolean strict) {
         List<List<TestReport>> testReportsList = new ArrayList<>();
 
-        for(LinkedHashSet<String> program : testData){
-            List<TestReport> reports = generateReport(program, knn, accumulative, strict);
+        for (LinkedHashSet<String> program : testData) {
+            List<TestReport> reports = generateReport(program, knn, k, strict);
             testReportsList.add(reports);
         }
 
@@ -44,55 +49,57 @@ public class Analyzer {
 
     /**
      * Write analytical results to filepath
+     *
      * @throws FileNotFoundException file not found
      */
-    private static void write() throws FileNotFoundException {
-        PrintWriter pw = new PrintWriter(new File("src/resources/analysis.txt"));
-        pw.write("bad data: "+badDataList.size()+"\n");
-        for(BadData badData : badDataList){
-            pw.write(badData.toString()+"\n");
+    private static void write(String out) throws FileNotFoundException {
+        PrintWriter pw = new PrintWriter(new File("src/resources/" + out + ".txt"));
+        pw.write("bad data: " + badDataList.size() + "\n");
+        for (BadData badData : badDataList) {
+            pw.write(badData.toString() + "\n");
         }
 
-        pw.write("good data: "+goodDataList.size()+"\n");
-        for(TrainData goodData : goodDataList){
-            pw.write(goodData.toString()+"\n");
+        pw.write("good data: " + goodDataList.size() + "\n");
+        for (TrainData goodData : goodDataList) {
+            pw.write(goodData.toString() + "\n");
         }
         pw.close();
     }
 
     /**
      * Read csv data from filepath
+     *
      * @throws IOException file not found
      */
-    private static void read() throws IOException {
+    private static void read(String in) throws IOException {
         String line = "";
         String cvsSplitBy = ",";
 
-        BufferedReader br = new BufferedReader(new FileReader("src/resources/data.csv"));
+        BufferedReader br = new BufferedReader(new FileReader("src/resources/" + in + ".csv"));
         while ((line = br.readLine()) != null) {
             // check if we have reached final
-            if(line.startsWith("final result:")){
+            if (line.startsWith("final result:")) {
                 // first line of vector
                 String s = line.split(":")[1];
                 vectors.add(stringToVector(s));
-            } else if(line.startsWith("name")){
+            } else if (line.startsWith("name")) {
                 // do nothing
-            }else if(line.startsWith("<j")){
+            } else if (line.startsWith("<j")) {
 
-            }else if(line.startsWith("<")){
+            } else if (line.startsWith("<")) {
                 vectors.add(stringToVector(line));
-            }else {
+            } else {
                 String[] dataStr = line.split(cvsSplitBy);
                 String name = dataStr[0].split("/")[4];
-                if(dataStr[1].equals("true")) {
-                    if(dataStr[2].equals("0")){
+                if (dataStr[1].equals("true")) {
+                    if (dataStr[2].equals("0")) {
                         BadData badData = new BadData(name, "No methods present.");
                         badDataList.add(badData);
-                    }else {
+                    } else {
                         TrainData data = new TrainData(name, parseBoolean(dataStr[1]), Integer.parseInt(dataStr[2]), Float.parseFloat(dataStr[3]));
                         goodDataList.add(data);
                     }
-                }else{
+                } else {
                     BadData badData = new BadData(name, "Soot parse error.");
                     badDataList.add(badData);
                 }
@@ -103,47 +110,54 @@ public class Analyzer {
 
     /**
      * Generates a report from a given set of program lines using kNN
+     *
      * @param program set of program methods
-     * @param knn trained kNN
+     * @param knn     trained kNN
+     * @param k       distance
      * @return report containing predicted results for the program
      */
-    private static List<TestReport> generateReport(LinkedHashSet<String> program, KNN knn, boolean accumulative, boolean strict){
-        Set<String> testData = new HashSet<>();
+    private static List<TestReport> generateReport(LinkedHashSet<String> program, KNN knn, int k, boolean strict) {
+        LinkedHashSet<String> testData = new LinkedHashSet<>();
         List<TestReport> reports = new ArrayList<>();
-        for(String method : program){
+        for (String method : program) {
             LinkedHashMap<String, Float> predictedResults = knn.predict(testData);
             TestReport report = new TestReport(method, predictedResults, testData, strict);
-            if(!method.equals("<java.awt.geom.Area: void <init>(java.awt.Shape)>")) {
-                if(accumulative) {
-                    testData.add(method);
-                }else{
-                    testData = new HashSet<>();
-                    testData.add(method);
+            if (method.equals("<java.awt.geom.Area: void <init>(java.awt.Shape)>")) {
+                method = "<java.awt.geom.Area: void <init>()>";
+            }
+            if (k <= 0) {
+                testData.add(method);
+            } else {
+                int i = testData.size() + 1;
+                while (i > k && !testData.isEmpty()) {
+                    testData.remove(testData.iterator().next());
+                    i--;
                 }
+                testData.add(method);
             }
             reports.add(report);
         }
         return reports;
     }
 
-    private static int[] stringToVector(String s){
-        s = s.substring(1,s.length()-1);
+    private static int[] stringToVector(String s) {
+        s = s.substring(1, s.length() - 1);
         String[] strings = s.split(",");
         int[] vec = new int[strings.length];
-        for(int i=0; i<strings.length; i++){
-            vec[i] = Integer.parseInt(strings[i].replaceAll("\\s+",""));
+        for (int i = 0; i < strings.length; i++) {
+            vec[i] = Integer.parseInt(strings[i].replaceAll("\\s+", ""));
         }
         return vec;
     }
 
     // Represents training data
-    private static class TrainData{
+    private static class TrainData {
         String name;
         boolean parsed;
         int rows;
         float average;
 
-        TrainData(String name, boolean parsed, int rows, float average){
+        TrainData(String name, boolean parsed, int rows, float average) {
             this.name = name;
             this.parsed = parsed;
             this.rows = rows;
@@ -151,24 +165,24 @@ public class Analyzer {
         }
 
         @Override
-        public String toString(){
-            return "NAME: "+name+", ROWS: "+rows+", AVERAGE: "+average;
+        public String toString() {
+            return "NAME: " + name + ", ROWS: " + rows + ", AVERAGE: " + average;
         }
     }
 
     // This is a bad data that has problems!
-    private static class BadData{
+    private static class BadData {
         String name;
         String problem;
 
-        BadData(String name, String problem){
+        BadData(String name, String problem) {
             this.name = name;
             this.problem = problem;
         }
 
         @Override
-        public String toString(){
-            return "NAME: "+name+", ERROR: "+problem;
+        public String toString() {
+            return "NAME: " + name + ", ERROR: " + problem;
         }
     }
 
@@ -185,14 +199,15 @@ public class Analyzer {
 
         /**
          * Generates a train report
-         * @param originalMethod expected method
+         *
+         * @param originalMethod   expected method
          * @param predictedMethods sorted predicted methods
-         * @param testData give test data
-         * @param strict whether toString should restrict matching and type
+         * @param testData         give test data
+         * @param strict           whether toString should restrict matching and type
          */
-        TestReport(String originalMethod, LinkedHashMap<String, Float> predictedMethods, Set<String> testData, boolean strict){
+        TestReport(String originalMethod, LinkedHashMap<String, Float> predictedMethods, Set<String> testData, boolean strict) {
             this.originalMethod = originalMethod;
-            if(strict) {
+            if (strict) {
                 String[] splitted = originalMethod.split(" ");
                 this.type = splitted[0] + " " + splitted[1];
             }
@@ -201,17 +216,20 @@ public class Analyzer {
             this.predictionStringBuilder = new StringBuilder();
             this.strict = strict;
             int k = 0;
-            for(String method : predictedMethods.keySet()) {
+            for (String method : predictedMethods.keySet()) {
                 if (k < 10) {
-                    if(strict) {
+                    if (strict) {
                         if (method.contains(type)) {
                             if (method.equals(originalMethod)) {
                                 matched = k;
                             }
-                            predictionStringBuilder.append(method + "=" + predictedMethods.get(method)+"|");
+                            predictionStringBuilder.append(method + "=" + predictedMethods.get(method) + "|");
                             k++;
                         }
-                    }else{
+                    } else {
+                        if (method.equals(originalMethod)) {
+                            matched = k;
+                        }
                         predictionStringBuilder.append(method + "=" + predictedMethods.get(method) + "|");
                         k++;
                     }
@@ -221,40 +239,47 @@ public class Analyzer {
 
         /**
          * Returns String representation of test data
+         *
          * @return String representation of test data
          */
-        public String testDataString(){
+        public String testDataString() {
             return testData.toString();
         }
 
         /**
          * Returns String representation of prediction result
+         *
          * @return String represnetation of prediction result
          */
-        public String predictionString(){
+        public String predictionString() {
             return predictionStringBuilder.toString();
         }
 
-        @Override
-        public String toString(){
+        public int getMatched() {
+            return matched;
+        }
 
-            if(!strict){
-                return "TEST: "+testData+"\n"+
-                        "\n PREDICTION: "+predictionStringBuilder+"\n";
+        @Override
+        public String toString() {
+
+            if (!strict) {
+                return "TEST: " + testData + "\n" +
+                        "\n PREDICTION: " + predictionStringBuilder + "\n";
             }
-            return "MATCH: "+matched+", ORIGINAL: "+originalMethod+
-                    "\n TEST: "+testData+"\n"+
-                    "\n PREDICTION: "+predictionStringBuilder+"\n";
+            return "MATCH: " + matched + ", ORIGINAL: " + originalMethod +
+                    "\n TEST: " + testData + "\n" +
+                    "\n PREDICTION: " + predictionStringBuilder + "\n";
         }
 
         /**
          * Indicates whether the method has been matched or not.
+         *
          * @return >0 if perfectly matched, =0 if matched within 10, <0 if not matched
          */
-        public int matched(){
-            if(matched == 0){
+        public int matched() {
+            if (matched == 0) {
                 return 1;
-            }else{
+            } else {
                 return matched;
             }
         }

@@ -76,43 +76,47 @@ public class KNN {
             for(int j=i+1; j<labelSize; j++){
                 if(labels[i].contains("$")){
                     String[] tmpArr = labels[i].split("\\$");
-                    String tmp1 = tmpArr[0]+":"+tmpArr[tmpArr.length-1].split(":")[1];
-                    if(tmp1.contains(labels[j])){
-                        if(sameLabelMap.containsKey(i)){
-                            sameLabelMap.get(i).add(j);
-                        }else{
-                            Set<Integer> set = new ArraySet<>();
-                            set.add(j);
-                            sameLabelMap.put(i, set);
-                        }
+                    if(tmpArr[tmpArr.length-1].contains(":")) {
+                        String tmp1 = tmpArr[0] + ":" + tmpArr[tmpArr.length - 1].split(":")[1];
+                        if (tmp1.contains(labels[j])) {
+                            if (sameLabelMap.containsKey(i)) {
+                                sameLabelMap.get(i).add(j);
+                            } else {
+                                Set<Integer> set = new ArraySet<>();
+                                set.add(j);
+                                sameLabelMap.put(i, set);
+                            }
 
-                        if(sameLabelMap.containsKey(j)){
-                            sameLabelMap.get(j).add(i);
-                        }else{
-                            Set<Integer> set = new ArraySet<>();
-                            set.add(i);
-                            sameLabelMap.put(j, set);
+                            if (sameLabelMap.containsKey(j)) {
+                                sameLabelMap.get(j).add(i);
+                            } else {
+                                Set<Integer> set = new ArraySet<>();
+                                set.add(i);
+                                sameLabelMap.put(j, set);
+                            }
                         }
                     }
                 }else if(labels[j].contains("$")){
                     String[] tmpArr = labels[j].split("\\$");
-                    String tmp1 = tmpArr[0]+":"+tmpArr[tmpArr.length-1].split(":")[1];
-                    if(tmp1.contains(labels[i])){
+                    if(tmpArr[tmpArr.length-1].contains(":")) {
+                        String tmp1 = tmpArr[0] + ":" + tmpArr[tmpArr.length - 1].split(":")[1];
+                        if (tmp1.contains(labels[i])) {
 
-                        if(sameLabelMap.containsKey(i)){
-                            sameLabelMap.get(i).add(j);
-                        }else{
-                            Set<Integer> set = new ArraySet<>();
-                            set.add(j);
-                            sameLabelMap.put(i, set);
-                        }
+                            if (sameLabelMap.containsKey(i)) {
+                                sameLabelMap.get(i).add(j);
+                            } else {
+                                Set<Integer> set = new ArraySet<>();
+                                set.add(j);
+                                sameLabelMap.put(i, set);
+                            }
 
-                        if(sameLabelMap.containsKey(j)){
-                            sameLabelMap.get(j).add(i);
-                        }else{
-                            Set<Integer> set = new ArraySet<>();
-                            set.add(i);
-                            sameLabelMap.put(j, set);
+                            if (sameLabelMap.containsKey(j)) {
+                                sameLabelMap.get(j).add(i);
+                            } else {
+                                Set<Integer> set = new ArraySet<>();
+                                set.add(i);
+                                sameLabelMap.put(j, set);
+                            }
                         }
                     }
                 }

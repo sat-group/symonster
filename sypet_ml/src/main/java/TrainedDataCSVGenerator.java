@@ -30,21 +30,31 @@ public class TrainedDataCSVGenerator {
      * @param args no use at all
      */
     public static void main(String[] args) throws FileNotFoundException {
+
+        // package of concern, corpus location, output data csv file name, library jar location(rt if not specified)
+        //args = new String[]{"org.jsoup", "lib/javax.xml/", "jsoup", "../sypet_ml/lib/jsoup-1.8.3.jar"};
+        //args = new String[]{"org.jsoup", "lib/javax.xml/", "jsoup"};
         // Parse lib
-        LibraryJarParser.init(DataSource.generateLib(), DataSource.targetPackages());
+        System.out.println("=== get lib ====");
+        if(args.length > 3) {
+            LibraryJarParser.init(DataSource.generateLib(args[3]), DataSource.generateCustomLib(args[0]));
+        }else{
+            LibraryJarParser.init(DataSource.generateLib(""), DataSource.generateCustomLib(args[0]));
+        }
+        System.out.println("=== get lib done ====");
 
         // Initialize
         completeKnn = new KNN(LibraryJarParser.getLabelSet());
         dummyKnn = new KNN(LibraryJarParser.getLabelSet());
-        List<String> trainData = DataSource.generateTrain();
-        PrintWriter pw = new PrintWriter(new File("src/resources/data.csv"));
+        List<String> trainData = DataSource.generateTrainCustom(args[1]);
+        PrintWriter pw = new PrintWriter(new File("src/resources/data_"+args[2]+".csv"));
 
         // Header
         pw.write("name,parsed,rows,average\n");
 
         // For each jar
         for (String s : trainData) {
-            JarParser.parseJar(Collections.singletonList(s), DataSource.targetPackages());
+            JarParser.parseJar(Collections.singletonList(s), DataSource.generateCustomLib(args[0]));
             pw.write(s);
             if (JarParser.getMethodToAppearancesMap().size() != 0) {
 
