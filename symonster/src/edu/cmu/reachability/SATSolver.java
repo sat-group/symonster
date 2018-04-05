@@ -34,6 +34,10 @@ public class SATSolver {
 		nbVariables = 0;
 	}
 	
+	public int getNbConstraints(){
+		return solver.nConstraints();
+	}
+	
 	public void setNbVariables(int vars){
 		nbVariables = vars;
 		solver.newVar(nbVariables);

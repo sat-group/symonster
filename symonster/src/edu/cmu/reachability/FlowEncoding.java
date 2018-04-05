@@ -15,14 +15,14 @@ import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
 
-public class SequentialEncoding implements Encoding {
+public class FlowEncoding implements Encoding {
 
 	int loc = 1;
 	PetriNet pnet = null;
 	int nbVariables = 1;
 	int nbConstraints = 0;
 
-	public SequentialEncoding(PetriNet pnet, int loc) {
+	public FlowEncoding(PetriNet pnet, int loc) {
 		this.pnet = pnet;
 		this.loc = loc;
 
@@ -271,10 +271,9 @@ public class SequentialEncoding implements Encoding {
 				for (int v = 0; v <= p.getMaxToken(); v++) {
 					// create a variable with <place in the petri-net, timestamp, value>
 					Triple<Place, Integer, Integer> triple = new ImmutableTriple<Place, Integer, Integer>(p, t, v);
+					// TODO: instead of Type.PLACE use Type.FLOWPLACE
 					Variable var = new Variable(nbVariables, p.getId(), Type.PLACE, t, v);
 					place2variable.put(triple, var);
-					// solver.id2variable.put(nbVariables, var);
-					// each variable is associated with an id (starts at 1)
 					nbVariables++;
 				}
 			}
@@ -285,7 +284,9 @@ public class SequentialEncoding implements Encoding {
 				// create a variable with <transition in the petri-net,timestamp>
 				Pair<Transition, Integer> pair = new ImmutablePair<Transition, Integer>(tr, t);
 				Variable var = new Variable(nbVariables, tr.getLabel(), Type.TRANSITION, t);
+				// This map is useful to create the encoding
 				transition2variable.put(pair, var);
+				// This map is only useful to interpret the SAT solver output
 				solver.id2variable.put(nbVariables, var);
 				// each variable is associated with an id (starts at 1)
 				nbVariables++;
@@ -328,13 +329,19 @@ public class SequentialEncoding implements Encoding {
 
 	@Override
 	public void setState(Set<Pair<Place, Integer>> state, int timestep) {
+		
+		/*
+		 * TODO: if you have a pair <int,2>, then we need to put variables <int, 1, 0, 0> and <int, 0, 0, 0> (int, id, flow, loc) to true.
+		 * TODO: you need to manually put the ones that do not happen to false, e.g. (int, 2, 0, 0) = false
+		 * 
+		 */
 
 		Set<Place> visited = new HashSet<Place>();
 		for (Pair<Place, Integer> p : state) {
 			Triple<Place, Integer, Integer> place = new ImmutableTriple<Place, Integer, Integer>(p.getLeft(), timestep,
 					p.getRight());
 			int v = place2variable.get(place).getId();
-			solver.setTrue(v);
+			solver.setTrue(v); // TODO: variables that do not appear set false
 			visited.add(p.getLeft());
 		}
 	}

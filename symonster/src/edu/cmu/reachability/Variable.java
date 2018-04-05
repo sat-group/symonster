@@ -2,12 +2,13 @@ package edu.cmu.reachability;
 
 public class Variable implements Comparable<Variable>{
 	
-	enum Type { PLACE, TRANSITION; }
+	enum Type { FLOWPLACE, PLACE, TRANSITION; }
 	
 	private int id;
 	private String name;
 	private int timestep;
 	private int value;
+	private int flows;
 	private Type type;
 	
 	public Variable(int id, String name, Type type){
@@ -34,6 +35,16 @@ public class Variable implements Comparable<Variable>{
 		this.type = type; 		
 	}
 	
+	public Variable(int id, String name, Type type, int timestep, int value, int flows){
+		this.id = id;
+		this.name = name;
+		this.timestep = timestep;
+		this.value = value;
+		this.type = type; 	
+		this.flows = flows;
+	}
+
+	
 	public int getId(){
 		return id;
 	}
@@ -59,8 +70,10 @@ public class Variable implements Comparable<Variable>{
 		String res = "";
 		if (type == Type.TRANSITION)
 			res += "[" + name + "]" + "(id=" + id + ",Type=" + type + ",timestep=" + timestep + ")";
-		else
+		else if (type == Type.PLACE)
 			res += "[" + name + "]" + "(id=" + id + ",Type=" + type + ",timestep=" + timestep + ",value=" + value + ")";
+		else if (type == Type.FLOWPLACE)
+			res += "[" + name + "]" + "(id=" + id + ",Type=" + type + ",id=" + value + ",flows=" + flows + ",timestep=" + timestep + ")";
 		
 		return res;
 	}
