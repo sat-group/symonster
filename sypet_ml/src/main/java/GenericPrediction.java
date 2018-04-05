@@ -19,11 +19,11 @@ public class GenericPrediction {
 
         // jar to predict, name of result csv, package of concern, name pretrained data csv, name of output analysis csv, filepath of lib if not rt
         // comment this out if you want to input from command line
-        args = new String[]{"lib/corpus/java.awt.geom/geometry.jar", "result_geom_k=3", "java.awt.geom", "data_geom", "analysis_geom"};
+        //args = new String[]{"lib/corpus/java.awt.geom/geometry.jar", "result_geom_k=3", "java.awt.geom", "data_geom", "analysis_geom", "3"};
 
         // Use Analyzer to generate kNN
-        if(args.length > 5) {
-            Analyzer.init(new String[]{args[2], args[3], args[4], args[5]});
+        if(args.length > 6) {
+            Analyzer.init(new String[]{args[2], args[3], args[4], args[6]});
         }else{
             Analyzer.init(new String[]{args[2], args[3], args[4]});
         }
@@ -37,7 +37,7 @@ public class GenericPrediction {
         Map<String, LinkedHashSet<String>> data = JarParser.getMethodToAppearancesMap();
 
         // Generate test reports
-        List<List<Analyzer.TestReport>> testReports = Analyzer.getTestReports(data.values(), 3, true);
+        List<List<Analyzer.TestReport>> testReports = Analyzer.getTestReports(data.values(), Integer.parseInt(args[5]), true);
         PrintWriter pw = new PrintWriter(new File("src/resources/"+args[1]+".csv"));
         pw.write("match,method,prediction\n");
         for(List<Analyzer.TestReport> reports : testReports){
