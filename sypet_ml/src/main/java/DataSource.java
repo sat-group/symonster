@@ -11,10 +11,10 @@ public class DataSource {
     public static ArrayList<String> generateTrain() {
         // read all files from folder
         ArrayList<String> libs = new ArrayList<>();
-        File libFolder = new File("lib/corpus/");
+        File libFolder = new File("../../corpus/");
         for (final File fileEntry : libFolder.listFiles()) {
             System.out.println(fileEntry.getName());
-            libs.add("lib/corpus/" + fileEntry.getName());
+            libs.add("../../corpus/" + fileEntry.getName());
         }
         return libs;
     }

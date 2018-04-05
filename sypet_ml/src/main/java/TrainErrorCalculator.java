@@ -26,7 +26,7 @@ public class TrainErrorCalculator {
             JarParser.parseJar(Collections.singletonList(jar), DataSource.targetPackages());
             data = JarParser.getMethodToAppearancesMap();
             if(data.size() != 0) {
-                List<List<Analyzer.TestReport>> testReports = Analyzer.getTestReports(data.values(), true, true);
+                List<List<Analyzer.TestReport>> testReports = Analyzer.getTestReports(data.values(), false, true);
                 for (List<Analyzer.TestReport> reports : testReports) {
                     for (Analyzer.TestReport report : reports) {
                         if (report.matched() == 0) {
@@ -46,6 +46,7 @@ public class TrainErrorCalculator {
         PrintWriter pw = new PrintWriter(new File("src/resources/metrics.txt"));
         pw.write("error perfect match: "+error_0+"\n");
         pw.write("error range 10 match: "+error_10+"\n");
+        pw.write("total: "+total+"\n");
         pw.write("error rate perfect: "+(float)error_0/(float)total+"\n");
         pw.write("error rate 10: "+(float)error_10/(float)total+"\n");
         pw.close();

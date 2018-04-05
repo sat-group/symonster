@@ -17,7 +17,7 @@ public class LibraryJarParser {
 
     private static Set<String> labelSet = new HashSet<>();
 
-    public static Set<SootMethod> parse(String lib, List<String> pkg, boolean visible){
+    public static Set<SootMethod> parse(String lib, List<String> packages, boolean visible) {
         Set<SootMethod> methods = new HashSet<>();
 
         for (String cl : SourceLocator.v().getClassesUnder(lib)) {
@@ -25,9 +25,9 @@ public class LibraryJarParser {
             LinkedList<SootMethod> methodsCopy = new LinkedList<SootMethod>(clazz.getMethods());
             for (SootMethod method : methodsCopy) {
                 // Only considers method that start with the package that we are interested on
-                boolean skip = !pkg.isEmpty();
-                for (String pName : pkg) {
-                    if (cl.startsWith(pName)) {
+                boolean skip = !packages.isEmpty();
+                for (String packageName : packages) {
+                    if (cl.startsWith(packageName)) {
                         skip = false;
                         break;
                     }
@@ -35,7 +35,7 @@ public class LibraryJarParser {
 
                 // Only consider methods that are either public or static
                 // This should be used for the libraries but not for the training set
-                if (visible && !method.isPublic() && !method.isStatic()){
+                if (visible && !method.isPublic() && !method.isStatic()) {
                     skip = true;
                 }
 
@@ -49,7 +49,7 @@ public class LibraryJarParser {
         return methods;
     }
 
-    protected static void initSoot(ArrayList<String> libs, List<String> packages){
+    protected static void initSoot(ArrayList<String> libs, List<String> packages) {
 
         StringBuilder options = new StringBuilder();
         options.append("-prepend-classpath");
@@ -74,9 +74,10 @@ public class LibraryJarParser {
     }
 
     public static void init(ArrayList<String> libs, List<String> packages) {
+        labelSet.clear();
         initSoot(libs, packages);
 
-        for (String lib : libs){
+        for (String lib : libs) {
             Set<SootMethod> methods = parse(lib, packages, true);
             labelSet = methods.stream().map(SootMethod::getSignature).collect(Collectors.toSet());
             System.out.println("#methods = " + labelSet.size());
