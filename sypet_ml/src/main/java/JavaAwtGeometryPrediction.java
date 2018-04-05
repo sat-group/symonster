@@ -22,7 +22,7 @@ public class JavaAwtGeometryPrediction {
 
         // Generate test reports
         List<List<Analyzer.TestReport>> testReports = Analyzer.getTestReports(Collections.singleton(labels), 10, false);
-        PrintWriter pw = new PrintWriter(new File("src/resources/java_awt_geom_prediction.csv"));
+        PrintWriter pw = new PrintWriter(new File("src/resources/result_java_awt_geom_k=1.csv"));
         pw.write("method,prediction\n");
         for(List<Analyzer.TestReport> reports : testReports){
             for(Analyzer.TestReport report : reports){
