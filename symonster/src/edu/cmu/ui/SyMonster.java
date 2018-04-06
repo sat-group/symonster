@@ -26,7 +26,7 @@ public class SyMonster {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/xml/26/benchmark26.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/xml/28/benchmark28.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -70,8 +70,8 @@ public class SyMonster {
         DependencyMap dependencyMap = JarParser.createDependencyMap();
 
         System.out.println("Building graph.");
-        BuildNetNoVoid b = new BuildNetNoVoid();// Set petrinet
-        //BuildNetWithoutClone b = new BuildNetWithoutClone();
+        //BuildNetNoVoid b = new BuildNetNoVoid();// Set petrinet
+        BuildNetNoVoidClone b = new BuildNetNoVoidClone();
 		PetriNet net = b.build(sigs, superclassMap, subclassMap, inputs);
 		Map<String, MethodSignature> signatureMap = b.dict;
         int loc = 1;
