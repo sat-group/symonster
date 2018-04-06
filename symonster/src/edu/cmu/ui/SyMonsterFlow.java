@@ -1,7 +1,7 @@
 package edu.cmu.ui;
 import edu.cmu.compilation.Test;
 import edu.cmu.parser.*;
-import edu.cmu.petrinet.BuildNetNoVoid;
+import edu.cmu.petrinet.BuildNetNoVoidClone;
 import edu.cmu.reachability.*;
 import edu.cmu.utils.TimerUtils;
 import uniol.apt.adt.pn.PetriNet;
@@ -63,7 +63,7 @@ public class SyMonsterFlow {
         
         // 3. build a petrinet and signatureMap of library
         // Currently built without clone edges
-		BuildNetNoVoid b = new BuildNetNoVoid();                          // Set petrinet
+		BuildNetNoVoidClone b = new BuildNetNoVoidClone();                          // Set petrinet
 		//BuildNetWithoutClone b = new BuildNetWithoutClone();
 		PetriNet net = b.build(sigs, superclassMap, subclassMap, inputs);
         Map<String, MethodSignature> signatureMap = b.dict;

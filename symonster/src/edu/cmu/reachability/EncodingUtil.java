@@ -45,6 +45,7 @@ public class EncodingUtil {
                 }
             }
             if(p.getId().equals("void")) {
+                assert(false);
                 initial.add(new ImmutablePair<Place, Integer>(p, 1));
             }
             else if(!isInput) {
