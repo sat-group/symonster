@@ -32,10 +32,6 @@ public class EncodingUtil {
         }
         // Add inputs into initial state
         for(Place key : count.keySet()) {
-            // Update the max token
-            if(count.get(key) > key.getMaxToken()) {
-                key.setMaxToken(count.get(key));
-            }
             initial.add(new ImmutablePair<Place, Integer>(key, count.get(key)));
         }
 

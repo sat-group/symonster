@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 /*
    An reimplementation of BuildNet, but eliminates all clone edges by creating
@@ -83,9 +84,9 @@ public class BuildNetWithoutClone {
 
     private static void generatePolymophism(Transition t,
                                             int count,
-                                            List<Place> inputs,
-                                            List<Place> trueInputs) {
-        System.out.println(inputs.size() + "  " + count);
+                                            Stack<Place> inputs,
+                                            Stack<Place> trueInputs) {
+        System.out.println(trueInputs.size() + "  " + count);
         if(inputs.size() == count) {
             // skip if true inputs is same as inputs
             boolean skip = true;
@@ -118,6 +119,7 @@ public class BuildNetWithoutClone {
                     petrinet.createFlow(p, newTransition, 1);
                 }
             }
+
             // Add outputs but should changes as well....
             for(Flow f : t.getPostsetEdges()) {
                 Place p = f.getPlace();
@@ -130,7 +132,7 @@ public class BuildNetWithoutClone {
             Place p = inputs.get(count);
             List<String> subClasses = subDict.get(p.getId());
             if(subClasses == null) { // No possible polymophism
-                trueInputs.add(p);
+                trueInputs.push(p);
                 generatePolymophism(t, count+1, inputs, trueInputs);
                 return;
             } else {
@@ -141,12 +143,10 @@ public class BuildNetWithoutClone {
                     } catch (NoSuchNodeException e) {
                         polyClass = petrinet.createPlace(subclass);
                     }
-
                     assert(petrinet.getPlace(subclass) != null);
-
-                    trueInputs.add(polyClass);
+                    trueInputs.push(polyClass);
                     generatePolymophism(t, count+1, inputs, trueInputs);
-                    trueInputs.remove(polyClass);
+                    trueInputs.pop();
                 }
                 return;
             }
@@ -156,21 +156,14 @@ public class BuildNetWithoutClone {
         // Handles polymorphism by creating copies for each method that
         // has superclass as input type
         for(Transition t : petrinet.getTransitions()) {
-            List<Place> inputs = new ArrayList<>();
-            List<Place> outputs = new ArrayList<>();
+            Stack<Place> inputs = new Stack<>();
             Set<Flow> inEdges = t.getPresetEdges();
-            Set<Flow> outEdges = t.getPostsetEdges();
             for(Flow f : inEdges) {
                 for(int i = 0; i < f.getWeight(); i++) {
-                    inputs.add(f.getPlace());
+                    inputs.push(f.getPlace());
                 }
             }
-            for(Flow f : outEdges) {
-                for(int i = 0; i < f.getWeight(); i++) {
-                    outputs.add(f.getPlace());
-                }
-            }
-            List<Place> trueInputs = new ArrayList<>();
+            Stack<Place> trueInputs = new Stack<>();
             generatePolymophism(t, 0, inputs, trueInputs);
         }
     }
@@ -234,7 +227,8 @@ public class BuildNetWithoutClone {
 
     public static PetriNet build(List<MethodSignature> result,
                                  Map<String, Set<String>> superClassMap,
-                                 Map<String, Set<String>> subClassMap)  throws java.io.IOException{
+                                 Map<String, Set<String>> subClassMap,
+                                 List<String> inputs)  throws java.io.IOException{
         // Create polymorphism dicts
         for(String s : superClassMap.keySet()) {
             Set<String> superClasses = superClassMap.get(s);
@@ -373,6 +367,22 @@ public class BuildNetWithoutClone {
             }
             if(p.getId() == "void") {
                 assert(p.getMaxToken() == 1);
+            }
+        }
+        // Update the maxtoken for inputs
+        HashMap<Place, Integer> count = new HashMap<Place, Integer>();
+        for (String input : inputs) {
+            Place p;
+            p = petrinet.getPlace(input);
+            if (count.containsKey(p)) {
+                count.put(p, count.get(p) + 1);
+            } else {
+                count.put(p, 1);
+            }
+        }
+        for(Place p : count.keySet()) {
+             if(count.get(p) > p.getMaxToken()) {
+                p.setMaxToken(count.get(p));
             }
         }
 

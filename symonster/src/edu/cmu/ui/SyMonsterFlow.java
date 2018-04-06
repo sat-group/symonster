@@ -65,7 +65,7 @@ public class SyMonsterFlow {
         // Currently built without clone edges
 		BuildNetNoVoid b = new BuildNetNoVoid();                          // Set petrinet
 		//BuildNetWithoutClone b = new BuildNetWithoutClone();
-		PetriNet net = b.build(sigs, superclassMap, subclassMap);
+		PetriNet net = b.build(sigs, superclassMap, subclassMap, inputs);
         Map<String, MethodSignature> signatureMap = b.dict;
 
 		int loc = 1;

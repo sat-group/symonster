@@ -225,7 +225,8 @@ public class BuildNetNoVoid{
 
     public static PetriNet build(List<MethodSignature> result,
                                  Map<String, Set<String>> superClassMap,
-                                 Map<String, Set<String>> subClassMap)  throws java.io.IOException{
+                                 Map<String, Set<String>> subClassMap,
+                                 List<String> inputs)  throws java.io.IOException{
         // Create polymorphism dicts
         for(String s : superClassMap.keySet()) {
             Set<String> superClasses = superClassMap.get(s);
@@ -363,6 +364,22 @@ public class BuildNetNoVoid{
                 p.setMaxToken(1);
             }
         }
+        // Update the maxtoken for inputs
+        HashMap<Place, Integer> count = new HashMap<Place, Integer>();
+        for (String input : inputs) {
+            Place p;
+            p = petrinet.getPlace(input);
+            if (count.containsKey(p)) {
+                count.put(p, count.get(p) + 1);
+            } else {
+                count.put(p, 1);
+            }
+        }
+        for(Place p : count.keySet()) {
+             if(count.get(p) > p.getMaxToken()) {
+                p.setMaxToken(count.get(p));
+            }
+        }
 
         Visualization.translate(petrinet);
         // print all transitions
@@ -382,5 +399,6 @@ public class BuildNetNoVoid{
         */
         return petrinet;
     }
+
 }
 

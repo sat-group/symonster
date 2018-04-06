@@ -26,7 +26,7 @@ public class SyMonster {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/joda/16/benchmark16.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/joda/17/benchmark17.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -70,9 +70,9 @@ public class SyMonster {
         DependencyMap dependencyMap = JarParser.createDependencyMap();
 
         System.out.println("Building graph.");
-        //BuildNetNoVoid b = new BuildNetNoVoid();// Set petrinet
-        BuildNetWithoutClone b = new BuildNetWithoutClone();
-		PetriNet net = b.build(sigs, superclassMap, subclassMap);
+        BuildNetNoVoid b = new BuildNetNoVoid();// Set petrinet
+        //BuildNetWithoutClone b = new BuildNetWithoutClone();
+		PetriNet net = b.build(sigs, superclassMap, subclassMap, inputs);
 		Map<String, MethodSignature> signatureMap = b.dict;
         int loc = 1;
 		int paths = 0;
@@ -85,7 +85,6 @@ public class SyMonster {
 		while (!solution) {
 			// create a formula that has the same semantics as the petri-net
 			Encoding encoding = new SequentialEncoding(net, loc);                     // Set encoding
-			
 			// set initial state and final state
 			encoding.setState(EncodingUtil.setInitialState(net, inputs),  0);
 			encoding.setState(EncodingUtil.setGoalState(net, retType),  loc);
@@ -163,5 +162,7 @@ public class SyMonster {
 		}
 
 	}
+
+
 
 }
