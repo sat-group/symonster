@@ -26,7 +26,7 @@ public class SyMonster {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/xml/28/benchmark28.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/xml/24/benchmark24.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -70,8 +70,8 @@ public class SyMonster {
         DependencyMap dependencyMap = JarParser.createDependencyMap();
 
         System.out.println("Building graph.");
-        //BuildNetNoVoid b = new BuildNetNoVoid();// Set petrinet
-        BuildNetNoVoidClone b = new BuildNetNoVoidClone();
+        BuildNetNoVoid b = new BuildNetNoVoid();  // Set petrinet
+        //BuildNetNoVoidClone b = new BuildNetNoVoidClone();
 		PetriNet net = b.build(sigs, superclassMap, subclassMap, inputs);
 		Map<String, MethodSignature> signatureMap = b.dict;
         int loc = 1;
@@ -160,9 +160,5 @@ public class SyMonster {
 			// we did not find a program of length = loc
 			loc++;
 		}
-
 	}
-
-
-
 }

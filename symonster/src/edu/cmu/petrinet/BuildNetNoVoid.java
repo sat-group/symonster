@@ -172,6 +172,17 @@ public class BuildNetNoVoid {
                 }
                 //add flow for the return type
                 petrinet.createFlow(transitionName, retType.toString(), 1);
+            } else {  // TODO Assume that it is not static
+                String hostclass = k.getHostClass().toString();
+                try{
+                    petrinet.getPlace(hostclass);
+                } catch (NoSuchNodeException e) {
+                    petrinet.createPlace(hostclass);
+                    //add clone transition
+                    petrinet.createTransition(hostclass + "Clone");
+                    petrinet.createFlow(hostclass, hostclass + "Clone", 1);
+                    petrinet.createFlow(hostclass + "Clone", hostclass, 2);
+                }
             }
         }
 
