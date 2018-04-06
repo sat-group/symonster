@@ -1,0 +1,147 @@
+public final class com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator extends com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter
+{
+    private static final com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator INSTANCE;
+    private static final double DEFAULT_MEAN_REVERSION;
+    private static final int DEFAULT_NB_PATH;
+    private static final com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator PVSSC;
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator r0;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter: void <init>()>();
+
+        return;
+    }
+
+    public static com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator getInstance()
+    {
+        com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator $r0;
+
+        $r0 = <com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator: com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator INSTANCE>;
+
+        return $r0;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitSwaptionPhysicalFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor, com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface)
+    {
+        com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface r2;
+        com.opengamma.util.money.Currency r3;
+        com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters $r11;
+        double[] $r12, $r13;
+        com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderHullWhiteCalibrationObjective $r14;
+        com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderHullWhiteCalibrationEngine $r15;
+        com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator $r16;
+        com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProvider $r17;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r18;
+        com.opengamma.analytics.financial.montecarlo.provider.HullWhiteMonteCarloMethod $r19;
+        com.opengamma.analytics.math.random.NormalRandomNumberGenerator $r20;
+        cern.jet.random.engine.MersenneTwister $r21;
+        com.opengamma.util.money.MultipleCurrencyAmount $r22;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Swaption");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "SABR swaption provider");
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r11 = new com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters;
+
+        $r12 = newarray (double)[1];
+
+        $r12[0] = 0.01;
+
+        $r13 = newarray (double)[0];
+
+        specialinvoke $r11.<com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters: void <init>(double,double[],double[])>(0.01, $r12, $r13);
+
+        $r14 = new com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderHullWhiteCalibrationObjective;
+
+        specialinvoke $r14.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderHullWhiteCalibrationObjective: void <init>(com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters,com.opengamma.util.money.Currency)>($r11, r3);
+
+        $r15 = new com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderHullWhiteCalibrationEngine;
+
+        specialinvoke $r15.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderHullWhiteCalibrationEngine: void <init>(com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves)>($r14);
+
+        $r16 = <com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator: com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator PVSSC>;
+
+        virtualinvoke $r15.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderHullWhiteCalibrationEngine: void addInstrument(com.opengamma.analytics.financial.interestrate.InstrumentDerivative,com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)>(r1, $r16);
+
+        virtualinvoke $r15.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderHullWhiteCalibrationEngine: void calibrate(com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>(r2);
+
+        $r17 = new com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProvider;
+
+        $r18 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        specialinvoke $r17.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProvider: void <init>(com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface,com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters,com.opengamma.util.money.Currency)>($r18, $r11, r3);
+
+        $r19 = new com.opengamma.analytics.financial.montecarlo.provider.HullWhiteMonteCarloMethod;
+
+        $r20 = new com.opengamma.analytics.math.random.NormalRandomNumberGenerator;
+
+        $r21 = new cern.jet.random.engine.MersenneTwister;
+
+        specialinvoke $r21.<cern.jet.random.engine.MersenneTwister: void <init>()>();
+
+        specialinvoke $r20.<com.opengamma.analytics.math.random.NormalRandomNumberGenerator: void <init>(double,double,cern.jet.random.engine.RandomEngine)>(0.0, 1.0, $r21);
+
+        specialinvoke $r19.<com.opengamma.analytics.financial.montecarlo.provider.HullWhiteMonteCarloMethod: void <init>(com.opengamma.analytics.math.random.RandomNumberGenerator,int)>($r20, 50000);
+
+        $r22 = virtualinvoke $r19.<com.opengamma.analytics.financial.montecarlo.provider.HullWhiteMonteCarloMethod: com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.InstrumentDerivative,com.opengamma.util.money.Currency,com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface)>(r1, r3, $r17);
+
+        return $r22;
+    }
+
+    public volatile java.lang.Object visitSwaptionPhysicalFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface $r3;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitSwaptionPhysicalFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator $r0;
+        com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator $r1;
+
+        <com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator: int DEFAULT_NB_PATH> = 50000;
+
+        <com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator: double DEFAULT_MEAN_REVERSION> = 0.01;
+
+        $r0 = new com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator: void <init>()>();
+
+        <com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator: com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator INSTANCE> = $r0;
+
+        $r1 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator: com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.provider.calculator.hullwhite.PresentValueSABRHullWhiteMonteCarloCalculator: com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator PVSSC> = $r1;
+
+        return;
+    }
+}

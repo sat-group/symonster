@@ -1,0 +1,1157 @@
+public class com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator extends com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter
+{
+    private static final com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator INSTANCE;
+    private static final com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod METHOD_SWAP;
+
+    public static com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator getInstance()
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator $r0;
+
+        $r0 = <com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator: com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator INSTANCE>;
+
+        return $r0;
+    }
+
+    void <init>()
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator r0;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter: void <init>()>();
+
+        return;
+    }
+
+    public java.lang.Double visitCapFloorIbor(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor, com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor r1;
+        com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle r2;
+        double[][] r3, $r10;
+        double[] r4, r6, r7, $r12, $r14, $r15, $r16;
+        int[] r5;
+        int i0, i1, $i2, $i3, i4, i5;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, d25, $d26, d27;
+        double[][][] $r8, $r9;
+        int[][] $r11;
+        boolean $z0, $z1;
+        java.lang.Double $r13;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle;
+
+        $r8 = virtualinvoke r2.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: double[][][] getPathIborRate()>();
+
+        $i2 = lengthof $r8;
+
+        if $i2 != 1 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "Only one decision date for cap/floor.");
+
+        $r9 = virtualinvoke r2.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: double[][][] getPathIborRate()>();
+
+        r3 = $r9[0];
+
+        $r10 = virtualinvoke r2.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: double[][] getImpactAmount()>();
+
+        r4 = $r10[0];
+
+        $r11 = virtualinvoke r2.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: int[][] getImpactIndex()>();
+
+        r5 = $r11[0];
+
+        d25 = 0.0;
+
+        $r12 = r3[0];
+
+        i0 = lengthof $r12;
+
+        i1 = lengthof r3;
+
+        r6 = newarray (double)[i0];
+
+        r7 = newarray (double)[i0];
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: boolean isCap()>();
+
+        if $z0 == 0 goto label3;
+
+        $d26 = 1.0;
+
+        goto label4;
+
+     label3:
+        $d26 = -1.0;
+
+     label4:
+        d1 = $d26;
+
+        i4 = 0;
+
+     label5:
+        if i4 >= i0 goto label8;
+
+        $d6 = r4[0];
+
+        $i3 = r5[0];
+
+        $r14 = r3[$i3];
+
+        $d5 = $r14[i4];
+
+        $d8 = $d6 * $d5;
+
+        $d7 = r4[0];
+
+        $d9 = $d7 - 1.0;
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        $d11 = $d9 / $d10;
+
+        $d12 = $d8 + $d11;
+
+        r6[i4] = $d12;
+
+        $d13 = r6[i4];
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $d15 = $d13 - $d14;
+
+        $d16 = d1 * $d15;
+
+        d0 = staticinvoke <java.lang.Math: double max(double,double)>($d16, 0.0);
+
+        r7[i4] = 1.0;
+
+        i5 = r5[2];
+
+     label6:
+        if i5 >= i1 goto label7;
+
+        $d19 = r7[i4];
+
+        $r15 = r3[i5];
+
+        $d20 = $r15[i4];
+
+        $r16 = virtualinvoke r2.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: double[] getDelta()>();
+
+        $d21 = $r16[i5];
+
+        $d22 = $d20 * $d21;
+
+        $d23 = 1.0 + $d22;
+
+        $d24 = $d19 * $d23;
+
+        r7[i4] = $d24;
+
+        i5 = i5 + 1;
+
+        goto label6;
+
+     label7:
+        $d17 = r7[i4];
+
+        $d18 = d0 * $d17;
+
+        d25 = d25 + $d18;
+
+        i4 = i4 + 1;
+
+        goto label5;
+
+     label8:
+        $d2 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getNotional()>();
+
+        $d3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentYearFraction()>();
+
+        $d4 = $d2 * $d3;
+
+        d27 = d25 * $d4;
+
+        $r13 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d27);
+
+        return $r13;
+    }
+
+    public java.lang.Double visitSwaptionPhysicalFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor, com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor r1;
+        com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle r2;
+        double[][] r3, r6, $r9;
+        double[] r4, r7, $r11, $r13, $r14, $r15, $r16, $r17, $r18;
+        int[] r5;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, i7, i8, i9;
+        double[][][] $r8;
+        int[][] $r10;
+        boolean $z0;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, d15, $d16;
+        java.lang.Double $r12;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle;
+
+        $r8 = virtualinvoke r2.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: double[][][] getPathIborRate()>();
+
+        r3 = $r8[0];
+
+        $r9 = virtualinvoke r2.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: double[][] getImpactAmount()>();
+
+        r4 = $r9[0];
+
+        $r10 = virtualinvoke r2.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: int[][] getImpactIndex()>();
+
+        r5 = $r10[0];
+
+        i0 = lengthof r5;
+
+        $r11 = r3[0];
+
+        i1 = lengthof $r11;
+
+        i2 = lengthof r3;
+
+        $i3 = i2 + 1;
+
+        r6 = newmultiarray (double)[i1][$i3];
+
+        d15 = 0.0;
+
+        r7 = newarray (double)[i1];
+
+        i7 = 0;
+
+     label1:
+        if i7 >= i1 goto label6;
+
+        $r13 = r6[i7];
+
+        $r13[i2] = 1.0;
+
+        i8 = i2 - 1;
+
+     label2:
+        if i8 < 0 goto label3;
+
+        $r17 = r6[i7];
+
+        $r15 = r6[i7];
+
+        $i6 = i8 + 1;
+
+        $d9 = $r15[$i6];
+
+        $r16 = r3[i8];
+
+        $d10 = $r16[i7];
+
+        $r18 = virtualinvoke r2.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: double[] getDelta()>();
+
+        $d11 = $r18[i8];
+
+        $d12 = $d10 * $d11;
+
+        $d13 = 1.0 + $d12;
+
+        $d14 = $d9 * $d13;
+
+        $r17[i8] = $d14;
+
+        i8 = i8 + -1;
+
+        goto label2;
+
+     label3:
+        i9 = 0;
+
+     label4:
+        if i9 >= i0 goto label5;
+
+        $d7 = r7[i7];
+
+        $i4 = r5[i9];
+
+        $d5 = r4[$i4];
+
+        $r14 = r6[i7];
+
+        $i5 = r5[i9];
+
+        $d4 = $r14[$i5];
+
+        $d6 = $d5 * $d4;
+
+        $d8 = $d7 + $d6;
+
+        r7[i7] = $d8;
+
+        i9 = i9 + 1;
+
+        goto label4;
+
+     label5:
+        $d2 = r7[i7];
+
+        $d3 = staticinvoke <java.lang.Math: double max(double,double)>($d2, 0.0);
+
+        d15 = d15 + $d3;
+
+        i7 = i7 + 1;
+
+        goto label1;
+
+     label6:
+        $d1 = d15;
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: boolean isLong()>();
+
+        if $z0 == 0 goto label7;
+
+        $d16 = 1.0;
+
+        goto label8;
+
+     label7:
+        $d16 = -1.0;
+
+     label8:
+        $d0 = $d1 * $d16;
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        return $r12;
+    }
+
+    public java.lang.Double visitSwaptionCashFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor, com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor r1;
+        com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle r2;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, d23, $d24, d25, d26, d28, d29, $d30;
+        double[][] r3, r6, $r8;
+        double[] r4, $r10, $r14, $r17, $r18, $r19, $r20, $r21, $r22, $r23;
+        int[] r5;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, i11, i12, i13, i14, i15, i16;
+        double[][][] $r7;
+        int[][] $r9;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon $r11, $r16;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed $r12;
+        boolean $z0, $z1;
+        java.lang.Double $r13;
+        com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod $r15;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle;
+
+        d0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor: double getStrike()>();
+
+        $r7 = virtualinvoke r2.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: double[][][] getPathIborRate()>();
+
+        r3 = $r7[0];
+
+        $r8 = virtualinvoke r2.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: double[][] getImpactAmount()>();
+
+        r4 = $r8[0];
+
+        $r9 = virtualinvoke r2.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: int[][] getImpactIndex()>();
+
+        r5 = $r9[0];
+
+        i11 = 0;
+
+     label01:
+        $i5 = r5[i11];
+
+        $i3 = i11 + 1;
+
+        $i4 = r5[$i3];
+
+        if $i5 >= $i4 goto label02;
+
+        i11 = i11 + 1;
+
+        goto label01;
+
+     label02:
+        i12 = i11 + 1;
+
+        i0 = lengthof r5;
+
+        $r10 = r3[0];
+
+        i1 = lengthof $r10;
+
+        i2 = lengthof r3;
+
+        $i6 = i2 + 1;
+
+        r6 = newmultiarray (double)[i1][$i6];
+
+        d23 = 0.0;
+
+        $r11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $z0 = virtualinvoke $r12.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: boolean isPayer()>();
+
+        if $z0 == 0 goto label03;
+
+        $d24 = 1.0;
+
+        goto label04;
+
+     label03:
+        $d24 = -1.0;
+
+     label04:
+        d1 = $d24;
+
+        i13 = 0;
+
+     label05:
+        if i13 >= i1 goto label12;
+
+        d25 = 0.0;
+
+        d26 = 0.0;
+
+        $r14 = r6[i13];
+
+        $r14[i2] = 1.0;
+
+        i14 = i2 - 1;
+
+     label06:
+        if i14 < 0 goto label07;
+
+        $r22 = r6[i13];
+
+        $r20 = r6[i13];
+
+        $i10 = i14 + 1;
+
+        $d17 = $r20[$i10];
+
+        $r21 = r3[i14];
+
+        $d18 = $r21[i13];
+
+        $r23 = virtualinvoke r2.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: double[] getDelta()>();
+
+        $d19 = $r23[i14];
+
+        $d20 = $d18 * $d19;
+
+        $d21 = 1.0 + $d20;
+
+        $d22 = $d17 * $d21;
+
+        $r22[i14] = $d22;
+
+        i14 = i14 + -1;
+
+        goto label06;
+
+     label07:
+        i15 = 0;
+
+     label08:
+        if i15 >= i12 goto label09;
+
+        $d15 = r4[i15];
+
+        $r19 = r6[i13];
+
+        $i9 = r5[i15];
+
+        $d14 = $r19[$i9];
+
+        $d16 = $d15 * $d14;
+
+        d25 = d25 + $d16;
+
+        i15 = i15 + 1;
+
+        goto label08;
+
+     label09:
+        i16 = i12;
+
+     label10:
+        if i16 >= i0 goto label11;
+
+        $d12 = r4[i16];
+
+        $r18 = r6[i13];
+
+        $i8 = r5[i16];
+
+        $d11 = $r18[$i8];
+
+        $d13 = $d12 * $d11;
+
+        d26 = d26 + $d13;
+
+        i16 = i16 + 1;
+
+        goto label10;
+
+     label11:
+        $d4 = neg d26;
+
+        d28 = $d4 / d25;
+
+        $r15 = <com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod METHOD_SWAP>;
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        d29 = virtualinvoke $r15.<com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod: double getAnnuityCash(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,double)>($r16, d28);
+
+        $d5 = d28 - d0;
+
+        $d6 = d1 * $d5;
+
+        $d7 = staticinvoke <java.lang.Math: double max(double,double)>($d6, 0.0);
+
+        $d9 = d29 * $d7;
+
+        $r17 = r6[i13];
+
+        $i7 = r5[i12];
+
+        $d8 = $r17[$i7];
+
+        $d10 = $d9 * $d8;
+
+        d23 = d23 + $d10;
+
+        i13 = i13 + 1;
+
+        goto label05;
+
+     label12:
+        $d3 = d23;
+
+        $z1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor: boolean isLong()>();
+
+        if $z1 == 0 goto label13;
+
+        $d30 = 1.0;
+
+        goto label14;
+
+     label13:
+        $d30 = -1.0;
+
+     label14:
+        $d2 = $d3 * $d30;
+
+        $r13 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d2);
+
+        return $r13;
+    }
+
+    public java.lang.Double visitAnnuityCouponIborRatchet(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet, com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet r1;
+        com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle r2;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, i15, i16, i17, i18, i19, i20, i21, i22;
+        double[][][] r3, r7;
+        double[][] r4, $r8, $r10, $r17, $r21, $r26, $r31, $r35, $r52, $r58, $r60, $r62, $r63, $r65, r68;
+        int[][] r5;
+        double[] r6, $r9, $r15, $r18, $r19, $r22, $r23, $r24, $r27, $r29, $r32, $r33, $r36, $r37, $r38, $r39, $r40, $r41, $r42, $r43, $r44, $r45, $r46, $r47, $r48, $r49, $r50, $r53, $r55, $r56, $r59, $r61, $r64, $r66, $r67, r69;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, $d80, d81, d82, d83;
+        java.lang.Double $r11;
+        boolean[] $r12;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r13, $r14, $r28, $r54;
+        int[] $r16, $r20, $r25, $r30, $r34, $r51, $r57;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed r70;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet r71;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing r72;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle;
+
+        i0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: int getNumberOfPayments()>();
+
+        r3 = virtualinvoke r2.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: double[][][] getPathIborRate()>();
+
+        $r8 = r3[0];
+
+        $r9 = $r8[0];
+
+        i1 = lengthof $r9;
+
+        $r10 = r3[0];
+
+        i2 = lengthof $r10;
+
+        r4 = virtualinvoke r2.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: double[][] getImpactAmount()>();
+
+        r5 = virtualinvoke r2.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: int[][] getImpactIndex()>();
+
+        r6 = virtualinvoke r2.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: double[] getDelta()>();
+
+        $i3 = i2 + 1;
+
+        r7 = newmultiarray (double)[i0][$i3][i1];
+
+        i15 = 0;
+
+     label01:
+        if i15 >= i0 goto label06;
+
+        i16 = 0;
+
+     label02:
+        if i16 >= i1 goto label05;
+
+        $r60 = r7[i15];
+
+        $r61 = $r60[i2];
+
+        $r61[i16] = 1.0;
+
+        i17 = i2 - 1;
+
+     label03:
+        if i17 < 0 goto label04;
+
+        $r62 = r7[i15];
+
+        $r67 = $r62[i17];
+
+        $r63 = r7[i15];
+
+        $i14 = i17 + 1;
+
+        $r64 = $r63[$i14];
+
+        $d79 = $r64[i16];
+
+        $r65 = r3[i15];
+
+        $r66 = $r65[i17];
+
+        $d76 = $r66[i16];
+
+        $d75 = r6[i17];
+
+        $d77 = $d76 * $d75;
+
+        $d78 = 1.0 + $d77;
+
+        $d80 = $d79 * $d78;
+
+        $r67[i16] = $d80;
+
+        i17 = i17 + -1;
+
+        goto label03;
+
+     label04:
+        i16 = i16 + 1;
+
+        goto label02;
+
+     label05:
+        i15 = i15 + 1;
+
+        goto label01;
+
+     label06:
+        r68 = newmultiarray (double)[i0][i1];
+
+        r69 = newarray (double)[i1];
+
+        i18 = 0;
+
+     label07:
+        if i18 >= i0 goto label16;
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: boolean[] isFixed()>();
+
+        $z0 = $r12[i18];
+
+        if $z0 == 0 goto label10;
+
+        $r54 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i18);
+
+        r70 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed) $r54;
+
+        i19 = 0;
+
+     label08:
+        if i19 >= i1 goto label09;
+
+        $r55 = r68[i18];
+
+        $d69 = virtualinvoke r70.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: double getFixedRate()>();
+
+        $r55[i19] = $d69;
+
+        $d73 = r69[i19];
+
+        $r56 = r4[i18];
+
+        $d71 = $r56[0];
+
+        $r58 = r7[i18];
+
+        $r57 = r5[i18];
+
+        $i13 = $r57[0];
+
+        $r59 = $r58[$i13];
+
+        $d70 = $r59[i19];
+
+        $d72 = $d71 * $d70;
+
+        $d74 = $d73 + $d72;
+
+        r69[i19] = $d74;
+
+        i19 = i19 + 1;
+
+        goto label08;
+
+     label09:
+        goto label15;
+
+     label10:
+        $r13 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i18);
+
+        $z1 = $r13 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet;
+
+        if $z1 == 0 goto label13;
+
+        $r28 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i18);
+
+        r71 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet) $r28;
+
+        i20 = 0;
+
+     label11:
+        if i20 >= i1 goto label12;
+
+        $r29 = r4[i18];
+
+        $d27 = $r29[0];
+
+        $d29 = neg $d27;
+
+        $r31 = r7[i18];
+
+        $r30 = r5[i18];
+
+        $i7 = $r30[0];
+
+        $r32 = $r31[$i7];
+
+        $d28 = $r32[i20];
+
+        $d33 = $d29 * $d28;
+
+        $r33 = r4[i18];
+
+        $d31 = $r33[1];
+
+        $r35 = r7[i18];
+
+        $r34 = r5[i18];
+
+        $i8 = $r34[1];
+
+        $r36 = $r35[$i8];
+
+        $d30 = $r36[i20];
+
+        $d32 = $d31 * $d30;
+
+        $d34 = $d33 / $d32;
+
+        $d35 = $d34 - 1.0;
+
+        $d36 = virtualinvoke r71.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double getFixingAccrualFactor()>();
+
+        d81 = $d35 / $d36;
+
+        $r37 = virtualinvoke r71.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getMainCoefficients()>();
+
+        $d38 = $r37[0];
+
+        $i9 = i18 - 1;
+
+        $r38 = r68[$i9];
+
+        $d37 = $r38[i20];
+
+        $d39 = $d38 * $d37;
+
+        $r39 = virtualinvoke r71.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getMainCoefficients()>();
+
+        $d40 = $r39[1];
+
+        $d41 = $d40 * d81;
+
+        $d42 = $d39 + $d41;
+
+        $r40 = virtualinvoke r71.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getMainCoefficients()>();
+
+        $d43 = $r40[2];
+
+        d0 = $d42 + $d43;
+
+        $r41 = virtualinvoke r71.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getFloorCoefficients()>();
+
+        $d45 = $r41[0];
+
+        $i10 = i18 - 1;
+
+        $r42 = r68[$i10];
+
+        $d44 = $r42[i20];
+
+        $d46 = $d45 * $d44;
+
+        $r43 = virtualinvoke r71.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getFloorCoefficients()>();
+
+        $d47 = $r43[1];
+
+        $d48 = $d47 * d81;
+
+        $d49 = $d46 + $d48;
+
+        $r44 = virtualinvoke r71.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getFloorCoefficients()>();
+
+        $d50 = $r44[2];
+
+        d1 = $d49 + $d50;
+
+        $r45 = virtualinvoke r71.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getCapCoefficients()>();
+
+        $d52 = $r45[0];
+
+        $i11 = i18 - 1;
+
+        $r46 = r68[$i11];
+
+        $d51 = $r46[i20];
+
+        $d53 = $d52 * $d51;
+
+        $r47 = virtualinvoke r71.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getCapCoefficients()>();
+
+        $d54 = $r47[1];
+
+        $d55 = $d54 * d81;
+
+        $d56 = $d53 + $d55;
+
+        $r48 = virtualinvoke r71.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getCapCoefficients()>();
+
+        $d57 = $r48[2];
+
+        d2 = $d56 + $d57;
+
+        $r49 = r68[i18];
+
+        $d58 = staticinvoke <java.lang.Math: double max(double,double)>(d1, d0);
+
+        $d59 = staticinvoke <java.lang.Math: double min(double,double)>($d58, d2);
+
+        $r49[i20] = $d59;
+
+        $d60 = r69[i20];
+
+        $r50 = r68[i18];
+
+        $d61 = $r50[i20];
+
+        $d62 = virtualinvoke r71.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double getPaymentYearFraction()>();
+
+        $d63 = $d61 * $d62;
+
+        $d64 = virtualinvoke r71.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double getNotional()>();
+
+        $d66 = $d63 * $d64;
+
+        $r52 = r7[i18];
+
+        $r51 = r5[i18];
+
+        $i12 = $r51[1];
+
+        $r53 = $r52[$i12];
+
+        $d65 = $r53[i20];
+
+        $d67 = $d66 * $d65;
+
+        $d68 = $d60 + $d67;
+
+        r69[i20] = $d68;
+
+        i20 = i20 + 1;
+
+        goto label11;
+
+     label12:
+        goto label15;
+
+     label13:
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i18);
+
+        r72 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing) $r14;
+
+        i21 = 0;
+
+     label14:
+        if i21 >= i1 goto label15;
+
+        $r15 = r4[0];
+
+        $d4 = $r15[0];
+
+        $d6 = neg $d4;
+
+        $r17 = r7[i18];
+
+        $r16 = r5[i18];
+
+        $i4 = $r16[0];
+
+        $r18 = $r17[$i4];
+
+        $d5 = $r18[i21];
+
+        $d10 = $d6 * $d5;
+
+        $r19 = r4[0];
+
+        $d8 = $r19[1];
+
+        $r21 = r7[i18];
+
+        $r20 = r5[i18];
+
+        $i5 = $r20[1];
+
+        $r22 = $r21[$i5];
+
+        $d7 = $r22[i21];
+
+        $d9 = $d8 * $d7;
+
+        $d11 = $d10 / $d9;
+
+        $d12 = $d11 - 1.0;
+
+        $d13 = virtualinvoke r72.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing: double getFixingAccrualFactor()>();
+
+        d82 = $d12 / $d13;
+
+        $r23 = r68[i18];
+
+        $d14 = virtualinvoke r72.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing: double getFactor()>();
+
+        $d15 = $d14 * d82;
+
+        $d16 = virtualinvoke r72.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing: double getSpread()>();
+
+        $d17 = $d15 + $d16;
+
+        $r23[i21] = $d17;
+
+        $d18 = r69[i21];
+
+        $r24 = r68[i18];
+
+        $d19 = $r24[i21];
+
+        $d20 = virtualinvoke r72.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing: double getPaymentYearFraction()>();
+
+        $d21 = $d19 * $d20;
+
+        $d22 = virtualinvoke r72.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing: double getNotional()>();
+
+        $d24 = $d21 * $d22;
+
+        $r26 = r7[i18];
+
+        $r25 = r5[i18];
+
+        $i6 = $r25[1];
+
+        $r27 = $r26[$i6];
+
+        $d23 = $r27[i21];
+
+        $d25 = $d24 * $d23;
+
+        $d26 = $d18 + $d25;
+
+        r69[i21] = $d26;
+
+        i21 = i21 + 1;
+
+        goto label14;
+
+     label15:
+        i18 = i18 + 1;
+
+        goto label07;
+
+     label16:
+        d83 = 0.0;
+
+        i22 = 0;
+
+     label17:
+        if i22 >= i1 goto label18;
+
+        $d3 = r69[i22];
+
+        d83 = d83 + $d3;
+
+        i22 = i22 + 1;
+
+        goto label17;
+
+     label18:
+        $r11 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d83);
+
+        return $r11;
+    }
+
+    public volatile java.lang.Object visitSwaptionPhysicalFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator: java.lang.Double visitSwaptionPhysicalFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitSwaptionCashFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator: java.lang.Double visitSwaptionCashFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor,com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitAnnuityCouponIborRatchet(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator: java.lang.Double visitAnnuityCouponIborRatchet(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet,com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitCapFloorIbor(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator: java.lang.Double visitCapFloorIbor(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor,com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator $r0;
+        com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod $r1;
+
+        $r0 = new com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator: void <init>()>();
+
+        <com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator: com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator INSTANCE> = $r0;
+
+        $r1 = staticinvoke <com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod METHOD_SWAP> = $r1;
+
+        return;
+    }
+}

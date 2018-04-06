@@ -1,0 +1,282 @@
+public class com.opengamma.financial.convention.businessday.BusinessDayDateUtils extends java.lang.Object
+{
+
+    protected void <init>()
+    {
+        com.opengamma.financial.convention.businessday.BusinessDayDateUtils r0;
+
+        r0 := @this: com.opengamma.financial.convention.businessday.BusinessDayDateUtils;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public static int getDaysBetween(org.threeten.bp.ZonedDateTime, boolean, org.threeten.bp.ZonedDateTime, boolean, org.threeten.bp.temporal.TemporalAdjuster)
+    {
+        org.threeten.bp.ZonedDateTime r0, r1;
+        boolean z0, z1, $z2, $z3;
+        org.threeten.bp.temporal.TemporalAdjuster r2;
+        int $i0, i4, $i5;
+        byte $b1, b2, $b3;
+        org.threeten.bp.LocalDate r3, r4, $r5;
+
+        r0 := @parameter0: org.threeten.bp.ZonedDateTime;
+
+        z0 := @parameter1: boolean;
+
+        r1 := @parameter2: org.threeten.bp.ZonedDateTime;
+
+        z1 := @parameter3: boolean;
+
+        r2 := @parameter4: org.threeten.bp.temporal.TemporalAdjuster;
+
+        r3 = virtualinvoke r0.<org.threeten.bp.ZonedDateTime: org.threeten.bp.LocalDate toLocalDate()>();
+
+        r4 = virtualinvoke r1.<org.threeten.bp.ZonedDateTime: org.threeten.bp.LocalDate toLocalDate()>();
+
+        b2 = 1;
+
+        $z2 = virtualinvoke r0.<org.threeten.bp.ZonedDateTime: boolean isAfter(org.threeten.bp.chrono.ChronoZonedDateTime)>(r1);
+
+        if $z2 == 0 goto label1;
+
+        r3 = virtualinvoke r1.<org.threeten.bp.ZonedDateTime: org.threeten.bp.LocalDate toLocalDate()>();
+
+        r4 = virtualinvoke r0.<org.threeten.bp.ZonedDateTime: org.threeten.bp.LocalDate toLocalDate()>();
+
+        b2 = -1;
+
+     label1:
+        if z0 == 0 goto label2;
+
+        $b3 = 1;
+
+        goto label3;
+
+     label2:
+        $b3 = 0;
+
+     label3:
+        i4 = $b3;
+
+     label4:
+        $r5 = virtualinvoke r3.<org.threeten.bp.LocalDate: org.threeten.bp.LocalDate 'with'(org.threeten.bp.temporal.TemporalAdjuster)>(r2);
+
+        $z3 = virtualinvoke $r5.<org.threeten.bp.LocalDate: boolean equals(java.lang.Object)>(r4);
+
+        if $z3 != 0 goto label5;
+
+        r3 = virtualinvoke r3.<org.threeten.bp.LocalDate: org.threeten.bp.LocalDate 'with'(org.threeten.bp.temporal.TemporalAdjuster)>(r2);
+
+        i4 = i4 + 1;
+
+        goto label4;
+
+     label5:
+        $b1 = b2;
+
+        if z1 == 0 goto label6;
+
+        $i5 = i4;
+
+        goto label7;
+
+     label6:
+        $i5 = i4 - 1;
+
+     label7:
+        $i0 = $b1 * $i5;
+
+        return $i0;
+    }
+
+    public static org.threeten.bp.LocalDate addWorkDays(org.threeten.bp.LocalDate, int, com.opengamma.financial.convention.calendar.Calendar)
+    {
+        org.threeten.bp.LocalDate r0, r4;
+        int i0, i1;
+        com.opengamma.financial.convention.calendar.Calendar r1;
+        boolean $z0;
+
+        r0 := @parameter0: org.threeten.bp.LocalDate;
+
+        i0 := @parameter1: int;
+
+        r1 := @parameter2: com.opengamma.financial.convention.calendar.Calendar;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r0, "null startDate");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "null holidayCalendar");
+
+        i1 = i0;
+
+        r4 = r0;
+
+     label1:
+        if i1 <= 0 goto label2;
+
+        r4 = virtualinvoke r4.<org.threeten.bp.LocalDate: org.threeten.bp.LocalDate plusDays(long)>(1L);
+
+        $z0 = interfaceinvoke r1.<com.opengamma.financial.convention.calendar.Calendar: boolean isWorkingDay(org.threeten.bp.LocalDate)>(r4);
+
+        if $z0 == 0 goto label1;
+
+        i1 = i1 + -1;
+
+        goto label1;
+
+     label2:
+        return r4;
+    }
+
+    public static int getDaysBetween(org.threeten.bp.LocalDate, org.threeten.bp.LocalDate, com.opengamma.financial.convention.calendar.Calendar)
+    {
+        org.threeten.bp.LocalDate r0, r1, r13;
+        com.opengamma.financial.convention.calendar.Calendar r2;
+        boolean $z0, $z1, $z2;
+        java.lang.StringBuilder $r8, $r9, $r10, $r11, r14;
+        java.lang.String $r12;
+        int i0;
+        com.opengamma.OpenGammaRuntimeException r15;
+        java.lang.Throwable r16;
+
+        r0 := @parameter0: org.threeten.bp.LocalDate;
+
+        r1 := @parameter1: org.threeten.bp.LocalDate;
+
+        r2 := @parameter2: com.opengamma.financial.convention.calendar.Calendar;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r0, "first date");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "second date");
+
+        $z0 = virtualinvoke r1.<org.threeten.bp.LocalDate: boolean isBefore(org.threeten.bp.chrono.ChronoLocalDate)>(r0);
+
+        if $z0 == 0 goto label1;
+
+        r15 = new com.opengamma.OpenGammaRuntimeException;
+
+        r14 = new java.lang.StringBuilder;
+
+        specialinvoke r14.<java.lang.StringBuilder: void <init>()>();
+
+        $r8 = virtualinvoke r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("d2 must be on or after d1: have d1 = ");
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r0);
+
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" and d2 = ");
+
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r1);
+
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke r15.<com.opengamma.OpenGammaRuntimeException: void <init>(java.lang.String)>($r12);
+
+        r16 = (java.lang.Throwable) r15;
+
+        throw r16;
+
+     label1:
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "calendar");
+
+        i0 = 0;
+
+        r13 = r0;
+
+     label2:
+        $z1 = virtualinvoke r13.<org.threeten.bp.LocalDate: boolean isBefore(org.threeten.bp.chrono.ChronoLocalDate)>(r1);
+
+        if $z1 == 0 goto label4;
+
+        $z2 = interfaceinvoke r2.<com.opengamma.financial.convention.calendar.Calendar: boolean isWorkingDay(org.threeten.bp.LocalDate)>(r13);
+
+        if $z2 == 0 goto label3;
+
+        i0 = i0 + 1;
+
+     label3:
+        r13 = virtualinvoke r13.<org.threeten.bp.LocalDate: org.threeten.bp.LocalDate plusDays(long)>(1L);
+
+        goto label2;
+
+     label4:
+        return i0;
+    }
+
+    public static int getDaysBetween(org.threeten.bp.ZonedDateTime, org.threeten.bp.ZonedDateTime, com.opengamma.financial.convention.calendar.Calendar)
+    {
+        org.threeten.bp.ZonedDateTime r0, r1;
+        com.opengamma.financial.convention.calendar.Calendar r2;
+        org.threeten.bp.LocalDate $r5, $r6;
+        int $i0;
+
+        r0 := @parameter0: org.threeten.bp.ZonedDateTime;
+
+        r1 := @parameter1: org.threeten.bp.ZonedDateTime;
+
+        r2 := @parameter2: com.opengamma.financial.convention.calendar.Calendar;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r0, "first date");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "second date");
+
+        $r5 = virtualinvoke r0.<org.threeten.bp.ZonedDateTime: org.threeten.bp.LocalDate toLocalDate()>();
+
+        $r6 = virtualinvoke r1.<org.threeten.bp.ZonedDateTime: org.threeten.bp.LocalDate toLocalDate()>();
+
+        $i0 = staticinvoke <com.opengamma.financial.convention.businessday.BusinessDayDateUtils: int getDaysBetween(org.threeten.bp.LocalDate,org.threeten.bp.LocalDate,com.opengamma.financial.convention.calendar.Calendar)>($r5, $r6, r2);
+
+        return $i0;
+    }
+
+    public static int getWorkingDaysInclusive(org.threeten.bp.LocalDate, org.threeten.bp.LocalDate, com.opengamma.financial.convention.calendar.Calendar)
+    {
+        org.threeten.bp.LocalDate r0, r1;
+        com.opengamma.financial.convention.calendar.Calendar r2;
+        boolean $z0;
+        int i0;
+
+        r0 := @parameter0: org.threeten.bp.LocalDate;
+
+        r1 := @parameter1: org.threeten.bp.LocalDate;
+
+        r2 := @parameter2: com.opengamma.financial.convention.calendar.Calendar;
+
+        i0 = staticinvoke <com.opengamma.financial.convention.businessday.BusinessDayDateUtils: int getDaysBetween(org.threeten.bp.LocalDate,org.threeten.bp.LocalDate,com.opengamma.financial.convention.calendar.Calendar)>(r0, r1, r2);
+
+        $z0 = interfaceinvoke r2.<com.opengamma.financial.convention.calendar.Calendar: boolean isWorkingDay(org.threeten.bp.LocalDate)>(r1);
+
+        if $z0 == 0 goto label1;
+
+        i0 = i0 + 1;
+
+     label1:
+        return i0;
+    }
+
+    public static int getWorkingDaysInclusive(org.threeten.bp.ZonedDateTime, org.threeten.bp.ZonedDateTime, com.opengamma.financial.convention.calendar.Calendar)
+    {
+        org.threeten.bp.ZonedDateTime r0, r1;
+        com.opengamma.financial.convention.calendar.Calendar r2;
+        org.threeten.bp.LocalDate $r5, $r6;
+        int $i0;
+
+        r0 := @parameter0: org.threeten.bp.ZonedDateTime;
+
+        r1 := @parameter1: org.threeten.bp.ZonedDateTime;
+
+        r2 := @parameter2: com.opengamma.financial.convention.calendar.Calendar;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r0, "first date");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "second date");
+
+        $r5 = virtualinvoke r0.<org.threeten.bp.ZonedDateTime: org.threeten.bp.LocalDate toLocalDate()>();
+
+        $r6 = virtualinvoke r1.<org.threeten.bp.ZonedDateTime: org.threeten.bp.LocalDate toLocalDate()>();
+
+        $i0 = staticinvoke <com.opengamma.financial.convention.businessday.BusinessDayDateUtils: int getWorkingDaysInclusive(org.threeten.bp.LocalDate,org.threeten.bp.LocalDate,com.opengamma.financial.convention.calendar.Calendar)>($r5, $r6, r2);
+
+        return $i0;
+    }
+}

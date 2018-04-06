@@ -1,0 +1,2906 @@
+public class com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator extends com.opengamma.analytics.math.interpolation.PiecewisePolynomialInterpolator
+{
+    private static final double INF;
+    private static final double ERROR;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator r0;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator;
+
+        specialinvoke r0.<com.opengamma.analytics.math.interpolation.PiecewisePolynomialInterpolator: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.interpolation.PiecewisePolynomialResult interpolate(double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator r0;
+        double[] r1, r2, r3, r4, r5, r6, r7, r8, $r15, $r16, $r17, $r18, r20, r21, r22, r23;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i10, $i11, i13, i14, i15, i16, i17, i18;
+        double[][] r9;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, d22, $d23;
+        com.opengamma.analytics.math.interpolation.PiecewisePolynomialResult $r12;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r13;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D $r14;
+        byte $b9, $b12;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, z9, $z10;
+        java.lang.IllegalArgumentException $r19;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "xValues");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "yValues");
+
+        $i2 = lengthof r1;
+
+        $i1 = lengthof r2;
+
+        if $i2 != $i1 goto label01;
+
+        $z6 = 1;
+
+        goto label02;
+
+     label01:
+        $z6 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z6, "xValues length = yValues length");
+
+        $i3 = lengthof r1;
+
+        if $i3 <= 2 goto label03;
+
+        $z7 = 1;
+
+        goto label04;
+
+     label03:
+        $z7 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z7, "Data points should be more than 1");
+
+        i0 = lengthof r1;
+
+        i13 = 0;
+
+     label05:
+        if i13 >= i0 goto label06;
+
+        $d18 = r1[i13];
+
+        $z2 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d18);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z2, "xData containing NaN");
+
+        $d19 = r1[i13];
+
+        $z3 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d19);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z3, "xData containing Infinity");
+
+        $d20 = r2[i13];
+
+        $z4 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d20);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z4, "yData containing NaN");
+
+        $d21 = r2[i13];
+
+        $z5 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d21);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z5, "yData containing Infinity");
+
+        i13 = i13 + 1;
+
+        goto label05;
+
+     label06:
+        i14 = 0;
+
+     label07:
+        if i14 >= i0 goto label12;
+
+        i15 = i14 + 1;
+
+     label08:
+        if i15 >= i0 goto label11;
+
+        $d17 = r1[i14];
+
+        $d16 = r1[i15];
+
+        $b12 = $d17 cmpl $d16;
+
+        if $b12 != 0 goto label09;
+
+        $z8 = 1;
+
+        goto label10;
+
+     label09:
+        $z8 = 0;
+
+     label10:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z8, "xValues should be distinct");
+
+        i15 = i15 + 1;
+
+        goto label08;
+
+     label11:
+        i14 = i14 + 1;
+
+        goto label07;
+
+     label12:
+        r20 = staticinvoke <java.util.Arrays: double[] copyOf(double[],int)>(r1, i0);
+
+        r21 = staticinvoke <java.util.Arrays: double[] copyOf(double[],int)>(r2, i0);
+
+        staticinvoke <com.opengamma.util.ParallelArrayBinarySort: void parallelBinarySort(double[],double[])>(r20, r21);
+
+        r3 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator: double[] intervalsCalculator(double[])>(r20);
+
+        r4 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator: double[] slopesCalculator(double[],double[])>(r21, r3);
+
+        r5 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator: double[] betaCalculator(double[])>(r4);
+
+        r22 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator: double[] firstDiffFinder(double[],double[])>(r3, r4);
+
+        r23 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator: double[] rValuesCalculator(double[],double[])>(r4, r22);
+
+        z9 = 0;
+
+        i16 = 0;
+
+     label13:
+        if z9 != 0 goto label15;
+
+        z9 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator: boolean signChecker(double[],double[])>(r5, r23);
+
+        if z9 != 0 goto label14;
+
+        r22 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator: double[] firstDiffSweep(double[],double[],double[],double[])>(r3, r4, r5, r22);
+
+        r23 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator: double[] rValuesCalculator(double[],double[])>(r4, r22);
+
+     label14:
+        i16 = i16 + 1;
+
+        if i16 <= 10 goto label13;
+
+        $r19 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r19.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Spline is not found!");
+
+        throw $r19;
+
+     label15:
+        r6 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator: double[] secondDiffFinder(double[],double[],double[])>(r3, r5, r23);
+
+        r7 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator: double[] tauFinder(double[],double[],double[],double[],double[])>(r3, r4, r5, r22, r6);
+
+        r8 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator: double[] knotsProvider(double[],double[],double[])>(r20, r3, r7);
+
+        r9 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator: double[][] solve(double[],double[],double[],double[],double[],double[])>(r21, r3, r4, r22, r6, r7);
+
+        i17 = 0;
+
+     label16:
+        $i4 = lengthof r9;
+
+        if i17 >= $i4 goto label23;
+
+        d22 = 0.0;
+
+        $i5 = i17 + 1;
+
+        $d3 = r8[$i5];
+
+        $d2 = r8[i17];
+
+        d0 = $d3 - $d2;
+
+        i18 = 0;
+
+     label17:
+        if i18 >= 4 goto label18;
+
+        $r16 = r9[i17];
+
+        $d11 = $r16[i18];
+
+        $i11 = 3 - i18;
+
+        $d10 = (double) $i11;
+
+        $d12 = staticinvoke <java.lang.Math: double pow(double,double)>(d0, $d10);
+
+        $d13 = $d11 * $d12;
+
+        d22 = d22 + $d13;
+
+        $r17 = r9[i17];
+
+        $d14 = $r17[i18];
+
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d14);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z0, "Too large input");
+
+        $r18 = r9[i17];
+
+        $d15 = $r18[i18];
+
+        $z1 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d15);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z1, "Too large input");
+
+        i18 = i18 + 1;
+
+        goto label17;
+
+     label18:
+        $i6 = lengthof r9;
+
+        $i7 = $i6 - 1;
+
+        if i17 != $i7 goto label19;
+
+        $i10 = i0 - 1;
+
+        $d23 = r2[$i10];
+
+        goto label20;
+
+     label19:
+        $i8 = i17 + 1;
+
+        $r15 = r9[$i8];
+
+        $d23 = $r15[3];
+
+     label20:
+        $d4 = staticinvoke <java.lang.Math: double abs(double)>(d22);
+
+        $d5 = staticinvoke <java.lang.Math: double abs(double)>($d23);
+
+        $d6 = $d4 + $d5;
+
+        d1 = staticinvoke <java.lang.Math: double max(double,double)>($d6, 0.1);
+
+        $d7 = d22 - $d23;
+
+        $d8 = staticinvoke <java.lang.Math: double abs(double)>($d7);
+
+        $d9 = 1.0E-12 * d1;
+
+        $b9 = $d8 cmpg $d9;
+
+        if $b9 >= 0 goto label21;
+
+        $z10 = 1;
+
+        goto label22;
+
+     label21:
+        $z10 = 0;
+
+     label22:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z10, "Input is too large/small or data points are too close");
+
+        i17 = i17 + 1;
+
+        goto label16;
+
+     label23:
+        $r12 = new com.opengamma.analytics.math.interpolation.PiecewisePolynomialResult;
+
+        $r13 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r13.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r8);
+
+        $r14 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r14.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r9);
+
+        specialinvoke $r12.<com.opengamma.analytics.math.interpolation.PiecewisePolynomialResult: void <init>(com.opengamma.analytics.math.matrix.DoubleMatrix1D,com.opengamma.analytics.math.matrix.DoubleMatrix2D,int,int)>($r13, $r14, 4, 1);
+
+        return $r12;
+    }
+
+    public com.opengamma.analytics.math.interpolation.PiecewisePolynomialResult interpolate(double[], double[][])
+    {
+        com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator r0;
+        double[] r1;
+        double[][] r2;
+        java.lang.IllegalArgumentException $r3;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[][];
+
+        $r3 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r3.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Method with multidimensional yValues is not supported");
+
+        throw $r3;
+    }
+
+    public com.opengamma.analytics.math.interpolation.PiecewisePolynomialResultsWithSensitivity interpolateWithSensitivity(double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator r0;
+        double[] r1, r2;
+        org.apache.commons.lang.NotImplementedException $r3;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        $r3 = new org.apache.commons.lang.NotImplementedException;
+
+        specialinvoke $r3.<org.apache.commons.lang.NotImplementedException: void <init>()>();
+
+        throw $r3;
+    }
+
+    private double[] intervalsCalculator(double[])
+    {
+        com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator r0;
+        double[] r1, r2;
+        int i0, $i1, $i2, $i3, i4;
+        double $d0, $d1, $d2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator;
+
+        r1 := @parameter0: double[];
+
+        i0 = lengthof r1;
+
+        $i1 = i0 - 1;
+
+        r2 = newarray (double)[$i1];
+
+        i4 = 0;
+
+     label1:
+        $i2 = i0 - 1;
+
+        if i4 >= $i2 goto label2;
+
+        $i3 = i4 + 1;
+
+        $d1 = r1[$i3];
+
+        $d0 = r1[i4];
+
+        $d2 = $d1 - $d0;
+
+        r2[i4] = $d2;
+
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label2:
+        return r2;
+    }
+
+    private double[] slopesCalculator(double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator r0;
+        double[] r1, r2, r3;
+        int i0, $i1, $i2, $i3, i4;
+        double $d0, $d1, $d2, $d3, $d4;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        i0 = lengthof r1;
+
+        $i1 = i0 - 1;
+
+        r3 = newarray (double)[$i1];
+
+        i4 = 0;
+
+     label1:
+        $i2 = i0 - 1;
+
+        if i4 >= $i2 goto label2;
+
+        $i3 = i4 + 1;
+
+        $d1 = r1[$i3];
+
+        $d0 = r1[i4];
+
+        $d3 = $d1 - $d0;
+
+        $d2 = r2[i4];
+
+        $d4 = $d3 / $d2;
+
+        r3[i4] = $d4;
+
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label2:
+        return r3;
+    }
+
+    private double[] firstDiffFinder(double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator r0;
+        double[] r1, r2, r3;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i9, $i10, $i11, $i12, i13, $i14;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33;
+        byte $b7, $b8, $b15;
+        boolean $z0, $z1, $z2, $z3, $z4;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        i0 = lengthof r1;
+
+        $i1 = i0 + 1;
+
+        r3 = newarray (double)[$i1];
+
+        $d5 = r1[0];
+
+        $d4 = r1[1];
+
+        $d3 = r2[0];
+
+        $d2 = r2[1];
+
+        $d6 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator: double endpointFirst(double,double,double,double)>($d5, $d4, $d3, $d2);
+
+        r3[0] = $d6;
+
+        $i2 = i0 - 1;
+
+        $d10 = r1[$i2];
+
+        $i3 = i0 - 2;
+
+        $d9 = r1[$i3];
+
+        $i4 = i0 - 1;
+
+        $d8 = r2[$i4];
+
+        $i5 = i0 - 2;
+
+        $d7 = r2[$i5];
+
+        $d11 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator: double endpointFirst(double,double,double,double)>($d10, $d9, $d8, $d7);
+
+        r3[i0] = $d11;
+
+        i13 = 1;
+
+     label01:
+        if i13 >= i0 goto label10;
+
+        $d12 = r2[i13];
+
+        $d13 = staticinvoke <java.lang.Math: double signum(double)>($d12);
+
+        $i6 = i13 - 1;
+
+        $d14 = r2[$i6];
+
+        $d15 = staticinvoke <java.lang.Math: double signum(double)>($d14);
+
+        $b7 = $d13 cmpl $d15;
+
+        if $b7 == 0 goto label02;
+
+        $z0 = 1;
+
+        goto label03;
+
+     label02:
+        $z0 = 0;
+
+     label03:
+        $d16 = r2[i13];
+
+        $b8 = $d16 cmpl 0.0;
+
+        if $b8 != 0 goto label04;
+
+        $z1 = 1;
+
+        goto label05;
+
+     label04:
+        $z1 = 0;
+
+     label05:
+        $i14 = i13 - 1;
+
+        $d33 = r2[$i14];
+
+        $b15 = $d33 cmpl 0.0;
+
+        if $b15 != 0 goto label06;
+
+        $z2 = 1;
+
+        goto label07;
+
+     label06:
+        $z2 = 0;
+
+     label07:
+        $z3 = $z1 | $z2;
+
+        $z4 = $z0 | $z3;
+
+        if $z4 == 0 goto label08;
+
+        r3[i13] = 0.0;
+
+        goto label09;
+
+     label08:
+        $d17 = r1[i13];
+
+        $d19 = 2.0 * $d17;
+
+        $i9 = i13 - 1;
+
+        $d18 = r1[$i9];
+
+        d0 = $d19 + $d18;
+
+        $d22 = r1[i13];
+
+        $i10 = i13 - 1;
+
+        $d20 = r1[$i10];
+
+        $d21 = 2.0 * $d20;
+
+        d1 = $d22 + $d21;
+
+        $d24 = r1[i13];
+
+        $i11 = i13 - 1;
+
+        $d23 = r1[$i11];
+
+        $d25 = $d24 + $d23;
+
+        $d31 = 3.0 * $d25;
+
+        $i12 = i13 - 1;
+
+        $d26 = r2[$i12];
+
+        $d29 = d0 / $d26;
+
+        $d27 = r2[i13];
+
+        $d28 = d1 / $d27;
+
+        $d30 = $d29 + $d28;
+
+        $d32 = $d31 / $d30;
+
+        r3[i13] = $d32;
+
+     label09:
+        i13 = i13 + 1;
+
+        goto label01;
+
+     label10:
+        return r3;
+    }
+
+    private double endpointFirst(double, double, double, double)
+    {
+        com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator r0;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20;
+        byte $b0, $b1, $b2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $d5 = 2.0 * d0;
+
+        $d6 = $d5 + d1;
+
+        $d8 = $d6 * d2;
+
+        $d7 = d0 + d1;
+
+        $d12 = $d8 / $d7;
+
+        $d10 = d0 * d3;
+
+        $d9 = d0 + d1;
+
+        $d11 = $d10 / $d9;
+
+        d4 = $d12 - $d11;
+
+        $d13 = staticinvoke <java.lang.Math: double signum(double)>(d4);
+
+        $d14 = staticinvoke <java.lang.Math: double signum(double)>(d2);
+
+        $b0 = $d13 cmpl $d14;
+
+        if $b0 == 0 goto label1;
+
+        return 0.0;
+
+     label1:
+        $d15 = staticinvoke <java.lang.Math: double signum(double)>(d2);
+
+        $d16 = staticinvoke <java.lang.Math: double signum(double)>(d3);
+
+        $b1 = $d15 cmpl $d16;
+
+        if $b1 == 0 goto label2;
+
+        $d17 = staticinvoke <java.lang.Math: double abs(double)>(d4);
+
+        $d18 = staticinvoke <java.lang.Math: double abs(double)>(d2);
+
+        $d19 = 3.0 * $d18;
+
+        $b2 = $d17 cmpl $d19;
+
+        if $b2 <= 0 goto label2;
+
+        $d20 = 3.0 * d2;
+
+        return $d20;
+
+     label2:
+        return d4;
+    }
+
+    private double[] betaCalculator(double[])
+    {
+        com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator r0;
+        double[] r1, r2;
+        int i0, $i1, $i2, $i3, $i4, $i5, i6;
+        double $d0, $d1, $d2, $d3, $d4, $d5;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator;
+
+        r1 := @parameter0: double[];
+
+        i0 = lengthof r1;
+
+        $i1 = i0 + 1;
+
+        r2 = newarray (double)[$i1];
+
+        i6 = 0;
+
+     label1:
+        $i2 = i0 - 1;
+
+        if i6 >= $i2 goto label2;
+
+        $i5 = i6 + 1;
+
+        $i4 = i6 + 1;
+
+        $d3 = r1[$i4];
+
+        $d2 = r1[i6];
+
+        $d4 = $d3 - $d2;
+
+        $d5 = staticinvoke <java.lang.Math: double signum(double)>($d4);
+
+        r2[$i5] = $d5;
+
+        i6 = i6 + 1;
+
+        goto label1;
+
+     label2:
+        $d0 = r2[1];
+
+        r2[0] = $d0;
+
+        $i3 = i0 - 1;
+
+        $d1 = r2[$i3];
+
+        r2[i0] = $d1;
+
+        return r2;
+    }
+
+    private double[] rValuesCalculator(double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator r0;
+        double[] r1, r2, r3;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i14, $i15, $i17, $i18, $i19, i20;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19;
+        byte $b13, $b16;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        i0 = lengthof r2;
+
+        $i1 = 2 * i0;
+
+        r3 = newarray (double)[$i1];
+
+        i20 = 1;
+
+     label1:
+        $i2 = i0 - 1;
+
+        if i20 >= $i2 goto label4;
+
+        $i7 = 2 * i20;
+
+        $i5 = i20 - 1;
+
+        $d0 = r2[$i5];
+
+        $d3 = 2.0 * $d0;
+
+        $d1 = r2[i20];
+
+        $d2 = 4.0 * $d1;
+
+        $d6 = $d3 + $d2;
+
+        $i6 = i20 - 1;
+
+        $d4 = r1[$i6];
+
+        $d5 = 6.0 * $d4;
+
+        $d7 = $d6 - $d5;
+
+        r3[$i7] = $d7;
+
+        $i8 = 2 * i20;
+
+        $i11 = $i8 - 1;
+
+        $i9 = i20 - 1;
+
+        $d8 = r2[$i9];
+
+        $d11 = -4.0 * $d8;
+
+        $d9 = r2[i20];
+
+        $d10 = 2.0 * $d9;
+
+        $d14 = $d11 - $d10;
+
+        $i10 = i20 - 1;
+
+        $d12 = r1[$i10];
+
+        $d13 = 6.0 * $d12;
+
+        $d15 = $d14 + $d13;
+
+        r3[$i11] = $d15;
+
+        $i12 = 2 * i20;
+
+        $d16 = r3[$i12];
+
+        $d17 = staticinvoke <java.lang.Math: double abs(double)>($d16);
+
+        $b13 = $d17 cmpg 1.0E-13;
+
+        if $b13 > 0 goto label2;
+
+        $i19 = 2 * i20;
+
+        r3[$i19] = 0.0;
+
+     label2:
+        $i14 = 2 * i20;
+
+        $i15 = $i14 - 1;
+
+        $d18 = r3[$i15];
+
+        $d19 = staticinvoke <java.lang.Math: double abs(double)>($d18);
+
+        $b16 = $d19 cmpg 1.0E-13;
+
+        if $b16 > 0 goto label3;
+
+        $i17 = 2 * i20;
+
+        $i18 = $i17 - 1;
+
+        r3[$i18] = 0.0;
+
+     label3:
+        i20 = i20 + 1;
+
+        goto label1;
+
+     label4:
+        r3[0] = #Infinity;
+
+        $i3 = 2 * i0;
+
+        $i4 = $i3 - 1;
+
+        r3[$i4] = #Infinity;
+
+        return r3;
+    }
+
+    private boolean signChecker(double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator r0;
+        double[] r1, r2;
+        int i0, $i1, $i2, $i3, $i5, $i6, $i7, i9;
+        double $d0, $d1, $d2, $d3, $d4, $d5;
+        byte $b4, $b8;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        i0 = lengthof r1;
+
+        i9 = 1;
+
+     label1:
+        $i1 = i0 - 2;
+
+        if i9 >= $i1 goto label7;
+
+        $d1 = r1[i9];
+
+        $i2 = 2 * i9;
+
+        $i3 = $i2 + 1;
+
+        $d0 = r2[$i3];
+
+        $d2 = $d1 * $d0;
+
+        $b4 = $d2 cmpg 0.0;
+
+        if $b4 >= 0 goto label2;
+
+        $z0 = 1;
+
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        $i5 = i9 + 1;
+
+        $d4 = r1[$i5];
+
+        $i6 = 2 * i9;
+
+        $i7 = $i6 + 2;
+
+        $d3 = r2[$i7];
+
+        $d5 = $d4 * $d3;
+
+        $b8 = $d5 cmpg 0.0;
+
+        if $b8 >= 0 goto label4;
+
+        $z1 = 1;
+
+        goto label5;
+
+     label4:
+        $z1 = 0;
+
+     label5:
+        $z2 = $z0 | $z1;
+
+        if $z2 == 0 goto label6;
+
+        return 0;
+
+     label6:
+        i9 = i9 + 1;
+
+        goto label1;
+
+     label7:
+        return 1;
+    }
+
+    private double[] firstDiffSweep(double[], double[], double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator r0;
+        double[] r1, r2, r3, r4, r5;
+        int i0, $i1, $i4, $i6, $i8, $i9, $i12, $i14, $i16, $i17, $i21, $i23, $i24, $i25, $i26, $i27, $i29, $i31, $i32, $i33, $i34, $i35, $i36, $i38, $i40, $i41, $i43, $i44, $i46, $i47, $i48, $i49, $i50, $i52, $i56, $i57, $i58, $i62, $i64, $i66, $i67, $i68, $i71, $i72, $i73, $i74, $i75, $i76, $i77, $i80, $i81, $i82, i83, i85;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, $d80, $d81, $d82, $d83, $d84, $d85, $d86, $d87, $d88, $d89, $d90, $d91, $d92, $d93, $d94, $d95, $d96, $d97, $d98, $d99, $d100, $d101, $d102, $d103, $d104, $d105, $d106, $d107, $d108, $d109, $d110, $d111, $d112, $d113, $d114, $d115, $d116, $d117, $d118, $d119, $d120, $d121, $d122, $d123, $d124, $d125, $d126, $d127, $d128, $d129, $d130, $d131, $d132, $d133, d136, d137, d140, d141, $d142, $d143, $d144, $d145, d150, d151, $d152, $d153;
+        byte $b2, $b3, $b5, $b7, $b10, $b11, $b13, $b15, $b18, $b19, $b20, $b22, $b28, $b30, $b37, $b39, $b42, $b45, $b51, $b53, $b54, $b55, $b59, $b60, $b61, $b63, $b65, $b69, $b70, $b78, $b79, $b84, $b86;
+        java.lang.IllegalArgumentException $r8;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[];
+
+        r4 := @parameter3: double[];
+
+        $i1 = lengthof r1;
+
+        i0 = $i1 + 1;
+
+        r5 = newarray (double)[i0];
+
+        $d0 = r3[0];
+
+        $b2 = $d0 cmpl 0.0;
+
+        if $b2 <= 0 goto label01;
+
+        $d130 = r2[0];
+
+        $d133 = 3.0 * $d130;
+
+        $d131 = r2[1];
+
+        $d132 = 2.0 * $d131;
+
+        d136 = $d133 - $d132;
+
+        d137 = r2[0];
+
+        goto label02;
+
+     label01:
+        d136 = r2[0];
+
+        $d1 = r2[0];
+
+        $d4 = 3.0 * $d1;
+
+        $d2 = r2[1];
+
+        $d3 = 2.0 * $d2;
+
+        d137 = $d4 - $d3;
+
+     label02:
+        i83 = 1;
+
+     label03:
+        if i83 >= i0 goto label21;
+
+        $i50 = i83 - 1;
+
+        $d71 = r3[$i50];
+
+        $b51 = $d71 cmpl 0.0;
+
+        if $b51 != 0 goto label06;
+
+        $d120 = r3[i83];
+
+        $b78 = $d120 cmpl 0.0;
+
+        if $b78 != 0 goto label04;
+
+        d140 = #-Infinity;
+
+        d141 = #Infinity;
+
+        goto label12;
+
+     label04:
+        $d121 = r3[i83];
+
+        $b79 = $d121 cmpl 0.0;
+
+        if $b79 <= 0 goto label05;
+
+        $i82 = i83 - 1;
+
+        $d127 = r2[$i82];
+
+        $d128 = 3.0 * $d127;
+
+        $d129 = $d128 - d137;
+
+        d140 = 0.5 * $d129;
+
+        d141 = #Infinity;
+
+        goto label12;
+
+     label05:
+        d140 = #-Infinity;
+
+        $i80 = i83 - 1;
+
+        $d126 = r2[$i80];
+
+        $i81 = i83 - 1;
+
+        $d122 = r2[$i81];
+
+        $d123 = 3.0 * $d122;
+
+        $d124 = $d123 - d136;
+
+        $d125 = 0.5 * $d124;
+
+        d141 = staticinvoke <java.lang.Math: double min(double,double)>($d126, $d125);
+
+        goto label12;
+
+     label06:
+        $i52 = i83 - 1;
+
+        $d72 = r3[$i52];
+
+        $b53 = $d72 cmpl 0.0;
+
+        if $b53 <= 0 goto label09;
+
+        $d99 = r3[i83];
+
+        $b69 = $d99 cmpl 0.0;
+
+        if $b69 != 0 goto label07;
+
+        $i76 = i83 - 1;
+
+        d140 = r2[$i76];
+
+        $i77 = i83 - 1;
+
+        $d117 = r2[$i77];
+
+        $d119 = 3.0 * $d117;
+
+        $d118 = 2.0 * d136;
+
+        d141 = $d119 - $d118;
+
+        goto label12;
+
+     label07:
+        $d100 = r3[i83];
+
+        $b70 = $d100 cmpl 0.0;
+
+        if $b70 <= 0 goto label08;
+
+        $i73 = i83 - 1;
+
+        $d113 = r2[$i73];
+
+        $i74 = i83 - 1;
+
+        $d109 = r2[$i74];
+
+        $d110 = 3.0 * $d109;
+
+        $d111 = $d110 - d137;
+
+        $d112 = 0.5 * $d111;
+
+        d140 = staticinvoke <java.lang.Math: double max(double,double)>($d113, $d112);
+
+        $i75 = i83 - 1;
+
+        $d114 = r2[$i75];
+
+        $d116 = 3.0 * $d114;
+
+        $d115 = 2.0 * d136;
+
+        d141 = $d116 - $d115;
+
+        goto label12;
+
+     label08:
+        d140 = #-Infinity;
+
+        $i71 = i83 - 1;
+
+        $d101 = r2[$i71];
+
+        $d103 = 3.0 * $d101;
+
+        $d102 = 2.0 * d136;
+
+        $d108 = $d103 - $d102;
+
+        $i72 = i83 - 1;
+
+        $d104 = r2[$i72];
+
+        $d105 = 3.0 * $d104;
+
+        $d106 = $d105 - d136;
+
+        $d107 = 0.5 * $d106;
+
+        d141 = staticinvoke <java.lang.Math: double min(double,double)>($d108, $d107);
+
+        goto label12;
+
+     label09:
+        $d73 = r3[i83];
+
+        $b54 = $d73 cmpl 0.0;
+
+        if $b54 != 0 goto label10;
+
+        $i68 = i83 - 1;
+
+        $d96 = r2[$i68];
+
+        $d98 = 3.0 * $d96;
+
+        $d97 = 2.0 * d136;
+
+        d140 = $d98 - $d97;
+
+        d141 = #Infinity;
+
+        goto label12;
+
+     label10:
+        $d74 = r3[i83];
+
+        $b55 = $d74 cmpl 0.0;
+
+        if $b55 <= 0 goto label11;
+
+        $i66 = i83 - 1;
+
+        $d88 = r2[$i66];
+
+        $d90 = 3.0 * $d88;
+
+        $d89 = 2.0 * d137;
+
+        $d95 = $d90 - $d89;
+
+        $i67 = i83 - 1;
+
+        $d91 = r2[$i67];
+
+        $d92 = 3.0 * $d91;
+
+        $d93 = $d92 - d137;
+
+        $d94 = 0.5 * $d93;
+
+        d140 = staticinvoke <java.lang.Math: double max(double,double)>($d95, $d94);
+
+        d141 = #Infinity;
+
+        goto label12;
+
+     label11:
+        $i56 = i83 - 1;
+
+        $d75 = r2[$i56];
+
+        $d77 = 3.0 * $d75;
+
+        $d76 = 2.0 * d137;
+
+        d140 = $d77 - $d76;
+
+        $i57 = i83 - 1;
+
+        $d82 = r2[$i57];
+
+        $i58 = i83 - 1;
+
+        $d78 = r2[$i58];
+
+        $d79 = 3.0 * $d78;
+
+        $d80 = $d79 - d136;
+
+        $d81 = 0.5 * $d80;
+
+        d141 = staticinvoke <java.lang.Math: double min(double,double)>($d82, $d81);
+
+     label12:
+        d136 = d140;
+
+        d137 = d141;
+
+        $b84 = d140 cmpl #-Infinity;
+
+        if $b84 == 0 goto label13;
+
+        $b65 = d141 cmpl #Infinity;
+
+        if $b65 == 0 goto label13;
+
+        $d86 = d140 + d141;
+
+        $d87 = 0.5 * $d86;
+
+        r5[i83] = $d87;
+
+        goto label20;
+
+     label13:
+        $d83 = r4[i83];
+
+        $b59 = $d83 cmpg d140;
+
+        if $b59 >= 0 goto label16;
+
+        $i64 = i83;
+
+        $b63 = d140 cmpl #Infinity;
+
+        if $b63 == 0 goto label14;
+
+        $d142 = d140;
+
+        goto label15;
+
+     label14:
+        $d142 = r4[i83];
+
+     label15:
+        r5[$i64] = $d142;
+
+        goto label20;
+
+     label16:
+        $d84 = r4[i83];
+
+        $b60 = $d84 cmpl d141;
+
+        if $b60 <= 0 goto label19;
+
+        $i62 = i83;
+
+        $b61 = d141 cmpl #-Infinity;
+
+        if $b61 == 0 goto label17;
+
+        $d143 = d141;
+
+        goto label18;
+
+     label17:
+        $d143 = r4[i83];
+
+     label18:
+        r5[$i62] = $d143;
+
+        goto label20;
+
+     label19:
+        $d85 = r4[i83];
+
+        r5[i83] = $d85;
+
+     label20:
+        i83 = i83 + 1;
+
+        goto label03;
+
+     label21:
+        $b3 = d136 cmpl d137;
+
+        if $b3 <= 0 goto label22;
+
+        $i49 = i0 - 1;
+
+        $i48 = i0 - 1;
+
+        $d70 = r4[$i48];
+
+        r5[$i49] = $d70;
+
+        goto label29;
+
+     label22:
+        $i4 = i0 - 1;
+
+        $d5 = r4[$i4];
+
+        $b5 = $d5 cmpg d136;
+
+        if $b5 >= 0 goto label25;
+
+        $i47 = i0 - 1;
+
+        $b45 = d136 cmpl #Infinity;
+
+        if $b45 == 0 goto label23;
+
+        $d144 = d136;
+
+        goto label24;
+
+     label23:
+        $i46 = i0 - 1;
+
+        $d144 = r4[$i46];
+
+     label24:
+        r5[$i47] = $d144;
+
+        goto label29;
+
+     label25:
+        $i6 = i0 - 1;
+
+        $d6 = r4[$i6];
+
+        $b7 = $d6 cmpl d137;
+
+        if $b7 <= 0 goto label28;
+
+        $i44 = i0 - 1;
+
+        $b42 = d137 cmpl #-Infinity;
+
+        if $b42 == 0 goto label26;
+
+        $d145 = d137;
+
+        goto label27;
+
+     label26:
+        $i43 = i0 - 1;
+
+        $d145 = r4[$i43];
+
+     label27:
+        r5[$i44] = $d145;
+
+        goto label29;
+
+     label28:
+        $i9 = i0 - 1;
+
+        $i8 = i0 - 1;
+
+        $d7 = r4[$i8];
+
+        r5[$i9] = $d7;
+
+     label29:
+        i85 = i0 - 2;
+
+     label30:
+        if i85 <= -1 goto label47;
+
+        $d8 = r3[i85];
+
+        $b10 = $d8 cmpl 0.0;
+
+        if $b10 != 0 goto label33;
+
+        $i36 = i85 + 1;
+
+        $d60 = r3[$i36];
+
+        $b37 = $d60 cmpl 0.0;
+
+        if $b37 != 0 goto label31;
+
+        d150 = #-Infinity;
+
+        d151 = #Infinity;
+
+        goto label39;
+
+     label31:
+        $i38 = i85 + 1;
+
+        $d61 = r3[$i38];
+
+        $b39 = $d61 cmpl 0.0;
+
+        if $b39 <= 0 goto label32;
+
+        $d66 = r2[i85];
+
+        $d69 = 3.0 * $d66;
+
+        $i41 = i85 + 1;
+
+        $d67 = r5[$i41];
+
+        $d68 = 2.0 * $d67;
+
+        d150 = $d69 - $d68;
+
+        d151 = #Infinity;
+
+        goto label39;
+
+     label32:
+        d150 = #-Infinity;
+
+        $d62 = r2[i85];
+
+        $d65 = 3.0 * $d62;
+
+        $i40 = i85 + 1;
+
+        $d63 = r5[$i40];
+
+        $d64 = 2.0 * $d63;
+
+        d151 = $d65 - $d64;
+
+        goto label39;
+
+     label33:
+        $d9 = r3[i85];
+
+        $b11 = $d9 cmpl 0.0;
+
+        if $b11 <= 0 goto label36;
+
+        $i27 = i85 + 1;
+
+        $d36 = r3[$i27];
+
+        $b28 = $d36 cmpl 0.0;
+
+        if $b28 != 0 goto label34;
+
+        d150 = #-Infinity;
+
+        $d56 = r2[i85];
+
+        $d58 = 3.0 * $d56;
+
+        $i35 = i85 + 1;
+
+        $d57 = r5[$i35];
+
+        $d59 = $d58 - $d57;
+
+        d151 = 0.5 * $d59;
+
+        goto label39;
+
+     label34:
+        $i29 = i85 + 1;
+
+        $d37 = r3[$i29];
+
+        $b30 = $d37 cmpl 0.0;
+
+        if $b30 <= 0 goto label35;
+
+        $d48 = r2[i85];
+
+        $d51 = 3.0 * $d48;
+
+        $i33 = i85 + 1;
+
+        $d49 = r5[$i33];
+
+        $d50 = 2.0 * $d49;
+
+        d150 = $d51 - $d50;
+
+        $d52 = r2[i85];
+
+        $d54 = 3.0 * $d52;
+
+        $i34 = i85 + 1;
+
+        $d53 = r5[$i34];
+
+        $d55 = $d54 - $d53;
+
+        d151 = 0.5 * $d55;
+
+        goto label39;
+
+     label35:
+        d150 = #-Infinity;
+
+        $d38 = r2[i85];
+
+        $d41 = 3.0 * $d38;
+
+        $i31 = i85 + 1;
+
+        $d39 = r5[$i31];
+
+        $d40 = 2.0 * $d39;
+
+        $d47 = $d41 - $d40;
+
+        $d42 = r2[i85];
+
+        $d44 = 3.0 * $d42;
+
+        $i32 = i85 + 1;
+
+        $d43 = r5[$i32];
+
+        $d45 = $d44 - $d43;
+
+        $d46 = 0.5 * $d45;
+
+        d151 = staticinvoke <java.lang.Math: double min(double,double)>($d47, $d46);
+
+        goto label39;
+
+     label36:
+        $i12 = i85 + 1;
+
+        $d10 = r3[$i12];
+
+        $b13 = $d10 cmpl 0.0;
+
+        if $b13 != 0 goto label37;
+
+        $d32 = r2[i85];
+
+        $d34 = 3.0 * $d32;
+
+        $i26 = i85 + 1;
+
+        $d33 = r5[$i26];
+
+        $d35 = $d34 - $d33;
+
+        d150 = 0.5 * $d35;
+
+        d151 = #Infinity;
+
+        goto label39;
+
+     label37:
+        $i14 = i85 + 1;
+
+        $d11 = r3[$i14];
+
+        $b15 = $d11 cmpl 0.0;
+
+        if $b15 <= 0 goto label38;
+
+        $d22 = r2[i85];
+
+        $d25 = 3.0 * $d22;
+
+        $i24 = i85 + 1;
+
+        $d23 = r5[$i24];
+
+        $d24 = 2.0 * $d23;
+
+        $d31 = $d25 - $d24;
+
+        $d26 = r2[i85];
+
+        $d28 = 3.0 * $d26;
+
+        $i25 = i85 + 1;
+
+        $d27 = r5[$i25];
+
+        $d29 = $d28 - $d27;
+
+        $d30 = 0.5 * $d29;
+
+        d150 = staticinvoke <java.lang.Math: double max(double,double)>($d31, $d30);
+
+        d151 = #Infinity;
+
+        goto label39;
+
+     label38:
+        $d12 = r2[i85];
+
+        $d14 = 3.0 * $d12;
+
+        $i16 = i85 + 1;
+
+        $d13 = r5[$i16];
+
+        $d15 = $d14 - $d13;
+
+        d150 = 0.5 * $d15;
+
+        $d16 = r2[i85];
+
+        $d19 = 3.0 * $d16;
+
+        $i17 = i85 + 1;
+
+        $d17 = r5[$i17];
+
+        $d18 = 2.0 * $d17;
+
+        d151 = $d19 - $d18;
+
+     label39:
+        $b86 = d150 cmpl d151;
+
+        if $b86 <= 0 goto label40;
+
+        $r8 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r8.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Local monotonicity can not be preserved");
+
+        throw $r8;
+
+     label40:
+        $d20 = r5[i85];
+
+        $b18 = $d20 cmpg d150;
+
+        if $b18 >= 0 goto label43;
+
+        $i23 = i85;
+
+        $b22 = d150 cmpl #Infinity;
+
+        if $b22 == 0 goto label41;
+
+        $d152 = d150;
+
+        goto label42;
+
+     label41:
+        $d152 = r5[i85];
+
+     label42:
+        r5[$i23] = $d152;
+
+        goto label46;
+
+     label43:
+        $d21 = r5[i85];
+
+        $b19 = $d21 cmpl d151;
+
+        if $b19 <= 0 goto label46;
+
+        $i21 = i85;
+
+        $b20 = d151 cmpl #-Infinity;
+
+        if $b20 == 0 goto label44;
+
+        $d153 = d151;
+
+        goto label45;
+
+     label44:
+        $d153 = r5[i85];
+
+     label45:
+        r5[$i21] = $d153;
+
+     label46:
+        i85 = i85 + -1;
+
+        goto label30;
+
+     label47:
+        return r5;
+    }
+
+    private double[] secondDiffFinder(double[], double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator r0;
+        double[] r1, r2, r3, r4;
+        int i0, $i1, $i2, $i4, $i5, $i7, $i8, $i9, $i10, $i11, $i13, $i14, $i16, $i18, $i19, $i20, $i21, i22, $i23;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26;
+        byte $b3, $b6, $b15, $b17;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[];
+
+        $i1 = lengthof r1;
+
+        i0 = $i1 + 1;
+
+        r4 = newarray (double)[i0];
+
+        i22 = 1;
+
+     label1:
+        $i2 = i0 - 1;
+
+        if i22 >= $i2 goto label4;
+
+        $i23 = i22;
+
+        $i13 = 2 * i22;
+
+        $i14 = $i13 + 1;
+
+        $d10 = r3[$i14];
+
+        $b15 = $d10 cmpl 0.0;
+
+        if $b15 <= 0 goto label2;
+
+        $i16 = 2 * i22;
+
+        $d11 = r3[$i16];
+
+        $b17 = $d11 cmpl 0.0;
+
+        if $b17 <= 0 goto label2;
+
+        $d22 = r2[i22];
+
+        $d13 = r2[i22];
+
+        $i18 = 2 * i22;
+
+        $i19 = $i18 + 1;
+
+        $d12 = r3[$i19];
+
+        $d15 = $d13 * $d12;
+
+        $d14 = r1[i22];
+
+        $d21 = $d15 / $d14;
+
+        $d17 = r2[i22];
+
+        $i20 = 2 * i22;
+
+        $d16 = r3[$i20];
+
+        $d19 = $d17 * $d16;
+
+        $i21 = i22 - 1;
+
+        $d18 = r1[$i21];
+
+        $d20 = $d19 / $d18;
+
+        $d23 = staticinvoke <java.lang.Math: double min(double,double)>($d21, $d20);
+
+        $d24 = $d22 * $d23;
+
+        goto label3;
+
+     label2:
+        $d24 = 0.0;
+
+     label3:
+        r4[$i23] = $d24;
+
+        i22 = i22 + 1;
+
+        goto label1;
+
+     label4:
+        $d0 = r3[1];
+
+        $b3 = $d0 cmpl 0.0;
+
+        if $b3 <= 0 goto label5;
+
+        $d7 = r2[0];
+
+        $d6 = r3[1];
+
+        $d9 = $d7 * $d6;
+
+        $d8 = r1[0];
+
+        $d25 = $d9 / $d8;
+
+        goto label6;
+
+     label5:
+        $d25 = 0.0;
+
+     label6:
+        r4[0] = $d25;
+
+        $i7 = i0 - 1;
+
+        $i4 = i0 - 1;
+
+        $i5 = 2 * $i4;
+
+        $d1 = r3[$i5];
+
+        $b6 = $d1 cmpl 0.0;
+
+        if $b6 <= 0 goto label7;
+
+        $i8 = i0 - 1;
+
+        $d3 = r2[$i8];
+
+        $i9 = i0 - 1;
+
+        $i10 = 2 * $i9;
+
+        $d2 = r3[$i10];
+
+        $d5 = $d3 * $d2;
+
+        $i11 = i0 - 2;
+
+        $d4 = r1[$i11];
+
+        $d26 = $d5 / $d4;
+
+        goto label8;
+
+     label7:
+        $d26 = 0.0;
+
+     label8:
+        r4[$i7] = $d26;
+
+        return r4;
+    }
+
+    private double[] tauFinder(double[], double[], double[], double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator r0;
+        double[] r1, r2, r3, r4, r5, r6;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i12, $i13, $i14, $i17, $i18, i19;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, $d80, $d81, $d82, $d83, $d84, $d85, $d86, $d87, $d88, $d89, $d90, $d91, $d92, $d93, $d94, $d95, $d96, $d97, $d98, $d99, $d100, $d101, $d102, $d103, $d104, $d105, $d106, $d107, $d108, $d109, $d110, $d111, $d112, $d113, $d114, $d115, $d116, $d117, $d118, $d119, $d120, $d121, d122, d123;
+        byte $b10, $b11, $b15, $b16;
+        java.lang.IllegalArgumentException $r7, $r8;
+        boolean z0, z1;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[];
+
+        r4 := @parameter3: double[];
+
+        r5 := @parameter4: double[];
+
+        $i1 = lengthof r1;
+
+        i0 = $i1 + 1;
+
+        $i2 = i0 - 1;
+
+        r6 = newarray (double)[$i2];
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>(r6, 0.3333333333333333);
+
+        i19 = 1;
+
+     label01:
+        $i3 = i0 - 2;
+
+        if i19 >= $i3 goto label11;
+
+        z0 = 0;
+
+        z1 = 0;
+
+        $d2 = r2[i19];
+
+        $d4 = 6.0 * $d2;
+
+        $d3 = r3[i19];
+
+        d0 = $d4 * $d3;
+
+        $d5 = r2[i19];
+
+        $d7 = 6.0 * $d5;
+
+        $i4 = i19 + 1;
+
+        $d6 = r3[$i4];
+
+        d1 = $d7 * $d6;
+
+        $d8 = r4[i19];
+
+        $d11 = 4.0 * $d8;
+
+        $i5 = i19 + 1;
+
+        $d9 = r4[$i5];
+
+        $d10 = 2.0 * $d9;
+
+        $d20 = $d11 + $d10;
+
+        $d13 = r1[i19];
+
+        $d12 = r5[i19];
+
+        $d15 = $d13 * $d12;
+
+        $d14 = r6[i19];
+
+        $d18 = $d15 * $d14;
+
+        $d16 = r6[i19];
+
+        $d17 = 2.0 - $d16;
+
+        $d19 = $d18 * $d17;
+
+        $d29 = $d20 + $d19;
+
+        $d22 = r1[i19];
+
+        $i6 = i19 + 1;
+
+        $d21 = r5[$i6];
+
+        $d24 = $d22 * $d21;
+
+        $d23 = r6[i19];
+
+        $d27 = $d24 * $d23;
+
+        $d25 = r6[i19];
+
+        $d26 = 1.0 - $d25;
+
+        $d28 = $d27 * $d26;
+
+        $d31 = $d29 - $d28;
+
+        $d30 = r3[i19];
+
+        d122 = $d31 * $d30;
+
+        $d32 = r4[i19];
+
+        $d35 = 2.0 * $d32;
+
+        $i7 = i19 + 1;
+
+        $d33 = r4[$i7];
+
+        $d34 = 4.0 * $d33;
+
+        $d44 = $d35 + $d34;
+
+        $d37 = r1[i19];
+
+        $d36 = r5[i19];
+
+        $d39 = $d37 * $d36;
+
+        $d38 = r6[i19];
+
+        $d42 = $d39 * $d38;
+
+        $d40 = r6[i19];
+
+        $d41 = 1.0 - $d40;
+
+        $d43 = $d42 * $d41;
+
+        $d53 = $d44 + $d43;
+
+        $d46 = r1[i19];
+
+        $i8 = i19 + 1;
+
+        $d45 = r5[$i8];
+
+        $d48 = $d46 * $d45;
+
+        $d47 = r6[i19];
+
+        $d51 = $d48 * $d47;
+
+        $d49 = r6[i19];
+
+        $d50 = 2.0 - $d49;
+
+        $d52 = $d51 * $d50;
+
+        $d55 = $d53 - $d52;
+
+        $i9 = i19 + 1;
+
+        $d54 = r3[$i9];
+
+        d123 = $d55 * $d54;
+
+     label02:
+        if z0 != 0 goto label06;
+
+        $d89 = staticinvoke <java.lang.Math: double abs(double)>(d122);
+
+        $d90 = 1.0E-12 * $d89;
+
+        $d91 = d122 - $d90;
+
+        $d92 = staticinvoke <java.lang.Math: double abs(double)>(d0);
+
+        $d93 = 1.0E-12 * $d92;
+
+        $d94 = d0 + $d93;
+
+        $b15 = $d91 cmpg $d94;
+
+        if $b15 > 0 goto label03;
+
+        z0 = 1;
+
+        goto label04;
+
+     label03:
+        $d95 = r6[i19];
+
+        $d96 = $d95 * 0.8;
+
+        r6[i19] = $d96;
+
+     label04:
+        $d97 = r6[i19];
+
+        $b16 = $d97 cmpg 1.0E-14;
+
+        if $b16 >= 0 goto label05;
+
+        $r8 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r8.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Spline is not found");
+
+        throw $r8;
+
+     label05:
+        $d98 = r4[i19];
+
+        $d101 = 4.0 * $d98;
+
+        $i17 = i19 + 1;
+
+        $d99 = r4[$i17];
+
+        $d100 = 2.0 * $d99;
+
+        $d110 = $d101 + $d100;
+
+        $d103 = r1[i19];
+
+        $d102 = r5[i19];
+
+        $d105 = $d103 * $d102;
+
+        $d104 = r6[i19];
+
+        $d108 = $d105 * $d104;
+
+        $d106 = r6[i19];
+
+        $d107 = 2.0 - $d106;
+
+        $d109 = $d108 * $d107;
+
+        $d119 = $d110 + $d109;
+
+        $d112 = r1[i19];
+
+        $i18 = i19 + 1;
+
+        $d111 = r5[$i18];
+
+        $d114 = $d112 * $d111;
+
+        $d113 = r6[i19];
+
+        $d117 = $d114 * $d113;
+
+        $d115 = r6[i19];
+
+        $d116 = 1.0 - $d115;
+
+        $d118 = $d117 * $d116;
+
+        $d121 = $d119 - $d118;
+
+        $d120 = r3[i19];
+
+        d122 = $d121 * $d120;
+
+        goto label02;
+
+     label06:
+        if z1 != 0 goto label10;
+
+        $d56 = staticinvoke <java.lang.Math: double abs(double)>(d123);
+
+        $d57 = 1.0E-12 * $d56;
+
+        $d58 = d123 + $d57;
+
+        $d59 = staticinvoke <java.lang.Math: double abs(double)>(d1);
+
+        $d60 = 1.0E-12 * $d59;
+
+        $d61 = d1 - $d60;
+
+        $b10 = $d58 cmpl $d61;
+
+        if $b10 < 0 goto label07;
+
+        z1 = 1;
+
+        goto label08;
+
+     label07:
+        $d62 = r6[i19];
+
+        $d63 = $d62 * 0.8;
+
+        r6[i19] = $d63;
+
+     label08:
+        $d64 = r6[i19];
+
+        $b11 = $d64 cmpg 1.0E-14;
+
+        if $b11 >= 0 goto label09;
+
+        $r7 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r7.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Spline is not found");
+
+        throw $r7;
+
+     label09:
+        $d65 = r4[i19];
+
+        $d68 = 2.0 * $d65;
+
+        $i12 = i19 + 1;
+
+        $d66 = r4[$i12];
+
+        $d67 = 4.0 * $d66;
+
+        $d77 = $d68 + $d67;
+
+        $d70 = r1[i19];
+
+        $d69 = r5[i19];
+
+        $d72 = $d70 * $d69;
+
+        $d71 = r6[i19];
+
+        $d75 = $d72 * $d71;
+
+        $d73 = r6[i19];
+
+        $d74 = 1.0 - $d73;
+
+        $d76 = $d75 * $d74;
+
+        $d86 = $d77 + $d76;
+
+        $d79 = r1[i19];
+
+        $i13 = i19 + 1;
+
+        $d78 = r5[$i13];
+
+        $d81 = $d79 * $d78;
+
+        $d80 = r6[i19];
+
+        $d84 = $d81 * $d80;
+
+        $d82 = r6[i19];
+
+        $d83 = 2.0 - $d82;
+
+        $d85 = $d84 * $d83;
+
+        $d88 = $d86 - $d85;
+
+        $i14 = i19 + 1;
+
+        $d87 = r3[$i14];
+
+        d123 = $d88 * $d87;
+
+        goto label06;
+
+     label10:
+        i19 = i19 + 1;
+
+        goto label01;
+
+     label11:
+        return r6;
+    }
+
+    private double[] knotsProvider(double[], double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator r0;
+        double[] r1, r2, r3, r4;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, i13;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[];
+
+        i0 = lengthof r1;
+
+        $i1 = 3 * i0;
+
+        $i2 = $i1 - 2;
+
+        r4 = newarray (double)[$i2];
+
+        i13 = 0;
+
+     label1:
+        $i3 = i0 - 1;
+
+        if i13 >= $i3 goto label2;
+
+        $i7 = 3 * i13;
+
+        $d1 = r1[i13];
+
+        r4[$i7] = $d1;
+
+        $i8 = 3 * i13;
+
+        $i9 = $i8 + 1;
+
+        $d5 = r1[i13];
+
+        $d3 = r3[i13];
+
+        $d2 = r2[i13];
+
+        $d4 = $d3 * $d2;
+
+        $d6 = $d5 + $d4;
+
+        r4[$i9] = $d6;
+
+        $i10 = 3 * i13;
+
+        $i12 = $i10 + 2;
+
+        $i11 = i13 + 1;
+
+        $d10 = r1[$i11];
+
+        $d8 = r3[i13];
+
+        $d7 = r2[i13];
+
+        $d9 = $d8 * $d7;
+
+        $d11 = $d10 - $d9;
+
+        r4[$i12] = $d11;
+
+        i13 = i13 + 1;
+
+        goto label1;
+
+     label2:
+        $i4 = i0 - 1;
+
+        $i6 = 3 * $i4;
+
+        $i5 = i0 - 1;
+
+        $d0 = r1[$i5];
+
+        r4[$i6] = $d0;
+
+        return r4;
+    }
+
+    private double[][] solve(double[], double[], double[], double[], double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator r0;
+        double[] r1, r2, r3, r4, r5, r6, r8, r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, $i25, $i26, $i27, $i28, $i29, $i30, $i31, $i32, $i33, $i34, $i35, $i36, i37, i38;
+        double[][] r7;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, $d80, $d81, $d82, $d83, $d84, $d85, $d86, $d87, $d88, $d89, $d90, $d91, $d92, $d93, $d94, $d95, $d96, $d97, $d98, $d99, $d100, $d101, $d102, $d103, $d104, $d105, $d106, $d107, $d108, $d109, $d110, $d111, $d112, $d113, $d114, $d115, $d116, $d117, $d118, $d119, $d120, $d121, $d122, $d123, $d124, $d125, $d126, $d127, $d128, $d129, $d130, $d131, $d132, $d133, $d134, $d135, $d136, $d137, $d138, $d139, $d140, $d141, $d142, $d143, $d144, $d145, $d146, $d147, $d148, $d149, $d150, $d151, $d152, $d153, $d154, $d155, $d156, $d157, $d158, $d159, $d160, $d161, $d162, $d163, $d164, $d165, $d166, $d167, $d168, $d169;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[];
+
+        r4 := @parameter3: double[];
+
+        r5 := @parameter4: double[];
+
+        r6 := @parameter5: double[];
+
+        i0 = lengthof r1;
+
+        $i1 = i0 - 1;
+
+        $i2 = 3 * $i1;
+
+        r7 = newmultiarray (double)[$i2][4];
+
+        $i3 = i0 - 1;
+
+        r8 = newarray (double)[$i3];
+
+        $i4 = i0 - 1;
+
+        r9 = newarray (double)[$i4];
+
+        i37 = 0;
+
+     label1:
+        $i5 = i0 - 1;
+
+        if i37 >= $i5 goto label2;
+
+        $d96 = r3[i37];
+
+        $d98 = 6.0 * $d96;
+
+        $d97 = r2[i37];
+
+        $d101 = $d98 / $d97;
+
+        $d99 = r6[i37];
+
+        $d100 = 1.0 - $d99;
+
+        $d109 = $d101 / $d100;
+
+        $d102 = r4[i37];
+
+        $d104 = 4.0 * $d102;
+
+        $d103 = r2[i37];
+
+        $d107 = $d104 / $d103;
+
+        $d105 = r6[i37];
+
+        $d106 = 1.0 - $d105;
+
+        $d108 = $d107 / $d106;
+
+        $d117 = $d109 - $d108;
+
+        $i33 = i37 + 1;
+
+        $d110 = r4[$i33];
+
+        $d112 = 2.0 * $d110;
+
+        $d111 = r2[i37];
+
+        $d115 = $d112 / $d111;
+
+        $d113 = r6[i37];
+
+        $d114 = 1.0 - $d113;
+
+        $d116 = $d115 / $d114;
+
+        $d127 = $d117 - $d116;
+
+        $d120 = r6[i37];
+
+        $d118 = r6[i37];
+
+        $d119 = 2.0 - $d118;
+
+        $d122 = $d120 * $d119;
+
+        $d121 = r5[i37];
+
+        $d125 = $d122 * $d121;
+
+        $d123 = r6[i37];
+
+        $d124 = 1.0 - $d123;
+
+        $d126 = $d125 / $d124;
+
+        $d131 = $d127 - $d126;
+
+        $d129 = r6[i37];
+
+        $i34 = i37 + 1;
+
+        $d128 = r5[$i34];
+
+        $d130 = $d129 * $d128;
+
+        $d132 = $d131 + $d130;
+
+        r8[i37] = $d132;
+
+        $d133 = r3[i37];
+
+        $d135 = -6.0 * $d133;
+
+        $d134 = r2[i37];
+
+        $d138 = $d135 / $d134;
+
+        $d136 = r6[i37];
+
+        $d137 = 1.0 - $d136;
+
+        $d146 = $d138 / $d137;
+
+        $i35 = i37 + 1;
+
+        $d139 = r4[$i35];
+
+        $d141 = 4.0 * $d139;
+
+        $d140 = r2[i37];
+
+        $d144 = $d141 / $d140;
+
+        $d142 = r6[i37];
+
+        $d143 = 1.0 - $d142;
+
+        $d145 = $d144 / $d143;
+
+        $d154 = $d146 + $d145;
+
+        $d147 = r4[i37];
+
+        $d149 = 2.0 * $d147;
+
+        $d148 = r2[i37];
+
+        $d152 = $d149 / $d148;
+
+        $d150 = r6[i37];
+
+        $d151 = 1.0 - $d150;
+
+        $d153 = $d152 / $d151;
+
+        $d164 = $d154 + $d153;
+
+        $d157 = r6[i37];
+
+        $d155 = r6[i37];
+
+        $d156 = 2.0 - $d155;
+
+        $d159 = $d157 * $d156;
+
+        $i36 = i37 + 1;
+
+        $d158 = r5[$i36];
+
+        $d162 = $d159 * $d158;
+
+        $d160 = r6[i37];
+
+        $d161 = 1.0 - $d160;
+
+        $d163 = $d162 / $d161;
+
+        $d168 = $d164 - $d163;
+
+        $d166 = r6[i37];
+
+        $d165 = r5[i37];
+
+        $d167 = $d166 * $d165;
+
+        $d169 = $d168 + $d167;
+
+        r9[i37] = $d169;
+
+        i37 = i37 + 1;
+
+        goto label1;
+
+     label2:
+        i38 = 0;
+
+     label3:
+        $i6 = i0 - 1;
+
+        if i38 >= $i6 goto label4;
+
+        $i7 = 3 * i38;
+
+        $r10 = r7[$i7];
+
+        $d1 = r8[i38];
+
+        $d0 = r5[i38];
+
+        $d2 = $d1 - $d0;
+
+        $d4 = $d2 / 6.0;
+
+        $d3 = r6[i38];
+
+        $d6 = $d4 / $d3;
+
+        $d5 = r2[i38];
+
+        $d7 = $d6 / $d5;
+
+        $r10[0] = $d7;
+
+        $i8 = 3 * i38;
+
+        $r11 = r7[$i8];
+
+        $d8 = r5[i38];
+
+        $d9 = 0.5 * $d8;
+
+        $r11[1] = $d9;
+
+        $i9 = 3 * i38;
+
+        $r12 = r7[$i9];
+
+        $d10 = r4[i38];
+
+        $r12[2] = $d10;
+
+        $i10 = 3 * i38;
+
+        $r13 = r7[$i10];
+
+        $d11 = r1[i38];
+
+        $r13[3] = $d11;
+
+        $i11 = 3 * i38;
+
+        $i12 = $i11 + 1;
+
+        $r14 = r7[$i12];
+
+        $d13 = r9[i38];
+
+        $d12 = r8[i38];
+
+        $d14 = $d13 - $d12;
+
+        $d18 = $d14 / 6.0;
+
+        $d15 = r6[i38];
+
+        $d16 = 2.0 * $d15;
+
+        $d17 = 1.0 - $d16;
+
+        $d20 = $d18 / $d17;
+
+        $d19 = r2[i38];
+
+        $d21 = $d20 / $d19;
+
+        $r14[0] = $d21;
+
+        $i13 = 3 * i38;
+
+        $i14 = $i13 + 1;
+
+        $r15 = r7[$i14];
+
+        $d22 = r8[i38];
+
+        $d23 = 0.5 * $d22;
+
+        $r15[1] = $d23;
+
+        $i15 = 3 * i38;
+
+        $i16 = $i15 + 1;
+
+        $r16 = r7[$i16];
+
+        $d32 = r4[i38];
+
+        $d25 = r5[i38];
+
+        $d24 = r8[i38];
+
+        $d27 = $d25 + $d24;
+
+        $d26 = r6[i38];
+
+        $d29 = $d27 * $d26;
+
+        $d28 = r2[i38];
+
+        $d30 = $d29 * $d28;
+
+        $d31 = $d30 * 0.5;
+
+        $d33 = $d32 + $d31;
+
+        $r16[2] = $d33;
+
+        $i17 = 3 * i38;
+
+        $i18 = $i17 + 1;
+
+        $r17 = r7[$i18];
+
+        $d39 = r1[i38];
+
+        $d35 = r6[i38];
+
+        $d34 = r2[i38];
+
+        $d37 = $d35 * $d34;
+
+        $d36 = r4[i38];
+
+        $d38 = $d37 * $d36;
+
+        $d53 = $d39 + $d38;
+
+        $d40 = r5[i38];
+
+        $d42 = 2.0 * $d40;
+
+        $d41 = r8[i38];
+
+        $d44 = $d42 + $d41;
+
+        $d43 = r6[i38];
+
+        $d46 = $d44 * $d43;
+
+        $d45 = r2[i38];
+
+        $d48 = $d46 * $d45;
+
+        $d47 = r6[i38];
+
+        $d50 = $d48 * $d47;
+
+        $d49 = r2[i38];
+
+        $d51 = $d50 * $d49;
+
+        $d52 = $d51 / 6.0;
+
+        $d54 = $d53 + $d52;
+
+        $r17[3] = $d54;
+
+        $i19 = 3 * i38;
+
+        $i20 = $i19 + 2;
+
+        $r18 = r7[$i20];
+
+        $i21 = i38 + 1;
+
+        $d56 = r5[$i21];
+
+        $d55 = r9[i38];
+
+        $d57 = $d56 - $d55;
+
+        $d59 = $d57 / 6.0;
+
+        $d58 = r6[i38];
+
+        $d61 = $d59 / $d58;
+
+        $d60 = r2[i38];
+
+        $d62 = $d61 / $d60;
+
+        $r18[0] = $d62;
+
+        $i22 = 3 * i38;
+
+        $i23 = $i22 + 2;
+
+        $r19 = r7[$i23];
+
+        $d63 = r9[i38];
+
+        $d64 = 0.5 * $d63;
+
+        $r19[1] = $d64;
+
+        $i24 = 3 * i38;
+
+        $i25 = $i24 + 2;
+
+        $r20 = r7[$i25];
+
+        $i26 = i38 + 1;
+
+        $d73 = r4[$i26];
+
+        $i27 = i38 + 1;
+
+        $d66 = r5[$i27];
+
+        $d65 = r9[i38];
+
+        $d68 = $d66 + $d65;
+
+        $d67 = r6[i38];
+
+        $d70 = $d68 * $d67;
+
+        $d69 = r2[i38];
+
+        $d71 = $d70 * $d69;
+
+        $d72 = $d71 * 0.5;
+
+        $d74 = $d73 - $d72;
+
+        $r20[2] = $d74;
+
+        $i28 = 3 * i38;
+
+        $i29 = $i28 + 2;
+
+        $r21 = r7[$i29];
+
+        $i30 = i38 + 1;
+
+        $d80 = r1[$i30];
+
+        $d76 = r6[i38];
+
+        $d75 = r2[i38];
+
+        $d78 = $d76 * $d75;
+
+        $i31 = i38 + 1;
+
+        $d77 = r4[$i31];
+
+        $d79 = $d78 * $d77;
+
+        $d94 = $d80 - $d79;
+
+        $i32 = i38 + 1;
+
+        $d81 = r5[$i32];
+
+        $d83 = 2.0 * $d81;
+
+        $d82 = r9[i38];
+
+        $d85 = $d83 + $d82;
+
+        $d84 = r6[i38];
+
+        $d87 = $d85 * $d84;
+
+        $d86 = r2[i38];
+
+        $d89 = $d87 * $d86;
+
+        $d88 = r6[i38];
+
+        $d91 = $d89 * $d88;
+
+        $d90 = r2[i38];
+
+        $d92 = $d91 * $d90;
+
+        $d93 = $d92 / 6.0;
+
+        $d95 = $d94 + $d93;
+
+        $r21[3] = $d95;
+
+        i38 = i38 + 1;
+
+        goto label3;
+
+     label4:
+        return r7;
+    }
+
+    public static void <clinit>()
+    {
+        <com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator: double ERROR> = 1.0E-12;
+
+        <com.opengamma.analytics.math.interpolation.ShapePreservingCubicSplineInterpolator: double INF> = #Infinity;
+
+        return;
+    }
+}

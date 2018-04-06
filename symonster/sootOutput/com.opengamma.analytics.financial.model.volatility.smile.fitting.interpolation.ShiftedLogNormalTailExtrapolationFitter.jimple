@@ -1,0 +1,1597 @@
+public class com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter extends java.lang.Object
+{
+    private static final org.slf4j.Logger LOG;
+    private static final com.opengamma.analytics.math.differentiation.ScalarFirstOrderDifferentiator DIFFERENTIATOR;
+    private static final com.opengamma.analytics.math.rootfinding.newton.NewtonVectorRootFinder ROOTFINDER;
+    private static final com.opengamma.analytics.math.minimization.NonLinearParameterTransforms TRANSFORMS;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public double[] fitTwoPrices(double, double[], double[], double, boolean)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31;
+        double[] r1, r2, r3, $r18;
+        boolean z0, $z1, $z2, $z3, $z4;
+        com.opengamma.analytics.math.function.Function1D r4, r5, $r14, $r15;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r7, $r11, $r16, $r17;
+        byte $b0, $b1, $b2, $b3, $b4;
+        com.opengamma.analytics.math.minimization.NonLinearTransformFunction $r8;
+        com.opengamma.analytics.math.minimization.NonLinearParameterTransforms $r9, $r10, $r12;
+        com.opengamma.analytics.math.rootfinding.newton.NewtonVectorRootFinder $r13;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        r2 := @parameter2: double[];
+
+        d1 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        $d10 = r1[0];
+
+        $d9 = r1[1];
+
+        $b0 = $d10 cmpg $d9;
+
+        if $b0 >= 0 goto label01;
+
+        $z1 = 1;
+
+        goto label02;
+
+     label01:
+        $z1 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "strikes must be in ascending order");
+
+        $d11 = r1[1];
+
+        $b1 = $d11 cmpg d0;
+
+        if $b1 < 0 goto label03;
+
+        $d16 = r1[0];
+
+        $b4 = $d16 cmpl d0;
+
+        if $b4 <= 0 goto label04;
+
+     label03:
+        $z2 = 1;
+
+        goto label05;
+
+     label04:
+        $z2 = 0;
+
+     label05:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "strikes cannot be either side of forward");
+
+        if z0 == 0 goto label08;
+
+        $d15 = r2[0];
+
+        $d14 = r2[1];
+
+        $b3 = $d15 cmpl $d14;
+
+        if $b3 <= 0 goto label06;
+
+        $z3 = 1;
+
+        goto label07;
+
+     label06:
+        $z3 = 0;
+
+     label07:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "Call prices are not decreasing with strike. Either the input data is wrong or there is an arbitrage");
+
+        goto label11;
+
+     label08:
+        $d13 = r2[0];
+
+        $d12 = r2[1];
+
+        $b2 = $d13 cmpg $d12;
+
+        if $b2 >= 0 goto label09;
+
+        $z4 = 1;
+
+        goto label10;
+
+     label09:
+        $z4 = 0;
+
+     label10:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z4, "Put prices are not increasing with strike. Either the input data is wrong or there is an arbitrage");
+
+     label11:
+        $d17 = r2[0];
+
+        $d18 = r1[0];
+
+        d2 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double impliedVolatility(double,double,double,double,boolean)>($d17, d0, $d18, d1, z0);
+
+        $d19 = r2[1];
+
+        $d20 = r1[1];
+
+        d3 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double impliedVolatility(double,double,double,double,boolean)>($d19, d0, $d20, d1, z0);
+
+        $d21 = r1[0];
+
+        $d22 = r1[1];
+
+        $d23 = $d21 + $d22;
+
+        d4 = $d23 / 2.0;
+
+        $d24 = d2 + d3;
+
+        d5 = $d24 / 2.0;
+
+        d6 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double price(double,double,double,double,boolean)>(d0, d4, d1, d5, z0);
+
+        $d25 = d2 - d3;
+
+        $d26 = r1[0];
+
+        $d27 = r1[1];
+
+        $d28 = $d26 - $d27;
+
+        d7 = $d25 / $d28;
+
+        $d29 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double dualDelta(double,double,double,double,boolean)>(d0, d4, d1, d5, z0);
+
+        $d30 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double vega(double,double,double,double)>(d0, d4, d1, d5);
+
+        $d31 = $d30 * d7;
+
+        d8 = $d29 + $d31;
+
+        r3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: double[] fitPriceAndGrad(double,double,double,double,double,boolean)>(d0, d4, d6, d8, d1, z0);
+
+        r4 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.function.Function1D getPriceDifferenceFunc(double,double[],double[],double,boolean)>(d0, r1, r2, d1, z0);
+
+        r5 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.function.Function1D getPriceDifferenceJac(double,double[],double[],double,boolean)>(d0, r1, r2, d1, z0);
+
+        $r8 = new com.opengamma.analytics.math.minimization.NonLinearTransformFunction;
+
+        $r9 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.minimization.NonLinearParameterTransforms TRANSFORMS>;
+
+        specialinvoke $r8.<com.opengamma.analytics.math.minimization.NonLinearTransformFunction: void <init>(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.minimization.NonLinearParameterTransforms)>(r4, r5, $r9);
+
+        $r10 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.minimization.NonLinearParameterTransforms TRANSFORMS>;
+
+        $r11 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r11.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r3);
+
+        r7 = interfaceinvoke $r10.<com.opengamma.analytics.math.minimization.NonLinearParameterTransforms: com.opengamma.analytics.math.matrix.DoubleMatrix1D transform(com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r11);
+
+        $r12 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.minimization.NonLinearParameterTransforms TRANSFORMS>;
+
+        $r13 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.rootfinding.newton.NewtonVectorRootFinder ROOTFINDER>;
+
+        $r14 = virtualinvoke $r8.<com.opengamma.analytics.math.minimization.NonLinearTransformFunction: com.opengamma.analytics.math.function.Function1D getFittingFunction()>();
+
+        $r15 = virtualinvoke $r8.<com.opengamma.analytics.math.minimization.NonLinearTransformFunction: com.opengamma.analytics.math.function.Function1D getFittingJacobian()>();
+
+        $r16 = virtualinvoke $r13.<com.opengamma.analytics.math.rootfinding.newton.NewtonVectorRootFinder: com.opengamma.analytics.math.matrix.DoubleMatrix1D getRoot(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r14, $r15, r7);
+
+        $r17 = interfaceinvoke $r12.<com.opengamma.analytics.math.minimization.NonLinearParameterTransforms: com.opengamma.analytics.math.matrix.DoubleMatrix1D inverseTransform(com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r16);
+
+        $r18 = virtualinvoke $r17.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        return $r18;
+    }
+
+    public double[] fitPriceAndGrad(double, double, double, double, double, boolean)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter r0;
+        double d0, d1, d2, d3, d4, $d5, $d6, d7, d8;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r1, $r31, $r39, $r40;
+        com.opengamma.analytics.math.function.Function1D r2, r3, $r37, $r38;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8;
+        java.lang.Object[] $r5, $r7, $r9, $r11, $r13, $r16, $r18, $r21;
+        java.lang.Double $r6, $r8, $r10, $r12, $r14, $r15, $r17, $r19, $r20, $r22;
+        java.lang.IllegalArgumentException $r23;
+        java.lang.StringBuilder $r24, $r25, $r26, $r27, $r28;
+        java.lang.String $r29;
+        com.opengamma.analytics.math.minimization.NonLinearParameterTransforms $r30, $r34, $r35;
+        double[] $r32, $r41;
+        com.opengamma.analytics.math.minimization.NonLinearTransformFunction $r33;
+        com.opengamma.analytics.math.rootfinding.newton.NewtonVectorRootFinder $r36;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        z0 := @parameter5: boolean;
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 <= 0 goto label01;
+
+        $z1 = 1;
+
+        goto label02;
+
+     label01:
+        $z1 = 0;
+
+     label02:
+        $r5 = newarray (java.lang.Object)[1];
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r5[0] = $r6;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z1, "Forward must be greater that zero. value given is {}", $r5);
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 < 0 goto label03;
+
+        $z2 = 1;
+
+        goto label04;
+
+     label03:
+        $z2 = 0;
+
+     label04:
+        $r7 = newarray (java.lang.Object)[1];
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r7[0] = $r8;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z2, "Strike must be greater that or equal to zero. value given is {}", $r7);
+
+        $b2 = d2 cmpl 0.0;
+
+        if $b2 <= 0 goto label05;
+
+        $z3 = 1;
+
+        goto label06;
+
+     label05:
+        $z3 = 0;
+
+     label06:
+        $r9 = newarray (java.lang.Object)[1];
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r9[0] = $r10;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z3, "Price must be greater that zero. value given is {}", $r9);
+
+        $b3 = d4 cmpl 0.0;
+
+        if $b3 <= 0 goto label07;
+
+        $z4 = 1;
+
+        goto label08;
+
+     label07:
+        $z4 = 0;
+
+     label08:
+        $r11 = newarray (java.lang.Object)[1];
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d4);
+
+        $r11[0] = $r12;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z4, "timeToExpiry must be greater that zero. value given is {}", $r11);
+
+        if z0 == 0 goto label14;
+
+        $b6 = d2 cmpg d0;
+
+        if $b6 >= 0 goto label09;
+
+        $z5 = 1;
+
+        goto label10;
+
+     label09:
+        $z5 = 0;
+
+     label10:
+        $r18 = newarray (java.lang.Object)[2];
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r18[0] = $r19;
+
+        $r20 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r18[1] = $r20;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z5, "call price must be less than forward. Price  is {} and foward is {} ", $r18);
+
+        $b7 = d3 cmpg 0.0;
+
+        if $b7 >= 0 goto label11;
+
+        $z6 = 1;
+
+        goto label12;
+
+     label11:
+        $z6 = 0;
+
+     label12:
+        $r21 = newarray (java.lang.Object)[1];
+
+        $r22 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r21[0] = $r22;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z6, "Call prices must decrease with strike, but priceGrad is {}", $r21);
+
+        $d5 = d0 - d1;
+
+        $d6 = $d5 * d3;
+
+        d7 = d2 + $d6;
+
+        $b8 = d7 cmpl d0;
+
+        if $b8 < 0 goto label13;
+
+        $r23 = new java.lang.IllegalArgumentException;
+
+        $r24 = new java.lang.StringBuilder;
+
+        specialinvoke $r24.<java.lang.StringBuilder: void <init>()>();
+
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("inputs imply an ATM price of >  ");
+
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d7);
+
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" which is greater than the forward of ");
+
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d0);
+
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r23.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r29);
+
+        throw $r23;
+
+     label13:
+        goto label19;
+
+     label14:
+        $b4 = d2 cmpg d1;
+
+        if $b4 >= 0 goto label15;
+
+        $z7 = 1;
+
+        goto label16;
+
+     label15:
+        $z7 = 0;
+
+     label16:
+        $r13 = newarray (java.lang.Object)[2];
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r13[0] = $r14;
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r13[1] = $r15;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z7, "put price must be less than strike. Price is {} and strike is  {}", $r13);
+
+        $b5 = d3 cmpl 0.0;
+
+        if $b5 <= 0 goto label17;
+
+        $z8 = 1;
+
+        goto label18;
+
+     label17:
+        $z8 = 0;
+
+     label18:
+        $r16 = newarray (java.lang.Object)[1];
+
+        $r17 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r16[0] = $r17;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z8, "Put prices must increase with strike, but priceGrad is {}", $r16);
+
+     label19:
+        d8 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double impliedVolatility(double,double,double,double,boolean)>(d2, d0, d1, d4, z0);
+
+        $r30 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.minimization.NonLinearParameterTransforms TRANSFORMS>;
+
+        $r31 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        $r32 = newarray (double)[2];
+
+        $r32[0] = 0.0;
+
+        $r32[1] = d8;
+
+        specialinvoke $r31.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>($r32);
+
+        r1 = interfaceinvoke $r30.<com.opengamma.analytics.math.minimization.NonLinearParameterTransforms: com.opengamma.analytics.math.matrix.DoubleMatrix1D transform(com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r31);
+
+        r2 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.function.Function1D getPriceGradDifferenceFunc(double,double,double,double,double,boolean)>(d0, d1, d2, d3, d4, z0);
+
+        r3 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.function.Function1D getPriceGradJac(double,double,double,double,double,boolean)>(d0, d1, d2, d3, d4, z0);
+
+        $r33 = new com.opengamma.analytics.math.minimization.NonLinearTransformFunction;
+
+        $r34 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.minimization.NonLinearParameterTransforms TRANSFORMS>;
+
+        specialinvoke $r33.<com.opengamma.analytics.math.minimization.NonLinearTransformFunction: void <init>(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.minimization.NonLinearParameterTransforms)>(r2, r3, $r34);
+
+        $r35 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.minimization.NonLinearParameterTransforms TRANSFORMS>;
+
+        $r36 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.rootfinding.newton.NewtonVectorRootFinder ROOTFINDER>;
+
+        $r37 = virtualinvoke $r33.<com.opengamma.analytics.math.minimization.NonLinearTransformFunction: com.opengamma.analytics.math.function.Function1D getFittingFunction()>();
+
+        $r38 = virtualinvoke $r33.<com.opengamma.analytics.math.minimization.NonLinearTransformFunction: com.opengamma.analytics.math.function.Function1D getFittingJacobian()>();
+
+        $r39 = virtualinvoke $r36.<com.opengamma.analytics.math.rootfinding.newton.NewtonVectorRootFinder: com.opengamma.analytics.math.matrix.DoubleMatrix1D getRoot(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r37, $r38, r1);
+
+        $r40 = interfaceinvoke $r35.<com.opengamma.analytics.math.minimization.NonLinearParameterTransforms: com.opengamma.analytics.math.matrix.DoubleMatrix1D inverseTransform(com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r39);
+
+        $r41 = virtualinvoke $r40.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        return $r41;
+    }
+
+    public double[] fitTwoVolatilities(double, double[], double[], double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter r0;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20;
+        double[] r1, r2, r3, $r18;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r4, $r8, $r16, $r17;
+        com.opengamma.analytics.math.function.Function1D r5, r6, $r14, $r15;
+        byte $b0, $b1, $b2;
+        com.opengamma.analytics.math.minimization.NonLinearParameterTransforms $r9, $r11, $r12;
+        com.opengamma.analytics.math.minimization.NonLinearTransformFunction $r10;
+        com.opengamma.analytics.math.rootfinding.newton.NewtonVectorRootFinder $r13;
+        boolean $z0, $z1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        r2 := @parameter2: double[];
+
+        d1 := @parameter3: double;
+
+        $d6 = r1[0];
+
+        $d5 = r1[1];
+
+        $b0 = $d6 cmpg $d5;
+
+        if $b0 >= 0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "strikes must be in assending order");
+
+        $d7 = r1[1];
+
+        $b1 = $d7 cmpg d0;
+
+        if $b1 < 0 goto label3;
+
+        $d20 = r1[0];
+
+        $b2 = $d20 cmpl d0;
+
+        if $b2 <= 0 goto label4;
+
+     label3:
+        $z1 = 1;
+
+        goto label5;
+
+     label4:
+        $z1 = 0;
+
+     label5:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "strikes cannot be either side of forward");
+
+        $d9 = r1[0];
+
+        $d8 = r1[1];
+
+        $d10 = $d9 + $d8;
+
+        d2 = $d10 / 2.0;
+
+        $d12 = r2[0];
+
+        $d11 = r2[1];
+
+        $d13 = $d12 + $d11;
+
+        d3 = $d13 / 2.0;
+
+        $d15 = r2[1];
+
+        $d14 = r2[0];
+
+        $d19 = $d15 - $d14;
+
+        $d17 = r1[1];
+
+        $d16 = r1[0];
+
+        $d18 = $d17 - $d16;
+
+        d4 = $d19 / $d18;
+
+        r3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: double[] fitVolatilityAndGrad(double,double,double,double,double)>(d0, d2, d3, d4, d1);
+
+        $r9 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.minimization.NonLinearParameterTransforms TRANSFORMS>;
+
+        $r8 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r8.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r3);
+
+        r4 = interfaceinvoke $r9.<com.opengamma.analytics.math.minimization.NonLinearParameterTransforms: com.opengamma.analytics.math.matrix.DoubleMatrix1D transform(com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r8);
+
+        r5 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.function.Function1D getVolDifferenceFunc(double,double[],double[],double)>(d0, r1, r2, d1);
+
+        r6 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.function.Function1D getVolDifferenceJac(double,double[],double)>(d0, r1, d1);
+
+        $r10 = new com.opengamma.analytics.math.minimization.NonLinearTransformFunction;
+
+        $r11 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.minimization.NonLinearParameterTransforms TRANSFORMS>;
+
+        specialinvoke $r10.<com.opengamma.analytics.math.minimization.NonLinearTransformFunction: void <init>(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.minimization.NonLinearParameterTransforms)>(r5, r6, $r11);
+
+        $r12 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.minimization.NonLinearParameterTransforms TRANSFORMS>;
+
+        $r13 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.rootfinding.newton.NewtonVectorRootFinder ROOTFINDER>;
+
+        $r14 = virtualinvoke $r10.<com.opengamma.analytics.math.minimization.NonLinearTransformFunction: com.opengamma.analytics.math.function.Function1D getFittingFunction()>();
+
+        $r15 = virtualinvoke $r10.<com.opengamma.analytics.math.minimization.NonLinearTransformFunction: com.opengamma.analytics.math.function.Function1D getFittingJacobian()>();
+
+        $r16 = virtualinvoke $r13.<com.opengamma.analytics.math.rootfinding.newton.NewtonVectorRootFinder: com.opengamma.analytics.math.matrix.DoubleMatrix1D getRoot(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r14, $r15, r4);
+
+        $r17 = interfaceinvoke $r12.<com.opengamma.analytics.math.minimization.NonLinearParameterTransforms: com.opengamma.analytics.math.matrix.DoubleMatrix1D inverseTransform(com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r16);
+
+        $r18 = virtualinvoke $r17.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        return $r18;
+    }
+
+    public double[] fitVolatilityAndGrad(double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, $d11, $d12, $d13, $d14;
+        boolean z0, $z1;
+        byte $b0, $b1, $b2;
+        java.lang.StringBuilder $r1, $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r15, $r16, $r17, $r18, $r19, $r20, $r21;
+        org.slf4j.Logger $r2;
+        java.lang.String $r13, $r22;
+        java.lang.IllegalArgumentException $r14;
+        double[] $r23;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        $b0 = d1 cmpl d0;
+
+        if $b0 < 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        z0 = $z1;
+
+        d5 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double dualDelta(double,double,double,double,boolean)>(d0, d1, d4, d2, $z1);
+
+        d6 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double vega(double,double,double,double)>(d0, d1, d4, d2);
+
+        if $z1 == 0 goto label3;
+
+        $d12 = 1.0 + d5;
+
+        $d13 = neg $d12;
+
+        goto label4;
+
+     label3:
+        $d13 = neg d5;
+
+     label4:
+        d7 = $d13 / d6;
+
+        if z0 == 0 goto label5;
+
+        $d14 = neg d5;
+
+        goto label6;
+
+     label5:
+        $d14 = 1.0 - d5;
+
+     label6:
+        d8 = $d14 / d6;
+
+        $b1 = d3 cmpl d8;
+
+        if $b1 >= 0 goto label7;
+
+        $b2 = d3 cmpg d7;
+
+        if $b2 > 0 goto label8;
+
+     label7:
+        $r2 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: org.slf4j.Logger LOG>;
+
+        $r1 = new java.lang.StringBuilder;
+
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Extrapolation - Expiry = ");
+
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d4);
+
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("- failed to fit tail to strike, ");
+
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d1);
+
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(". volGrad, ");
+
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d3);
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", out of bounds. minGrad = ");
+
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d7);
+
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", maxGrad = ");
+
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d8);
+
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        interfaceinvoke $r2.<org.slf4j.Logger: void info(java.lang.String)>($r13);
+
+        $r14 = new java.lang.IllegalArgumentException;
+
+        $r15 = new java.lang.StringBuilder;
+
+        specialinvoke $r15.<java.lang.StringBuilder: void <init>()>();
+
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Volatility smile gradient must be in range ");
+
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d7);
+
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" to ");
+
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d8);
+
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", but value is ");
+
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d3);
+
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r14.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r22);
+
+        throw $r14;
+
+     label8:
+        d9 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double price(double,double,double,double,boolean)>(d0, d1, d4, d2, z0);
+
+        $d11 = d6 * d3;
+
+        d10 = d5 + $d11;
+
+        $r23 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: double[] fitPriceAndGrad(double,double,double,double,double,boolean)>(d0, d1, d9, d10, d4, z0);
+
+        return $r23;
+    }
+
+    public double[] fitVolatilityAndGrad(double, double, com.opengamma.analytics.math.function.Function1D, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter r0;
+        double d0, d1, d2, d3, d4;
+        com.opengamma.analytics.math.function.Function1D r1, r2;
+        java.lang.Double $r3, $r5, $r7, $r9;
+        java.lang.Object $r4, $r8;
+        com.opengamma.analytics.math.differentiation.ScalarFirstOrderDifferentiator $r6;
+        double[] $r10;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        r1 := @parameter2: com.opengamma.analytics.math.function.Function1D;
+
+        d2 := @parameter3: double;
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r3);
+
+        $r5 = (java.lang.Double) $r4;
+
+        d3 = virtualinvoke $r5.<java.lang.Double: double doubleValue()>();
+
+        $r6 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.differentiation.ScalarFirstOrderDifferentiator DIFFERENTIATOR>;
+
+        r2 = virtualinvoke $r6.<com.opengamma.analytics.math.differentiation.ScalarFirstOrderDifferentiator: com.opengamma.analytics.math.function.Function1D differentiate(com.opengamma.analytics.math.function.Function1D)>(r1);
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r8 = virtualinvoke r2.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r7);
+
+        $r9 = (java.lang.Double) $r8;
+
+        d4 = virtualinvoke $r9.<java.lang.Double: double doubleValue()>();
+
+        $r10 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: double[] fitVolatilityAndGrad(double,double,double,double,double)>(d0, d1, d3, d4, d2);
+
+        return $r10;
+    }
+
+    public java.util.ArrayList fitVolatilityAndGradRecursivelyByTossingPoints(double, double[], double[], com.opengamma.analytics.math.function.Function1D, double, boolean)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter r0;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14;
+        double[] r1, r2, r4, $r31, $r32, $r34, $r35;
+        com.opengamma.analytics.math.function.Function1D r3;
+        boolean z0, $z1;
+        int i0, i1, $i2, $i3, $i4, $i5;
+        java.lang.Double $r5, $r7, $r18, $r19, $r20;
+        java.lang.Object $r6;
+        java.lang.StringBuilder $r8, $r10, $r11, $r12, $r13, $r14, $r15, $r22, $r24, $r25, $r26, $r27, $r28, $r29;
+        org.slf4j.Logger $r9, $r23;
+        java.lang.String $r16, $r30;
+        java.util.ArrayList $r17, $r33, $r36;
+        java.lang.Exception $r21;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        r2 := @parameter2: double[];
+
+        r3 := @parameter3: com.opengamma.analytics.math.function.Function1D;
+
+        d1 := @parameter4: double;
+
+        z0 := @parameter5: boolean;
+
+        i0 = lengthof r1;
+
+        $i2 = lengthof r2;
+
+        if $i2 != i0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "Lengths of strikes and vols unexpectedly differ!");
+
+        if z0 == 0 goto label3;
+
+        $i5 = 0;
+
+        goto label4;
+
+     label3:
+        $i5 = i0 - 1;
+
+     label4:
+        i1 = $i5;
+
+     label5:
+        $d3 = r1[$i5];
+
+        $d4 = r2[$i5];
+
+        $d2 = r1[$i5];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d2);
+
+        $r6 = virtualinvoke r3.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r5);
+
+        $r7 = (java.lang.Double) $r6;
+
+        $d5 = virtualinvoke $r7.<java.lang.Double: double doubleValue()>();
+
+        r4 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: double[] fitVolatilityAndGrad(double,double,double,double,double)>(d0, $d3, $d4, $d5, d1);
+
+     label6:
+        goto label9;
+
+     label7:
+        $r21 := @caughtexception;
+
+        $r23 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: org.slf4j.Logger LOG>;
+
+        $r22 = new java.lang.StringBuilder;
+
+        specialinvoke $r22.<java.lang.StringBuilder: void <init>()>();
+
+        $r24 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Extrapolation - Expiry = ");
+
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d1);
+
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("- failed to fit tail to ");
+
+        $d14 = r1[i1];
+
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d14);
+
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(". Trying next strike. Caught ");
+
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r21);
+
+        $r30 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        interfaceinvoke $r23.<org.slf4j.Logger: void info(java.lang.String)>($r30);
+
+        if z0 == 0 goto label8;
+
+        $r34 = staticinvoke <java.util.Arrays: double[] copyOfRange(double[],int,int)>(r1, 1, i0);
+
+        $r35 = staticinvoke <java.util.Arrays: double[] copyOfRange(double[],int,int)>(r2, 1, i0);
+
+        $r36 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: java.util.ArrayList fitVolatilityAndGradRecursivelyByTossingPoints(double,double[],double[],com.opengamma.analytics.math.function.Function1D,double,boolean)>(d0, $r34, $r35, r3, d1, z0);
+
+        return $r36;
+
+     label8:
+        $i3 = i0 - 1;
+
+        $r31 = staticinvoke <java.util.Arrays: double[] copyOfRange(double[],int,int)>(r1, 0, $i3);
+
+        $i4 = i0 - 1;
+
+        $r32 = staticinvoke <java.util.Arrays: double[] copyOfRange(double[],int,int)>(r2, 0, $i4);
+
+        $r33 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: java.util.ArrayList fitVolatilityAndGradRecursivelyByTossingPoints(double,double[],double[],com.opengamma.analytics.math.function.Function1D,double,boolean)>(d0, $r31, $r32, r3, d1, z0);
+
+        return $r33;
+
+     label9:
+        $r9 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: org.slf4j.Logger LOG>;
+
+        $r8 = new java.lang.StringBuilder;
+
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>()>();
+
+        $r10 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Extrapolating from strike, ");
+
+        $d6 = r1[$i5];
+
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d6);
+
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", with shifted forward, ");
+
+        $d7 = r4[0];
+
+        $d8 = staticinvoke <java.lang.Math: double exp(double)>($d7);
+
+        $d9 = d0 * $d8;
+
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d9);
+
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", and vol, ");
+
+        $d10 = r4[1];
+
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d10);
+
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        interfaceinvoke $r9.<org.slf4j.Logger: void info(java.lang.String)>($r16);
+
+        $r17 = new java.util.ArrayList;
+
+        specialinvoke $r17.<java.util.ArrayList: void <init>()>();
+
+        $d11 = r4[0];
+
+        $r18 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d11);
+
+        virtualinvoke $r17.<java.util.ArrayList: void add(int,java.lang.Object)>(0, $r18);
+
+        $d12 = r4[1];
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d12);
+
+        virtualinvoke $r17.<java.util.ArrayList: void add(int,java.lang.Object)>(1, $r19);
+
+        $d13 = r1[$i5];
+
+        $r20 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d13);
+
+        virtualinvoke $r17.<java.util.ArrayList: void add(int,java.lang.Object)>(2, $r20);
+
+        return $r17;
+
+        catch java.lang.Exception from label5 to label6 with label7;
+    }
+
+    public java.util.ArrayList fitVolatilityAndGradRecursivelyByTossingPoints(double, double[], double[], double[], double, boolean)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter r0;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13;
+        double[] r1, r2, r3, r4, $r28, $r29, $r30, $r32, $r33, $r34;
+        boolean z0, $z1, $z2;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7;
+        java.lang.StringBuilder $r5, $r7, $r8, $r9, $r10, $r11, $r12, $r19, $r21, $r22, $r23, $r24, $r25, $r26;
+        org.slf4j.Logger $r6, $r20;
+        java.lang.String $r13, $r27;
+        java.util.ArrayList $r14, $r31, $r35;
+        java.lang.Double $r15, $r16, $r17;
+        java.lang.Exception $r18;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        r2 := @parameter2: double[];
+
+        r3 := @parameter3: double[];
+
+        d1 := @parameter4: double;
+
+        z0 := @parameter5: boolean;
+
+        i0 = lengthof r1;
+
+        $i2 = lengthof r2;
+
+        if $i2 != i0 goto label01;
+
+        $z1 = 1;
+
+        goto label02;
+
+     label01:
+        $z1 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "Lengths of strikes and vols unexpectedly differ!");
+
+        $i3 = lengthof r3;
+
+        if $i3 != i0 goto label03;
+
+        $z2 = 1;
+
+        goto label04;
+
+     label03:
+        $z2 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "Lengths of slopes and vols unexpectedly differ!");
+
+        if z0 == 0 goto label05;
+
+        $i7 = 0;
+
+        goto label06;
+
+     label05:
+        $i7 = i0 - 1;
+
+     label06:
+        i1 = $i7;
+
+     label07:
+        $d4 = r1[$i7];
+
+        $d3 = r2[$i7];
+
+        $d2 = r3[$i7];
+
+        r4 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: double[] fitVolatilityAndGrad(double,double,double,double,double)>(d0, $d4, $d3, $d2, d1);
+
+     label08:
+        goto label11;
+
+     label09:
+        $r18 := @caughtexception;
+
+        $r20 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: org.slf4j.Logger LOG>;
+
+        $r19 = new java.lang.StringBuilder;
+
+        specialinvoke $r19.<java.lang.StringBuilder: void <init>()>();
+
+        $r21 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Extrapolation - Expiry = ");
+
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d1);
+
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("- failed to fit tail to ");
+
+        $d13 = r1[i1];
+
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d13);
+
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(". Trying next strike. Caught ");
+
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r18);
+
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        interfaceinvoke $r20.<org.slf4j.Logger: void info(java.lang.String)>($r27);
+
+        if z0 == 0 goto label10;
+
+        $r32 = staticinvoke <java.util.Arrays: double[] copyOfRange(double[],int,int)>(r1, 1, i0);
+
+        $r33 = staticinvoke <java.util.Arrays: double[] copyOfRange(double[],int,int)>(r2, 1, i0);
+
+        $r34 = staticinvoke <java.util.Arrays: double[] copyOfRange(double[],int,int)>(r3, 1, i0);
+
+        $r35 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: java.util.ArrayList fitVolatilityAndGradRecursivelyByTossingPoints(double,double[],double[],double[],double,boolean)>(d0, $r32, $r33, $r34, d1, z0);
+
+        return $r35;
+
+     label10:
+        $i4 = i0 - 1;
+
+        $r28 = staticinvoke <java.util.Arrays: double[] copyOfRange(double[],int,int)>(r1, 0, $i4);
+
+        $i5 = i0 - 1;
+
+        $r29 = staticinvoke <java.util.Arrays: double[] copyOfRange(double[],int,int)>(r2, 0, $i5);
+
+        $i6 = i0 - 1;
+
+        $r30 = staticinvoke <java.util.Arrays: double[] copyOfRange(double[],int,int)>(r3, 0, $i6);
+
+        $r31 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: java.util.ArrayList fitVolatilityAndGradRecursivelyByTossingPoints(double,double[],double[],double[],double,boolean)>(d0, $r28, $r29, $r30, d1, z0);
+
+        return $r31;
+
+     label11:
+        $r6 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: org.slf4j.Logger LOG>;
+
+        $r5 = new java.lang.StringBuilder;
+
+        specialinvoke $r5.<java.lang.StringBuilder: void <init>()>();
+
+        $r7 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Extrapolating from strike, ");
+
+        $d5 = r1[$i7];
+
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d5);
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", with shifted forward, ");
+
+        $d6 = r4[0];
+
+        $d7 = staticinvoke <java.lang.Math: double exp(double)>($d6);
+
+        $d8 = d0 * $d7;
+
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d8);
+
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", and vol, ");
+
+        $d9 = r4[1];
+
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d9);
+
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        interfaceinvoke $r6.<org.slf4j.Logger: void info(java.lang.String)>($r13);
+
+        $r14 = new java.util.ArrayList;
+
+        specialinvoke $r14.<java.util.ArrayList: void <init>()>();
+
+        $d10 = r4[0];
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        virtualinvoke $r14.<java.util.ArrayList: void add(int,java.lang.Object)>(0, $r15);
+
+        $d11 = r4[1];
+
+        $r16 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d11);
+
+        virtualinvoke $r14.<java.util.ArrayList: void add(int,java.lang.Object)>(1, $r16);
+
+        $d12 = r1[$i7];
+
+        $r17 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d12);
+
+        virtualinvoke $r14.<java.util.ArrayList: void add(int,java.lang.Object)>(2, $r17);
+
+        return $r14;
+
+        catch java.lang.Exception from label07 to label08 with label09;
+    }
+
+    public double[] fitVolatilityAndGradRecursivelyByReducingSmile(double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, $d9, $d10, $d11, $d12, d13, $d14;
+        double[] r1, $r14;
+        boolean z0, $z1;
+        java.lang.Exception $r3;
+        byte $b0, $b1, $b2, $b3, $b4;
+        java.lang.StringBuilder $r4, $r6, $r7, $r8, $r9, $r10, $r11, $r12;
+        org.slf4j.Logger $r5;
+        java.lang.String $r13;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+     label01:
+        r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: double[] fitVolatilityAndGrad(double,double,double,double,double)>(d0, d1, d2, d3, d4);
+
+     label02:
+        goto label17;
+
+     label03:
+        $r3 := @caughtexception;
+
+        $b0 = d1 cmpl d0;
+
+        if $b0 < 0 goto label04;
+
+        $z1 = 1;
+
+        goto label05;
+
+     label04:
+        $z1 = 0;
+
+     label05:
+        z0 = $z1;
+
+        d5 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double dualDelta(double,double,double,double,boolean)>(d0, d1, d4, d2, $z1);
+
+        d6 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double vega(double,double,double,double)>(d0, d1, d4, d2);
+
+        if $z1 == 0 goto label06;
+
+        $d9 = 1.0 + d5;
+
+        $d10 = neg $d9;
+
+        goto label07;
+
+     label06:
+        $d10 = neg d5;
+
+     label07:
+        d7 = $d10 / d6;
+
+        if z0 == 0 goto label08;
+
+        $d11 = neg d5;
+
+        goto label09;
+
+     label08:
+        $d11 = 1.0 - d5;
+
+     label09:
+        d8 = $d11 / d6;
+
+        $b1 = d3 cmpl d8;
+
+        if $b1 < 0 goto label12;
+
+        $b4 = d8 cmpl 0.0;
+
+        if $b4 <= 0 goto label10;
+
+        $d12 = 0.99;
+
+        goto label11;
+
+     label10:
+        $d12 = 1.01;
+
+     label11:
+        d13 = $d12 * d8;
+
+        goto label16;
+
+     label12:
+        $b2 = d3 cmpg d7;
+
+        if $b2 > 0 goto label15;
+
+        $b3 = d7 cmpg 0.0;
+
+        if $b3 >= 0 goto label13;
+
+        $d14 = 0.99;
+
+        goto label14;
+
+     label13:
+        $d14 = 1.01;
+
+     label14:
+        d13 = $d14 * d7;
+
+        goto label16;
+
+     label15:
+        $r5 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: org.slf4j.Logger LOG>;
+
+        $r4 = new java.lang.StringBuilder;
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>()>();
+
+        $r6 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Extrapolation - Expiry = ");
+
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d4);
+
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("- failed to fit tail to strike, ");
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d1);
+
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", and DVolDStrike, ");
+
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d3);
+
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", though within bounds. Lowering smile.");
+
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        interfaceinvoke $r5.<org.slf4j.Logger: void info(java.lang.String)>($r13);
+
+        d13 = 0.95 * d3;
+
+     label16:
+        $r14 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: double[] fitVolatilityAndGradRecursivelyByReducingSmile(double,double,double,double,double)>(d0, d1, d2, d13, d4);
+
+        return $r14;
+
+     label17:
+        return r1;
+
+        catch java.lang.Exception from label01 to label02 with label03;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getPriceDifferenceFunc(double, double[], double[], double, boolean)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter r0;
+        double d0, d1;
+        double[] r1, r2;
+        boolean z0;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$1 $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        r2 := @parameter2: double[];
+
+        d1 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        $r3 = new com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$1;
+
+        specialinvoke $r3.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$1: void <init>(com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter,double,double[],double,boolean,double[])>(r0, d0, r1, d1, z0, r2);
+
+        return $r3;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getPriceDifferenceJac(double, double[], double[], double, boolean)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter r0;
+        double d0, d1;
+        double[] r1, r2;
+        boolean z0;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$2 $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        r2 := @parameter2: double[];
+
+        d1 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        $r3 = new com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$2;
+
+        specialinvoke $r3.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$2: void <init>(com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter,double,double[],double,boolean,double[])>(r0, d0, r1, d1, z0, r2);
+
+        return $r3;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getVolDifferenceFunc(double, double[], double[], double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter r0;
+        double d0, d1;
+        double[] r1, r2;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$3 $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        r2 := @parameter2: double[];
+
+        d1 := @parameter3: double;
+
+        $r3 = new com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$3;
+
+        specialinvoke $r3.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$3: void <init>(com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter,double,double[],double,double[])>(r0, d0, r1, d1, r2);
+
+        return $r3;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getVolDifferenceJac(double, double[], double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter r0;
+        double d0, d1, $d2;
+        double[] r1;
+        byte $b0;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$4 $r2;
+        boolean $z1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        d1 := @parameter2: double;
+
+        $d2 = r1[0];
+
+        $b0 = $d2 cmpl d0;
+
+        if $b0 <= 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        $r2 = new com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$4;
+
+        specialinvoke $r2.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$4: void <init>(com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter,double,double[],double,boolean)>(r0, d0, r1, d1, $z1);
+
+        return $r2;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getPriceGradDifferenceFunc(double, double, double, double, double, boolean)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter r0;
+        double d0, d1, d2, d3, d4, d5, d6;
+        boolean z0;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$5 $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        z0 := @parameter5: boolean;
+
+        d5 = 1.0 / d2;
+
+        d6 = 1.0 / d3;
+
+        $r1 = new com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$5;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$5: void <init>(com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter,double,double,double,double,boolean,double)>(r0, d5, d0, d1, d4, z0, d6);
+
+        return $r1;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getPriceGradJac(double, double, double, double, double, boolean)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter r0;
+        double d0, d1, d2, d3, d4, d5, d6;
+        boolean z0;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$6 $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        z0 := @parameter5: boolean;
+
+        d5 = 1.0 / d2;
+
+        d6 = 1.0 / d3;
+
+        $r1 = new com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$6;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter$6: void <init>(com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter,double,double,double,double,boolean,double)>(r0, d0, d5, d1, d4, z0, d6);
+
+        return $r1;
+    }
+
+    static void <clinit>()
+    {
+        org.slf4j.Logger $r2;
+        com.opengamma.analytics.math.differentiation.ScalarFirstOrderDifferentiator $r3;
+        com.opengamma.analytics.math.rootfinding.newton.NewtonDefaultVectorRootFinder $r4;
+        com.opengamma.analytics.math.minimization.SingleRangeLimitTransform $r5;
+        com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType $r6;
+        com.opengamma.analytics.math.minimization.DoubleRangeLimitTransform $r7;
+        com.opengamma.analytics.math.minimization.UncoupledParameterTransforms $r8;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r9;
+        double[] $r10;
+        com.opengamma.analytics.math.minimization.ParameterLimitsTransform[] $r11;
+        java.util.BitSet $r12;
+
+        $r2 = staticinvoke <org.slf4j.LoggerFactory: org.slf4j.Logger getLogger(java.lang.Class)>(class "com/opengamma/analytics/financial/model/volatility/smile/fitting/interpolation/ShiftedLogNormalTailExtrapolationFitter");
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: org.slf4j.Logger LOG> = $r2;
+
+        $r3 = new com.opengamma.analytics.math.differentiation.ScalarFirstOrderDifferentiator;
+
+        specialinvoke $r3.<com.opengamma.analytics.math.differentiation.ScalarFirstOrderDifferentiator: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.differentiation.ScalarFirstOrderDifferentiator DIFFERENTIATOR> = $r3;
+
+        $r4 = new com.opengamma.analytics.math.rootfinding.newton.NewtonDefaultVectorRootFinder;
+
+        specialinvoke $r4.<com.opengamma.analytics.math.rootfinding.newton.NewtonDefaultVectorRootFinder: void <init>(double,double,int)>(1.0E-8, 1.0E-8, 500);
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.rootfinding.newton.NewtonVectorRootFinder ROOTFINDER> = $r4;
+
+        $r5 = new com.opengamma.analytics.math.minimization.SingleRangeLimitTransform;
+
+        $r6 = <com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType: com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType GREATER_THAN>;
+
+        specialinvoke $r5.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: void <init>(double,com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType)>(0.0, $r6);
+
+        $r7 = new com.opengamma.analytics.math.minimization.DoubleRangeLimitTransform;
+
+        specialinvoke $r7.<com.opengamma.analytics.math.minimization.DoubleRangeLimitTransform: void <init>(double,double)>(-40.0, 40.0);
+
+        $r8 = new com.opengamma.analytics.math.minimization.UncoupledParameterTransforms;
+
+        $r9 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        $r10 = newarray (double)[2];
+
+        $r10[0] = 0.0;
+
+        $r10[1] = 1.0;
+
+        specialinvoke $r9.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>($r10);
+
+        $r11 = newarray (com.opengamma.analytics.math.minimization.ParameterLimitsTransform)[2];
+
+        $r11[0] = $r7;
+
+        $r11[1] = $r5;
+
+        $r12 = new java.util.BitSet;
+
+        specialinvoke $r12.<java.util.BitSet: void <init>()>();
+
+        specialinvoke $r8.<com.opengamma.analytics.math.minimization.UncoupledParameterTransforms: void <init>(com.opengamma.analytics.math.matrix.DoubleMatrix1D,com.opengamma.analytics.math.minimization.ParameterLimitsTransform[],java.util.BitSet)>($r9, $r11, $r12);
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.ShiftedLogNormalTailExtrapolationFitter: com.opengamma.analytics.math.minimization.NonLinearParameterTransforms TRANSFORMS> = $r8;
+
+        return;
+    }
+}

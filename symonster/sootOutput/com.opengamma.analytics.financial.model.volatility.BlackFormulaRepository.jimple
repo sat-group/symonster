@@ -1,0 +1,5752 @@
+public abstract class com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository extends java.lang.Object
+{
+    private static final org.slf4j.Logger s_logger;
+    private static final double LARGE;
+    private static final com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL;
+    private static final double SMALL;
+    private static final double EPS;
+    private static final int MAX_ITERATIONS;
+    private static final double VOL_TOL;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public static double price(double, double, double, double, boolean)
+    {
+        double d0, d1, d2, d3, d4, d5, d6, d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, d27, $d30, d31, d32, $d33, $d34;
+        boolean z0, z1, z2, z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11;
+        byte b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11, $b12, $b13, $b14;
+        java.lang.Object[] $r0, $r2, $r4, $r6;
+        java.lang.Double $r1, $r3, $r5, $r7, $r9, $r11;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r8, $r10;
+        org.slf4j.Logger $r12, $r13;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 < 0 goto label01;
+
+        $z5 = 1;
+
+        goto label02;
+
+     label01:
+        $z5 = 0;
+
+     label02:
+        $r0 = newarray (java.lang.Object)[1];
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r0[0] = $r1;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z5, "negative/NaN forward; have {}", $r0);
+
+        $b2 = d1 cmpl 0.0;
+
+        if $b2 < 0 goto label03;
+
+        $z6 = 1;
+
+        goto label04;
+
+     label03:
+        $z6 = 0;
+
+     label04:
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r2[0] = $r3;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z6, "negative/NaN strike; have {}", $r2);
+
+        $b3 = d2 cmpl 0.0;
+
+        if $b3 < 0 goto label05;
+
+        $z7 = 1;
+
+        goto label06;
+
+     label05:
+        $z7 = 0;
+
+     label06:
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r4[0] = $r5;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z7, "negative/NaN timeToExpiry; have {}", $r4);
+
+        $b4 = d3 cmpl 0.0;
+
+        if $b4 < 0 goto label07;
+
+        $z8 = 1;
+
+        goto label08;
+
+     label07:
+        $z8 = 0;
+
+     label08:
+        $r6 = newarray (java.lang.Object)[1];
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r6[0] = $r7;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z8, "negative/NaN lognormalVol; have {}", $r6);
+
+        $d9 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d27 = d3 * $d9;
+
+        $z4 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d27);
+
+        if $z4 == 0 goto label09;
+
+        $r13 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r13.<org.slf4j.Logger: void info(java.lang.String)>("lognormalVol * Math.sqrt(timeToExpiry) ambiguous");
+
+        d27 = 1.0;
+
+     label09:
+        if z0 == 0 goto label10;
+
+        $b14 = 1;
+
+        goto label11;
+
+     label10:
+        $b14 = -1;
+
+     label11:
+        b0 = $b14;
+
+        $b5 = d0 cmpl 1.0E13;
+
+        if $b5 <= 0 goto label12;
+
+        $z9 = 1;
+
+        goto label13;
+
+     label12:
+        $z9 = 0;
+
+     label13:
+        z1 = $z9;
+
+        $b6 = d1 cmpl 1.0E13;
+
+        if $b6 <= 0 goto label14;
+
+        $z10 = 1;
+
+        goto label15;
+
+     label14:
+        $z10 = 0;
+
+     label15:
+        z2 = $z10;
+
+        $b7 = d27 cmpl 1.0E13;
+
+        if $b7 <= 0 goto label16;
+
+        $z11 = 1;
+
+        goto label17;
+
+     label16:
+        $z11 = 0;
+
+     label17:
+        z3 = $z11;
+
+        if z1 == 0 goto label22;
+
+        if z2 == 0 goto label22;
+
+        $r12 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r12.<org.slf4j.Logger: void info(java.lang.String)>("(large value)/(large value) ambiguous");
+
+        if z0 == 0 goto label19;
+
+        $b13 = d0 cmpl d1;
+
+        if $b13 < 0 goto label18;
+
+        $d30 = d0;
+
+        goto label21;
+
+     label18:
+        $d30 = 0.0;
+
+        goto label21;
+
+     label19:
+        $b12 = d1 cmpl d0;
+
+        if $b12 < 0 goto label20;
+
+        $d30 = d1;
+
+        goto label21;
+
+     label20:
+        $d30 = 0.0;
+
+     label21:
+        return $d30;
+
+     label22:
+        $b8 = d27 cmpg 1.0E-13;
+
+        if $b8 >= 0 goto label23;
+
+        $d24 = (double) b0;
+
+        $d23 = d0 - d1;
+
+        $d25 = $d24 * $d23;
+
+        $d26 = staticinvoke <java.lang.Math: double max(double,double)>($d25, 0.0);
+
+        return $d26;
+
+     label23:
+        $d10 = d0 - d1;
+
+        $d11 = staticinvoke <java.lang.Math: double abs(double)>($d10);
+
+        $b9 = $d11 cmpg 1.0E-13;
+
+        if $b9 < 0 goto label24;
+
+        if z3 == 0 goto label25;
+
+     label24:
+        d31 = 0.5 * d27;
+
+        d32 = -0.5 * d27;
+
+        goto label26;
+
+     label25:
+        $d19 = d0 / d1;
+
+        $d20 = staticinvoke <java.lang.Math: double log(double)>($d19);
+
+        $d22 = $d20 / d27;
+
+        $d21 = 0.5 * d27;
+
+        d31 = $d22 + $d21;
+
+        d32 = d31 - d27;
+
+     label26:
+        $r8 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d12 = (double) b0;
+
+        $d13 = $d12 * d31;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d13);
+
+        d4 = interfaceinvoke $r8.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r9);
+
+        $r10 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d14 = (double) b0;
+
+        $d15 = $d14 * d32;
+
+        $r11 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d15);
+
+        d5 = interfaceinvoke $r10.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r11);
+
+        $b10 = d4 cmpl 0.0;
+
+        if $b10 != 0 goto label27;
+
+        $d33 = 0.0;
+
+        goto label28;
+
+     label27:
+        $d33 = d0 * d4;
+
+     label28:
+        d6 = $d33;
+
+        $b11 = d5 cmpl 0.0;
+
+        if $b11 != 0 goto label29;
+
+        $d34 = 0.0;
+
+        goto label30;
+
+     label29:
+        $d34 = d1 * d5;
+
+     label30:
+        $d17 = (double) b0;
+
+        $d16 = d6 - $d34;
+
+        d8 = $d17 * $d16;
+
+        $d18 = staticinvoke <java.lang.Math: double max(double,double)>(0.0, d8);
+
+        return $d18;
+    }
+
+    public static double price(com.opengamma.analytics.financial.model.volatility.SimpleOptionData, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData r0;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6;
+        boolean $z0;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.model.volatility.SimpleOptionData;
+
+        d0 := @parameter1: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r0, "null data");
+
+        $d1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getDiscountFactor()>();
+
+        $d2 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getForward()>();
+
+        $d3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getStrike()>();
+
+        $d4 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getTimeToExpiry()>();
+
+        $z0 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: boolean isCall()>();
+
+        $d5 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double price(double,double,double,double,boolean)>($d2, $d3, $d4, d0, $z0);
+
+        $d6 = $d1 * $d5;
+
+        return $d6;
+    }
+
+    public static double price(com.opengamma.analytics.financial.model.volatility.SimpleOptionData[], double)
+    {
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] r0;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, d7;
+        int i0, i1;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData r1;
+        boolean $z0;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[];
+
+        d0 := @parameter1: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object[] noNulls(java.lang.Object[],java.lang.String)>(r0, "null data");
+
+        i0 = lengthof r0;
+
+        d7 = 0.0;
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        r1 = r0[i1];
+
+        $d1 = virtualinvoke r1.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getDiscountFactor()>();
+
+        $d2 = virtualinvoke r1.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getForward()>();
+
+        $d3 = virtualinvoke r1.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getStrike()>();
+
+        $d4 = virtualinvoke r1.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getTimeToExpiry()>();
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: boolean isCall()>();
+
+        $d5 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double price(double,double,double,double,boolean)>($d2, $d3, $d4, d0, $z0);
+
+        $d6 = $d1 * $d5;
+
+        d7 = d7 + $d6;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return d7;
+    }
+
+    public static double delta(double, double, double, double, boolean)
+    {
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, d18, $d20, $d21, $d22, d23;
+        boolean z0, z1, z2, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14;
+        byte b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11, $b12, $b13;
+        java.lang.Object[] $r0, $r2, $r4, $r6;
+        java.lang.Double $r1, $r3, $r5, $r7, $r9;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r8;
+        org.slf4j.Logger $r10, $r11;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 < 0 goto label01;
+
+        $z5 = 1;
+
+        goto label02;
+
+     label01:
+        $z5 = 0;
+
+     label02:
+        $r0 = newarray (java.lang.Object)[1];
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r0[0] = $r1;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z5, "negative/NaN forward; have {}", $r0);
+
+        $b2 = d1 cmpl 0.0;
+
+        if $b2 < 0 goto label03;
+
+        $z6 = 1;
+
+        goto label04;
+
+     label03:
+        $z6 = 0;
+
+     label04:
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r2[0] = $r3;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z6, "negative/NaN strike; have {}", $r2);
+
+        $b3 = d2 cmpl 0.0;
+
+        if $b3 < 0 goto label05;
+
+        $z7 = 1;
+
+        goto label06;
+
+     label05:
+        $z7 = 0;
+
+     label06:
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r4[0] = $r5;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z7, "negative/NaN timeToExpiry; have {}", $r4);
+
+        $b4 = d3 cmpl 0.0;
+
+        if $b4 < 0 goto label07;
+
+        $z8 = 1;
+
+        goto label08;
+
+     label07:
+        $z8 = 0;
+
+     label08:
+        $r6 = newarray (java.lang.Object)[1];
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r6[0] = $r7;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z8, "negative/NaN lognormalVol; have {}", $r6);
+
+        $d4 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d18 = d3 * $d4;
+
+        $z4 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d18);
+
+        if $z4 == 0 goto label09;
+
+        $r11 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r11.<org.slf4j.Logger: void info(java.lang.String)>("lognormalVol * Math.sqrt(timeToExpiry) ambiguous");
+
+        d18 = 1.0;
+
+     label09:
+        if z0 == 0 goto label10;
+
+        $b13 = 1;
+
+        goto label11;
+
+     label10:
+        $b13 = -1;
+
+     label11:
+        b0 = $b13;
+
+        $b5 = d0 cmpl 1.0E13;
+
+        if $b5 <= 0 goto label12;
+
+        $z9 = 1;
+
+        goto label13;
+
+     label12:
+        $z9 = 0;
+
+     label13:
+        z1 = $z9;
+
+        $b6 = d1 cmpl 1.0E13;
+
+        if $b6 <= 0 goto label14;
+
+        $z10 = 1;
+
+        goto label15;
+
+     label14:
+        $z10 = 0;
+
+     label15:
+        z2 = $z10;
+
+        $b7 = d18 cmpl 1.0E13;
+
+        if $b7 <= 0 goto label16;
+
+        $z11 = 1;
+
+        goto label17;
+
+     label16:
+        $z11 = 0;
+
+     label17:
+        if $z11 == 0 goto label20;
+
+        if z0 == 0 goto label18;
+
+        $d20 = 1.0;
+
+        goto label19;
+
+     label18:
+        $d20 = 0.0;
+
+     label19:
+        return $d20;
+
+     label20:
+        $b8 = d18 cmpg 1.0E-13;
+
+        if $b8 >= 0 goto label29;
+
+        $d16 = d0 - d1;
+
+        $d17 = staticinvoke <java.lang.Math: double abs(double)>($d16);
+
+        $b10 = $d17 cmpl 1.0E-13;
+
+        if $b10 < 0 goto label26;
+
+        if z1 == 0 goto label21;
+
+        if z2 != 0 goto label26;
+
+     label21:
+        if z0 == 0 goto label23;
+
+        $b12 = d0 cmpl d1;
+
+        if $b12 <= 0 goto label22;
+
+        $d21 = 1.0;
+
+        goto label25;
+
+     label22:
+        $d21 = 0.0;
+
+        goto label25;
+
+     label23:
+        $b11 = d0 cmpl d1;
+
+        if $b11 <= 0 goto label24;
+
+        $d21 = 0.0;
+
+        goto label25;
+
+     label24:
+        $d21 = -1.0;
+
+     label25:
+        return $d21;
+
+     label26:
+        $r10 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r10.<org.slf4j.Logger: void info(java.lang.String)>("(log 1.)/0., ambiguous value");
+
+        if z0 == 0 goto label27;
+
+        $d22 = 0.5;
+
+        goto label28;
+
+     label27:
+        $d22 = -0.5;
+
+     label28:
+        return $d22;
+
+     label29:
+        $d5 = d0 - d1;
+
+        $d6 = staticinvoke <java.lang.Math: double abs(double)>($d5);
+
+        $b9 = $d6 cmpg 1.0E-13;
+
+        if $b9 >= 0 goto label30;
+
+        $z12 = 1;
+
+        goto label31;
+
+     label30:
+        $z12 = 0;
+
+     label31:
+        if z1 == 0 goto label32;
+
+        if z2 == 0 goto label32;
+
+        $z13 = 1;
+
+        goto label33;
+
+     label32:
+        $z13 = 0;
+
+     label33:
+        $z14 = $z12 | $z13;
+
+        if $z14 == 0 goto label34;
+
+        d23 = 0.5 * d18;
+
+        goto label35;
+
+     label34:
+        $d7 = d0 / d1;
+
+        $d8 = staticinvoke <java.lang.Math: double log(double)>($d7);
+
+        $d10 = $d8 / d18;
+
+        $d9 = 0.5 * d18;
+
+        d23 = $d10 + $d9;
+
+     label35:
+        $d13 = (double) b0;
+
+        $r8 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d11 = (double) b0;
+
+        $d12 = $d11 * d23;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d12);
+
+        $d14 = interfaceinvoke $r8.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r9);
+
+        $d15 = $d13 * $d14;
+
+        return $d15;
+    }
+
+    public static double strikeForDelta(double, double, double, double, boolean)
+    {
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, d17;
+        boolean z0, $z1, $z2, $z3, $z4, $z5;
+        byte $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8;
+        java.lang.Object[] $r0, $r2, $r4, $r9;
+        java.lang.Double $r1, $r3, $r5, $r7, $r10;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r6;
+        org.slf4j.Logger $r8;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 < 0 goto label01;
+
+        $z2 = 1;
+
+        goto label02;
+
+     label01:
+        $z2 = 0;
+
+     label02:
+        $r0 = newarray (java.lang.Object)[1];
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r0[0] = $r1;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z2, "negative/NaN forward; have {}", $r0);
+
+        if z0 == 0 goto label03;
+
+        $b5 = d1 cmpl 0.0;
+
+        if $b5 <= 0 goto label03;
+
+        $b6 = d1 cmpg 1.0;
+
+        if $b6 < 0 goto label04;
+
+     label03:
+        if z0 != 0 goto label05;
+
+        $b3 = d1 cmpl -1.0;
+
+        if $b3 <= 0 goto label05;
+
+        $b4 = d1 cmpg 0.0;
+
+        if $b4 >= 0 goto label05;
+
+     label04:
+        $z3 = 1;
+
+        goto label06;
+
+     label05:
+        $z3 = 0;
+
+     label06:
+        $r9 = newarray (java.lang.Object)[1];
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r9[0] = $r10;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z3, "delta out of range", $r9);
+
+        $b7 = d2 cmpl 0.0;
+
+        if $b7 < 0 goto label07;
+
+        $z4 = 1;
+
+        goto label08;
+
+     label07:
+        $z4 = 0;
+
+     label08:
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r2[0] = $r3;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z4, "negative/NaN timeToExpiry; have {}", $r2);
+
+        $b2 = d3 cmpl 0.0;
+
+        if $b2 < 0 goto label09;
+
+        $z5 = 1;
+
+        goto label10;
+
+     label09:
+        $z5 = 0;
+
+     label10:
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r4[0] = $r5;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z5, "negative/NaN lognormalVol; have {}", $r4);
+
+        if z0 == 0 goto label11;
+
+        $b8 = 1;
+
+        goto label12;
+
+     label11:
+        $b8 = -1;
+
+     label12:
+        $d7 = (double) $b8;
+
+        $r6 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d5 = (double) $b8;
+
+        $d6 = $d5 * d1;
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d6);
+
+        $d8 = interfaceinvoke $r6.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getInverseCDF(java.lang.Object)>($r7);
+
+        d4 = $d7 * $d8;
+
+        $d9 = d3 * d3;
+
+        d17 = $d9 * d2;
+
+        $z1 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d17);
+
+        if $z1 == 0 goto label13;
+
+        $r8 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r8.<org.slf4j.Logger: void info(java.lang.String)>("lognormalVol * Math.sqrt(timeToExpiry) ambiguous");
+
+        d17 = 1.0;
+
+     label13:
+        $d10 = neg d4;
+
+        $d11 = staticinvoke <java.lang.Math: double sqrt(double)>(d17);
+
+        $d13 = $d10 * $d11;
+
+        $d12 = 0.5 * d17;
+
+        $d14 = $d13 + $d12;
+
+        $d15 = staticinvoke <java.lang.Math: double exp(double)>($d14);
+
+        $d16 = d0 * $d15;
+
+        return $d16;
+    }
+
+    public static double dualDelta(double, double, double, double, boolean)
+    {
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, d18, $d20, $d21, $d22, d23;
+        boolean z0, z1, z2, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14;
+        byte b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11, $b12, $b13, $b14;
+        java.lang.Object[] $r0, $r2, $r4, $r6;
+        java.lang.Double $r1, $r3, $r5, $r7, $r9;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r8;
+        org.slf4j.Logger $r10, $r11;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 < 0 goto label01;
+
+        $z5 = 1;
+
+        goto label02;
+
+     label01:
+        $z5 = 0;
+
+     label02:
+        $r0 = newarray (java.lang.Object)[1];
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r0[0] = $r1;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z5, "negative/NaN forward; have {}", $r0);
+
+        $b2 = d1 cmpl 0.0;
+
+        if $b2 < 0 goto label03;
+
+        $z6 = 1;
+
+        goto label04;
+
+     label03:
+        $z6 = 0;
+
+     label04:
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r2[0] = $r3;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z6, "negative/NaN strike; have {}", $r2);
+
+        $b3 = d2 cmpl 0.0;
+
+        if $b3 < 0 goto label05;
+
+        $z7 = 1;
+
+        goto label06;
+
+     label05:
+        $z7 = 0;
+
+     label06:
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r4[0] = $r5;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z7, "negative/NaN timeToExpiry; have {}", $r4);
+
+        $b4 = d3 cmpl 0.0;
+
+        if $b4 < 0 goto label07;
+
+        $z8 = 1;
+
+        goto label08;
+
+     label07:
+        $z8 = 0;
+
+     label08:
+        $r6 = newarray (java.lang.Object)[1];
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r6[0] = $r7;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z8, "negative/NaN lognormalVol; have {}", $r6);
+
+        $d4 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d18 = d3 * $d4;
+
+        $z4 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d18);
+
+        if $z4 == 0 goto label09;
+
+        $r11 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r11.<org.slf4j.Logger: void info(java.lang.String)>("lognormalVol * Math.sqrt(timeToExpiry) ambiguous");
+
+        d18 = 1.0;
+
+     label09:
+        if z0 == 0 goto label10;
+
+        $b14 = 1;
+
+        goto label11;
+
+     label10:
+        $b14 = -1;
+
+     label11:
+        b0 = $b14;
+
+        $b5 = d0 cmpl 1.0E13;
+
+        if $b5 <= 0 goto label12;
+
+        $z9 = 1;
+
+        goto label13;
+
+     label12:
+        $z9 = 0;
+
+     label13:
+        z1 = $z9;
+
+        $b6 = d1 cmpl 1.0E13;
+
+        if $b6 <= 0 goto label14;
+
+        $z10 = 1;
+
+        goto label15;
+
+     label14:
+        $z10 = 0;
+
+     label15:
+        z2 = $z10;
+
+        $b7 = d18 cmpl 1.0E13;
+
+        if $b7 <= 0 goto label16;
+
+        $z11 = 1;
+
+        goto label17;
+
+     label16:
+        $z11 = 0;
+
+     label17:
+        if $z11 == 0 goto label20;
+
+        if z0 == 0 goto label18;
+
+        $d20 = 0.0;
+
+        goto label19;
+
+     label18:
+        $d20 = 1.0;
+
+     label19:
+        return $d20;
+
+     label20:
+        $b8 = d18 cmpg 1.0E-13;
+
+        if $b8 >= 0 goto label29;
+
+        $d16 = d0 - d1;
+
+        $d17 = staticinvoke <java.lang.Math: double abs(double)>($d16);
+
+        $b11 = $d17 cmpl 1.0E-13;
+
+        if $b11 < 0 goto label26;
+
+        if z1 == 0 goto label21;
+
+        if z2 != 0 goto label26;
+
+     label21:
+        if z0 == 0 goto label23;
+
+        $b13 = d0 cmpl d1;
+
+        if $b13 <= 0 goto label22;
+
+        $d21 = -1.0;
+
+        goto label25;
+
+     label22:
+        $d21 = 0.0;
+
+        goto label25;
+
+     label23:
+        $b12 = d0 cmpl d1;
+
+        if $b12 <= 0 goto label24;
+
+        $d21 = 0.0;
+
+        goto label25;
+
+     label24:
+        $d21 = 1.0;
+
+     label25:
+        return $d21;
+
+     label26:
+        $r10 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r10.<org.slf4j.Logger: void info(java.lang.String)>("(log 1.)/0., ambiguous value");
+
+        if z0 == 0 goto label27;
+
+        $d22 = -0.5;
+
+        goto label28;
+
+     label27:
+        $d22 = 0.5;
+
+     label28:
+        return $d22;
+
+     label29:
+        $d5 = d0 - d1;
+
+        $d6 = staticinvoke <java.lang.Math: double abs(double)>($d5);
+
+        $b9 = $d6 cmpg 1.0E-13;
+
+        if $b9 >= 0 goto label30;
+
+        $z12 = 1;
+
+        goto label31;
+
+     label30:
+        $z12 = 0;
+
+     label31:
+        if z1 == 0 goto label32;
+
+        if z2 == 0 goto label32;
+
+        $z13 = 1;
+
+        goto label33;
+
+     label32:
+        $z13 = 0;
+
+     label33:
+        $z14 = $z12 | $z13;
+
+        if $z14 == 0 goto label34;
+
+        d23 = -0.5 * d18;
+
+        goto label35;
+
+     label34:
+        $d7 = d0 / d1;
+
+        $d8 = staticinvoke <java.lang.Math: double log(double)>($d7);
+
+        $d10 = $d8 / d18;
+
+        $d9 = 0.5 * d18;
+
+        d23 = $d10 - $d9;
+
+     label35:
+        $b10 = neg b0;
+
+        $d13 = (double) $b10;
+
+        $r8 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d11 = (double) b0;
+
+        $d12 = $d11 * d23;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d12);
+
+        $d14 = interfaceinvoke $r8.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r9);
+
+        $d15 = $d13 * $d14;
+
+        return $d15;
+    }
+
+    public static double simpleDelta(double, double, double, double, boolean)
+    {
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, d16, $d18, $d19, $d20, d21;
+        boolean z0, z1, z2, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14;
+        byte b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11, $b12, $b13;
+        java.lang.Object[] $r0, $r2, $r4, $r6;
+        java.lang.Double $r1, $r3, $r5, $r7, $r9;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r8;
+        org.slf4j.Logger $r10, $r11;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 < 0 goto label01;
+
+        $z5 = 1;
+
+        goto label02;
+
+     label01:
+        $z5 = 0;
+
+     label02:
+        $r0 = newarray (java.lang.Object)[1];
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r0[0] = $r1;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z5, "negative/NaN forward; have {}", $r0);
+
+        $b2 = d1 cmpl 0.0;
+
+        if $b2 < 0 goto label03;
+
+        $z6 = 1;
+
+        goto label04;
+
+     label03:
+        $z6 = 0;
+
+     label04:
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r2[0] = $r3;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z6, "negative/NaN strike; have {}", $r2);
+
+        $b3 = d2 cmpl 0.0;
+
+        if $b3 < 0 goto label05;
+
+        $z7 = 1;
+
+        goto label06;
+
+     label05:
+        $z7 = 0;
+
+     label06:
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r4[0] = $r5;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z7, "negative/NaN timeToExpiry; have {}", $r4);
+
+        $b4 = d3 cmpl 0.0;
+
+        if $b4 < 0 goto label07;
+
+        $z8 = 1;
+
+        goto label08;
+
+     label07:
+        $z8 = 0;
+
+     label08:
+        $r6 = newarray (java.lang.Object)[1];
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r6[0] = $r7;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z8, "negative/NaN lognormalVol; have {}", $r6);
+
+        $d4 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d16 = d3 * $d4;
+
+        $z4 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d16);
+
+        if $z4 == 0 goto label09;
+
+        $r11 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r11.<org.slf4j.Logger: void info(java.lang.String)>("lognormalVol * Math.sqrt(timeToExpiry) ambiguous");
+
+        d16 = 1.0;
+
+     label09:
+        if z0 == 0 goto label10;
+
+        $b13 = 1;
+
+        goto label11;
+
+     label10:
+        $b13 = -1;
+
+     label11:
+        b0 = $b13;
+
+        $b5 = d0 cmpl 1.0E13;
+
+        if $b5 <= 0 goto label12;
+
+        $z9 = 1;
+
+        goto label13;
+
+     label12:
+        $z9 = 0;
+
+     label13:
+        z1 = $z9;
+
+        $b6 = d1 cmpl 1.0E13;
+
+        if $b6 <= 0 goto label14;
+
+        $z10 = 1;
+
+        goto label15;
+
+     label14:
+        $z10 = 0;
+
+     label15:
+        z2 = $z10;
+
+        $b7 = d16 cmpl 1.0E13;
+
+        if $b7 <= 0 goto label16;
+
+        $z11 = 1;
+
+        goto label17;
+
+     label16:
+        $z11 = 0;
+
+     label17:
+        if $z11 == 0 goto label20;
+
+        if z0 == 0 goto label18;
+
+        $d18 = 0.5;
+
+        goto label19;
+
+     label18:
+        $d18 = -0.5;
+
+     label19:
+        return $d18;
+
+     label20:
+        $b8 = d16 cmpg 1.0E-13;
+
+        if $b8 >= 0 goto label29;
+
+        $d14 = d0 - d1;
+
+        $d15 = staticinvoke <java.lang.Math: double abs(double)>($d14);
+
+        $b10 = $d15 cmpl 1.0E-13;
+
+        if $b10 < 0 goto label26;
+
+        if z1 == 0 goto label21;
+
+        if z2 != 0 goto label26;
+
+     label21:
+        if z0 == 0 goto label23;
+
+        $b12 = d0 cmpl d1;
+
+        if $b12 <= 0 goto label22;
+
+        $d19 = 1.0;
+
+        goto label25;
+
+     label22:
+        $d19 = 0.0;
+
+        goto label25;
+
+     label23:
+        $b11 = d0 cmpl d1;
+
+        if $b11 <= 0 goto label24;
+
+        $d19 = 0.0;
+
+        goto label25;
+
+     label24:
+        $d19 = -1.0;
+
+     label25:
+        return $d19;
+
+     label26:
+        $r10 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r10.<org.slf4j.Logger: void info(java.lang.String)>("(log 1.)/0., ambiguous");
+
+        if z0 == 0 goto label27;
+
+        $d20 = 0.5;
+
+        goto label28;
+
+     label27:
+        $d20 = -0.5;
+
+     label28:
+        return $d20;
+
+     label29:
+        $d5 = d0 - d1;
+
+        $d6 = staticinvoke <java.lang.Math: double abs(double)>($d5);
+
+        $b9 = $d6 cmpg 1.0E-13;
+
+        if $b9 >= 0 goto label30;
+
+        $z12 = 1;
+
+        goto label31;
+
+     label30:
+        $z12 = 0;
+
+     label31:
+        if z1 == 0 goto label32;
+
+        if z2 == 0 goto label32;
+
+        $z13 = 1;
+
+        goto label33;
+
+     label32:
+        $z13 = 0;
+
+     label33:
+        $z14 = $z12 | $z13;
+
+        if $z14 == 0 goto label34;
+
+        d21 = 0.0;
+
+        goto label35;
+
+     label34:
+        $d7 = d0 / d1;
+
+        $d8 = staticinvoke <java.lang.Math: double log(double)>($d7);
+
+        d21 = $d8 / d16;
+
+     label35:
+        $d11 = (double) b0;
+
+        $r8 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d9 = (double) b0;
+
+        $d10 = $d9 * d21;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        $d12 = interfaceinvoke $r8.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r9);
+
+        $d13 = $d11 * $d12;
+
+        return $d13;
+    }
+
+    public static double gamma(double, double, double, double)
+    {
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, d17, $d19, d20, $d21;
+        boolean z0, z1, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10;
+        java.lang.Object[] $r0, $r2, $r4, $r6;
+        java.lang.Double $r1, $r3, $r5, $r7, $r9, $r12, $r14;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r8, $r11, $r13;
+        org.slf4j.Logger $r10, $r15;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 < 0 goto label01;
+
+        $z4 = 1;
+
+        goto label02;
+
+     label01:
+        $z4 = 0;
+
+     label02:
+        $r0 = newarray (java.lang.Object)[1];
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r0[0] = $r1;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z4, "negative/NaN forward; have {}", $r0);
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 < 0 goto label03;
+
+        $z5 = 1;
+
+        goto label04;
+
+     label03:
+        $z5 = 0;
+
+     label04:
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r2[0] = $r3;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z5, "negative/NaN strike; have {}", $r2);
+
+        $b2 = d2 cmpl 0.0;
+
+        if $b2 < 0 goto label05;
+
+        $z6 = 1;
+
+        goto label06;
+
+     label05:
+        $z6 = 0;
+
+     label06:
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r4[0] = $r5;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z6, "negative/NaN timeToExpiry; have {}", $r4);
+
+        $b3 = d3 cmpl 0.0;
+
+        if $b3 < 0 goto label07;
+
+        $z7 = 1;
+
+        goto label08;
+
+     label07:
+        $z7 = 0;
+
+     label08:
+        $r6 = newarray (java.lang.Object)[1];
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r6[0] = $r7;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z7, "negative/NaN lognormalVol; have {}", $r6);
+
+        $d5 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d17 = d3 * $d5;
+
+        $z3 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d17);
+
+        if $z3 == 0 goto label09;
+
+        $r15 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r15.<org.slf4j.Logger: void info(java.lang.String)>("lognormalVol * Math.sqrt(timeToExpiry) ambiguous");
+
+        d17 = 1.0;
+
+     label09:
+        $b4 = d0 cmpl 1.0E13;
+
+        if $b4 <= 0 goto label10;
+
+        $z8 = 1;
+
+        goto label11;
+
+     label10:
+        $z8 = 0;
+
+     label11:
+        z0 = $z8;
+
+        $b5 = d1 cmpl 1.0E13;
+
+        if $b5 <= 0 goto label12;
+
+        $z9 = 1;
+
+        goto label13;
+
+     label12:
+        $z9 = 0;
+
+     label13:
+        z1 = $z9;
+
+        $b6 = d17 cmpl 1.0E13;
+
+        if $b6 <= 0 goto label14;
+
+        $z10 = 1;
+
+        goto label15;
+
+     label14:
+        $z10 = 0;
+
+     label15:
+        if $z10 == 0 goto label16;
+
+        return 0.0;
+
+     label16:
+        $b7 = d17 cmpg 1.0E-13;
+
+        if $b7 >= 0 goto label21;
+
+        $d13 = d0 - d1;
+
+        $d14 = staticinvoke <java.lang.Math: double abs(double)>($d13);
+
+        $b10 = $d14 cmpl 1.0E-13;
+
+        if $b10 < 0 goto label18;
+
+        if z0 == 0 goto label17;
+
+        if z1 != 0 goto label18;
+
+     label17:
+        return 0.0;
+
+     label18:
+        $r10 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r10.<org.slf4j.Logger: void info(java.lang.String)>("(log 1.)/0. ambiguous");
+
+        if z0 == 0 goto label19;
+
+        $r13 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d19 = interfaceinvoke $r13.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r14);
+
+        goto label20;
+
+     label19:
+        $r11 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d15 = interfaceinvoke $r11.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r12);
+
+        $d16 = $d15 / d0;
+
+        $d19 = $d16 / d17;
+
+     label20:
+        return $d19;
+
+     label21:
+        $d6 = d0 - d1;
+
+        $d7 = staticinvoke <java.lang.Math: double abs(double)>($d6);
+
+        $b8 = $d7 cmpg 1.0E-13;
+
+        if $b8 >= 0 goto label22;
+
+        $z11 = 1;
+
+        goto label23;
+
+     label22:
+        $z11 = 0;
+
+     label23:
+        if z0 == 0 goto label24;
+
+        if z1 == 0 goto label24;
+
+        $z12 = 1;
+
+        goto label25;
+
+     label24:
+        $z12 = 0;
+
+     label25:
+        $z13 = $z11 | $z12;
+
+        if $z13 == 0 goto label26;
+
+        d20 = 0.5 * d17;
+
+        goto label27;
+
+     label26:
+        $d8 = d0 / d1;
+
+        $d9 = staticinvoke <java.lang.Math: double log(double)>($d8);
+
+        $d11 = $d9 / d17;
+
+        $d10 = 0.5 * d17;
+
+        d20 = $d11 + $d10;
+
+     label27:
+        $r8 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d20);
+
+        d4 = interfaceinvoke $r8.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r9);
+
+        $b9 = d4 cmpl 0.0;
+
+        if $b9 != 0 goto label28;
+
+        $d21 = 0.0;
+
+        goto label29;
+
+     label28:
+        $d12 = d4 / d0;
+
+        $d21 = $d12 / d17;
+
+     label29:
+        return $d21;
+    }
+
+    public static double dualGamma(double, double, double, double)
+    {
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, d17, $d19, d20, $d21;
+        boolean z0, z1, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10;
+        java.lang.Object[] $r0, $r2, $r4, $r6;
+        java.lang.Double $r1, $r3, $r5, $r7, $r9, $r12, $r14;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r8, $r11, $r13;
+        org.slf4j.Logger $r10, $r15;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 < 0 goto label01;
+
+        $z4 = 1;
+
+        goto label02;
+
+     label01:
+        $z4 = 0;
+
+     label02:
+        $r0 = newarray (java.lang.Object)[1];
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r0[0] = $r1;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z4, "negative/NaN forward; have {}", $r0);
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 < 0 goto label03;
+
+        $z5 = 1;
+
+        goto label04;
+
+     label03:
+        $z5 = 0;
+
+     label04:
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r2[0] = $r3;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z5, "negative/NaN strike; have {}", $r2);
+
+        $b2 = d2 cmpl 0.0;
+
+        if $b2 < 0 goto label05;
+
+        $z6 = 1;
+
+        goto label06;
+
+     label05:
+        $z6 = 0;
+
+     label06:
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r4[0] = $r5;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z6, "negative/NaN timeToExpiry; have {}", $r4);
+
+        $b3 = d3 cmpl 0.0;
+
+        if $b3 < 0 goto label07;
+
+        $z7 = 1;
+
+        goto label08;
+
+     label07:
+        $z7 = 0;
+
+     label08:
+        $r6 = newarray (java.lang.Object)[1];
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r6[0] = $r7;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z7, "negative/NaN lognormalVol; have {}", $r6);
+
+        $d5 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d17 = d3 * $d5;
+
+        $z3 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d17);
+
+        if $z3 == 0 goto label09;
+
+        $r15 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r15.<org.slf4j.Logger: void info(java.lang.String)>("lognormalVol * Math.sqrt(timeToExpiry) ambiguous");
+
+        d17 = 1.0;
+
+     label09:
+        $b4 = d0 cmpl 1.0E13;
+
+        if $b4 <= 0 goto label10;
+
+        $z8 = 1;
+
+        goto label11;
+
+     label10:
+        $z8 = 0;
+
+     label11:
+        z0 = $z8;
+
+        $b5 = d1 cmpl 1.0E13;
+
+        if $b5 <= 0 goto label12;
+
+        $z9 = 1;
+
+        goto label13;
+
+     label12:
+        $z9 = 0;
+
+     label13:
+        z1 = $z9;
+
+        $b6 = d17 cmpl 1.0E13;
+
+        if $b6 <= 0 goto label14;
+
+        $z10 = 1;
+
+        goto label15;
+
+     label14:
+        $z10 = 0;
+
+     label15:
+        if $z10 == 0 goto label16;
+
+        return 0.0;
+
+     label16:
+        $b7 = d17 cmpg 1.0E-13;
+
+        if $b7 >= 0 goto label21;
+
+        $d13 = d0 - d1;
+
+        $d14 = staticinvoke <java.lang.Math: double abs(double)>($d13);
+
+        $b10 = $d14 cmpl 1.0E-13;
+
+        if $b10 < 0 goto label18;
+
+        if z0 == 0 goto label17;
+
+        if z1 != 0 goto label18;
+
+     label17:
+        return 0.0;
+
+     label18:
+        $r10 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r10.<org.slf4j.Logger: void info(java.lang.String)>("(log 1.)/0. ambiguous");
+
+        if z1 == 0 goto label19;
+
+        $r13 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d19 = interfaceinvoke $r13.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r14);
+
+        goto label20;
+
+     label19:
+        $r11 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d15 = interfaceinvoke $r11.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r12);
+
+        $d16 = $d15 / d1;
+
+        $d19 = $d16 / d17;
+
+     label20:
+        return $d19;
+
+     label21:
+        $d6 = d0 - d1;
+
+        $d7 = staticinvoke <java.lang.Math: double abs(double)>($d6);
+
+        $b8 = $d7 cmpg 1.0E-13;
+
+        if $b8 >= 0 goto label22;
+
+        $z11 = 1;
+
+        goto label23;
+
+     label22:
+        $z11 = 0;
+
+     label23:
+        if z0 == 0 goto label24;
+
+        if z1 == 0 goto label24;
+
+        $z12 = 1;
+
+        goto label25;
+
+     label24:
+        $z12 = 0;
+
+     label25:
+        $z13 = $z11 | $z12;
+
+        if $z13 == 0 goto label26;
+
+        d20 = -0.5 * d17;
+
+        goto label27;
+
+     label26:
+        $d8 = d0 / d1;
+
+        $d9 = staticinvoke <java.lang.Math: double log(double)>($d8);
+
+        $d11 = $d9 / d17;
+
+        $d10 = 0.5 * d17;
+
+        d20 = $d11 - $d10;
+
+     label27:
+        $r8 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d20);
+
+        d4 = interfaceinvoke $r8.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r9);
+
+        $b9 = d4 cmpl 0.0;
+
+        if $b9 != 0 goto label28;
+
+        $d21 = 0.0;
+
+        goto label29;
+
+     label28:
+        $d12 = d4 / d1;
+
+        $d21 = $d12 / d17;
+
+     label29:
+        return $d21;
+    }
+
+    public static double crossGamma(double, double, double, double)
+    {
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, d20, $d22, d23, $d24;
+        boolean z0, z1, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10;
+        java.lang.Object[] $r0, $r2, $r4, $r6;
+        java.lang.Double $r1, $r3, $r5, $r7, $r9, $r12, $r14;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r8, $r11, $r13;
+        org.slf4j.Logger $r10, $r15;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 < 0 goto label01;
+
+        $z4 = 1;
+
+        goto label02;
+
+     label01:
+        $z4 = 0;
+
+     label02:
+        $r0 = newarray (java.lang.Object)[1];
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r0[0] = $r1;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z4, "negative/NaN forward; have {}", $r0);
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 < 0 goto label03;
+
+        $z5 = 1;
+
+        goto label04;
+
+     label03:
+        $z5 = 0;
+
+     label04:
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r2[0] = $r3;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z5, "negative/NaN strike; have {}", $r2);
+
+        $b2 = d2 cmpl 0.0;
+
+        if $b2 < 0 goto label05;
+
+        $z6 = 1;
+
+        goto label06;
+
+     label05:
+        $z6 = 0;
+
+     label06:
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r4[0] = $r5;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z6, "negative/NaN timeToExpiry; have {}", $r4);
+
+        $b3 = d3 cmpl 0.0;
+
+        if $b3 < 0 goto label07;
+
+        $z7 = 1;
+
+        goto label08;
+
+     label07:
+        $z7 = 0;
+
+     label08:
+        $r6 = newarray (java.lang.Object)[1];
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r6[0] = $r7;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z7, "negative/NaN lognormalVol; have {}", $r6);
+
+        $d5 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d20 = d3 * $d5;
+
+        $z3 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d20);
+
+        if $z3 == 0 goto label09;
+
+        $r15 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r15.<org.slf4j.Logger: void info(java.lang.String)>("lognormalVol * Math.sqrt(timeToExpiry) ambiguous");
+
+        d20 = 1.0;
+
+     label09:
+        $b4 = d0 cmpl 1.0E13;
+
+        if $b4 <= 0 goto label10;
+
+        $z8 = 1;
+
+        goto label11;
+
+     label10:
+        $z8 = 0;
+
+     label11:
+        z0 = $z8;
+
+        $b5 = d1 cmpl 1.0E13;
+
+        if $b5 <= 0 goto label12;
+
+        $z9 = 1;
+
+        goto label13;
+
+     label12:
+        $z9 = 0;
+
+     label13:
+        z1 = $z9;
+
+        $b6 = d20 cmpl 1.0E13;
+
+        if $b6 <= 0 goto label14;
+
+        $z10 = 1;
+
+        goto label15;
+
+     label14:
+        $z10 = 0;
+
+     label15:
+        if $z10 == 0 goto label16;
+
+        return 0.0;
+
+     label16:
+        $b7 = d20 cmpg 1.0E-13;
+
+        if $b7 >= 0 goto label21;
+
+        $d14 = d0 - d1;
+
+        $d15 = staticinvoke <java.lang.Math: double abs(double)>($d14);
+
+        $b10 = $d15 cmpl 1.0E-13;
+
+        if $b10 < 0 goto label18;
+
+        if z0 == 0 goto label17;
+
+        if z1 != 0 goto label18;
+
+     label17:
+        return 0.0;
+
+     label18:
+        $r10 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r10.<org.slf4j.Logger: void info(java.lang.String)>("(log 1.)/0. ambiguous");
+
+        if z0 == 0 goto label19;
+
+        $r13 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d19 = interfaceinvoke $r13.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r14);
+
+        $d22 = neg $d19;
+
+        goto label20;
+
+     label19:
+        $r11 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d16 = interfaceinvoke $r11.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r12);
+
+        $d17 = neg $d16;
+
+        $d18 = $d17 / d0;
+
+        $d22 = $d18 / d20;
+
+     label20:
+        return $d22;
+
+     label21:
+        $d6 = d0 - d1;
+
+        $d7 = staticinvoke <java.lang.Math: double abs(double)>($d6);
+
+        $b8 = $d7 cmpg 1.0E-13;
+
+        if $b8 >= 0 goto label22;
+
+        $z11 = 1;
+
+        goto label23;
+
+     label22:
+        $z11 = 0;
+
+     label23:
+        if z0 == 0 goto label24;
+
+        if z1 == 0 goto label24;
+
+        $z12 = 1;
+
+        goto label25;
+
+     label24:
+        $z12 = 0;
+
+     label25:
+        $z13 = $z11 | $z12;
+
+        if $z13 == 0 goto label26;
+
+        d23 = -0.5 * d20;
+
+        goto label27;
+
+     label26:
+        $d8 = d0 / d1;
+
+        $d9 = staticinvoke <java.lang.Math: double log(double)>($d8);
+
+        $d11 = $d9 / d20;
+
+        $d10 = 0.5 * d20;
+
+        d23 = $d11 - $d10;
+
+     label27:
+        $r8 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d23);
+
+        d4 = interfaceinvoke $r8.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r9);
+
+        $b9 = d4 cmpl 0.0;
+
+        if $b9 != 0 goto label28;
+
+        $d24 = 0.0;
+
+        goto label29;
+
+     label28:
+        $d12 = neg d4;
+
+        $d13 = $d12 / d0;
+
+        $d24 = $d13 / d20;
+
+     label29:
+        return $d24;
+    }
+
+    public static double theta(double, double, double, double, boolean, double)
+    {
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, d41, $d45, $d46, d47, $d48, $d49, d50, d51, d52, $d53, $d54, $d55, $d57, $d58;
+        boolean z0, z1, z2, z3, $z4, $z5, $z6, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15, $z17, $z18, $z19;
+        byte b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11, $b12, $b13, $b14, $b15, $b16, $b17, $b18, $b19, $b20, $b21, $b22, $b23, $b24, $b25, $b26, $b27, $b28;
+        java.lang.Object[] $r0, $r2, $r4, $r6;
+        java.lang.Double $r1, $r3, $r5, $r7, $r9, $r11;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r8, $r10;
+        org.slf4j.Logger $r12, $r13;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        d4 := @parameter5: double;
+
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 < 0 goto label01;
+
+        $z8 = 1;
+
+        goto label02;
+
+     label01:
+        $z8 = 0;
+
+     label02:
+        $r0 = newarray (java.lang.Object)[1];
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r0[0] = $r1;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z8, "negative/NaN forward; have {}", $r0);
+
+        $b2 = d1 cmpl 0.0;
+
+        if $b2 < 0 goto label03;
+
+        $z9 = 1;
+
+        goto label04;
+
+     label03:
+        $z9 = 0;
+
+     label04:
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r2[0] = $r3;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z9, "negative/NaN strike; have {}", $r2);
+
+        $b3 = d2 cmpl 0.0;
+
+        if $b3 < 0 goto label05;
+
+        $z10 = 1;
+
+        goto label06;
+
+     label05:
+        $z10 = 0;
+
+     label06:
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r4[0] = $r5;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z10, "negative/NaN timeToExpiry; have {}", $r4);
+
+        $b4 = d3 cmpl 0.0;
+
+        if $b4 < 0 goto label07;
+
+        $z11 = 1;
+
+        goto label08;
+
+     label07:
+        $z11 = 0;
+
+     label08:
+        $r6 = newarray (java.lang.Object)[1];
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r6[0] = $r7;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z11, "negative/NaN lognormalVol; have {}", $r6);
+
+        $z4 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d4);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z4, "interestRate is NaN");
+
+        $d11 = neg d4;
+
+        $b5 = $d11 cmpl 1.0E13;
+
+        if $b5 <= 0 goto label09;
+
+        return 0.0;
+
+     label09:
+        d5 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double driftlessTheta(double,double,double,double)>(d0, d1, d2, d3);
+
+        $d12 = staticinvoke <java.lang.Math: double abs(double)>(d4);
+
+        $b6 = $d12 cmpg 1.0E-13;
+
+        if $b6 >= 0 goto label10;
+
+        return d5;
+
+     label10:
+        d6 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d41 = d3 * d6;
+
+        $z5 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d41);
+
+        if $z5 == 0 goto label11;
+
+        $r13 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r13.<org.slf4j.Logger: void info(java.lang.String)>("lognormalVol * Math.sqrt(timeToExpiry) ambiguous");
+
+        d41 = 1.0;
+
+     label11:
+        if z0 == 0 goto label12;
+
+        $b26 = 1;
+
+        goto label13;
+
+     label12:
+        $b26 = -1;
+
+     label13:
+        b0 = $b26;
+
+        $b7 = d0 cmpl 1.0E13;
+
+        if $b7 <= 0 goto label14;
+
+        $z12 = 1;
+
+        goto label15;
+
+     label14:
+        $z12 = 0;
+
+     label15:
+        z1 = $z12;
+
+        $b8 = d1 cmpl 1.0E13;
+
+        if $b8 <= 0 goto label16;
+
+        $z13 = 1;
+
+        goto label17;
+
+     label16:
+        $z13 = 0;
+
+     label17:
+        z2 = $z13;
+
+        $b9 = d41 cmpl 1.0E13;
+
+        if $b9 <= 0 goto label18;
+
+        $z14 = 1;
+
+        goto label19;
+
+     label18:
+        $z14 = 0;
+
+     label19:
+        z3 = $z14;
+
+        $b10 = d2 cmpg 1.0E-13;
+
+        if $b10 >= 0 goto label21;
+
+        $d40 = staticinvoke <java.lang.Math: double abs(double)>(d4);
+
+        $b24 = $d40 cmpl 1.0E13;
+
+        if $b24 <= 0 goto label21;
+
+        $b25 = d4 cmpl 0.0;
+
+        if $b25 <= 0 goto label20;
+
+        $d45 = 1.0;
+
+        goto label22;
+
+     label20:
+        $d45 = -1.0;
+
+        goto label22;
+
+     label21:
+        $d45 = d4 * d2;
+
+     label22:
+        d7 = $d45;
+
+        if z1 == 0 goto label27;
+
+        if z2 == 0 goto label27;
+
+        $r12 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r12.<org.slf4j.Logger: void info(java.lang.String)>("(large value)/(large value) ambiguous");
+
+        if z0 == 0 goto label24;
+
+        $b23 = d0 cmpl d1;
+
+        if $b23 < 0 goto label23;
+
+        $d46 = d0;
+
+        goto label26;
+
+     label23:
+        $d46 = 0.0;
+
+        goto label26;
+
+     label24:
+        $b22 = d1 cmpl d0;
+
+        if $b22 < 0 goto label25;
+
+        $d46 = d1;
+
+        goto label26;
+
+     label25:
+        $d46 = 0.0;
+
+     label26:
+        d47 = $d46;
+
+        goto label50;
+
+     label27:
+        $b11 = d41 cmpg 1.0E-13;
+
+        if $b11 >= 0 goto label37;
+
+        $b17 = d7 cmpl 1.0E13;
+
+        if $b17 <= 0 goto label32;
+
+        if z0 == 0 goto label29;
+
+        $b21 = d0 cmpl d1;
+
+        if $b21 <= 0 goto label28;
+
+        $d48 = d0;
+
+        goto label31;
+
+     label28:
+        $d48 = 0.0;
+
+        goto label31;
+
+     label29:
+        $b20 = d0 cmpl d1;
+
+        if $b20 <= 0 goto label30;
+
+        $d48 = 0.0;
+
+        goto label31;
+
+     label30:
+        $d48 = neg d0;
+
+     label31:
+        d47 = $d48;
+
+        goto label50;
+
+     label32:
+        if z0 == 0 goto label34;
+
+        $b19 = d0 cmpl d1;
+
+        if $b19 <= 0 goto label33;
+
+        $d37 = neg d7;
+
+        $d38 = staticinvoke <java.lang.Math: double exp(double)>($d37);
+
+        $d39 = d1 * $d38;
+
+        $d49 = d0 - $d39;
+
+        goto label36;
+
+     label33:
+        $d49 = 0.0;
+
+        goto label36;
+
+     label34:
+        $b18 = d0 cmpl d1;
+
+        if $b18 <= 0 goto label35;
+
+        $d49 = 0.0;
+
+        goto label36;
+
+     label35:
+        $d34 = neg d0;
+
+        $d33 = neg d7;
+
+        $d35 = staticinvoke <java.lang.Math: double exp(double)>($d33);
+
+        $d36 = d1 * $d35;
+
+        $d49 = $d34 + $d36;
+
+     label36:
+        d47 = $d49;
+
+        goto label50;
+
+     label37:
+        $d13 = d0 - d1;
+
+        $d14 = staticinvoke <java.lang.Math: double abs(double)>($d13);
+
+        $b12 = $d14 cmpg 1.0E-13;
+
+        if $b12 >= 0 goto label38;
+
+        $z15 = 1;
+
+        goto label39;
+
+     label38:
+        $z15 = 0;
+
+     label39:
+        $z6 = $z15 | z3;
+
+        if $z6 == 0 goto label40;
+
+        d50 = 0.5 * d41;
+
+        d51 = -0.5 * d41;
+
+        goto label41;
+
+     label40:
+        $d15 = d0 / d1;
+
+        $d16 = staticinvoke <java.lang.Math: double log(double)>($d15);
+
+        $d18 = $d16 / d41;
+
+        $d17 = 0.5 * d41;
+
+        d50 = $d18 + $d17;
+
+        d51 = d50 - d41;
+
+     label41:
+        $r8 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d19 = (double) b0;
+
+        $d20 = $d19 * d50;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d20);
+
+        d52 = interfaceinvoke $r8.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r9);
+
+        $r10 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d21 = (double) b0;
+
+        $d22 = $d21 * d51;
+
+        $r11 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d22);
+
+        d8 = interfaceinvoke $r10.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r11);
+
+        $b13 = d52 cmpl 0.0;
+
+        if $b13 != 0 goto label42;
+
+        $d53 = 0.0;
+
+        goto label43;
+
+     label42:
+        $d53 = d0 * d52;
+
+     label43:
+        d9 = $d53;
+
+        $b14 = d8 cmpl 0.0;
+
+        if $b14 != 0 goto label44;
+
+        $z17 = 1;
+
+        goto label45;
+
+     label44:
+        $z17 = 0;
+
+     label45:
+        $d23 = neg d4;
+
+        $d24 = $d23 * d2;
+
+        $d25 = staticinvoke <java.lang.Math: double exp(double)>($d24);
+
+        $b15 = $d25 cmpl 0.0;
+
+        if $b15 != 0 goto label46;
+
+        $z18 = 1;
+
+        goto label47;
+
+     label46:
+        $z18 = 0;
+
+     label47:
+        $z19 = $z17 | $z18;
+
+        if $z19 == 0 goto label48;
+
+        $d54 = 0.0;
+
+        goto label49;
+
+     label48:
+        $d26 = neg d4;
+
+        $d27 = $d26 * d2;
+
+        $d28 = staticinvoke <java.lang.Math: double exp(double)>($d27);
+
+        $d29 = d1 * $d28;
+
+        $d54 = $d29 * d8;
+
+     label49:
+        $d31 = (double) b0;
+
+        $d30 = d9 - $d54;
+
+        d47 = $d31 * $d30;
+
+     label50:
+        $b27 = d4 cmpl 1.0E13;
+
+        if $b27 <= 0 goto label51;
+
+        $d32 = staticinvoke <java.lang.Math: double abs(double)>(d47);
+
+        $b16 = $d32 cmpg 1.0E-13;
+
+        if $b16 >= 0 goto label51;
+
+        $d55 = 0.0;
+
+        goto label52;
+
+     label51:
+        $d55 = d4 * d47;
+
+     label52:
+        $d57 = staticinvoke <java.lang.Math: double abs(double)>($d55);
+
+        $b28 = $d57 cmpl 1.0E13;
+
+        if $b28 <= 0 goto label53;
+
+        $d58 = $d55;
+
+        goto label54;
+
+     label53:
+        $d58 = d5 + $d55;
+
+     label54:
+        return $d58;
+    }
+
+    public static double thetaMod(double, double, double, double, boolean, double)
+    {
+        double d0, d1, d2, d3, d4, d5, d6, d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, d22, $d25, $d26, d27, $d28, d29, d30, $d31, $d32, $d34, $d35;
+        boolean z0, z1, z2, z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14;
+        byte b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11, $b12, $b13, $b14, $b15, $b16, $b17, $b18, $b19, $b20, $b21, $b22, $b23, $b24;
+        java.lang.Object[] $r0, $r2, $r4, $r6;
+        java.lang.Double $r1, $r3, $r5, $r7, $r9;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r8;
+        org.slf4j.Logger $r10, $r11;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        d4 := @parameter5: double;
+
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 < 0 goto label01;
+
+        $z7 = 1;
+
+        goto label02;
+
+     label01:
+        $z7 = 0;
+
+     label02:
+        $r0 = newarray (java.lang.Object)[1];
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r0[0] = $r1;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z7, "negative/NaN forward; have {}", $r0);
+
+        $b2 = d1 cmpl 0.0;
+
+        if $b2 < 0 goto label03;
+
+        $z8 = 1;
+
+        goto label04;
+
+     label03:
+        $z8 = 0;
+
+     label04:
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r2[0] = $r3;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z8, "negative/NaN strike; have {}", $r2);
+
+        $b3 = d2 cmpl 0.0;
+
+        if $b3 < 0 goto label05;
+
+        $z9 = 1;
+
+        goto label06;
+
+     label05:
+        $z9 = 0;
+
+     label06:
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r4[0] = $r5;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z9, "negative/NaN timeToExpiry; have {}", $r4);
+
+        $b4 = d3 cmpl 0.0;
+
+        if $b4 < 0 goto label07;
+
+        $z10 = 1;
+
+        goto label08;
+
+     label07:
+        $z10 = 0;
+
+     label08:
+        $r6 = newarray (java.lang.Object)[1];
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r6[0] = $r7;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z10, "negative/NaN lognormalVol; have {}", $r6);
+
+        $z4 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d4);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z4, "interestRate is NaN");
+
+        $d8 = neg d4;
+
+        $b5 = $d8 cmpl 1.0E13;
+
+        if $b5 <= 0 goto label09;
+
+        return 0.0;
+
+     label09:
+        d5 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double driftlessTheta(double,double,double,double)>(d0, d1, d2, d3);
+
+        $d9 = staticinvoke <java.lang.Math: double abs(double)>(d4);
+
+        $b6 = $d9 cmpg 1.0E-13;
+
+        if $b6 >= 0 goto label10;
+
+        return d5;
+
+     label10:
+        d6 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d22 = d3 * d6;
+
+        $z5 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d22);
+
+        if $z5 == 0 goto label11;
+
+        $r11 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r11.<org.slf4j.Logger: void info(java.lang.String)>("lognormalVol * Math.sqrt(timeToExpiry) ambiguous");
+
+        d22 = 1.0;
+
+     label11:
+        if z0 == 0 goto label12;
+
+        $b22 = 1;
+
+        goto label13;
+
+     label12:
+        $b22 = -1;
+
+     label13:
+        b0 = $b22;
+
+        $b7 = d0 cmpl 1.0E13;
+
+        if $b7 <= 0 goto label14;
+
+        $z11 = 1;
+
+        goto label15;
+
+     label14:
+        $z11 = 0;
+
+     label15:
+        z1 = $z11;
+
+        $b8 = d1 cmpl 1.0E13;
+
+        if $b8 <= 0 goto label16;
+
+        $z12 = 1;
+
+        goto label17;
+
+     label16:
+        $z12 = 0;
+
+     label17:
+        z2 = $z12;
+
+        $b9 = d22 cmpl 1.0E13;
+
+        if $b9 <= 0 goto label18;
+
+        $z13 = 1;
+
+        goto label19;
+
+     label18:
+        $z13 = 0;
+
+     label19:
+        z3 = $z13;
+
+        $b10 = d2 cmpg 1.0E-13;
+
+        if $b10 >= 0 goto label21;
+
+        $d21 = staticinvoke <java.lang.Math: double abs(double)>(d4);
+
+        $b20 = $d21 cmpl 1.0E13;
+
+        if $b20 <= 0 goto label21;
+
+        $b21 = d4 cmpl 0.0;
+
+        if $b21 <= 0 goto label20;
+
+        $d25 = 1.0;
+
+        goto label22;
+
+     label20:
+        $d25 = -1.0;
+
+        goto label22;
+
+     label21:
+        $d25 = d4 * d2;
+
+     label22:
+        d7 = $d25;
+
+        if z1 == 0 goto label26;
+
+        if z2 == 0 goto label26;
+
+        $r10 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r10.<org.slf4j.Logger: void info(java.lang.String)>("(large value)/(large value) ambiguous");
+
+        if z0 == 0 goto label23;
+
+        $d26 = 0.0;
+
+        goto label25;
+
+     label23:
+        $b19 = d1 cmpl d0;
+
+        if $b19 < 0 goto label24;
+
+        $d26 = d1;
+
+        goto label25;
+
+     label24:
+        $d26 = 0.0;
+
+     label25:
+        d27 = $d26;
+
+        goto label39;
+
+     label26:
+        $b11 = d22 cmpg 1.0E-13;
+
+        if $b11 >= 0 goto label32;
+
+        $b16 = d7 cmpl 1.0E13;
+
+        if $b16 <= 0 goto label27;
+
+        d27 = 0.0;
+
+        goto label39;
+
+     label27:
+        if z0 == 0 goto label29;
+
+        $b18 = d0 cmpl d1;
+
+        if $b18 <= 0 goto label28;
+
+        $d28 = neg d1;
+
+        goto label31;
+
+     label28:
+        $d28 = 0.0;
+
+        goto label31;
+
+     label29:
+        $b17 = d0 cmpl d1;
+
+        if $b17 <= 0 goto label30;
+
+        $d28 = 0.0;
+
+        goto label31;
+
+     label30:
+        $d28 = d1;
+
+     label31:
+        d27 = $d28;
+
+        goto label39;
+
+     label32:
+        $d10 = d0 - d1;
+
+        $d11 = staticinvoke <java.lang.Math: double abs(double)>($d10);
+
+        $b12 = $d11 cmpg 1.0E-13;
+
+        if $b12 >= 0 goto label33;
+
+        $z14 = 1;
+
+        goto label34;
+
+     label33:
+        $z14 = 0;
+
+     label34:
+        $z6 = $z14 | z3;
+
+        if $z6 == 0 goto label35;
+
+        d29 = -0.5 * d22;
+
+        goto label36;
+
+     label35:
+        $d12 = d0 / d1;
+
+        $d13 = staticinvoke <java.lang.Math: double log(double)>($d12);
+
+        $d15 = $d13 / d22;
+
+        $d14 = 0.5 * d22;
+
+        d29 = $d15 - $d14;
+
+     label36:
+        $r8 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d16 = (double) b0;
+
+        $d17 = $d16 * d29;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d17);
+
+        d30 = interfaceinvoke $r8.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r9);
+
+        $b13 = d30 cmpl 0.0;
+
+        if $b13 != 0 goto label37;
+
+        $d31 = 0.0;
+
+        goto label38;
+
+     label37:
+        $b14 = neg b0;
+
+        $d18 = (double) $b14;
+
+        $d19 = $d18 * d1;
+
+        $d31 = $d19 * d30;
+
+     label38:
+        d27 = $d31;
+
+     label39:
+        $b23 = d4 cmpl 1.0E13;
+
+        if $b23 <= 0 goto label40;
+
+        $d20 = staticinvoke <java.lang.Math: double abs(double)>(d27);
+
+        $b15 = $d20 cmpg 1.0E-13;
+
+        if $b15 >= 0 goto label40;
+
+        $d32 = 0.0;
+
+        goto label41;
+
+     label40:
+        $d32 = d4 * d27;
+
+     label41:
+        $d34 = staticinvoke <java.lang.Math: double abs(double)>($d32);
+
+        $b24 = $d34 cmpl 1.0E13;
+
+        if $b24 <= 0 goto label42;
+
+        $d35 = $d32;
+
+        goto label43;
+
+     label42:
+        $d35 = d5 + $d32;
+
+     label43:
+        return $d35;
+    }
+
+    public static double driftlessTheta(double, double, double, double)
+    {
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, d37, $d39, $d40, d41, $d42;
+        boolean z0, z1, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11, $b12, $b13, $b14;
+        java.lang.Object[] $r0, $r2, $r4, $r6;
+        java.lang.Double $r1, $r3, $r5, $r7, $r9, $r12, $r14, $r16, $r18, $r20;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r8, $r11, $r13, $r15, $r17, $r19;
+        org.slf4j.Logger $r10, $r21;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 < 0 goto label01;
+
+        $z4 = 1;
+
+        goto label02;
+
+     label01:
+        $z4 = 0;
+
+     label02:
+        $r0 = newarray (java.lang.Object)[1];
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r0[0] = $r1;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z4, "negative/NaN forward; have {}", $r0);
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 < 0 goto label03;
+
+        $z5 = 1;
+
+        goto label04;
+
+     label03:
+        $z5 = 0;
+
+     label04:
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r2[0] = $r3;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z5, "negative/NaN strike; have {}", $r2);
+
+        $b2 = d2 cmpl 0.0;
+
+        if $b2 < 0 goto label05;
+
+        $z6 = 1;
+
+        goto label06;
+
+     label05:
+        $z6 = 0;
+
+     label06:
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r4[0] = $r5;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z6, "negative/NaN timeToExpiry; have {}", $r4);
+
+        $b3 = d3 cmpl 0.0;
+
+        if $b3 < 0 goto label07;
+
+        $z7 = 1;
+
+        goto label08;
+
+     label07:
+        $z7 = 0;
+
+     label08:
+        $r6 = newarray (java.lang.Object)[1];
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r6[0] = $r7;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z7, "negative/NaN lognormalVol; have {}", $r6);
+
+        d4 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d37 = d3 * d4;
+
+        $z3 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d37);
+
+        if $z3 == 0 goto label09;
+
+        $r21 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r21.<org.slf4j.Logger: void info(java.lang.String)>("lognormalVol * Math.sqrt(timeToExpiry) ambiguous");
+
+        d37 = 1.0;
+
+     label09:
+        $b4 = d0 cmpl 1.0E13;
+
+        if $b4 <= 0 goto label10;
+
+        $z8 = 1;
+
+        goto label11;
+
+     label10:
+        $z8 = 0;
+
+     label11:
+        z0 = $z8;
+
+        $b5 = d1 cmpl 1.0E13;
+
+        if $b5 <= 0 goto label12;
+
+        $z9 = 1;
+
+        goto label13;
+
+     label12:
+        $z9 = 0;
+
+     label13:
+        z1 = $z9;
+
+        $b6 = d37 cmpl 1.0E13;
+
+        if $b6 <= 0 goto label14;
+
+        $z10 = 1;
+
+        goto label15;
+
+     label14:
+        $z10 = 0;
+
+     label15:
+        if $z10 == 0 goto label16;
+
+        return 0.0;
+
+     label16:
+        $b7 = d37 cmpg 1.0E-13;
+
+        if $b7 >= 0 goto label25;
+
+        $d16 = d0 - d1;
+
+        $d17 = staticinvoke <java.lang.Math: double abs(double)>($d16);
+
+        $b10 = $d17 cmpl 1.0E-13;
+
+        if $b10 < 0 goto label18;
+
+        if z0 == 0 goto label17;
+
+        if z1 != 0 goto label18;
+
+     label17:
+        return 0.0;
+
+     label18:
+        $r10 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r10.<org.slf4j.Logger: void info(java.lang.String)>("log(1)/0 ambiguous");
+
+        $b11 = d4 cmpg 1.0E-13;
+
+        if $b11 >= 0 goto label22;
+
+        $b13 = d0 cmpg 1.0E-13;
+
+        if $b13 >= 0 goto label19;
+
+        $r19 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r20 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d34 = interfaceinvoke $r19.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r20);
+
+        $d35 = neg $d34;
+
+        $d36 = $d35 * d3;
+
+        $d39 = $d36 / 2.0;
+
+        goto label21;
+
+     label19:
+        $b14 = d3 cmpg 1.0E-13;
+
+        if $b14 >= 0 goto label20;
+
+        $d31 = neg d0;
+
+        $r17 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r18 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d32 = interfaceinvoke $r17.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r18);
+
+        $d33 = $d31 * $d32;
+
+        $d39 = $d33 / 2.0;
+
+        goto label21;
+
+     label20:
+        $d26 = neg d0;
+
+        $r15 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r16 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d27 = interfaceinvoke $r15.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r16);
+
+        $d28 = $d26 * $d27;
+
+        $d29 = $d28 * d3;
+
+        $d30 = $d29 / 2.0;
+
+        $d39 = $d30 / d4;
+
+     label21:
+        return $d39;
+
+     label22:
+        $b12 = d3 cmpg 1.0E-13;
+
+        if $b12 >= 0 goto label25;
+
+        if z0 == 0 goto label23;
+
+        $r13 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d23 = interfaceinvoke $r13.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r14);
+
+        $d24 = neg $d23;
+
+        $d25 = $d24 / 2.0;
+
+        $d40 = $d25 / d4;
+
+        goto label24;
+
+     label23:
+        $d18 = neg d0;
+
+        $r11 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d19 = interfaceinvoke $r11.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r12);
+
+        $d20 = $d18 * $d19;
+
+        $d21 = $d20 * d3;
+
+        $d22 = $d21 / 2.0;
+
+        $d40 = $d22 / d4;
+
+     label24:
+        return $d40;
+
+     label25:
+        $d6 = d0 - d1;
+
+        $d7 = staticinvoke <java.lang.Math: double abs(double)>($d6);
+
+        $b8 = $d7 cmpg 1.0E-13;
+
+        if $b8 >= 0 goto label26;
+
+        $z11 = 1;
+
+        goto label27;
+
+     label26:
+        $z11 = 0;
+
+     label27:
+        if z0 == 0 goto label28;
+
+        if z1 == 0 goto label28;
+
+        $z12 = 1;
+
+        goto label29;
+
+     label28:
+        $z12 = 0;
+
+     label29:
+        $z13 = $z11 | $z12;
+
+        if $z13 == 0 goto label30;
+
+        d41 = 0.5 * d37;
+
+        goto label31;
+
+     label30:
+        $d8 = d0 / d1;
+
+        $d9 = staticinvoke <java.lang.Math: double log(double)>($d8);
+
+        $d11 = $d9 / d37;
+
+        $d10 = 0.5 * d37;
+
+        d41 = $d11 + $d10;
+
+     label31:
+        $r8 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d41);
+
+        d5 = interfaceinvoke $r8.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r9);
+
+        $b9 = d5 cmpl 0.0;
+
+        if $b9 != 0 goto label32;
+
+        $d42 = 0.0;
+
+        goto label33;
+
+     label32:
+        $d12 = neg d0;
+
+        $d13 = $d12 * d5;
+
+        $d14 = $d13 * d3;
+
+        $d15 = $d14 / 2.0;
+
+        $d42 = $d15 / d4;
+
+     label33:
+        return $d42;
+    }
+
+    public static double vega(double, double, double, double)
+    {
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, d17, $d19, d20, $d21;
+        boolean z0, z1, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11, $b12;
+        java.lang.Object[] $r0, $r2, $r4, $r6;
+        java.lang.Double $r1, $r3, $r5, $r7, $r9, $r12, $r14;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r8, $r11, $r13;
+        org.slf4j.Logger $r10, $r15;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 < 0 goto label01;
+
+        $z4 = 1;
+
+        goto label02;
+
+     label01:
+        $z4 = 0;
+
+     label02:
+        $r0 = newarray (java.lang.Object)[1];
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r0[0] = $r1;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z4, "negative/NaN forward; have {}", $r0);
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 < 0 goto label03;
+
+        $z5 = 1;
+
+        goto label04;
+
+     label03:
+        $z5 = 0;
+
+     label04:
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r2[0] = $r3;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z5, "negative/NaN strike; have {}", $r2);
+
+        $b2 = d2 cmpl 0.0;
+
+        if $b2 < 0 goto label05;
+
+        $z6 = 1;
+
+        goto label06;
+
+     label05:
+        $z6 = 0;
+
+     label06:
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r4[0] = $r5;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z6, "negative/NaN timeToExpiry; have {}", $r4);
+
+        $b3 = d3 cmpl 0.0;
+
+        if $b3 < 0 goto label07;
+
+        $z7 = 1;
+
+        goto label08;
+
+     label07:
+        $z7 = 0;
+
+     label08:
+        $r6 = newarray (java.lang.Object)[1];
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r6[0] = $r7;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z7, "negative/NaN lognormalVol; have {}", $r6);
+
+        d4 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d17 = d3 * d4;
+
+        $z3 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d17);
+
+        if $z3 == 0 goto label09;
+
+        $r15 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r15.<org.slf4j.Logger: void info(java.lang.String)>("lognormalVol * Math.sqrt(timeToExpiry) ambiguous");
+
+        d17 = 1.0;
+
+     label09:
+        $b4 = d0 cmpl 1.0E13;
+
+        if $b4 <= 0 goto label10;
+
+        $z8 = 1;
+
+        goto label11;
+
+     label10:
+        $z8 = 0;
+
+     label11:
+        z0 = $z8;
+
+        $b5 = d1 cmpl 1.0E13;
+
+        if $b5 <= 0 goto label12;
+
+        $z9 = 1;
+
+        goto label13;
+
+     label12:
+        $z9 = 0;
+
+     label13:
+        z1 = $z9;
+
+        $b6 = d17 cmpl 1.0E13;
+
+        if $b6 <= 0 goto label14;
+
+        $z10 = 1;
+
+        goto label15;
+
+     label14:
+        $z10 = 0;
+
+     label15:
+        if $z10 == 0 goto label16;
+
+        return 0.0;
+
+     label16:
+        $b7 = d17 cmpg 1.0E-13;
+
+        if $b7 >= 0 goto label21;
+
+        $d13 = d0 - d1;
+
+        $d14 = staticinvoke <java.lang.Math: double abs(double)>($d13);
+
+        $b10 = $d14 cmpl 1.0E-13;
+
+        if $b10 < 0 goto label18;
+
+        if z0 == 0 goto label17;
+
+        if z1 != 0 goto label18;
+
+     label17:
+        return 0.0;
+
+     label18:
+        $r10 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r10.<org.slf4j.Logger: void info(java.lang.String)>("log(1)/0 ambiguous");
+
+        $b11 = d4 cmpg 1.0E-13;
+
+        if $b11 >= 0 goto label19;
+
+        $b12 = d0 cmpl 1.0E13;
+
+        if $b12 <= 0 goto label19;
+
+        $r13 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d19 = interfaceinvoke $r13.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r14);
+
+        goto label20;
+
+     label19:
+        $d15 = d0 * d4;
+
+        $r11 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d16 = interfaceinvoke $r11.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r12);
+
+        $d19 = $d15 * $d16;
+
+     label20:
+        return $d19;
+
+     label21:
+        $d6 = d0 - d1;
+
+        $d7 = staticinvoke <java.lang.Math: double abs(double)>($d6);
+
+        $b8 = $d7 cmpg 1.0E-13;
+
+        if $b8 >= 0 goto label22;
+
+        $z11 = 1;
+
+        goto label23;
+
+     label22:
+        $z11 = 0;
+
+     label23:
+        if z0 == 0 goto label24;
+
+        if z1 == 0 goto label24;
+
+        $z12 = 1;
+
+        goto label25;
+
+     label24:
+        $z12 = 0;
+
+     label25:
+        $z13 = $z11 | $z12;
+
+        if $z13 == 0 goto label26;
+
+        d20 = 0.5 * d17;
+
+        goto label27;
+
+     label26:
+        $d8 = d0 / d1;
+
+        $d9 = staticinvoke <java.lang.Math: double log(double)>($d8);
+
+        $d11 = $d9 / d17;
+
+        $d10 = 0.5 * d17;
+
+        d20 = $d11 + $d10;
+
+     label27:
+        $r8 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d20);
+
+        d5 = interfaceinvoke $r8.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r9);
+
+        $b9 = d5 cmpl 0.0;
+
+        if $b9 != 0 goto label28;
+
+        $d21 = 0.0;
+
+        goto label29;
+
+     label28:
+        $d12 = d0 * d4;
+
+        $d21 = $d12 * d5;
+
+     label29:
+        return $d21;
+    }
+
+    public static double vega(com.opengamma.analytics.financial.model.volatility.SimpleOptionData, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData r0;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.model.volatility.SimpleOptionData;
+
+        d0 := @parameter1: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r0, "null data");
+
+        $d1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getDiscountFactor()>();
+
+        $d2 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getForward()>();
+
+        $d3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getStrike()>();
+
+        $d4 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getTimeToExpiry()>();
+
+        $d5 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double vega(double,double,double,double)>($d2, $d3, $d4, d0);
+
+        $d6 = $d1 * $d5;
+
+        return $d6;
+    }
+
+    public static double vanna(double, double, double, double)
+    {
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, d19, $d22, d23, d24, $d25;
+        boolean z0, z1, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11;
+        java.lang.Object[] $r0, $r2, $r4, $r6;
+        java.lang.Double $r1, $r3, $r5, $r7, $r9, $r12, $r14;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r8, $r11, $r13;
+        org.slf4j.Logger $r10, $r15;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 < 0 goto label01;
+
+        $z4 = 1;
+
+        goto label02;
+
+     label01:
+        $z4 = 0;
+
+     label02:
+        $r0 = newarray (java.lang.Object)[1];
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r0[0] = $r1;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z4, "negative/NaN forward; have {}", $r0);
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 < 0 goto label03;
+
+        $z5 = 1;
+
+        goto label04;
+
+     label03:
+        $z5 = 0;
+
+     label04:
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r2[0] = $r3;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z5, "negative/NaN strike; have {}", $r2);
+
+        $b2 = d2 cmpl 0.0;
+
+        if $b2 < 0 goto label05;
+
+        $z6 = 1;
+
+        goto label06;
+
+     label05:
+        $z6 = 0;
+
+     label06:
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r4[0] = $r5;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z6, "negative/NaN timeToExpiry; have {}", $r4);
+
+        $b3 = d3 cmpl 0.0;
+
+        if $b3 < 0 goto label07;
+
+        $z7 = 1;
+
+        goto label08;
+
+     label07:
+        $z7 = 0;
+
+     label08:
+        $r6 = newarray (java.lang.Object)[1];
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r6[0] = $r7;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z7, "negative/NaN lognormalVol; have {}", $r6);
+
+        d4 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d19 = d3 * d4;
+
+        $z3 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d19);
+
+        if $z3 == 0 goto label09;
+
+        $r15 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r15.<org.slf4j.Logger: void info(java.lang.String)>("lognormalVol * Math.sqrt(timeToExpiry) ambiguous");
+
+        d19 = 1.0;
+
+     label09:
+        $b4 = d0 cmpl 1.0E13;
+
+        if $b4 <= 0 goto label10;
+
+        $z8 = 1;
+
+        goto label11;
+
+     label10:
+        $z8 = 0;
+
+     label11:
+        z0 = $z8;
+
+        $b5 = d1 cmpl 1.0E13;
+
+        if $b5 <= 0 goto label12;
+
+        $z9 = 1;
+
+        goto label13;
+
+     label12:
+        $z9 = 0;
+
+     label13:
+        z1 = $z9;
+
+        $b6 = d19 cmpl 1.0E13;
+
+        if $b6 <= 0 goto label14;
+
+        $z10 = 1;
+
+        goto label15;
+
+     label14:
+        $z10 = 0;
+
+     label15:
+        if $z10 == 0 goto label16;
+
+        return 0.0;
+
+     label16:
+        $b7 = d19 cmpg 1.0E-13;
+
+        if $b7 >= 0 goto label21;
+
+        $d14 = d0 - d1;
+
+        $d15 = staticinvoke <java.lang.Math: double abs(double)>($d14);
+
+        $b10 = $d15 cmpl 1.0E-13;
+
+        if $b10 < 0 goto label18;
+
+        if z0 == 0 goto label17;
+
+        if z1 != 0 goto label18;
+
+     label17:
+        return 0.0;
+
+     label18:
+        $r10 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r10.<org.slf4j.Logger: void info(java.lang.String)>("log(1)/0 ambiguous");
+
+        $b11 = d3 cmpg 1.0E-13;
+
+        if $b11 >= 0 goto label19;
+
+        $r13 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d17 = interfaceinvoke $r13.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r14);
+
+        $d18 = neg $d17;
+
+        $d22 = $d18 / d3;
+
+        goto label20;
+
+     label19:
+        $r11 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d16 = interfaceinvoke $r11.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r12);
+
+        $d22 = $d16 * d4;
+
+     label20:
+        return $d22;
+
+     label21:
+        $d6 = d0 - d1;
+
+        $d7 = staticinvoke <java.lang.Math: double abs(double)>($d6);
+
+        $b8 = $d7 cmpg 1.0E-13;
+
+        if $b8 >= 0 goto label22;
+
+        $z11 = 1;
+
+        goto label23;
+
+     label22:
+        $z11 = 0;
+
+     label23:
+        if z0 == 0 goto label24;
+
+        if z1 == 0 goto label24;
+
+        $z12 = 1;
+
+        goto label25;
+
+     label24:
+        $z12 = 0;
+
+     label25:
+        $z13 = $z11 | $z12;
+
+        if $z13 == 0 goto label26;
+
+        d23 = 0.5 * d19;
+
+        d24 = -0.5 * d19;
+
+        goto label27;
+
+     label26:
+        $d8 = d0 / d1;
+
+        $d9 = staticinvoke <java.lang.Math: double log(double)>($d8);
+
+        $d11 = $d9 / d19;
+
+        $d10 = 0.5 * d19;
+
+        d23 = $d11 + $d10;
+
+        d24 = d23 - d19;
+
+     label27:
+        $r8 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d23);
+
+        d5 = interfaceinvoke $r8.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r9);
+
+        $b9 = d5 cmpl 0.0;
+
+        if $b9 != 0 goto label28;
+
+        $d25 = 0.0;
+
+        goto label29;
+
+     label28:
+        $d12 = neg d5;
+
+        $d13 = $d12 * d24;
+
+        $d25 = $d13 / d3;
+
+     label29:
+        return $d25;
+    }
+
+    public static double dualVanna(double, double, double, double)
+    {
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, d19, $d22, d23, d24, $d25;
+        boolean z0, z1, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11;
+        java.lang.Object[] $r0, $r2, $r4, $r6;
+        java.lang.Double $r1, $r3, $r5, $r7, $r9, $r12, $r14;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r8, $r11, $r13;
+        org.slf4j.Logger $r10, $r15;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 < 0 goto label01;
+
+        $z4 = 1;
+
+        goto label02;
+
+     label01:
+        $z4 = 0;
+
+     label02:
+        $r0 = newarray (java.lang.Object)[1];
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r0[0] = $r1;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z4, "negative/NaN forward; have {}", $r0);
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 < 0 goto label03;
+
+        $z5 = 1;
+
+        goto label04;
+
+     label03:
+        $z5 = 0;
+
+     label04:
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r2[0] = $r3;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z5, "negative/NaN strike; have {}", $r2);
+
+        $b2 = d2 cmpl 0.0;
+
+        if $b2 < 0 goto label05;
+
+        $z6 = 1;
+
+        goto label06;
+
+     label05:
+        $z6 = 0;
+
+     label06:
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r4[0] = $r5;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z6, "negative/NaN timeToExpiry; have {}", $r4);
+
+        $b3 = d3 cmpl 0.0;
+
+        if $b3 < 0 goto label07;
+
+        $z7 = 1;
+
+        goto label08;
+
+     label07:
+        $z7 = 0;
+
+     label08:
+        $r6 = newarray (java.lang.Object)[1];
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r6[0] = $r7;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z7, "negative/NaN lognormalVol; have {}", $r6);
+
+        d4 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d19 = d3 * d4;
+
+        $z3 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d19);
+
+        if $z3 == 0 goto label09;
+
+        $r15 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r15.<org.slf4j.Logger: void info(java.lang.String)>("lognormalVol * Math.sqrt(timeToExpiry) ambiguous");
+
+        d19 = 1.0;
+
+     label09:
+        $b4 = d0 cmpl 1.0E13;
+
+        if $b4 <= 0 goto label10;
+
+        $z8 = 1;
+
+        goto label11;
+
+     label10:
+        $z8 = 0;
+
+     label11:
+        z0 = $z8;
+
+        $b5 = d1 cmpl 1.0E13;
+
+        if $b5 <= 0 goto label12;
+
+        $z9 = 1;
+
+        goto label13;
+
+     label12:
+        $z9 = 0;
+
+     label13:
+        z1 = $z9;
+
+        $b6 = d19 cmpl 1.0E13;
+
+        if $b6 <= 0 goto label14;
+
+        $z10 = 1;
+
+        goto label15;
+
+     label14:
+        $z10 = 0;
+
+     label15:
+        if $z10 == 0 goto label16;
+
+        return 0.0;
+
+     label16:
+        $b7 = d19 cmpg 1.0E-13;
+
+        if $b7 >= 0 goto label21;
+
+        $d13 = d0 - d1;
+
+        $d14 = staticinvoke <java.lang.Math: double abs(double)>($d13);
+
+        $b10 = $d14 cmpl 1.0E-13;
+
+        if $b10 < 0 goto label18;
+
+        if z0 == 0 goto label17;
+
+        if z1 != 0 goto label18;
+
+     label17:
+        return 0.0;
+
+     label18:
+        $r10 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r10.<org.slf4j.Logger: void info(java.lang.String)>("log(1)/0 ambiguous");
+
+        $b11 = d3 cmpg 1.0E-13;
+
+        if $b11 >= 0 goto label19;
+
+        $r13 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d17 = interfaceinvoke $r13.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r14);
+
+        $d18 = neg $d17;
+
+        $d22 = $d18 / d3;
+
+        goto label20;
+
+     label19:
+        $r11 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d15 = interfaceinvoke $r11.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r12);
+
+        $d16 = neg $d15;
+
+        $d22 = $d16 * d4;
+
+     label20:
+        return $d22;
+
+     label21:
+        $d6 = d0 - d1;
+
+        $d7 = staticinvoke <java.lang.Math: double abs(double)>($d6);
+
+        $b8 = $d7 cmpg 1.0E-13;
+
+        if $b8 >= 0 goto label22;
+
+        $z11 = 1;
+
+        goto label23;
+
+     label22:
+        $z11 = 0;
+
+     label23:
+        if z0 == 0 goto label24;
+
+        if z1 == 0 goto label24;
+
+        $z12 = 1;
+
+        goto label25;
+
+     label24:
+        $z12 = 0;
+
+     label25:
+        $z13 = $z11 | $z12;
+
+        if $z13 == 0 goto label26;
+
+        d23 = 0.5 * d19;
+
+        d24 = -0.5 * d19;
+
+        goto label27;
+
+     label26:
+        $d8 = d0 / d1;
+
+        $d9 = staticinvoke <java.lang.Math: double log(double)>($d8);
+
+        $d11 = $d9 / d19;
+
+        $d10 = 0.5 * d19;
+
+        d23 = $d11 + $d10;
+
+        d24 = d23 - d19;
+
+     label27:
+        $r8 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d24);
+
+        d5 = interfaceinvoke $r8.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r9);
+
+        $b9 = d5 cmpl 0.0;
+
+        if $b9 != 0 goto label28;
+
+        $d25 = 0.0;
+
+        goto label29;
+
+     label28:
+        $d12 = d5 * d23;
+
+        $d25 = $d12 / d3;
+
+     label29:
+        return $d25;
+    }
+
+    public static double vomma(double, double, double, double)
+    {
+        double d0, d1, d2, d3, d4, d5, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, d31, $d34, $d35, d36, d37, $d38;
+        boolean z0, z1, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11, $b12;
+        java.lang.Object[] $r0, $r2, $r4, $r6;
+        java.lang.Double $r1, $r3, $r5, $r7, $r9, $r12, $r14, $r16, $r18;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r8, $r11, $r13, $r15, $r17;
+        org.slf4j.Logger $r10, $r19;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 < 0 goto label01;
+
+        $z4 = 1;
+
+        goto label02;
+
+     label01:
+        $z4 = 0;
+
+     label02:
+        $r0 = newarray (java.lang.Object)[1];
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r0[0] = $r1;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z4, "negative/NaN forward; have {}", $r0);
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 < 0 goto label03;
+
+        $z5 = 1;
+
+        goto label04;
+
+     label03:
+        $z5 = 0;
+
+     label04:
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r2[0] = $r3;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z5, "negative/NaN strike; have {}", $r2);
+
+        $b2 = d2 cmpl 0.0;
+
+        if $b2 < 0 goto label05;
+
+        $z6 = 1;
+
+        goto label06;
+
+     label05:
+        $z6 = 0;
+
+     label06:
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r4[0] = $r5;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z6, "negative/NaN timeToExpiry; have {}", $r4);
+
+        $b3 = d3 cmpl 0.0;
+
+        if $b3 < 0 goto label07;
+
+        $z7 = 1;
+
+        goto label08;
+
+     label07:
+        $z7 = 0;
+
+     label08:
+        $r6 = newarray (java.lang.Object)[1];
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r6[0] = $r7;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z7, "negative/NaN lognormalVol; have {}", $r6);
+
+        d4 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d31 = d3 * d4;
+
+        $z3 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d31);
+
+        if $z3 == 0 goto label09;
+
+        $r19 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r19.<org.slf4j.Logger: void info(java.lang.String)>("lognormalVol * Math.sqrt(timeToExpiry) ambiguous");
+
+        d31 = 1.0;
+
+     label09:
+        $b4 = d0 cmpl 1.0E13;
+
+        if $b4 <= 0 goto label10;
+
+        $z8 = 1;
+
+        goto label11;
+
+     label10:
+        $z8 = 0;
+
+     label11:
+        z0 = $z8;
+
+        $b5 = d1 cmpl 1.0E13;
+
+        if $b5 <= 0 goto label12;
+
+        $z9 = 1;
+
+        goto label13;
+
+     label12:
+        $z9 = 0;
+
+     label13:
+        z1 = $z9;
+
+        $b6 = d31 cmpl 1.0E13;
+
+        if $b6 <= 0 goto label14;
+
+        $z10 = 1;
+
+        goto label15;
+
+     label14:
+        $z10 = 0;
+
+     label15:
+        if $z10 == 0 goto label16;
+
+        return 0.0;
+
+     label16:
+        $b7 = d31 cmpg 1.0E-13;
+
+        if $b7 >= 0 goto label24;
+
+        $d17 = d0 - d1;
+
+        $d18 = staticinvoke <java.lang.Math: double abs(double)>($d17);
+
+        $b10 = $d18 cmpl 1.0E-13;
+
+        if $b10 < 0 goto label18;
+
+        if z0 == 0 goto label17;
+
+        if z1 != 0 goto label18;
+
+     label17:
+        return 0.0;
+
+     label18:
+        $r10 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r10.<org.slf4j.Logger: void info(java.lang.String)>("log(1)/0 ambiguous");
+
+        if z0 == 0 goto label21;
+
+        $b12 = d4 cmpg 1.0E-13;
+
+        if $b12 >= 0 goto label19;
+
+        $r17 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r18 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d30 = interfaceinvoke $r17.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r18);
+
+        $d34 = $d30 / d3;
+
+        goto label20;
+
+     label19:
+        $r15 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r16 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d27 = interfaceinvoke $r15.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r16);
+
+        $d28 = d0 * $d27;
+
+        $d29 = $d28 * d4;
+
+        $d34 = $d29 / d3;
+
+     label20:
+        return $d34;
+
+     label21:
+        $b11 = d3 cmpg 1.0E-13;
+
+        if $b11 >= 0 goto label22;
+
+        $r13 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d24 = interfaceinvoke $r13.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r14);
+
+        $d25 = d0 * $d24;
+
+        $d26 = $d25 * d4;
+
+        $d35 = $d26 / d3;
+
+        goto label23;
+
+     label22:
+        $d19 = neg d0;
+
+        $r11 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $d20 = interfaceinvoke $r11.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r12);
+
+        $d21 = $d19 * $d20;
+
+        $d22 = $d21 * d2;
+
+        $d23 = $d22 * d3;
+
+        $d35 = $d23 / 4.0;
+
+     label23:
+        return $d35;
+
+     label24:
+        $d7 = d0 - d1;
+
+        $d8 = staticinvoke <java.lang.Math: double abs(double)>($d7);
+
+        $b8 = $d8 cmpg 1.0E-13;
+
+        if $b8 >= 0 goto label25;
+
+        $z11 = 1;
+
+        goto label26;
+
+     label25:
+        $z11 = 0;
+
+     label26:
+        if z0 == 0 goto label27;
+
+        if z1 == 0 goto label27;
+
+        $z12 = 1;
+
+        goto label28;
+
+     label27:
+        $z12 = 0;
+
+     label28:
+        $z13 = $z11 | $z12;
+
+        if $z13 == 0 goto label29;
+
+        d36 = 0.5 * d31;
+
+        d37 = -0.5 * d31;
+
+        goto label30;
+
+     label29:
+        $d9 = d0 / d1;
+
+        $d10 = staticinvoke <java.lang.Math: double log(double)>($d9);
+
+        $d12 = $d10 / d31;
+
+        $d11 = 0.5 * d31;
+
+        d36 = $d12 + $d11;
+
+        d37 = d36 - d31;
+
+     label30:
+        $r8 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d36);
+
+        d5 = interfaceinvoke $r8.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r9);
+
+        $b9 = d5 cmpl 0.0;
+
+        if $b9 != 0 goto label31;
+
+        $d38 = 0.0;
+
+        goto label32;
+
+     label31:
+        $d13 = d0 * d5;
+
+        $d14 = $d13 * d4;
+
+        $d15 = $d14 * d36;
+
+        $d16 = $d15 * d37;
+
+        $d38 = $d16 / d3;
+
+     label32:
+        return $d38;
+    }
+
+    public static double volga(double, double, double, double)
+    {
+        double d0, d1, d2, d3, $d4;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $d4 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double vomma(double,double,double,double)>(d0, d1, d2, d3);
+
+        return $d4;
+    }
+
+    public static double impliedVolatility(double, double, double, double, boolean)
+    {
+        double d0, d1, d2, d3, d4, d5, $d7, $d8, $d9, $d10;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        byte $b0, $b1, $b2, $b3, $b4;
+        java.lang.Object[] $r0, $r2, $r4, $r6;
+        java.lang.Double $r1, $r3, $r5, $r7;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 < 0 goto label01;
+
+        $z4 = 1;
+
+        goto label02;
+
+     label01:
+        $z4 = 0;
+
+     label02:
+        $r0 = newarray (java.lang.Object)[1];
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r0[0] = $r1;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z4, "negative/NaN price; have {}", $r0);
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 <= 0 goto label03;
+
+        $z5 = 1;
+
+        goto label04;
+
+     label03:
+        $z5 = 0;
+
+     label04:
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r2[0] = $r3;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z5, "negative/NaN forward; have {}", $r2);
+
+        $b2 = d2 cmpl 0.0;
+
+        if $b2 < 0 goto label05;
+
+        $z6 = 1;
+
+        goto label06;
+
+     label05:
+        $z6 = 0;
+
+     label06:
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r4[0] = $r5;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z6, "negative/NaN strike; have {}", $r4);
+
+        $b3 = d3 cmpl 0.0;
+
+        if $b3 < 0 goto label07;
+
+        $z7 = 1;
+
+        goto label08;
+
+     label07:
+        $z7 = 0;
+
+     label08:
+        $r6 = newarray (java.lang.Object)[1];
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r6[0] = $r7;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z7, "negative/NaN timeToExpiry; have {}", $r6);
+
+        $z1 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d1);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z1, "forward is Infinity");
+
+        $z2 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z2, "strike is Infinity");
+
+        $z3 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d3);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z3, "timeToExpiry is Infinity");
+
+        if z0 == 0 goto label09;
+
+        $b4 = 1;
+
+        goto label10;
+
+     label09:
+        $b4 = -1;
+
+     label10:
+        $d8 = (double) $b4;
+
+        $d7 = d1 - d2;
+
+        $d9 = $d8 * $d7;
+
+        d4 = staticinvoke <java.lang.Math: double max(double,double)>(0.0, $d9);
+
+        d5 = d0 - d4;
+
+        $d10 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double impliedVolatility(double,double,double,double,double)>(d5, d1, d2, d3, 0.3);
+
+        return $d10;
+    }
+
+    public static double impliedVolatility(double, double, double, double, double)
+    {
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8;
+        java.lang.Object[] $r3, $r5, $r7, $r9, $r11, $r13;
+        java.lang.Double $r4, $r6, $r8, $r10, $r12, $r14, $r15, $r20;
+        boolean $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12;
+        com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository$1 $r16;
+        com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository$2 $r17;
+        com.opengamma.analytics.financial.model.volatility.GenericImpliedVolatiltySolver $r18;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r19;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 < 0 goto label01;
+
+        $z6 = 1;
+
+        goto label02;
+
+     label01:
+        $z6 = 0;
+
+     label02:
+        $r3 = newarray (java.lang.Object)[1];
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r3[0] = $r4;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z6, "negative/NaN otmPrice; have {}", $r3);
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 < 0 goto label03;
+
+        $z7 = 1;
+
+        goto label04;
+
+     label03:
+        $z7 = 0;
+
+     label04:
+        $r5 = newarray (java.lang.Object)[1];
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r5[0] = $r6;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z7, "negative/NaN forward; have {}", $r5);
+
+        $b2 = d2 cmpl 0.0;
+
+        if $b2 < 0 goto label05;
+
+        $z8 = 1;
+
+        goto label06;
+
+     label05:
+        $z8 = 0;
+
+     label06:
+        $r7 = newarray (java.lang.Object)[1];
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r7[0] = $r8;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z8, "negative/NaN strike; have {}", $r7);
+
+        $b3 = d3 cmpl 0.0;
+
+        if $b3 < 0 goto label07;
+
+        $z9 = 1;
+
+        goto label08;
+
+     label07:
+        $z9 = 0;
+
+     label08:
+        $r9 = newarray (java.lang.Object)[1];
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r9[0] = $r10;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z9, "negative/NaN timeToExpiry; have {}", $r9);
+
+        $b4 = d4 cmpl 0.0;
+
+        if $b4 < 0 goto label09;
+
+        $z10 = 1;
+
+        goto label10;
+
+     label09:
+        $z10 = 0;
+
+     label10:
+        $r11 = newarray (java.lang.Object)[1];
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d4);
+
+        $r11[0] = $r12;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z10, "negative/NaN volGuess; have {}", $r11);
+
+        $z1 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d0);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z1, "otmPrice is Infinity");
+
+        $z2 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d1);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z2, "forward is Infinity");
+
+        $z3 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z3, "strike is Infinity");
+
+        $z4 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d3);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z4, "timeToExpiry is Infinity");
+
+        $z5 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d4);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z5, "volGuess is Infinity");
+
+        $b5 = d0 cmpl 0.0;
+
+        if $b5 != 0 goto label11;
+
+        return 0.0;
+
+     label11:
+        $d5 = staticinvoke <java.lang.Math: double min(double,double)>(d1, d2);
+
+        $b6 = d0 cmpg $d5;
+
+        if $b6 >= 0 goto label12;
+
+        $z11 = 1;
+
+        goto label13;
+
+     label12:
+        $z11 = 0;
+
+     label13:
+        $r13 = newarray (java.lang.Object)[2];
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r13[0] = $r14;
+
+        $d6 = staticinvoke <java.lang.Math: double min(double,double)>(d1, d2);
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d6);
+
+        $r13[1] = $r15;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z11, "otmPrice of {} exceeded upper bound of {}", $r13);
+
+        $b7 = d1 cmpl d2;
+
+        if $b7 != 0 goto label14;
+
+        $r19 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d8 = d0 / d1;
+
+        $d9 = $d8 + 1.0;
+
+        $d10 = 0.5 * $d9;
+
+        $r20 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        $d11 = interfaceinvoke $r19.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getInverseCDF(java.lang.Object)>($r20);
+
+        $d12 = $d11 * 2.0;
+
+        $d13 = staticinvoke <java.lang.Math: double sqrt(double)>(d3);
+
+        $d14 = $d12 / $d13;
+
+        return $d14;
+
+     label14:
+        $b8 = d2 cmpl d1;
+
+        if $b8 < 0 goto label15;
+
+        $z12 = 1;
+
+        goto label16;
+
+     label15:
+        $z12 = 0;
+
+     label16:
+        $r16 = new com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository$1;
+
+        specialinvoke $r16.<com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository$1: void <init>(double,double,double,boolean)>(d1, d2, d3, $z12);
+
+        $r17 = new com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository$2;
+
+        specialinvoke $r17.<com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository$2: void <init>(double,double,double)>(d1, d2, d3);
+
+        $r18 = new com.opengamma.analytics.financial.model.volatility.GenericImpliedVolatiltySolver;
+
+        specialinvoke $r18.<com.opengamma.analytics.financial.model.volatility.GenericImpliedVolatiltySolver: void <init>(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.function.Function1D)>($r16, $r17);
+
+        $d7 = virtualinvoke $r18.<com.opengamma.analytics.financial.model.volatility.GenericImpliedVolatiltySolver: double impliedVolatility(double,double)>(d0, d4);
+
+        return $d7;
+    }
+
+    public static double impliedVolatility(com.opengamma.analytics.financial.model.volatility.SimpleOptionData, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData r0;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6;
+        boolean $z0;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.model.volatility.SimpleOptionData;
+
+        d0 := @parameter1: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r0, "null data");
+
+        $d1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getDiscountFactor()>();
+
+        $d2 = d0 / $d1;
+
+        $d3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getForward()>();
+
+        $d4 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getStrike()>();
+
+        $d5 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getTimeToExpiry()>();
+
+        $z0 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: boolean isCall()>();
+
+        $d6 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double impliedVolatility(double,double,double,double,boolean)>($d2, $d3, $d4, $d5, $z0);
+
+        return $d6;
+    }
+
+    public static double impliedVolatility(com.opengamma.analytics.financial.model.volatility.SimpleOptionData[], double)
+    {
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] r0;
+        double d0, $d1, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, d12;
+        int i0, i5;
+        byte $b1, $b4, $b6;
+        java.lang.StringBuilder $r2, $r3, $r4, $r5, $r6, $r7;
+        java.lang.String $r8;
+        long $l2, $l3;
+        com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository$3 $r9;
+        com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository$4 $r10;
+        com.opengamma.analytics.financial.model.volatility.GenericImpliedVolatiltySolver $r11;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData r13;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[];
+
+        d0 := @parameter1: double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notEmpty(java.lang.Object[],java.lang.String)>(r0, "no option data given");
+
+        d12 = 0.0;
+
+        i0 = lengthof r0;
+
+        i5 = 0;
+
+     label1:
+        if i5 >= i0 goto label4;
+
+        r13 = r0[i5];
+
+        $d11 = d12;
+
+        $z0 = virtualinvoke r13.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: boolean isCall()>();
+
+        if $z0 == 0 goto label2;
+
+        $b6 = 1;
+
+        goto label3;
+
+     label2:
+        $b6 = -1;
+
+     label3:
+        $d3 = (double) $b6;
+
+        $d4 = virtualinvoke r13.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getDiscountFactor()>();
+
+        $d5 = $d3 * $d4;
+
+        $d6 = virtualinvoke r13.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getForward()>();
+
+        $d7 = virtualinvoke r13.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getStrike()>();
+
+        $d8 = $d6 - $d7;
+
+        $d9 = $d5 * $d8;
+
+        $d10 = staticinvoke <java.lang.Math: double max(double,double)>(0.0, $d9);
+
+        d12 = $d11 + $d10;
+
+        i5 = i5 + 1;
+
+        goto label1;
+
+     label4:
+        $b1 = d0 cmpl d12;
+
+        if $b1 < 0 goto label5;
+
+        $z1 = 1;
+
+        goto label6;
+
+     label5:
+        $z1 = 0;
+
+     label6:
+        $r2 = new java.lang.StringBuilder;
+
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+
+        $r3 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("option price (");
+
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d0);
+
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(") less than intrinsic value (");
+
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d12);
+
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(")");
+
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, $r8);
+
+        $l2 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d0);
+
+        $l3 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d12);
+
+        $b4 = $l2 cmp $l3;
+
+        if $b4 != 0 goto label7;
+
+        return 0.0;
+
+     label7:
+        $r9 = new com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository$3;
+
+        specialinvoke $r9.<com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository$3: void <init>(com.opengamma.analytics.financial.model.volatility.SimpleOptionData[])>(r0);
+
+        $r10 = new com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository$4;
+
+        specialinvoke $r10.<com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository$4: void <init>(com.opengamma.analytics.financial.model.volatility.SimpleOptionData[])>(r0);
+
+        $r11 = new com.opengamma.analytics.financial.model.volatility.GenericImpliedVolatiltySolver;
+
+        specialinvoke $r11.<com.opengamma.analytics.financial.model.volatility.GenericImpliedVolatiltySolver: void <init>(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.function.Function1D)>($r9, $r10);
+
+        $d1 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.volatility.GenericImpliedVolatiltySolver: double impliedVolatility(double,double)>(d0, 0.3);
+
+        return $d1;
+    }
+
+    public static double impliedStrike(double, boolean, double, double, double)
+    {
+        double d0, d1, d2, d3, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18;
+        boolean z0, $z1, $z3, $z4, $z5;
+        byte $b0, $b1, $b2, $b3;
+        java.lang.StringBuilder $r0, $r1, $r2, $r3, $r4;
+        java.lang.String $r5;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r6;
+        java.lang.Double $r7;
+
+        d0 := @parameter0: double;
+
+        z0 := @parameter1: boolean;
+
+        d1 := @parameter2: double;
+
+        d2 := @parameter3: double;
+
+        d3 := @parameter4: double;
+
+        $b0 = d0 cmpl -1.0;
+
+        if $b0 <= 0 goto label1;
+
+        $b2 = d0 cmpg 1.0;
+
+        if $b2 >= 0 goto label1;
+
+        $z3 = 1;
+
+        goto label2;
+
+     label1:
+        $z3 = 0;
+
+     label2:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z3, "Delta out of range");
+
+        $b3 = d0 cmpg 0.0;
+
+        if $b3 >= 0 goto label3;
+
+        $z4 = 1;
+
+        goto label4;
+
+     label3:
+        $z4 = 0;
+
+     label4:
+        $z1 = z0 ^ $z4;
+
+        $r0 = new java.lang.StringBuilder;
+
+        specialinvoke $r0.<java.lang.StringBuilder: void <init>()>();
+
+        $r1 = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Delta incompatible with call/put: ");
+
+        $r2 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(boolean)>(z0);
+
+        $r3 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", ");
+
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d0);
+
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, $r5);
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 <= 0 goto label5;
+
+        $z5 = 1;
+
+        goto label6;
+
+     label5:
+        $z5 = 0;
+
+     label6:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z5, "Forward negative");
+
+        if z0 == 0 goto label7;
+
+        $d18 = 1.0;
+
+        goto label8;
+
+     label7:
+        $d18 = -1.0;
+
+     label8:
+        $d6 = neg d3;
+
+        $d7 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        $d8 = $d6 * $d7;
+
+        $d10 = $d8 * $d18;
+
+        $r6 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d9 = $d18 * d0;
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d9);
+
+        $d11 = interfaceinvoke $r6.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getInverseCDF(java.lang.Object)>($r7);
+
+        $d15 = $d10 * $d11;
+
+        $d12 = d3 * d3;
+
+        $d13 = $d12 * d2;
+
+        $d14 = $d13 / 2.0;
+
+        $d16 = $d15 + $d14;
+
+        $d17 = staticinvoke <java.lang.Math: double exp(double)>($d16);
+
+        d5 = d1 * $d17;
+
+        return d5;
+    }
+
+    public static double impliedStrike(double, boolean, double, double, double, double[])
+    {
+        double d0, d1, d2, d3, d5, d6, d7, d8, d10, d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47;
+        boolean z0, $z1, $z3, $z4, $z5;
+        double[] r0;
+        byte $b0, $b1, $b2, $b3;
+        java.lang.StringBuilder $r1, $r2, $r3, $r4, $r5;
+        java.lang.String $r6;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r7, $r9;
+        java.lang.Double $r8, $r10;
+
+        d0 := @parameter0: double;
+
+        z0 := @parameter1: boolean;
+
+        d1 := @parameter2: double;
+
+        d2 := @parameter3: double;
+
+        d3 := @parameter4: double;
+
+        r0 := @parameter5: double[];
+
+        $b0 = d0 cmpl -1.0;
+
+        if $b0 <= 0 goto label1;
+
+        $b2 = d0 cmpg 1.0;
+
+        if $b2 >= 0 goto label1;
+
+        $z3 = 1;
+
+        goto label2;
+
+     label1:
+        $z3 = 0;
+
+     label2:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z3, "Delta out of range");
+
+        $b3 = d0 cmpg 0.0;
+
+        if $b3 >= 0 goto label3;
+
+        $z4 = 1;
+
+        goto label4;
+
+     label3:
+        $z4 = 0;
+
+     label4:
+        $z1 = z0 ^ $z4;
+
+        $r1 = new java.lang.StringBuilder;
+
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+
+        $r2 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Delta incompatible with call/put: ");
+
+        $r3 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(boolean)>(z0);
+
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", ");
+
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d0);
+
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, $r6);
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 <= 0 goto label5;
+
+        $z5 = 1;
+
+        goto label6;
+
+     label5:
+        $z5 = 0;
+
+     label6:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z5, "Forward negative");
+
+        if z0 == 0 goto label7;
+
+        $d47 = 1.0;
+
+        goto label8;
+
+     label7:
+        $d47 = -1.0;
+
+     label8:
+        d5 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        $r7 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d12 = $d47 * d0;
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d12);
+
+        d6 = interfaceinvoke $r7.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getInverseCDF(java.lang.Object)>($r8);
+
+        $d13 = neg d3;
+
+        $d14 = $d13 * d5;
+
+        $d15 = $d14 * $d47;
+
+        $d19 = $d15 * d6;
+
+        $d16 = d3 * d3;
+
+        $d17 = $d16 * d2;
+
+        $d18 = $d17 / 2.0;
+
+        $d20 = $d19 + $d18;
+
+        d7 = staticinvoke <java.lang.Math: double exp(double)>($d20);
+
+        d8 = d1 * d7;
+
+        d10 = d1 * 1.0;
+
+        $d21 = neg d3;
+
+        $d22 = d7 * $d21;
+
+        $d23 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        $d24 = $d22 * $d23;
+
+        $d25 = $d24 * $d47;
+
+        d11 = $d25 * d10;
+
+        $r9 = <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d6);
+
+        $d26 = interfaceinvoke $r9.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r10);
+
+        $d27 = $d47 / $d26;
+
+        $d28 = $d27 * d11;
+
+        r0[0] = $d28;
+
+        $d29 = d7 * 1.0;
+
+        r0[1] = $d29;
+
+        $d30 = neg d3;
+
+        $d31 = $d30 * $d47;
+
+        $d32 = $d31 * d6;
+
+        $d33 = $d32 * 0.5;
+
+        $d36 = $d33 / d5;
+
+        $d34 = d3 * d3;
+
+        $d35 = $d34 / 2.0;
+
+        $d37 = $d36 + $d35;
+
+        $d38 = d7 * $d37;
+
+        $d39 = $d38 * d10;
+
+        r0[2] = $d39;
+
+        $d40 = neg d5;
+
+        $d41 = $d40 * $d47;
+
+        $d43 = $d41 * d6;
+
+        $d42 = d3 * d2;
+
+        $d44 = $d43 + $d42;
+
+        $d45 = d7 * $d44;
+
+        $d46 = $d45 * d10;
+
+        r0[3] = $d46;
+
+        return d8;
+    }
+
+    static void <clinit>()
+    {
+        org.slf4j.Logger $r0;
+        com.opengamma.analytics.math.statistics.distribution.NormalDistribution $r1;
+
+        <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double VOL_TOL> = 1.0E-9;
+
+        <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: int MAX_ITERATIONS> = 20;
+
+        <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double EPS> = 1.0E-15;
+
+        <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double SMALL> = 1.0E-13;
+
+        <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double LARGE> = 1.0E13;
+
+        $r0 = staticinvoke <org.slf4j.LoggerFactory: org.slf4j.Logger getLogger(java.lang.Class)>(class "com/opengamma/analytics/financial/model/volatility/BlackFormulaRepository");
+
+        <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: org.slf4j.Logger s_logger> = $r0;
+
+        $r1 = new com.opengamma.analytics.math.statistics.distribution.NormalDistribution;
+
+        specialinvoke $r1.<com.opengamma.analytics.math.statistics.distribution.NormalDistribution: void <init>(double,double)>(0.0, 1.0);
+
+        <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL> = $r1;
+
+        return;
+    }
+}

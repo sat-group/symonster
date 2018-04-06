@@ -1,0 +1,193 @@
+public final class com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator extends com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorSameMethodAdapter
+{
+    private static final double BP1;
+    private final com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityParameterCalculator _parameterSensitivityCalculator;
+
+    public void <init>(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)
+    {
+        com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor r1;
+        com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityParameterCalculator $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorSameMethodAdapter: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "curve sensitivity calculator");
+
+        $r3 = new com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityParameterCalculator;
+
+        specialinvoke $r3.<com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityParameterCalculator: void <init>(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)>(r1);
+
+        r0.<com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator: com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityParameterCalculator _parameterSensitivityCalculator> = $r3;
+
+        return;
+    }
+
+    public com.opengamma.analytics.util.amount.ReferenceAmount visit(com.opengamma.analytics.financial.interestrate.InstrumentDerivative, com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)
+    {
+        com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface r2;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity r3;
+        com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityParameterCalculator $r6;
+        com.opengamma.analytics.util.amount.ReferenceAmount $r7;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivative;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "derivative");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "multicurves");
+
+        $r6 = r0.<com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator: com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityParameterCalculator _parameterSensitivityCalculator>;
+
+        r3 = virtualinvoke $r6.<com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityParameterCalculator: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity calculateSensitivity(com.opengamma.analytics.financial.interestrate.InstrumentDerivative,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>(r1, r2);
+
+        $r7 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator: com.opengamma.analytics.util.amount.ReferenceAmount pv01CurveParameters(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity)>(r3);
+
+        return $r7;
+    }
+
+    public com.opengamma.analytics.util.amount.ReferenceAmount pv01CurveParameters(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity)
+    {
+        com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator r0;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity r1;
+        java.util.Iterator r3;
+        com.opengamma.util.tuple.Pair r4;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r5;
+        com.opengamma.analytics.util.amount.ReferenceAmount $r7;
+        java.util.Set $r8;
+        boolean $z0;
+        java.lang.Object $r9;
+        int $i0, i1;
+        double $d0, $d1, d2;
+        java.lang.Double $r10, $r12;
+        int[] $r11;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "parameter sensitivity");
+
+        $r7 = new com.opengamma.analytics.util.amount.ReferenceAmount;
+
+        specialinvoke $r7.<com.opengamma.analytics.util.amount.ReferenceAmount: void <init>()>();
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity: java.util.Set getAllNamesCurrency()>();
+
+        r3 = interfaceinvoke $r8.<java.util.Set: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label4;
+
+        $r9 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+
+        r4 = (com.opengamma.util.tuple.Pair) $r9;
+
+        r5 = virtualinvoke r1.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity: com.opengamma.analytics.math.matrix.DoubleMatrix1D getSensitivity(com.opengamma.util.tuple.Pair)>(r4);
+
+        d2 = 0.0;
+
+        i1 = 0;
+
+     label2:
+        $i0 = virtualinvoke r5.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: int getNumberOfElements()>();
+
+        if i1 >= $i0 goto label3;
+
+        $r11 = newarray (int)[1];
+
+        $r11[0] = i1;
+
+        $r12 = virtualinvoke r5.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: java.lang.Double getEntry(int[])>($r11);
+
+        $d1 = virtualinvoke $r12.<java.lang.Double: double doubleValue()>();
+
+        d2 = d2 + $d1;
+
+        i1 = i1 + 1;
+
+        goto label2;
+
+     label3:
+        $d0 = d2 * 1.0E-4;
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        virtualinvoke $r7.<com.opengamma.analytics.util.amount.ReferenceAmount: void add(java.lang.Object,java.lang.Double)>(r4, $r10);
+
+        goto label1;
+
+     label4:
+        return $r7;
+    }
+
+    public com.opengamma.analytics.util.amount.ReferenceAmount visit(com.opengamma.analytics.financial.interestrate.InstrumentDerivative)
+    {
+        com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative r1;
+        java.lang.UnsupportedOperationException $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivative;
+
+        $r2 = new java.lang.UnsupportedOperationException;
+
+        specialinvoke $r2.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>("Need curve data");
+
+        throw $r2;
+    }
+
+    public volatile java.lang.Object visit(com.opengamma.analytics.financial.interestrate.InstrumentDerivative, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface $r3;
+        com.opengamma.analytics.util.amount.ReferenceAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivative;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator: com.opengamma.analytics.util.amount.ReferenceAmount visit(com.opengamma.analytics.financial.interestrate.InstrumentDerivative,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visit(com.opengamma.analytics.financial.interestrate.InstrumentDerivative)
+    {
+        com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative r1;
+        com.opengamma.analytics.util.amount.ReferenceAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivative;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator: com.opengamma.analytics.util.amount.ReferenceAmount visit(com.opengamma.analytics.financial.interestrate.InstrumentDerivative)>(r1);
+
+        return $r2;
+    }
+
+    public static void <clinit>()
+    {
+        <com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator: double BP1> = 1.0E-4;
+
+        return;
+    }
+}

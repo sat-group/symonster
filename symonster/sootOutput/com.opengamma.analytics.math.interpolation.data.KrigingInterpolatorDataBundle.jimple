@@ -1,0 +1,462 @@
+public class com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle extends com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle
+{
+    private final com.opengamma.analytics.math.linearalgebra.Decomposition _decomp;
+    private final com.opengamma.analytics.math.function.Function1D _variogram;
+    private final double[] _weights;
+
+    public void <init>(java.util.List, double)
+    {
+        com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle r0;
+        java.util.List r1;
+        double d0;
+        com.opengamma.analytics.math.linearalgebra.Decomposition $r2;
+        byte $b0, $b1;
+        boolean $z0;
+        com.opengamma.analytics.math.function.Function1D $r3, $r4;
+        double[] $r5;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle;
+
+        r1 := @parameter0: java.util.List;
+
+        d0 := @parameter1: double;
+
+        specialinvoke r0.<com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle: void <init>(java.util.List)>(r1);
+
+        $r2 = <com.opengamma.analytics.math.linearalgebra.DecompositionFactory: com.opengamma.analytics.math.linearalgebra.Decomposition LU_COMMONS>;
+
+        r0.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: com.opengamma.analytics.math.linearalgebra.Decomposition _decomp> = $r2;
+
+        $b0 = d0 cmpl 1.0;
+
+        if $b0 < 0 goto label1;
+
+        $b1 = d0 cmpg 2.0;
+
+        if $b1 >= 0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "Beta was not in acceptable range (1 <= beta < 2");
+
+        $r3 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: com.opengamma.analytics.math.function.Function1D calculateVariogram(java.util.List,double)>(r1, d0);
+
+        r0.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: com.opengamma.analytics.math.function.Function1D _variogram> = $r3;
+
+        $r4 = r0.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: com.opengamma.analytics.math.function.Function1D _variogram>;
+
+        $r5 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: double[] calculateWeights(java.util.List,com.opengamma.analytics.math.function.Function1D)>(r1, $r4);
+
+        r0.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: double[] _weights> = $r5;
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getVariogram()
+    {
+        com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle r0;
+        com.opengamma.analytics.math.function.Function1D $r1;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle;
+
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: com.opengamma.analytics.math.function.Function1D _variogram>;
+
+        return $r1;
+    }
+
+    public double[] getWeights()
+    {
+        com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle r0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle;
+
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: double[] _weights>;
+
+        return $r1;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D calculateVariogram(java.util.List, double)
+    {
+        com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle r0;
+        java.util.List r1;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, d11, d12, d13;
+        int i0, i1, i2;
+        double[] r2, r3;
+        com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle$1 $r4;
+        java.lang.Object $r5, $r6, $r7, $r9, $r10, $r11;
+        java.lang.Double $r8, $r12;
+        com.opengamma.util.tuple.Pair r13, r14;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle;
+
+        r1 := @parameter0: java.util.List;
+
+        d0 := @parameter1: double;
+
+        i0 = interfaceinvoke r1.<java.util.List: int size()>();
+
+        d11 = 0.0;
+
+        d12 = 0.0;
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label4;
+
+        $r5 = interfaceinvoke r1.<java.util.List: java.lang.Object get(int)>(i1);
+
+        r13 = (com.opengamma.util.tuple.Pair) $r5;
+
+        $r6 = virtualinvoke r13.<com.opengamma.util.tuple.Pair: java.lang.Object getFirst()>();
+
+        r2 = (double[]) $r6;
+
+        $r7 = virtualinvoke r13.<com.opengamma.util.tuple.Pair: java.lang.Object getSecond()>();
+
+        $r8 = (java.lang.Double) $r7;
+
+        d1 = virtualinvoke $r8.<java.lang.Double: double doubleValue()>();
+
+        i2 = i1 + 1;
+
+     label2:
+        if i2 >= i0 goto label3;
+
+        $r9 = interfaceinvoke r1.<java.util.List: java.lang.Object get(int)>(i2);
+
+        r14 = (com.opengamma.util.tuple.Pair) $r9;
+
+        $r10 = virtualinvoke r14.<com.opengamma.util.tuple.Pair: java.lang.Object getFirst()>();
+
+        r3 = (double[]) $r10;
+
+        $r11 = virtualinvoke r14.<com.opengamma.util.tuple.Pair: java.lang.Object getSecond()>();
+
+        $r12 = (java.lang.Double) $r11;
+
+        d2 = virtualinvoke $r12.<java.lang.Double: double doubleValue()>();
+
+        $d5 = staticinvoke <com.opengamma.analytics.math.interpolation.DistanceCalculator: double getDistance(double[],double[])>(r2, r3);
+
+        d3 = staticinvoke <java.lang.Math: double pow(double,double)>($d5, d0);
+
+        $d7 = d1 - d2;
+
+        $d6 = d1 - d2;
+
+        $d8 = $d7 * $d6;
+
+        $d9 = $d8 * d3;
+
+        d11 = d11 + $d9;
+
+        $d10 = d3 * d3;
+
+        d12 = d12 + $d10;
+
+        i2 = i2 + 1;
+
+        goto label2;
+
+     label3:
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label4:
+        $d4 = d11 / 2.0;
+
+        d13 = $d4 / d12;
+
+        $r4 = new com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle$1;
+
+        specialinvoke $r4.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle$1: void <init>(com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle,double,double)>(r0, d13, d0);
+
+        return $r4;
+    }
+
+    private double[] calculateWeights(java.util.List, com.opengamma.analytics.math.function.Function1D)
+    {
+        com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle r0;
+        java.util.List r1;
+        com.opengamma.analytics.math.function.Function1D r2;
+        int i0, $i1, $i2, $i3, i4, i5;
+        double[] r3, r5, r6, $r7, $r13, $r14, $r20, $r21, r25;
+        double[][] r4;
+        com.opengamma.analytics.math.linearalgebra.Decomposition $r8, r27;
+        java.lang.Object $r9, $r10, $r11, $r15, $r16, $r18;
+        java.lang.Double $r12, $r17, $r19;
+        double $d0, $d1, d2;
+        java.lang.IllegalArgumentException $r22;
+        com.opengamma.util.tuple.Pair r23, r24;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle;
+
+        r1 := @parameter0: java.util.List;
+
+        r2 := @parameter1: com.opengamma.analytics.math.function.Function1D;
+
+        i0 = interfaceinvoke r1.<java.util.List: int size()>();
+
+        $i1 = i0 + 1;
+
+        r3 = newarray (double)[$i1];
+
+        $i3 = i0 + 1;
+
+        $i2 = i0 + 1;
+
+        r4 = newmultiarray (double)[$i3][$i2];
+
+        i4 = 0;
+
+     label1:
+        if i4 >= i0 goto label4;
+
+        $r9 = interfaceinvoke r1.<java.util.List: java.lang.Object get(int)>(i4);
+
+        r23 = (com.opengamma.util.tuple.Pair) $r9;
+
+        $r10 = virtualinvoke r23.<com.opengamma.util.tuple.Pair: java.lang.Object getFirst()>();
+
+        r5 = (double[]) $r10;
+
+        $r11 = virtualinvoke r23.<com.opengamma.util.tuple.Pair: java.lang.Object getSecond()>();
+
+        $r12 = (java.lang.Double) $r11;
+
+        $d0 = virtualinvoke $r12.<java.lang.Double: double doubleValue()>();
+
+        r3[i4] = $d0;
+
+        i5 = i4 + 1;
+
+     label2:
+        if i5 >= i0 goto label3;
+
+        $r15 = interfaceinvoke r1.<java.util.List: java.lang.Object get(int)>(i5);
+
+        r24 = (com.opengamma.util.tuple.Pair) $r15;
+
+        $r16 = virtualinvoke r24.<com.opengamma.util.tuple.Pair: java.lang.Object getFirst()>();
+
+        r6 = (double[]) $r16;
+
+        $d1 = staticinvoke <com.opengamma.analytics.math.interpolation.DistanceCalculator: double getDistance(double[],double[])>(r5, r6);
+
+        $r17 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d1);
+
+        $r18 = virtualinvoke r2.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r17);
+
+        $r19 = (java.lang.Double) $r18;
+
+        d2 = virtualinvoke $r19.<java.lang.Double: double doubleValue()>();
+
+        $r20 = r4[i4];
+
+        $r20[i5] = d2;
+
+        $r21 = r4[i5];
+
+        $r21[i4] = d2;
+
+        i5 = i5 + 1;
+
+        goto label2;
+
+     label3:
+        $r13 = r4[i4];
+
+        $r13[i0] = 1.0;
+
+        $r14 = r4[i0];
+
+        $r14[i4] = 1.0;
+
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label4:
+        $r7 = r4[i0];
+
+        $r7[i0] = 0.0;
+
+        r3[i0] = 0.0;
+
+     label5:
+        $r8 = r0.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: com.opengamma.analytics.math.linearalgebra.Decomposition _decomp>;
+
+        r25 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: double[] solve(double[][],double[],com.opengamma.analytics.math.linearalgebra.Decomposition)>(r4, r3, $r8);
+
+     label6:
+        goto label8;
+
+     label7:
+        $r22 := @caughtexception;
+
+        r27 = <com.opengamma.analytics.math.linearalgebra.DecompositionFactory: com.opengamma.analytics.math.linearalgebra.Decomposition SV_COMMONS>;
+
+        r25 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: double[] solve(double[][],double[],com.opengamma.analytics.math.linearalgebra.Decomposition)>(r4, r3, r27);
+
+     label8:
+        return r25;
+
+        catch java.lang.IllegalArgumentException from label5 to label6 with label7;
+    }
+
+    private double[] solve(double[][], double[], com.opengamma.analytics.math.linearalgebra.Decomposition)
+    {
+        com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle r0;
+        double[][] r1;
+        double[] r2, $r9;
+        com.opengamma.analytics.math.linearalgebra.Decomposition r3;
+        com.opengamma.analytics.math.linearalgebra.DecompositionResult r4;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r5, $r8;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D $r6;
+        java.lang.Object $r7;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle;
+
+        r1 := @parameter0: double[][];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: com.opengamma.analytics.math.linearalgebra.Decomposition;
+
+        $r6 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r6.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r1);
+
+        $r7 = virtualinvoke r3.<com.opengamma.analytics.math.linearalgebra.Decomposition: java.lang.Object evaluate(java.lang.Object)>($r6);
+
+        r4 = (com.opengamma.analytics.math.linearalgebra.DecompositionResult) $r7;
+
+        $r8 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r8.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r2);
+
+        r5 = interfaceinvoke r4.<com.opengamma.analytics.math.linearalgebra.DecompositionResult: com.opengamma.analytics.math.matrix.DoubleMatrix1D solve(com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r8);
+
+        $r9 = virtualinvoke r5.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        return $r9;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle r0;
+        com.opengamma.analytics.math.linearalgebra.Decomposition $r1;
+        int $i1, $i2, $i3, $i4, $i5, $i6, i7, i8, i9, i10;
+        com.opengamma.analytics.math.function.Function1D $r2;
+        double[] $r3;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle;
+
+        i7 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle: int hashCode()>();
+
+        $i1 = 31 * i7;
+
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: com.opengamma.analytics.math.linearalgebra.Decomposition _decomp>;
+
+        $i2 = virtualinvoke $r1.<java.lang.Object: int hashCode()>();
+
+        i8 = $i1 + $i2;
+
+        $i3 = 31 * i8;
+
+        $r2 = r0.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: com.opengamma.analytics.math.function.Function1D _variogram>;
+
+        $i4 = virtualinvoke $r2.<java.lang.Object: int hashCode()>();
+
+        i9 = $i3 + $i4;
+
+        $i5 = 31 * i9;
+
+        $r3 = r0.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: double[] _weights>;
+
+        $i6 = staticinvoke <java.util.Arrays: int hashCode(double[])>($r3);
+
+        i10 = $i5 + $i6;
+
+        return i10;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle r0, r2;
+        java.lang.Object r1;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        com.opengamma.analytics.math.linearalgebra.Decomposition $r3, $r4;
+        com.opengamma.analytics.math.function.Function1D $r5, $r6;
+        double[] $r7, $r8;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        $z0 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle: boolean equals(java.lang.Object)>(r1);
+
+        if $z0 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        $z1 = r1 instanceof com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle;
+
+        if $z1 != 0 goto label3;
+
+        return 0;
+
+     label3:
+        r2 = (com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle) r1;
+
+        $r4 = r0.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: com.opengamma.analytics.math.linearalgebra.Decomposition _decomp>;
+
+        $r3 = r2.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: com.opengamma.analytics.math.linearalgebra.Decomposition _decomp>;
+
+        $z2 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r4, $r3);
+
+        if $z2 != 0 goto label4;
+
+        return 0;
+
+     label4:
+        $r6 = r0.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: com.opengamma.analytics.math.function.Function1D _variogram>;
+
+        $r5 = r2.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: com.opengamma.analytics.math.function.Function1D _variogram>;
+
+        $z3 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r6, $r5);
+
+        if $z3 != 0 goto label5;
+
+        return 0;
+
+     label5:
+        $r8 = r0.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: double[] _weights>;
+
+        $r7 = r2.<com.opengamma.analytics.math.interpolation.data.KrigingInterpolatorDataBundle: double[] _weights>;
+
+        $z4 = staticinvoke <java.util.Arrays: boolean equals(double[],double[])>($r8, $r7);
+
+        if $z4 != 0 goto label6;
+
+        return 0;
+
+     label6:
+        return 1;
+    }
+}

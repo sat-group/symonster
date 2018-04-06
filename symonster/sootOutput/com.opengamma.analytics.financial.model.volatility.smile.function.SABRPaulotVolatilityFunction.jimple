@@ -1,0 +1,528 @@
+public class com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction extends com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider
+{
+    private static final com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider HAGAN;
+    private static final org.slf4j.Logger s_logger;
+    private static final double CUTOFF_MONEYNESS;
+    private static final double EPS;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getVolatilityFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r1;
+        double d0, d1, d2, d3, d4;
+        byte $b0;
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction$1 $r2;
+        java.lang.StringBuilder $r3, $r5, $r6, $r7, $r8, $r9, $r10;
+        org.slf4j.Logger $r4;
+        java.lang.String $r11;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        d0 := @parameter1: double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "option");
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        d2 = d0 * 1.0E-6;
+
+        $b0 = d1 cmpg d2;
+
+        if $b0 >= 0 goto label1;
+
+        $r4 = <com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction: org.slf4j.Logger s_logger>;
+
+        $r3 = new java.lang.StringBuilder;
+
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>()>();
+
+        $r5 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Given strike of ");
+
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d1);
+
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" is less than cutoff at ");
+
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d2);
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", therefore the strike is taken as ");
+
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d2);
+
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        interfaceinvoke $r4.<org.slf4j.Logger: void info(java.lang.String)>($r11);
+
+        d4 = d2;
+
+        goto label2;
+
+     label1:
+        d4 = d1;
+
+     label2:
+        d3 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        $r2 = new com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction$1;
+
+        specialinvoke $r2.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction$1: void <init>(com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction,double,double,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,double)>(r0, d4, d0, r1, d3);
+
+        return $r2;
+    }
+
+    private double getCTilde(double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d16, d17, d18, d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, d77, d78;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        $d20 = d4 * d4;
+
+        $d21 = 1.0 - $d20;
+
+        d6 = staticinvoke <java.lang.Math: double sqrt(double)>($d21);
+
+        d7 = 1.0 - d3;
+
+        $d25 = d2 * d2;
+
+        $d22 = 2.0 * d4;
+
+        $d23 = $d22 * d2;
+
+        $d24 = $d23 * d5;
+
+        $d27 = $d25 + $d24;
+
+        $d26 = d5 * d5;
+
+        $d28 = $d27 + $d26;
+
+        d8 = staticinvoke <java.lang.Math: double sqrt(double)>($d28);
+
+        $d30 = d2 * d8;
+
+        $d29 = d0 * d1;
+
+        $d31 = staticinvoke <java.lang.Math: double pow(double,double)>($d29, d3);
+
+        $d32 = $d30 * $d31;
+
+        $d33 = staticinvoke <java.lang.Math: double log(double)>($d32);
+
+        d77 = -0.5 * $d33;
+
+        $z0 = staticinvoke <com.opengamma.util.CompareUtils: boolean closeEquals(double,double,double)>(d3, 1.0, 1.0E-15);
+
+        if $z0 == 0 goto label1;
+
+        $d68 = d4 / 2.0;
+
+        $d69 = $d68 / d6;
+
+        $d71 = $d69 / d6;
+
+        $d70 = d1 / d0;
+
+        $d72 = staticinvoke <java.lang.Math: double log(double)>($d70);
+
+        $d73 = d4 * $d72;
+
+        $d74 = $d73 - d8;
+
+        $d75 = $d74 + d2;
+
+        $d76 = $d71 * $d75;
+
+        d78 = d77 + $d76;
+
+        goto label2;
+
+     label1:
+        d9 = staticinvoke <java.lang.Math: double pow(double,double)>(d0, d7);
+
+        d10 = d7 * d6;
+
+        d11 = d7 * d4;
+
+        $d34 = neg d4;
+
+        $d35 = $d34 * d2;
+
+        d12 = $d35 / d6;
+
+        $d36 = d4 * d8;
+
+        $d37 = d5 - $d36;
+
+        d13 = $d37 / d6;
+
+        $d39 = d13 * d13;
+
+        $d38 = d12 * d12;
+
+        $d41 = $d39 - $d38;
+
+        $d40 = d8 * d8;
+
+        $d43 = $d41 + $d40;
+
+        $d42 = d2 * d2;
+
+        $d44 = $d43 - $d42;
+
+        $d46 = $d44 / 2.0;
+
+        $d45 = d13 - d12;
+
+        d16 = $d46 / $d45;
+
+        $d48 = d2 * d2;
+
+        $d47 = d12 - d16;
+
+        $d49 = staticinvoke <com.opengamma.analytics.math.FunctionUtils: double square(double)>($d47);
+
+        $d50 = $d48 + $d49;
+
+        d17 = staticinvoke <java.lang.Math: double sqrt(double)>($d50);
+
+        $d51 = d17 - d12;
+
+        $d54 = $d51 + d16;
+
+        $d52 = d17 + d12;
+
+        $d53 = $d52 - d16;
+
+        $d55 = $d54 / $d53;
+
+        d18 = staticinvoke <java.lang.Math: double sqrt(double)>($d55);
+
+        $d56 = d17 - d13;
+
+        $d59 = $d56 + d16;
+
+        $d57 = d17 + d13;
+
+        $d58 = $d57 - d16;
+
+        $d60 = $d59 / $d58;
+
+        d19 = staticinvoke <java.lang.Math: double sqrt(double)>($d60);
+
+        $d61 = d4 * d3;
+
+        $d62 = $d61 / d7;
+
+        $d63 = $d62 / d6;
+
+        $d64 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction: double getG(double,double,double,double,double,double,double)>(d9, d10, d11, d16, d17, d3, d19);
+
+        $d65 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction: double getG(double,double,double,double,double,double,double)>(d9, d10, d11, d16, d17, d3, d18);
+
+        $d66 = $d64 - $d65;
+
+        $d67 = $d63 * $d66;
+
+        d78 = d77 - $d67;
+
+     label2:
+        return d78;
+    }
+
+    private double getG(double, double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, d48, d49, d50, d51;
+        byte $b0, $b1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        d6 := @parameter6: double;
+
+        d7 = 1.0 - d5;
+
+        d48 = staticinvoke <java.lang.Math: double atan(double)>(d6);
+
+        $d9 = d1 * d3;
+
+        $d10 = d0 + $d9;
+
+        $d11 = staticinvoke <com.opengamma.analytics.math.FunctionUtils: double square(double)>($d10);
+
+        $d12 = d7 * d4;
+
+        $d13 = staticinvoke <com.opengamma.analytics.math.FunctionUtils: double square(double)>($d12);
+
+        d8 = $d11 - $d13;
+
+        $b0 = d8 cmpl 0.0;
+
+        if $b0 <= 0 goto label1;
+
+        d49 = staticinvoke <java.lang.Math: double sqrt(double)>(d8);
+
+        $d36 = d1 * d3;
+
+        $d37 = d0 + $d36;
+
+        $d45 = $d37 / d49;
+
+        $d42 = d2 * d4;
+
+        $d38 = d3 - d4;
+
+        $d39 = d1 * $d38;
+
+        $d40 = d0 + $d39;
+
+        $d41 = d6 * $d40;
+
+        $d43 = $d42 + $d41;
+
+        $d44 = $d43 / d49;
+
+        $d46 = staticinvoke <java.lang.Math: double atan(double)>($d44);
+
+        $d47 = $d45 * $d46;
+
+        d50 = d48 - $d47;
+
+        goto label3;
+
+     label1:
+        $b1 = d8 cmpg 0.0;
+
+        if $b1 >= 0 goto label2;
+
+        $d23 = neg d8;
+
+        d51 = staticinvoke <java.lang.Math: double sqrt(double)>($d23);
+
+        $d24 = d1 * d3;
+
+        $d25 = d0 + $d24;
+
+        $d33 = $d25 / d51;
+
+        $d30 = d2 * d4;
+
+        $d26 = d3 - d4;
+
+        $d27 = d1 * $d26;
+
+        $d28 = d0 + $d27;
+
+        $d29 = d6 * $d28;
+
+        $d31 = $d30 + $d29;
+
+        $d32 = $d31 / d51;
+
+        $d34 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction: double modAtanh(double)>($d32);
+
+        $d35 = $d33 * $d34;
+
+        d50 = d48 + $d35;
+
+        goto label3;
+
+     label2:
+        $d14 = d1 * d3;
+
+        $d21 = d0 + $d14;
+
+        $d19 = d2 * d4;
+
+        $d15 = d3 - d4;
+
+        $d16 = d1 * $d15;
+
+        $d17 = d0 + $d16;
+
+        $d18 = d6 * $d17;
+
+        $d20 = $d19 + $d18;
+
+        $d22 = $d21 / $d20;
+
+        d50 = d48 + $d22;
+
+     label3:
+        return d50;
+    }
+
+    private double modAtanh(double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction r0;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction;
+
+        d0 := @parameter0: double;
+
+        $d2 = 1.0 + d0;
+
+        $d1 = 1.0 - d0;
+
+        $d3 = $d2 / $d1;
+
+        $d4 = staticinvoke <java.lang.Math: double abs(double)>($d3);
+
+        $d5 = staticinvoke <java.lang.Math: double log(double)>($d4);
+
+        $d6 = 0.5 * $d5;
+
+        return $d6;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction r0;
+        java.lang.String $r1;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction: java.lang.String toString()>();
+
+        $i0 = virtualinvoke $r1.<java.lang.String: int hashCode()>();
+
+        return $i0;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction r0;
+        java.lang.Object r1;
+        java.lang.Class $r2, $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r1 != null goto label1;
+
+        return 0;
+
+     label1:
+        if r0 != r1 goto label2;
+
+        return 1;
+
+     label2:
+        $r2 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r3 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+
+        if $r2 == $r3 goto label3;
+
+        return 0;
+
+     label3:
+        return 1;
+    }
+
+    public java.lang.String toString()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction;
+
+        return "SABR (Paulot)";
+    }
+
+    static com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider access$000()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider $r0;
+
+        $r0 = <com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction: com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider HAGAN>;
+
+        return $r0;
+    }
+
+    static double access$100(com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction, double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction r0;
+        double d0, d1, d2, d3, d4, d5, $d6;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        d2 := @parameter3: double;
+
+        d3 := @parameter4: double;
+
+        d4 := @parameter5: double;
+
+        d5 := @parameter6: double;
+
+        $d6 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction: double getCTilde(double,double,double,double,double,double)>(d0, d1, d2, d3, d4, d5);
+
+        return $d6;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRHaganVolatilityFunction $r0;
+        org.slf4j.Logger $r1;
+
+        <com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction: double EPS> = 1.0E-15;
+
+        <com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction: double CUTOFF_MONEYNESS> = 1.0E-6;
+
+        $r0 = new com.opengamma.analytics.financial.model.volatility.smile.function.SABRHaganVolatilityFunction;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRHaganVolatilityFunction: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction: com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider HAGAN> = $r0;
+
+        $r1 = staticinvoke <org.slf4j.LoggerFactory: org.slf4j.Logger getLogger(java.lang.Class)>(class "com/opengamma/analytics/financial/model/volatility/smile/function/SABRPaulotVolatilityFunction");
+
+        <com.opengamma.analytics.financial.model.volatility.smile.function.SABRPaulotVolatilityFunction: org.slf4j.Logger s_logger> = $r1;
+
+        return;
+    }
+}

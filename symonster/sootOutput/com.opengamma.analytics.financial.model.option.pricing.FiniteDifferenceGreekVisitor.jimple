@@ -1,0 +1,2230 @@
+public class com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor extends com.opengamma.analytics.financial.greeks.AbstractGreekVisitor
+{
+    private static final double EPS;
+    private final com.opengamma.analytics.math.function.Function1D _pricingFunction;
+    private final com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data;
+    private final com.opengamma.analytics.financial.model.option.definition.OptionDefinition _definition;
+
+    public void <init>(com.opengamma.analytics.math.function.Function1D, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle, com.opengamma.analytics.financial.model.option.definition.OptionDefinition)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        com.opengamma.analytics.math.function.Function1D r1;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r2;
+        com.opengamma.analytics.financial.model.option.definition.OptionDefinition r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        r1 := @parameter0: com.opengamma.analytics.math.function.Function1D;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.option.definition.OptionDefinition;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.greeks.AbstractGreekVisitor: void <init>()>();
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "pricing function");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "data");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r3, "definition");
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction> = r1;
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data> = r2;
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _definition> = r3;
+
+        return;
+    }
+
+    public java.lang.Double visitDelta()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double r1, $r7;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r2, r3, $r4, $r5, $r6;
+        double $d0, $d1, $d2, $d3, $d4, $d5;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r4 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d0 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getSpot()>();
+
+        r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d1 = virtualinvoke r1.<java.lang.Double: double doubleValue()>();
+
+        $d2 = $d1 + 1.0E-4;
+
+        r2 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>($d2);
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d3 = virtualinvoke r1.<java.lang.Double: double doubleValue()>();
+
+        $d4 = $d3 - 1.0E-4;
+
+        r3 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>($d4);
+
+        $d5 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getFirstDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r2, r3);
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d5);
+
+        return $r7;
+    }
+
+    public java.lang.Double visitGamma()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double r1, $r8;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r2, r3, $r4, $r5, $r6, $r7;
+        double $d0, $d1, $d2, $d3, $d4, $d5;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r4 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d0 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getSpot()>();
+
+        r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d1 = virtualinvoke r1.<java.lang.Double: double doubleValue()>();
+
+        $d2 = $d1 + 1.0E-4;
+
+        r2 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>($d2);
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d3 = virtualinvoke r1.<java.lang.Double: double doubleValue()>();
+
+        $d4 = $d3 - 1.0E-4;
+
+        r3 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>($d4);
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d5 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getSecondDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r2, r3, $r7);
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d5);
+
+        return $r8;
+    }
+
+    public java.lang.Double visitVega()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface r1, r2, $r6, $r8;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r3, r4, $r5, $r7, $r9, $r10;
+        double $d0;
+        java.lang.Double $r11;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r6 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface getVolatilitySurface()>();
+
+        r1 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface withParallelShift(double)>(1.0E-4);
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface getVolatilitySurface()>();
+
+        r2 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface withParallelShift(double)>(-1.0E-4);
+
+        $r9 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r3 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r1);
+
+        $r10 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r4 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r2);
+
+        $d0 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getFirstDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r3, r4);
+
+        $r11 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        return $r11;
+    }
+
+    public java.lang.Double visitPrice()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle $r1;
+        com.opengamma.analytics.math.function.Function1D $r2;
+        java.lang.Object $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r3 = virtualinvoke $r2.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r1);
+
+        $r4 = (java.lang.Double) $r3;
+
+        return $r4;
+    }
+
+    public java.lang.Double visitRho()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        org.threeten.bp.ZonedDateTime r1;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve r2, r3;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r4, r5, $r6, $r8, $r9, $r12, $r13, $r14, $r15;
+        com.opengamma.analytics.financial.model.option.definition.OptionDefinition $r7;
+        com.opengamma.analytics.math.curve.ConstantDoublesCurve $r10, $r11;
+        java.lang.Double $r16;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r1 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: org.threeten.bp.ZonedDateTime getDate()>();
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _definition>;
+
+        d0 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.option.definition.OptionDefinition: double getTimeToExpiry(org.threeten.bp.ZonedDateTime)>(r1);
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        d1 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getInterestRate(double)>(d0);
+
+        $r9 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        d2 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getCostOfCarry()>();
+
+        $d3 = d1 + 1.0E-4;
+
+        $r10 = staticinvoke <com.opengamma.analytics.math.curve.ConstantDoublesCurve: com.opengamma.analytics.math.curve.ConstantDoublesCurve 'from'(double)>($d3);
+
+        r2 = staticinvoke <com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve 'from'(com.opengamma.analytics.math.curve.DoublesCurve)>($r10);
+
+        $d4 = d1 - 1.0E-4;
+
+        $r11 = staticinvoke <com.opengamma.analytics.math.curve.ConstantDoublesCurve: com.opengamma.analytics.math.curve.ConstantDoublesCurve 'from'(double)>($d4);
+
+        r3 = staticinvoke <com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve 'from'(com.opengamma.analytics.math.curve.DoublesCurve)>($r11);
+
+        $r12 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d5 = d2 + 1.0E-4;
+
+        $r13 = virtualinvoke $r12.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withCostOfCarry(double)>($d5);
+
+        r4 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withInterestRateCurve(com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)>(r2);
+
+        $r14 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d6 = d2 - 1.0E-4;
+
+        $r15 = virtualinvoke $r14.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withCostOfCarry(double)>($d6);
+
+        r5 = virtualinvoke $r15.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withInterestRateCurve(com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)>(r3);
+
+        $d7 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getFirstDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r4, r5);
+
+        $r16 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d7);
+
+        return $r16;
+    }
+
+    public java.lang.Double visitTheta()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        org.threeten.bp.ZonedDateTime r1, r2;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r3, $r4, $r5, $r6;
+        double $d0;
+        java.lang.Double $r7;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r4 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r1 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: org.threeten.bp.ZonedDateTime getDate()>();
+
+        r2 = staticinvoke <com.opengamma.util.time.DateUtils: org.threeten.bp.ZonedDateTime getDateOffsetWithYearFraction(org.threeten.bp.ZonedDateTime,double)>(r1, 1.0E-4);
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r3 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r2);
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d0 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getForwardFirstDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r3, $r6);
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        return $r7;
+    }
+
+    public java.lang.Double visitCarryRho()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double d0, $d1, $d2, $d3;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r1, r2, $r3, $r4, $r5;
+        java.lang.Double $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        d0 = virtualinvoke $r3.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getCostOfCarry()>();
+
+        $r4 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d1 = d0 + 1.0E-4;
+
+        r1 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withCostOfCarry(double)>($d1);
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d2 = d0 - 1.0E-4;
+
+        r2 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withCostOfCarry(double)>($d2);
+
+        $d3 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getFirstDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r1, r2);
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        return $r6;
+    }
+
+    public java.lang.Double visitDZetaDVol()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        return null;
+    }
+
+    public java.lang.Double visitDeltaBleed()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double d0, d1, d2, $d3;
+        org.threeten.bp.ZonedDateTime r1, r2, $r9, $r11;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r3, r4, r5, r6, $r7, $r8, $r10, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19;
+        java.lang.Double $r20;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        d0 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getSpot()>();
+
+        d1 = d0 + 1.0E-4;
+
+        d2 = d0 - 1.0E-4;
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r9 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: org.threeten.bp.ZonedDateTime getDate()>();
+
+        r1 = staticinvoke <com.opengamma.util.time.DateUtils: org.threeten.bp.ZonedDateTime getDateOffsetWithYearFraction(org.threeten.bp.ZonedDateTime,double)>($r9, 1.0E-4);
+
+        $r10 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: org.threeten.bp.ZonedDateTime getDate()>();
+
+        r2 = staticinvoke <com.opengamma.util.time.DateUtils: org.threeten.bp.ZonedDateTime getDateOffsetWithYearFraction(org.threeten.bp.ZonedDateTime,double)>($r11, -1.0E-4);
+
+        $r12 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r13 = virtualinvoke $r12.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d1);
+
+        r3 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r1);
+
+        $r14 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r15 = virtualinvoke $r14.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d1);
+
+        r4 = virtualinvoke $r15.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r2);
+
+        $r16 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r17 = virtualinvoke $r16.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d2);
+
+        r5 = virtualinvoke $r17.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r1);
+
+        $r18 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r19 = virtualinvoke $r18.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d2);
+
+        r6 = virtualinvoke $r19.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r2);
+
+        $d3 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getMixedSecondDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r3, r4, r5, r6);
+
+        $r20 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        return $r20;
+    }
+
+    public java.lang.Double visitDriftlessTheta()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        return null;
+    }
+
+    public java.lang.Double visitElasticity()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double d0, d1, $d2, $d3, $d4;
+        java.lang.Double $r1, $r2, $r4;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitDelta()>();
+
+        d0 = virtualinvoke $r1.<java.lang.Double: double doubleValue()>();
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitPrice()>();
+
+        d1 = virtualinvoke $r2.<java.lang.Double: double doubleValue()>();
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d2 = virtualinvoke $r3.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getSpot()>();
+
+        $d3 = $d2 * d0;
+
+        $d4 = $d3 / d1;
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d4);
+
+        return $r4;
+    }
+
+    public java.lang.Double visitGammaBleed()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double d0, d1, d2, $d3;
+        org.threeten.bp.ZonedDateTime r1, r2, $r11, $r13;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r3, r4, r5, r6, r7, r8, $r9, $r10, $r12, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23;
+        java.lang.Double $r24;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r9 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        d0 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getSpot()>();
+
+        d1 = d0 + 1.0E-4;
+
+        d2 = d0 - 1.0E-4;
+
+        $r10 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: org.threeten.bp.ZonedDateTime getDate()>();
+
+        r1 = staticinvoke <com.opengamma.util.time.DateUtils: org.threeten.bp.ZonedDateTime getDateOffsetWithYearFraction(org.threeten.bp.ZonedDateTime,double)>($r11, 1.0E-4);
+
+        $r12 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r13 = virtualinvoke $r12.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: org.threeten.bp.ZonedDateTime getDate()>();
+
+        r2 = staticinvoke <com.opengamma.util.time.DateUtils: org.threeten.bp.ZonedDateTime getDateOffsetWithYearFraction(org.threeten.bp.ZonedDateTime,double)>($r13, -1.0E-4);
+
+        $r14 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r15 = virtualinvoke $r14.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d1);
+
+        r3 = virtualinvoke $r15.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r1);
+
+        $r16 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r4 = virtualinvoke $r16.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r1);
+
+        $r17 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r18 = virtualinvoke $r17.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d2);
+
+        r5 = virtualinvoke $r18.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r1);
+
+        $r19 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r20 = virtualinvoke $r19.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d1);
+
+        r6 = virtualinvoke $r20.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r2);
+
+        $r21 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r7 = virtualinvoke $r21.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r2);
+
+        $r22 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r23 = virtualinvoke $r22.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d2);
+
+        r8 = virtualinvoke $r23.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r2);
+
+        $d3 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getMixedThirdDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r3, r4, r5, r6, r7, r8);
+
+        $r24 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        return $r24;
+    }
+
+    public java.lang.Double visitGammaP()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double $d0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $d0 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getGammaP(double,double)>(0.0, 0.0);
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        return $r1;
+    }
+
+    public java.lang.Double visitGammaPBleed()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double d0, d1, $d2, $d3;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        d0 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getGammaP(double,double)>(0.0, 1.0E-4);
+
+        d1 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getGammaP(double,double)>(0.0, -1.0E-4);
+
+        $d2 = d0 - d1;
+
+        $d3 = $d2 / 2.0E-4;
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        return $r1;
+    }
+
+    public java.lang.Double visitPhi()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1, $r2;
+        double $d0, $d1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitCarryRho()>();
+
+        $d0 = virtualinvoke $r1.<java.lang.Double: double doubleValue()>();
+
+        $d1 = neg $d0;
+
+        $r2 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d1);
+
+        return $r2;
+    }
+
+    public java.lang.Double visitSpeed()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double d0, $d1, $d2, $d3, $d4;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r1, r2, r3, $r4, $r5, $r6, $r7, $r8;
+        java.lang.Double $r9;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r4 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        d0 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getSpot()>();
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d1 = d0 + 2.0E-4;
+
+        r1 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>($d1);
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d2 = d0 + 1.0E-4;
+
+        r2 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>($d2);
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d3 = d0 - 1.0E-4;
+
+        r3 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>($d3);
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d4 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getThirdDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r1, r2, $r8, r3);
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d4);
+
+        return $r9;
+    }
+
+    public java.lang.Double visitSpeedP()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double d0, d1, $d2, $d3;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        d0 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getGammaP(double,double)>(1.0E-4, 0.0);
+
+        d1 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getGammaP(double,double)>(-1.0E-4, 0.0);
+
+        $d2 = d0 - d1;
+
+        $d3 = $d2 / 2.0E-4;
+
+        $r1 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        return $r1;
+    }
+
+    public java.lang.Double visitStrikeDelta()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        return null;
+    }
+
+    public java.lang.Double visitStrikeGamma()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        return null;
+    }
+
+    public java.lang.Double visitUltima()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface r1, r2, r3, $r8, $r10, $r12;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r4, r5, r6, $r7, $r9, $r11, $r13, $r14, $r15, $r16;
+        double $d0;
+        java.lang.Double $r17;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface getVolatilitySurface()>();
+
+        r1 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface withParallelShift(double)>(2.0E-4);
+
+        $r9 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r10 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface getVolatilitySurface()>();
+
+        r2 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface withParallelShift(double)>(1.0E-4);
+
+        $r11 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface getVolatilitySurface()>();
+
+        r3 = virtualinvoke $r12.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface withParallelShift(double)>(-1.0E-4);
+
+        $r13 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r4 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r1);
+
+        $r14 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r5 = virtualinvoke $r14.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r2);
+
+        $r15 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r6 = virtualinvoke $r15.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r3);
+
+        $r16 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d0 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getThirdDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r4, r5, $r16, r6);
+
+        $r17 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        return $r17;
+    }
+
+    public java.lang.Double visitVanna()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double d0, d1, d2, $d3;
+        com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface r1, r2, $r9, $r11;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r3, r4, r5, r6, $r7, $r8, $r10, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19;
+        java.lang.Double $r20;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        d0 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getSpot()>();
+
+        d1 = d0 + 1.0E-4;
+
+        d2 = d0 - 1.0E-4;
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r9 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface getVolatilitySurface()>();
+
+        r1 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface withParallelShift(double)>(1.0E-4);
+
+        $r10 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface getVolatilitySurface()>();
+
+        r2 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface withParallelShift(double)>(-1.0E-4);
+
+        $r12 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r13 = virtualinvoke $r12.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d1);
+
+        r3 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r1);
+
+        $r14 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r15 = virtualinvoke $r14.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d2);
+
+        r4 = virtualinvoke $r15.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r1);
+
+        $r16 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r17 = virtualinvoke $r16.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d1);
+
+        r5 = virtualinvoke $r17.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r2);
+
+        $r18 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r19 = virtualinvoke $r18.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d2);
+
+        r6 = virtualinvoke $r19.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r2);
+
+        $d3 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getMixedSecondDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r3, r4, r5, r6);
+
+        $r20 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        return $r20;
+    }
+
+    public java.lang.Double visitVarianceUltima()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r4, r5, r6, $r7, $r11, $r19, $r20, $r21, $r22;
+        com.opengamma.analytics.financial.model.option.definition.OptionDefinition $r8, $r10;
+        org.threeten.bp.ZonedDateTime $r9;
+        java.lang.Double $r12, $r23;
+        com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface $r13, $r15, $r17;
+        com.opengamma.analytics.math.surface.ConstantDoublesSurface $r14, $r16, $r18;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _definition>;
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r9 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: org.threeten.bp.ZonedDateTime getDate()>();
+
+        d0 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.option.definition.OptionDefinition: double getTimeToExpiry(org.threeten.bp.ZonedDateTime)>($r9);
+
+        $r11 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r10 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _definition>;
+
+        $r12 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.option.definition.OptionDefinition: java.lang.Double getStrike()>();
+
+        $d3 = virtualinvoke $r12.<java.lang.Double: double doubleValue()>();
+
+        d1 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getVolatility(double,double)>(d0, $d3);
+
+        d2 = d1 * d1;
+
+        $r13 = new com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface;
+
+        $d4 = d2 + 2.0E-4;
+
+        $d5 = staticinvoke <java.lang.Math: double sqrt(double)>($d4);
+
+        $r14 = staticinvoke <com.opengamma.analytics.math.surface.ConstantDoublesSurface: com.opengamma.analytics.math.surface.ConstantDoublesSurface 'from'(double)>($d5);
+
+        specialinvoke $r13.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: void <init>(com.opengamma.analytics.math.surface.Surface)>($r14);
+
+        $r15 = new com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface;
+
+        $d6 = d2 + 1.0E-4;
+
+        $d7 = staticinvoke <java.lang.Math: double sqrt(double)>($d6);
+
+        $r16 = staticinvoke <com.opengamma.analytics.math.surface.ConstantDoublesSurface: com.opengamma.analytics.math.surface.ConstantDoublesSurface 'from'(double)>($d7);
+
+        specialinvoke $r15.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: void <init>(com.opengamma.analytics.math.surface.Surface)>($r16);
+
+        $r17 = new com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface;
+
+        $d8 = d2 - 1.0E-4;
+
+        $d9 = staticinvoke <java.lang.Math: double sqrt(double)>($d8);
+
+        $r18 = staticinvoke <com.opengamma.analytics.math.surface.ConstantDoublesSurface: com.opengamma.analytics.math.surface.ConstantDoublesSurface 'from'(double)>($d9);
+
+        specialinvoke $r17.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: void <init>(com.opengamma.analytics.math.surface.Surface)>($r18);
+
+        $r19 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r4 = virtualinvoke $r19.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>($r13);
+
+        $r20 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r5 = virtualinvoke $r20.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>($r15);
+
+        $r21 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r6 = virtualinvoke $r21.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>($r17);
+
+        $r22 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d10 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getThirdDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r4, r5, $r22, r6);
+
+        $r23 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        return $r23;
+    }
+
+    public java.lang.Double visitVarianceVanna()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r3, r4, r5, r6, $r7, $r11, $r13, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26;
+        com.opengamma.analytics.financial.model.option.definition.OptionDefinition $r8, $r10;
+        org.threeten.bp.ZonedDateTime $r9;
+        java.lang.Double $r12, $r27;
+        com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface $r14, $r16;
+        com.opengamma.analytics.math.surface.ConstantDoublesSurface $r15, $r17;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _definition>;
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r9 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: org.threeten.bp.ZonedDateTime getDate()>();
+
+        d0 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.option.definition.OptionDefinition: double getTimeToExpiry(org.threeten.bp.ZonedDateTime)>($r9);
+
+        $r11 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r10 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _definition>;
+
+        $r12 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.option.definition.OptionDefinition: java.lang.Double getStrike()>();
+
+        $d6 = virtualinvoke $r12.<java.lang.Double: double doubleValue()>();
+
+        d1 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getVolatility(double,double)>(d0, $d6);
+
+        d2 = d1 * d1;
+
+        $r13 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        d3 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getSpot()>();
+
+        d4 = d3 + 1.0E-4;
+
+        d5 = d3 - 1.0E-4;
+
+        $r14 = new com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface;
+
+        $d7 = d2 + 1.0E-4;
+
+        $d8 = staticinvoke <java.lang.Math: double sqrt(double)>($d7);
+
+        $r15 = staticinvoke <com.opengamma.analytics.math.surface.ConstantDoublesSurface: com.opengamma.analytics.math.surface.ConstantDoublesSurface 'from'(double)>($d8);
+
+        specialinvoke $r14.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: void <init>(com.opengamma.analytics.math.surface.Surface)>($r15);
+
+        $r16 = new com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface;
+
+        $d9 = d2 - 1.0E-4;
+
+        $d10 = staticinvoke <java.lang.Math: double sqrt(double)>($d9);
+
+        $r17 = staticinvoke <com.opengamma.analytics.math.surface.ConstantDoublesSurface: com.opengamma.analytics.math.surface.ConstantDoublesSurface 'from'(double)>($d10);
+
+        specialinvoke $r16.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: void <init>(com.opengamma.analytics.math.surface.Surface)>($r17);
+
+        $r18 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r19 = virtualinvoke $r18.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>($r14);
+
+        r3 = virtualinvoke $r19.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d4);
+
+        $r20 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r21 = virtualinvoke $r20.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>($r14);
+
+        r4 = virtualinvoke $r21.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d5);
+
+        $r22 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r23 = virtualinvoke $r22.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>($r16);
+
+        r5 = virtualinvoke $r23.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d4);
+
+        $r24 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r25 = virtualinvoke $r24.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>($r16);
+
+        r6 = virtualinvoke $r25.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d5);
+
+        $r26 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d11 = virtualinvoke $r26.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getSpot()>();
+
+        $d12 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getMixedSecondDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r3, r4, r5, r6);
+
+        $d13 = $d11 * $d12;
+
+        $r27 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d13);
+
+        return $r27;
+    }
+
+    public java.lang.Double visitVarianceVega()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r3, r4, $r5, $r9, $r15, $r16;
+        com.opengamma.analytics.financial.model.option.definition.OptionDefinition $r6, $r8;
+        org.threeten.bp.ZonedDateTime $r7;
+        java.lang.Double $r10, $r17;
+        com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface $r11, $r13;
+        com.opengamma.analytics.math.surface.ConstantDoublesSurface $r12, $r14;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _definition>;
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r7 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: org.threeten.bp.ZonedDateTime getDate()>();
+
+        d0 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.option.definition.OptionDefinition: double getTimeToExpiry(org.threeten.bp.ZonedDateTime)>($r7);
+
+        $r9 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _definition>;
+
+        $r10 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.option.definition.OptionDefinition: java.lang.Double getStrike()>();
+
+        $d3 = virtualinvoke $r10.<java.lang.Double: double doubleValue()>();
+
+        d1 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getVolatility(double,double)>(d0, $d3);
+
+        d2 = d1 * d1;
+
+        $r11 = new com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface;
+
+        $d4 = d2 + 1.0E-4;
+
+        $d5 = staticinvoke <java.lang.Math: double sqrt(double)>($d4);
+
+        $r12 = staticinvoke <com.opengamma.analytics.math.surface.ConstantDoublesSurface: com.opengamma.analytics.math.surface.ConstantDoublesSurface 'from'(double)>($d5);
+
+        specialinvoke $r11.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: void <init>(com.opengamma.analytics.math.surface.Surface)>($r12);
+
+        $r13 = new com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface;
+
+        $d6 = d2 - 1.0E-4;
+
+        $d7 = staticinvoke <java.lang.Math: double sqrt(double)>($d6);
+
+        $r14 = staticinvoke <com.opengamma.analytics.math.surface.ConstantDoublesSurface: com.opengamma.analytics.math.surface.ConstantDoublesSurface 'from'(double)>($d7);
+
+        specialinvoke $r13.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: void <init>(com.opengamma.analytics.math.surface.Surface)>($r14);
+
+        $r15 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r3 = virtualinvoke $r15.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>($r11);
+
+        $r16 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r4 = virtualinvoke $r16.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>($r13);
+
+        $d8 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getFirstDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r3, r4);
+
+        $r17 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d8);
+
+        return $r17;
+    }
+
+    public java.lang.Double visitVarianceVomma()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r3, r4, $r5, $r9, $r15, $r16, $r17;
+        com.opengamma.analytics.financial.model.option.definition.OptionDefinition $r6, $r8;
+        org.threeten.bp.ZonedDateTime $r7;
+        java.lang.Double $r10, $r18;
+        com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface $r11, $r13;
+        com.opengamma.analytics.math.surface.ConstantDoublesSurface $r12, $r14;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _definition>;
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r7 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: org.threeten.bp.ZonedDateTime getDate()>();
+
+        d0 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.option.definition.OptionDefinition: double getTimeToExpiry(org.threeten.bp.ZonedDateTime)>($r7);
+
+        $r9 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _definition>;
+
+        $r10 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.option.definition.OptionDefinition: java.lang.Double getStrike()>();
+
+        $d3 = virtualinvoke $r10.<java.lang.Double: double doubleValue()>();
+
+        d1 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getVolatility(double,double)>(d0, $d3);
+
+        d2 = d1 * d1;
+
+        $r11 = new com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface;
+
+        $d4 = d2 + 1.0E-4;
+
+        $d5 = staticinvoke <java.lang.Math: double sqrt(double)>($d4);
+
+        $r12 = staticinvoke <com.opengamma.analytics.math.surface.ConstantDoublesSurface: com.opengamma.analytics.math.surface.ConstantDoublesSurface 'from'(double)>($d5);
+
+        specialinvoke $r11.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: void <init>(com.opengamma.analytics.math.surface.Surface)>($r12);
+
+        $r13 = new com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface;
+
+        $d6 = d2 - 1.0E-4;
+
+        $d7 = staticinvoke <java.lang.Math: double sqrt(double)>($d6);
+
+        $r14 = staticinvoke <com.opengamma.analytics.math.surface.ConstantDoublesSurface: com.opengamma.analytics.math.surface.ConstantDoublesSurface 'from'(double)>($d7);
+
+        specialinvoke $r13.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: void <init>(com.opengamma.analytics.math.surface.Surface)>($r14);
+
+        $r15 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r3 = virtualinvoke $r15.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>($r11);
+
+        $r16 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r4 = virtualinvoke $r16.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>($r13);
+
+        $r17 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d8 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getSecondDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r3, r4, $r17);
+
+        $r18 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d8);
+
+        return $r18;
+    }
+
+    public java.lang.Double visitVegaBleed()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        org.threeten.bp.ZonedDateTime r1, r2, $r10, $r12;
+        com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface r3, r4, $r14, $r16;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r5, r6, r7, r8, $r9, $r11, $r13, $r15, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24;
+        double $d0;
+        java.lang.Double $r25;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r9 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r10 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: org.threeten.bp.ZonedDateTime getDate()>();
+
+        r1 = staticinvoke <com.opengamma.util.time.DateUtils: org.threeten.bp.ZonedDateTime getDateOffsetWithYearFraction(org.threeten.bp.ZonedDateTime,double)>($r10, 1.0E-4);
+
+        $r11 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: org.threeten.bp.ZonedDateTime getDate()>();
+
+        r2 = staticinvoke <com.opengamma.util.time.DateUtils: org.threeten.bp.ZonedDateTime getDateOffsetWithYearFraction(org.threeten.bp.ZonedDateTime,double)>($r12, -1.0E-4);
+
+        $r13 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r14 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface getVolatilitySurface()>();
+
+        r3 = virtualinvoke $r14.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface withParallelShift(double)>(1.0E-4);
+
+        $r15 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r16 = virtualinvoke $r15.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface getVolatilitySurface()>();
+
+        r4 = virtualinvoke $r16.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface withParallelShift(double)>(-1.0E-4);
+
+        $r17 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r18 = virtualinvoke $r17.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r3);
+
+        r5 = virtualinvoke $r18.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r1);
+
+        $r19 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r20 = virtualinvoke $r19.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r3);
+
+        r6 = virtualinvoke $r20.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r2);
+
+        $r21 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r22 = virtualinvoke $r21.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r4);
+
+        r7 = virtualinvoke $r22.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r1);
+
+        $r23 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r24 = virtualinvoke $r23.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r4);
+
+        r8 = virtualinvoke $r24.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r2);
+
+        $d0 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getMixedSecondDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r5, r6, r7, r8);
+
+        $r25 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        return $r25;
+    }
+
+    public java.lang.Double visitVegaP()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double d0, d1, $d2, $d3, $d4, $d5;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle $r1, $r5;
+        com.opengamma.analytics.financial.model.option.definition.OptionDefinition $r2, $r4;
+        org.threeten.bp.ZonedDateTime $r3;
+        java.lang.Double $r6, $r7, $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _definition>;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r3 = virtualinvoke $r1.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: org.threeten.bp.ZonedDateTime getDate()>();
+
+        d0 = virtualinvoke $r2.<com.opengamma.analytics.financial.model.option.definition.OptionDefinition: double getTimeToExpiry(org.threeten.bp.ZonedDateTime)>($r3);
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r4 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _definition>;
+
+        $r6 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.option.definition.OptionDefinition: java.lang.Double getStrike()>();
+
+        $d2 = virtualinvoke $r6.<java.lang.Double: double doubleValue()>();
+
+        d1 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getVolatility(double,double)>(d0, $d2);
+
+        $r7 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitVega()>();
+
+        $d3 = virtualinvoke $r7.<java.lang.Double: double doubleValue()>();
+
+        $d4 = $d3 * d1;
+
+        $d5 = $d4 / 10.0;
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d5);
+
+        return $r8;
+    }
+
+    public java.lang.Double visitVomma()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface r1, r2, $r6, $r8;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r3, r4, $r5, $r7, $r9, $r10, $r11;
+        double $d0;
+        java.lang.Double $r12;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r6 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface getVolatilitySurface()>();
+
+        r1 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface withParallelShift(double)>(1.0E-4);
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface getVolatilitySurface()>();
+
+        r2 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface withParallelShift(double)>(-1.0E-4);
+
+        $r9 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r3 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r1);
+
+        $r10 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r4 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r2);
+
+        $r11 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d0 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getSecondDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r3, r4, $r11);
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        return $r12;
+    }
+
+    public java.lang.Double visitVommaP()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double d0, d1, $d2, $d3, $d4, $d5;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle $r1, $r5;
+        com.opengamma.analytics.financial.model.option.definition.OptionDefinition $r2, $r4;
+        org.threeten.bp.ZonedDateTime $r3;
+        java.lang.Double $r6, $r7, $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _definition>;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r3 = virtualinvoke $r1.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: org.threeten.bp.ZonedDateTime getDate()>();
+
+        d0 = virtualinvoke $r2.<com.opengamma.analytics.financial.model.option.definition.OptionDefinition: double getTimeToExpiry(org.threeten.bp.ZonedDateTime)>($r3);
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r4 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _definition>;
+
+        $r6 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.option.definition.OptionDefinition: java.lang.Double getStrike()>();
+
+        $d2 = virtualinvoke $r6.<java.lang.Double: double doubleValue()>();
+
+        d1 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getVolatility(double,double)>(d0, $d2);
+
+        $r7 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitVomma()>();
+
+        $d3 = virtualinvoke $r7.<java.lang.Double: double doubleValue()>();
+
+        $d4 = $d3 * d1;
+
+        $d5 = $d4 / 10.0;
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d5);
+
+        return $r8;
+    }
+
+    public java.lang.Double visitZeta()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        return null;
+    }
+
+    public java.lang.Double visitZetaBleed()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        return null;
+    }
+
+    public java.lang.Double visitZomma()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double d0, d1, d2, $d3;
+        com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface r1, r2, $r11, $r13;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r3, r4, r5, r6, r7, r8, $r9, $r10, $r12, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23;
+        java.lang.Double $r24;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r9 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        d0 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getSpot()>();
+
+        d1 = d0 + 1.0E-4;
+
+        d2 = d0 - 1.0E-4;
+
+        $r10 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface getVolatilitySurface()>();
+
+        r1 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface withParallelShift(double)>(1.0E-4);
+
+        $r12 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r13 = virtualinvoke $r12.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface getVolatilitySurface()>();
+
+        r2 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface withParallelShift(double)>(-1.0E-4);
+
+        $r14 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r15 = virtualinvoke $r14.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d1);
+
+        r3 = virtualinvoke $r15.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r1);
+
+        $r16 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r4 = virtualinvoke $r16.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r1);
+
+        $r17 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r18 = virtualinvoke $r17.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d2);
+
+        r5 = virtualinvoke $r18.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r1);
+
+        $r19 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r20 = virtualinvoke $r19.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d1);
+
+        r6 = virtualinvoke $r20.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r2);
+
+        $r21 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r7 = virtualinvoke $r21.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r2);
+
+        $r22 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r23 = virtualinvoke $r22.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d2);
+
+        r8 = virtualinvoke $r23.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r2);
+
+        $d3 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getMixedThirdDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r3, r4, r5, r6, r7, r8);
+
+        $r24 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        return $r24;
+    }
+
+    public java.lang.Double visitZommaP()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1, $r3;
+        double $d0, $d1, $d2, $d3;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitZomma()>();
+
+        $d0 = virtualinvoke $r1.<java.lang.Double: double doubleValue()>();
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d1 = virtualinvoke $r2.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getSpot()>();
+
+        $d2 = $d0 * $d1;
+
+        $d3 = $d2 / 100.0;
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        return $r3;
+    }
+
+    public java.lang.Double visitDVannaDVol()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double d0, d1, d2, $d3;
+        com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface r1, r2, $r11, $r13;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r3, r4, r5, r6, r7, r8, $r9, $r10, $r12, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23;
+        java.lang.Double $r24;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r9 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        d0 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getSpot()>();
+
+        d1 = d0 + 1.0E-4;
+
+        d2 = d0 - 1.0E-4;
+
+        $r10 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface getVolatilitySurface()>();
+
+        r1 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface withParallelShift(double)>(1.0E-4);
+
+        $r12 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r13 = virtualinvoke $r12.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface getVolatilitySurface()>();
+
+        r2 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface withParallelShift(double)>(-1.0E-4);
+
+        $r14 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r15 = virtualinvoke $r14.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r1);
+
+        r3 = virtualinvoke $r15.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d1);
+
+        $r16 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r4 = virtualinvoke $r16.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d1);
+
+        $r17 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r18 = virtualinvoke $r17.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r2);
+
+        r5 = virtualinvoke $r18.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d1);
+
+        $r19 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r20 = virtualinvoke $r19.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r1);
+
+        r6 = virtualinvoke $r20.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d2);
+
+        $r21 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        r7 = virtualinvoke $r21.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d2);
+
+        $r22 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r23 = virtualinvoke $r22.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r2);
+
+        r8 = virtualinvoke $r23.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d2);
+
+        $d3 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getMixedThirdDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r3, r4, r5, r6, r7, r8);
+
+        $r24 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        return $r24;
+    }
+
+    private double getFirstDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r1, r2;
+        com.opengamma.analytics.math.function.Function1D $r3, $r6;
+        java.lang.Object $r4, $r7;
+        java.lang.Double $r5, $r8;
+        double $d0, $d1, $d2, $d3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r4 = virtualinvoke $r3.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r1);
+
+        $r5 = (java.lang.Double) $r4;
+
+        $d0 = virtualinvoke $r5.<java.lang.Double: double doubleValue()>();
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r7 = virtualinvoke $r6.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r2);
+
+        $r8 = (java.lang.Double) $r7;
+
+        $d1 = virtualinvoke $r8.<java.lang.Double: double doubleValue()>();
+
+        $d2 = $d0 - $d1;
+
+        $d3 = $d2 / 2.0E-4;
+
+        return $d3;
+    }
+
+    private double getForwardFirstDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r1, r2;
+        com.opengamma.analytics.math.function.Function1D $r3, $r6;
+        java.lang.Object $r4, $r7;
+        java.lang.Double $r5, $r8;
+        double $d0, $d1, $d2, $d3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r4 = virtualinvoke $r3.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r1);
+
+        $r5 = (java.lang.Double) $r4;
+
+        $d0 = virtualinvoke $r5.<java.lang.Double: double doubleValue()>();
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r7 = virtualinvoke $r6.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r2);
+
+        $r8 = (java.lang.Double) $r7;
+
+        $d1 = virtualinvoke $r8.<java.lang.Double: double doubleValue()>();
+
+        $d2 = $d0 - $d1;
+
+        $d3 = $d2 / 1.0E-4;
+
+        return $d3;
+    }
+
+    private double getSecondDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r1, r2, r3;
+        com.opengamma.analytics.math.function.Function1D $r4, $r7, $r10;
+        java.lang.Object $r5, $r8, $r11;
+        java.lang.Double $r6, $r9, $r12;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        $r4 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r5 = virtualinvoke $r4.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r1);
+
+        $r6 = (java.lang.Double) $r5;
+
+        $d0 = virtualinvoke $r6.<java.lang.Double: double doubleValue()>();
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r2);
+
+        $r9 = (java.lang.Double) $r8;
+
+        $d1 = virtualinvoke $r9.<java.lang.Double: double doubleValue()>();
+
+        $d2 = $d0 + $d1;
+
+        $r10 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r3);
+
+        $r12 = (java.lang.Double) $r11;
+
+        $d3 = virtualinvoke $r12.<java.lang.Double: double doubleValue()>();
+
+        $d4 = 2.0 * $d3;
+
+        $d5 = $d2 - $d4;
+
+        $d6 = $d5 / 1.0E-8;
+
+        return $d6;
+    }
+
+    private double getMixedSecondDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r1, r2, r3, r4;
+        com.opengamma.analytics.math.function.Function1D $r5, $r8, $r11, $r14;
+        java.lang.Object $r6, $r9, $r12, $r15;
+        java.lang.Double $r7, $r10, $r13, $r16;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        r4 := @parameter3: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r6 = virtualinvoke $r5.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r1);
+
+        $r7 = (java.lang.Double) $r6;
+
+        $d0 = virtualinvoke $r7.<java.lang.Double: double doubleValue()>();
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r9 = virtualinvoke $r8.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r2);
+
+        $r10 = (java.lang.Double) $r9;
+
+        $d1 = virtualinvoke $r10.<java.lang.Double: double doubleValue()>();
+
+        $d2 = $d0 - $d1;
+
+        $r11 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r3);
+
+        $r13 = (java.lang.Double) $r12;
+
+        $d3 = virtualinvoke $r13.<java.lang.Double: double doubleValue()>();
+
+        $d4 = $d2 - $d3;
+
+        $r14 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r15 = virtualinvoke $r14.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r4);
+
+        $r16 = (java.lang.Double) $r15;
+
+        $d5 = virtualinvoke $r16.<java.lang.Double: double doubleValue()>();
+
+        $d6 = $d4 + $d5;
+
+        $d7 = $d6 / 4.0E-8;
+
+        return $d7;
+    }
+
+    private double getThirdDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r1, r2, r3, r4;
+        com.opengamma.analytics.math.function.Function1D $r5, $r8, $r11, $r14;
+        java.lang.Object $r6, $r9, $r12, $r15;
+        java.lang.Double $r7, $r10, $r13, $r16;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        r4 := @parameter3: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r6 = virtualinvoke $r5.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r1);
+
+        $r7 = (java.lang.Double) $r6;
+
+        $d0 = virtualinvoke $r7.<java.lang.Double: double doubleValue()>();
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r9 = virtualinvoke $r8.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r3);
+
+        $r10 = (java.lang.Double) $r9;
+
+        $d1 = virtualinvoke $r10.<java.lang.Double: double doubleValue()>();
+
+        $d2 = 3.0 * $d1;
+
+        $d3 = $d0 + $d2;
+
+        $r11 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r2);
+
+        $r13 = (java.lang.Double) $r12;
+
+        $d4 = virtualinvoke $r13.<java.lang.Double: double doubleValue()>();
+
+        $d5 = 3.0 * $d4;
+
+        $d6 = $d3 - $d5;
+
+        $r14 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r15 = virtualinvoke $r14.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r4);
+
+        $r16 = (java.lang.Double) $r15;
+
+        $d7 = virtualinvoke $r16.<java.lang.Double: double doubleValue()>();
+
+        $d8 = $d6 - $d7;
+
+        $d9 = $d8 / 1.0E-12;
+
+        return $d9;
+    }
+
+    private double getMixedThirdDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r1, r2, r3, r4, r5, r6;
+        com.opengamma.analytics.math.function.Function1D $r7, $r10, $r13, $r16, $r19, $r22;
+        java.lang.Object $r8, $r11, $r14, $r17, $r20, $r23;
+        java.lang.Double $r9, $r12, $r15, $r18, $r21, $r24;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        r4 := @parameter3: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        r5 := @parameter4: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        r6 := @parameter5: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r1);
+
+        $r9 = (java.lang.Double) $r8;
+
+        $d0 = virtualinvoke $r9.<java.lang.Double: double doubleValue()>();
+
+        $r10 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r2);
+
+        $r12 = (java.lang.Double) $r11;
+
+        $d1 = virtualinvoke $r12.<java.lang.Double: double doubleValue()>();
+
+        $d2 = 2.0 * $d1;
+
+        $d3 = $d0 - $d2;
+
+        $r13 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r14 = virtualinvoke $r13.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r3);
+
+        $r15 = (java.lang.Double) $r14;
+
+        $d4 = virtualinvoke $r15.<java.lang.Double: double doubleValue()>();
+
+        $d5 = $d3 + $d4;
+
+        $r16 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r17 = virtualinvoke $r16.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r4);
+
+        $r18 = (java.lang.Double) $r17;
+
+        $d6 = virtualinvoke $r18.<java.lang.Double: double doubleValue()>();
+
+        $d7 = $d5 - $d6;
+
+        $r19 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r20 = virtualinvoke $r19.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r5);
+
+        $r21 = (java.lang.Double) $r20;
+
+        $d8 = virtualinvoke $r21.<java.lang.Double: double doubleValue()>();
+
+        $d9 = 2.0 * $d8;
+
+        $d10 = $d7 + $d9;
+
+        $r22 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.math.function.Function1D _pricingFunction>;
+
+        $r23 = virtualinvoke $r22.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r6);
+
+        $r24 = (java.lang.Double) $r23;
+
+        $d11 = virtualinvoke $r24.<java.lang.Double: double doubleValue()>();
+
+        $d12 = $d10 - $d11;
+
+        $d13 = $d12 / 2.0E-12;
+
+        return $d13;
+    }
+
+    private double getGammaP(double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8;
+        org.threeten.bp.ZonedDateTime r1, $r7;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r2, r3, r4, $r5, $r6, $r8, $r9, $r10, $r11, $r12, $r13;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d4 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: double getSpot()>();
+
+        d2 = $d4 + d0;
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r7 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: org.threeten.bp.ZonedDateTime getDate()>();
+
+        r1 = staticinvoke <com.opengamma.util.time.DateUtils: org.threeten.bp.ZonedDateTime getDateOffsetWithYearFraction(org.threeten.bp.ZonedDateTime,double)>($r7, d1);
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d5 = d2 + 1.0E-4;
+
+        $r9 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>($d5);
+
+        r2 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r1);
+
+        $r10 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $d6 = d2 - 1.0E-4;
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>($d6);
+
+        r3 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r1);
+
+        $r12 = r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle _data>;
+
+        $r13 = virtualinvoke $r12.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withSpot(double)>(d2);
+
+        r4 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle withDate(org.threeten.bp.ZonedDateTime)>(r1);
+
+        d3 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double getSecondDerivative(com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)>(r2, r3, r4);
+
+        $d7 = d3 * d2;
+
+        $d8 = $d7 / 100.0;
+
+        return $d8;
+    }
+
+    public volatile java.lang.Object visitZommaP()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitZommaP()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitZomma()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitZomma()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitZetaBleed()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitZetaBleed()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitZeta()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitZeta()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitVommaP()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitVommaP()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitVomma()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitVomma()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitVegaP()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitVegaP()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitVegaBleed()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitVegaBleed()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitVega()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitVega()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitVarianceVomma()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitVarianceVomma()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitVarianceVega()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitVarianceVega()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitVarianceVanna()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitVarianceVanna()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitVarianceUltima()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitVarianceUltima()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitVanna()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitVanna()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitUltima()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitUltima()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitTheta()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitTheta()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitStrikeGamma()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitStrikeGamma()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitStrikeDelta()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitStrikeDelta()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitSpeedP()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitSpeedP()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitSpeed()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitSpeed()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitRho()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitRho()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitPrice()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitPrice()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitPhi()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitPhi()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitGammaPBleed()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitGammaPBleed()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitGammaP()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitGammaP()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitGammaBleed()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitGammaBleed()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitGamma()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitGamma()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitElasticity()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitElasticity()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitDriftlessTheta()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitDriftlessTheta()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitDeltaBleed()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitDeltaBleed()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitDelta()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitDelta()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitDZetaDVol()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitDZetaDVol()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitDVannaDVol()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitDVannaDVol()>();
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object visitCarryRho()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor r0;
+        java.lang.Double $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: java.lang.Double visitCarryRho()>();
+
+        return $r1;
+    }
+
+    public static void <clinit>()
+    {
+        <com.opengamma.analytics.financial.model.option.pricing.FiniteDifferenceGreekVisitor: double EPS> = 1.0E-4;
+
+        return;
+    }
+}

@@ -1,0 +1,288 @@
+public class com.opengamma.analytics.financial.interestrate.payments.method.CapFloorIborLMMDDMethod extends java.lang.Object implements com.opengamma.analytics.financial.interestrate.method.PricingMethod
+{
+    private static final com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.interestrate.payments.method.CapFloorIborLMMDDMethod r0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.method.CapFloorIborLMMDDMethod;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.util.money.CurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor, com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.method.CapFloorIborLMMDDMethod r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor r1;
+        com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle r2;
+        int i0, $i1, i2;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, d49, d50, d51, d52;
+        com.opengamma.analytics.math.function.Function1D r5;
+        com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters $r6, $r7, $r8, $r9, $r10, $r33, $r36;
+        double[] $r11, $r35, $r38;
+        java.lang.String $r12, $r14, $r16, $r18, $r21, $r23, $r25;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r13, $r15, $r17, $r19, $r22, $r24, $r26;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r20;
+        boolean $z0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r27;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r28;
+        java.lang.Object $r29;
+        java.lang.Double $r30;
+        com.opengamma.util.money.Currency $r31;
+        com.opengamma.util.money.CurrencyAmount $r32;
+        double[][] $r34, $r37;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.method.CapFloorIborLMMDDMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle;
+
+        $r6 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters getLmmParameter()>();
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        i0 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: int getTimeIndex(double)>($d6);
+
+        d49 = 0.0;
+
+        i2 = 0;
+
+     label1:
+        $r7 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters getLmmParameter()>();
+
+        $i1 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: int getNbFactor()>();
+
+        if i2 >= $i1 goto label2;
+
+        $r33 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters getLmmParameter()>();
+
+        $r34 = virtualinvoke $r33.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double[][] getVolatility()>();
+
+        $r35 = $r34[i0];
+
+        $d46 = $r35[i2];
+
+        $r36 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters getLmmParameter()>();
+
+        $r37 = virtualinvoke $r36.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double[][] getVolatility()>();
+
+        $r38 = $r37[i0];
+
+        $d47 = $r38[i2];
+
+        $d48 = $d46 * $d47;
+
+        d49 = d49 + $d48;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        d50 = staticinvoke <java.lang.Math: double sqrt(double)>(d49);
+
+        $r8 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters getLmmParameter()>();
+
+        $d7 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double getMeanReversion()>();
+
+        $d8 = 2.0 * $d7;
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingTime()>();
+
+        $d10 = $d8 * $d9;
+
+        $d11 = staticinvoke <java.lang.Math: double exp(double)>($d10);
+
+        $d12 = $d11 - 1.0;
+
+        $r9 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters getLmmParameter()>();
+
+        $d13 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double getMeanReversion()>();
+
+        $d14 = 2.0 * $d13;
+
+        $d15 = $d12 / $d14;
+
+        d51 = staticinvoke <java.lang.Math: double sqrt(double)>($d15);
+
+        d52 = d50 * d51;
+
+        $r10 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters getLmmParameter()>();
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double[] getDisplacement()>();
+
+        d0 = $r11[i0];
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: java.lang.String getForwardCurveName()>();
+
+        $r13 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r12);
+
+        $d16 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $d17 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d16);
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: java.lang.String getForwardCurveName()>();
+
+        $r15 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r14);
+
+        $d18 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d19 = virtualinvoke $r15.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d18);
+
+        $d20 = $d17 / $d19;
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: java.lang.String getFundingCurveName()>();
+
+        $r17 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r16);
+
+        $d21 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d22 = virtualinvoke $r17.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d21);
+
+        $d23 = $d20 * $d22;
+
+        $r18 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: java.lang.String getFundingCurveName()>();
+
+        $r19 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r18);
+
+        $d24 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $d25 = virtualinvoke $r19.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d24);
+
+        d1 = $d23 / $d25;
+
+        $d26 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $d27 = d1 - 1.0;
+
+        $d28 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        $d29 = $d27 / $d28;
+
+        $d30 = $d26 - $d29;
+
+        d2 = $d30 / d1;
+
+        $r20 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d31 = d2 + d0;
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: boolean isCap()>();
+
+        specialinvoke $r20.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>($d31, 1.0, $z0);
+
+        $r21 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: java.lang.String getFundingCurveName()>();
+
+        $r22 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r21);
+
+        $d32 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $d33 = virtualinvoke $r22.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d32);
+
+        $r23 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: java.lang.String getFundingCurveName()>();
+
+        $r24 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r23);
+
+        $d34 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d35 = virtualinvoke $r24.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d34);
+
+        $d36 = $d33 / $d35;
+
+        $d37 = $d36 - 1.0;
+
+        $d38 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        d3 = $d37 / $d38;
+
+        $r25 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: java.lang.String getFundingCurveName()>();
+
+        $r26 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r25);
+
+        $d39 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentTime()>();
+
+        d4 = virtualinvoke $r26.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d39);
+
+        $r27 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        $d40 = d3 + d0;
+
+        specialinvoke $r27.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>($d40, d4, d52);
+
+        $r28 = <com.opengamma.analytics.financial.interestrate.payments.method.CapFloorIborLMMDDMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        r5 = virtualinvoke $r28.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: com.opengamma.analytics.math.function.Function1D getPriceFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)>($r20);
+
+        $r29 = virtualinvoke r5.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r27);
+
+        $r30 = (java.lang.Double) $r29;
+
+        $d41 = virtualinvoke $r30.<java.lang.Double: double doubleValue()>();
+
+        $d42 = d1 * $d41;
+
+        $d43 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getNotional()>();
+
+        $d44 = $d42 * $d43;
+
+        $d45 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentYearFraction()>();
+
+        d5 = $d44 * $d45;
+
+        $r31 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r32 = staticinvoke <com.opengamma.util.money.CurrencyAmount: com.opengamma.util.money.CurrencyAmount of(com.opengamma.util.money.Currency,double)>($r31, d5);
+
+        return $r32;
+    }
+
+    public com.opengamma.util.money.CurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.InstrumentDerivative, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.method.CapFloorIborLMMDDMethod r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle $r3;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor $r4;
+        com.opengamma.util.money.CurrencyAmount $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.method.CapFloorIborLMMDDMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivative;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $z0 = r1 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor;
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "Ibor Cap/floor");
+
+        $z1 = r2 instanceof com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle;
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "Bundle should contain LMM data");
+
+        $r4 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor) r1;
+
+        $r3 = (com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle) r2;
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.payments.method.CapFloorIborLMMDDMethod: com.opengamma.util.money.CurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor,com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionDataBundle)>($r4, $r3);
+
+        return $r5;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r0;
+
+        $r0 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.payments.method.CapFloorIborLMMDDMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION> = $r0;
+
+        return;
+    }
+}

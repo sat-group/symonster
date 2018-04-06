@@ -1,0 +1,396 @@
+public class com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver extends com.opengamma.analytics.math.interpolation.CubicSplineSolver
+{
+    private double[] _iniConds;
+    private double[] _finConds;
+    private double _iniCondUse;
+    private double _finCondUse;
+
+    public void <init>(double, double)
+    {
+        com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver r0;
+        double d0, d1;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        specialinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineSolver: void <init>()>();
+
+        r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double _iniCondUse> = d0;
+
+        r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double _finCondUse> = d1;
+
+        return;
+    }
+
+    public void <init>(double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver r0;
+        double[] r1, r2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        specialinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineSolver: void <init>()>();
+
+        r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double[] _iniConds> = r1;
+
+        r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double[] _finConds> = r2;
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.matrix.DoubleMatrix2D solve(double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver r0;
+        double[] r1, r2, r3, $r5, $r6;
+        double[][] $r4;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D $r7;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double[] getDiffs(double[])>(r1);
+
+        $r4 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double[][] getMatrix(double[])>(r3);
+
+        $r5 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double[] getVector(double[],double[])>(r2, r3);
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double[] matrixEqnSolver(double[][],double[])>($r4, $r5);
+
+        $r7 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: com.opengamma.analytics.math.matrix.DoubleMatrix2D getCommonSplineCoeffs(double[],double[],double[],double[])>(r1, r2, r3, $r6);
+
+        return $r7;
+    }
+
+    public com.opengamma.analytics.math.matrix.DoubleMatrix2D[] solveWithSensitivity(double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver r0;
+        double[] r1, r2, r3, r5;
+        double[][] r4, r6;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D[] $r7;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double[] getDiffs(double[])>(r1);
+
+        r4 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double[][] getMatrix(double[])>(r3);
+
+        r5 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double[] getVector(double[],double[])>(r2, r3);
+
+        r6 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double[][] getVectorSensitivity(double[])>(r3);
+
+        $r7 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: com.opengamma.analytics.math.matrix.DoubleMatrix2D[] getCommonCoefficientWithSensitivity(double[],double[],double[],double[][],double[],double[][])>(r1, r2, r3, r4, r5, r6);
+
+        return $r7;
+    }
+
+    public com.opengamma.analytics.math.matrix.DoubleMatrix2D[] solveMultiDim(double[], com.opengamma.analytics.math.matrix.DoubleMatrix2D)
+    {
+        com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver r0;
+        double[] r1, $r5;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D r2, $r6;
+        int i0, i1;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D[] r3;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r4;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        i0 = virtualinvoke r2.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: int getNumberOfRows()>();
+
+        r3 = newarray (com.opengamma.analytics.math.matrix.DoubleMatrix2D)[i0];
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        specialinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: void resetConds(int)>(i1);
+
+        $r4 = virtualinvoke r2.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: com.opengamma.analytics.math.matrix.DoubleMatrix1D getRowVector(int)>(i1);
+
+        $r5 = virtualinvoke $r4.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: com.opengamma.analytics.math.matrix.DoubleMatrix2D solve(double[],double[])>(r1, $r5);
+
+        r3[i1] = $r6;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return r3;
+    }
+
+    private void resetConds(int)
+    {
+        com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver r0;
+        int i0;
+        double[] $r1, $r2;
+        double $d0, $d1;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double[] _iniConds>;
+
+        $d0 = $r1[i0];
+
+        r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double _iniCondUse> = $d0;
+
+        $r2 = r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double[] _finConds>;
+
+        $d1 = $r2[i0];
+
+        r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double _finCondUse> = $d1;
+
+        return;
+    }
+
+    private double[][] getMatrix(double[])
+    {
+        com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver r0;
+        double[] r1, $r2, $r3, $r4, $r5;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7;
+        double $d0, $d1, $d2, $d3, $d4, $d5;
+        double[][] r6, r7;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver;
+
+        r1 := @parameter0: double[];
+
+        $i1 = lengthof r1;
+
+        i0 = $i1 + 1;
+
+        r6 = newmultiarray (double)[i0][i0];
+
+        r7 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double[][] getCommonMatrixElements(double[])>(r1);
+
+        $r2 = r7[0];
+
+        $d0 = r1[0];
+
+        $d1 = 2.0 * $d0;
+
+        $r2[0] = $d1;
+
+        $r3 = r7[0];
+
+        $d2 = r1[0];
+
+        $r3[1] = $d2;
+
+        $i2 = i0 - 1;
+
+        $r4 = r7[$i2];
+
+        $i4 = i0 - 2;
+
+        $i3 = i0 - 2;
+
+        $d3 = r1[$i3];
+
+        $r4[$i4] = $d3;
+
+        $i5 = i0 - 1;
+
+        $r5 = r7[$i5];
+
+        $i7 = i0 - 1;
+
+        $i6 = i0 - 2;
+
+        $d4 = r1[$i6];
+
+        $d5 = 2.0 * $d4;
+
+        $r5[$i7] = $d5;
+
+        return r7;
+    }
+
+    private double[] getVector(double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver r0;
+        double[] r1, r2, r3, r4;
+        int i0, $i1, $i2, $i3, $i4, $i5;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        i0 = lengthof r1;
+
+        r3 = newarray (double)[i0];
+
+        r4 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double[] getCommonVectorElements(double[],double[])>(r1, r2);
+
+        $d0 = r1[1];
+
+        $d2 = 6.0 * $d0;
+
+        $d1 = r2[0];
+
+        $d7 = $d2 / $d1;
+
+        $d3 = r1[0];
+
+        $d5 = 6.0 * $d3;
+
+        $d4 = r2[0];
+
+        $d6 = $d5 / $d4;
+
+        $d10 = $d7 - $d6;
+
+        $d8 = r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double _iniCondUse>;
+
+        $d9 = 6.0 * $d8;
+
+        $d11 = $d10 - $d9;
+
+        r4[0] = $d11;
+
+        $i5 = i0 - 1;
+
+        $d12 = r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double _finCondUse>;
+
+        $d17 = 6.0 * $d12;
+
+        $i1 = i0 - 1;
+
+        $d13 = r1[$i1];
+
+        $d15 = 6.0 * $d13;
+
+        $i2 = i0 - 2;
+
+        $d14 = r2[$i2];
+
+        $d16 = $d15 / $d14;
+
+        $d22 = $d17 - $d16;
+
+        $i3 = i0 - 2;
+
+        $d18 = r1[$i3];
+
+        $d20 = 6.0 * $d18;
+
+        $i4 = i0 - 2;
+
+        $d19 = r2[$i4];
+
+        $d21 = $d20 / $d19;
+
+        $d23 = $d22 + $d21;
+
+        r4[$i5] = $d23;
+
+        return r4;
+    }
+
+    private double[][] getVectorSensitivity(double[])
+    {
+        com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver r0;
+        double[] r1, $r2, $r3, $r4, $r5;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7;
+        double[][] r6, r7;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver;
+
+        r1 := @parameter0: double[];
+
+        $i1 = lengthof r1;
+
+        i0 = $i1 + 1;
+
+        r6 = newmultiarray (double)[i0][i0];
+
+        r7 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver: double[][] getCommonVectorSensitivity(double[])>(r1);
+
+        $r2 = r7[0];
+
+        $d0 = r1[0];
+
+        $d1 = -6.0 / $d0;
+
+        $r2[0] = $d1;
+
+        $r3 = r7[0];
+
+        $d2 = r1[0];
+
+        $d3 = 6.0 / $d2;
+
+        $r3[1] = $d3;
+
+        $i2 = i0 - 1;
+
+        $r4 = r7[$i2];
+
+        $i4 = i0 - 1;
+
+        $i3 = i0 - 2;
+
+        $d4 = r1[$i3];
+
+        $d5 = -6.0 / $d4;
+
+        $r4[$i4] = $d5;
+
+        $i5 = i0 - 1;
+
+        $r5 = r7[$i5];
+
+        $i7 = i0 - 2;
+
+        $i6 = i0 - 2;
+
+        $d6 = r1[$i6];
+
+        $d7 = 6.0 / $d6;
+
+        $r5[$i7] = $d7;
+
+        return r7;
+    }
+
+    public volatile com.opengamma.analytics.math.matrix.DoubleMatrix1D getKnotsMat1D(double[])
+    {
+        com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver r0;
+        double[] r1;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.CubicSplineClampedSolver;
+
+        r1 := @parameter0: double[];
+
+        $r2 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.CubicSplineSolver: com.opengamma.analytics.math.matrix.DoubleMatrix1D getKnotsMat1D(double[])>(r1);
+
+        return $r2;
+    }
+}

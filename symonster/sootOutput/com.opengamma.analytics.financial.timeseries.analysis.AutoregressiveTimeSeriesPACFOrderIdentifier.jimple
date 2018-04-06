@@ -1,0 +1,221 @@
+public class com.opengamma.analytics.financial.timeseries.analysis.AutoregressiveTimeSeriesPACFOrderIdentifier extends java.lang.Object
+{
+    private final int _maxOrder;
+    private final double _level;
+    private final com.opengamma.analytics.math.regression.LeastSquaresRegression _regression;
+
+    public void <init>(int, double)
+    {
+        com.opengamma.analytics.financial.timeseries.analysis.AutoregressiveTimeSeriesPACFOrderIdentifier r0;
+        int i0;
+        double d0;
+        com.opengamma.analytics.math.regression.OrdinaryLeastSquaresRegression $r1;
+        byte $b1, $b2;
+        java.lang.IllegalArgumentException $r2, $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.timeseries.analysis.AutoregressiveTimeSeriesPACFOrderIdentifier;
+
+        i0 := @parameter0: int;
+
+        d0 := @parameter1: double;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $r1 = new com.opengamma.analytics.math.regression.OrdinaryLeastSquaresRegression;
+
+        specialinvoke $r1.<com.opengamma.analytics.math.regression.OrdinaryLeastSquaresRegression: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.timeseries.analysis.AutoregressiveTimeSeriesPACFOrderIdentifier: com.opengamma.analytics.math.regression.LeastSquaresRegression _regression> = $r1;
+
+        if i0 >= 1 goto label1;
+
+        $r3 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r3.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Maximum order must be greater than zero");
+
+        throw $r3;
+
+     label1:
+        $b1 = d0 cmpg 0.0;
+
+        if $b1 <= 0 goto label2;
+
+        $b2 = d0 cmpl 1.0;
+
+        if $b2 <= 0 goto label3;
+
+     label2:
+        $r2 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Level must be between 0 and 1");
+
+        throw $r2;
+
+     label3:
+        r0.<com.opengamma.analytics.financial.timeseries.analysis.AutoregressiveTimeSeriesPACFOrderIdentifier: int _maxOrder> = i0;
+
+        r0.<com.opengamma.analytics.financial.timeseries.analysis.AutoregressiveTimeSeriesPACFOrderIdentifier: double _level> = d0;
+
+        return;
+    }
+
+    public int getOrder(com.opengamma.timeseries.DoubleTimeSeries)
+    {
+        com.opengamma.analytics.financial.timeseries.analysis.AutoregressiveTimeSeriesPACFOrderIdentifier r0;
+        com.opengamma.timeseries.DoubleTimeSeries r1;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i8, $i9, $i10, $i11, $i12, $i13, i14, i15, i16;
+        double[] r2, r3, $r8, $r9;
+        double[][] r4, $r6;
+        boolean $z0;
+        java.lang.IllegalArgumentException $r5, $r10, $r16;
+        com.opengamma.analytics.math.regression.LeastSquaresRegression $r7;
+        double $d0, $d1, $d2, $d3;
+        byte $b7;
+        java.lang.StringBuilder $r11, $r12, $r13, $r14;
+        java.lang.String $r15;
+        java.lang.Integer r17;
+        com.opengamma.analytics.math.regression.LeastSquaresRegressionResult r18;
+
+        r0 := @this: com.opengamma.analytics.financial.timeseries.analysis.AutoregressiveTimeSeriesPACFOrderIdentifier;
+
+        r1 := @parameter0: com.opengamma.timeseries.DoubleTimeSeries;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object)>(r1);
+
+        $z0 = interfaceinvoke r1.<com.opengamma.timeseries.DoubleTimeSeries: boolean isEmpty()>();
+
+        if $z0 == 0 goto label01;
+
+        $r16 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r16.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Time series was empty");
+
+        throw $r16;
+
+     label01:
+        $i1 = interfaceinvoke r1.<com.opengamma.timeseries.DoubleTimeSeries: int size()>();
+
+        $i2 = r0.<com.opengamma.analytics.financial.timeseries.analysis.AutoregressiveTimeSeriesPACFOrderIdentifier: int _maxOrder>;
+
+        if $i1 > $i2 goto label02;
+
+        $r10 = new java.lang.IllegalArgumentException;
+
+        $r11 = new java.lang.StringBuilder;
+
+        specialinvoke $r11.<java.lang.StringBuilder: void <init>()>();
+
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Need at least ");
+
+        $i12 = r0.<com.opengamma.analytics.financial.timeseries.analysis.AutoregressiveTimeSeriesPACFOrderIdentifier: int _maxOrder>;
+
+        $i13 = $i12 + 1;
+
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i13);
+
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" points in the time series");
+
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r10.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r15);
+
+        throw $r10;
+
+     label02:
+        i0 = interfaceinvoke r1.<com.opengamma.timeseries.DoubleTimeSeries: int size()>();
+
+        r17 = null;
+
+        r2 = interfaceinvoke r1.<com.opengamma.timeseries.DoubleTimeSeries: double[] valuesArrayFast()>();
+
+        i14 = 1;
+
+     label03:
+        $i3 = r0.<com.opengamma.analytics.financial.timeseries.analysis.AutoregressiveTimeSeriesPACFOrderIdentifier: int _maxOrder>;
+
+        if i14 >= $i3 goto label09;
+
+        $i5 = i0 - i14;
+
+        r3 = newarray (double)[$i5];
+
+        $i6 = i0 - i14;
+
+        r4 = newmultiarray (double)[$i6][i14];
+
+        i15 = i0 - 1;
+
+     label04:
+        if i15 < i14 goto label07;
+
+        $i8 = i15 - i14;
+
+        $d2 = r2[i15];
+
+        r3[$i8] = $d2;
+
+        i16 = 1;
+
+     label05:
+        if i16 > i14 goto label06;
+
+        $i9 = i15 - i14;
+
+        $r9 = r4[$i9];
+
+        $i11 = i16 - 1;
+
+        $i10 = i15 - i16;
+
+        $d3 = r2[$i10];
+
+        $r9[$i11] = $d3;
+
+        i16 = i16 + 1;
+
+        goto label05;
+
+     label06:
+        i15 = i15 + -1;
+
+        goto label04;
+
+     label07:
+        $r7 = r0.<com.opengamma.analytics.financial.timeseries.analysis.AutoregressiveTimeSeriesPACFOrderIdentifier: com.opengamma.analytics.math.regression.LeastSquaresRegression _regression>;
+
+        $r6 = (double[][]) null;
+
+        r18 = virtualinvoke $r7.<com.opengamma.analytics.math.regression.LeastSquaresRegression: com.opengamma.analytics.math.regression.LeastSquaresRegressionResult regress(double[][],double[][],double[],boolean)>(r4, $r6, r3, 1);
+
+        $r8 = virtualinvoke r18.<com.opengamma.analytics.math.regression.LeastSquaresRegressionResult: double[] getPValues()>();
+
+        $d1 = $r8[i14];
+
+        $d0 = r0.<com.opengamma.analytics.financial.timeseries.analysis.AutoregressiveTimeSeriesPACFOrderIdentifier: double _level>;
+
+        $b7 = $d1 cmpg $d0;
+
+        if $b7 >= 0 goto label08;
+
+        r17 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i14);
+
+     label08:
+        i14 = i14 + 1;
+
+        goto label03;
+
+     label09:
+        if r17 != null goto label10;
+
+        $r5 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r5.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Could not find order of series using PACF; no significant coefficients");
+
+        throw $r5;
+
+     label10:
+        $i4 = virtualinvoke r17.<java.lang.Integer: int intValue()>();
+
+        return $i4;
+    }
+}

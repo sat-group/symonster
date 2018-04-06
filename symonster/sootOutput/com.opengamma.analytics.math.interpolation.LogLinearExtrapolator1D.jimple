@@ -1,0 +1,783 @@
+public class com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D extends com.opengamma.analytics.math.interpolation.Interpolator1D
+{
+    private static final long serialVersionUID;
+    private final com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator;
+    private final double _eps;
+
+    public void <init>(com.opengamma.analytics.math.interpolation.Interpolator1D)
+    {
+        com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D r0;
+        com.opengamma.analytics.math.interpolation.Interpolator1D r1;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.interpolation.Interpolator1D;
+
+        specialinvoke r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: void <init>(com.opengamma.analytics.math.interpolation.Interpolator1D,double)>(r1, 1.0E-8);
+
+        return;
+    }
+
+    public void <init>(com.opengamma.analytics.math.interpolation.Interpolator1D, double)
+    {
+        com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D r0;
+        com.opengamma.analytics.math.interpolation.Interpolator1D r1;
+        double d0;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.interpolation.Interpolator1D;
+
+        d0 := @parameter1: double;
+
+        specialinvoke r0.<com.opengamma.analytics.math.interpolation.Interpolator1D: void <init>()>();
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "interpolator");
+
+        r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator> = r1;
+
+        r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: double _eps> = d0;
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle getDataBundle(double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D r0;
+        double[] r1, r2;
+        com.opengamma.analytics.math.interpolation.Interpolator1D $r3;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r4;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        $r3 = r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $r4 = virtualinvoke $r3.<com.opengamma.analytics.math.interpolation.Interpolator1D: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle getDataBundle(double[],double[])>(r1, r2);
+
+        return $r4;
+    }
+
+    public com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle getDataBundleFromSortedArrays(double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D r0;
+        double[] r1, r2;
+        com.opengamma.analytics.math.interpolation.Interpolator1D $r3;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r4;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        $r3 = r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $r4 = virtualinvoke $r3.<com.opengamma.analytics.math.interpolation.Interpolator1D: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle getDataBundleFromSortedArrays(double[],double[])>(r1, r2);
+
+        return $r4;
+    }
+
+    public java.lang.Double interpolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle, java.lang.Double)
+    {
+        com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle r1;
+        java.lang.Double r2, $r3, $r4, $r11, $r12;
+        double $d0, $d1, $d2, $d3;
+        byte $b0, $b1;
+        java.lang.IllegalArgumentException $r5;
+        java.lang.StringBuilder $r6, $r7, $r8, $r9;
+        java.lang.String $r10;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle;
+
+        r2 := @parameter1: java.lang.Double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "data");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "value");
+
+        $d0 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $r3 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double firstKey()>();
+
+        $d1 = virtualinvoke $r3.<java.lang.Double: double doubleValue()>();
+
+        $b0 = $d0 cmpg $d1;
+
+        if $b0 >= 0 goto label1;
+
+        $r12 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: java.lang.Double leftExtrapolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, r2);
+
+        return $r12;
+
+     label1:
+        $d2 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $r4 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double lastKey()>();
+
+        $d3 = virtualinvoke $r4.<java.lang.Double: double doubleValue()>();
+
+        $b1 = $d2 cmpl $d3;
+
+        if $b1 <= 0 goto label2;
+
+        $r11 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: java.lang.Double rightExtrapolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, r2);
+
+        return $r11;
+
+     label2:
+        $r5 = new java.lang.IllegalArgumentException;
+
+        $r6 = new java.lang.StringBuilder;
+
+        specialinvoke $r6.<java.lang.StringBuilder: void <init>()>();
+
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Value ");
+
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r2);
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" was within data range");
+
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r5.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r10);
+
+        throw $r5;
+    }
+
+    public double firstDerivative(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle, java.lang.Double)
+    {
+        com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle r1;
+        java.lang.Double r2, $r3, $r4, $r11, $r12;
+        double $d0, $d1, $d2, $d3, $d4, $d5;
+        byte $b0, $b1;
+        java.lang.IllegalArgumentException $r5;
+        java.lang.StringBuilder $r6, $r7, $r8, $r9;
+        java.lang.String $r10;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle;
+
+        r2 := @parameter1: java.lang.Double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "data");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "value");
+
+        $d0 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $r3 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double firstKey()>();
+
+        $d1 = virtualinvoke $r3.<java.lang.Double: double doubleValue()>();
+
+        $b0 = $d0 cmpg $d1;
+
+        if $b0 >= 0 goto label1;
+
+        $r12 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: java.lang.Double leftExtrapolateDerivative(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, r2);
+
+        $d5 = virtualinvoke $r12.<java.lang.Double: double doubleValue()>();
+
+        return $d5;
+
+     label1:
+        $d2 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $r4 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double lastKey()>();
+
+        $d3 = virtualinvoke $r4.<java.lang.Double: double doubleValue()>();
+
+        $b1 = $d2 cmpl $d3;
+
+        if $b1 <= 0 goto label2;
+
+        $r11 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: java.lang.Double rightExtrapolateDerivative(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, r2);
+
+        $d4 = virtualinvoke $r11.<java.lang.Double: double doubleValue()>();
+
+        return $d4;
+
+     label2:
+        $r5 = new java.lang.IllegalArgumentException;
+
+        $r6 = new java.lang.StringBuilder;
+
+        specialinvoke $r6.<java.lang.StringBuilder: void <init>()>();
+
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Value ");
+
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r2);
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" was within data range");
+
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r5.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r10);
+
+        throw $r5;
+    }
+
+    public double[] getNodeSensitivitiesForValue(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle, java.lang.Double)
+    {
+        com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle r1;
+        java.lang.Double r2, $r3, $r4;
+        double $d0, $d1, $d2, $d3;
+        byte $b0, $b1;
+        java.lang.IllegalArgumentException $r5;
+        java.lang.StringBuilder $r6, $r7, $r8, $r9;
+        java.lang.String $r10;
+        double[] $r11, $r12;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle;
+
+        r2 := @parameter1: java.lang.Double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "data");
+
+        $d0 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $r3 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double firstKey()>();
+
+        $d1 = virtualinvoke $r3.<java.lang.Double: double doubleValue()>();
+
+        $b0 = $d0 cmpg $d1;
+
+        if $b0 >= 0 goto label1;
+
+        $r12 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: double[] getLeftSensitivities(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, r2);
+
+        return $r12;
+
+     label1:
+        $d2 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $r4 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double lastKey()>();
+
+        $d3 = virtualinvoke $r4.<java.lang.Double: double doubleValue()>();
+
+        $b1 = $d2 cmpl $d3;
+
+        if $b1 <= 0 goto label2;
+
+        $r11 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: double[] getRightSensitivities(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, r2);
+
+        return $r11;
+
+     label2:
+        $r5 = new java.lang.IllegalArgumentException;
+
+        $r6 = new java.lang.StringBuilder;
+
+        specialinvoke $r6.<java.lang.StringBuilder: void <init>()>();
+
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Value ");
+
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r2);
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" was within data range");
+
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r5.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r10);
+
+        throw $r5;
+    }
+
+    private java.lang.Double leftExtrapolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle, java.lang.Double)
+    {
+        com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle r1;
+        java.lang.Double r2, $r3, $r4, $r6, $r8, $r9, $r10;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10;
+        com.opengamma.analytics.math.interpolation.Interpolator1D $r5, $r7;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle;
+
+        r2 := @parameter1: java.lang.Double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "data");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "value");
+
+        $r3 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double firstKey()>();
+
+        d0 = virtualinvoke $r3.<java.lang.Double: double doubleValue()>();
+
+        $r4 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double firstValue()>();
+
+        $d3 = virtualinvoke $r4.<java.lang.Double: double doubleValue()>();
+
+        d1 = staticinvoke <java.lang.Math: double log(double)>($d3);
+
+        $r5 = r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $d4 = virtualinvoke $r5.<com.opengamma.analytics.math.interpolation.Interpolator1D: double firstDerivative(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, $r6);
+
+        $r7 = r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r9 = virtualinvoke $r7.<com.opengamma.analytics.math.interpolation.Interpolator1D: java.lang.Double interpolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, $r8);
+
+        $d5 = virtualinvoke $r9.<java.lang.Double: double doubleValue()>();
+
+        d2 = $d4 / $d5;
+
+        $d6 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $d7 = $d6 - d0;
+
+        $d8 = $d7 * d2;
+
+        $d9 = d1 + $d8;
+
+        $d10 = staticinvoke <java.lang.Math: double exp(double)>($d9);
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        return $r10;
+    }
+
+    private java.lang.Double rightExtrapolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle, java.lang.Double)
+    {
+        com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle r1;
+        java.lang.Double r2, $r3, $r4, $r6, $r8, $r9, $r10;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10;
+        com.opengamma.analytics.math.interpolation.Interpolator1D $r5, $r7;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle;
+
+        r2 := @parameter1: java.lang.Double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "data");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "value");
+
+        $r3 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double lastKey()>();
+
+        d0 = virtualinvoke $r3.<java.lang.Double: double doubleValue()>();
+
+        $r4 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double lastValue()>();
+
+        $d3 = virtualinvoke $r4.<java.lang.Double: double doubleValue()>();
+
+        d1 = staticinvoke <java.lang.Math: double log(double)>($d3);
+
+        $r5 = r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $d4 = virtualinvoke $r5.<com.opengamma.analytics.math.interpolation.Interpolator1D: double firstDerivative(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, $r6);
+
+        $r7 = r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r9 = virtualinvoke $r7.<com.opengamma.analytics.math.interpolation.Interpolator1D: java.lang.Double interpolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, $r8);
+
+        $d5 = virtualinvoke $r9.<java.lang.Double: double doubleValue()>();
+
+        d2 = $d4 / $d5;
+
+        $d6 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $d7 = $d6 - d0;
+
+        $d8 = $d7 * d2;
+
+        $d9 = d1 + $d8;
+
+        $d10 = staticinvoke <java.lang.Math: double exp(double)>($d9);
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        return $r10;
+    }
+
+    private java.lang.Double leftExtrapolateDerivative(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle, java.lang.Double)
+    {
+        com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle r1;
+        java.lang.Double r2, $r3, $r4, $r6, $r8, $r9, $r10;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11;
+        com.opengamma.analytics.math.interpolation.Interpolator1D $r5, $r7;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle;
+
+        r2 := @parameter1: java.lang.Double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "data");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "value");
+
+        $r3 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double firstKey()>();
+
+        d0 = virtualinvoke $r3.<java.lang.Double: double doubleValue()>();
+
+        $r4 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double firstValue()>();
+
+        $d3 = virtualinvoke $r4.<java.lang.Double: double doubleValue()>();
+
+        d1 = staticinvoke <java.lang.Math: double log(double)>($d3);
+
+        $r5 = r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $d4 = virtualinvoke $r5.<com.opengamma.analytics.math.interpolation.Interpolator1D: double firstDerivative(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, $r6);
+
+        $r7 = r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r9 = virtualinvoke $r7.<com.opengamma.analytics.math.interpolation.Interpolator1D: java.lang.Double interpolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, $r8);
+
+        $d5 = virtualinvoke $r9.<java.lang.Double: double doubleValue()>();
+
+        d2 = $d4 / $d5;
+
+        $d6 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $d7 = $d6 - d0;
+
+        $d8 = $d7 * d2;
+
+        $d9 = d1 + $d8;
+
+        $d10 = staticinvoke <java.lang.Math: double exp(double)>($d9);
+
+        $d11 = d2 * $d10;
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d11);
+
+        return $r10;
+    }
+
+    private java.lang.Double rightExtrapolateDerivative(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle, java.lang.Double)
+    {
+        com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle r1;
+        java.lang.Double r2, $r3, $r4, $r6, $r8, $r9, $r10;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11;
+        com.opengamma.analytics.math.interpolation.Interpolator1D $r5, $r7;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle;
+
+        r2 := @parameter1: java.lang.Double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "data");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "value");
+
+        $r3 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double lastKey()>();
+
+        d0 = virtualinvoke $r3.<java.lang.Double: double doubleValue()>();
+
+        $r4 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double lastValue()>();
+
+        $d3 = virtualinvoke $r4.<java.lang.Double: double doubleValue()>();
+
+        d1 = staticinvoke <java.lang.Math: double log(double)>($d3);
+
+        $r5 = r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $d4 = virtualinvoke $r5.<com.opengamma.analytics.math.interpolation.Interpolator1D: double firstDerivative(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, $r6);
+
+        $r7 = r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r9 = virtualinvoke $r7.<com.opengamma.analytics.math.interpolation.Interpolator1D: java.lang.Double interpolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, $r8);
+
+        $d5 = virtualinvoke $r9.<java.lang.Double: double doubleValue()>();
+
+        d2 = $d4 / $d5;
+
+        $d6 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $d7 = $d6 - d0;
+
+        $d8 = $d7 * d2;
+
+        $d9 = d1 + $d8;
+
+        $d10 = staticinvoke <java.lang.Math: double exp(double)>($d9);
+
+        $d11 = d2 * $d10;
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d11);
+
+        return $r10;
+    }
+
+    private double[] getLeftSensitivities(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle, java.lang.Double)
+    {
+        com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle r1;
+        java.lang.Double r2, $r4, $r5, $r6, $r8, $r9, $r10, $r12, $r13;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23;
+        double[] r3;
+        int i0, i1;
+        com.opengamma.analytics.math.interpolation.Interpolator1D $r7, $r11;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle;
+
+        r2 := @parameter1: java.lang.Double;
+
+        $d6 = r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: double _eps>;
+
+        $r4 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double lastKey()>();
+
+        $d7 = virtualinvoke $r4.<java.lang.Double: double doubleValue()>();
+
+        $r5 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double firstKey()>();
+
+        $d8 = virtualinvoke $r5.<java.lang.Double: double doubleValue()>();
+
+        $d9 = $d7 - $d8;
+
+        d0 = $d6 * $d9;
+
+        $r6 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double firstKey()>();
+
+        d1 = virtualinvoke $r6.<java.lang.Double: double doubleValue()>();
+
+        $r7 = r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $d10 = d1 + d0;
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        $r9 = virtualinvoke $r7.<com.opengamma.analytics.math.interpolation.Interpolator1D: java.lang.Double interpolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, $r8);
+
+        d2 = virtualinvoke $r9.<java.lang.Double: double doubleValue()>();
+
+        $r10 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: java.lang.Double leftExtrapolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, r2);
+
+        d3 = virtualinvoke $r10.<java.lang.Double: double doubleValue()>();
+
+        $r11 = r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $d11 = d1 + d0;
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d11);
+
+        r3 = virtualinvoke $r11.<com.opengamma.analytics.math.interpolation.Interpolator1D: double[] getNodeSensitivitiesForValue(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, $r12);
+
+        $d12 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $d13 = $d12 - d1;
+
+        d4 = $d13 / d0;
+
+        $d14 = d4 * d3;
+
+        d5 = $d14 / d2;
+
+        i0 = lengthof r3;
+
+        i1 = 1;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $d22 = r3[i1];
+
+        $d23 = $d22 * d5;
+
+        r3[i1] = $d23;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        $d15 = r3[0];
+
+        $d17 = $d15 * d5;
+
+        $d16 = 1.0 - d4;
+
+        $d18 = $d16 * d3;
+
+        $r13 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double firstValue()>();
+
+        $d19 = virtualinvoke $r13.<java.lang.Double: double doubleValue()>();
+
+        $d20 = $d18 / $d19;
+
+        $d21 = $d17 + $d20;
+
+        r3[0] = $d21;
+
+        return r3;
+    }
+
+    private double[] getRightSensitivities(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle, java.lang.Double)
+    {
+        com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle r1;
+        java.lang.Double r2, $r4, $r5, $r6, $r8, $r9, $r10, $r12, $r13;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24;
+        double[] r3;
+        int i0, $i1, $i2, $i3, i4;
+        com.opengamma.analytics.math.interpolation.Interpolator1D $r7, $r11;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle;
+
+        r2 := @parameter1: java.lang.Double;
+
+        $d6 = r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: double _eps>;
+
+        $r4 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double lastKey()>();
+
+        $d7 = virtualinvoke $r4.<java.lang.Double: double doubleValue()>();
+
+        $r5 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double firstKey()>();
+
+        $d8 = virtualinvoke $r5.<java.lang.Double: double doubleValue()>();
+
+        $d9 = $d7 - $d8;
+
+        d0 = $d6 * $d9;
+
+        $r6 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double lastKey()>();
+
+        d1 = virtualinvoke $r6.<java.lang.Double: double doubleValue()>();
+
+        $r7 = r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $d10 = d1 - d0;
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        $r9 = virtualinvoke $r7.<com.opengamma.analytics.math.interpolation.Interpolator1D: java.lang.Double interpolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, $r8);
+
+        d2 = virtualinvoke $r9.<java.lang.Double: double doubleValue()>();
+
+        $r10 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: java.lang.Double rightExtrapolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, r2);
+
+        d3 = virtualinvoke $r10.<java.lang.Double: double doubleValue()>();
+
+        $r11 = r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $d11 = d1 - d0;
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d11);
+
+        r3 = virtualinvoke $r11.<com.opengamma.analytics.math.interpolation.Interpolator1D: double[] getNodeSensitivitiesForValue(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r1, $r12);
+
+        $d12 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $d13 = $d12 - d1;
+
+        d4 = $d13 / d0;
+
+        $d14 = d4 * d3;
+
+        d5 = $d14 / d2;
+
+        i0 = lengthof r3;
+
+        i4 = 0;
+
+     label1:
+        $i1 = i0 - 1;
+
+        if i4 >= $i1 goto label2;
+
+        $d23 = r3[i4];
+
+        $d22 = neg d5;
+
+        $d24 = $d23 * $d22;
+
+        r3[i4] = $d24;
+
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label2:
+        $i2 = i0 - 1;
+
+        $d15 = 1.0 + d4;
+
+        $d16 = $d15 * d3;
+
+        $r13 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double lastValue()>();
+
+        $d17 = virtualinvoke $r13.<java.lang.Double: double doubleValue()>();
+
+        $d20 = $d16 / $d17;
+
+        $i3 = i0 - 1;
+
+        $d18 = r3[$i3];
+
+        $d19 = $d18 * d5;
+
+        $d21 = $d20 - $d19;
+
+        r3[$i2] = $d21;
+
+        return r3;
+    }
+
+    public volatile java.lang.Double interpolate(java.lang.Object, java.lang.Object)
+    {
+        com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D r0;
+        java.lang.Object r1, r2;
+        java.lang.Double $r3, $r5;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r4;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D;
+
+        r1 := @parameter0: java.lang.Object;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r4 = (com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle) r1;
+
+        $r3 = (java.lang.Double) r2;
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: java.lang.Double interpolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>($r4, $r3);
+
+        return $r5;
+    }
+
+    public static void <clinit>()
+    {
+        <com.opengamma.analytics.math.interpolation.LogLinearExtrapolator1D: long serialVersionUID> = 1L;
+
+        return;
+    }
+}

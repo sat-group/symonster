@@ -1,0 +1,233 @@
+public class com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCurveCalibrator extends java.lang.Object
+{
+    private static final com.opengamma.financial.convention.daycount.DayCount ACT_365;
+    private static final com.opengamma.analytics.math.rootfinding.BracketRoot BRACKER;
+    private static final com.opengamma.analytics.math.rootfinding.RealSingleRootFinder ROOTFINDER;
+    private static final com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantPresentValueCreditDefaultSwap PRICER;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCurveCalibrator r0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCurveCalibrator;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantDateCreditCurve calibrateHazardCurve(org.threeten.bp.LocalDate, org.threeten.bp.LocalDate, org.threeten.bp.LocalDate, org.threeten.bp.LocalDate, org.threeten.bp.LocalDate[], double[], boolean, org.threeten.bp.Period, com.opengamma.analytics.financial.credit.isdastandardmodel.StubType, boolean, com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantDateYieldCurve, double)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCurveCalibrator r0;
+        org.threeten.bp.LocalDate r1, r2, r3, r4, $r25, $r31;
+        org.threeten.bp.LocalDate[] r5;
+        double[] r6, r10, r11, r13;
+        boolean z0, z1, $z3, $z4, $z5;
+        org.threeten.bp.Period r7;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.StubType r8;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantDateYieldCurve r9;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12;
+        int i0, $i1, i2, i3;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantDateCreditCurve $r23, r33;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCurveCalibrator$CDSPricer $r24;
+        com.opengamma.analytics.math.rootfinding.BracketRoot $r26;
+        com.opengamma.analytics.math.rootfinding.RealSingleRootFinder $r27;
+        java.lang.Double $r28, $r29, $r30;
+        com.opengamma.financial.convention.daycount.DayCount $r32;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCurveCalibrator;
+
+        r1 := @parameter0: org.threeten.bp.LocalDate;
+
+        r2 := @parameter1: org.threeten.bp.LocalDate;
+
+        r3 := @parameter2: org.threeten.bp.LocalDate;
+
+        r4 := @parameter3: org.threeten.bp.LocalDate;
+
+        r5 := @parameter4: org.threeten.bp.LocalDate[];
+
+        r6 := @parameter5: double[];
+
+        z0 := @parameter6: boolean;
+
+        r7 := @parameter7: org.threeten.bp.Period;
+
+        r8 := @parameter8: com.opengamma.analytics.financial.credit.isdastandardmodel.StubType;
+
+        z1 := @parameter9: boolean;
+
+        r9 := @parameter10: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantDateYieldCurve;
+
+        d0 := @parameter11: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "null today");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "null stepinDate");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "null valueDate");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r4, "null startDate");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object[] noNulls(java.lang.Object[],java.lang.String)>(r5, "null endDates");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: double[] notEmpty(double[],java.lang.String)>(r6, "no or null couponRates");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r7, "null tenor");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r8, "null stubType");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r9, "null yieldCurve");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: boolean isInRangeExcludingHigh(double,double,double)>(0.0, 1.0, d0);
+
+        $z3 = virtualinvoke r3.<org.threeten.bp.LocalDate: boolean isBefore(org.threeten.bp.chrono.ChronoLocalDate)>(r1);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z3, "Require valueDate >= today");
+
+        $z4 = virtualinvoke r2.<org.threeten.bp.LocalDate: boolean isBefore(org.threeten.bp.chrono.ChronoLocalDate)>(r1);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z4, "Require stepin >= today");
+
+        i0 = lengthof r5;
+
+        $i1 = lengthof r6;
+
+        if i0 != $i1 goto label1;
+
+        $z5 = 1;
+
+        goto label2;
+
+     label1:
+        $z5 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "length of couponRates does not match endDates");
+
+        r10 = newarray (double)[i0];
+
+        r11 = newarray (double)[i0];
+
+        d1 = 1.0 - d0;
+
+        i2 = 0;
+
+     label3:
+        if i2 >= i0 goto label4;
+
+        $d10 = r6[i2];
+
+        $d11 = $d10 / d1;
+
+        r10[i2] = $d11;
+
+        $r32 = <com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCurveCalibrator: com.opengamma.financial.convention.daycount.DayCount ACT_365>;
+
+        $r31 = r5[i2];
+
+        $d12 = interfaceinvoke $r32.<com.opengamma.financial.convention.daycount.DayCount: double getDayCountFraction(org.threeten.bp.LocalDate,org.threeten.bp.LocalDate)>(r1, $r31);
+
+        r11[i2] = $d12;
+
+        i2 = i2 + 1;
+
+        goto label3;
+
+     label4:
+        $r23 = new com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantDateCreditCurve;
+
+        specialinvoke $r23.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantDateCreditCurve: void <init>(org.threeten.bp.LocalDate,org.threeten.bp.LocalDate[],double[])>(r1, r5, r10);
+
+        r33 = $r23;
+
+        i3 = 0;
+
+     label5:
+        if i3 >= i0 goto label6;
+
+        $r24 = new com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCurveCalibrator$CDSPricer;
+
+        $r25 = r5[i3];
+
+        $d3 = r6[i3];
+
+        specialinvoke $r24.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCurveCalibrator$CDSPricer: void <init>(com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCurveCalibrator,int,org.threeten.bp.LocalDate,org.threeten.bp.LocalDate,org.threeten.bp.LocalDate,org.threeten.bp.LocalDate,org.threeten.bp.LocalDate,double,boolean,boolean,org.threeten.bp.Period,com.opengamma.analytics.financial.credit.isdastandardmodel.StubType,double,com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantDateYieldCurve,com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantDateCreditCurve)>(r0, i3, r1, r2, r3, r4, $r25, $d3, z1, z0, r7, r8, d0, r9, r33);
+
+        $r26 = <com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCurveCalibrator: com.opengamma.analytics.math.rootfinding.BracketRoot BRACKER>;
+
+        $d4 = r10[i3];
+
+        $d7 = 0.9 * $d4;
+
+        $d5 = r10[i3];
+
+        $d6 = 1.1 * $d5;
+
+        r13 = virtualinvoke $r26.<com.opengamma.analytics.math.rootfinding.BracketRoot: double[] getBracketedPoints(com.opengamma.analytics.math.function.Function1D,double,double,double,double)>($r24, $d7, $d6, 0.0, #Infinity);
+
+        $r27 = <com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCurveCalibrator: com.opengamma.analytics.math.rootfinding.RealSingleRootFinder ROOTFINDER>;
+
+        $d8 = r13[0];
+
+        $r28 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d8);
+
+        $d9 = r13[1];
+
+        $r29 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d9);
+
+        $r30 = virtualinvoke $r27.<com.opengamma.analytics.math.rootfinding.RealSingleRootFinder: java.lang.Double getRoot(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r24, $r28, $r29);
+
+        d2 = virtualinvoke $r30.<java.lang.Double: double doubleValue()>();
+
+        r33 = virtualinvoke r33.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantDateCreditCurve: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantDateCreditCurve withRate(double,int)>(d2, i3);
+
+        i3 = i3 + 1;
+
+        goto label5;
+
+     label6:
+        return r33;
+    }
+
+    static com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantPresentValueCreditDefaultSwap access$000()
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantPresentValueCreditDefaultSwap $r0;
+
+        $r0 = <com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCurveCalibrator: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantPresentValueCreditDefaultSwap PRICER>;
+
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.financial.convention.daycount.DayCount $r0;
+        com.opengamma.analytics.math.rootfinding.BracketRoot $r1;
+        com.opengamma.analytics.math.rootfinding.BrentSingleRootFinder $r2;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantPresentValueCreditDefaultSwap $r3;
+
+        $r0 = <com.opengamma.financial.convention.daycount.DayCounts: com.opengamma.financial.convention.daycount.DayCount ACT_365>;
+
+        <com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCurveCalibrator: com.opengamma.financial.convention.daycount.DayCount ACT_365> = $r0;
+
+        $r1 = new com.opengamma.analytics.math.rootfinding.BracketRoot;
+
+        specialinvoke $r1.<com.opengamma.analytics.math.rootfinding.BracketRoot: void <init>()>();
+
+        <com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCurveCalibrator: com.opengamma.analytics.math.rootfinding.BracketRoot BRACKER> = $r1;
+
+        $r2 = new com.opengamma.analytics.math.rootfinding.BrentSingleRootFinder;
+
+        specialinvoke $r2.<com.opengamma.analytics.math.rootfinding.BrentSingleRootFinder: void <init>()>();
+
+        <com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCurveCalibrator: com.opengamma.analytics.math.rootfinding.RealSingleRootFinder ROOTFINDER> = $r2;
+
+        $r3 = new com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantPresentValueCreditDefaultSwap;
+
+        specialinvoke $r3.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantPresentValueCreditDefaultSwap: void <init>()>();
+
+        <com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCurveCalibrator: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantPresentValueCreditDefaultSwap PRICER> = $r3;
+
+        return;
+    }
+}

@@ -1,0 +1,370 @@
+public class com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand extends java.lang.Object
+{
+    private final com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent _ce;
+    private final double _alpha;
+    private final boolean _useVarianceReduction;
+
+    public void <init>(com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent, double, boolean)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand r0;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent r1;
+        double d0;
+        boolean z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent;
+
+        d0 := @parameter1: double;
+
+        z0 := @parameter2: boolean;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "characteristic exponent");
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent _ce> = r1;
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: double _alpha> = d0;
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: boolean _useVarianceReduction> = z0;
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData, com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData r1;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r2;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7;
+        com.opengamma.analytics.math.function.Function1D r3, r8;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent $r4;
+        boolean $z0;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand$1 $r5;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.GaussianCharacteristicExponent $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "data");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "option");
+
+        d0 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        $r4 = r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent _ce>;
+
+        r3 = interfaceinvoke $r4.<com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent: com.opengamma.analytics.math.function.Function1D getFunction(double)>(d0);
+
+        $d3 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        $d4 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: double getForward()>();
+
+        $d5 = $d3 / $d4;
+
+        d1 = staticinvoke <java.lang.Math: double log(double)>($d5);
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: double getBlackVolatility()>();
+
+        $z0 = r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: boolean _useVarianceReduction>;
+
+        if $z0 == 0 goto label1;
+
+        $r6 = new com.opengamma.analytics.financial.model.option.pricing.fourier.GaussianCharacteristicExponent;
+
+        $d6 = -0.5 * d2;
+
+        $d7 = $d6 * d2;
+
+        specialinvoke $r6.<com.opengamma.analytics.financial.model.option.pricing.fourier.GaussianCharacteristicExponent: void <init>(double,double)>($d7, d2);
+
+        r8 = interfaceinvoke $r6.<com.opengamma.analytics.financial.model.option.pricing.fourier.CharacteristicExponent: com.opengamma.analytics.math.function.Function1D getFunction(double)>(d0);
+
+        goto label2;
+
+     label1:
+        r8 = null;
+
+     label2:
+        $r5 = new com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand$1;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand$1: void <init>(com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand,com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.function.Function1D,double)>(r0, r3, r8, d1);
+
+        return $r5;
+    }
+
+    private com.opengamma.analytics.math.number.ComplexNumber getIntegrand(double, com.opengamma.analytics.math.function.Function1D, com.opengamma.analytics.math.function.Function1D, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand r0;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7;
+        com.opengamma.analytics.math.function.Function1D r1, r2;
+        com.opengamma.analytics.math.number.ComplexNumber r4, r6, r7, $r8, $r9, $r11, $r12, $r13, $r15, $r16, $r17, $r18, $r19, $r20;
+        java.lang.Object $r10, $r14;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: com.opengamma.analytics.math.function.Function1D;
+
+        r2 := @parameter2: com.opengamma.analytics.math.function.Function1D;
+
+        d1 := @parameter3: double;
+
+        $r8 = new com.opengamma.analytics.math.number.ComplexNumber;
+
+        $d2 = r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: double _alpha>;
+
+        $d3 = -1.0 - $d2;
+
+        specialinvoke $r8.<com.opengamma.analytics.math.number.ComplexNumber: void <init>(double,double)>(d0, $d3);
+
+        $r9 = new com.opengamma.analytics.math.number.ComplexNumber;
+
+        $d4 = neg d0;
+
+        $d5 = $d4 * d1;
+
+        specialinvoke $r9.<com.opengamma.analytics.math.number.ComplexNumber: void <init>(double,double)>(0.0, $d5);
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r8);
+
+        $r11 = (com.opengamma.analytics.math.number.ComplexNumber) $r10;
+
+        $r12 = staticinvoke <com.opengamma.analytics.math.ComplexMathUtils: com.opengamma.analytics.math.number.ComplexNumber add(com.opengamma.analytics.math.number.ComplexNumber,com.opengamma.analytics.math.number.ComplexNumber)>($r9, $r11);
+
+        r4 = staticinvoke <com.opengamma.analytics.math.ComplexMathUtils: com.opengamma.analytics.math.number.ComplexNumber exp(com.opengamma.analytics.math.number.ComplexNumber)>($r12);
+
+        if r2 != null goto label1;
+
+        $r20 = new com.opengamma.analytics.math.number.ComplexNumber;
+
+        specialinvoke $r20.<com.opengamma.analytics.math.number.ComplexNumber: void <init>(double)>(0.0);
+
+        goto label2;
+
+     label1:
+        $r13 = new com.opengamma.analytics.math.number.ComplexNumber;
+
+        $d6 = neg d0;
+
+        $d7 = $d6 * d1;
+
+        specialinvoke $r13.<com.opengamma.analytics.math.number.ComplexNumber: void <init>(double,double)>(0.0, $d7);
+
+        $r14 = virtualinvoke r2.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r8);
+
+        $r15 = (com.opengamma.analytics.math.number.ComplexNumber) $r14;
+
+        $r16 = staticinvoke <com.opengamma.analytics.math.ComplexMathUtils: com.opengamma.analytics.math.number.ComplexNumber add(com.opengamma.analytics.math.number.ComplexNumber,com.opengamma.analytics.math.number.ComplexNumber)>($r13, $r15);
+
+        $r20 = staticinvoke <com.opengamma.analytics.math.ComplexMathUtils: com.opengamma.analytics.math.number.ComplexNumber exp(com.opengamma.analytics.math.number.ComplexNumber)>($r16);
+
+     label2:
+        $r17 = <com.opengamma.analytics.math.number.ComplexNumber: com.opengamma.analytics.math.number.ComplexNumber MINUS_I>;
+
+        $r18 = staticinvoke <com.opengamma.analytics.math.ComplexMathUtils: com.opengamma.analytics.math.number.ComplexNumber subtract(com.opengamma.analytics.math.number.ComplexNumber,com.opengamma.analytics.math.number.ComplexNumber)>($r17, $r8);
+
+        r6 = staticinvoke <com.opengamma.analytics.math.ComplexMathUtils: com.opengamma.analytics.math.number.ComplexNumber multiply(com.opengamma.analytics.math.number.ComplexNumber,com.opengamma.analytics.math.number.ComplexNumber)>($r8, $r18);
+
+        $r19 = staticinvoke <com.opengamma.analytics.math.ComplexMathUtils: com.opengamma.analytics.math.number.ComplexNumber subtract(com.opengamma.analytics.math.number.ComplexNumber,com.opengamma.analytics.math.number.ComplexNumber)>(r4, $r20);
+
+        r7 = staticinvoke <com.opengamma.analytics.math.ComplexMathUtils: com.opengamma.analytics.math.number.ComplexNumber divide(com.opengamma.analytics.math.number.ComplexNumber,com.opengamma.analytics.math.number.ComplexNumber)>($r19, r6);
+
+        return r7;
+    }
+
+    public com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent getCharacteristicExponent()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand r0;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent _ce>;
+
+        return $r1;
+    }
+
+    public double getAlpha()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: double _alpha>;
+
+        return $d0;
+    }
+
+    public boolean useVarianceReduction()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand r0;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand;
+
+        $z0 = r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: boolean _useVarianceReduction>;
+
+        return $z0;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand r0;
+        long l1, $l2, $l3;
+        double $d0;
+        int $i4, $i5, $i6, $i7, $i8, i10, i11, i13;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent $r1;
+        boolean $z0;
+        short $s12;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: double _alpha>;
+
+        l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $i5 = 31 * 1;
+
+        $l2 = l1 >>> 32;
+
+        $l3 = l1 ^ $l2;
+
+        $i4 = (int) $l3;
+
+        i10 = $i5 + $i4;
+
+        $i6 = 31 * i10;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent _ce>;
+
+        $i7 = virtualinvoke $r1.<java.lang.Object: int hashCode()>();
+
+        i11 = $i6 + $i7;
+
+        $i8 = 31 * i11;
+
+        $z0 = r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: boolean _useVarianceReduction>;
+
+        if $z0 == 0 goto label1;
+
+        $s12 = 1231;
+
+        goto label2;
+
+     label1:
+        $s12 = 1237;
+
+     label2:
+        i13 = $i8 + $s12;
+
+        return i13;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand r0, r2;
+        java.lang.Object r1;
+        java.lang.Class $r3, $r4;
+        double $d0, $d1;
+        long $l0, $l1;
+        byte $b2;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent $r5, $r6;
+        boolean $z0, $z1, $z2, $z3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        if r1 != null goto label2;
+
+        return 0;
+
+     label2:
+        $r3 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r4 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+
+        if $r3 == $r4 goto label3;
+
+        return 0;
+
+     label3:
+        r2 = (com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand) r1;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: double _alpha>;
+
+        $l0 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $d1 = r2.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: double _alpha>;
+
+        $l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d1);
+
+        $b2 = $l0 cmp $l1;
+
+        if $b2 == 0 goto label4;
+
+        return 0;
+
+     label4:
+        $r6 = r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent _ce>;
+
+        $r5 = r2.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent _ce>;
+
+        $z0 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r6, $r5);
+
+        if $z0 != 0 goto label5;
+
+        return 0;
+
+     label5:
+        $z2 = r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: boolean _useVarianceReduction>;
+
+        $z1 = r2.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: boolean _useVarianceReduction>;
+
+        if $z2 != $z1 goto label6;
+
+        $z3 = 1;
+
+        goto label7;
+
+     label6:
+        $z3 = 0;
+
+     label7:
+        return $z3;
+    }
+
+    static com.opengamma.analytics.math.number.ComplexNumber access$000(com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand, double, com.opengamma.analytics.math.function.Function1D, com.opengamma.analytics.math.function.Function1D, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand r0;
+        double d0, d1;
+        com.opengamma.analytics.math.function.Function1D r1, r2;
+        com.opengamma.analytics.math.number.ComplexNumber $r3;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand;
+
+        d0 := @parameter1: double;
+
+        r1 := @parameter2: com.opengamma.analytics.math.function.Function1D;
+
+        r2 := @parameter3: com.opengamma.analytics.math.function.Function1D;
+
+        d1 := @parameter4: double;
+
+        $r3 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanPriceIntegrand: com.opengamma.analytics.math.number.ComplexNumber getIntegrand(double,com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.function.Function1D,double)>(d0, r1, r2, d1);
+
+        return $r3;
+    }
+}

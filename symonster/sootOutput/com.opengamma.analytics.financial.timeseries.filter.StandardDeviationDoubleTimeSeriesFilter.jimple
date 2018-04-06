@@ -1,0 +1,258 @@
+public class com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter extends com.opengamma.analytics.financial.timeseries.filter.TimeSeriesFilter
+{
+    private static final org.slf4j.Logger s_logger;
+    private static final com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries EMPTY_SERIES;
+    private final com.opengamma.analytics.financial.timeseries.analysis.DoubleTimeSeriesStatisticsCalculator _meanCalculator;
+    private final com.opengamma.analytics.financial.timeseries.analysis.DoubleTimeSeriesStatisticsCalculator _stdCalculator;
+    private double _standardDeviations;
+
+    public void <init>(double)
+    {
+        com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter r0;
+        double d0, $d1;
+        com.opengamma.analytics.financial.timeseries.analysis.DoubleTimeSeriesStatisticsCalculator $r1, $r3;
+        com.opengamma.analytics.math.statistics.descriptive.MeanCalculator $r2;
+        com.opengamma.analytics.math.statistics.descriptive.SampleStandardDeviationCalculator $r4;
+        byte $b0;
+        org.slf4j.Logger $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter;
+
+        d0 := @parameter0: double;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.timeseries.filter.TimeSeriesFilter: void <init>()>();
+
+        $r1 = new com.opengamma.analytics.financial.timeseries.analysis.DoubleTimeSeriesStatisticsCalculator;
+
+        $r2 = new com.opengamma.analytics.math.statistics.descriptive.MeanCalculator;
+
+        specialinvoke $r2.<com.opengamma.analytics.math.statistics.descriptive.MeanCalculator: void <init>()>();
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.timeseries.analysis.DoubleTimeSeriesStatisticsCalculator: void <init>(com.opengamma.analytics.math.function.Function)>($r2);
+
+        r0.<com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter: com.opengamma.analytics.financial.timeseries.analysis.DoubleTimeSeriesStatisticsCalculator _meanCalculator> = $r1;
+
+        $r3 = new com.opengamma.analytics.financial.timeseries.analysis.DoubleTimeSeriesStatisticsCalculator;
+
+        $r4 = new com.opengamma.analytics.math.statistics.descriptive.SampleStandardDeviationCalculator;
+
+        specialinvoke $r4.<com.opengamma.analytics.math.statistics.descriptive.SampleStandardDeviationCalculator: void <init>()>();
+
+        specialinvoke $r3.<com.opengamma.analytics.financial.timeseries.analysis.DoubleTimeSeriesStatisticsCalculator: void <init>(com.opengamma.analytics.math.function.Function)>($r4);
+
+        r0.<com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter: com.opengamma.analytics.financial.timeseries.analysis.DoubleTimeSeriesStatisticsCalculator _stdCalculator> = $r3;
+
+        $b0 = d0 cmpg 0.0;
+
+        if $b0 >= 0 goto label1;
+
+        $r5 = <com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r5.<org.slf4j.Logger: void info(java.lang.String)>("Standard deviation was negative; using absolute value");
+
+     label1:
+        $d1 = staticinvoke <java.lang.Math: double abs(double)>(d0);
+
+        r0.<com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter: double _standardDeviations> = $d1;
+
+        return;
+    }
+
+    public void setStandardDeviations(double)
+    {
+        com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter r0;
+        double d0, $d1;
+        byte $b0;
+        org.slf4j.Logger $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter;
+
+        d0 := @parameter0: double;
+
+        $b0 = d0 cmpg 0.0;
+
+        if $b0 >= 0 goto label1;
+
+        $r1 = <com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r1.<org.slf4j.Logger: void info(java.lang.String)>("Standard deviation was negative; using absolute value");
+
+     label1:
+        $d1 = staticinvoke <java.lang.Math: double abs(double)>(d0);
+
+        r0.<com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter: double _standardDeviations> = $d1;
+
+        return;
+    }
+
+    public com.opengamma.analytics.financial.timeseries.filter.FilteredTimeSeries evaluate(com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries)
+    {
+        com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter r0;
+        com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries r1, $r19, $r20;
+        double d0, d1, d2, $d3, $d4, $d5, $d6;
+        int i0, i1, $i3, $i4, i5, i6;
+        int[] r2, r4;
+        double[] r3, r5;
+        com.opengamma.timeseries.date.localdate.LocalDateDoubleEntryIterator r6;
+        boolean $z0, $z1;
+        java.lang.Object[] $r8, $r11;
+        com.opengamma.analytics.financial.timeseries.analysis.DoubleTimeSeriesStatisticsCalculator $r9, $r12;
+        java.lang.Double $r10, $r13, $r16;
+        com.opengamma.analytics.financial.timeseries.filter.FilteredTimeSeries $r14, r21;
+        java.lang.Object $r15;
+        byte $b2;
+        org.slf4j.Logger $r17;
+        com.opengamma.timeseries.DoubleTimeSeries[] r22, r23;
+
+        r0 := @this: com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter;
+
+        r1 := @parameter0: com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "ts");
+
+        $z0 = interfaceinvoke r1.<com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries: boolean isEmpty()>();
+
+        if $z0 == 0 goto label1;
+
+        $r17 = <com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r17.<org.slf4j.Logger: void info(java.lang.String)>("Time series was empty");
+
+        r21 = new com.opengamma.analytics.financial.timeseries.filter.FilteredTimeSeries;
+
+        $r20 = <com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter: com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries EMPTY_SERIES>;
+
+        $r19 = <com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter: com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries EMPTY_SERIES>;
+
+        specialinvoke r21.<com.opengamma.analytics.financial.timeseries.filter.FilteredTimeSeries: void <init>(com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries,com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries)>($r20, $r19);
+
+        return r21;
+
+     label1:
+        $r9 = r0.<com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter: com.opengamma.analytics.financial.timeseries.analysis.DoubleTimeSeriesStatisticsCalculator _meanCalculator>;
+
+        $r8 = newarray (com.opengamma.timeseries.DoubleTimeSeries)[1];
+
+        $r8[0] = r1;
+
+        r22 = (com.opengamma.timeseries.DoubleTimeSeries[]) $r8;
+
+        $r10 = virtualinvoke $r9.<com.opengamma.analytics.financial.timeseries.analysis.DoubleTimeSeriesStatisticsCalculator: java.lang.Double evaluate(com.opengamma.timeseries.DoubleTimeSeries[])>(r22);
+
+        d0 = virtualinvoke $r10.<java.lang.Double: double doubleValue()>();
+
+        $r12 = r0.<com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter: com.opengamma.analytics.financial.timeseries.analysis.DoubleTimeSeriesStatisticsCalculator _stdCalculator>;
+
+        $r11 = newarray (com.opengamma.timeseries.DoubleTimeSeries)[1];
+
+        $r11[0] = r1;
+
+        r23 = (com.opengamma.timeseries.DoubleTimeSeries[]) $r11;
+
+        $r13 = virtualinvoke $r12.<com.opengamma.analytics.financial.timeseries.analysis.DoubleTimeSeriesStatisticsCalculator: java.lang.Double evaluate(com.opengamma.timeseries.DoubleTimeSeries[])>(r23);
+
+        d1 = virtualinvoke $r13.<java.lang.Double: double doubleValue()>();
+
+        i0 = interfaceinvoke r1.<com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries: int size()>();
+
+        r2 = newarray (int)[i0];
+
+        r3 = newarray (double)[i0];
+
+        r4 = newarray (int)[i0];
+
+        r5 = newarray (double)[i0];
+
+        r6 = interfaceinvoke r1.<com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries: com.opengamma.timeseries.date.localdate.LocalDateDoubleEntryIterator iterator()>();
+
+        i5 = 0;
+
+        i6 = 0;
+
+     label2:
+        $z1 = interfaceinvoke r6.<com.opengamma.timeseries.date.localdate.LocalDateDoubleEntryIterator: boolean hasNext()>();
+
+        if $z1 == 0 goto label5;
+
+        i1 = interfaceinvoke r6.<com.opengamma.timeseries.date.localdate.LocalDateDoubleEntryIterator: int nextTimeFast()>();
+
+        $r15 = interfaceinvoke r6.<com.opengamma.timeseries.date.localdate.LocalDateDoubleEntryIterator: java.lang.Object currentValue()>();
+
+        $r16 = (java.lang.Double) $r15;
+
+        d2 = virtualinvoke $r16.<java.lang.Double: double doubleValue()>();
+
+        $d3 = d2 - d0;
+
+        $d4 = staticinvoke <java.lang.Math: double abs(double)>($d3);
+
+        $d5 = r0.<com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter: double _standardDeviations>;
+
+        $d6 = $d5 * d1;
+
+        $b2 = $d4 cmpl $d6;
+
+        if $b2 <= 0 goto label3;
+
+        r4[i6] = i1;
+
+        $i4 = i6;
+
+        i6 = i6 + 1;
+
+        r5[$i4] = d2;
+
+        goto label4;
+
+     label3:
+        r2[i5] = i1;
+
+        $i3 = i5;
+
+        i5 = i5 + 1;
+
+        r3[$i3] = d2;
+
+     label4:
+        goto label2;
+
+     label5:
+        $r14 = virtualinvoke r0.<com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter: com.opengamma.analytics.financial.timeseries.filter.FilteredTimeSeries getFilteredSeries(int[],double[],int,int[],double[],int)>(r2, r3, i5, r4, r5, i6);
+
+        return $r14;
+    }
+
+    public volatile java.lang.Object evaluate(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter r0;
+        java.lang.Object r1;
+        com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries $r2;
+        com.opengamma.analytics.financial.timeseries.filter.FilteredTimeSeries $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter;
+
+        r1 := @parameter0: java.lang.Object;
+
+        $r2 = (com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries) r1;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter: com.opengamma.analytics.financial.timeseries.filter.FilteredTimeSeries evaluate(com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries)>($r2);
+
+        return $r3;
+    }
+
+    static void <clinit>()
+    {
+        org.slf4j.Logger $r0;
+        com.opengamma.timeseries.date.localdate.ImmutableLocalDateDoubleTimeSeries $r1;
+
+        $r0 = staticinvoke <org.slf4j.LoggerFactory: org.slf4j.Logger getLogger(java.lang.Class)>(class "com/opengamma/analytics/financial/timeseries/filter/StandardDeviationDoubleTimeSeriesFilter");
+
+        <com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter: org.slf4j.Logger s_logger> = $r0;
+
+        $r1 = <com.opengamma.timeseries.date.localdate.ImmutableLocalDateDoubleTimeSeries: com.opengamma.timeseries.date.localdate.ImmutableLocalDateDoubleTimeSeries EMPTY_SERIES>;
+
+        <com.opengamma.analytics.financial.timeseries.filter.StandardDeviationDoubleTimeSeriesFilter: com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries EMPTY_SERIES> = $r1;
+
+        return;
+    }
+}

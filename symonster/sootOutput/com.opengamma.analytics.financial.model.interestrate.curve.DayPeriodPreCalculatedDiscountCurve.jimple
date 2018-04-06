@@ -1,0 +1,215 @@
+public class com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve extends com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve
+{
+    private double[] _preCalculatedDiscountFactors;
+    private final double _daysPerYear;
+
+    public void <init>(java.lang.String, com.opengamma.analytics.math.curve.DoublesCurve)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve r0;
+        java.lang.String r1;
+        com.opengamma.analytics.math.curve.DoublesCurve r2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve;
+
+        r1 := @parameter0: java.lang.String;
+
+        r2 := @parameter1: com.opengamma.analytics.math.curve.DoublesCurve;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve: void <init>(java.lang.String,com.opengamma.analytics.math.curve.DoublesCurve,double)>(r1, r2, 365.25);
+
+        return;
+    }
+
+    public void <init>(java.lang.String, com.opengamma.analytics.math.curve.DoublesCurve, double)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve r0;
+        java.lang.String r1;
+        com.opengamma.analytics.math.curve.DoublesCurve r2;
+        double d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve;
+
+        r1 := @parameter0: java.lang.String;
+
+        r2 := @parameter1: com.opengamma.analytics.math.curve.DoublesCurve;
+
+        d0 := @parameter2: double;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: void <init>(java.lang.String,com.opengamma.analytics.math.curve.DoublesCurve)>(r1, r2);
+
+        r0.<com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve: double _daysPerYear> = d0;
+
+        return;
+    }
+
+    public void preCalculateDiscountFactors(int)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve r0;
+        int i0, $i1, i2, $i3;
+        double d0, d1, $d2, $d3;
+        double[] $r1, $r2, $r3;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve;
+
+        i0 := @parameter0: int;
+
+        if i0 < 1 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "numYears must be more than 1");
+
+        $i1 = i0 * 366;
+
+        $r1 = newarray (double)[$i1];
+
+        r0.<com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve: double[] _preCalculatedDiscountFactors> = $r1;
+
+        i2 = 0;
+
+     label3:
+        $r3 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve: double[] _preCalculatedDiscountFactors>;
+
+        $i3 = lengthof $r3;
+
+        if i2 >= $i3 goto label4;
+
+        $d3 = (double) i2;
+
+        $d2 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve: double _daysPerYear>;
+
+        d0 = $d3 / $d2;
+
+        d1 = specialinvoke r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: double getDiscountFactor(double)>(d0);
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve: double[] _preCalculatedDiscountFactors>;
+
+        $r2[i2] = d1;
+
+        i2 = i2 + 1;
+
+        goto label3;
+
+     label4:
+        return;
+    }
+
+    public double getDiscountFactor(double)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve r0;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6;
+        long l0;
+        int i1, $i3;
+        double[] $r1, $r2, $r3;
+        byte $b2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve;
+
+        d0 := @parameter0: double;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve: double[] _preCalculatedDiscountFactors>;
+
+        if $r1 != null goto label1;
+
+        $d6 = specialinvoke r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: double getDiscountFactor(double)>(d0);
+
+        return $d6;
+
+     label1:
+        $d1 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve: double _daysPerYear>;
+
+        $d2 = d0 * $d1;
+
+        l0 = staticinvoke <java.lang.Math: long round(double)>($d2);
+
+        $b2 = l0 cmp 2147483647L;
+
+        if $b2 <= 0 goto label2;
+
+        $d5 = specialinvoke r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: double getDiscountFactor(double)>(d0);
+
+        return $d5;
+
+     label2:
+        i1 = (int) l0;
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve: double[] _preCalculatedDiscountFactors>;
+
+        $i3 = lengthof $r2;
+
+        if i1 <= $i3 goto label3;
+
+        $d4 = specialinvoke r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: double getDiscountFactor(double)>(d0);
+
+        return $d4;
+
+     label3:
+        $r3 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve: double[] _preCalculatedDiscountFactors>;
+
+        $d3 = $r3[i1];
+
+        return $d3;
+    }
+
+    public boolean isPreCalculated()
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve r0;
+        double[] $r1;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve: double[] _preCalculatedDiscountFactors>;
+
+        if $r1 == null goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    public boolean isPreCalculated(int)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve r0;
+        int i0, $i1;
+        double[] $r1, $r2;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve: double[] _preCalculatedDiscountFactors>;
+
+        if $r1 == null goto label1;
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DayPeriodPreCalculatedDiscountCurve: double[] _preCalculatedDiscountFactors>;
+
+        $i1 = lengthof $r2;
+
+        if $i1 < i0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+}

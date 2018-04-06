@@ -1,0 +1,1041 @@
+public class com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer extends java.lang.Object
+{
+    private static final com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider ICP;
+    private static final com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider PDE;
+    private static final boolean USE_BURNIN;
+    private static final double BURNIN_FRACTION;
+    private static final double BURNIN_THETA;
+    private static final double MAIN_RUN_THETA;
+    private final boolean _useBurnin;
+    private final double _burninFrac;
+    private final double _burninTheta;
+    private final double _mainRunTheta;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: boolean _useBurnin> = 1;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _burninFrac> = 0.2;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _burninTheta> = 1.0;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _mainRunTheta> = 0.5;
+
+        return;
+    }
+
+    public void <init>(boolean)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer r0;
+        boolean z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer;
+
+        z0 := @parameter0: boolean;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: boolean _useBurnin> = z0;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _burninFrac> = 0.2;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _burninTheta> = 1.0;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _mainRunTheta> = 0.5;
+
+        return;
+    }
+
+    public void <init>(boolean, double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer r0;
+        boolean z0, $z1;
+        double d0;
+        byte $b0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer;
+
+        z0 := @parameter0: boolean;
+
+        d0 := @parameter1: double;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $b0 = d0 cmpg 0.5;
+
+        if $b0 >= 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "burn-in fraction too high");
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: boolean _useBurnin> = z0;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _burninFrac> = d0;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _burninTheta> = 1.0;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _mainRunTheta> = 0.5;
+
+        return;
+    }
+
+    public void <init>(boolean, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer r0;
+        boolean z0, $z1, $z2, $z3;
+        double d0, d1, d2;
+        byte $b0, $b1, $b2, $b3, $b4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer;
+
+        z0 := @parameter0: boolean;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        d2 := @parameter3: double;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $b0 = d0 cmpg 0.5;
+
+        if $b0 >= 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "burn-in fraction too high");
+
+        $b1 = 0.0 cmpg d1;
+
+        if $b1 > 0 goto label3;
+
+        $b3 = d1 cmpg 1.0;
+
+        if $b3 > 0 goto label3;
+
+        $z2 = 1;
+
+        goto label4;
+
+     label3:
+        $z2 = 0;
+
+     label4:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "burn-in theta must be between 0 and 1.0");
+
+        $b4 = 0.0 cmpg d2;
+
+        if $b4 > 0 goto label5;
+
+        $b2 = d2 cmpg 1.0;
+
+        if $b2 > 0 goto label5;
+
+        $z3 = 1;
+
+        goto label6;
+
+     label5:
+        $z3 = 0;
+
+     label6:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "main theta must be between 0 and 1.0");
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: boolean _useBurnin> = z0;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _burninFrac> = d0;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _burninTheta> = d1;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _mainRunTheta> = d2;
+
+        return;
+    }
+
+    public double price(double, double, double, double, double, double, boolean, int, int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer r0;
+        double d0, d1, d2, d3, d4, d5, $d6;
+        boolean z0;
+        int i0, i1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        z0 := @parameter6: boolean;
+
+        i0 := @parameter7: int;
+
+        i1 := @parameter8: int;
+
+        $d6 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double price(double,double,double,double,double,double,boolean,boolean,int,int)>(d0, d1, d2, d3, d4, d5, z0, 0, i0, i1);
+
+        return $d6;
+    }
+
+    public double price(double, double, double, double, double, double, boolean, boolean, int, int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, d33;
+        boolean z0, z1, $z2;
+        int i0, i1, $i4, i5, i6;
+        byte $b2, $b3;
+        com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing $r3, $r4, $r7, $r8;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r5, $r9, $r10;
+        double[] $r6, $r11, $r19, r23;
+        java.lang.IllegalArgumentException $r12;
+        java.lang.StringBuilder $r13, $r14, $r15, $r16, $r17;
+        java.lang.String $r18;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D[] r22;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        z0 := @parameter6: boolean;
+
+        z1 := @parameter7: boolean;
+
+        i0 := @parameter8: int;
+
+        i1 := @parameter9: int;
+
+        $d10 = 6.0 * d5;
+
+        $d11 = staticinvoke <java.lang.Math: double sqrt(double)>(d4);
+
+        $d12 = $d10 * $d11;
+
+        d6 = staticinvoke <java.lang.Math: double exp(double)>($d12);
+
+        $d14 = 0.8 * d1;
+
+        $d13 = d0 / d6;
+
+        d7 = staticinvoke <java.lang.Math: double min(double,double)>($d14, $d13);
+
+        $d16 = 1.25 * d1;
+
+        $d15 = d0 * d6;
+
+        d8 = staticinvoke <java.lang.Math: double max(double,double)>($d16, $d15);
+
+        $b2 = d1 cmpl 0.0;
+
+        if $b2 != 0 goto label1;
+
+        $r19 = newarray (double)[1];
+
+        $r19[0] = d0;
+
+        goto label2;
+
+     label1:
+        $r19 = newarray (double)[2];
+
+        $r19[0] = d0;
+
+        $r19[1] = d1;
+
+     label2:
+        $r3 = new com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing;
+
+        specialinvoke $r3.<com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing: void <init>(double,double,int,double,double[])>(d7, d8, i0, 0.0, $r19);
+
+        $z2 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: boolean _useBurnin>;
+
+        if $z2 == 0 goto label4;
+
+        $d20 = (double) i1;
+
+        $d19 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _burninFrac>;
+
+        $d21 = $d20 * $d19;
+
+        $d22 = staticinvoke <java.lang.Math: double max(double,double)>(2.0, $d21);
+
+        i5 = (int) $d22;
+
+        $d23 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _burninFrac>;
+
+        $d24 = $d23 * d4;
+
+        $d26 = $d24 * d4;
+
+        $d25 = (double) i1;
+
+        d9 = $d26 / $d25;
+
+        $b3 = d9 cmpl d4;
+
+        if $b3 < 0 goto label3;
+
+        $d29 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _burninFrac>;
+
+        $d30 = $d29 * d4;
+
+        $d31 = staticinvoke <java.lang.Math: double ceil(double)>($d30);
+
+        i6 = (int) $d31;
+
+        $d32 = (double) i1;
+
+        d33 = $d32 / d4;
+
+        $r12 = new java.lang.IllegalArgumentException;
+
+        $r13 = new java.lang.StringBuilder;
+
+        specialinvoke $r13.<java.lang.StringBuilder: void <init>()>();
+
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("burn in period greater than total time. Either increase timeNodes to above ");
+
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i6);
+
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", or reduce burninFrac to below ");
+
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d33);
+
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r12.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r18);
+
+        throw $r12;
+
+     label3:
+        $r7 = new com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing;
+
+        specialinvoke $r7.<com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing: void <init>(double,double,int,double)>(0.0, d9, i5, 0.0);
+
+        $r8 = new com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing;
+
+        $i4 = i1 - i5;
+
+        specialinvoke $r8.<com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing: void <init>(double,double,int,double)>(d9, d4, $i4, 0.0);
+
+        r22 = newarray (com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D)[2];
+
+        $r9 = new com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        specialinvoke $r9.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: void <init>(com.opengamma.analytics.financial.model.finitedifference.MeshingFunction,com.opengamma.analytics.financial.model.finitedifference.MeshingFunction)>($r7, $r3);
+
+        r22[0] = $r9;
+
+        $r10 = new com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        specialinvoke $r10.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: void <init>(com.opengamma.analytics.financial.model.finitedifference.MeshingFunction,com.opengamma.analytics.financial.model.finitedifference.MeshingFunction)>($r8, $r3);
+
+        r22[1] = $r10;
+
+        $r11 = newarray (double)[2];
+
+        $d27 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _burninTheta>;
+
+        $r11[0] = $d27;
+
+        $d28 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _mainRunTheta>;
+
+        $r11[1] = $d28;
+
+        r23 = $r11;
+
+        goto label5;
+
+     label4:
+        r22 = newarray (com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D)[1];
+
+        $r4 = new com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing: void <init>(double,double,int,double)>(0.0, d4, i1, 0.0);
+
+        $r5 = new com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: void <init>(com.opengamma.analytics.financial.model.finitedifference.MeshingFunction,com.opengamma.analytics.financial.model.finitedifference.MeshingFunction)>($r4, $r3);
+
+        r22[0] = $r5;
+
+        $r6 = newarray (double)[1];
+
+        $d17 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _mainRunTheta>;
+
+        $r6[0] = $d17;
+
+        r23 = $r6;
+
+     label5:
+        $d18 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double price(double,double,double,double,double,double,boolean,boolean,com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D[],double[])>(d0, d1, d2, d3, d4, d5, z0, z1, r22, r23);
+
+        return $d18;
+    }
+
+    public double price(double, double, double, double, double, double, boolean, boolean, int, int, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, d33;
+        boolean z0, z1, $z2;
+        int i0, i1, i2, $i5;
+        byte $b3, $b4;
+        com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing $r3;
+        com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing $r4, $r13, $r14;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r5, $r15, $r16;
+        double[] $r6, $r17, $r23, r28;
+        java.lang.Integer $r7, $r10;
+        java.lang.Object $r8, $r11;
+        java.lang.Double $r9, $r12;
+        java.lang.IllegalArgumentException $r18;
+        java.lang.StringBuilder $r19, $r20, $r21;
+        java.lang.String $r22;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D[] r27;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        z0 := @parameter6: boolean;
+
+        z1 := @parameter7: boolean;
+
+        i0 := @parameter8: int;
+
+        i1 := @parameter9: int;
+
+        d6 := @parameter10: double;
+
+        d7 := @parameter11: double;
+
+        d8 := @parameter12: double;
+
+        $d15 = staticinvoke <java.lang.Math: double sqrt(double)>(d4);
+
+        d9 = d5 * $d15;
+
+        $d16 = d8 * d9;
+
+        d10 = staticinvoke <java.lang.Math: double exp(double)>($d16);
+
+        d11 = d0 / d10;
+
+        d12 = d0 * d10;
+
+        $d17 = 1.25 * d1;
+
+        $b3 = d12 cmpg $d17;
+
+        if $b3 > 0 goto label1;
+
+        $d30 = 1.25 * d1;
+
+        $d31 = $d30 / d0;
+
+        $d32 = staticinvoke <java.lang.Math: double log(double)>($d31);
+
+        d33 = $d32 / d9;
+
+        $r18 = new java.lang.IllegalArgumentException;
+
+        $r19 = new java.lang.StringBuilder;
+
+        specialinvoke $r19.<java.lang.StringBuilder: void <init>()>();
+
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("sd does not give boundaries that contain the strike. Use a minimum value of ");
+
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d33);
+
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r18.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r22);
+
+        throw $r18;
+
+     label1:
+        $b4 = d1 cmpl 0.0;
+
+        if $b4 != 0 goto label2;
+
+        $r23 = newarray (double)[1];
+
+        $r23[0] = d0;
+
+        goto label3;
+
+     label2:
+        $r23 = newarray (double)[2];
+
+        $r23[0] = d0;
+
+        $r23[1] = d1;
+
+     label3:
+        $r3 = new com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing;
+
+        specialinvoke $r3.<com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing: void <init>(double,double,double,int,double,double[])>(d11, d12, d0, i0, d6, $r23);
+
+        $r4 = new com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing: void <init>(double,double,int,double)>(0.0, d4, i1, d7);
+
+        $z2 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: boolean _useBurnin>;
+
+        if $z2 == 0 goto label4;
+
+        $d21 = (double) i1;
+
+        $d20 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _burninFrac>;
+
+        $d22 = $d21 * $d20;
+
+        $d23 = staticinvoke <java.lang.Math: double max(double,double)>(2.0, $d22);
+
+        i2 = (int) $d23;
+
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(1);
+
+        $r8 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.finitedifference.MeshingFunction: java.lang.Object evaluate(java.lang.Object)>($r7);
+
+        $r9 = (java.lang.Double) $r8;
+
+        $d24 = virtualinvoke $r9.<java.lang.Double: double doubleValue()>();
+
+        $r10 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(0);
+
+        $r11 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.finitedifference.MeshingFunction: java.lang.Object evaluate(java.lang.Object)>($r10);
+
+        $r12 = (java.lang.Double) $r11;
+
+        $d25 = virtualinvoke $r12.<java.lang.Double: double doubleValue()>();
+
+        d13 = $d24 - $d25;
+
+        $d26 = (double) i2;
+
+        $d27 = $d26 * d13;
+
+        d14 = $d27 * d13;
+
+        $r13 = new com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing;
+
+        specialinvoke $r13.<com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing: void <init>(double,double,int,double)>(0.0, d14, i2, 0.0);
+
+        $r14 = new com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing;
+
+        $i5 = i1 - i2;
+
+        specialinvoke $r14.<com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing: void <init>(double,double,int,double)>(d14, d4, $i5, d7);
+
+        r27 = newarray (com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D)[2];
+
+        $r15 = new com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        specialinvoke $r15.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: void <init>(com.opengamma.analytics.financial.model.finitedifference.MeshingFunction,com.opengamma.analytics.financial.model.finitedifference.MeshingFunction)>($r13, $r3);
+
+        r27[0] = $r15;
+
+        $r16 = new com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        specialinvoke $r16.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: void <init>(com.opengamma.analytics.financial.model.finitedifference.MeshingFunction,com.opengamma.analytics.financial.model.finitedifference.MeshingFunction)>($r14, $r3);
+
+        r27[1] = $r16;
+
+        $r17 = newarray (double)[2];
+
+        $d28 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _burninTheta>;
+
+        $r17[0] = $d28;
+
+        $d29 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _mainRunTheta>;
+
+        $r17[1] = $d29;
+
+        r28 = $r17;
+
+        goto label5;
+
+     label4:
+        r27 = newarray (com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D)[1];
+
+        $r5 = new com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: void <init>(com.opengamma.analytics.financial.model.finitedifference.MeshingFunction,com.opengamma.analytics.financial.model.finitedifference.MeshingFunction)>($r4, $r3);
+
+        r27[0] = $r5;
+
+        $r6 = newarray (double)[1];
+
+        $d18 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double _mainRunTheta>;
+
+        $r6[0] = $d18;
+
+        r28 = $r6;
+
+     label5:
+        $d19 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double price(double,double,double,double,double,double,boolean,boolean,com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D[],double[])>(d0, d1, d2, d3, d4, d5, z0, z1, r27, r28);
+
+        return $d19;
+    }
+
+    public double price(double, double, double, double, double, double, boolean, boolean, com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D[], double[])
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, d17;
+        boolean z0, z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D[] r1;
+        double[] r2, r3, $r19, $r33, $r39;
+        int i0, i1, $i2, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i13, $i14, $i15, $i16, $i17, i18, i19, i20;
+        com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients r4;
+        com.opengamma.analytics.math.function.Function1D r5;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r6, $r7, $r8, $r9, $r16, $r20, $r30, $r34, $r38, $r40, $r41, $r42;
+        byte $b3, $b11, $b12;
+        com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider $r10;
+        com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider $r11;
+        com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer$3 $r12;
+        com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition $r13, $r14, $r22, $r24, $r25, $r26, $r36, $r37, r43, r44, r52, r54;
+        com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle $r15, $r18, $r29, $r32;
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference $r17, $r21, $r31, $r35;
+        com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer$2 $r23;
+        com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer$1 $r27;
+        com.opengamma.analytics.math.surface.FunctionalDoublesSurface $r28;
+        com.opengamma.analytics.financial.model.finitedifference.PDEResults1D r49;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        z0 := @parameter6: boolean;
+
+        z1 := @parameter7: boolean;
+
+        r1 := @parameter8: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D[];
+
+        r2 := @parameter9: double[];
+
+        i0 = lengthof r1;
+
+        $i2 = lengthof r2;
+
+        if i0 != $i2 goto label01;
+
+        $z3 = 1;
+
+        goto label02;
+
+     label01:
+        $z3 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "#theta does not match #grid");
+
+        $r6 = r1[0];
+
+        r3 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] getSpaceNodes()>();
+
+        $r7 = r1[0];
+
+        $d8 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double getTimeNode(int)>(0);
+
+        $b3 = $d8 cmpl 0.0;
+
+        if $b3 != 0 goto label03;
+
+        $z4 = 1;
+
+        goto label04;
+
+     label03:
+        $z4 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z4, "time nodes not starting from zero");
+
+        $i4 = i0 - 1;
+
+        $r9 = r1[$i4];
+
+        $i5 = i0 - 1;
+
+        $r8 = r1[$i5];
+
+        $i6 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getNumTimeNodes()>();
+
+        $i7 = $i6 - 1;
+
+        $d9 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double getTimeNode(int)>($i7);
+
+        $i8 = staticinvoke <java.lang.Double: int compare(double,double)>($d9, d4);
+
+        if $i8 != 0 goto label05;
+
+        $z5 = 1;
+
+        goto label06;
+
+     label05:
+        $z5 = 0;
+
+     label06:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "time nodes not ending at t");
+
+        i18 = 1;
+
+     label07:
+        if i18 >= i0 goto label10;
+
+        $r38 = r1[i18];
+
+        $r39 = virtualinvoke $r38.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] getSpaceNodes()>();
+
+        $z2 = staticinvoke <java.util.Arrays: boolean equals(double[],double[])>($r39, r3);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "different xNodes not supported");
+
+        $i13 = i18 - 1;
+
+        $r41 = r1[$i13];
+
+        $i14 = i18 - 1;
+
+        $r40 = r1[$i14];
+
+        $i15 = virtualinvoke $r40.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getNumTimeNodes()>();
+
+        $i16 = $i15 - 1;
+
+        $d15 = virtualinvoke $r41.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double getTimeNode(int)>($i16);
+
+        $r42 = r1[i18];
+
+        $d16 = virtualinvoke $r42.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double getTimeNode(int)>(0);
+
+        $i17 = staticinvoke <java.lang.Double: int compare(double,double)>($d15, $d16);
+
+        if $i17 != 0 goto label08;
+
+        $z6 = 1;
+
+        goto label09;
+
+     label08:
+        $z6 = 0;
+
+     label09:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z6, "time nodes not consistent");
+
+        i18 = i18 + 1;
+
+        goto label07;
+
+     label10:
+        d17 = r3[0];
+
+        $i9 = lengthof r3;
+
+        $i10 = $i9 - 1;
+
+        d6 = r3[$i10];
+
+        $b11 = d17 cmpg d1;
+
+        if $b11 > 0 goto label11;
+
+        $z7 = 1;
+
+        goto label12;
+
+     label11:
+        $z7 = 0;
+
+     label12:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z7, "strike lower than sMin");
+
+        $b12 = d6 cmpl d1;
+
+        if $b12 < 0 goto label13;
+
+        $z8 = 1;
+
+        goto label14;
+
+     label13:
+        $z8 = 0;
+
+     label14:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z8, "strike higher than sMax");
+
+        i1 = staticinvoke <java.util.Arrays: int binarySearch(double[],double)>(r3, d0);
+
+        if i1 < 0 goto label15;
+
+        $z9 = 1;
+
+        goto label16;
+
+     label15:
+        $z9 = 0;
+
+     label16:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z9, "cannot find spot on grid");
+
+        d7 = d2 - d3;
+
+        $r10 = <com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider PDE>;
+
+        r4 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients getBlackScholes(double,double,double)>(d2, d7, d5);
+
+        $r11 = <com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider ICP>;
+
+        r5 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider: com.opengamma.analytics.math.function.Function1D getEuropeanPayoff(double,boolean)>(d1, z0);
+
+        if z1 == 0 goto label21;
+
+        if z0 == 0 goto label17;
+
+        $r36 = new com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition;
+
+        specialinvoke $r36.<com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition: void <init>(double,double,boolean)>(0.0, d17, 1);
+
+        r43 = $r36;
+
+        $r37 = new com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition;
+
+        specialinvoke $r37.<com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition: void <init>(double,double,boolean)>(1.0, d6, 0);
+
+        r44 = $r37;
+
+        goto label18;
+
+     label17:
+        $r25 = new com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition;
+
+        specialinvoke $r25.<com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition: void <init>(double,double,boolean)>(-1.0, d17, 1);
+
+        r43 = $r25;
+
+        $r26 = new com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition;
+
+        specialinvoke $r26.<com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition: void <init>(double,double,boolean)>(0.0, d6, 0);
+
+        r44 = $r26;
+
+     label18:
+        $r27 = new com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer$1;
+
+        specialinvoke $r27.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer$1: void <init>(com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer,com.opengamma.analytics.math.function.Function1D)>(r0, r5);
+
+        $r28 = new com.opengamma.analytics.math.surface.FunctionalDoublesSurface;
+
+        specialinvoke $r28.<com.opengamma.analytics.math.surface.FunctionalDoublesSurface: void <init>(com.opengamma.analytics.math.function.Function)>($r27);
+
+        $r29 = new com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle;
+
+        $r30 = r1[0];
+
+        specialinvoke $r29.<com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle: void <init>(com.opengamma.analytics.financial.model.finitedifference.PDE1DCoefficients,com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition,com.opengamma.analytics.math.surface.Surface,com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D)>(r4, r5, r43, r44, $r28, $r30);
+
+        $r31 = new com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference;
+
+        $d13 = r2[0];
+
+        specialinvoke $r31.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: void <init>(double,boolean)>($d13, 0);
+
+        r49 = virtualinvoke $r31.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: com.opengamma.analytics.financial.model.finitedifference.PDEResults1D solve(com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle)>($r29);
+
+        i19 = 1;
+
+     label19:
+        if i19 >= i0 goto label20;
+
+        $r32 = new com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle;
+
+        $r33 = interfaceinvoke r49.<com.opengamma.analytics.financial.model.finitedifference.PDEResults1D: double[] getTerminalResults()>();
+
+        $r34 = r1[i19];
+
+        specialinvoke $r32.<com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle: void <init>(com.opengamma.analytics.financial.model.finitedifference.PDE1DCoefficients,double[],com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition,com.opengamma.analytics.math.surface.Surface,com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D)>(r4, $r33, r43, r44, $r28, $r34);
+
+        $r35 = new com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference;
+
+        $d14 = r2[i19];
+
+        specialinvoke $r35.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: void <init>(double,boolean)>($d14, 0);
+
+        r49 = virtualinvoke $r35.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: com.opengamma.analytics.financial.model.finitedifference.PDEResults1D solve(com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle)>($r32);
+
+        i19 = i19 + 1;
+
+        goto label19;
+
+     label20:
+        goto label25;
+
+     label21:
+        if z0 == 0 goto label22;
+
+        $r22 = new com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition;
+
+        specialinvoke $r22.<com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition: void <init>(double,double,boolean)>(0.0, d17, 1);
+
+        r52 = $r22;
+
+        $r23 = new com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer$2;
+
+        specialinvoke $r23.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer$2: void <init>(com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer,double)>(r0, d7);
+
+        $r24 = new com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition;
+
+        specialinvoke $r24.<com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition: void <init>(com.opengamma.analytics.math.function.Function1D,double,boolean)>($r23, d6, 0);
+
+        r54 = $r24;
+
+        goto label23;
+
+     label22:
+        $r12 = new com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer$3;
+
+        specialinvoke $r12.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer$3: void <init>(com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer,double)>(r0, d7);
+
+        $r13 = new com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition;
+
+        specialinvoke $r13.<com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition: void <init>(com.opengamma.analytics.math.function.Function1D,double,boolean)>($r12, d17, 1);
+
+        r52 = $r13;
+
+        $r14 = new com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition;
+
+        specialinvoke $r14.<com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition: void <init>(double,double,boolean)>(0.0, d6, 0);
+
+        r54 = $r14;
+
+     label23:
+        $r15 = new com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle;
+
+        $r16 = r1[0];
+
+        specialinvoke $r15.<com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle: void <init>(com.opengamma.analytics.financial.model.finitedifference.PDE1DCoefficients,com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition,com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D)>(r4, r5, r52, r54, $r16);
+
+        $r17 = new com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference;
+
+        $d10 = r2[0];
+
+        specialinvoke $r17.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: void <init>(double,boolean)>($d10, 0);
+
+        r49 = virtualinvoke $r17.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: com.opengamma.analytics.financial.model.finitedifference.PDEResults1D solve(com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle)>($r15);
+
+        i20 = 1;
+
+     label24:
+        if i20 >= i0 goto label25;
+
+        $r18 = new com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle;
+
+        $r19 = interfaceinvoke r49.<com.opengamma.analytics.financial.model.finitedifference.PDEResults1D: double[] getTerminalResults()>();
+
+        $r20 = r1[i20];
+
+        specialinvoke $r18.<com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle: void <init>(com.opengamma.analytics.financial.model.finitedifference.PDE1DCoefficients,double[],com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition,com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D)>(r4, $r19, r52, r54, $r20);
+
+        $r21 = new com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference;
+
+        $d12 = r2[i20];
+
+        specialinvoke $r21.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: void <init>(double,boolean)>($d12, 0);
+
+        r49 = virtualinvoke $r21.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: com.opengamma.analytics.financial.model.finitedifference.PDEResults1D solve(com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle)>($r18);
+
+        i20 = i20 + 1;
+
+        goto label24;
+
+     label25:
+        $d11 = interfaceinvoke r49.<com.opengamma.analytics.financial.model.finitedifference.PDEResults1D: double getFunctionValue(int)>(i1);
+
+        return $d11;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider $r0;
+        com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider $r1;
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double MAIN_RUN_THETA> = 0.5;
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double BURNIN_THETA> = 1.0;
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double BURNIN_FRACTION> = 0.2;
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: boolean USE_BURNIN> = 1;
+
+        $r0 = new com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider ICP> = $r0;
+
+        $r1 = new com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider PDE> = $r1;
+
+        return;
+    }
+}

@@ -1,0 +1,1075 @@
+public class org.apache.commons.math.util.OpenIntToFieldHashMap extends java.lang.Object implements java.io.Serializable
+{
+    protected static final byte FREE;
+    protected static final byte FULL;
+    protected static final byte REMOVED;
+    private static final long serialVersionUID;
+    private static final float LOAD_FACTOR;
+    private static final int DEFAULT_EXPECTED_SIZE;
+    private static final int RESIZE_MULTIPLIER;
+    private static final int PERTURB_SHIFT;
+    private final org.apache.commons.math.Field field;
+    private int[] keys;
+    private org.apache.commons.math.FieldElement[] values;
+    private byte[] states;
+    private final org.apache.commons.math.FieldElement missingEntries;
+    private int size;
+    private int mask;
+    private transient int count;
+
+    public void <init>(org.apache.commons.math.Field)
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        org.apache.commons.math.Field r1;
+        java.lang.Object $r2;
+        org.apache.commons.math.FieldElement $r3;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        r1 := @parameter0: org.apache.commons.math.Field;
+
+        $r2 = interfaceinvoke r1.<org.apache.commons.math.Field: java.lang.Object getZero()>();
+
+        $r3 = (org.apache.commons.math.FieldElement) $r2;
+
+        specialinvoke r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: void <init>(org.apache.commons.math.Field,int,org.apache.commons.math.FieldElement)>(r1, 16, $r3);
+
+        return;
+    }
+
+    public void <init>(org.apache.commons.math.Field, org.apache.commons.math.FieldElement)
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        org.apache.commons.math.Field r1;
+        org.apache.commons.math.FieldElement r2;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        r1 := @parameter0: org.apache.commons.math.Field;
+
+        r2 := @parameter1: org.apache.commons.math.FieldElement;
+
+        specialinvoke r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: void <init>(org.apache.commons.math.Field,int,org.apache.commons.math.FieldElement)>(r1, 16, r2);
+
+        return;
+    }
+
+    public void <init>(org.apache.commons.math.Field, int)
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        org.apache.commons.math.Field r1;
+        int i0;
+        java.lang.Object $r2;
+        org.apache.commons.math.FieldElement $r3;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        r1 := @parameter0: org.apache.commons.math.Field;
+
+        i0 := @parameter1: int;
+
+        $r2 = interfaceinvoke r1.<org.apache.commons.math.Field: java.lang.Object getZero()>();
+
+        $r3 = (org.apache.commons.math.FieldElement) $r2;
+
+        specialinvoke r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: void <init>(org.apache.commons.math.Field,int,org.apache.commons.math.FieldElement)>(r1, i0, $r3);
+
+        return;
+    }
+
+    public void <init>(org.apache.commons.math.Field, int, org.apache.commons.math.FieldElement)
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        org.apache.commons.math.Field r1;
+        int i0, i1, $i2;
+        org.apache.commons.math.FieldElement r2;
+        int[] $r3;
+        org.apache.commons.math.FieldElement[] $r4;
+        byte[] $r5;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        r1 := @parameter0: org.apache.commons.math.Field;
+
+        i0 := @parameter1: int;
+
+        r2 := @parameter2: org.apache.commons.math.FieldElement;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.Field field> = r1;
+
+        i1 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int computeCapacity(int)>(i0);
+
+        $r3 = newarray (int)[i1];
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int[] keys> = $r3;
+
+        $r4 = specialinvoke r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement[] buildArray(int)>(i1);
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement[] values> = $r4;
+
+        $r5 = newarray (byte)[i1];
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states> = $r5;
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement missingEntries> = r2;
+
+        $i2 = i1 - 1;
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int mask> = $i2;
+
+        return;
+    }
+
+    public void <init>(org.apache.commons.math.util.OpenIntToFieldHashMap)
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0, r1;
+        int i0, $i1, $i2, $i3;
+        org.apache.commons.math.Field $r2;
+        int[] $r3, $r4, $r5, $r6;
+        org.apache.commons.math.FieldElement[] $r7, $r8, $r9;
+        byte[] $r10, $r11, $r12;
+        org.apache.commons.math.FieldElement $r13;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        r1 := @parameter0: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $r2 = r1.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.Field field>;
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.Field field> = $r2;
+
+        $r3 = r1.<org.apache.commons.math.util.OpenIntToFieldHashMap: int[] keys>;
+
+        i0 = lengthof $r3;
+
+        $r4 = newarray (int)[i0];
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int[] keys> = $r4;
+
+        $r6 = r1.<org.apache.commons.math.util.OpenIntToFieldHashMap: int[] keys>;
+
+        $r5 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int[] keys>;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r6, 0, $r5, 0, i0);
+
+        $r7 = specialinvoke r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement[] buildArray(int)>(i0);
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement[] values> = $r7;
+
+        $r9 = r1.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement[] values>;
+
+        $r8 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement[] values>;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r9, 0, $r8, 0, i0);
+
+        $r10 = newarray (byte)[i0];
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states> = $r10;
+
+        $r12 = r1.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states>;
+
+        $r11 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states>;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r12, 0, $r11, 0, i0);
+
+        $r13 = r1.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement missingEntries>;
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement missingEntries> = $r13;
+
+        $i1 = r1.<org.apache.commons.math.util.OpenIntToFieldHashMap: int size>;
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int size> = $i1;
+
+        $i2 = r1.<org.apache.commons.math.util.OpenIntToFieldHashMap: int mask>;
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int mask> = $i2;
+
+        $i3 = r1.<org.apache.commons.math.util.OpenIntToFieldHashMap: int count>;
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int count> = $i3;
+
+        return;
+    }
+
+    private static int computeCapacity(int)
+    {
+        int i0, i1, i2, $i3;
+        float $f0, $f1;
+        double $d0, $d1;
+
+        i0 := @parameter0: int;
+
+        if i0 != 0 goto label1;
+
+        return 1;
+
+     label1:
+        $f0 = (float) i0;
+
+        $f1 = $f0 / 0.5F;
+
+        $d0 = (double) $f1;
+
+        $d1 = staticinvoke <org.apache.commons.math.util.FastMath: double ceil(double)>($d0);
+
+        i1 = (int) $d1;
+
+        i2 = staticinvoke <java.lang.Integer: int highestOneBit(int)>(i1);
+
+        if i2 != i1 goto label2;
+
+        return i1;
+
+     label2:
+        $i3 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int nextPowerOfTwo(int)>(i1);
+
+        return $i3;
+    }
+
+    private static int nextPowerOfTwo(int)
+    {
+        int i0, $i1, $i2;
+
+        i0 := @parameter0: int;
+
+        $i1 = staticinvoke <java.lang.Integer: int highestOneBit(int)>(i0);
+
+        $i2 = $i1 << 1;
+
+        return $i2;
+    }
+
+    public org.apache.commons.math.FieldElement get(int)
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        int i0, i1, $i2, $i5, i6, i7, i8;
+        boolean $z0, $z1;
+        byte[] $r1, $r2;
+        byte $b3, $b4;
+        org.apache.commons.math.FieldElement $r3, $r5, $r6, $r8;
+        org.apache.commons.math.FieldElement[] $r4, $r7;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        i0 := @parameter0: int;
+
+        i1 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int hashOf(int)>(i0);
+
+        $i2 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int mask>;
+
+        i6 = i1 & $i2;
+
+        $z0 = specialinvoke r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: boolean containsKey(int,int)>(i0, i6);
+
+        if $z0 == 0 goto label1;
+
+        $r7 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement[] values>;
+
+        $r8 = $r7[i6];
+
+        return $r8;
+
+     label1:
+        $r1 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states>;
+
+        $b3 = $r1[i6];
+
+        if $b3 != 0 goto label2;
+
+        $r6 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement missingEntries>;
+
+        return $r6;
+
+     label2:
+        i7 = i6;
+
+        i8 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int perturb(int)>(i1);
+
+     label3:
+        $r2 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states>;
+
+        $b4 = $r2[i6];
+
+        if $b4 == 0 goto label5;
+
+        i7 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int probe(int,int)>(i8, i7);
+
+        $i5 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int mask>;
+
+        i6 = i7 & $i5;
+
+        $z1 = specialinvoke r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: boolean containsKey(int,int)>(i0, i6);
+
+        if $z1 == 0 goto label4;
+
+        $r4 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement[] values>;
+
+        $r5 = $r4[i6];
+
+        return $r5;
+
+     label4:
+        i8 = i8 >> 5;
+
+        goto label3;
+
+     label5:
+        $r3 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement missingEntries>;
+
+        return $r3;
+    }
+
+    public boolean containsKey(int)
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        int i0, i1, $i2, $i5, i6, i7, i8;
+        boolean $z0, $z1;
+        byte[] $r1, $r2;
+        byte $b3, $b4;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        i0 := @parameter0: int;
+
+        i1 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int hashOf(int)>(i0);
+
+        $i2 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int mask>;
+
+        i6 = i1 & $i2;
+
+        $z0 = specialinvoke r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: boolean containsKey(int,int)>(i0, i6);
+
+        if $z0 == 0 goto label1;
+
+        return 1;
+
+     label1:
+        $r1 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states>;
+
+        $b3 = $r1[i6];
+
+        if $b3 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        i7 = i6;
+
+        i8 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int perturb(int)>(i1);
+
+     label3:
+        $r2 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states>;
+
+        $b4 = $r2[i6];
+
+        if $b4 == 0 goto label5;
+
+        i7 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int probe(int,int)>(i8, i7);
+
+        $i5 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int mask>;
+
+        i6 = i7 & $i5;
+
+        $z1 = specialinvoke r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: boolean containsKey(int,int)>(i0, i6);
+
+        if $z1 == 0 goto label4;
+
+        return 1;
+
+     label4:
+        i8 = i8 >> 5;
+
+        goto label3;
+
+     label5:
+        return 0;
+    }
+
+    public org.apache.commons.math.util.OpenIntToFieldHashMap$Iterator iterator()
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        org.apache.commons.math.util.OpenIntToFieldHashMap$Iterator $r1;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        $r1 = new org.apache.commons.math.util.OpenIntToFieldHashMap$Iterator;
+
+        specialinvoke $r1.<org.apache.commons.math.util.OpenIntToFieldHashMap$Iterator: void <init>(org.apache.commons.math.util.OpenIntToFieldHashMap,org.apache.commons.math.util.OpenIntToFieldHashMap$1)>(r0, null);
+
+        return $r1;
+    }
+
+    private static int perturb(int)
+    {
+        int i0, $i1;
+
+        i0 := @parameter0: int;
+
+        $i1 = i0 & 2147483647;
+
+        return $i1;
+    }
+
+    private int findInsertionIndex(int)
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        int i0, $i1, $i2;
+        byte[] $r1;
+        int[] $r2;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        i0 := @parameter0: int;
+
+        $r2 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int[] keys>;
+
+        $r1 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states>;
+
+        $i1 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int mask>;
+
+        $i2 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int findInsertionIndex(int[],byte[],int,int)>($r2, $r1, i0, $i1);
+
+        return $i2;
+    }
+
+    private static int findInsertionIndex(int[], byte[], int, int)
+    {
+        int[] r0;
+        byte[] r1;
+        int i0, i1, i2, i3, $i10, $i11, $i12, $i14, $i15, $i16, i17, i18, i19, i21;
+        byte $b4, $b5, $b6, $b7, $b8, $b9, $b13, $b20;
+
+        r0 := @parameter0: int[];
+
+        r1 := @parameter1: byte[];
+
+        i0 := @parameter2: int;
+
+        i1 := @parameter3: int;
+
+        i2 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int hashOf(int)>(i0);
+
+        i17 = i2 & i1;
+
+        $b4 = r1[i17];
+
+        if $b4 != 0 goto label1;
+
+        return i17;
+
+     label1:
+        $b5 = r1[i17];
+
+        if $b5 != 1 goto label2;
+
+        $i15 = r0[i17];
+
+        if $i15 != i0 goto label2;
+
+        $i16 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int changeIndexSign(int)>(i17);
+
+        return $i16;
+
+     label2:
+        i18 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int perturb(int)>(i2);
+
+        i19 = i17;
+
+        $b6 = r1[i17];
+
+        if $b6 != 1 goto label4;
+
+     label3:
+        i19 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int probe(int,int)>(i18, i19);
+
+        i17 = i19 & i1;
+
+        i18 = i18 >> 5;
+
+        $b13 = r1[i17];
+
+        if $b13 != 1 goto label4;
+
+        $i14 = r0[i17];
+
+        if $i14 != i0 goto label3;
+
+        goto label4;
+
+     label4:
+        $b20 = r1[i17];
+
+        if $b20 != 0 goto label5;
+
+        return i17;
+
+     label5:
+        $b7 = r1[i17];
+
+        if $b7 != 1 goto label6;
+
+        $i12 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int changeIndexSign(int)>(i17);
+
+        return $i12;
+
+     label6:
+        i3 = i17;
+
+     label7:
+        i19 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int probe(int,int)>(i18, i19);
+
+        i21 = i19 & i1;
+
+        $b8 = r1[i21];
+
+        if $b8 != 0 goto label8;
+
+        return i3;
+
+     label8:
+        $b9 = r1[i21];
+
+        if $b9 != 1 goto label9;
+
+        $i10 = r0[i21];
+
+        if $i10 != i0 goto label9;
+
+        $i11 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int changeIndexSign(int)>(i21);
+
+        return $i11;
+
+     label9:
+        i18 = i18 >> 5;
+
+        goto label7;
+    }
+
+    private static int probe(int, int)
+    {
+        int i0, i1, $i2, $i3, $i4, $i5;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        $i2 = i1 << 2;
+
+        $i3 = $i2 + i1;
+
+        $i4 = $i3 + i0;
+
+        $i5 = $i4 + 1;
+
+        return $i5;
+    }
+
+    private static int changeIndexSign(int)
+    {
+        int i0, $i1, $i2;
+
+        i0 := @parameter0: int;
+
+        $i1 = neg i0;
+
+        $i2 = $i1 - 1;
+
+        return $i2;
+    }
+
+    public int size()
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        int $i0;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        $i0 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int size>;
+
+        return $i0;
+    }
+
+    public org.apache.commons.math.FieldElement remove(int)
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        int i0, i1, $i2, $i5, i6, i7, i8;
+        boolean $z0, $z1;
+        byte[] $r1, $r2;
+        byte $b3, $b4;
+        org.apache.commons.math.FieldElement $r3, $r4, $r5, $r6;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        i0 := @parameter0: int;
+
+        i1 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int hashOf(int)>(i0);
+
+        $i2 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int mask>;
+
+        i6 = i1 & $i2;
+
+        $z0 = specialinvoke r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: boolean containsKey(int,int)>(i0, i6);
+
+        if $z0 == 0 goto label1;
+
+        $r6 = specialinvoke r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement doRemove(int)>(i6);
+
+        return $r6;
+
+     label1:
+        $r1 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states>;
+
+        $b3 = $r1[i6];
+
+        if $b3 != 0 goto label2;
+
+        $r5 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement missingEntries>;
+
+        return $r5;
+
+     label2:
+        i7 = i6;
+
+        i8 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int perturb(int)>(i1);
+
+     label3:
+        $r2 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states>;
+
+        $b4 = $r2[i6];
+
+        if $b4 == 0 goto label5;
+
+        i7 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int probe(int,int)>(i8, i7);
+
+        $i5 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int mask>;
+
+        i6 = i7 & $i5;
+
+        $z1 = specialinvoke r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: boolean containsKey(int,int)>(i0, i6);
+
+        if $z1 == 0 goto label4;
+
+        $r4 = specialinvoke r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement doRemove(int)>(i6);
+
+        return $r4;
+
+     label4:
+        i8 = i8 >> 5;
+
+        goto label3;
+
+     label5:
+        $r3 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement missingEntries>;
+
+        return $r3;
+    }
+
+    private boolean containsKey(int, int)
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        int i0, i1, $i2;
+        int[] $r1;
+        byte[] $r2;
+        byte $b3;
+        boolean $z0;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        if i0 != 0 goto label1;
+
+        $r2 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states>;
+
+        $b3 = $r2[i1];
+
+        if $b3 != 1 goto label2;
+
+     label1:
+        $r1 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int[] keys>;
+
+        $i2 = $r1[i1];
+
+        if $i2 != i0 goto label2;
+
+        $z0 = 1;
+
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        return $z0;
+    }
+
+    private org.apache.commons.math.FieldElement doRemove(int)
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        int i0, $i1, $i2, $i3, $i4;
+        org.apache.commons.math.FieldElement r1, $r5;
+        int[] $r2;
+        byte[] $r3;
+        org.apache.commons.math.FieldElement[] $r4, $r6;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        i0 := @parameter0: int;
+
+        $r2 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int[] keys>;
+
+        $r2[i0] = 0;
+
+        $r3 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states>;
+
+        $r3[i0] = 2;
+
+        $r4 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement[] values>;
+
+        r1 = $r4[i0];
+
+        $r6 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement[] values>;
+
+        $r5 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement missingEntries>;
+
+        $r6[i0] = $r5;
+
+        $i1 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int size>;
+
+        $i2 = $i1 - 1;
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int size> = $i2;
+
+        $i3 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int count>;
+
+        $i4 = $i3 + 1;
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int count> = $i4;
+
+        return r1;
+    }
+
+    public org.apache.commons.math.FieldElement put(int, org.apache.commons.math.FieldElement)
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        int i0, $i1, $i2, $i3, $i4, i5;
+        org.apache.commons.math.FieldElement r1, r7;
+        int[] $r2;
+        byte[] $r3;
+        org.apache.commons.math.FieldElement[] $r4, $r6;
+        boolean $z0, z1;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        i0 := @parameter0: int;
+
+        r1 := @parameter1: org.apache.commons.math.FieldElement;
+
+        i5 = specialinvoke r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int findInsertionIndex(int)>(i0);
+
+        r7 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement missingEntries>;
+
+        z1 = 1;
+
+        if i5 >= 0 goto label1;
+
+        i5 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int changeIndexSign(int)>(i5);
+
+        $r6 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement[] values>;
+
+        r7 = $r6[i5];
+
+        z1 = 0;
+
+     label1:
+        $r2 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int[] keys>;
+
+        $r2[i5] = i0;
+
+        $r3 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states>;
+
+        $r3[i5] = 1;
+
+        $r4 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement[] values>;
+
+        $r4[i5] = r1;
+
+        if z1 == 0 goto label3;
+
+        $i1 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int size>;
+
+        $i2 = $i1 + 1;
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int size> = $i2;
+
+        $z0 = specialinvoke r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: boolean shouldGrowTable()>();
+
+        if $z0 == 0 goto label2;
+
+        specialinvoke r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: void growTable()>();
+
+     label2:
+        $i3 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int count>;
+
+        $i4 = $i3 + 1;
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int count> = $i4;
+
+     label3:
+        return r7;
+    }
+
+    private void growTable()
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        int i0, i1, i2, i3, i4, i6;
+        int[] r1, r4;
+        org.apache.commons.math.FieldElement[] r2, r5;
+        byte[] r3, r6, $r7;
+        byte $b5;
+        org.apache.commons.math.FieldElement $r8;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        $r7 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states>;
+
+        i0 = lengthof $r7;
+
+        r1 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int[] keys>;
+
+        r2 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement[] values>;
+
+        r3 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states>;
+
+        i1 = 2 * i0;
+
+        r4 = newarray (int)[i1];
+
+        r5 = specialinvoke r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement[] buildArray(int)>(i1);
+
+        r6 = newarray (byte)[i1];
+
+        i2 = i1 - 1;
+
+        i6 = 0;
+
+     label1:
+        if i6 >= i0 goto label3;
+
+        $b5 = r3[i6];
+
+        if $b5 != 1 goto label2;
+
+        i3 = r1[i6];
+
+        i4 = staticinvoke <org.apache.commons.math.util.OpenIntToFieldHashMap: int findInsertionIndex(int[],byte[],int,int)>(r4, r6, i3, i2);
+
+        r4[i4] = i3;
+
+        $r8 = r2[i6];
+
+        r5[i4] = $r8;
+
+        r6[i4] = 1;
+
+     label2:
+        i6 = i6 + 1;
+
+        goto label1;
+
+     label3:
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int mask> = i2;
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int[] keys> = r4;
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement[] values> = r5;
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states> = r6;
+
+        return;
+    }
+
+    private boolean shouldGrowTable()
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        int $i0, $i1, $i2;
+        float $f0, $f1, $f2;
+        byte $b3;
+        boolean $z0;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        $i0 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int size>;
+
+        $f2 = (float) $i0;
+
+        $i1 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int mask>;
+
+        $i2 = $i1 + 1;
+
+        $f0 = (float) $i2;
+
+        $f1 = $f0 * 0.5F;
+
+        $b3 = $f2 cmpl $f1;
+
+        if $b3 <= 0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    private static int hashOf(int)
+    {
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8;
+
+        i0 := @parameter0: int;
+
+        $i3 = i0 >>> 20;
+
+        $i2 = i0 >>> 12;
+
+        $i4 = $i3 ^ $i2;
+
+        i1 = i0 ^ $i4;
+
+        $i5 = i1 >>> 7;
+
+        $i7 = i1 ^ $i5;
+
+        $i6 = i1 >>> 4;
+
+        $i8 = $i7 ^ $i6;
+
+        return $i8;
+    }
+
+    private void readObject(java.io.ObjectInputStream) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        java.io.ObjectInputStream r1;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        r1 := @parameter0: java.io.ObjectInputStream;
+
+        virtualinvoke r1.<java.io.ObjectInputStream: void defaultReadObject()>();
+
+        r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int count> = 0;
+
+        return;
+    }
+
+    private org.apache.commons.math.FieldElement[] buildArray(int)
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        int i0;
+        org.apache.commons.math.Field $r1;
+        java.lang.Object $r2, $r5;
+        org.apache.commons.math.FieldElement $r3;
+        java.lang.Class $r4;
+        org.apache.commons.math.FieldElement[] $r6, $r7;
+
+        r0 := @this: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.Field field>;
+
+        $r2 = interfaceinvoke $r1.<org.apache.commons.math.Field: java.lang.Object getZero()>();
+
+        $r3 = (org.apache.commons.math.FieldElement) $r2;
+
+        $r4 = virtualinvoke $r3.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r5 = staticinvoke <java.lang.reflect.Array: java.lang.Object newInstance(java.lang.Class,int)>($r4, i0);
+
+        $r6 = (org.apache.commons.math.FieldElement[]) $r5;
+
+        $r7 = (org.apache.commons.math.FieldElement[]) $r6;
+
+        return $r7;
+    }
+
+    static int access$100(org.apache.commons.math.util.OpenIntToFieldHashMap)
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        int $i0;
+
+        r0 := @parameter0: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        $i0 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int count>;
+
+        return $i0;
+    }
+
+    static int[] access$200(org.apache.commons.math.util.OpenIntToFieldHashMap)
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        int[] $r1;
+
+        r0 := @parameter0: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        $r1 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: int[] keys>;
+
+        return $r1;
+    }
+
+    static org.apache.commons.math.FieldElement[] access$300(org.apache.commons.math.util.OpenIntToFieldHashMap)
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        org.apache.commons.math.FieldElement[] $r1;
+
+        r0 := @parameter0: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        $r1 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: org.apache.commons.math.FieldElement[] values>;
+
+        return $r1;
+    }
+
+    static byte[] access$400(org.apache.commons.math.util.OpenIntToFieldHashMap)
+    {
+        org.apache.commons.math.util.OpenIntToFieldHashMap r0;
+        byte[] $r1;
+
+        r0 := @parameter0: org.apache.commons.math.util.OpenIntToFieldHashMap;
+
+        $r1 = r0.<org.apache.commons.math.util.OpenIntToFieldHashMap: byte[] states>;
+
+        return $r1;
+    }
+
+    public static void <clinit>()
+    {
+        <org.apache.commons.math.util.OpenIntToFieldHashMap: int PERTURB_SHIFT> = 5;
+
+        <org.apache.commons.math.util.OpenIntToFieldHashMap: int RESIZE_MULTIPLIER> = 2;
+
+        <org.apache.commons.math.util.OpenIntToFieldHashMap: int DEFAULT_EXPECTED_SIZE> = 16;
+
+        <org.apache.commons.math.util.OpenIntToFieldHashMap: float LOAD_FACTOR> = 0.5F;
+
+        <org.apache.commons.math.util.OpenIntToFieldHashMap: long serialVersionUID> = -9179080286849120720L;
+
+        <org.apache.commons.math.util.OpenIntToFieldHashMap: byte REMOVED> = 2;
+
+        <org.apache.commons.math.util.OpenIntToFieldHashMap: byte FULL> = 1;
+
+        <org.apache.commons.math.util.OpenIntToFieldHashMap: byte FREE> = 0;
+
+        return;
+    }
+}

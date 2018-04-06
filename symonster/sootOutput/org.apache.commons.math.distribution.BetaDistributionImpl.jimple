@@ -1,0 +1,496 @@
+public class org.apache.commons.math.distribution.BetaDistributionImpl extends org.apache.commons.math.distribution.AbstractContinuousDistribution implements org.apache.commons.math.distribution.BetaDistribution
+{
+    public static final double DEFAULT_INVERSE_ABSOLUTE_ACCURACY;
+    private static final long serialVersionUID;
+    private double alpha;
+    private double beta;
+    private double z;
+    private final double solverAbsoluteAccuracy;
+
+    public void <init>(double, double, double)
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        double d0, d1, d2;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        specialinvoke r0.<org.apache.commons.math.distribution.AbstractContinuousDistribution: void <init>()>();
+
+        r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double alpha> = d0;
+
+        r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double beta> = d1;
+
+        r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double z> = #NaN;
+
+        r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double solverAbsoluteAccuracy> = d2;
+
+        return;
+    }
+
+    public void <init>(double, double)
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        double d0, d1;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        specialinvoke r0.<org.apache.commons.math.distribution.BetaDistributionImpl: void <init>(double,double,double)>(d0, d1, 1.0E-9);
+
+        return;
+    }
+
+    public void setAlpha(double)
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        d0 := @parameter0: double;
+
+        r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double alpha> = d0;
+
+        r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double z> = #NaN;
+
+        return;
+    }
+
+    public double getAlpha()
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        $d0 = r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double alpha>;
+
+        return $d0;
+    }
+
+    public void setBeta(double)
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        d0 := @parameter0: double;
+
+        r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double beta> = d0;
+
+        r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double z> = #NaN;
+
+        return;
+    }
+
+    public double getBeta()
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        $d0 = r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double beta>;
+
+        return $d0;
+    }
+
+    private void recomputeZ()
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10;
+        boolean $z0;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        $d0 = r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double z>;
+
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d0);
+
+        if $z0 == 0 goto label1;
+
+        $d1 = r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double alpha>;
+
+        $d2 = staticinvoke <org.apache.commons.math.special.Gamma: double logGamma(double)>($d1);
+
+        $d3 = r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double beta>;
+
+        $d4 = staticinvoke <org.apache.commons.math.special.Gamma: double logGamma(double)>($d3);
+
+        $d8 = $d2 + $d4;
+
+        $d6 = r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double alpha>;
+
+        $d5 = r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double beta>;
+
+        $d7 = $d6 + $d5;
+
+        $d9 = staticinvoke <org.apache.commons.math.special.Gamma: double logGamma(double)>($d7);
+
+        $d10 = $d8 - $d9;
+
+        r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double z> = $d10;
+
+     label1:
+        return;
+    }
+
+    public double density(java.lang.Double)
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        java.lang.Double r1;
+        double $d0, $d1;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        r1 := @parameter0: java.lang.Double;
+
+        $d0 = virtualinvoke r1.<java.lang.Double: double doubleValue()>();
+
+        $d1 = virtualinvoke r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double density(double)>($d0);
+
+        return $d1;
+    }
+
+    public double density(double)
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17;
+        byte $b0, $b1, $b2, $b3, $b4, $b5;
+        java.lang.Object[] $r1, $r5;
+        org.apache.commons.math.exception.util.LocalizedFormats $r2, $r6;
+        java.lang.Double $r3, $r7;
+        java.lang.IllegalArgumentException $r4, $r8;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        d0 := @parameter0: double;
+
+        specialinvoke r0.<org.apache.commons.math.distribution.BetaDistributionImpl: void recomputeZ()>();
+
+        $b0 = d0 cmpg 0.0;
+
+        if $b0 < 0 goto label1;
+
+        $b1 = d0 cmpl 1.0;
+
+        if $b1 <= 0 goto label2;
+
+     label1:
+        return 0.0;
+
+     label2:
+        $b2 = d0 cmpl 0.0;
+
+        if $b2 != 0 goto label4;
+
+        $d16 = r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double alpha>;
+
+        $b5 = $d16 cmpg 1.0;
+
+        if $b5 >= 0 goto label3;
+
+        $r6 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats CANNOT_COMPUTE_BETA_DENSITY_AT_0_FOR_SOME_ALPHA>;
+
+        $r5 = newarray (java.lang.Object)[1];
+
+        $d17 = r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double alpha>;
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d17);
+
+        $r5[0] = $r7;
+
+        $r8 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r6, $r5);
+
+        throw $r8;
+
+     label3:
+        return 0.0;
+
+     label4:
+        $b3 = d0 cmpl 1.0;
+
+        if $b3 != 0 goto label6;
+
+        $d14 = r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double beta>;
+
+        $b4 = $d14 cmpg 1.0;
+
+        if $b4 >= 0 goto label5;
+
+        $r2 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats CANNOT_COMPUTE_BETA_DENSITY_AT_1_FOR_SOME_BETA>;
+
+        $r1 = newarray (java.lang.Object)[1];
+
+        $d15 = r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double beta>;
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d15);
+
+        $r1[0] = $r3;
+
+        $r4 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r2, $r1);
+
+        throw $r4;
+
+     label5:
+        return 0.0;
+
+     label6:
+        d1 = staticinvoke <org.apache.commons.math.util.FastMath: double log(double)>(d0);
+
+        $d3 = neg d0;
+
+        d2 = staticinvoke <org.apache.commons.math.util.FastMath: double log1p(double)>($d3);
+
+        $d4 = r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double alpha>;
+
+        $d5 = $d4 - 1.0;
+
+        $d9 = $d5 * d1;
+
+        $d6 = r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double beta>;
+
+        $d7 = $d6 - 1.0;
+
+        $d8 = $d7 * d2;
+
+        $d11 = $d9 + $d8;
+
+        $d10 = r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double z>;
+
+        $d12 = $d11 - $d10;
+
+        $d13 = staticinvoke <org.apache.commons.math.util.FastMath: double exp(double)>($d12);
+
+        return $d13;
+    }
+
+    public double inverseCumulativeProbability(double) throws org.apache.commons.math.MathException
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        double d0, $d1;
+        byte $b0, $b1;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        d0 := @parameter0: double;
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 != 0 goto label1;
+
+        return 0.0;
+
+     label1:
+        $b1 = d0 cmpl 1.0;
+
+        if $b1 != 0 goto label2;
+
+        return 1.0;
+
+     label2:
+        $d1 = specialinvoke r0.<org.apache.commons.math.distribution.AbstractContinuousDistribution: double inverseCumulativeProbability(double)>(d0);
+
+        return $d1;
+    }
+
+    protected double getInitialDomain(double)
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        d0 := @parameter0: double;
+
+        return d0;
+    }
+
+    protected double getDomainLowerBound(double)
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        d0 := @parameter0: double;
+
+        return 0.0;
+    }
+
+    protected double getDomainUpperBound(double)
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        d0 := @parameter0: double;
+
+        return 1.0;
+    }
+
+    public double cumulativeProbability(double) throws org.apache.commons.math.MathException
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        double d0, $d1, $d2, $d3;
+        byte $b0, $b1;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        d0 := @parameter0: double;
+
+        $b0 = d0 cmpg 0.0;
+
+        if $b0 > 0 goto label1;
+
+        return 0.0;
+
+     label1:
+        $b1 = d0 cmpl 1.0;
+
+        if $b1 < 0 goto label2;
+
+        return 1.0;
+
+     label2:
+        $d2 = r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double alpha>;
+
+        $d1 = r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double beta>;
+
+        $d3 = staticinvoke <org.apache.commons.math.special.Beta: double regularizedBeta(double,double,double)>(d0, $d2, $d1);
+
+        return $d3;
+    }
+
+    public double cumulativeProbability(double, double) throws org.apache.commons.math.MathException
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        double d0, d1, $d2, $d3, $d4;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $d2 = virtualinvoke r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double cumulativeProbability(double)>(d1);
+
+        $d3 = virtualinvoke r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double cumulativeProbability(double)>(d0);
+
+        $d4 = $d2 - $d3;
+
+        return $d4;
+    }
+
+    protected double getSolverAbsoluteAccuracy()
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        $d0 = r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double solverAbsoluteAccuracy>;
+
+        return $d0;
+    }
+
+    public double getSupportLowerBound()
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        return 0.0;
+    }
+
+    public double getSupportUpperBound()
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        return 1.0;
+    }
+
+    public double getNumericalMean()
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        double d0, $d1, $d2, $d3;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        d0 = virtualinvoke r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double getAlpha()>();
+
+        $d1 = virtualinvoke r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double getBeta()>();
+
+        $d2 = d0 + $d1;
+
+        $d3 = d0 / $d2;
+
+        return $d3;
+    }
+
+    public double getNumericalVariance()
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        d0 = virtualinvoke r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double getAlpha()>();
+
+        d1 = virtualinvoke r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double getBeta()>();
+
+        d2 = d0 + d1;
+
+        $d6 = d0 * d1;
+
+        $d4 = d2 * d2;
+
+        $d3 = d2 + 1.0;
+
+        $d5 = $d4 * $d3;
+
+        $d7 = $d6 / $d5;
+
+        return $d7;
+    }
+
+    public volatile double density(java.lang.Object) throws org.apache.commons.math.MathException
+    {
+        org.apache.commons.math.distribution.BetaDistributionImpl r0;
+        java.lang.Object r1;
+        java.lang.Double $r2;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.distribution.BetaDistributionImpl;
+
+        r1 := @parameter0: java.lang.Object;
+
+        $r2 = (java.lang.Double) r1;
+
+        $d0 = virtualinvoke r0.<org.apache.commons.math.distribution.BetaDistributionImpl: double density(java.lang.Double)>($r2);
+
+        return $d0;
+    }
+
+    public static void <clinit>()
+    {
+        <org.apache.commons.math.distribution.BetaDistributionImpl: long serialVersionUID> = -1221965979403477668L;
+
+        <org.apache.commons.math.distribution.BetaDistributionImpl: double DEFAULT_INVERSE_ABSOLUTE_ACCURACY> = 1.0E-9;
+
+        return;
+    }
+}

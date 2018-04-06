@@ -1,0 +1,185 @@
+public class com.opengamma.analytics.math.curve.InterpolatedCurveBuildingFunction extends java.lang.Object
+{
+    private final java.util.LinkedHashMap _knotPoints;
+    private final java.util.LinkedHashMap _interpolators;
+    private final int _nNodes;
+
+    public void <init>(java.util.LinkedHashMap, java.util.LinkedHashMap)
+    {
+        com.opengamma.analytics.math.curve.InterpolatedCurveBuildingFunction r0;
+        java.util.LinkedHashMap r1, r2;
+        java.util.Iterator r3;
+        java.util.Map$Entry r4;
+        int i0, i1;
+        java.util.Set $r7;
+        boolean $z0, $z1;
+        java.lang.Object $r8, $r9, $r13;
+        double[] $r10;
+        java.lang.StringBuilder $r11, $r12, $r15;
+        java.lang.String $r14, $r16;
+
+        r0 := @this: com.opengamma.analytics.math.curve.InterpolatedCurveBuildingFunction;
+
+        r1 := @parameter0: java.util.LinkedHashMap;
+
+        r2 := @parameter1: java.util.LinkedHashMap;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "null knot points");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "null interpolators");
+
+        i1 = 0;
+
+        $r7 = virtualinvoke r1.<java.util.LinkedHashMap: java.util.Set entrySet()>();
+
+        r3 = interfaceinvoke $r7.<java.util.Set: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label4;
+
+        $r8 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+
+        r4 = (java.util.Map$Entry) $r8;
+
+        $r9 = interfaceinvoke r4.<java.util.Map$Entry: java.lang.Object getValue()>();
+
+        $r10 = (double[]) $r9;
+
+        i0 = lengthof $r10;
+
+        if i0 <= 0 goto label2;
+
+        $z1 = 1;
+
+        goto label3;
+
+     label2:
+        $z1 = 0;
+
+     label3:
+        $r11 = new java.lang.StringBuilder;
+
+        specialinvoke $r11.<java.lang.StringBuilder: void <init>()>();
+
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("no knot points for ");
+
+        $r13 = interfaceinvoke r4.<java.util.Map$Entry: java.lang.Object getKey()>();
+
+        $r14 = (java.lang.String) $r13;
+
+        $r15 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r14);
+
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, $r16);
+
+        i1 = i1 + i0;
+
+        goto label1;
+
+     label4:
+        r0.<com.opengamma.analytics.math.curve.InterpolatedCurveBuildingFunction: java.util.LinkedHashMap _knotPoints> = r1;
+
+        r0.<com.opengamma.analytics.math.curve.InterpolatedCurveBuildingFunction: java.util.LinkedHashMap _interpolators> = r2;
+
+        r0.<com.opengamma.analytics.math.curve.InterpolatedCurveBuildingFunction: int _nNodes> = i1;
+
+        return;
+    }
+
+    public java.util.LinkedHashMap evaluate(com.opengamma.analytics.math.matrix.DoubleMatrix1D)
+    {
+        com.opengamma.analytics.math.curve.InterpolatedCurveBuildingFunction r0;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r1;
+        java.util.Iterator r3;
+        java.lang.String r4;
+        com.opengamma.analytics.math.interpolation.Interpolator1D r5;
+        double[] r6, r7, $r18;
+        com.opengamma.analytics.math.curve.InterpolatedDoublesCurve r8;
+        int $i0, $i1, $i2, $i3, $i4, i5;
+        java.util.LinkedHashMap $r10, $r11, $r14, $r16;
+        java.util.Set $r12;
+        java.lang.Object $r13, $r15, $r17;
+        boolean $z0, $z1;
+
+        r0 := @this: com.opengamma.analytics.math.curve.InterpolatedCurveBuildingFunction;
+
+        r1 := @parameter0: com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "null data x");
+
+        $i0 = r0.<com.opengamma.analytics.math.curve.InterpolatedCurveBuildingFunction: int _nNodes>;
+
+        $i1 = virtualinvoke r1.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: int getNumberOfElements()>();
+
+        if $i0 != $i1 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "x wrong length");
+
+        $r10 = new java.util.LinkedHashMap;
+
+        specialinvoke $r10.<java.util.LinkedHashMap: void <init>()>();
+
+        i5 = 0;
+
+        $r11 = r0.<com.opengamma.analytics.math.curve.InterpolatedCurveBuildingFunction: java.util.LinkedHashMap _interpolators>;
+
+        $r12 = virtualinvoke $r11.<java.util.LinkedHashMap: java.util.Set keySet()>();
+
+        r3 = interfaceinvoke $r12.<java.util.Set: java.util.Iterator iterator()>();
+
+     label3:
+        $z1 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+
+        if $z1 == 0 goto label4;
+
+        $r13 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+
+        r4 = (java.lang.String) $r13;
+
+        $r14 = r0.<com.opengamma.analytics.math.curve.InterpolatedCurveBuildingFunction: java.util.LinkedHashMap _interpolators>;
+
+        $r15 = virtualinvoke $r14.<java.util.LinkedHashMap: java.lang.Object get(java.lang.Object)>(r4);
+
+        r5 = (com.opengamma.analytics.math.interpolation.Interpolator1D) $r15;
+
+        $r16 = r0.<com.opengamma.analytics.math.curve.InterpolatedCurveBuildingFunction: java.util.LinkedHashMap _knotPoints>;
+
+        $r17 = virtualinvoke $r16.<java.util.LinkedHashMap: java.lang.Object get(java.lang.Object)>(r4);
+
+        r6 = (double[]) $r17;
+
+        $r18 = virtualinvoke r1.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        $i2 = lengthof r6;
+
+        $i3 = i5 + $i2;
+
+        r7 = staticinvoke <java.util.Arrays: double[] copyOfRange(double[],int,int)>($r18, i5, $i3);
+
+        $i4 = lengthof r6;
+
+        i5 = i5 + $i4;
+
+        r8 = staticinvoke <com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: com.opengamma.analytics.math.curve.InterpolatedDoublesCurve 'from'(double[],double[],com.opengamma.analytics.math.interpolation.Interpolator1D)>(r6, r7, r5);
+
+        virtualinvoke $r10.<java.util.LinkedHashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(r4, r8);
+
+        goto label3;
+
+     label4:
+        return $r10;
+    }
+}

@@ -1,0 +1,733 @@
+public class com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider extends com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D
+{
+    private int _nTimes;
+    private double[] _exerciseTimes;
+    private int[] _exerciseSteps;
+
+    public void <init>(double, double, int, boolean, double[])
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider r0;
+        double d0, d1, $d2, $d3, $d4, $d5;
+        int i0, $i1, $i2, $i3, $i4, i7, $i8;
+        boolean z0, $z1, $z2, $z3;
+        double[] r1, $r3, $r4;
+        int[] $r5;
+        byte $b5, $b6;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        i0 := @parameter2: int;
+
+        z0 := @parameter3: boolean;
+
+        r1 := @parameter4: double[];
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: void <init>(double,double,int,boolean)>(d0, d1, i0, z0);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "exerciseDates");
+
+        $i1 = lengthof r1;
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: int _nTimes> = $i1;
+
+        $i3 = i0 + 1;
+
+        $i2 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: int _nTimes>;
+
+        if $i3 < $i2 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "Number of steps is not large enough");
+
+        i7 = 0;
+
+     label3:
+        $i8 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: int _nTimes>;
+
+        if i7 >= $i8 goto label8;
+
+        $d4 = r1[i7];
+
+        $b5 = $d4 cmpl 0.0;
+
+        if $b5 < 0 goto label4;
+
+        $z2 = 1;
+
+        goto label5;
+
+     label4:
+        $z2 = 0;
+
+     label5:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "exerciseDates should be non-negative");
+
+        $d5 = r1[i7];
+
+        $b6 = $d5 cmpg d1;
+
+        if $b6 > 0 goto label6;
+
+        $z3 = 1;
+
+        goto label7;
+
+     label6:
+        $z3 = 0;
+
+     label7:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "exerciseDates should be less than timeToExpiry");
+
+        i7 = i7 + 1;
+
+        goto label3;
+
+     label8:
+        $i4 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: int _nTimes>;
+
+        $r3 = staticinvoke <java.util.Arrays: double[] copyOf(double[],int)>(r1, $i4);
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: double[] _exerciseTimes> = $r3;
+
+        $r4 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: double[] _exerciseTimes>;
+
+        staticinvoke <java.util.Arrays: void sort(double[])>($r4);
+
+        $d2 = (double) i0;
+
+        $d3 = d1 / $d2;
+
+        $r5 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: int[] timesToSteps(int,double)>(i0, $d3);
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: int[] _exerciseSteps> = $r5;
+
+        return;
+    }
+
+    public double[] getPayoffAtExpiry(double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider r0;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, d10;
+        int i0, i1, i2;
+        double[] r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: double getStrike()>();
+
+        i0 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: int getNumberOfSteps()>();
+
+        i1 = i0 + 1;
+
+        d4 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: double getSign()>();
+
+        r1 = newarray (double)[i1];
+
+        $d5 = (double) i0;
+
+        $d6 = staticinvoke <java.lang.Math: double pow(double,double)>(d1, $d5);
+
+        d10 = d0 * $d6;
+
+        i2 = 0;
+
+     label1:
+        if i2 >= i1 goto label2;
+
+        $d7 = d10 - d3;
+
+        $d8 = d4 * $d7;
+
+        $d9 = staticinvoke <java.lang.Math: double max(double,double)>($d8, 0.0);
+
+        r1[i2] = $d9;
+
+        d10 = d10 * d2;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        return r1;
+    }
+
+    public double[] getNextOptionValues(double, double, double, double[], double, double, double, double, int)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, d26, d27;
+        double[] r1, r2;
+        int i0, i1, $i2, $i3, i4, i5;
+        boolean z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        r1 := @parameter3: double[];
+
+        d3 := @parameter4: double;
+
+        d4 := @parameter5: double;
+
+        d5 := @parameter6: double;
+
+        d6 := @parameter7: double;
+
+        i0 := @parameter8: int;
+
+        d7 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: double getStrike()>();
+
+        i1 = i0 + 1;
+
+        r2 = newarray (double)[i1];
+
+        z0 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: boolean checkExercise(int)>(i0);
+
+        if z0 == 0 goto label3;
+
+        d26 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: double getSign()>();
+
+        $d14 = (double) i0;
+
+        $d15 = staticinvoke <java.lang.Math: double pow(double,double)>(d5, $d14);
+
+        d27 = d3 * $d15;
+
+        i4 = 0;
+
+     label1:
+        if i4 >= i1 goto label2;
+
+        $i3 = i4 + 1;
+
+        $d16 = r1[$i3];
+
+        $d19 = d1 * $d16;
+
+        $d17 = r1[i4];
+
+        $d18 = d2 * $d17;
+
+        $d20 = $d19 + $d18;
+
+        $d24 = d0 * $d20;
+
+        $d21 = d27 + d4;
+
+        $d22 = $d21 - d7;
+
+        $d23 = d26 * $d22;
+
+        $d25 = staticinvoke <java.lang.Math: double max(double,double)>($d24, $d23);
+
+        r2[i4] = $d25;
+
+        d27 = d27 * d6;
+
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label2:
+        goto label5;
+
+     label3:
+        i5 = 0;
+
+     label4:
+        if i5 >= i1 goto label5;
+
+        $i2 = i5 + 1;
+
+        $d8 = r1[$i2];
+
+        $d11 = d1 * $d8;
+
+        $d9 = r1[i5];
+
+        $d10 = d2 * $d9;
+
+        $d12 = $d11 + $d10;
+
+        $d13 = d0 * $d12;
+
+        r2[i5] = $d13;
+
+        i5 = i5 + 1;
+
+        goto label4;
+
+     label5:
+        return r2;
+    }
+
+    public double[] getPayoffAtExpiryTrinomial(double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider r0;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, d10;
+        int i0, i1, $i2, $i3, i4;
+        double[] r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: double getStrike()>();
+
+        i0 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: int getNumberOfSteps()>();
+
+        $i2 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: int getNumberOfSteps()>();
+
+        $i3 = 2 * $i2;
+
+        i1 = $i3 + 1;
+
+        d4 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: double getSign()>();
+
+        r1 = newarray (double)[i1];
+
+        $d5 = (double) i0;
+
+        $d6 = staticinvoke <java.lang.Math: double pow(double,double)>(d1, $d5);
+
+        d10 = d0 * $d6;
+
+        i4 = 0;
+
+     label1:
+        if i4 >= i1 goto label2;
+
+        $d7 = d10 - d3;
+
+        $d8 = d4 * $d7;
+
+        $d9 = staticinvoke <java.lang.Math: double max(double,double)>($d8, 0.0);
+
+        r1[i4] = $d9;
+
+        d10 = d10 * d2;
+
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label2:
+        return r1;
+    }
+
+    public double[] getNextOptionValues(double, double, double, double, double[], double, double, double, double, int)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, d33, d34;
+        double[] r1, r2;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, i7, i8;
+        boolean z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        r1 := @parameter4: double[];
+
+        d4 := @parameter5: double;
+
+        d5 := @parameter6: double;
+
+        d6 := @parameter7: double;
+
+        d7 := @parameter8: double;
+
+        i0 := @parameter9: int;
+
+        d8 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: double getStrike()>();
+
+        $i2 = 2 * i0;
+
+        i1 = $i2 + 1;
+
+        r2 = newarray (double)[i1];
+
+        z0 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: boolean checkExercise(int)>(i0);
+
+        if z0 == 0 goto label3;
+
+        d33 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: double getSign()>();
+
+        $d18 = (double) i0;
+
+        $d19 = staticinvoke <java.lang.Math: double pow(double,double)>(d6, $d18);
+
+        d34 = d4 * $d19;
+
+        i7 = 0;
+
+     label1:
+        if i7 >= i1 goto label2;
+
+        $i5 = i7 + 2;
+
+        $d20 = r1[$i5];
+
+        $d23 = d1 * $d20;
+
+        $i6 = i7 + 1;
+
+        $d21 = r1[$i6];
+
+        $d22 = d2 * $d21;
+
+        $d26 = $d23 + $d22;
+
+        $d24 = r1[i7];
+
+        $d25 = d3 * $d24;
+
+        $d27 = $d26 + $d25;
+
+        $d31 = d0 * $d27;
+
+        $d28 = d34 + d5;
+
+        $d29 = $d28 - d8;
+
+        $d30 = d33 * $d29;
+
+        $d32 = staticinvoke <java.lang.Math: double max(double,double)>($d31, $d30);
+
+        r2[i7] = $d32;
+
+        d34 = d34 * d7;
+
+        i7 = i7 + 1;
+
+        goto label1;
+
+     label2:
+        goto label5;
+
+     label3:
+        i8 = 0;
+
+     label4:
+        if i8 >= i1 goto label5;
+
+        $i3 = i8 + 2;
+
+        $d9 = r1[$i3];
+
+        $d12 = d1 * $d9;
+
+        $i4 = i8 + 1;
+
+        $d10 = r1[$i4];
+
+        $d11 = d2 * $d10;
+
+        $d15 = $d12 + $d11;
+
+        $d13 = r1[i8];
+
+        $d14 = d3 * $d13;
+
+        $d16 = $d15 + $d14;
+
+        $d17 = d0 * $d16;
+
+        r2[i8] = $d17;
+
+        i8 = i8 + 1;
+
+        goto label4;
+
+     label5:
+        return r2;
+    }
+
+    public int getNumberOfExerciseTimes()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider r0;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider;
+
+        $i0 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: int _nTimes>;
+
+        return $i0;
+    }
+
+    public double[] getExerciseTimes()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider r0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: double[] _exerciseTimes>;
+
+        return $r1;
+    }
+
+    public int[] getExerciseSteps()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider r0;
+        int[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: int[] _exerciseSteps>;
+
+        return $r1;
+    }
+
+    private boolean checkExercise(int)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider r0;
+        int i0, $i1, $i2, i3;
+        int[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider;
+
+        i0 := @parameter0: int;
+
+        i3 = 0;
+
+     label1:
+        $i1 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: int _nTimes>;
+
+        if i3 >= $i1 goto label3;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: int[] _exerciseSteps>;
+
+        $i2 = $r1[i3];
+
+        if i0 != $i2 goto label2;
+
+        return 1;
+
+     label2:
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label3:
+        return 0;
+    }
+
+    private int[] timesToSteps(int, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider r0;
+        int i0, $i1, $i2, $i5, $i6, $i7, $i8, i9, i10, $i11, $i12;
+        double d0, d1, d2, d3, $d4, $d5, $d6;
+        int[] r1;
+        double[] $r2, $r3;
+        byte $b3, $b4;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider;
+
+        i0 := @parameter0: int;
+
+        d0 := @parameter1: double;
+
+        $i1 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: int _nTimes>;
+
+        r1 = newarray (int)[$i1];
+
+        i9 = 0;
+
+        i10 = 0;
+
+     label1:
+        $i2 = i0 + 1;
+
+        if i10 >= $i2 goto label9;
+
+        $d4 = (double) i10;
+
+        d1 = d0 * $d4;
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: double[] _exerciseTimes>;
+
+        $d5 = $r2[i9];
+
+        $b3 = d1 cmpl $d5;
+
+        if $b3 < 0 goto label7;
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: double[] _exerciseTimes>;
+
+        $d6 = $r3[i9];
+
+        d2 = d1 - $d6;
+
+        d3 = d0 - d2;
+
+        $i8 = i9;
+
+        $b4 = d2 cmpg d3;
+
+        if $b4 > 0 goto label2;
+
+        $i11 = i10;
+
+        goto label3;
+
+     label2:
+        $i11 = i10 - 1;
+
+     label3:
+        r1[$i8] = $i11;
+
+        if i9 == 0 goto label6;
+
+        $i7 = r1[i9];
+
+        $i5 = i9 - 1;
+
+        $i6 = r1[$i5];
+
+        if $i7 != $i6 goto label4;
+
+        $z0 = 1;
+
+        goto label5;
+
+     label4:
+        $z0 = 0;
+
+     label5:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z0, "Number of steps is not large enough");
+
+     label6:
+        i9 = i9 + 1;
+
+     label7:
+        $i12 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: int _nTimes>;
+
+        if i9 != $i12 goto label8;
+
+        i10 = i0;
+
+     label8:
+        i10 = i10 + 1;
+
+        goto label1;
+
+     label9:
+        return r1;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider r0;
+        int[] $r1;
+        int $i1, $i2, $i3, $i4, $i5, $i6, i7, i8, i9, i10;
+        double[] $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider;
+
+        i7 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: int hashCode()>();
+
+        $i1 = 31 * i7;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: int[] _exerciseSteps>;
+
+        $i2 = staticinvoke <java.util.Arrays: int hashCode(int[])>($r1);
+
+        i8 = $i1 + $i2;
+
+        $i3 = 31 * i8;
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: double[] _exerciseTimes>;
+
+        $i4 = staticinvoke <java.util.Arrays: int hashCode(double[])>($r2);
+
+        i9 = $i3 + $i4;
+
+        $i6 = 31 * i9;
+
+        $i5 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: int _nTimes>;
+
+        i10 = $i6 + $i5;
+
+        return i10;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider r0, r2;
+        java.lang.Object r1;
+        boolean $z0, $z1, $z2;
+        double[] $r3, $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        $z0 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: boolean equals(java.lang.Object)>(r1);
+
+        if $z0 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        $z1 = r1 instanceof com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider;
+
+        if $z1 != 0 goto label3;
+
+        return 0;
+
+     label3:
+        r2 = (com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider) r1;
+
+        $r4 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: double[] _exerciseTimes>;
+
+        $r3 = r2.<com.opengamma.analytics.financial.model.option.pricing.tree.BermudanOptionFunctionProvider: double[] _exerciseTimes>;
+
+        $z2 = staticinvoke <java.util.Arrays: boolean equals(double[],double[])>($r4, $r3);
+
+        if $z2 != 0 goto label4;
+
+        return 0;
+
+     label4:
+        return 1;
+    }
+}

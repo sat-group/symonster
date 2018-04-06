@@ -1,0 +1,370 @@
+public class org.apache.commons.math.estimation.GaussNewtonEstimator extends org.apache.commons.math.estimation.AbstractEstimator implements java.io.Serializable
+{
+    private static final long serialVersionUID;
+    private static final double DEFAULT_STEADY_STATE_THRESHOLD;
+    private static final double DEFAULT_CONVERGENCE;
+    private double steadyStateThreshold;
+    private double convergence;
+
+    public void <init>()
+    {
+        org.apache.commons.math.estimation.GaussNewtonEstimator r0;
+
+        r0 := @this: org.apache.commons.math.estimation.GaussNewtonEstimator;
+
+        specialinvoke r0.<org.apache.commons.math.estimation.AbstractEstimator: void <init>()>();
+
+        r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: double steadyStateThreshold> = 1.0E-6;
+
+        r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: double convergence> = 1.0E-6;
+
+        return;
+    }
+
+    public void <init>(int, double, double)
+    {
+        org.apache.commons.math.estimation.GaussNewtonEstimator r0;
+        int i0;
+        double d0, d1;
+
+        r0 := @this: org.apache.commons.math.estimation.GaussNewtonEstimator;
+
+        i0 := @parameter0: int;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        specialinvoke r0.<org.apache.commons.math.estimation.AbstractEstimator: void <init>()>();
+
+        virtualinvoke r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: void setMaxCostEval(int)>(i0);
+
+        r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: double steadyStateThreshold> = d1;
+
+        r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: double convergence> = d0;
+
+        return;
+    }
+
+    public void setConvergence(double)
+    {
+        org.apache.commons.math.estimation.GaussNewtonEstimator r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math.estimation.GaussNewtonEstimator;
+
+        d0 := @parameter0: double;
+
+        r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: double convergence> = d0;
+
+        return;
+    }
+
+    public void setSteadyStateThreshold(double)
+    {
+        org.apache.commons.math.estimation.GaussNewtonEstimator r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math.estimation.GaussNewtonEstimator;
+
+        d0 := @parameter0: double;
+
+        r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: double steadyStateThreshold> = d0;
+
+        return;
+    }
+
+    public void estimate(org.apache.commons.math.estimation.EstimationProblem) throws org.apache.commons.math.estimation.EstimationException
+    {
+        org.apache.commons.math.estimation.GaussNewtonEstimator r0;
+        org.apache.commons.math.estimation.EstimationProblem r1;
+        double[] r2, r4;
+        org.apache.commons.math.linear.RealMatrix r5, r40;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, d22, d23;
+        org.apache.commons.math.estimation.EstimatedParameter[] $r6, $r8, $r9, $r10, $r13, $r14, $r15, $r24, $r25, $r26, $r28, $r36, $r38, $r39;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i8, $i9, $i10, $i11, $i12, $i13, i14, $i15, i16, i17, i18, i19;
+        org.apache.commons.math.linear.ArrayRealVector $r7, $r35;
+        org.apache.commons.math.linear.LUDecompositionImpl $r11;
+        org.apache.commons.math.linear.DecompositionSolver $r12;
+        byte $b6, $b7;
+        org.apache.commons.math.estimation.EstimatedParameter $r16, $r17, $r29;
+        org.apache.commons.math.estimation.WeightedMeasurement[] $r18, $r20, $r22, $r27, $r41;
+        org.apache.commons.math.estimation.WeightedMeasurement $r19, $r21, $r23, $r30;
+        boolean $z0;
+        org.apache.commons.math.linear.InvalidMatrixException $r31;
+        org.apache.commons.math.estimation.EstimationException $r32;
+        java.lang.Object[] $r33;
+        org.apache.commons.math.exception.util.LocalizedFormats $r34;
+        org.apache.commons.math.linear.RealVector r37, r42;
+
+        r0 := @this: org.apache.commons.math.estimation.GaussNewtonEstimator;
+
+        r1 := @parameter0: org.apache.commons.math.estimation.EstimationProblem;
+
+        virtualinvoke r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: void initializeEstimate(org.apache.commons.math.estimation.EstimationProblem)>(r1);
+
+        $r6 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $i0 = lengthof $r6;
+
+        r2 = newarray (double)[$i0];
+
+        $r7 = new org.apache.commons.math.linear.ArrayRealVector;
+
+        $r8 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $i1 = lengthof $r8;
+
+        specialinvoke $r7.<org.apache.commons.math.linear.ArrayRealVector: void <init>(int)>($i1);
+
+        r4 = virtualinvoke $r7.<org.apache.commons.math.linear.ArrayRealVector: double[] getDataRef()>();
+
+        $r9 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $i3 = lengthof $r9;
+
+        $r10 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $i2 = lengthof $r10;
+
+        r5 = staticinvoke <org.apache.commons.math.linear.MatrixUtils: org.apache.commons.math.linear.RealMatrix createRealMatrix(int,int)>($i3, $i2);
+
+     label01:
+        virtualinvoke r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: void incrementJacobianEvaluationsCounter()>();
+
+        $r35 = new org.apache.commons.math.linear.ArrayRealVector;
+
+        $r36 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $i11 = lengthof $r36;
+
+        specialinvoke $r35.<org.apache.commons.math.linear.ArrayRealVector: void <init>(int)>($i11);
+
+        r37 = $r35;
+
+        $r38 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $i12 = lengthof $r38;
+
+        $r39 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $i13 = lengthof $r39;
+
+        r40 = staticinvoke <org.apache.commons.math.linear.MatrixUtils: org.apache.commons.math.linear.RealMatrix createRealMatrix(int,int)>($i12, $i13);
+
+        i14 = 0;
+
+     label02:
+        $r41 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.WeightedMeasurement[] measurements>;
+
+        $i15 = lengthof $r41;
+
+        if i14 >= $i15 goto label10;
+
+        $r18 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.WeightedMeasurement[] measurements>;
+
+        $r19 = $r18[i14];
+
+        $z0 = virtualinvoke $r19.<org.apache.commons.math.estimation.WeightedMeasurement: boolean isIgnored()>();
+
+        if $z0 != 0 goto label09;
+
+        $r20 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.WeightedMeasurement[] measurements>;
+
+        $r21 = $r20[i14];
+
+        d22 = virtualinvoke $r21.<org.apache.commons.math.estimation.WeightedMeasurement: double getWeight()>();
+
+        $r22 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.WeightedMeasurement[] measurements>;
+
+        $r23 = $r22[i14];
+
+        d0 = virtualinvoke $r23.<org.apache.commons.math.estimation.WeightedMeasurement: double getResidual()>();
+
+        i16 = 0;
+
+     label03:
+        $r24 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $i8 = lengthof $r24;
+
+        if i16 >= $i8 goto label04;
+
+        $r27 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.WeightedMeasurement[] measurements>;
+
+        $r30 = $r27[i14];
+
+        $r28 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $r29 = $r28[i16];
+
+        $d17 = virtualinvoke $r30.<org.apache.commons.math.estimation.WeightedMeasurement: double getPartial(org.apache.commons.math.estimation.EstimatedParameter)>($r29);
+
+        r2[i16] = $d17;
+
+        $d19 = d22 * d0;
+
+        $d18 = r2[i16];
+
+        $d20 = $d19 * $d18;
+
+        r4[i16] = $d20;
+
+        i16 = i16 + 1;
+
+        goto label03;
+
+     label04:
+        i17 = 0;
+
+     label05:
+        $r25 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $i9 = lengthof $r25;
+
+        if i17 >= $i9 goto label08;
+
+        d1 = r2[i17];
+
+        i18 = 0;
+
+     label06:
+        $r26 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $i10 = lengthof $r26;
+
+        if i18 >= $i10 goto label07;
+
+        $d15 = d22 * d1;
+
+        $d14 = r2[i18];
+
+        $d16 = $d15 * $d14;
+
+        interfaceinvoke r5.<org.apache.commons.math.linear.RealMatrix: void setEntry(int,int,double)>(i17, i18, $d16);
+
+        i18 = i18 + 1;
+
+        goto label06;
+
+     label07:
+        i17 = i17 + 1;
+
+        goto label05;
+
+     label08:
+        r40 = interfaceinvoke r40.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealMatrix add(org.apache.commons.math.linear.RealMatrix)>(r5);
+
+        r37 = interfaceinvoke r37.<org.apache.commons.math.linear.RealVector: org.apache.commons.math.linear.RealVector add(org.apache.commons.math.linear.RealVector)>($r7);
+
+     label09:
+        i14 = i14 + 1;
+
+        goto label02;
+
+     label10:
+        $r11 = new org.apache.commons.math.linear.LUDecompositionImpl;
+
+        specialinvoke $r11.<org.apache.commons.math.linear.LUDecompositionImpl: void <init>(org.apache.commons.math.linear.RealMatrix)>(r40);
+
+        $r12 = virtualinvoke $r11.<org.apache.commons.math.linear.LUDecompositionImpl: org.apache.commons.math.linear.DecompositionSolver getSolver()>();
+
+        r42 = interfaceinvoke $r12.<org.apache.commons.math.linear.DecompositionSolver: org.apache.commons.math.linear.RealVector solve(org.apache.commons.math.linear.RealVector)>(r37);
+
+        i19 = 0;
+
+     label11:
+        $r13 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $i4 = lengthof $r13;
+
+        if i19 >= $i4 goto label12;
+
+        $r14 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $r17 = $r14[i19];
+
+        $r15 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $r16 = $r15[i19];
+
+        $d11 = virtualinvoke $r16.<org.apache.commons.math.estimation.EstimatedParameter: double getEstimate()>();
+
+        $d12 = interfaceinvoke r42.<org.apache.commons.math.linear.RealVector: double getEntry(int)>(i19);
+
+        $d13 = $d11 + $d12;
+
+        virtualinvoke $r17.<org.apache.commons.math.estimation.EstimatedParameter: void setEstimate(double)>($d13);
+
+        i19 = i19 + 1;
+
+        goto label11;
+
+     label12:
+        goto label14;
+
+     label13:
+        $r31 := @caughtexception;
+
+        $r32 = new org.apache.commons.math.estimation.EstimationException;
+
+        $r34 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats UNABLE_TO_SOLVE_SINGULAR_PROBLEM>;
+
+        $r33 = newarray (java.lang.Object)[0];
+
+        specialinvoke $r32.<org.apache.commons.math.estimation.EstimationException: void <init>(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r34, $r33);
+
+        throw $r32;
+
+     label14:
+        d23 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: double cost>;
+
+        virtualinvoke r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: void updateResidualsAndCost()>();
+
+        $i5 = virtualinvoke r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: int getCostEvaluations()>();
+
+        if $i5 < 2 goto label01;
+
+        $d2 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: double cost>;
+
+        $d3 = d23 - $d2;
+
+        $d4 = staticinvoke <org.apache.commons.math.util.FastMath: double abs(double)>($d3);
+
+        $d6 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: double cost>;
+
+        $d5 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: double steadyStateThreshold>;
+
+        $d7 = $d6 * $d5;
+
+        $b6 = $d4 cmpl $d7;
+
+        if $b6 <= 0 goto label15;
+
+        $d8 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: double cost>;
+
+        $d9 = staticinvoke <org.apache.commons.math.util.FastMath: double abs(double)>($d8);
+
+        $d10 = r0.<org.apache.commons.math.estimation.GaussNewtonEstimator: double convergence>;
+
+        $b7 = $d9 cmpl $d10;
+
+        if $b7 > 0 goto label01;
+
+     label15:
+        return;
+
+        catch org.apache.commons.math.linear.InvalidMatrixException from label10 to label12 with label13;
+    }
+
+    public static void <clinit>()
+    {
+        <org.apache.commons.math.estimation.GaussNewtonEstimator: double DEFAULT_CONVERGENCE> = 1.0E-6;
+
+        <org.apache.commons.math.estimation.GaussNewtonEstimator: double DEFAULT_STEADY_STATE_THRESHOLD> = 1.0E-6;
+
+        <org.apache.commons.math.estimation.GaussNewtonEstimator: long serialVersionUID> = 5485001826076289109L;
+
+        return;
+    }
+}

@@ -1,0 +1,578 @@
+public class com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer extends java.lang.Object
+{
+    private final com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] _caplets;
+    private final int _n;
+
+    public void <init>(com.opengamma.analytics.financial.interestrate.capletstripping.CapFloor, com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloor r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r2;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] $r3, $r4;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $r3 = staticinvoke <com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorDecomposer: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] toOptions(com.opengamma.analytics.financial.interestrate.capletstripping.CapFloor,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>(r1, r2);
+
+        r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] _caplets> = $r3;
+
+        $r4 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] _caplets>;
+
+        $i0 = lengthof $r4;
+
+        r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: int _n> = $i0;
+
+        return;
+    }
+
+    public double price(double)
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        double d0, $d1, d2;
+        int $i0, i1;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] $r1;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        d0 := @parameter0: double;
+
+        d2 = 0.0;
+
+        i1 = 0;
+
+     label1:
+        $i0 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: int _n>;
+
+        if i1 >= $i0 goto label2;
+
+        $r1 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] _caplets>;
+
+        $r2 = $r1[i1];
+
+        $d1 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double price(com.opengamma.analytics.financial.model.volatility.SimpleOptionData,double)>($r2, d0);
+
+        d2 = d2 + $d1;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return d2;
+    }
+
+    public double price(com.opengamma.analytics.financial.model.volatility.VolatilityModel1D)
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        com.opengamma.analytics.financial.model.volatility.VolatilityModel1D r1;
+        double d0, $d1, d2;
+        int $i0, i1;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] $r2, $r4;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData $r3, $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.VolatilityModel1D;
+
+        d2 = 0.0;
+
+        i1 = 0;
+
+     label1:
+        $i0 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: int _n>;
+
+        if i1 >= $i0 goto label2;
+
+        $r2 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] _caplets>;
+
+        $r3 = $r2[i1];
+
+        d0 = interfaceinvoke r1.<com.opengamma.analytics.financial.model.volatility.VolatilityModel1D: double getVolatility(com.opengamma.analytics.financial.model.volatility.SimpleOptionData)>($r3);
+
+        $r4 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] _caplets>;
+
+        $r5 = $r4[i1];
+
+        $d1 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double price(com.opengamma.analytics.financial.model.volatility.SimpleOptionData,double)>($r5, d0);
+
+        d2 = d2 + $d1;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return d2;
+    }
+
+    public double price(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface r1;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData r2, $r5;
+        double d0, $d1, $d2, $d3, d4;
+        int $i0, i1;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] $r3, $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface;
+
+        d4 = 0.0;
+
+        i1 = 0;
+
+     label1:
+        $i0 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: int _n>;
+
+        if i1 >= $i0 goto label2;
+
+        $r3 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] _caplets>;
+
+        r2 = $r3[i1];
+
+        $d1 = virtualinvoke r2.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getTimeToExpiry()>();
+
+        $d2 = virtualinvoke r2.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getStrike()>();
+
+        d0 = virtualinvoke r1.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface: double getVolatility(double,double)>($d1, $d2);
+
+        $r4 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] _caplets>;
+
+        $r5 = $r4[i1];
+
+        $d3 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double price(com.opengamma.analytics.financial.model.volatility.SimpleOptionData,double)>($r5, d0);
+
+        d4 = d4 + $d3;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return d4;
+    }
+
+    public double price(double[])
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        double[] r1;
+        double d0, $d1, d2;
+        int $i0, $i1, i2, $i3;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] $r2;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData $r3;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        r1 := @parameter0: double[];
+
+        $i1 = lengthof r1;
+
+        $i0 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: int _n>;
+
+        if $i1 != $i0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "number of caplets is not equal to number of vols");
+
+        d2 = 0.0;
+
+        i2 = 0;
+
+     label3:
+        $i3 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: int _n>;
+
+        if i2 >= $i3 goto label4;
+
+        d0 = r1[i2];
+
+        $r2 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] _caplets>;
+
+        $r3 = $r2[i2];
+
+        $d1 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double price(com.opengamma.analytics.financial.model.volatility.SimpleOptionData,double)>($r3, d0);
+
+        d2 = d2 + $d1;
+
+        i2 = i2 + 1;
+
+        goto label3;
+
+     label4:
+        return d2;
+    }
+
+    public double impliedVol(double)
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        double d0, $d1;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        d0 := @parameter0: double;
+
+        $r1 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] _caplets>;
+
+        $d1 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double impliedVolatility(com.opengamma.analytics.financial.model.volatility.SimpleOptionData[],double)>($r1, d0);
+
+        return $d1;
+    }
+
+    public double impliedVol(com.opengamma.analytics.financial.model.volatility.VolatilityModel1D)
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        com.opengamma.analytics.financial.model.volatility.VolatilityModel1D r1;
+        double d0, $d1;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.VolatilityModel1D;
+
+        d0 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: double price(com.opengamma.analytics.financial.model.volatility.VolatilityModel1D)>(r1);
+
+        $d1 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: double impliedVol(double)>(d0);
+
+        return $d1;
+    }
+
+    public double impliedVol(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface r1;
+        double d0, $d1;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface;
+
+        d0 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: double price(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r1);
+
+        $d1 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: double impliedVol(double)>(d0);
+
+        return $d1;
+    }
+
+    public double impliedVol(double[])
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        double[] r1;
+        double d0, $d1;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        r1 := @parameter0: double[];
+
+        d0 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: double price(double[])>(r1);
+
+        $d1 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: double impliedVol(double)>(d0);
+
+        return $d1;
+    }
+
+    public double vega(double)
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        double d0, $d1, d2;
+        int $i0, i1;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] $r1;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        d0 := @parameter0: double;
+
+        d2 = 0.0;
+
+        i1 = 0;
+
+     label1:
+        $i0 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: int _n>;
+
+        if i1 >= $i0 goto label2;
+
+        $r1 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] _caplets>;
+
+        $r2 = $r1[i1];
+
+        $d1 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double vega(com.opengamma.analytics.financial.model.volatility.SimpleOptionData,double)>($r2, d0);
+
+        d2 = d2 + $d1;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return d2;
+    }
+
+    public double vega(com.opengamma.analytics.financial.model.volatility.VolatilityModel1D)
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        com.opengamma.analytics.financial.model.volatility.VolatilityModel1D r1;
+        double d0, $d1;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.VolatilityModel1D;
+
+        d0 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: double impliedVol(com.opengamma.analytics.financial.model.volatility.VolatilityModel1D)>(r1);
+
+        $d1 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: double vega(double)>(d0);
+
+        return $d1;
+    }
+
+    public double vega(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface r1;
+        double d0, $d1;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface;
+
+        d0 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: double impliedVol(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurface)>(r1);
+
+        $d1 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: double vega(double)>(d0);
+
+        return $d1;
+    }
+
+    public double vega(double[])
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        double[] r1;
+        double d0, $d1;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        r1 := @parameter0: double[];
+
+        d0 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: double impliedVol(double[])>(r1);
+
+        $d1 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: double vega(double)>(d0);
+
+        return $d1;
+    }
+
+    public double[] getCapletForwardRates()
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        double[] r1;
+        int $i0, $i1, i2;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] $r2;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData $r3;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        $i0 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: int _n>;
+
+        r1 = newarray (double)[$i0];
+
+        i2 = 0;
+
+     label1:
+        $i1 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: int _n>;
+
+        if i2 >= $i1 goto label2;
+
+        $r2 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] _caplets>;
+
+        $r3 = $r2[i2];
+
+        $d0 = virtualinvoke $r3.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getForward()>();
+
+        r1[i2] = $d0;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        return r1;
+    }
+
+    protected double getCapForward()
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        double[] r1, r2;
+        int $i0, i1;
+        double $d0, $d1, $d2, $d3, $d4, d5, d6;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        d5 = 0.0;
+
+        d6 = 0.0;
+
+        r1 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: double[] getDiscountFactors()>();
+
+        r2 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: double[] getCapletForwardRates()>();
+
+        i1 = 0;
+
+     label1:
+        $i0 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: int _n>;
+
+        if i1 >= $i0 goto label2;
+
+        $d2 = r1[i1];
+
+        $d1 = r2[i1];
+
+        $d3 = $d2 * $d1;
+
+        d5 = d5 + $d3;
+
+        $d4 = r1[i1];
+
+        d6 = d6 + $d4;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        $d0 = d5 / d6;
+
+        return $d0;
+    }
+
+    public double[] getCapletExpiries()
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        double[] r1;
+        int $i0, $i1, i2;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] $r2;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData $r3;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        $i0 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: int _n>;
+
+        r1 = newarray (double)[$i0];
+
+        i2 = 0;
+
+     label1:
+        $i1 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: int _n>;
+
+        if i2 >= $i1 goto label2;
+
+        $r2 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] _caplets>;
+
+        $r3 = $r2[i2];
+
+        $d0 = virtualinvoke $r3.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getTimeToExpiry()>();
+
+        r1[i2] = $d0;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        return r1;
+    }
+
+    protected double[] getDiscountFactors()
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        double[] r1;
+        int $i0, $i1, i2;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] $r2;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData $r3;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        $i0 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: int _n>;
+
+        r1 = newarray (double)[$i0];
+
+        i2 = 0;
+
+     label1:
+        $i1 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: int _n>;
+
+        if i2 >= $i1 goto label2;
+
+        $r2 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] _caplets>;
+
+        $r3 = $r2[i2];
+
+        $d0 = virtualinvoke $r3.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getDiscountFactor()>();
+
+        r1[i2] = $d0;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        return r1;
+    }
+
+    protected double getStrike()
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] $r1;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData $r2;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        $r1 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] _caplets>;
+
+        $r2 = $r1[0];
+
+        $d0 = virtualinvoke $r2.<com.opengamma.analytics.financial.model.volatility.SimpleOptionData: double getStrike()>();
+
+        return $d0;
+    }
+
+    public int getNumberCaplets()
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        $i0 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: int _n>;
+
+        return $i0;
+    }
+
+    public com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] getCapletAsOptionData()
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer r0;
+        com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer;
+
+        $r1 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapFloorPricer: com.opengamma.analytics.financial.model.volatility.SimpleOptionData[] _caplets>;
+
+        return $r1;
+    }
+}

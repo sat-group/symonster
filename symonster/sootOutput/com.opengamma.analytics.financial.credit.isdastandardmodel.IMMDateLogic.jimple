@@ -1,0 +1,479 @@
+public abstract class com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic extends java.lang.Object
+{
+    private static final int IMM_DAY;
+    private static final int[] IMM_MONTHS;
+    private static final int[] INDEX_ROLL_MONTHS;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic r0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public static boolean isIMMDate(org.threeten.bp.LocalDate)
+    {
+        org.threeten.bp.LocalDate r0;
+        int $i0, $i1, $i2;
+
+        r0 := @parameter0: org.threeten.bp.LocalDate;
+
+        $i0 = virtualinvoke r0.<org.threeten.bp.LocalDate: int getDayOfMonth()>();
+
+        if $i0 == 20 goto label1;
+
+        return 0;
+
+     label1:
+        $i1 = virtualinvoke r0.<org.threeten.bp.LocalDate: int getMonthValue()>();
+
+        $i2 = $i1 % 3;
+
+        if $i2 == 0 goto label2;
+
+        return 0;
+
+     label2:
+        return 1;
+    }
+
+    public static boolean isIndexRollDate(org.threeten.bp.LocalDate)
+    {
+        org.threeten.bp.LocalDate r0;
+        int i0, $i1, $i2, $i3;
+        int[] $r1, $r2;
+        boolean $z0;
+
+        r0 := @parameter0: org.threeten.bp.LocalDate;
+
+        $i1 = virtualinvoke r0.<org.threeten.bp.LocalDate: int getDayOfMonth()>();
+
+        if $i1 == 20 goto label1;
+
+        return 0;
+
+     label1:
+        i0 = virtualinvoke r0.<org.threeten.bp.LocalDate: int getMonthValue()>();
+
+        $r1 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] INDEX_ROLL_MONTHS>;
+
+        $i2 = $r1[0];
+
+        if i0 == $i2 goto label2;
+
+        $r2 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] INDEX_ROLL_MONTHS>;
+
+        $i3 = $r2[1];
+
+        if i0 != $i3 goto label3;
+
+     label2:
+        $z0 = 1;
+
+        goto label4;
+
+     label3:
+        $z0 = 0;
+
+     label4:
+        return $z0;
+    }
+
+    public static org.threeten.bp.LocalDate[] getIMMDateSet(org.threeten.bp.LocalDate, org.threeten.bp.Period[])
+    {
+        org.threeten.bp.LocalDate r0, $r7;
+        org.threeten.bp.Period[] r1;
+        int i0, i1;
+        org.threeten.bp.LocalDate[] r3;
+        boolean $z0;
+        org.threeten.bp.Period $r6;
+
+        r0 := @parameter0: org.threeten.bp.LocalDate;
+
+        r1 := @parameter1: org.threeten.bp.Period[];
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r0, "startIMMDate");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object[] noNulls(java.lang.Object[],java.lang.String)>(r1, "tenors");
+
+        i0 = lengthof r1;
+
+        $z0 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: boolean isIMMDate(org.threeten.bp.LocalDate)>(r0);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "start is not an IMM date");
+
+        r3 = newarray (org.threeten.bp.LocalDate)[i0];
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $r6 = r1[i1];
+
+        $r7 = virtualinvoke r0.<org.threeten.bp.LocalDate: org.threeten.bp.LocalDate plus(org.threeten.bp.temporal.TemporalAmount)>($r6);
+
+        r3[i1] = $r7;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return r3;
+    }
+
+    public static org.threeten.bp.LocalDate[] getIMMDateSet(org.threeten.bp.LocalDate, int)
+    {
+        org.threeten.bp.LocalDate r0, $r2, $r3, $r4, $r5;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, i7;
+        org.threeten.bp.LocalDate[] r1;
+        boolean $z0;
+
+        r0 := @parameter0: org.threeten.bp.LocalDate;
+
+        i0 := @parameter1: int;
+
+        $z0 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: boolean isIMMDate(org.threeten.bp.LocalDate)>(r0);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "start is not an IMM date");
+
+        r1 = newarray (org.threeten.bp.LocalDate)[i0];
+
+        r1[0] = r0;
+
+        i7 = 1;
+
+     label1:
+        if i7 >= i0 goto label4;
+
+        $i3 = i7 - 1;
+
+        $r2 = r1[$i3];
+
+        i1 = virtualinvoke $r2.<org.threeten.bp.LocalDate: int getMonthValue()>();
+
+        $i4 = i7 - 1;
+
+        $r3 = r1[$i4];
+
+        i2 = virtualinvoke $r3.<org.threeten.bp.LocalDate: int getYear()>();
+
+        if i1 == 12 goto label2;
+
+        $i6 = i1 + 3;
+
+        $r5 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>(i2, $i6, 20);
+
+        r1[i7] = $r5;
+
+        goto label3;
+
+     label2:
+        $i5 = i2 + 1;
+
+        $r4 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>($i5, 3, 20);
+
+        r1[i7] = $r4;
+
+     label3:
+        i7 = i7 + 1;
+
+        goto label1;
+
+     label4:
+        return r1;
+    }
+
+    public static org.threeten.bp.LocalDate getNextIMMDate(org.threeten.bp.LocalDate)
+    {
+        org.threeten.bp.LocalDate r0, $r2, $r4, $r5, $r6;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8;
+        int[] $r1, $r3;
+
+        r0 := @parameter0: org.threeten.bp.LocalDate;
+
+        i0 = virtualinvoke r0.<org.threeten.bp.LocalDate: int getDayOfMonth()>();
+
+        i1 = virtualinvoke r0.<org.threeten.bp.LocalDate: int getMonthValue()>();
+
+        i2 = virtualinvoke r0.<org.threeten.bp.LocalDate: int getYear()>();
+
+        $i3 = i1 % 3;
+
+        if $i3 != 0 goto label3;
+
+        if i0 >= 20 goto label1;
+
+        $r6 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>(i2, i1, 20);
+
+        return $r6;
+
+     label1:
+        if i1 == 12 goto label2;
+
+        $i8 = i1 + 3;
+
+        $r5 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>(i2, $i8, 20);
+
+        return $r5;
+
+     label2:
+        $i7 = i2 + 1;
+
+        $r3 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] IMM_MONTHS>;
+
+        $i6 = $r3[0];
+
+        $r4 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>($i7, $i6, 20);
+
+        return $r4;
+
+     label3:
+        $r1 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] IMM_MONTHS>;
+
+        $i4 = i1 / 3;
+
+        $i5 = $r1[$i4];
+
+        $r2 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>(i2, $i5, 20);
+
+        return $r2;
+    }
+
+    public static org.threeten.bp.LocalDate getPrevIMMDate(org.threeten.bp.LocalDate)
+    {
+        org.threeten.bp.LocalDate r0, $r2, $r4, $r6, $r7, $r8;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11;
+        int[] $r1, $r3, $r5;
+
+        r0 := @parameter0: org.threeten.bp.LocalDate;
+
+        i0 = virtualinvoke r0.<org.threeten.bp.LocalDate: int getDayOfMonth()>();
+
+        i1 = virtualinvoke r0.<org.threeten.bp.LocalDate: int getMonthValue()>();
+
+        i2 = virtualinvoke r0.<org.threeten.bp.LocalDate: int getYear()>();
+
+        $i4 = i1 % 3;
+
+        if $i4 != 0 goto label3;
+
+        if i0 <= 20 goto label1;
+
+        $r8 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>(i2, i1, 20);
+
+        return $r8;
+
+     label1:
+        if i1 == 3 goto label2;
+
+        $i11 = i1 - 3;
+
+        $r7 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>(i2, $i11, 20);
+
+        return $r7;
+
+     label2:
+        $i10 = i2 - 1;
+
+        $r5 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] IMM_MONTHS>;
+
+        $i9 = $r5[3];
+
+        $r6 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>($i10, $i9, 20);
+
+        return $r6;
+
+     label3:
+        i3 = i1 / 3;
+
+        if i3 != 0 goto label4;
+
+        $i8 = i2 - 1;
+
+        $r3 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] IMM_MONTHS>;
+
+        $i7 = $r3[3];
+
+        $r4 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>($i8, $i7, 20);
+
+        return $r4;
+
+     label4:
+        $r1 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] IMM_MONTHS>;
+
+        $i5 = i3 - 1;
+
+        $i6 = $r1[$i5];
+
+        $r2 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>(i2, $i6, 20);
+
+        return $r2;
+    }
+
+    public static org.threeten.bp.LocalDate getNextIndexRollDate(org.threeten.bp.LocalDate)
+    {
+        org.threeten.bp.LocalDate r0, $r6, $r8, $r9, $r11, $r13, $r14, $r16, $r19, $r21;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17;
+        boolean $z0;
+        int[] $r1, $r2, $r3, $r4, $r5, $r7, $r10, $r12, $r15, $r17, $r18, $r20;
+
+        r0 := @parameter0: org.threeten.bp.LocalDate;
+
+        i0 = virtualinvoke r0.<org.threeten.bp.LocalDate: int getDayOfMonth()>();
+
+        i1 = virtualinvoke r0.<org.threeten.bp.LocalDate: int getMonthValue()>();
+
+        i2 = virtualinvoke r0.<org.threeten.bp.LocalDate: int getYear()>();
+
+        $z0 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: boolean isIndexRollDate(org.threeten.bp.LocalDate)>(r0);
+
+        if $z0 == 0 goto label2;
+
+        $r17 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] INDEX_ROLL_MONTHS>;
+
+        $i14 = $r17[0];
+
+        if i1 != $i14 goto label1;
+
+        $r20 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] INDEX_ROLL_MONTHS>;
+
+        $i17 = $r20[1];
+
+        $r21 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>(i2, $i17, 20);
+
+        return $r21;
+
+     label1:
+        $i16 = i2 + 1;
+
+        $r18 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] INDEX_ROLL_MONTHS>;
+
+        $i15 = $r18[0];
+
+        $r19 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>($i16, $i15, 20);
+
+        return $r19;
+
+     label2:
+        $r1 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] INDEX_ROLL_MONTHS>;
+
+        $i3 = $r1[0];
+
+        if i1 >= $i3 goto label3;
+
+        $r15 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] INDEX_ROLL_MONTHS>;
+
+        $i13 = $r15[0];
+
+        $r16 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>(i2, $i13, 20);
+
+        return $r16;
+
+     label3:
+        $r2 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] INDEX_ROLL_MONTHS>;
+
+        $i4 = $r2[0];
+
+        if i1 != $i4 goto label5;
+
+        if i0 >= 20 goto label4;
+
+        $r14 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>(i2, i1, 20);
+
+        return $r14;
+
+     label4:
+        $r12 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] INDEX_ROLL_MONTHS>;
+
+        $i12 = $r12[1];
+
+        $r13 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>(i2, $i12, 20);
+
+        return $r13;
+
+     label5:
+        $r3 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] INDEX_ROLL_MONTHS>;
+
+        $i5 = $r3[1];
+
+        if i1 >= $i5 goto label6;
+
+        $r10 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] INDEX_ROLL_MONTHS>;
+
+        $i11 = $r10[1];
+
+        $r11 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>(i2, $i11, 20);
+
+        return $r11;
+
+     label6:
+        $r4 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] INDEX_ROLL_MONTHS>;
+
+        $i6 = $r4[1];
+
+        if i1 != $i6 goto label8;
+
+        if i0 >= 20 goto label7;
+
+        $r9 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>(i2, i1, 20);
+
+        return $r9;
+
+     label7:
+        $i10 = i2 + 1;
+
+        $r7 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] INDEX_ROLL_MONTHS>;
+
+        $i9 = $r7[0];
+
+        $r8 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>($i10, $i9, 20);
+
+        return $r8;
+
+     label8:
+        $i8 = i2 + 1;
+
+        $r5 = <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] INDEX_ROLL_MONTHS>;
+
+        $i7 = $r5[0];
+
+        $r6 = staticinvoke <org.threeten.bp.LocalDate: org.threeten.bp.LocalDate of(int,int,int)>($i8, $i7, 20);
+
+        return $r6;
+    }
+
+    static void <clinit>()
+    {
+        int[] $r0, $r1;
+
+        <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int IMM_DAY> = 20;
+
+        $r0 = newarray (int)[4];
+
+        $r0[0] = 3;
+
+        $r0[1] = 6;
+
+        $r0[2] = 9;
+
+        $r0[3] = 12;
+
+        <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] IMM_MONTHS> = $r0;
+
+        $r1 = newarray (int)[2];
+
+        $r1[0] = 3;
+
+        $r1[1] = 9;
+
+        <com.opengamma.analytics.financial.credit.isdastandardmodel.IMMDateLogic: int[] INDEX_ROLL_MONTHS> = $r1;
+
+        return;
+    }
+}

@@ -1,0 +1,350 @@
+public class com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider extends com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D
+{
+    private double _power;
+    private double _cap;
+
+    public void <init>(double, double, int, boolean, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider r0;
+        double d0, d1, d2, d3;
+        int i0;
+        boolean z0, $z1, $z2, $z3, $z4, $z5;
+        byte $b1, $b2, $b3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        i0 := @parameter2: int;
+
+        z0 := @parameter3: boolean;
+
+        d2 := @parameter4: double;
+
+        d3 := @parameter5: double;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: void <init>(double,double,int,boolean)>(d0, d1, i0, z0);
+
+        $b1 = d2 cmpl 0.0;
+
+        if $b1 <= 0 goto label1;
+
+        $z3 = 1;
+
+        goto label2;
+
+     label1:
+        $z3 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "power should be positive");
+
+        $z1 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "power should be finite");
+
+        $b2 = d3 cmpl 0.0;
+
+        if $b2 <= 0 goto label3;
+
+        $z4 = 1;
+
+        goto label4;
+
+     label3:
+        $z4 = 0;
+
+     label4:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z4, "cap should be positive");
+
+        $z2 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d3);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "cap should be finite");
+
+        if z0 != 0 goto label7;
+
+        $b3 = d3 cmpg d0;
+
+        if $b3 >= 0 goto label5;
+
+        $z5 = 1;
+
+        goto label6;
+
+     label5:
+        $z5 = 0;
+
+     label6:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "cap should be smaller than strike for put");
+
+     label7:
+        r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double _power> = d2;
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double _cap> = d3;
+
+        return;
+    }
+
+    public double[] getPayoffAtExpiry(double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider r0;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, d14;
+        int i0, i1, i2;
+        double[] r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double getStrike()>();
+
+        i0 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: int getNumberOfSteps()>();
+
+        i1 = i0 + 1;
+
+        d4 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double getSign()>();
+
+        r1 = newarray (double)[i1];
+
+        $d5 = (double) i0;
+
+        $d6 = staticinvoke <java.lang.Math: double pow(double,double)>(d1, $d5);
+
+        d14 = d0 * $d6;
+
+        i2 = 0;
+
+     label1:
+        if i2 >= i1 goto label2;
+
+        $d7 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double _power>;
+
+        $d8 = staticinvoke <java.lang.Math: double pow(double,double)>(d14, $d7);
+
+        $d9 = $d8 - d3;
+
+        $d10 = d4 * $d9;
+
+        $d11 = staticinvoke <java.lang.Math: double max(double,double)>($d10, 0.0);
+
+        $d12 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double _cap>;
+
+        $d13 = staticinvoke <java.lang.Math: double min(double,double)>($d11, $d12);
+
+        r1[i2] = $d13;
+
+        d14 = d14 * d2;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        return r1;
+    }
+
+    public double[] getPayoffAtExpiryTrinomial(double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider r0;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, d14;
+        int i0, i1, $i2, $i3, i4;
+        double[] r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double getStrike()>();
+
+        i0 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: int getNumberOfSteps()>();
+
+        $i2 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: int getNumberOfSteps()>();
+
+        $i3 = 2 * $i2;
+
+        i1 = $i3 + 1;
+
+        d4 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double getSign()>();
+
+        r1 = newarray (double)[i1];
+
+        $d5 = (double) i0;
+
+        $d6 = staticinvoke <java.lang.Math: double pow(double,double)>(d1, $d5);
+
+        d14 = d0 * $d6;
+
+        i4 = 0;
+
+     label1:
+        if i4 >= i1 goto label2;
+
+        $d7 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double _power>;
+
+        $d8 = staticinvoke <java.lang.Math: double pow(double,double)>(d14, $d7);
+
+        $d9 = $d8 - d3;
+
+        $d10 = d4 * $d9;
+
+        $d11 = staticinvoke <java.lang.Math: double max(double,double)>($d10, 0.0);
+
+        $d12 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double _cap>;
+
+        $d13 = staticinvoke <java.lang.Math: double min(double,double)>($d11, $d12);
+
+        r1[i4] = $d13;
+
+        d14 = d14 * d2;
+
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label2:
+        return r1;
+    }
+
+    public double getPower()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double _power>;
+
+        return $d0;
+    }
+
+    public double getCap()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double _cap>;
+
+        return $d0;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider r0;
+        double $d0, $d1;
+        long $l1, $l2, $l5, $l6, l10, l12;
+        int $i3, $i4, $i7, $i8, i9, i11, i13;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider;
+
+        i9 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: int hashCode()>();
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double _cap>;
+
+        l10 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $i4 = 31 * i9;
+
+        $l1 = l10 >>> 32;
+
+        $l2 = l10 ^ $l1;
+
+        $i3 = (int) $l2;
+
+        i11 = $i4 + $i3;
+
+        $d1 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double _power>;
+
+        l12 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d1);
+
+        $i8 = 31 * i11;
+
+        $l5 = l12 >>> 32;
+
+        $l6 = l12 ^ $l5;
+
+        $i7 = (int) $l6;
+
+        i13 = $i8 + $i7;
+
+        return i13;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider r0, r2;
+        java.lang.Object r1;
+        boolean $z0, $z1;
+        double $d0, $d1, $d2, $d3;
+        long $l0, $l1, $l3, $l4;
+        byte $b2, $b5;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        $z0 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: boolean equals(java.lang.Object)>(r1);
+
+        if $z0 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        $z1 = r1 instanceof com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider;
+
+        if $z1 != 0 goto label3;
+
+        return 0;
+
+     label3:
+        r2 = (com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider) r1;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double _cap>;
+
+        $l0 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $d1 = r2.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double _cap>;
+
+        $l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d1);
+
+        $b2 = $l0 cmp $l1;
+
+        if $b2 == 0 goto label4;
+
+        return 0;
+
+     label4:
+        $d2 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double _power>;
+
+        $l3 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d2);
+
+        $d3 = r2.<com.opengamma.analytics.financial.model.option.pricing.tree.CappedPowerOptionFunctionProvider: double _power>;
+
+        $l4 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d3);
+
+        $b5 = $l3 cmp $l4;
+
+        if $b5 == 0 goto label5;
+
+        return 0;
+
+     label5:
+        return 1;
+    }
+}

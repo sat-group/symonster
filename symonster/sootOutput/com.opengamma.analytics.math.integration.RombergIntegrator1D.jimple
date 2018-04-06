@@ -1,0 +1,156 @@
+public class com.opengamma.analytics.math.integration.RombergIntegrator1D extends com.opengamma.analytics.math.integration.Integrator1D
+{
+    private static final org.slf4j.Logger s_logger;
+    private final org.apache.commons.math.analysis.integration.UnivariateRealIntegrator _integrator;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.math.integration.RombergIntegrator1D r0;
+        org.apache.commons.math.analysis.integration.RombergIntegrator $r1;
+
+        r0 := @this: com.opengamma.analytics.math.integration.RombergIntegrator1D;
+
+        specialinvoke r0.<com.opengamma.analytics.math.integration.Integrator1D: void <init>()>();
+
+        $r1 = new org.apache.commons.math.analysis.integration.RombergIntegrator;
+
+        specialinvoke $r1.<org.apache.commons.math.analysis.integration.RombergIntegrator: void <init>()>();
+
+        r0.<com.opengamma.analytics.math.integration.RombergIntegrator1D: org.apache.commons.math.analysis.integration.UnivariateRealIntegrator _integrator> = $r1;
+
+        return;
+    }
+
+    public java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D, java.lang.Double, java.lang.Double)
+    {
+        com.opengamma.analytics.math.integration.RombergIntegrator1D r0;
+        com.opengamma.analytics.math.function.Function1D r1;
+        java.lang.Double r2, r3, $r7, $r10;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8;
+        byte $b0;
+        org.slf4j.Logger $r4;
+        org.apache.commons.math.analysis.integration.UnivariateRealIntegrator $r5, $r8;
+        org.apache.commons.math.analysis.UnivariateRealFunction $r6, $r9;
+        org.apache.commons.math.ConvergenceException $r11;
+        com.opengamma.analytics.math.MathException $r12, $r14;
+        org.apache.commons.math.FunctionEvaluationException $r13;
+
+        r0 := @this: com.opengamma.analytics.math.integration.RombergIntegrator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.function.Function1D;
+
+        r2 := @parameter1: java.lang.Double;
+
+        r3 := @parameter2: java.lang.Double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "f");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "lower bound");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r3, "upper bound");
+
+     label1:
+        $d0 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $d1 = virtualinvoke r3.<java.lang.Double: double doubleValue()>();
+
+        $b0 = $d0 cmpg $d1;
+
+        if $b0 >= 0 goto label3;
+
+        $r8 = r0.<com.opengamma.analytics.math.integration.RombergIntegrator1D: org.apache.commons.math.analysis.integration.UnivariateRealIntegrator _integrator>;
+
+        $r9 = staticinvoke <com.opengamma.analytics.math.util.wrapper.CommonsMathWrapper: org.apache.commons.math.analysis.UnivariateRealFunction wrapUnivariate(com.opengamma.analytics.math.function.Function1D)>(r1);
+
+        $d6 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $d7 = virtualinvoke r3.<java.lang.Double: double doubleValue()>();
+
+        $d8 = interfaceinvoke $r8.<org.apache.commons.math.analysis.integration.UnivariateRealIntegrator: double integrate(org.apache.commons.math.analysis.UnivariateRealFunction,double,double)>($r9, $d6, $d7);
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d8);
+
+     label2:
+        return $r10;
+
+     label3:
+        $r4 = <com.opengamma.analytics.math.integration.RombergIntegrator1D: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r4.<org.slf4j.Logger: void info(java.lang.String)>("Upper bound was less than lower bound; swapping bounds and negating result");
+
+        $r5 = r0.<com.opengamma.analytics.math.integration.RombergIntegrator1D: org.apache.commons.math.analysis.integration.UnivariateRealIntegrator _integrator>;
+
+        $r6 = staticinvoke <com.opengamma.analytics.math.util.wrapper.CommonsMathWrapper: org.apache.commons.math.analysis.UnivariateRealFunction wrapUnivariate(com.opengamma.analytics.math.function.Function1D)>(r1);
+
+        $d2 = virtualinvoke r3.<java.lang.Double: double doubleValue()>();
+
+        $d3 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $d4 = interfaceinvoke $r5.<org.apache.commons.math.analysis.integration.UnivariateRealIntegrator: double integrate(org.apache.commons.math.analysis.UnivariateRealFunction,double,double)>($r6, $d2, $d3);
+
+        $d5 = neg $d4;
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d5);
+
+     label4:
+        return $r7;
+
+     label5:
+        $r13 := @caughtexception;
+
+        $r14 = new com.opengamma.analytics.math.MathException;
+
+        specialinvoke $r14.<com.opengamma.analytics.math.MathException: void <init>(java.lang.Throwable)>($r13);
+
+        throw $r14;
+
+     label6:
+        $r11 := @caughtexception;
+
+        $r12 = new com.opengamma.analytics.math.MathException;
+
+        specialinvoke $r12.<com.opengamma.analytics.math.MathException: void <init>(java.lang.Throwable)>($r11);
+
+        throw $r12;
+
+        catch org.apache.commons.math.FunctionEvaluationException from label1 to label2 with label5;
+        catch org.apache.commons.math.FunctionEvaluationException from label3 to label4 with label5;
+        catch org.apache.commons.math.ConvergenceException from label1 to label2 with label6;
+        catch org.apache.commons.math.ConvergenceException from label3 to label4 with label6;
+    }
+
+    public volatile java.lang.Object integrate(com.opengamma.analytics.math.function.Function1D, java.lang.Object, java.lang.Object)
+    {
+        com.opengamma.analytics.math.integration.RombergIntegrator1D r0;
+        com.opengamma.analytics.math.function.Function1D r1;
+        java.lang.Object r2, r3;
+        java.lang.Double $r4, $r5, $r6;
+
+        r0 := @this: com.opengamma.analytics.math.integration.RombergIntegrator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.function.Function1D;
+
+        r2 := @parameter1: java.lang.Object;
+
+        r3 := @parameter2: java.lang.Object;
+
+        $r5 = (java.lang.Double) r2;
+
+        $r4 = (java.lang.Double) r3;
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.math.integration.RombergIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>(r1, $r5, $r4);
+
+        return $r6;
+    }
+
+    static void <clinit>()
+    {
+        org.slf4j.Logger $r0;
+
+        $r0 = staticinvoke <org.slf4j.LoggerFactory: org.slf4j.Logger getLogger(java.lang.Class)>(class "com/opengamma/analytics/math/integration/RombergIntegrator1D");
+
+        <com.opengamma.analytics.math.integration.RombergIntegrator1D: org.slf4j.Logger s_logger> = $r0;
+
+        return;
+    }
+}

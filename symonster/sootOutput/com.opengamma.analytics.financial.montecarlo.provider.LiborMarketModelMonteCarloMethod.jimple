@@ -1,0 +1,1182 @@
+public class com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod extends com.opengamma.analytics.financial.montecarlo.provider.MonteCarloMethod
+{
+    private final double _maxJump;
+    private static final com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleCalculator DC;
+    private static final com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator MCC;
+    private static final int BLOCK_SIZE;
+    private static final double MAX_JUMP_DEFAULT;
+
+    public void <init>(com.opengamma.analytics.math.random.RandomNumberGenerator, int)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod r0;
+        com.opengamma.analytics.math.random.RandomNumberGenerator r1;
+        int i0;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.math.random.RandomNumberGenerator;
+
+        i0 := @parameter1: int;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.montecarlo.provider.MonteCarloMethod: void <init>(com.opengamma.analytics.math.random.RandomNumberGenerator,int)>(r1, i0);
+
+        r0.<com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: double _maxJump> = 1.0;
+
+        return;
+    }
+
+    public void <init>(com.opengamma.analytics.math.random.RandomNumberGenerator, int, double)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod r0;
+        com.opengamma.analytics.math.random.RandomNumberGenerator r1;
+        int i0;
+        double d0;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.math.random.RandomNumberGenerator;
+
+        i0 := @parameter1: int;
+
+        d0 := @parameter2: double;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.montecarlo.provider.MonteCarloMethod: void <init>(com.opengamma.analytics.math.random.RandomNumberGenerator,int)>(r1, i0);
+
+        r0.<com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: double _maxJump> = d0;
+
+        return;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.InstrumentDerivative, com.opengamma.util.money.Currency, com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProvider)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative r1;
+        com.opengamma.util.money.Currency r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProvider r3;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r4;
+        com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters r5;
+        com.opengamma.analytics.financial.montecarlo.DecisionSchedule r6;
+        int[][] r7;
+        int i0, $i1, $i2, $i3, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, i17, i18, i19, i20, i21, i22, i23;
+        double[] r8, r9, r10, $r16, $r17, $r20, $r26, $r27;
+        int[] r11;
+        double[][] r12, $r15, $r23;
+        com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleCalculator $r13;
+        java.lang.Object $r14, $r24;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, d17, d18;
+        long $l4;
+        java.lang.Double $r18, $r25, $r28;
+        com.opengamma.util.money.MultipleCurrencyAmount $r19;
+        com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle $r21;
+        com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator $r22;
+        double[][][] r29;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivative;
+
+        r2 := @parameter1: com.opengamma.util.money.Currency;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProvider;
+
+        r4 = virtualinvoke r3.<com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProvider: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        r5 = virtualinvoke r3.<com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProvider: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters getLMMParameters()>();
+
+        $r13 = <com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleCalculator DC>;
+
+        $r14 = interfaceinvoke r1.<com.opengamma.analytics.financial.interestrate.InstrumentDerivative: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r13, r4);
+
+        r6 = (com.opengamma.analytics.financial.montecarlo.DecisionSchedule) $r14;
+
+        $r15 = virtualinvoke r6.<com.opengamma.analytics.financial.montecarlo.DecisionSchedule: double[][] getImpactTime()>();
+
+        r7 = specialinvoke r0.<com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: int[][] index(double[][],com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters)>($r15, r5);
+
+        i0 = virtualinvoke r5.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: int getNbPeriod()>();
+
+        r8 = newarray (double)[i0];
+
+        r9 = virtualinvoke r5.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double[] getAccrualFactor()>();
+
+        $i1 = i0 + 1;
+
+        r10 = newarray (double)[$i1];
+
+        i17 = 0;
+
+     label01:
+        $i2 = i0 + 1;
+
+        if i17 >= $i2 goto label02;
+
+        $r27 = virtualinvoke r5.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double[] getIborTime()>();
+
+        $d15 = $r27[i17];
+
+        $r28 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d15);
+
+        $d16 = interfaceinvoke r4.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r2, $r28);
+
+        r10[i17] = $d16;
+
+        i17 = i17 + 1;
+
+        goto label01;
+
+     label02:
+        i18 = 0;
+
+     label03:
+        if i18 >= i0 goto label04;
+
+        $d10 = r10[i18];
+
+        $i16 = i18 + 1;
+
+        $d9 = r10[$i16];
+
+        $d11 = $d10 / $d9;
+
+        $d13 = $d11 - 1.0;
+
+        $d12 = r9[i18];
+
+        $d14 = $d13 / $d12;
+
+        r8[i18] = $d14;
+
+        i18 = i18 + 1;
+
+        goto label03;
+
+     label04:
+        $i3 = virtualinvoke r0.<com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: int getNbPath()>();
+
+        $d0 = (double) $i3;
+
+        $d1 = $d0 / 1000.0;
+
+        $d2 = staticinvoke <java.lang.Math: double ceil(double)>($d1);
+
+        $l4 = staticinvoke <java.lang.Math: long round(double)>($d2);
+
+        i19 = (int) $l4;
+
+        r11 = newarray (int)[i19];
+
+        i20 = 0;
+
+     label05:
+        $i5 = i19 - 1;
+
+        if i20 >= $i5 goto label06;
+
+        r11[i20] = 1000;
+
+        i20 = i20 + 1;
+
+        goto label05;
+
+     label06:
+        $i6 = i19 - 1;
+
+        $i7 = virtualinvoke r0.<com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: int getNbPath()>();
+
+        $i8 = i19 - 1;
+
+        $i9 = $i8 * 1000;
+
+        $i10 = $i7 - $i9;
+
+        r11[$i6] = $i10;
+
+        d17 = 0.0;
+
+        i21 = 0;
+
+     label07:
+        if i21 >= i19 goto label12;
+
+        $i14 = r11[i21];
+
+        r12 = newmultiarray (double)[i0][$i14];
+
+        i22 = 0;
+
+     label08:
+        if i22 >= i0 goto label11;
+
+        i23 = 0;
+
+     label09:
+        $i15 = r11[i21];
+
+        if i23 >= $i15 goto label10;
+
+        $r26 = r12[i22];
+
+        $d8 = r8[i22];
+
+        $r26[i23] = $d8;
+
+        i23 = i23 + 1;
+
+        goto label09;
+
+     label10:
+        i22 = i22 + 1;
+
+        goto label08;
+
+     label11:
+        $r20 = virtualinvoke r6.<com.opengamma.analytics.financial.montecarlo.DecisionSchedule: double[] getDecisionTime()>();
+
+        r29 = specialinvoke r0.<com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: double[][][] pathgeneratorlibor(double[],double[][],com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters)>($r20, r12, r5);
+
+        $r22 = <com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator MCC>;
+
+        $r21 = new com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle;
+
+        $r23 = virtualinvoke r6.<com.opengamma.analytics.financial.montecarlo.DecisionSchedule: double[][] getImpactAmount()>();
+
+        specialinvoke $r21.<com.opengamma.analytics.financial.montecarlo.MonteCarloIborRateDataBundle: void <init>(double[][][],double[],double[][],int[][])>(r29, r9, $r23, r7);
+
+        $r24 = interfaceinvoke r1.<com.opengamma.analytics.financial.interestrate.InstrumentDerivative: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r22, $r21);
+
+        $r25 = (java.lang.Double) $r24;
+
+        $d7 = virtualinvoke $r25.<java.lang.Double: double doubleValue()>();
+
+        d17 = d17 + $d7;
+
+        i21 = i21 + 1;
+
+        goto label07;
+
+     label12:
+        $r16 = virtualinvoke r5.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double[] getIborTime()>();
+
+        $r17 = virtualinvoke r5.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double[] getIborTime()>();
+
+        $i11 = lengthof $r17;
+
+        $i12 = $i11 - 1;
+
+        $d3 = $r16[$i12];
+
+        $r18 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        $d4 = interfaceinvoke r4.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r2, $r18);
+
+        $i13 = virtualinvoke r0.<com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: int getNbPath()>();
+
+        $d5 = (double) $i13;
+
+        $d6 = $d4 / $d5;
+
+        d18 = d17 * $d6;
+
+        $r19 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>(r2, d18);
+
+        return $r19;
+    }
+
+    private int[][] index(double[][], com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod r0;
+        double[][] r1;
+        com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters r2;
+        int[][] r3;
+        int $i0, $i1, $i2, $i3, $i4, i5, i6;
+        double[] $r4, $r6, $r7;
+        int[] $r5, $r8;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod;
+
+        r1 := @parameter0: double[][];
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters;
+
+        $i0 = lengthof r1;
+
+        r3 = newarray (int[])[$i0];
+
+        i5 = 0;
+
+     label1:
+        $i1 = lengthof r1;
+
+        if i5 >= $i1 goto label4;
+
+        $r4 = r1[i5];
+
+        $i2 = lengthof $r4;
+
+        $r5 = newarray (int)[$i2];
+
+        r3[i5] = $r5;
+
+        i6 = 0;
+
+     label2:
+        $r6 = r1[i5];
+
+        $i3 = lengthof $r6;
+
+        if i6 >= $i3 goto label3;
+
+        $r8 = r3[i5];
+
+        $r7 = r1[i5];
+
+        $d0 = $r7[i6];
+
+        $i4 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: int getTimeIndex(double)>($d0);
+
+        $r8[i6] = $i4;
+
+        i6 = i6 + 1;
+
+        goto label2;
+
+     label3:
+        i5 = i5 + 1;
+
+        goto label1;
+
+     label4:
+        return r3;
+    }
+
+    private double[][] stepPC(double[], double[][], com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod r0;
+        double[] r1, r4, r5, r6, r10, r11, r12, r13, r14, $r21, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r30, $r31, $r32, $r33, $r34, $r37, $r38, $r41, $r42, $r43, $r44, $r45, $r46, $r49, $r53;
+        double[][] r2, r15, $r17, r56, r58, r59, r60, r61, r62;
+        com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters r3;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, $d80, $d81, $d82, $d83;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D r9, $r16, $r19, $r22;
+        int i0, i1, i2, i3, i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, $i25, $i26, $i27, $i28, $i29, $i30, $i31, $i32, $i33, $i34, $i35, $i36, $i37, $i38, $i39, $i40, i41, i42, i43, i44, i45, i46, i47, i48, i49, i50, i51, i52, i53, i54, i55, i56, i57, i58;
+        com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra $r18;
+        com.opengamma.analytics.math.matrix.Matrix $r20;
+        int[] $r35, $r39, $r47, $r50, $r52;
+        java.lang.Double $r36, $r40, $r48, $r51, $r54;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[][];
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters;
+
+        d0 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double getMeanReversion()>();
+
+        r4 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double[] getIborTime()>();
+
+        r5 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double[] getDisplacement()>();
+
+        r6 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double[] getAccrualFactor()>();
+
+        $r16 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        $r17 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double[][] getVolatility()>();
+
+        specialinvoke $r16.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>($r17);
+
+        $r18 = new com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra;
+
+        specialinvoke $r18.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: void <init>()>();
+
+        $r19 = virtualinvoke $r18.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.DoubleMatrix2D getTranspose(com.opengamma.analytics.math.matrix.Matrix)>($r16);
+
+        $r20 = virtualinvoke $r18.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>($r16, $r19);
+
+        r9 = (com.opengamma.analytics.math.matrix.DoubleMatrix2D) $r20;
+
+        $i5 = lengthof r1;
+
+        i0 = $i5 - 1;
+
+        $r21 = r2[0];
+
+        i1 = lengthof $r21;
+
+        i2 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: int getNbPeriod()>();
+
+        i3 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: int getNbFactor()>();
+
+        r10 = newarray (double)[i0];
+
+        r11 = newarray (double)[i0];
+
+        r12 = newarray (double)[i0];
+
+        i41 = 0;
+
+     label01:
+        if i41 >= i0 goto label02;
+
+        $i39 = i41 + 1;
+
+        $d76 = r1[$i39];
+
+        $d75 = r1[i41];
+
+        $d77 = $d76 - $d75;
+
+        r10[i41] = $d77;
+
+        $i40 = i41 + 1;
+
+        $d78 = r1[$i40];
+
+        $d79 = d0 * $d78;
+
+        $d80 = staticinvoke <java.lang.Math: double exp(double)>($d79);
+
+        r11[i41] = $d80;
+
+        $d82 = r11[i41];
+
+        $d81 = r11[i41];
+
+        $d83 = $d82 * $d81;
+
+        r12[i41] = $d83;
+
+        i41 = i41 + 1;
+
+        goto label01;
+
+     label02:
+        i42 = 0;
+
+     label03:
+        if i42 >= i0 goto label33;
+
+        $d2 = r10[i42];
+
+        d1 = staticinvoke <java.lang.Math: double sqrt(double)>($d2);
+
+        $i6 = i42 + 1;
+
+        $d3 = r1[$i6];
+
+        $d4 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double getTimeTolerance()>();
+
+        $d5 = $d3 - $d4;
+
+        i43 = staticinvoke <java.util.Arrays: int binarySearch(double[],double)>(r4, $d5);
+
+        $i7 = neg i43;
+
+        i44 = $i7 - 1;
+
+        i4 = i2 - i44;
+
+        r13 = newarray (double)[i4];
+
+        i45 = 0;
+
+     label04:
+        if i45 >= i4 goto label05;
+
+        $i38 = i44 + i45;
+
+        $d73 = r6[$i38];
+
+        $d74 = 1.0 / $d73;
+
+        r13[i45] = $d74;
+
+        i45 = i45 + 1;
+
+        goto label04;
+
+     label05:
+        r56 = newmultiarray (double)[i4][i4];
+
+        i46 = 0;
+
+     label06:
+        if i46 >= i4 goto label09;
+
+        i47 = 0;
+
+     label07:
+        if i47 >= i4 goto label08;
+
+        $r53 = r56[i46];
+
+        $r52 = newarray (int)[2];
+
+        $i36 = i44 + i46;
+
+        $r52[0] = $i36;
+
+        $i37 = i44 + i47;
+
+        $r52[1] = $i37;
+
+        $r54 = virtualinvoke r9.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: java.lang.Double getEntry(int[])>($r52);
+
+        $d70 = virtualinvoke $r54.<java.lang.Double: double doubleValue()>();
+
+        $d71 = r12[i42];
+
+        $d72 = $d70 * $d71;
+
+        $r53[i47] = $d72;
+
+        i47 = i47 + 1;
+
+        goto label07;
+
+     label08:
+        i46 = i46 + 1;
+
+        goto label06;
+
+     label09:
+        $r22 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r22.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r56);
+
+        r58 = specialinvoke r0.<com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: double[][] getNormalArray(int,int)>(i3, i1);
+
+        r14 = newarray (double)[i4];
+
+        i48 = 0;
+
+     label10:
+        if i48 >= i4 goto label11;
+
+        $r50 = newarray (int)[2];
+
+        $r50[0] = i48;
+
+        $r50[1] = i48;
+
+        $r51 = virtualinvoke $r22.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: java.lang.Double getEntry(int[])>($r50);
+
+        $d65 = virtualinvoke $r51.<java.lang.Double: double doubleValue()>();
+
+        $d67 = neg $d65;
+
+        $d66 = r10[i42];
+
+        $d68 = $d67 * $d66;
+
+        $d69 = $d68 / 2.0;
+
+        r14[i48] = $d69;
+
+        i48 = i48 + 1;
+
+        goto label10;
+
+     label11:
+        r59 = newmultiarray (double)[i4][i1];
+
+        i49 = 0;
+
+     label12:
+        if i49 >= i4 goto label17;
+
+        i50 = 0;
+
+     label13:
+        if i50 >= i1 goto label16;
+
+        i51 = 0;
+
+     label14:
+        if i51 >= i3 goto label15;
+
+        $r46 = r59[i49];
+
+        $d57 = $r46[i50];
+
+        $r47 = newarray (int)[2];
+
+        $i35 = i44 + i49;
+
+        $r47[0] = $i35;
+
+        $r47[1] = i51;
+
+        $r48 = virtualinvoke $r16.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: java.lang.Double getEntry(int[])>($r47);
+
+        $d58 = virtualinvoke $r48.<java.lang.Double: double doubleValue()>();
+
+        $r49 = r58[i51];
+
+        $d59 = $r49[i50];
+
+        $d60 = $d58 * $d59;
+
+        $d62 = $d60 * d1;
+
+        $d61 = r11[i42];
+
+        $d63 = $d62 * $d61;
+
+        $d64 = $d57 + $d63;
+
+        $r46[i50] = $d64;
+
+        i51 = i51 + 1;
+
+        goto label14;
+
+     label15:
+        $r45 = r59[i49];
+
+        $d55 = $r45[i50];
+
+        $d54 = r14[i49];
+
+        $d56 = $d55 + $d54;
+
+        $r45[i50] = $d56;
+
+        i50 = i50 + 1;
+
+        goto label13;
+
+     label16:
+        i49 = i49 + 1;
+
+        goto label12;
+
+     label17:
+        r60 = newmultiarray (double)[i4][i1];
+
+        r61 = newmultiarray (double)[i4][i1];
+
+        $i8 = i4 - 1;
+
+        r62 = newmultiarray (double)[i1][$i8];
+
+        r15 = newmultiarray (double)[i4][i1];
+
+        i52 = 0;
+
+     label18:
+        if i52 >= i1 goto label21;
+
+        i53 = 0;
+
+     label19:
+        $i27 = i4 - 1;
+
+        if i53 >= $i27 goto label20;
+
+        $r44 = r62[i52];
+
+        $i28 = i44 + i53;
+
+        $i29 = $i28 + 1;
+
+        $r42 = r2[$i29];
+
+        $d48 = $r42[i52];
+
+        $i30 = i44 + i53;
+
+        $i31 = $i30 + 1;
+
+        $d47 = r5[$i31];
+
+        $d52 = $d48 + $d47;
+
+        $i32 = i44 + i53;
+
+        $i33 = $i32 + 1;
+
+        $r43 = r2[$i33];
+
+        $d50 = $r43[i52];
+
+        $i34 = i53 + 1;
+
+        $d49 = r13[$i34];
+
+        $d51 = $d50 + $d49;
+
+        $d53 = $d52 / $d51;
+
+        $r44[i53] = $d53;
+
+        i53 = i53 + 1;
+
+        goto label19;
+
+     label20:
+        i52 = i52 + 1;
+
+        goto label18;
+
+     label21:
+        i54 = i4 - 1;
+
+     label22:
+        if i54 < 0 goto label32;
+
+        $i9 = i4 - 1;
+
+        if i54 >= $i9 goto label29;
+
+        i55 = 0;
+
+     label23:
+        if i55 >= i1 goto label26;
+
+        $i18 = i54 + 1;
+
+        $r33 = r15[$i18];
+
+        $i19 = i44 + i54;
+
+        $i20 = $i19 + 1;
+
+        $r31 = r2[$i20];
+
+        $d31 = $r31[i55];
+
+        $i21 = i44 + i54;
+
+        $i22 = $i21 + 1;
+
+        $d30 = r5[$i22];
+
+        $d35 = $d31 + $d30;
+
+        $i23 = i44 + i54;
+
+        $i24 = $i23 + 1;
+
+        $r32 = r2[$i24];
+
+        $d33 = $r32[i55];
+
+        $i25 = i54 + 1;
+
+        $d32 = r13[$i25];
+
+        $d34 = $d33 + $d32;
+
+        $d36 = $d35 / $d34;
+
+        $r33[i55] = $d36;
+
+        i56 = i54 + 1;
+
+     label24:
+        if i56 >= i4 goto label25;
+
+        $r34 = r60[i54];
+
+        $d37 = $r34[i55];
+
+        $r35 = newarray (int)[2];
+
+        $r35[0] = i56;
+
+        $r35[1] = i54;
+
+        $r36 = virtualinvoke $r22.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: java.lang.Double getEntry(int[])>($r35);
+
+        $d38 = virtualinvoke $r36.<java.lang.Double: double doubleValue()>();
+
+        $r37 = r62[i55];
+
+        $i26 = i56 - 1;
+
+        $d39 = $r37[$i26];
+
+        $d40 = $d38 * $d39;
+
+        $d41 = $d37 + $d40;
+
+        $r34[i55] = $d41;
+
+        $r38 = r61[i54];
+
+        $d42 = $r38[i55];
+
+        $r39 = newarray (int)[2];
+
+        $r39[0] = i56;
+
+        $r39[1] = i54;
+
+        $r40 = virtualinvoke $r22.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: java.lang.Double getEntry(int[])>($r39);
+
+        $d43 = virtualinvoke $r40.<java.lang.Double: double doubleValue()>();
+
+        $r41 = r15[i56];
+
+        $d44 = $r41[i55];
+
+        $d45 = $d43 * $d44;
+
+        $d46 = $d42 + $d45;
+
+        $r38[i55] = $d46;
+
+        i56 = i56 + 1;
+
+        goto label24;
+
+     label25:
+        i55 = i55 + 1;
+
+        goto label23;
+
+     label26:
+        i57 = 0;
+
+     label27:
+        if i57 >= i1 goto label28;
+
+        $i14 = i54 + i44;
+
+        $r30 = r2[$i14];
+
+        $i15 = i54 + i44;
+
+        $r26 = r2[$i15];
+
+        $d15 = $r26[i57];
+
+        $i16 = i44 + i54;
+
+        $d14 = r5[$i16];
+
+        $d25 = $d15 + $d14;
+
+        $r27 = r60[i54];
+
+        $d17 = $r27[i57];
+
+        $r28 = r61[i54];
+
+        $d16 = $r28[i57];
+
+        $d18 = $d17 + $d16;
+
+        $d20 = neg $d18;
+
+        $d19 = r10[i42];
+
+        $d21 = $d20 * $d19;
+
+        $d23 = $d21 / 2.0;
+
+        $r29 = r59[i54];
+
+        $d22 = $r29[i57];
+
+        $d24 = $d23 + $d22;
+
+        $d26 = staticinvoke <java.lang.Math: double exp(double)>($d24);
+
+        $d28 = $d25 * $d26;
+
+        $i17 = i44 + i54;
+
+        $d27 = r5[$i17];
+
+        $d29 = $d28 - $d27;
+
+        $r30[i57] = $d29;
+
+        i57 = i57 + 1;
+
+        goto label27;
+
+     label28:
+        goto label31;
+
+     label29:
+        i58 = 0;
+
+     label30:
+        if i58 >= i1 goto label31;
+
+        $i10 = i54 + i44;
+
+        $r25 = r2[$i10];
+
+        $i11 = i54 + i44;
+
+        $r23 = r2[$i11];
+
+        $d7 = $r23[i58];
+
+        $i12 = i44 + i54;
+
+        $d6 = r5[$i12];
+
+        $d9 = $d7 + $d6;
+
+        $r24 = r59[i54];
+
+        $d8 = $r24[i58];
+
+        $d10 = staticinvoke <java.lang.Math: double exp(double)>($d8);
+
+        $d12 = $d9 * $d10;
+
+        $i13 = i44 + i54;
+
+        $d11 = r5[$i13];
+
+        $d13 = $d12 - $d11;
+
+        $r25[i58] = $d13;
+
+        i58 = i58 + 1;
+
+        goto label30;
+
+     label31:
+        i54 = i54 + -1;
+
+        goto label22;
+
+     label32:
+        i42 = i42 + 1;
+
+        goto label03;
+
+     label33:
+        return r2;
+    }
+
+    private double[][][] pathgeneratorlibor(double[], double[][], com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod r0;
+        double[] r1, $r5, $r7, $r8, $r9, $r10, $r11, r13, r14;
+        double[][] r2, $r6, r12;
+        com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters r3;
+        int i0, i1, i2, i3, $i4, $i5, $i7, $i8, $i9, i10, i11, i12, i13;
+        double[][][] r4;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, d18;
+        byte $b6;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[][];
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters;
+
+        i0 = lengthof r2;
+
+        $r5 = r2[0];
+
+        i1 = lengthof $r5;
+
+        i2 = lengthof r1;
+
+        r12 = newmultiarray (double)[i0][i1];
+
+        i10 = 0;
+
+     label1:
+        if i10 >= i0 goto label2;
+
+        $r11 = r2[i10];
+
+        $r10 = r12[i10];
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r11, 0, $r10, 0, i1);
+
+        i10 = i10 + 1;
+
+        goto label1;
+
+     label2:
+        $i4 = i2 + 1;
+
+        r13 = newarray (double)[$i4];
+
+        r13[0] = 0.0;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r1, 0, r13, 1, i2);
+
+        r4 = newmultiarray (double)[i2][i0][i1];
+
+        i11 = 0;
+
+     label3:
+        if i11 >= i2 goto label9;
+
+        $i5 = i11 + 1;
+
+        $d1 = r13[$i5];
+
+        $d0 = r13[i11];
+
+        $d3 = $d1 - $d0;
+
+        $d2 = r0.<com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: double _maxJump>;
+
+        $b6 = $d3 cmpg $d2;
+
+        if $b6 >= 0 goto label4;
+
+        $r9 = newarray (double)[2];
+
+        $d16 = r13[i11];
+
+        $r9[0] = $d16;
+
+        $i9 = i11 + 1;
+
+        $d17 = r13[$i9];
+
+        $r9[1] = $d17;
+
+        r14 = $r9;
+
+        goto label6;
+
+     label4:
+        $i7 = i11 + 1;
+
+        $d5 = r13[$i7];
+
+        $d4 = r13[i11];
+
+        d18 = $d5 - $d4;
+
+        $d6 = r0.<com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: double _maxJump>;
+
+        $d7 = d18 / $d6;
+
+        $d8 = staticinvoke <java.lang.Math: double ceil(double)>($d7);
+
+        i3 = (int) $d8;
+
+        $i8 = i3 + 1;
+
+        r14 = newarray (double)[$i8];
+
+        $d9 = r13[i11];
+
+        r14[0] = $d9;
+
+        i12 = 1;
+
+     label5:
+        if i12 > i3 goto label6;
+
+        $d14 = r13[i11];
+
+        $d10 = (double) i12;
+
+        $d12 = $d10 * d18;
+
+        $d11 = (double) i3;
+
+        $d13 = $d12 / $d11;
+
+        $d15 = $d14 + $d13;
+
+        r14[i12] = $d15;
+
+        i12 = i12 + 1;
+
+        goto label5;
+
+     label6:
+        r12 = specialinvoke r0.<com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: double[][] stepPC(double[],double[][],com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters)>(r14, r12, r3);
+
+        i13 = 0;
+
+     label7:
+        if i13 >= i0 goto label8;
+
+        $r8 = r12[i13];
+
+        $r6 = r4[i11];
+
+        $r7 = $r6[i13];
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r8, 0, $r7, 0, i1);
+
+        i13 = i13 + 1;
+
+        goto label7;
+
+     label8:
+        i11 = i11 + 1;
+
+        goto label3;
+
+     label9:
+        return r4;
+    }
+
+    private double[][] getNormalArray(int, int)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod r0;
+        int i0, i1, i2;
+        double[][] r1;
+        com.opengamma.analytics.math.random.RandomNumberGenerator $r2;
+        double[] $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        r1 = newmultiarray (double)[i0][i1];
+
+        i2 = 0;
+
+     label1:
+        if i2 >= i0 goto label2;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: com.opengamma.analytics.math.random.RandomNumberGenerator getNumberGenerator()>();
+
+        $r3 = interfaceinvoke $r2.<com.opengamma.analytics.math.random.RandomNumberGenerator: double[] getVector(int)>(i1);
+
+        r1[i2] = $r3;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        return r1;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleCalculator $r0;
+        com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator $r1;
+
+        <com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: double MAX_JUMP_DEFAULT> = 1.0;
+
+        <com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: int BLOCK_SIZE> = 1000;
+
+        $r0 = staticinvoke <com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleCalculator: com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleCalculator DC> = $r0;
+
+        $r1 = staticinvoke <com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator: com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.montecarlo.provider.LiborMarketModelMonteCarloMethod: com.opengamma.analytics.financial.montecarlo.provider.MonteCarloIborRateCalculator MCC> = $r1;
+
+        return;
+    }
+}

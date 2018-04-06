@@ -1,0 +1,549 @@
+public class com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D extends com.opengamma.analytics.math.integration.Integrator1D
+{
+    private static final double DEF_TOL;
+    private static final double STEP_SIZE_LIMIT;
+    private static final int DEF_MIN_STEPS;
+    private final double _absTol;
+    private final double _relTol;
+    private final int _minSteps;
+
+    public void <init>(double, double, int)
+    {
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D r0;
+        double d0, d1;
+        int i0;
+        byte $b1, $b2;
+        boolean $z0, $z1, $z2, $z3;
+        java.lang.IllegalArgumentException $r1, $r2, $r3;
+
+        r0 := @this: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        i0 := @parameter2: int;
+
+        specialinvoke r0.<com.opengamma.analytics.math.integration.Integrator1D: void <init>()>();
+
+        $b1 = d0 cmpg 0.0;
+
+        if $b1 < 0 goto label1;
+
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d0);
+
+        if $z0 != 0 goto label1;
+
+        $z1 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d0);
+
+        if $z1 == 0 goto label2;
+
+     label1:
+        $r2 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Absolute Tolerance must be greater than zero");
+
+        throw $r2;
+
+     label2:
+        $b2 = d1 cmpg 0.0;
+
+        if $b2 < 0 goto label3;
+
+        $z2 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d1);
+
+        if $z2 != 0 goto label3;
+
+        $z3 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d1);
+
+        if $z3 == 0 goto label4;
+
+     label3:
+        $r3 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r3.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Relative Tolerance must be greater than zero");
+
+        throw $r3;
+
+     label4:
+        if i0 >= 1 goto label5;
+
+        $r1 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Must have minimum of 1 step");
+
+        throw $r1;
+
+     label5:
+        r0.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: double _absTol> = d0;
+
+        r0.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: double _relTol> = d1;
+
+        r0.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: int _minSteps> = i0;
+
+        return;
+    }
+
+    public void <init>(double, int)
+    {
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D r0;
+        double d0;
+        int i0;
+
+        r0 := @this: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        d0 := @parameter0: double;
+
+        i0 := @parameter1: int;
+
+        specialinvoke r0.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: void <init>(double,double,int)>(d0, d0, i0);
+
+        return;
+    }
+
+    public void <init>(double, double)
+    {
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D r0;
+        double d0, d1;
+
+        r0 := @this: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        specialinvoke r0.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: void <init>(double,double,int)>(d0, d1, 10);
+
+        return;
+    }
+
+    public void <init>(double)
+    {
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D r0;
+        double d0;
+
+        r0 := @this: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        d0 := @parameter0: double;
+
+        specialinvoke r0.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: void <init>(double,double,int)>(d0, d0, 10);
+
+        return;
+    }
+
+    public void <init>(int)
+    {
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D r0;
+        int i0;
+
+        r0 := @this: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        i0 := @parameter0: int;
+
+        specialinvoke r0.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: void <init>(double,int)>(1.0E-10, i0);
+
+        return;
+    }
+
+    public void <init>()
+    {
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D r0;
+
+        r0 := @this: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        specialinvoke r0.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: void <init>(double,int)>(1.0E-10, 10);
+
+        return;
+    }
+
+    public java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D, java.lang.Double, java.lang.Double)
+    {
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D r0;
+        com.opengamma.analytics.math.function.Function1D r1;
+        java.lang.Double r2, r3, $r6, $r8, $r10, $r11, $r13, $r15, $r17;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, d15, d16, d17;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9;
+        int $i0, $i1, i2;
+        java.lang.Object $r7, $r12, $r16;
+        com.opengamma.OpenGammaRuntimeException r20, r21, r22, r23;
+        java.lang.Throwable r24, r25, r26, r27;
+
+        r0 := @this: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.function.Function1D;
+
+        r2 := @parameter1: java.lang.Double;
+
+        r3 := @parameter2: java.lang.Double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "lower");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "upper");
+
+        $d3 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d3);
+
+        if $z0 != 0 goto label01;
+
+        $d4 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $z1 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d4);
+
+        if $z1 != 0 goto label01;
+
+        $d5 = virtualinvoke r3.<java.lang.Double: double doubleValue()>();
+
+        $z2 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d5);
+
+        if $z2 != 0 goto label01;
+
+        $d6 = virtualinvoke r3.<java.lang.Double: double doubleValue()>();
+
+        $z3 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d6);
+
+        if $z3 == 0 goto label02;
+
+     label01:
+        r20 = new com.opengamma.OpenGammaRuntimeException;
+
+        specialinvoke r20.<com.opengamma.OpenGammaRuntimeException: void <init>(java.lang.String)>("lower or upper was NaN or Inf");
+
+        r24 = (java.lang.Throwable) r20;
+
+        throw r24;
+
+     label02:
+        $d7 = virtualinvoke r3.<java.lang.Double: double doubleValue()>();
+
+        $d8 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $d10 = $d7 - $d8;
+
+        $i0 = r0.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: int _minSteps>;
+
+        $d9 = (double) $i0;
+
+        d0 = $d10 / $d9;
+
+        d15 = virtualinvoke r2.<java.lang.Double: double doubleValue()>();
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d15);
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r6);
+
+        $r8 = (java.lang.Double) $r7;
+
+        d16 = virtualinvoke $r8.<java.lang.Double: double doubleValue()>();
+
+        $z4 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d16);
+
+        if $z4 != 0 goto label03;
+
+        $z5 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d16);
+
+        if $z5 == 0 goto label04;
+
+     label03:
+        r21 = new com.opengamma.OpenGammaRuntimeException;
+
+        specialinvoke r21.<com.opengamma.OpenGammaRuntimeException: void <init>(java.lang.String)>("function evaluation returned NaN or Inf");
+
+        r25 = (java.lang.Throwable) r21;
+
+        throw r25;
+
+     label04:
+        d17 = 0.0;
+
+        i2 = 0;
+
+     label05:
+        $i1 = r0.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: int _minSteps>;
+
+        if i2 >= $i1 goto label10;
+
+        $d11 = d0 / 2.0;
+
+        $d12 = d15 + $d11;
+
+        $r11 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d12);
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r11);
+
+        $r13 = (java.lang.Double) $r12;
+
+        d1 = virtualinvoke $r13.<java.lang.Double: double doubleValue()>();
+
+        $z6 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d1);
+
+        if $z6 != 0 goto label06;
+
+        $z7 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d1);
+
+        if $z7 == 0 goto label07;
+
+     label06:
+        r22 = new com.opengamma.OpenGammaRuntimeException;
+
+        specialinvoke r22.<com.opengamma.OpenGammaRuntimeException: void <init>(java.lang.String)>("function evaluation returned NaN or Inf");
+
+        r26 = (java.lang.Throwable) r22;
+
+        throw r26;
+
+     label07:
+        $d13 = d15 + d0;
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d13);
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r15);
+
+        $r17 = (java.lang.Double) $r16;
+
+        d2 = virtualinvoke $r17.<java.lang.Double: double doubleValue()>();
+
+        $z8 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d2);
+
+        if $z8 != 0 goto label08;
+
+        $z9 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d2);
+
+        if $z9 == 0 goto label09;
+
+     label08:
+        r23 = new com.opengamma.OpenGammaRuntimeException;
+
+        specialinvoke r23.<com.opengamma.OpenGammaRuntimeException: void <init>(java.lang.String)>("function evaluation returned NaN or Inf");
+
+        r27 = (java.lang.Throwable) r23;
+
+        throw r27;
+
+     label09:
+        $d14 = specialinvoke r0.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: double calculateRungeKuttaFourthOrder(com.opengamma.analytics.math.function.Function1D,double,double,double,double,double)>(r1, d15, d0, d16, d1, d2);
+
+        d17 = d17 + $d14;
+
+        d16 = d2;
+
+        d15 = d15 + d0;
+
+        i2 = i2 + 1;
+
+        goto label05;
+
+     label10:
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d17);
+
+        return $r10;
+    }
+
+    private double calculateRungeKuttaFourthOrder(com.opengamma.analytics.math.function.Function1D, double, double, double, double, double)
+    {
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D r0;
+        com.opengamma.analytics.math.function.Function1D r1;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45;
+        java.lang.Double $r2, $r4, $r6, $r8;
+        java.lang.Object $r3, $r7;
+        boolean $z0, $z1, $z2, $z3;
+        byte $b0, $b1;
+        com.opengamma.OpenGammaRuntimeException r10, r11;
+        java.lang.Throwable r12, r13;
+
+        r0 := @this: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.function.Function1D;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        d2 := @parameter3: double;
+
+        d3 := @parameter4: double;
+
+        d4 := @parameter5: double;
+
+        $d11 = 0.25 * d1;
+
+        $d12 = d0 + $d11;
+
+        $r2 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d12);
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r2);
+
+        $r4 = (java.lang.Double) $r3;
+
+        d5 = virtualinvoke $r4.<java.lang.Double: double doubleValue()>();
+
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d5);
+
+        if $z0 != 0 goto label1;
+
+        $z1 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d5);
+
+        if $z1 == 0 goto label2;
+
+     label1:
+        r10 = new com.opengamma.OpenGammaRuntimeException;
+
+        specialinvoke r10.<com.opengamma.OpenGammaRuntimeException: void <init>(java.lang.String)>("f.evaluate returned NaN or Inf");
+
+        r12 = (java.lang.Throwable) r10;
+
+        throw r12;
+
+     label2:
+        $d13 = 0.75 * d1;
+
+        $d14 = d0 + $d13;
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d14);
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r6);
+
+        $r8 = (java.lang.Double) $r7;
+
+        d6 = virtualinvoke $r8.<java.lang.Double: double doubleValue()>();
+
+        $z2 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d6);
+
+        if $z2 != 0 goto label3;
+
+        $z3 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d6);
+
+        if $z3 == 0 goto label4;
+
+     label3:
+        r11 = new com.opengamma.OpenGammaRuntimeException;
+
+        specialinvoke r11.<com.opengamma.OpenGammaRuntimeException: void <init>(java.lang.String)>("f.evaluate returned NaN or Inf");
+
+        r13 = (java.lang.Throwable) r11;
+
+        throw r13;
+
+     label4:
+        $d15 = 4.0 * d3;
+
+        $d16 = d2 + $d15;
+
+        $d17 = $d16 + d4;
+
+        $d18 = d1 * $d17;
+
+        d7 = $d18 / 6.0;
+
+        $d19 = 2.0 * d3;
+
+        $d22 = d2 + $d19;
+
+        $d20 = d5 + d6;
+
+        $d21 = 4.0 * $d20;
+
+        $d23 = $d22 + $d21;
+
+        $d24 = $d23 + d4;
+
+        $d25 = d1 * $d24;
+
+        d8 = $d25 / 12.0;
+
+        $d26 = d7 - d8;
+
+        d9 = staticinvoke <java.lang.Math: double abs(double)>($d26);
+
+        $d27 = staticinvoke <java.lang.Math: double abs(double)>(d7);
+
+        $d28 = staticinvoke <java.lang.Math: double abs(double)>(d8);
+
+        d10 = staticinvoke <java.lang.Math: double max(double,double)>($d27, $d28);
+
+        $d31 = r0.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: double _absTol>;
+
+        $d29 = r0.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: double _relTol>;
+
+        $d30 = $d29 * d10;
+
+        $d32 = $d31 + $d30;
+
+        $b0 = d9 cmpg $d32;
+
+        if $b0 >= 0 goto label5;
+
+        $d43 = d8 - d7;
+
+        $d44 = $d43 / 15.0;
+
+        $d45 = d8 + $d44;
+
+        return $d45;
+
+     label5:
+        $b1 = d1 cmpg 1.0E-50;
+
+        if $b1 >= 0 goto label6;
+
+        $d40 = d8 - d7;
+
+        $d41 = $d40 / 15.0;
+
+        $d42 = d8 + $d41;
+
+        return $d42;
+
+     label6:
+        $d33 = d1 / 2.0;
+
+        $d34 = specialinvoke r0.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: double calculateRungeKuttaFourthOrder(com.opengamma.analytics.math.function.Function1D,double,double,double,double,double)>(r1, d0, $d33, d2, d5, d3);
+
+        $d35 = d1 / 2.0;
+
+        $d37 = d0 + $d35;
+
+        $d36 = d1 / 2.0;
+
+        $d38 = specialinvoke r0.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: double calculateRungeKuttaFourthOrder(com.opengamma.analytics.math.function.Function1D,double,double,double,double,double)>(r1, $d37, $d36, d3, d6, d4);
+
+        $d39 = $d34 + $d38;
+
+        return $d39;
+    }
+
+    public volatile java.lang.Object integrate(com.opengamma.analytics.math.function.Function1D, java.lang.Object, java.lang.Object)
+    {
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D r0;
+        com.opengamma.analytics.math.function.Function1D r1;
+        java.lang.Object r2, r3;
+        java.lang.Double $r4, $r5, $r6;
+
+        r0 := @this: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.function.Function1D;
+
+        r2 := @parameter1: java.lang.Object;
+
+        r3 := @parameter2: java.lang.Object;
+
+        $r5 = (java.lang.Double) r2;
+
+        $r4 = (java.lang.Double) r3;
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>(r1, $r5, $r4);
+
+        return $r6;
+    }
+
+    public static void <clinit>()
+    {
+        <com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: int DEF_MIN_STEPS> = 10;
+
+        <com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: double STEP_SIZE_LIMIT> = 1.0E-50;
+
+        <com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: double DEF_TOL> = 1.0E-10;
+
+        return;
+    }
+}

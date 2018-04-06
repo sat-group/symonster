@@ -1,0 +1,387 @@
+public class com.opengamma.analytics.math.minimization.SingleRangeLimitTransform extends java.lang.Object implements com.opengamma.analytics.math.minimization.ParameterLimitsTransform
+{
+    private static final double EXP_MAX;
+    private final double _limit;
+    private final int _sign;
+
+    public void <init>(double, com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType)
+    {
+        com.opengamma.analytics.math.minimization.SingleRangeLimitTransform r0;
+        double d0;
+        com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType r1, $r2;
+        byte $b0;
+
+        r0 := @this: com.opengamma.analytics.math.minimization.SingleRangeLimitTransform;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: double _limit> = d0;
+
+        $r2 = <com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType: com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType GREATER_THAN>;
+
+        if r1 != $r2 goto label1;
+
+        $b0 = 1;
+
+        goto label2;
+
+     label1:
+        $b0 = -1;
+
+     label2:
+        r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: int _sign> = $b0;
+
+        return;
+    }
+
+    public double inverseTransform(double)
+    {
+        com.opengamma.analytics.math.minimization.SingleRangeLimitTransform r0;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12;
+        byte $b0, $b1;
+        int $i2, $i3;
+
+        r0 := @this: com.opengamma.analytics.math.minimization.SingleRangeLimitTransform;
+
+        d0 := @parameter0: double;
+
+        $b0 = d0 cmpl 50.0;
+
+        if $b0 <= 0 goto label1;
+
+        $d11 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: double _limit>;
+
+        $i3 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: int _sign>;
+
+        $d9 = (double) $i3;
+
+        $d10 = $d9 * d0;
+
+        $d12 = $d11 + $d10;
+
+        return $d12;
+
+     label1:
+        $b1 = d0 cmpg -50.0;
+
+        if $b1 >= 0 goto label2;
+
+        $d8 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: double _limit>;
+
+        return $d8;
+
+     label2:
+        $d1 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: double _limit>;
+
+        $i2 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: int _sign>;
+
+        $d2 = (double) $i2;
+
+        $d3 = staticinvoke <java.lang.Math: double exp(double)>(d0);
+
+        $d4 = $d3 + 1.0;
+
+        $d5 = staticinvoke <java.lang.Math: double log(double)>($d4);
+
+        $d6 = $d2 * $d5;
+
+        $d7 = $d1 + $d6;
+
+        return $d7;
+    }
+
+    public double transform(double)
+    {
+        com.opengamma.analytics.math.minimization.SingleRangeLimitTransform r0;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13;
+        int $i0, $i1, $i4;
+        byte $b2, $b3, $b5;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.math.minimization.SingleRangeLimitTransform;
+
+        d0 := @parameter0: double;
+
+        $i0 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: int _sign>;
+
+        $d2 = (double) $i0;
+
+        $d6 = $d2 * d0;
+
+        $i1 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: int _sign>;
+
+        $d4 = (double) $i1;
+
+        $d3 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: double _limit>;
+
+        $d5 = $d4 * $d3;
+
+        $b2 = $d6 cmpl $d5;
+
+        if $b2 < 0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "x not in limit");
+
+        $d7 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: double _limit>;
+
+        $b3 = d0 cmpl $d7;
+
+        if $b3 != 0 goto label3;
+
+        return -50.0;
+
+     label3:
+        $i4 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: int _sign>;
+
+        $d10 = (double) $i4;
+
+        $d8 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: double _limit>;
+
+        $d9 = d0 - $d8;
+
+        d1 = $d10 * $d9;
+
+        $b5 = d1 cmpl 50.0;
+
+        if $b5 <= 0 goto label4;
+
+        return d1;
+
+     label4:
+        $d11 = staticinvoke <java.lang.Math: double exp(double)>(d1);
+
+        $d12 = $d11 - 1.0;
+
+        $d13 = staticinvoke <java.lang.Math: double log(double)>($d12);
+
+        return $d13;
+    }
+
+    public double inverseTransformGradient(double)
+    {
+        com.opengamma.analytics.math.minimization.SingleRangeLimitTransform r0;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6;
+        byte $b0;
+        int $i1, $i2;
+
+        r0 := @this: com.opengamma.analytics.math.minimization.SingleRangeLimitTransform;
+
+        d0 := @parameter0: double;
+
+        $b0 = d0 cmpl 50.0;
+
+        if $b0 <= 0 goto label1;
+
+        $i2 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: int _sign>;
+
+        $d6 = (double) $i2;
+
+        return $d6;
+
+     label1:
+        d1 = staticinvoke <java.lang.Math: double exp(double)>(d0);
+
+        $i1 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: int _sign>;
+
+        $d2 = (double) $i1;
+
+        $d4 = $d2 * d1;
+
+        $d3 = d1 + 1.0;
+
+        $d5 = $d4 / $d3;
+
+        return $d5;
+    }
+
+    public double transformGradient(double)
+    {
+        com.opengamma.analytics.math.minimization.SingleRangeLimitTransform r0;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14;
+        int $i0, $i1, $i3, $i5;
+        byte $b2, $b4;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.math.minimization.SingleRangeLimitTransform;
+
+        d0 := @parameter0: double;
+
+        $i0 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: int _sign>;
+
+        $d3 = (double) $i0;
+
+        $d7 = $d3 * d0;
+
+        $i1 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: int _sign>;
+
+        $d5 = (double) $i1;
+
+        $d4 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: double _limit>;
+
+        $d6 = $d5 * $d4;
+
+        $b2 = $d7 cmpl $d6;
+
+        if $b2 < 0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "x not in limit");
+
+        $i3 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: int _sign>;
+
+        $d10 = (double) $i3;
+
+        $d8 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: double _limit>;
+
+        $d9 = d0 - $d8;
+
+        d1 = $d10 * $d9;
+
+        $b4 = d1 cmpl 50.0;
+
+        if $b4 <= 0 goto label3;
+
+        return 1.0;
+
+     label3:
+        d2 = staticinvoke <java.lang.Math: double exp(double)>(d1);
+
+        $i5 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: int _sign>;
+
+        $d11 = (double) $i5;
+
+        $d13 = $d11 * d2;
+
+        $d12 = d2 - 1.0;
+
+        $d14 = $d13 / $d12;
+
+        return $d14;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.math.minimization.SingleRangeLimitTransform r0;
+        long l1, $l2, $l3;
+        double $d0;
+        int $i4, $i5, $i6, $i7, i9, i10;
+
+        r0 := @this: com.opengamma.analytics.math.minimization.SingleRangeLimitTransform;
+
+        $d0 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: double _limit>;
+
+        l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $i5 = 31 * 1;
+
+        $l2 = l1 >>> 32;
+
+        $l3 = l1 ^ $l2;
+
+        $i4 = (int) $l3;
+
+        i9 = $i5 + $i4;
+
+        $i7 = 31 * i9;
+
+        $i6 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: int _sign>;
+
+        i10 = $i7 + $i6;
+
+        return i10;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.math.minimization.SingleRangeLimitTransform r0, r2;
+        java.lang.Object r1;
+        java.lang.Class $r3, $r4;
+        double $d0, $d1;
+        long $l0, $l1;
+        byte $b2;
+        int $i3, $i4;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.math.minimization.SingleRangeLimitTransform;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        if r1 != null goto label2;
+
+        return 0;
+
+     label2:
+        $r3 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r4 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+
+        if $r3 == $r4 goto label3;
+
+        return 0;
+
+     label3:
+        r2 = (com.opengamma.analytics.math.minimization.SingleRangeLimitTransform) r1;
+
+        $d0 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: double _limit>;
+
+        $l0 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $d1 = r2.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: double _limit>;
+
+        $l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d1);
+
+        $b2 = $l0 cmp $l1;
+
+        if $b2 == 0 goto label4;
+
+        return 0;
+
+     label4:
+        $i4 = r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: int _sign>;
+
+        $i3 = r2.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: int _sign>;
+
+        if $i4 != $i3 goto label5;
+
+        $z0 = 1;
+
+        goto label6;
+
+     label5:
+        $z0 = 0;
+
+     label6:
+        return $z0;
+    }
+
+    public static void <clinit>()
+    {
+        <com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: double EXP_MAX> = 50.0;
+
+        return;
+    }
+}

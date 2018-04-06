@@ -1,0 +1,581 @@
+public class com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator extends java.lang.Object
+{
+    private final com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _valueCalculator;
+    private final double _shift;
+
+    public void <init>(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor, double)
+    {
+        com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor r1;
+        double d0;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        d0 := @parameter1: double;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Calculator");
+
+        r0.<com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _valueCalculator> = r1;
+
+        r0.<com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator: double _shift> = d0;
+
+        return;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.multicurve.SimpleParameterSensitivity calculateSensitivity(com.opengamma.analytics.financial.interestrate.InstrumentDerivative, com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount)
+    {
+        com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount r2, $r22, $r37, $r59, $r74, $r96, $r111;
+        java.util.Set r3, r133, r147;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, d31, d32, d33, d34, d35;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.SimpleParameterSensitivity $r4, r119;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount $r5, $r6, $r7, $r9, $r13, $r23, $r24, $r38, $r39, $r46, $r50, $r60, $r61, $r75, $r76, $r83, $r87, $r97, $r98, $r112, $r113;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8;
+        java.lang.Object $r8, $r16, $r28, $r31, $r43, $r45, $r53, $r65, $r68, $r80, $r82, $r90, $r102, $r105, $r117;
+        com.opengamma.analytics.math.curve.DoublesCurve $r10, $r11, $r47, $r48, $r84, $r85;
+        double[] $r12, $r15, $r20, $r30, $r35, $r49, $r52, $r57, $r67, $r72, $r86, $r89, $r94, $r104, $r109, r125, r126, r129, r139, r140, r143, r153, r154, r157;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r14, $r51, $r88;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve $r17, $r32, $r54, $r69, $r91, $r106, r123, r137, r151;
+        java.lang.String $r18, $r33, $r55, $r70, $r92, $r107, r132, r146, r160;
+        com.opengamma.analytics.math.curve.InterpolatedDoublesCurve $r19, $r34, $r56, $r71, $r93, $r108, r124, r138, r152;
+        com.opengamma.analytics.math.interpolation.Interpolator1D $r21, $r36, $r58, $r73, $r95, $r110;
+        com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters $r25, $r40, $r62, $r77, $r99, $r114;
+        com.opengamma.util.money.Currency $r26, $r41, $r63, $r78, $r100, $r115, r121;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor $r27, $r42, $r64, $r79, $r101, $r116;
+        java.lang.Double $r29, $r44, $r66, $r81, $r103, $r118;
+        java.util.Iterator r120, r134, r148;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve r122, r136, r150;
+        int i0, i1, i2, i3, i4, i5;
+        com.opengamma.analytics.financial.instrument.index.IndexON r135;
+        com.opengamma.analytics.financial.instrument.index.IborIndex r149;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivative;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount;
+
+        $r4 = new com.opengamma.analytics.financial.provider.sensitivity.multicurve.SimpleParameterSensitivity;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.SimpleParameterSensitivity: void <init>()>();
+
+        r119 = $r4;
+
+        $r5 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        r3 = virtualinvoke $r5.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: java.util.Set getCurrencies()>();
+
+        r120 = interfaceinvoke r3.<java.util.Set: java.util.Iterator iterator()>();
+
+     label01:
+        $z0 = interfaceinvoke r120.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label04;
+
+        $r82 = interfaceinvoke r120.<java.util.Iterator: java.lang.Object next()>();
+
+        r121 = (com.opengamma.util.money.Currency) $r82;
+
+        $r83 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        r122 = virtualinvoke $r83.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(com.opengamma.util.money.Currency)>(r121);
+
+        $z7 = r122 instanceof com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z7, "Curve should be a YieldCurve");
+
+        r123 = (com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve) r122;
+
+        $r84 = virtualinvoke r123.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.math.curve.DoublesCurve getCurve()>();
+
+        $z8 = $r84 instanceof com.opengamma.analytics.math.curve.InterpolatedDoublesCurve;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z8, "Yield curve should be based on InterpolatedDoublesCurve");
+
+        $r85 = virtualinvoke r123.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.math.curve.DoublesCurve getCurve()>();
+
+        r124 = (com.opengamma.analytics.math.curve.InterpolatedDoublesCurve) $r85;
+
+        $r86 = virtualinvoke r124.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: double[] getXDataAsPrimitive()>();
+
+        i0 = lengthof $r86;
+
+        r125 = newarray (double)[i0];
+
+        i1 = 0;
+
+     label02:
+        if i1 >= i0 goto label03;
+
+        $r89 = virtualinvoke r124.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: double[] getYDataAsPrimitive()>();
+
+        $r90 = virtualinvoke $r89.<java.lang.Object: java.lang.Object clone()>();
+
+        r126 = (double[]) $r90;
+
+        $d22 = r126[i1];
+
+        $d21 = r0.<com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator: double _shift>;
+
+        $d23 = $d22 + $d21;
+
+        r126[i1] = $d23;
+
+        $r91 = new com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        $r92 = virtualinvoke r124.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: java.lang.String getName()>();
+
+        $r93 = new com.opengamma.analytics.math.curve.InterpolatedDoublesCurve;
+
+        $r94 = virtualinvoke r124.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: double[] getXDataAsPrimitive()>();
+
+        $r95 = virtualinvoke r124.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: com.opengamma.analytics.math.interpolation.Interpolator1D getInterpolator()>();
+
+        specialinvoke $r93.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: void <init>(double[],double[],com.opengamma.analytics.math.interpolation.Interpolator1D,boolean)>($r94, r126, $r95, 1);
+
+        specialinvoke $r91.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: void <init>(java.lang.String,com.opengamma.analytics.math.curve.DoublesCurve)>($r92, $r93);
+
+        $r96 = new com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount;
+
+        $r97 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        $r98 = virtualinvoke $r97.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount withDiscountFactor(com.opengamma.util.money.Currency,com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)>(r121, $r91);
+
+        $r99 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters getHullWhiteParameters()>();
+
+        $r100 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.util.money.Currency getHullWhiteCurrency()>();
+
+        specialinvoke $r96.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: void <init>(com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount,com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters,com.opengamma.util.money.Currency)>($r98, $r99, $r100);
+
+        $r101 = r0.<com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _valueCalculator>;
+
+        $r102 = interfaceinvoke r1.<com.opengamma.analytics.financial.interestrate.InstrumentDerivative: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r101, $r96);
+
+        $r103 = (java.lang.Double) $r102;
+
+        d31 = virtualinvoke $r103.<java.lang.Double: double doubleValue()>();
+
+        $r104 = virtualinvoke r124.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: double[] getYDataAsPrimitive()>();
+
+        $r105 = virtualinvoke $r104.<java.lang.Object: java.lang.Object clone()>();
+
+        r129 = (double[]) $r105;
+
+        $d25 = r129[i1];
+
+        $d24 = r0.<com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator: double _shift>;
+
+        $d26 = $d25 - $d24;
+
+        r129[i1] = $d26;
+
+        $r106 = new com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        $r107 = virtualinvoke r124.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: java.lang.String getName()>();
+
+        $r108 = new com.opengamma.analytics.math.curve.InterpolatedDoublesCurve;
+
+        $r109 = virtualinvoke r124.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: double[] getXDataAsPrimitive()>();
+
+        $r110 = virtualinvoke r124.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: com.opengamma.analytics.math.interpolation.Interpolator1D getInterpolator()>();
+
+        specialinvoke $r108.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: void <init>(double[],double[],com.opengamma.analytics.math.interpolation.Interpolator1D,boolean)>($r109, r129, $r110, 1);
+
+        specialinvoke $r106.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: void <init>(java.lang.String,com.opengamma.analytics.math.curve.DoublesCurve)>($r107, $r108);
+
+        $r111 = new com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount;
+
+        $r112 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        $r113 = virtualinvoke $r112.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount withDiscountFactor(com.opengamma.util.money.Currency,com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)>(r121, $r106);
+
+        $r114 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters getHullWhiteParameters()>();
+
+        $r115 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.util.money.Currency getHullWhiteCurrency()>();
+
+        specialinvoke $r111.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: void <init>(com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount,com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters,com.opengamma.util.money.Currency)>($r113, $r114, $r115);
+
+        $r116 = r0.<com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _valueCalculator>;
+
+        $r117 = interfaceinvoke r1.<com.opengamma.analytics.financial.interestrate.InstrumentDerivative: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r116, $r111);
+
+        $r118 = (java.lang.Double) $r117;
+
+        d32 = virtualinvoke $r118.<java.lang.Double: double doubleValue()>();
+
+        $d29 = d31 - d32;
+
+        $d27 = r0.<com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator: double _shift>;
+
+        $d28 = 2.0 * $d27;
+
+        $d30 = $d29 / $d28;
+
+        r125[i1] = $d30;
+
+        i1 = i1 + 1;
+
+        goto label02;
+
+     label03:
+        $r87 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        r132 = virtualinvoke $r87.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: java.lang.String getName(com.opengamma.util.money.Currency)>(r121);
+
+        $r88 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r88.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r125);
+
+        r119 = virtualinvoke r119.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.SimpleParameterSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.SimpleParameterSensitivity plus(java.lang.String,com.opengamma.analytics.math.matrix.DoubleMatrix1D)>(r132, $r88);
+
+        goto label01;
+
+     label04:
+        $r6 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        r133 = virtualinvoke $r6.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: java.util.Set getIndexesON()>();
+
+        r134 = interfaceinvoke r133.<java.util.Set: java.util.Iterator iterator()>();
+
+     label05:
+        $z1 = interfaceinvoke r134.<java.util.Iterator: boolean hasNext()>();
+
+        if $z1 == 0 goto label08;
+
+        $r45 = interfaceinvoke r134.<java.util.Iterator: java.lang.Object next()>();
+
+        r135 = (com.opengamma.analytics.financial.instrument.index.IndexON) $r45;
+
+        $r46 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        r136 = virtualinvoke $r46.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(com.opengamma.analytics.financial.instrument.index.IndexON)>(r135);
+
+        $z5 = r136 instanceof com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "Curve should be a YieldCurve");
+
+        r137 = (com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve) r136;
+
+        $r47 = virtualinvoke r137.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.math.curve.DoublesCurve getCurve()>();
+
+        $z6 = $r47 instanceof com.opengamma.analytics.math.curve.InterpolatedDoublesCurve;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z6, "Yield curve should be based on InterpolatedDoublesCurve");
+
+        $r48 = virtualinvoke r137.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.math.curve.DoublesCurve getCurve()>();
+
+        r138 = (com.opengamma.analytics.math.curve.InterpolatedDoublesCurve) $r48;
+
+        $r49 = virtualinvoke r138.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: double[] getXDataAsPrimitive()>();
+
+        i2 = lengthof $r49;
+
+        r139 = newarray (double)[i2];
+
+        i3 = 0;
+
+     label06:
+        if i3 >= i2 goto label07;
+
+        $r52 = virtualinvoke r138.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: double[] getYDataAsPrimitive()>();
+
+        $r53 = virtualinvoke $r52.<java.lang.Object: java.lang.Object clone()>();
+
+        r140 = (double[]) $r53;
+
+        $d12 = r140[i3];
+
+        $d11 = r0.<com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator: double _shift>;
+
+        $d13 = $d12 + $d11;
+
+        r140[i3] = $d13;
+
+        $r54 = new com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        $r55 = virtualinvoke r138.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: java.lang.String getName()>();
+
+        $r56 = new com.opengamma.analytics.math.curve.InterpolatedDoublesCurve;
+
+        $r57 = virtualinvoke r138.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: double[] getXDataAsPrimitive()>();
+
+        $r58 = virtualinvoke r138.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: com.opengamma.analytics.math.interpolation.Interpolator1D getInterpolator()>();
+
+        specialinvoke $r56.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: void <init>(double[],double[],com.opengamma.analytics.math.interpolation.Interpolator1D,boolean)>($r57, r140, $r58, 1);
+
+        specialinvoke $r54.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: void <init>(java.lang.String,com.opengamma.analytics.math.curve.DoublesCurve)>($r55, $r56);
+
+        $r59 = new com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount;
+
+        $r60 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        $r61 = virtualinvoke $r60.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount withForward(com.opengamma.analytics.financial.instrument.index.IndexON,com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)>(r135, $r54);
+
+        $r62 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters getHullWhiteParameters()>();
+
+        $r63 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.util.money.Currency getHullWhiteCurrency()>();
+
+        specialinvoke $r59.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: void <init>(com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount,com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters,com.opengamma.util.money.Currency)>($r61, $r62, $r63);
+
+        $r64 = r0.<com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _valueCalculator>;
+
+        $r65 = interfaceinvoke r1.<com.opengamma.analytics.financial.interestrate.InstrumentDerivative: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r64, $r59);
+
+        $r66 = (java.lang.Double) $r65;
+
+        d33 = virtualinvoke $r66.<java.lang.Double: double doubleValue()>();
+
+        $r67 = virtualinvoke r138.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: double[] getYDataAsPrimitive()>();
+
+        $r68 = virtualinvoke $r67.<java.lang.Object: java.lang.Object clone()>();
+
+        r143 = (double[]) $r68;
+
+        $d15 = r143[i3];
+
+        $d14 = r0.<com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator: double _shift>;
+
+        $d16 = $d15 - $d14;
+
+        r143[i3] = $d16;
+
+        $r69 = new com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        $r70 = virtualinvoke r138.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: java.lang.String getName()>();
+
+        $r71 = new com.opengamma.analytics.math.curve.InterpolatedDoublesCurve;
+
+        $r72 = virtualinvoke r138.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: double[] getXDataAsPrimitive()>();
+
+        $r73 = virtualinvoke r138.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: com.opengamma.analytics.math.interpolation.Interpolator1D getInterpolator()>();
+
+        specialinvoke $r71.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: void <init>(double[],double[],com.opengamma.analytics.math.interpolation.Interpolator1D,boolean)>($r72, r143, $r73, 1);
+
+        specialinvoke $r69.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: void <init>(java.lang.String,com.opengamma.analytics.math.curve.DoublesCurve)>($r70, $r71);
+
+        $r74 = new com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount;
+
+        $r75 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        $r76 = virtualinvoke $r75.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount withForward(com.opengamma.analytics.financial.instrument.index.IndexON,com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)>(r135, $r69);
+
+        $r77 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters getHullWhiteParameters()>();
+
+        $r78 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.util.money.Currency getHullWhiteCurrency()>();
+
+        specialinvoke $r74.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: void <init>(com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount,com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters,com.opengamma.util.money.Currency)>($r76, $r77, $r78);
+
+        $r79 = r0.<com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _valueCalculator>;
+
+        $r80 = interfaceinvoke r1.<com.opengamma.analytics.financial.interestrate.InstrumentDerivative: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r79, $r74);
+
+        $r81 = (java.lang.Double) $r80;
+
+        d34 = virtualinvoke $r81.<java.lang.Double: double doubleValue()>();
+
+        $d19 = d33 - d34;
+
+        $d17 = r0.<com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator: double _shift>;
+
+        $d18 = 2.0 * $d17;
+
+        $d20 = $d19 / $d18;
+
+        r139[i3] = $d20;
+
+        i3 = i3 + 1;
+
+        goto label06;
+
+     label07:
+        $r50 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        r146 = virtualinvoke $r50.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: java.lang.String getName(com.opengamma.analytics.financial.instrument.index.IndexON)>(r135);
+
+        $r51 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r51.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r139);
+
+        r119 = virtualinvoke r119.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.SimpleParameterSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.SimpleParameterSensitivity plus(java.lang.String,com.opengamma.analytics.math.matrix.DoubleMatrix1D)>(r146, $r51);
+
+        goto label05;
+
+     label08:
+        $r7 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        r147 = virtualinvoke $r7.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: java.util.Set getIndexesIbor()>();
+
+        r148 = interfaceinvoke r147.<java.util.Set: java.util.Iterator iterator()>();
+
+     label09:
+        $z2 = interfaceinvoke r148.<java.util.Iterator: boolean hasNext()>();
+
+        if $z2 == 0 goto label12;
+
+        $r8 = interfaceinvoke r148.<java.util.Iterator: java.lang.Object next()>();
+
+        r149 = (com.opengamma.analytics.financial.instrument.index.IborIndex) $r8;
+
+        $r9 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        r150 = virtualinvoke $r9.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(com.opengamma.analytics.financial.instrument.index.IborIndex)>(r149);
+
+        $z3 = r150 instanceof com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "Curve should be a YieldCurve");
+
+        r151 = (com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve) r150;
+
+        $r10 = virtualinvoke r151.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.math.curve.DoublesCurve getCurve()>();
+
+        $z4 = $r10 instanceof com.opengamma.analytics.math.curve.InterpolatedDoublesCurve;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z4, "Yield curve should be based on InterpolatedDoublesCurve");
+
+        $r11 = virtualinvoke r151.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.math.curve.DoublesCurve getCurve()>();
+
+        r152 = (com.opengamma.analytics.math.curve.InterpolatedDoublesCurve) $r11;
+
+        $r12 = virtualinvoke r152.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: double[] getXDataAsPrimitive()>();
+
+        i4 = lengthof $r12;
+
+        r153 = newarray (double)[i4];
+
+        i5 = 0;
+
+     label10:
+        if i5 >= i4 goto label11;
+
+        $r15 = virtualinvoke r152.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: double[] getYDataAsPrimitive()>();
+
+        $r16 = virtualinvoke $r15.<java.lang.Object: java.lang.Object clone()>();
+
+        r154 = (double[]) $r16;
+
+        $d2 = r154[i5];
+
+        $d1 = r0.<com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator: double _shift>;
+
+        $d3 = $d2 + $d1;
+
+        r154[i5] = $d3;
+
+        $r17 = new com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        $r18 = virtualinvoke r152.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: java.lang.String getName()>();
+
+        $r19 = new com.opengamma.analytics.math.curve.InterpolatedDoublesCurve;
+
+        $r20 = virtualinvoke r152.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: double[] getXDataAsPrimitive()>();
+
+        $r21 = virtualinvoke r152.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: com.opengamma.analytics.math.interpolation.Interpolator1D getInterpolator()>();
+
+        specialinvoke $r19.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: void <init>(double[],double[],com.opengamma.analytics.math.interpolation.Interpolator1D,boolean)>($r20, r154, $r21, 1);
+
+        specialinvoke $r17.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: void <init>(java.lang.String,com.opengamma.analytics.math.curve.DoublesCurve)>($r18, $r19);
+
+        $r22 = new com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount;
+
+        $r23 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        $r24 = virtualinvoke $r23.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount withForward(com.opengamma.analytics.financial.instrument.index.IborIndex,com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)>(r149, $r17);
+
+        $r25 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters getHullWhiteParameters()>();
+
+        $r26 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.util.money.Currency getHullWhiteCurrency()>();
+
+        specialinvoke $r22.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: void <init>(com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount,com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters,com.opengamma.util.money.Currency)>($r24, $r25, $r26);
+
+        $r27 = r0.<com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _valueCalculator>;
+
+        $r28 = interfaceinvoke r1.<com.opengamma.analytics.financial.interestrate.InstrumentDerivative: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r27, $r22);
+
+        $r29 = (java.lang.Double) $r28;
+
+        d35 = virtualinvoke $r29.<java.lang.Double: double doubleValue()>();
+
+        $r30 = virtualinvoke r152.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: double[] getYDataAsPrimitive()>();
+
+        $r31 = virtualinvoke $r30.<java.lang.Object: java.lang.Object clone()>();
+
+        r157 = (double[]) $r31;
+
+        $d5 = r157[i5];
+
+        $d4 = r0.<com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator: double _shift>;
+
+        $d6 = $d5 - $d4;
+
+        r157[i5] = $d6;
+
+        $r32 = new com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        $r33 = virtualinvoke r152.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: java.lang.String getName()>();
+
+        $r34 = new com.opengamma.analytics.math.curve.InterpolatedDoublesCurve;
+
+        $r35 = virtualinvoke r152.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: double[] getXDataAsPrimitive()>();
+
+        $r36 = virtualinvoke r152.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: com.opengamma.analytics.math.interpolation.Interpolator1D getInterpolator()>();
+
+        specialinvoke $r34.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: void <init>(double[],double[],com.opengamma.analytics.math.interpolation.Interpolator1D,boolean)>($r35, r157, $r36, 1);
+
+        specialinvoke $r32.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: void <init>(java.lang.String,com.opengamma.analytics.math.curve.DoublesCurve)>($r33, $r34);
+
+        $r37 = new com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount;
+
+        $r38 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        $r39 = virtualinvoke $r38.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount withForward(com.opengamma.analytics.financial.instrument.index.IborIndex,com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)>(r149, $r32);
+
+        $r40 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters getHullWhiteParameters()>();
+
+        $r41 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.util.money.Currency getHullWhiteCurrency()>();
+
+        specialinvoke $r37.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: void <init>(com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount,com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters,com.opengamma.util.money.Currency)>($r39, $r40, $r41);
+
+        $r42 = r0.<com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _valueCalculator>;
+
+        $r43 = interfaceinvoke r1.<com.opengamma.analytics.financial.interestrate.InstrumentDerivative: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r42, $r37);
+
+        $r44 = (java.lang.Double) $r43;
+
+        d0 = virtualinvoke $r44.<java.lang.Double: double doubleValue()>();
+
+        $d9 = d35 - d0;
+
+        $d7 = r0.<com.opengamma.analytics.financial.provider.sensitivity.hullwhite.SimpleParameterSensitivityHullWhiteDiscountInterpolatedFDCalculator: double _shift>;
+
+        $d8 = 2.0 * $d7;
+
+        $d10 = $d9 / $d8;
+
+        r153[i5] = $d10;
+
+        i5 = i5 + 1;
+
+        goto label10;
+
+     label11:
+        $r13 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        r160 = virtualinvoke $r13.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: java.lang.String getName(com.opengamma.analytics.financial.instrument.index.IborIndex)>(r149);
+
+        $r14 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r14.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r153);
+
+        r119 = virtualinvoke r119.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.SimpleParameterSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.SimpleParameterSensitivity plus(java.lang.String,com.opengamma.analytics.math.matrix.DoubleMatrix1D)>(r160, $r14);
+
+        goto label09;
+
+     label12:
+        return r119;
+    }
+}

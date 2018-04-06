@@ -1,0 +1,244 @@
+public abstract class com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D extends com.opengamma.analytics.math.integration.Integrator1D
+{
+    private final int _n;
+    private final com.opengamma.analytics.math.integration.QuadratureWeightAndAbscissaFunction _generator;
+    final com.opengamma.analytics.math.integration.GaussianQuadratureData _quadrature;
+
+    public void <init>(int, com.opengamma.analytics.math.integration.QuadratureWeightAndAbscissaFunction)
+    {
+        com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D r0;
+        int i0, $i1;
+        com.opengamma.analytics.math.integration.QuadratureWeightAndAbscissaFunction r1, $r2;
+        com.opengamma.analytics.math.integration.GaussianQuadratureData $r3;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D;
+
+        i0 := @parameter0: int;
+
+        r1 := @parameter1: com.opengamma.analytics.math.integration.QuadratureWeightAndAbscissaFunction;
+
+        specialinvoke r0.<com.opengamma.analytics.math.integration.Integrator1D: void <init>()>();
+
+        if i0 <= 0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "number of intervals must be > 0");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "generating function");
+
+        r0.<com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D: int _n> = i0;
+
+        r0.<com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D: com.opengamma.analytics.math.integration.QuadratureWeightAndAbscissaFunction _generator> = r1;
+
+        $r2 = r0.<com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D: com.opengamma.analytics.math.integration.QuadratureWeightAndAbscissaFunction _generator>;
+
+        $i1 = r0.<com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D: int _n>;
+
+        $r3 = interfaceinvoke $r2.<com.opengamma.analytics.math.integration.QuadratureWeightAndAbscissaFunction: com.opengamma.analytics.math.integration.GaussianQuadratureData generate(int)>($i1);
+
+        r0.<com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D: com.opengamma.analytics.math.integration.GaussianQuadratureData _quadrature> = $r3;
+
+        return;
+    }
+
+    public java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D, java.lang.Double, java.lang.Double)
+    {
+        com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D r0;
+        com.opengamma.analytics.math.function.Function1D r1, r4;
+        java.lang.Double r2, r3, $r5;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.function.Function1D;
+
+        r2 := @parameter1: java.lang.Double;
+
+        r3 := @parameter2: java.lang.Double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object)>(r1);
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object)>(r2);
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object)>(r3);
+
+        r4 = virtualinvoke r0.<com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D: com.opengamma.analytics.math.function.Function1D getIntegralFunction(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>(r1, r2, r3);
+
+        $d0 = virtualinvoke r0.<com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D: double integrateFromPolyFunc(com.opengamma.analytics.math.function.Function1D)>(r4);
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        return $r5;
+    }
+
+    public double integrateFromPolyFunc(com.opengamma.analytics.math.function.Function1D)
+    {
+        com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D r0;
+        com.opengamma.analytics.math.function.Function1D r1;
+        double[] r2, r3;
+        int i0, i1;
+        com.opengamma.analytics.math.integration.GaussianQuadratureData $r5, $r6;
+        double $d0, $d1, $d2, $d3, d4;
+        java.lang.Double $r7, $r9;
+        java.lang.Object $r8;
+
+        r0 := @this: com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.function.Function1D;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "polyFunction");
+
+        $r5 = r0.<com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D: com.opengamma.analytics.math.integration.GaussianQuadratureData _quadrature>;
+
+        r2 = virtualinvoke $r5.<com.opengamma.analytics.math.integration.GaussianQuadratureData: double[] getAbscissas()>();
+
+        i0 = lengthof r2;
+
+        $r6 = r0.<com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D: com.opengamma.analytics.math.integration.GaussianQuadratureData _quadrature>;
+
+        r3 = virtualinvoke $r6.<com.opengamma.analytics.math.integration.GaussianQuadratureData: double[] getWeights()>();
+
+        d4 = 0.0;
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $d0 = r2[i1];
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r7);
+
+        $r9 = (java.lang.Double) $r8;
+
+        $d1 = virtualinvoke $r9.<java.lang.Double: double doubleValue()>();
+
+        $d2 = r3[i1];
+
+        $d3 = $d1 * $d2;
+
+        d4 = d4 + $d3;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return d4;
+    }
+
+    public abstract java.lang.Double[] getLimits();
+
+    public abstract com.opengamma.analytics.math.function.Function1D getIntegralFunction(com.opengamma.analytics.math.function.Function1D, java.lang.Double, java.lang.Double);
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D r0;
+        com.opengamma.analytics.math.integration.QuadratureWeightAndAbscissaFunction $r1;
+        int $i1, $i2, $i3, $i4, i6, i7;
+
+        r0 := @this: com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D;
+
+        $i1 = 31 * 1;
+
+        $r1 = r0.<com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D: com.opengamma.analytics.math.integration.QuadratureWeightAndAbscissaFunction _generator>;
+
+        $i2 = virtualinvoke $r1.<java.lang.Object: int hashCode()>();
+
+        i6 = $i1 + $i2;
+
+        $i4 = 31 * i6;
+
+        $i3 = r0.<com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D: int _n>;
+
+        i7 = $i4 + $i3;
+
+        return i7;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D r0, r2;
+        java.lang.Object r1;
+        java.lang.Class $r3, $r4;
+        int $i0, $i1;
+        com.opengamma.analytics.math.integration.QuadratureWeightAndAbscissaFunction $r5, $r6;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        if r1 != null goto label2;
+
+        return 0;
+
+     label2:
+        $r3 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r4 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+
+        if $r3 == $r4 goto label3;
+
+        return 0;
+
+     label3:
+        r2 = (com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D) r1;
+
+        $i1 = r0.<com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D: int _n>;
+
+        $i0 = r2.<com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D: int _n>;
+
+        if $i1 == $i0 goto label4;
+
+        return 0;
+
+     label4:
+        $r6 = r0.<com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D: com.opengamma.analytics.math.integration.QuadratureWeightAndAbscissaFunction _generator>;
+
+        $r5 = r2.<com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D: com.opengamma.analytics.math.integration.QuadratureWeightAndAbscissaFunction _generator>;
+
+        $z0 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r6, $r5);
+
+        return $z0;
+    }
+
+    public volatile java.lang.Object integrate(com.opengamma.analytics.math.function.Function1D, java.lang.Object, java.lang.Object)
+    {
+        com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D r0;
+        com.opengamma.analytics.math.function.Function1D r1;
+        java.lang.Object r2, r3;
+        java.lang.Double $r4, $r5, $r6;
+
+        r0 := @this: com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D;
+
+        r1 := @parameter0: com.opengamma.analytics.math.function.Function1D;
+
+        r2 := @parameter1: java.lang.Object;
+
+        r3 := @parameter2: java.lang.Object;
+
+        $r5 = (java.lang.Double) r2;
+
+        $r4 = (java.lang.Double) r3;
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.math.integration.GaussianQuadratureIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>(r1, $r5, $r4);
+
+        return $r6;
+    }
+}

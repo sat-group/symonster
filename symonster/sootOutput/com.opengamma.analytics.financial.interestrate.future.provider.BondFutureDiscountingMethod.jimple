@@ -1,0 +1,581 @@
+public final class com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod extends com.opengamma.analytics.financial.interestrate.future.provider.BondFutureMethod
+{
+    private static final com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod INSTANCE;
+    private static final com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod BOND_METHOD;
+    private static final org.apache.commons.math.stat.descriptive.rank.Min MIN_FUNCTION;
+
+    public static com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod getInstance()
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod $r0;
+
+        $r0 = <com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod INSTANCE>;
+
+        return $r0;
+    }
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod r0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.future.provider.BondFutureMethod: void <init>()>();
+
+        return;
+    }
+
+    public double price(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture, com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface r2;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface;
+
+        $d0 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: double priceFromNetBasis(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture,com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface,double)>(r1, r2, 0.0);
+
+        return $d0;
+    }
+
+    public double priceFromNetBasis(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture, com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface, double)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface r2;
+        double d0, $d1, $d2, $d3, $d4, d5;
+        double[] r3, $r12;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] $r6, $r7, $r10;
+        int $i0, $i1, i2;
+        org.apache.commons.math.stat.descriptive.rank.Min $r8;
+        com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod $r9;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity $r11;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface;
+
+        d0 := @parameter2: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Future");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Issuer and multi-curves provider");
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        $i0 = lengthof $r6;
+
+        r3 = newarray (double)[$i0];
+
+        i2 = 0;
+
+     label1:
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        $i1 = lengthof $r7;
+
+        if i2 >= $i1 goto label2;
+
+        $r9 = <com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod BOND_METHOD>;
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        $r11 = $r10[i2];
+
+        $d1 = virtualinvoke $r9.<com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod: double cleanPriceFromCurves(com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity,com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface)>($r11, r2);
+
+        $d2 = $d1 - d0;
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: double[] getConversionFactor()>();
+
+        $d3 = $r12[i2];
+
+        $d4 = $d2 / $d3;
+
+        r3[i2] = $d4;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        $r8 = <com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: org.apache.commons.math.stat.descriptive.rank.Min MIN_FUNCTION>;
+
+        d5 = virtualinvoke $r8.<org.apache.commons.math.stat.descriptive.rank.Min: double evaluate(double[])>(r3);
+
+        return d5;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture, com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface r2;
+        double $d0;
+        com.opengamma.util.money.MultipleCurrencyAmount $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface;
+
+        $d0 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: double price(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture,com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface)>(r1, r2);
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: com.opengamma.util.money.MultipleCurrencyAmount presentValueFromPrice(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture,double)>(r1, $d0);
+
+        return $r3;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount presentValueFromNetBasis(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture, com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface, double)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface r2;
+        double d0, $d1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface;
+
+        d0 := @parameter2: double;
+
+        $d1 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: double priceFromNetBasis(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture,com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface,double)>(r1, r2, d0);
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: com.opengamma.util.money.MultipleCurrencyAmount presentValueFromPrice(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture,double)>(r1, $d1);
+
+        return $r3;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity priceCurveSensitivity(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture, com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface r2;
+        double[] r3, $r11, $r16;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] $r6, $r7, $r9, $r14;
+        int $i0, $i1, i3, i4;
+        com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod $r8, $r13;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity $r10, $r15;
+        double $d0, $d1, $d2, $d3, $d4, $d5, d6;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity $r12, r17;
+        byte $b2;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Future");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Issuer and multi-curves provider");
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        $i0 = lengthof $r6;
+
+        r3 = newarray (double)[$i0];
+
+        i3 = 0;
+
+        d6 = 2.0;
+
+        i4 = 0;
+
+     label1:
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        $i1 = lengthof $r7;
+
+        if i4 >= $i1 goto label3;
+
+        $r13 = <com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod BOND_METHOD>;
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        $r15 = $r14[i4];
+
+        $d2 = virtualinvoke $r13.<com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod: double cleanPriceFromCurves(com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity,com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface)>($r15, r2);
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: double[] getConversionFactor()>();
+
+        $d3 = $r16[i4];
+
+        $d4 = $d2 / $d3;
+
+        r3[i4] = $d4;
+
+        $d5 = r3[i4];
+
+        $b2 = $d5 cmpg d6;
+
+        if $b2 >= 0 goto label2;
+
+        d6 = r3[i4];
+
+        i3 = i4;
+
+     label2:
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label3:
+        $r8 = <com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod BOND_METHOD>;
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        $r10 = $r9[i3];
+
+        r17 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity dirtyPriceCurveSensitivity(com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity,com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface)>($r10, r2);
+
+        $r11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: double[] getConversionFactor()>();
+
+        $d0 = $r11[i3];
+
+        $d1 = 1.0 / $d0;
+
+        $r12 = virtualinvoke r17.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>($d1);
+
+        return $r12;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity presentValueCurveSensitivity(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture, com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface r2;
+        com.opengamma.util.money.Currency r3;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity r4, $r6;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity r5;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface;
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.util.money.Currency getCurrency()>();
+
+        r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity priceCurveSensitivity(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture,com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface)>(r1, r2);
+
+        $d0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: double getNotional()>();
+
+        $r6 = virtualinvoke r4.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>($d0);
+
+        r5 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity of(com.opengamma.util.money.Currency,com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>(r3, $r6);
+
+        return r5;
+    }
+
+    public double[] grossBasisFromPrices(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture, double[], double)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture r1;
+        double[] r2, r3, $r6;
+        double d0, $d1, $d2, $d3, $d4;
+        int i0, $i1, i2, $i3;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] $r5, $r7;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture;
+
+        r2 := @parameter1: double[];
+
+        d0 := @parameter2: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Future");
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        i0 = lengthof $r5;
+
+        $i1 = lengthof r2;
+
+        if $i1 != i0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Number of clean prices");
+
+        r3 = newarray (double)[i0];
+
+        i2 = 0;
+
+     label3:
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        $i3 = lengthof $r7;
+
+        if i2 >= $i3 goto label4;
+
+        $d1 = r2[i2];
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: double[] getConversionFactor()>();
+
+        $d2 = $r6[i2];
+
+        $d3 = d0 * $d2;
+
+        $d4 = $d1 - $d3;
+
+        r3[i2] = $d4;
+
+        i2 = i2 + 1;
+
+        goto label3;
+
+     label4:
+        return r3;
+    }
+
+    public double[] grossBasisFromCurves(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture, com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface, double)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface r2;
+        double d0, $d1, $d2, $d3, $d4, $d5;
+        int i0, $i1, i2;
+        double[] r3, r4, $r12;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] $r7, $r8, $r10;
+        com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod $r9;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity $r11;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface;
+
+        d0 := @parameter2: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Future");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Issuer and multi-curves provider");
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        i0 = lengthof $r7;
+
+        r3 = newarray (double)[i0];
+
+        r4 = newarray (double)[i0];
+
+        i2 = 0;
+
+     label1:
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        $i1 = lengthof $r8;
+
+        if i2 >= $i1 goto label2;
+
+        $r9 = <com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod BOND_METHOD>;
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        $r11 = $r10[i2];
+
+        $d1 = virtualinvoke $r9.<com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod: double cleanPriceFromCurves(com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity,com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface)>($r11, r2);
+
+        r4[i2] = $d1;
+
+        $d2 = r4[i2];
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: double[] getConversionFactor()>();
+
+        $d3 = $r12[i2];
+
+        $d4 = d0 * $d3;
+
+        $d5 = $d2 - $d4;
+
+        r3[i2] = $d5;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        return r3;
+    }
+
+    public double[] netBasisAllBonds(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture, com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface, double)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface r2;
+        double d0, $d1, $d2, $d3, $d4;
+        int i0, $i1, i2;
+        double[] r3, $r11;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] $r6, $r7, $r9;
+        com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod $r8;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity $r10;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface;
+
+        d0 := @parameter2: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Future");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Issuer and multi-curves provider");
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        i0 = lengthof $r6;
+
+        r3 = newarray (double)[i0];
+
+        i2 = 0;
+
+     label1:
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        $i1 = lengthof $r7;
+
+        if i2 >= $i1 goto label2;
+
+        $r8 = <com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod BOND_METHOD>;
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        $r10 = $r9[i2];
+
+        $d1 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod: double cleanPriceFromCurves(com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity,com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface)>($r10, r2);
+
+        $r11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: double[] getConversionFactor()>();
+
+        $d2 = $r11[i2];
+
+        $d3 = d0 * $d2;
+
+        $d4 = $d1 - $d3;
+
+        r3[i2] = $d4;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        return r3;
+    }
+
+    public double netBasisCheapest(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture, com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface, double)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface r2;
+        double d0, $d1, $d2, $d3, $d4, $d5;
+        int i0, $i1, i2;
+        double[] r3, $r12;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] $r6, $r7, $r10;
+        org.apache.commons.math.stat.descriptive.rank.Min $r8;
+        com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod $r9;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity $r11;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface;
+
+        d0 := @parameter2: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Future");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Issuer and multi-curves provider");
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        i0 = lengthof $r6;
+
+        r3 = newarray (double)[i0];
+
+        i2 = 0;
+
+     label1:
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        $i1 = lengthof $r7;
+
+        if i2 >= $i1 goto label2;
+
+        $r9 = <com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod BOND_METHOD>;
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasket()>();
+
+        $r11 = $r10[i2];
+
+        $d2 = virtualinvoke $r9.<com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod: double cleanPriceFromCurves(com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity,com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface)>($r11, r2);
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuture: double[] getConversionFactor()>();
+
+        $d3 = $r12[i2];
+
+        $d4 = d0 * $d3;
+
+        $d5 = $d2 - $d4;
+
+        r3[i2] = $d5;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        $r8 = <com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: org.apache.commons.math.stat.descriptive.rank.Min MIN_FUNCTION>;
+
+        $d1 = virtualinvoke $r8.<org.apache.commons.math.stat.descriptive.rank.Min: double evaluate(double[])>(r3);
+
+        return $d1;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod $r0;
+        com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod $r1;
+        org.apache.commons.math.stat.descriptive.rank.Min $r2;
+
+        $r0 = new com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod INSTANCE> = $r0;
+
+        $r1 = staticinvoke <com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod: com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod BOND_METHOD> = $r1;
+
+        $r2 = new org.apache.commons.math.stat.descriptive.rank.Min;
+
+        specialinvoke $r2.<org.apache.commons.math.stat.descriptive.rank.Min: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.future.provider.BondFutureDiscountingMethod: org.apache.commons.math.stat.descriptive.rank.Min MIN_FUNCTION> = $r2;
+
+        return;
+    }
+}

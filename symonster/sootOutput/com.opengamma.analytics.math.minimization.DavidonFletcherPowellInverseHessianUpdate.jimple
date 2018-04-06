@@ -1,0 +1,129 @@
+public class com.opengamma.analytics.math.minimization.DavidonFletcherPowellInverseHessianUpdate extends java.lang.Object implements com.opengamma.analytics.math.minimization.QuasiNewtonInverseHessianUpdate
+{
+    private static final com.opengamma.analytics.math.matrix.MatrixAlgebra MA;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.math.minimization.DavidonFletcherPowellInverseHessianUpdate r0;
+
+        r0 := @this: com.opengamma.analytics.math.minimization.DavidonFletcherPowellInverseHessianUpdate;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public void update(com.opengamma.analytics.math.minimization.QuasiNewtonVectorMinimizer$DataBundle)
+    {
+        com.opengamma.analytics.math.minimization.DavidonFletcherPowellInverseHessianUpdate r0;
+        com.opengamma.analytics.math.minimization.QuasiNewtonVectorMinimizer$DataBundle r1;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r2, $r8, $r11, $r12, $r14, $r17, $r19;
+        double d0, d1, $d2, $d3;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D r3, r4, r5, $r7, $r24;
+        com.opengamma.analytics.math.matrix.MatrixAlgebra $r6, $r10, $r13, $r15, $r16, $r20, $r21, $r23, $r25;
+        com.opengamma.analytics.math.matrix.Matrix $r9, $r18, $r22, $r26, $r27;
+        byte $b0, $b1;
+        com.opengamma.analytics.math.MathException $r28, $r29;
+
+        r0 := @this: com.opengamma.analytics.math.minimization.DavidonFletcherPowellInverseHessianUpdate;
+
+        r1 := @parameter0: com.opengamma.analytics.math.minimization.QuasiNewtonVectorMinimizer$DataBundle;
+
+        $r6 = <com.opengamma.analytics.math.minimization.DavidonFletcherPowellInverseHessianUpdate: com.opengamma.analytics.math.matrix.MatrixAlgebra MA>;
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.math.minimization.QuasiNewtonVectorMinimizer$DataBundle: com.opengamma.analytics.math.matrix.DoubleMatrix2D getInverseHessianEsimate()>();
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.math.minimization.QuasiNewtonVectorMinimizer$DataBundle: com.opengamma.analytics.math.matrix.DoubleMatrix1D getDeltaGrad()>();
+
+        $r9 = virtualinvoke $r6.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>($r7, $r8);
+
+        r2 = (com.opengamma.analytics.math.matrix.DoubleMatrix1D) $r9;
+
+        $r10 = <com.opengamma.analytics.math.minimization.DavidonFletcherPowellInverseHessianUpdate: com.opengamma.analytics.math.matrix.MatrixAlgebra MA>;
+
+        $r11 = virtualinvoke r1.<com.opengamma.analytics.math.minimization.QuasiNewtonVectorMinimizer$DataBundle: com.opengamma.analytics.math.matrix.DoubleMatrix1D getDeltaX()>();
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.math.minimization.QuasiNewtonVectorMinimizer$DataBundle: com.opengamma.analytics.math.matrix.DoubleMatrix1D getDeltaGrad()>();
+
+        d0 = virtualinvoke $r10.<com.opengamma.analytics.math.matrix.MatrixAlgebra: double getInnerProduct(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>($r11, $r12);
+
+        $r13 = <com.opengamma.analytics.math.minimization.DavidonFletcherPowellInverseHessianUpdate: com.opengamma.analytics.math.matrix.MatrixAlgebra MA>;
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.math.minimization.QuasiNewtonVectorMinimizer$DataBundle: com.opengamma.analytics.math.matrix.DoubleMatrix1D getDeltaGrad()>();
+
+        d1 = virtualinvoke $r13.<com.opengamma.analytics.math.matrix.MatrixAlgebra: double getInnerProduct(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>($r14, r2);
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 != 0 goto label1;
+
+        $r29 = new com.opengamma.analytics.math.MathException;
+
+        specialinvoke $r29.<com.opengamma.analytics.math.MathException: void <init>(java.lang.String)>("The dot product of the change in position and the change in gradient is zero");
+
+        throw $r29;
+
+     label1:
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 != 0 goto label2;
+
+        $r28 = new com.opengamma.analytics.math.MathException;
+
+        specialinvoke $r28.<com.opengamma.analytics.math.MathException: void <init>(java.lang.String)>("Most likely the change in gradient is zero - should have exited");
+
+        throw $r28;
+
+     label2:
+        $r15 = <com.opengamma.analytics.math.minimization.DavidonFletcherPowellInverseHessianUpdate: com.opengamma.analytics.math.matrix.MatrixAlgebra MA>;
+
+        $r16 = <com.opengamma.analytics.math.minimization.DavidonFletcherPowellInverseHessianUpdate: com.opengamma.analytics.math.matrix.MatrixAlgebra MA>;
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.math.minimization.QuasiNewtonVectorMinimizer$DataBundle: com.opengamma.analytics.math.matrix.DoubleMatrix1D getDeltaX()>();
+
+        $d2 = 1.0 / d0;
+
+        $r18 = virtualinvoke $r16.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix scale(com.opengamma.analytics.math.matrix.Matrix,double)>($r17, $d2);
+
+        $r19 = virtualinvoke r1.<com.opengamma.analytics.math.minimization.QuasiNewtonVectorMinimizer$DataBundle: com.opengamma.analytics.math.matrix.DoubleMatrix1D getDeltaX()>();
+
+        r3 = virtualinvoke $r15.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.DoubleMatrix2D getOuterProduct(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>($r18, $r19);
+
+        $r21 = <com.opengamma.analytics.math.minimization.DavidonFletcherPowellInverseHessianUpdate: com.opengamma.analytics.math.matrix.MatrixAlgebra MA>;
+
+        $r20 = <com.opengamma.analytics.math.minimization.DavidonFletcherPowellInverseHessianUpdate: com.opengamma.analytics.math.matrix.MatrixAlgebra MA>;
+
+        $d3 = -1.0 / d1;
+
+        $r22 = virtualinvoke $r20.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix scale(com.opengamma.analytics.math.matrix.Matrix,double)>(r2, $d3);
+
+        r4 = virtualinvoke $r21.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.DoubleMatrix2D getOuterProduct(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>($r22, r2);
+
+        $r23 = <com.opengamma.analytics.math.minimization.DavidonFletcherPowellInverseHessianUpdate: com.opengamma.analytics.math.matrix.MatrixAlgebra MA>;
+
+        $r24 = virtualinvoke r1.<com.opengamma.analytics.math.minimization.QuasiNewtonVectorMinimizer$DataBundle: com.opengamma.analytics.math.matrix.DoubleMatrix2D getInverseHessianEsimate()>();
+
+        $r25 = <com.opengamma.analytics.math.minimization.DavidonFletcherPowellInverseHessianUpdate: com.opengamma.analytics.math.matrix.MatrixAlgebra MA>;
+
+        $r26 = virtualinvoke $r25.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix add(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r3, r4);
+
+        $r27 = virtualinvoke $r23.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix add(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>($r24, $r26);
+
+        r5 = (com.opengamma.analytics.math.matrix.DoubleMatrix2D) $r27;
+
+        virtualinvoke r1.<com.opengamma.analytics.math.minimization.QuasiNewtonVectorMinimizer$DataBundle: void setInverseHessianEsimate(com.opengamma.analytics.math.matrix.DoubleMatrix2D)>(r5);
+
+        return;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.math.matrix.MatrixAlgebra $r0;
+
+        $r0 = staticinvoke <com.opengamma.analytics.math.matrix.MatrixAlgebraFactory: com.opengamma.analytics.math.matrix.MatrixAlgebra getMatrixAlgebra(java.lang.String)>("OG");
+
+        <com.opengamma.analytics.math.minimization.DavidonFletcherPowellInverseHessianUpdate: com.opengamma.analytics.math.matrix.MatrixAlgebra MA> = $r0;
+
+        return;
+    }
+}

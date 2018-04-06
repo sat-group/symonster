@@ -1,0 +1,468 @@
+abstract class org.apache.commons.lang.reflect.MemberUtils extends java.lang.Object
+{
+    private static final int ACCESS_TEST;
+    private static final java.lang.reflect.Method IS_SYNTHETIC;
+    private static final java.lang.Class[] ORDERED_PRIMITIVE_TYPES;
+    static java.lang.Class class$java$lang$reflect$Member;
+
+    void <init>()
+    {
+        org.apache.commons.lang.reflect.MemberUtils r0;
+
+        r0 := @this: org.apache.commons.lang.reflect.MemberUtils;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    static void setAccessibleWorkaround(java.lang.reflect.AccessibleObject)
+    {
+        java.lang.reflect.AccessibleObject r0;
+        java.lang.reflect.Member r1;
+        boolean $z0, $z1, $z2;
+        int $i0, $i1;
+        java.lang.Class $r3;
+        java.lang.SecurityException $r4;
+
+        r0 := @parameter0: java.lang.reflect.AccessibleObject;
+
+        if r0 == null goto label1;
+
+        $z0 = virtualinvoke r0.<java.lang.reflect.AccessibleObject: boolean isAccessible()>();
+
+        if $z0 == 0 goto label2;
+
+     label1:
+        return;
+
+     label2:
+        r1 = (java.lang.reflect.Member) r0;
+
+        $i0 = interfaceinvoke r1.<java.lang.reflect.Member: int getModifiers()>();
+
+        $z1 = staticinvoke <java.lang.reflect.Modifier: boolean isPublic(int)>($i0);
+
+        if $z1 == 0 goto label6;
+
+        $r3 = interfaceinvoke r1.<java.lang.reflect.Member: java.lang.Class getDeclaringClass()>();
+
+        $i1 = virtualinvoke $r3.<java.lang.Class: int getModifiers()>();
+
+        $z2 = staticinvoke <org.apache.commons.lang.reflect.MemberUtils: boolean isPackageAccess(int)>($i1);
+
+        if $z2 == 0 goto label6;
+
+     label3:
+        virtualinvoke r0.<java.lang.reflect.AccessibleObject: void setAccessible(boolean)>(1);
+
+     label4:
+        goto label6;
+
+     label5:
+        $r4 := @caughtexception;
+
+     label6:
+        return;
+
+        catch java.lang.SecurityException from label3 to label4 with label5;
+    }
+
+    static boolean isPackageAccess(int)
+    {
+        int i0, $i1;
+        boolean $z0;
+
+        i0 := @parameter0: int;
+
+        $i1 = i0 & 7;
+
+        if $i1 != 0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    static boolean isAccessible(java.lang.reflect.Member)
+    {
+        java.lang.reflect.Member r0;
+        int $i0;
+        boolean $z0, $z1, $z2;
+
+        r0 := @parameter0: java.lang.reflect.Member;
+
+        if r0 == null goto label1;
+
+        $i0 = interfaceinvoke r0.<java.lang.reflect.Member: int getModifiers()>();
+
+        $z0 = staticinvoke <java.lang.reflect.Modifier: boolean isPublic(int)>($i0);
+
+        if $z0 == 0 goto label1;
+
+        $z1 = staticinvoke <org.apache.commons.lang.reflect.MemberUtils: boolean isSynthetic(java.lang.reflect.Member)>(r0);
+
+        if $z1 != 0 goto label1;
+
+        $z2 = 1;
+
+        goto label2;
+
+     label1:
+        $z2 = 0;
+
+     label2:
+        return $z2;
+    }
+
+    static boolean isSynthetic(java.lang.reflect.Member)
+    {
+        java.lang.reflect.Member r0;
+        java.lang.reflect.Method $r2, $r3;
+        java.lang.Object $r4;
+        java.lang.Boolean $r5;
+        boolean $z0;
+        java.lang.Exception $r6;
+
+        r0 := @parameter0: java.lang.reflect.Member;
+
+        $r2 = <org.apache.commons.lang.reflect.MemberUtils: java.lang.reflect.Method IS_SYNTHETIC>;
+
+        if $r2 == null goto label4;
+
+     label1:
+        $r3 = <org.apache.commons.lang.reflect.MemberUtils: java.lang.reflect.Method IS_SYNTHETIC>;
+
+        $r4 = virtualinvoke $r3.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(r0, null);
+
+        $r5 = (java.lang.Boolean) $r4;
+
+        $z0 = virtualinvoke $r5.<java.lang.Boolean: boolean booleanValue()>();
+
+     label2:
+        return $z0;
+
+     label3:
+        $r6 := @caughtexception;
+
+     label4:
+        return 0;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+    }
+
+    static int compareParameterTypes(java.lang.Class[], java.lang.Class[], java.lang.Class[])
+    {
+        java.lang.Class[] r0, r1, r2;
+        float f0, f1;
+        byte $b0, $b1, $b2;
+
+        r0 := @parameter0: java.lang.Class[];
+
+        r1 := @parameter1: java.lang.Class[];
+
+        r2 := @parameter2: java.lang.Class[];
+
+        f0 = staticinvoke <org.apache.commons.lang.reflect.MemberUtils: float getTotalTransformationCost(java.lang.Class[],java.lang.Class[])>(r2, r0);
+
+        f1 = staticinvoke <org.apache.commons.lang.reflect.MemberUtils: float getTotalTransformationCost(java.lang.Class[],java.lang.Class[])>(r2, r1);
+
+        $b0 = f0 cmpg f1;
+
+        if $b0 >= 0 goto label1;
+
+        $b2 = -1;
+
+        goto label3;
+
+     label1:
+        $b1 = f1 cmpg f0;
+
+        if $b1 >= 0 goto label2;
+
+        $b2 = 1;
+
+        goto label3;
+
+     label2:
+        $b2 = 0;
+
+     label3:
+        return $b2;
+    }
+
+    private static float getTotalTransformationCost(java.lang.Class[], java.lang.Class[])
+    {
+        java.lang.Class[] r0, r1;
+        java.lang.Class r2, r3;
+        int $i0, i1;
+        float $f0, f1;
+
+        r0 := @parameter0: java.lang.Class[];
+
+        r1 := @parameter1: java.lang.Class[];
+
+        f1 = 0.0F;
+
+        i1 = 0;
+
+     label1:
+        $i0 = lengthof r0;
+
+        if i1 >= $i0 goto label2;
+
+        r2 = r0[i1];
+
+        r3 = r1[i1];
+
+        $f0 = staticinvoke <org.apache.commons.lang.reflect.MemberUtils: float getObjectTransformationCost(java.lang.Class,java.lang.Class)>(r2, r3);
+
+        f1 = f1 + $f0;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return f1;
+    }
+
+    private static float getObjectTransformationCost(java.lang.Class, java.lang.Class)
+    {
+        java.lang.Class r0, r1;
+        boolean $z0, $z1, $z2, $z3;
+        float $f0, f1;
+
+        r1 := @parameter0: java.lang.Class;
+
+        r0 := @parameter1: java.lang.Class;
+
+        $z0 = virtualinvoke r0.<java.lang.Class: boolean isPrimitive()>();
+
+        if $z0 == 0 goto label1;
+
+        $f0 = staticinvoke <org.apache.commons.lang.reflect.MemberUtils: float getPrimitivePromotionCost(java.lang.Class,java.lang.Class)>(r1, r0);
+
+        return $f0;
+
+     label1:
+        f1 = 0.0F;
+
+     label2:
+        if r1 == null goto label4;
+
+        $z1 = virtualinvoke r0.<java.lang.Object: boolean equals(java.lang.Object)>(r1);
+
+        if $z1 != 0 goto label4;
+
+        $z2 = virtualinvoke r0.<java.lang.Class: boolean isInterface()>();
+
+        if $z2 == 0 goto label3;
+
+        $z3 = staticinvoke <org.apache.commons.lang.ClassUtils: boolean isAssignable(java.lang.Class,java.lang.Class)>(r1, r0);
+
+        if $z3 == 0 goto label3;
+
+        f1 = f1 + 0.25F;
+
+        goto label4;
+
+     label3:
+        f1 = f1 + 1.0F;
+
+        r1 = virtualinvoke r1.<java.lang.Class: java.lang.Class getSuperclass()>();
+
+        goto label2;
+
+     label4:
+        if r1 != null goto label5;
+
+        f1 = f1 + 1.5F;
+
+     label5:
+        return f1;
+    }
+
+    private static float getPrimitivePromotionCost(java.lang.Class, java.lang.Class)
+    {
+        java.lang.Class r0, r1, $r4, r7;
+        boolean $z0;
+        java.lang.Class[] $r2, $r3, $r5, $r6;
+        int $i0, $i1, $i2, $i3, i4;
+        float f0;
+
+        r0 := @parameter0: java.lang.Class;
+
+        r1 := @parameter1: java.lang.Class;
+
+        f0 = 0.0F;
+
+        r7 = r0;
+
+        $z0 = virtualinvoke r0.<java.lang.Class: boolean isPrimitive()>();
+
+        if $z0 != 0 goto label1;
+
+        f0 = 0.0F + 0.1F;
+
+        r7 = staticinvoke <org.apache.commons.lang.ClassUtils: java.lang.Class wrapperToPrimitive(java.lang.Class)>(r0);
+
+     label1:
+        i4 = 0;
+
+     label2:
+        if r7 == r1 goto label4;
+
+        $r2 = <org.apache.commons.lang.reflect.MemberUtils: java.lang.Class[] ORDERED_PRIMITIVE_TYPES>;
+
+        $i0 = lengthof $r2;
+
+        if i4 >= $i0 goto label4;
+
+        $r3 = <org.apache.commons.lang.reflect.MemberUtils: java.lang.Class[] ORDERED_PRIMITIVE_TYPES>;
+
+        $r4 = $r3[i4];
+
+        if r7 != $r4 goto label3;
+
+        f0 = f0 + 0.1F;
+
+        $r5 = <org.apache.commons.lang.reflect.MemberUtils: java.lang.Class[] ORDERED_PRIMITIVE_TYPES>;
+
+        $i1 = lengthof $r5;
+
+        $i2 = $i1 - 1;
+
+        if i4 >= $i2 goto label3;
+
+        $r6 = <org.apache.commons.lang.reflect.MemberUtils: java.lang.Class[] ORDERED_PRIMITIVE_TYPES>;
+
+        $i3 = i4 + 1;
+
+        r7 = $r6[$i3];
+
+     label3:
+        i4 = i4 + 1;
+
+        goto label2;
+
+     label4:
+        return f0;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String r0, $r5;
+        java.lang.Class $r2;
+        java.lang.ClassNotFoundException $r3;
+        java.lang.NoClassDefFoundError $r4;
+
+        r0 := @parameter0: java.lang.String;
+
+     label1:
+        $r2 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(r0);
+
+     label2:
+        return $r2;
+
+     label3:
+        $r3 := @caughtexception;
+
+        $r4 = new java.lang.NoClassDefFoundError;
+
+        $r5 = virtualinvoke $r3.<java.lang.ClassNotFoundException: java.lang.String getMessage()>();
+
+        specialinvoke $r4.<java.lang.NoClassDefFoundError: void <init>(java.lang.String)>($r5);
+
+        throw $r4;
+
+        catch java.lang.ClassNotFoundException from label1 to label2 with label3;
+    }
+
+    static void <clinit>()
+    {
+        boolean $z0;
+        java.lang.Class $r1, $r5, $r7, $r8, $r9, $r10, $r11, $r12, $r13;
+        java.lang.Class[] $r2, $r6;
+        java.lang.Exception $r3;
+        java.lang.reflect.Method r4;
+
+        <org.apache.commons.lang.reflect.MemberUtils: int ACCESS_TEST> = 7;
+
+        r4 = null;
+
+        $z0 = staticinvoke <org.apache.commons.lang.SystemUtils: boolean isJavaVersionAtLeast(float)>(1.5F);
+
+        if $z0 == 0 goto label6;
+
+     label1:
+        $r1 = <org.apache.commons.lang.reflect.MemberUtils: java.lang.Class class$java$lang$reflect$Member>;
+
+        if $r1 != null goto label2;
+
+        $r5 = staticinvoke <org.apache.commons.lang.reflect.MemberUtils: java.lang.Class class$(java.lang.String)>("java.lang.reflect.Member");
+
+        <org.apache.commons.lang.reflect.MemberUtils: java.lang.Class class$java$lang$reflect$Member> = $r5;
+
+        goto label3;
+
+     label2:
+        $r5 = <org.apache.commons.lang.reflect.MemberUtils: java.lang.Class class$java$lang$reflect$Member>;
+
+     label3:
+        $r2 = <org.apache.commons.lang.ArrayUtils: java.lang.Class[] EMPTY_CLASS_ARRAY>;
+
+        r4 = virtualinvoke $r5.<java.lang.Class: java.lang.reflect.Method getMethod(java.lang.String,java.lang.Class[])>("isSynthetic", $r2);
+
+     label4:
+        goto label6;
+
+     label5:
+        $r3 := @caughtexception;
+
+     label6:
+        <org.apache.commons.lang.reflect.MemberUtils: java.lang.reflect.Method IS_SYNTHETIC> = r4;
+
+        $r6 = newarray (java.lang.Class)[7];
+
+        $r7 = <java.lang.Byte: java.lang.Class TYPE>;
+
+        $r6[0] = $r7;
+
+        $r8 = <java.lang.Short: java.lang.Class TYPE>;
+
+        $r6[1] = $r8;
+
+        $r9 = <java.lang.Character: java.lang.Class TYPE>;
+
+        $r6[2] = $r9;
+
+        $r10 = <java.lang.Integer: java.lang.Class TYPE>;
+
+        $r6[3] = $r10;
+
+        $r11 = <java.lang.Long: java.lang.Class TYPE>;
+
+        $r6[4] = $r11;
+
+        $r12 = <java.lang.Float: java.lang.Class TYPE>;
+
+        $r6[5] = $r12;
+
+        $r13 = <java.lang.Double: java.lang.Class TYPE>;
+
+        $r6[6] = $r13;
+
+        <org.apache.commons.lang.reflect.MemberUtils: java.lang.Class[] ORDERED_PRIMITIVE_TYPES> = $r6;
+
+        return;
+
+        catch java.lang.Exception from label1 to label4 with label5;
+    }
+}

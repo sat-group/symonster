@@ -1,0 +1,1238 @@
+public class com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility extends java.lang.Object
+{
+    private com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData _data;
+    private double[] _weights;
+    private double[] _sigmasX;
+    private double[] _sigmasY;
+    private double[] _relativePartialForwardsX;
+    private double[] _relativePartialForwardsY;
+    private double[] _rhos;
+    private final double _driftCorrection;
+
+    public void <init>(double[], double[], double[], double[])
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility r0;
+        double[] r1, r2, r3, r4, r5, $r10, $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r30, $r31, $r33, $r34, $r35, $r36, $r37, $r38, $r39, $r40, $r41, $r42, $r43, $r44, $r45, $r46, $r47, $r48, $r49, $r50, $r51, $r52, $r53, $r54, $r55, $r56, $r57, r58;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, i8, i9, i10, i11, i12, i13;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, d28, d29, d30, d31, d32, d33, d34;
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData $r32;
+        byte $b7;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[];
+
+        r4 := @parameter3: double[];
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "weights is Null");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "sigmasX is Null");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "sigmasY is Null");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r4, "rhos is Null");
+
+        $i2 = lengthof r2;
+
+        $i1 = lengthof r3;
+
+        if $i2 != $i1 goto label01;
+
+        $z8 = 1;
+
+        goto label02;
+
+     label01:
+        $z8 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z8, "sigmasX must be the same length as sigmasY");
+
+        $i4 = lengthof r2;
+
+        $i3 = lengthof r4;
+
+        if $i4 != $i3 goto label03;
+
+        $z9 = 1;
+
+        goto label04;
+
+     label03:
+        $z9 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z9, "sigmasX must be the same length as rhos");
+
+        $i6 = lengthof r2;
+
+        $i5 = lengthof r1;
+
+        if $i6 != $i5 goto label05;
+
+        $z10 = 1;
+
+        goto label06;
+
+     label05:
+        $z10 = 0;
+
+     label06:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z10, "sigmasX must be the same length as weights");
+
+        i0 = lengthof r2;
+
+        i8 = 0;
+
+     label07:
+        if i8 >= i0 goto label08;
+
+        $d17 = r1[i8];
+
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d17);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z0, "weights containing NaN");
+
+        $d18 = r1[i8];
+
+        $z1 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d18);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z1, "weights containing Infinity");
+
+        $d19 = r2[i8];
+
+        $z2 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d19);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z2, "sigmasX containing NaN");
+
+        $d20 = r2[i8];
+
+        $z3 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d20);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z3, "sigmasX containing Infinity");
+
+        $d21 = r3[i8];
+
+        $z4 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d21);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z4, "sigmasY containing NaN");
+
+        $d22 = r3[i8];
+
+        $z5 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d22);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z5, "sigmasY containing Infinity");
+
+        $d23 = r4[i8];
+
+        $z6 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d23);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z6, "rhos containing NaN");
+
+        $d24 = r4[i8];
+
+        $z7 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d24);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z7, "rhos containing Infinity");
+
+        i8 = i8 + 1;
+
+        goto label07;
+
+     label08:
+        $r10 = newarray (double)[i0];
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsX> = $r10;
+
+        $r11 = newarray (double)[i0];
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsY> = $r11;
+
+        $r12 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsX>;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>($r12, 1.0);
+
+        $r13 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsY>;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>($r13, 1.0);
+
+        $r14 = newarray (double)[i0];
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _weights> = $r14;
+
+        $r15 = newarray (double)[i0];
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX> = $r15;
+
+        $r16 = newarray (double)[i0];
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY> = $r16;
+
+        $r17 = newarray (double)[i0];
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _rhos> = $r17;
+
+        i9 = 0;
+
+     label09:
+        if i9 >= i0 goto label10;
+
+        $r54 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _weights>;
+
+        $d13 = r1[i9];
+
+        $r54[i9] = $d13;
+
+        $r55 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX>;
+
+        $d14 = r2[i9];
+
+        $r55[i9] = $d14;
+
+        $r56 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY>;
+
+        $d15 = r3[i9];
+
+        $r56[i9] = $d15;
+
+        $r57 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _rhos>;
+
+        $d16 = r4[i9];
+
+        $r57[i9] = $d16;
+
+        i9 = i9 + 1;
+
+        goto label09;
+
+     label10:
+        $r20 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX>;
+
+        $r19 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY>;
+
+        $r18 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _rhos>;
+
+        r58 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] getVolatilityZ(double[],double[],double[])>($r20, $r19, $r18);
+
+        $r25 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsX>;
+
+        $r24 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsY>;
+
+        $r23 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX>;
+
+        $r22 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY>;
+
+        $r21 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _rhos>;
+
+        r5 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] getrelativePartialForwardZ(double[],double[],double[],double[],double[])>($r25, $r24, $r23, $r22, $r21);
+
+        $r31 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _weights>;
+
+        $r30 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsX>;
+
+        $r29 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsY>;
+
+        $r28 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX>;
+
+        $r27 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY>;
+
+        $r26 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _rhos>;
+
+        $d0 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double getDriftCorrectionZ(double[],double[],double[],double[],double[],double[])>($r31, $r30, $r29, $r28, $r27, $r26);
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double _driftCorrection> = $d0;
+
+        i10 = 0;
+
+     label11:
+        if i10 >= i0 goto label12;
+
+        $d11 = r5[i10];
+
+        $d10 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double _driftCorrection>;
+
+        $d12 = $d11 * $d10;
+
+        r5[i10] = $d12;
+
+        i10 = i10 + 1;
+
+        goto label11;
+
+     label12:
+        i11 = 0;
+
+     label13:
+        if i11 >= i0 goto label17;
+
+        i12 = i11;
+
+        i13 = i11;
+
+     label14:
+        if i13 >= i0 goto label16;
+
+        $d9 = r58[i12];
+
+        $d8 = r58[i13];
+
+        $b7 = $d9 cmpl $d8;
+
+        if $b7 <= 0 goto label15;
+
+        i12 = i13;
+
+     label15:
+        i13 = i13 + 1;
+
+        goto label14;
+
+     label16:
+        d28 = r58[i11];
+
+        $d1 = r58[i12];
+
+        r58[i11] = $d1;
+
+        r58[i12] = d28;
+
+        $r34 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _weights>;
+
+        d29 = $r34[i11];
+
+        $r36 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _weights>;
+
+        $r35 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _weights>;
+
+        $d2 = $r35[i12];
+
+        $r36[i11] = $d2;
+
+        $r37 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _weights>;
+
+        $r37[i12] = d29;
+
+        d30 = r5[i11];
+
+        $d3 = r5[i12];
+
+        r5[i11] = $d3;
+
+        r5[i12] = d30;
+
+        $r38 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX>;
+
+        d31 = $r38[i11];
+
+        $r40 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX>;
+
+        $r39 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX>;
+
+        $d4 = $r39[i12];
+
+        $r40[i11] = $d4;
+
+        $r41 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX>;
+
+        $r41[i12] = d31;
+
+        $r42 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsX>;
+
+        d32 = $r42[i11];
+
+        $r44 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsX>;
+
+        $r43 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsX>;
+
+        $d5 = $r43[i12];
+
+        $r44[i11] = $d5;
+
+        $r45 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsX>;
+
+        $r45[i12] = d32;
+
+        $r46 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY>;
+
+        d33 = $r46[i11];
+
+        $r48 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY>;
+
+        $r47 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY>;
+
+        $d6 = $r47[i12];
+
+        $r48[i11] = $d6;
+
+        $r49 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY>;
+
+        $r49[i12] = d33;
+
+        $r50 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsY>;
+
+        d34 = $r50[i11];
+
+        $r52 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsY>;
+
+        $r51 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsY>;
+
+        $d7 = $r51[i12];
+
+        $r52[i11] = $d7;
+
+        $r53 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsY>;
+
+        $r53[i12] = d34;
+
+        i11 = i11 + 1;
+
+        goto label13;
+
+     label17:
+        $r32 = new com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData;
+
+        $r33 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _weights>;
+
+        specialinvoke $r32.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData: void <init>(double[],double[],double[])>($r33, r58, r5);
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData _data> = $r32;
+
+        return;
+    }
+
+    public void <init>(double[], double[], double[], double[], double[], double[])
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility r0;
+        double[] r1, r2, r3, r4, r5, r6, r7, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r30, $r31, $r32, $r33, $r35, $r36, $r37, $r38, $r39, $r40, $r41, $r42, $r43, $r44, $r45, $r46, $r47, $r48, $r49, $r50, $r51, $r52, $r53, $r54, $r55, $r56, $r57, $r58, $r59, $r60, $r61, r62;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, i12, i13, i14, i15, i16, i17;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, d34, d35, d36, d37, d38, d39, d40;
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData $r34;
+        byte $b11;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15, $z16;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[];
+
+        r4 := @parameter3: double[];
+
+        r5 := @parameter4: double[];
+
+        r6 := @parameter5: double[];
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "weights is Null");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "sigmasX is Null");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "sigmasY is Null");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r4, "relativePartialForwardsX is Null");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r5, "relativePartialForwardsY is Null");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r6, "rhos is Null");
+
+        $i2 = lengthof r2;
+
+        $i1 = lengthof r3;
+
+        if $i2 != $i1 goto label01;
+
+        $z12 = 1;
+
+        goto label02;
+
+     label01:
+        $z12 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z12, "sigmasX must be the same length as sigmasY");
+
+        $i4 = lengthof r2;
+
+        $i3 = lengthof r6;
+
+        if $i4 != $i3 goto label03;
+
+        $z13 = 1;
+
+        goto label04;
+
+     label03:
+        $z13 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z13, "sigmasX must be the same length as rhos");
+
+        $i6 = lengthof r2;
+
+        $i5 = lengthof r1;
+
+        if $i6 != $i5 goto label05;
+
+        $z14 = 1;
+
+        goto label06;
+
+     label05:
+        $z14 = 0;
+
+     label06:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z14, "sigmasX must be the same length as weights");
+
+        $i8 = lengthof r2;
+
+        $i7 = lengthof r4;
+
+        if $i8 != $i7 goto label07;
+
+        $z15 = 1;
+
+        goto label08;
+
+     label07:
+        $z15 = 0;
+
+     label08:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z15, "sigmasX must be the same length as relativePartialForwardsX");
+
+        $i10 = lengthof r2;
+
+        $i9 = lengthof r5;
+
+        if $i10 != $i9 goto label09;
+
+        $z16 = 1;
+
+        goto label10;
+
+     label09:
+        $z16 = 0;
+
+     label10:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z16, "sigmasX must be the same length as relativePartialForwardsY");
+
+        i0 = lengthof r2;
+
+        i12 = 0;
+
+     label11:
+        if i12 >= i0 goto label12;
+
+        $d19 = r1[i12];
+
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d19);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z0, "weights containing NaN");
+
+        $d20 = r1[i12];
+
+        $z1 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d20);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z1, "weights containing Infinity");
+
+        $d21 = r2[i12];
+
+        $z2 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d21);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z2, "sigmasX containing NaN");
+
+        $d22 = r2[i12];
+
+        $z3 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d22);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z3, "sigmasX containing Infinity");
+
+        $d23 = r3[i12];
+
+        $z4 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d23);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z4, "sigmasY containing NaN");
+
+        $d24 = r3[i12];
+
+        $z5 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d24);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z5, "sigmasY containing Infinity");
+
+        $d25 = r4[i12];
+
+        $z6 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d25);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z6, "relativePartialForwardsX containing NaN");
+
+        $d26 = r4[i12];
+
+        $z7 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d26);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z7, "relativePartialForwardsX containing Infinity");
+
+        $d27 = r5[i12];
+
+        $z8 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d27);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z8, "relativePartialForwardsY containing NaN");
+
+        $d28 = r5[i12];
+
+        $z9 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d28);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z9, "relativePartialForwardsY containing Infinity");
+
+        $d29 = r6[i12];
+
+        $z10 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d29);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z10, "rhos containing NaN");
+
+        $d30 = r6[i12];
+
+        $z11 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d30);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z11, "rhos containing Infinity");
+
+        i12 = i12 + 1;
+
+        goto label11;
+
+     label12:
+        $r14 = newarray (double)[i0];
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _weights> = $r14;
+
+        $r15 = newarray (double)[i0];
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX> = $r15;
+
+        $r16 = newarray (double)[i0];
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY> = $r16;
+
+        $r17 = newarray (double)[i0];
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsX> = $r17;
+
+        $r18 = newarray (double)[i0];
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsY> = $r18;
+
+        $r19 = newarray (double)[i0];
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _rhos> = $r19;
+
+        i13 = 0;
+
+     label13:
+        if i13 >= i0 goto label14;
+
+        $r56 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _weights>;
+
+        $d13 = r1[i13];
+
+        $r56[i13] = $d13;
+
+        $r57 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX>;
+
+        $d14 = r2[i13];
+
+        $r57[i13] = $d14;
+
+        $r58 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY>;
+
+        $d15 = r3[i13];
+
+        $r58[i13] = $d15;
+
+        $r59 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsX>;
+
+        $d16 = r4[i13];
+
+        $r59[i13] = $d16;
+
+        $r60 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsY>;
+
+        $d17 = r5[i13];
+
+        $r60[i13] = $d17;
+
+        $r61 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _rhos>;
+
+        $d18 = r6[i13];
+
+        $r61[i13] = $d18;
+
+        i13 = i13 + 1;
+
+        goto label13;
+
+     label14:
+        $r25 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _weights>;
+
+        $r24 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsX>;
+
+        $r23 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsY>;
+
+        $r22 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX>;
+
+        $r21 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY>;
+
+        $r20 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _rhos>;
+
+        $d0 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double getDriftCorrectionZ(double[],double[],double[],double[],double[],double[])>($r25, $r24, $r23, $r22, $r21, $r20);
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double _driftCorrection> = $d0;
+
+        $r28 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX>;
+
+        $r27 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY>;
+
+        $r26 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _rhos>;
+
+        r62 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] getVolatilityZ(double[],double[],double[])>($r28, $r27, $r26);
+
+        $r33 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsX>;
+
+        $r32 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsY>;
+
+        $r31 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX>;
+
+        $r30 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY>;
+
+        $r29 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _rhos>;
+
+        r7 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] getrelativePartialForwardZ(double[],double[],double[],double[],double[])>($r33, $r32, $r31, $r30, $r29);
+
+        i14 = 0;
+
+     label15:
+        if i14 >= i0 goto label16;
+
+        $d11 = r7[i14];
+
+        $d10 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double _driftCorrection>;
+
+        $d12 = $d11 * $d10;
+
+        r7[i14] = $d12;
+
+        i14 = i14 + 1;
+
+        goto label15;
+
+     label16:
+        i15 = 0;
+
+     label17:
+        if i15 >= i0 goto label21;
+
+        i16 = i15;
+
+        i17 = i15;
+
+     label18:
+        if i17 >= i0 goto label20;
+
+        $d9 = r62[i16];
+
+        $d8 = r62[i17];
+
+        $b11 = $d9 cmpl $d8;
+
+        if $b11 <= 0 goto label19;
+
+        i16 = i17;
+
+     label19:
+        i17 = i17 + 1;
+
+        goto label18;
+
+     label20:
+        d34 = r62[i15];
+
+        $d1 = r62[i16];
+
+        r62[i15] = $d1;
+
+        r62[i16] = d34;
+
+        $r36 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _weights>;
+
+        d35 = $r36[i15];
+
+        $r38 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _weights>;
+
+        $r37 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _weights>;
+
+        $d2 = $r37[i16];
+
+        $r38[i15] = $d2;
+
+        $r39 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _weights>;
+
+        $r39[i16] = d35;
+
+        d36 = r7[i15];
+
+        $d3 = r7[i16];
+
+        r7[i15] = $d3;
+
+        r7[i16] = d36;
+
+        $r40 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX>;
+
+        d37 = $r40[i15];
+
+        $r42 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX>;
+
+        $r41 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX>;
+
+        $d4 = $r41[i16];
+
+        $r42[i15] = $d4;
+
+        $r43 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX>;
+
+        $r43[i16] = d37;
+
+        $r44 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsX>;
+
+        d38 = $r44[i15];
+
+        $r46 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsX>;
+
+        $r45 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsX>;
+
+        $d5 = $r45[i16];
+
+        $r46[i15] = $d5;
+
+        $r47 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsX>;
+
+        $r47[i16] = d38;
+
+        $r48 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY>;
+
+        d39 = $r48[i15];
+
+        $r50 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY>;
+
+        $r49 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY>;
+
+        $d6 = $r49[i16];
+
+        $r50[i15] = $d6;
+
+        $r51 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY>;
+
+        $r51[i16] = d39;
+
+        $r52 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsY>;
+
+        d40 = $r52[i15];
+
+        $r54 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsY>;
+
+        $r53 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsY>;
+
+        $d7 = $r53[i16];
+
+        $r54[i15] = $d7;
+
+        $r55 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsY>;
+
+        $r55[i16] = d40;
+
+        i15 = i15 + 1;
+
+        goto label17;
+
+     label21:
+        $r34 = new com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData;
+
+        $r35 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _weights>;
+
+        specialinvoke $r34.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData: void <init>(double[],double[],double[])>($r35, r62, r7);
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData _data> = $r34;
+
+        return;
+    }
+
+    private double[] getVolatilityZ(double[], double[], double[])
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility r0;
+        double[] r1, r2, r3, r4;
+        int i0, i1;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[];
+
+        i0 = lengthof r1;
+
+        r4 = newarray (double)[i0];
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $d1 = r1[i1];
+
+        $d0 = r1[i1];
+
+        $d5 = $d1 * $d0;
+
+        $d3 = r2[i1];
+
+        $d2 = r2[i1];
+
+        $d4 = $d3 * $d2;
+
+        $d12 = $d5 + $d4;
+
+        $d6 = r3[i1];
+
+        $d8 = 2.0 * $d6;
+
+        $d7 = r1[i1];
+
+        $d10 = $d8 * $d7;
+
+        $d9 = r2[i1];
+
+        $d11 = $d10 * $d9;
+
+        $d13 = $d12 - $d11;
+
+        $d14 = staticinvoke <java.lang.Math: double sqrt(double)>($d13);
+
+        r4[i1] = $d14;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return r4;
+    }
+
+    private double[] getrelativePartialForwardZ(double[], double[], double[], double[], double[])
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility r0;
+        double[] r1, r2, r3, r4, r5, r6;
+        int i0, i1;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[];
+
+        r4 := @parameter3: double[];
+
+        r5 := @parameter4: double[];
+
+        i0 = lengthof r2;
+
+        r6 = newarray (double)[i0];
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $d0 = r1[i1];
+
+        $d1 = staticinvoke <java.lang.Math: double log(double)>($d0);
+
+        $d2 = r2[i1];
+
+        $d3 = staticinvoke <java.lang.Math: double log(double)>($d2);
+
+        $d7 = $d1 - $d3;
+
+        $d5 = r4[i1];
+
+        $d4 = r4[i1];
+
+        $d6 = $d5 * $d4;
+
+        $d13 = $d7 + $d6;
+
+        $d9 = r5[i1];
+
+        $d8 = r3[i1];
+
+        $d11 = $d9 * $d8;
+
+        $d10 = r4[i1];
+
+        $d12 = $d11 * $d10;
+
+        $d14 = $d13 - $d12;
+
+        $d15 = staticinvoke <java.lang.Math: double exp(double)>($d14);
+
+        r6[i1] = $d15;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return r6;
+    }
+
+    private double getDriftCorrectionZ(double[], double[], double[], double[], double[], double[])
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility r0;
+        double[] r1, r2, r3, r4, r5, r6;
+        int i0, i1;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, d19;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[];
+
+        r4 := @parameter3: double[];
+
+        r5 := @parameter4: double[];
+
+        r6 := @parameter5: double[];
+
+        i0 = lengthof r1;
+
+        d19 = 0.0;
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $d2 = r1[i1];
+
+        $d1 = r2[i1];
+
+        $d3 = staticinvoke <java.lang.Math: double log(double)>($d1);
+
+        $d4 = r3[i1];
+
+        $d5 = staticinvoke <java.lang.Math: double log(double)>($d4);
+
+        $d9 = $d3 - $d5;
+
+        $d7 = r5[i1];
+
+        $d6 = r5[i1];
+
+        $d8 = $d7 * $d6;
+
+        $d15 = $d9 + $d8;
+
+        $d11 = r6[i1];
+
+        $d10 = r4[i1];
+
+        $d13 = $d11 * $d10;
+
+        $d12 = r5[i1];
+
+        $d14 = $d13 * $d12;
+
+        $d16 = $d15 - $d14;
+
+        $d17 = staticinvoke <java.lang.Math: double exp(double)>($d16);
+
+        $d18 = $d2 * $d17;
+
+        d19 = d19 + $d18;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        $d0 = 1.0 / d19;
+
+        return $d0;
+    }
+
+    public double getInvExpDriftCorrection()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double _driftCorrection>;
+
+        return $d0;
+    }
+
+    public double[] getOrderedWeights()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility r0;
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData $r1;
+        double[] $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData _data>;
+
+        $r2 = virtualinvoke $r1.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData: double[] getWeights()>();
+
+        return $r2;
+    }
+
+    public double[] getSigmasZ()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility r0;
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData $r1;
+        double[] $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData _data>;
+
+        $r2 = virtualinvoke $r1.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData: double[] getVolatilities()>();
+
+        return $r2;
+    }
+
+    public double[] getRelativeForwardsZ()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility r0;
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData $r1;
+        double[] $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData _data>;
+
+        $r2 = virtualinvoke $r1.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData: double[] getRelativeForwards()>();
+
+        return $r2;
+    }
+
+    public double getImpliedVolatilityZ(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r1;
+        double d0, $d1;
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalVolatilityFunction r2;
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        d0 := @parameter1: double;
+
+        r2 = staticinvoke <com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalVolatilityFunction: com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalVolatilityFunction getInstance()>();
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData _data>;
+
+        $d1 = virtualinvoke r2.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalVolatilityFunction: double getVolatility(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,double,com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData)>(r1, d0, $r3);
+
+        return $d1;
+    }
+
+    public double getPriceZ(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r1;
+        double d0, $d1;
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalVolatilityFunction r2;
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        d0 := @parameter1: double;
+
+        r2 = staticinvoke <com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalVolatilityFunction: com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalVolatilityFunction getInstance()>();
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData _data>;
+
+        $d1 = virtualinvoke r2.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalVolatilityFunction: double getPrice(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,double,com.opengamma.analytics.financial.model.volatility.smile.function.MixedLogNormalModelData)>(r1, d0, $r3);
+
+        return $d1;
+    }
+
+    public double[] getOrderedSigmasX()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility r0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasX>;
+
+        return $r1;
+    }
+
+    public double[] getOrderedSigmasY()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility r0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _sigmasY>;
+
+        return $r1;
+    }
+
+    public double[] getOrderedRelativePartialForwardsX()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility r0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsX>;
+
+        return $r1;
+    }
+
+    public double[] getOrderedRelativePartialForwardsY()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility r0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.MixedBivariateLogNormalModelVolatility: double[] _relativePartialForwardsY>;
+
+        return $r1;
+    }
+}

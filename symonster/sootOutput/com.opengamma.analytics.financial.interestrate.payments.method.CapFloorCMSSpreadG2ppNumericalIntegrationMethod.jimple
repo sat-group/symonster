@@ -1,0 +1,864 @@
+public class com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod extends java.lang.Object
+{
+    private static final com.opengamma.analytics.financial.model.interestrate.G2ppPiecewiseConstantModel MODEL_G2PP;
+    private static final com.opengamma.analytics.financial.interestrate.CashFlowEquivalentCalculator CFEC;
+    private static final int NB_INTEGRATION;
+    private static final double INTEGRATION_LIMIT;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod r0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.util.money.CurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread, com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantDataBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread r1;
+        com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantDataBundle r2;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve r3;
+        double d0, d1, d2, d3, d4, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, $d80, $d81, $d82, $d83, $d84, $d85, $d86, $d87, $d88, $d89, $d90, $d91, $d92, $d93, $d94, $d95, $d96, $d97, $d98, $d99, $d100, $d101, $d102, $d103, $d104, $d105, $d106, $d107, $d108, $d109, $d110, $d111, $d112, $d113, d114, d115, d117;
+        double[][] r5, r6, r7, r8, r9, r10, r14, r16, r18, $r81, $r86, $r88, $r92, $r96, $r98, $r100, $r102, $r108, $r112, $r116, $r118, $r120, $r122, r173, r174;
+        double[][][] r15, r17;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon $r23, $r27, $r29, $r32, $r37, $r46, $r50, $r129, $r137, $r142, $r150;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed $r24, $r28, $r30, $r47, $r51, $r130, $r138, $r143, $r151;
+        java.lang.String $r25;
+        int[] $r26, $r42;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, i19, i20, i21, i22, i23, i24, i25;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed[] $r31;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity $r33, $r38;
+        com.opengamma.analytics.financial.interestrate.CashFlowEquivalentCalculator $r34, $r39;
+        java.lang.Object $r35, $r40;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed $r36, $r41, $r43, $r44, $r160, $r167;
+        double[] $r45, $r57, $r58, $r59, $r62, $r63, $r64, $r65, $r80, $r82, $r85, $r87, $r89, $r90, $r91, $r93, $r94, $r95, $r97, $r99, $r101, $r103, $r104, $r105, $r106, $r107, $r109, $r110, $r111, $r113, $r114, $r115, $r117, $r119, $r121, $r123, $r124, $r125, $r126, $r127, $r128, $r133, $r134, $r135, $r136, $r141, $r146, $r147, $r148, $r149, $r154, $r155, $r156, $r157, $r158, $r159, $r161, $r164, $r165, $r166, $r168, r175;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r48, $r52, $r131, $r139, $r144, $r152, $r162, $r169;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed $r49, $r53, $r132, $r140, $r145, $r153;
+        com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantParameters $r54, $r56, $r61, $r79, $r84;
+        com.opengamma.analytics.financial.model.interestrate.G2ppPiecewiseConstantModel $r55, $r60, $r78, $r83;
+        com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod$SpreadIntegrant $r66;
+        boolean $z0;
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D $r67;
+        com.opengamma.analytics.math.integration.IntegratorRepeated2D $r68;
+        java.lang.Double[] $r69, $r72;
+        java.lang.Double $r70, $r71, $r73, $r74, $r75;
+        com.opengamma.util.money.Currency $r76;
+        com.opengamma.util.money.CurrencyAmount $r77;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r163, $r170;
+        java.lang.Exception $r171;
+        com.opengamma.analytics.math.MathException $r172;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantDataBundle;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "CMS spread");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "Yield curves and G2++ parameters");
+
+        $r23 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap1()>();
+
+        $r24 = virtualinvoke $r23.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $r25 = virtualinvoke $r24.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: java.lang.String getDiscountCurve()>();
+
+        r3 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r25);
+
+        d0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: double getStrike()>();
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: double getFixingTime()>();
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: double getPaymentTime()>();
+
+        d3 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>(d2);
+
+        $r26 = newarray (int)[2];
+
+        $r27 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap1()>();
+
+        $r28 = virtualinvoke $r27.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $i0 = virtualinvoke $r28.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: int getNumberOfPayments()>();
+
+        $r26[0] = $i0;
+
+        $r29 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap2()>();
+
+        $r30 = virtualinvoke $r29.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $i1 = virtualinvoke $r30.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: int getNumberOfPayments()>();
+
+        $r26[1] = $i1;
+
+        r5 = newarray (double[])[2];
+
+        r6 = newarray (double[])[2];
+
+        r7 = newarray (double[])[2];
+
+        r8 = newarray (double[])[2];
+
+        r9 = newarray (double[])[2];
+
+        r10 = newarray (double[])[2];
+
+        $r31 = newarray (com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed)[2];
+
+        $r32 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap1()>();
+
+        $r33 = virtualinvoke $r32.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getSecondLeg()>();
+
+        $r34 = <com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod: com.opengamma.analytics.financial.interestrate.CashFlowEquivalentCalculator CFEC>;
+
+        $r35 = virtualinvoke $r33.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r34, r2);
+
+        $r36 = (com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed) $r35;
+
+        $r31[0] = $r36;
+
+        $r37 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap2()>();
+
+        $r38 = virtualinvoke $r37.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getSecondLeg()>();
+
+        $r39 = <com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod: com.opengamma.analytics.financial.interestrate.CashFlowEquivalentCalculator CFEC>;
+
+        $r40 = virtualinvoke $r38.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r39, r2);
+
+        $r41 = (com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed) $r40;
+
+        $r31[1] = $r41;
+
+        $r42 = newarray (int)[2];
+
+        $r43 = $r31[0];
+
+        $i2 = virtualinvoke $r43.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        $r42[0] = $i2;
+
+        $r44 = $r31[1];
+
+        $i3 = virtualinvoke $r44.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        $r42[1] = $i3;
+
+        $r45 = newarray (double)[2];
+
+        $r46 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap1()>();
+
+        $r47 = virtualinvoke $r46.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $r48 = virtualinvoke $r47.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $r49 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed) $r48;
+
+        $d7 = virtualinvoke $r49.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: double getNotional()>();
+
+        $r45[0] = $d7;
+
+        $r50 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap2()>();
+
+        $r51 = virtualinvoke $r50.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $r52 = virtualinvoke $r51.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $r53 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed) $r52;
+
+        $d8 = virtualinvoke $r53.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: double getNotional()>();
+
+        $r45[1] = $d8;
+
+        i19 = 0;
+
+     label01:
+        if i19 >= 2 goto label04;
+
+        $i12 = $r42[i19];
+
+        $r154 = newarray (double)[$i12];
+
+        r8[i19] = $r154;
+
+        $i13 = $r42[i19];
+
+        $r155 = newarray (double)[$i13];
+
+        r9[i19] = $r155;
+
+        $i14 = $r42[i19];
+
+        $r156 = newarray (double)[$i14];
+
+        r10[i19] = $r156;
+
+        i20 = 0;
+
+     label02:
+        $i15 = $r42[i19];
+
+        if i20 >= $i15 goto label03;
+
+        $r161 = r8[i19];
+
+        $r160 = $r31[i19];
+
+        $r162 = virtualinvoke $r160.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i20);
+
+        $r163 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r162;
+
+        $d106 = virtualinvoke $r163.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getPaymentTime()>();
+
+        $r161[i20] = $d106;
+
+        $r165 = r9[i19];
+
+        $r164 = r8[i19];
+
+        $d107 = $r164[i20];
+
+        $d108 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d107);
+
+        $r165[i20] = $d108;
+
+        $r168 = r10[i19];
+
+        $r166 = r9[i19];
+
+        $d109 = $r166[i20];
+
+        $r167 = $r31[i19];
+
+        $r169 = virtualinvoke $r167.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i20);
+
+        $r170 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r169;
+
+        $d110 = virtualinvoke $r170.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        $d112 = $d109 * $d110;
+
+        $d111 = $r45[i19];
+
+        $d113 = $d112 / $d111;
+
+        $r168[i20] = $d113;
+
+        i20 = i20 + 1;
+
+        goto label02;
+
+     label03:
+        $i16 = $r26[i19];
+
+        $r157 = newarray (double)[$i16];
+
+        r5[i19] = $r157;
+
+        $i17 = $r26[i19];
+
+        $r158 = newarray (double)[$i17];
+
+        r6[i19] = $r158;
+
+        $i18 = $r26[i19];
+
+        $r159 = newarray (double)[$i18];
+
+        r7[i19] = $r159;
+
+        i19 = i19 + 1;
+
+        goto label01;
+
+     label04:
+        i21 = 0;
+
+     label05:
+        $i4 = $r26[0];
+
+        if i21 >= $i4 goto label06;
+
+        $r141 = r5[0];
+
+        $r142 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap1()>();
+
+        $r143 = virtualinvoke $r142.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $r144 = virtualinvoke $r143.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i21);
+
+        $r145 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed) $r144;
+
+        $d100 = virtualinvoke $r145.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: double getPaymentTime()>();
+
+        $r141[i21] = $d100;
+
+        $r147 = r6[0];
+
+        $r146 = r5[0];
+
+        $d101 = $r146[i21];
+
+        $d102 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d101);
+
+        $r147[i21] = $d102;
+
+        $r149 = r7[0];
+
+        $r148 = r6[0];
+
+        $d103 = $r148[i21];
+
+        $r150 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap1()>();
+
+        $r151 = virtualinvoke $r150.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $r152 = virtualinvoke $r151.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i21);
+
+        $r153 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed) $r152;
+
+        $d104 = virtualinvoke $r153.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: double getPaymentYearFraction()>();
+
+        $d105 = $d103 * $d104;
+
+        $r149[i21] = $d105;
+
+        i21 = i21 + 1;
+
+        goto label05;
+
+     label06:
+        i22 = 0;
+
+     label07:
+        $i5 = $r26[1];
+
+        if i22 >= $i5 goto label08;
+
+        $r128 = r5[1];
+
+        $r129 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap2()>();
+
+        $r130 = virtualinvoke $r129.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $r131 = virtualinvoke $r130.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i22);
+
+        $r132 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed) $r131;
+
+        $d94 = virtualinvoke $r132.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: double getPaymentTime()>();
+
+        $r128[i22] = $d94;
+
+        $r134 = r6[1];
+
+        $r133 = r5[1];
+
+        $d95 = $r133[i22];
+
+        $d96 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d95);
+
+        $r134[i22] = $d96;
+
+        $r136 = r7[1];
+
+        $r135 = r6[1];
+
+        $d97 = $r135[i22];
+
+        $r137 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap2()>();
+
+        $r138 = virtualinvoke $r137.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $r139 = virtualinvoke $r138.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i22);
+
+        $r140 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed) $r139;
+
+        $d98 = virtualinvoke $r140.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: double getPaymentYearFraction()>();
+
+        $d99 = $d97 * $d98;
+
+        $r136[i22] = $d99;
+
+        i22 = i22 + 1;
+
+        goto label07;
+
+     label08:
+        $r54 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantDataBundle: com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantParameters getG2ppParameter()>();
+
+        d114 = virtualinvoke $r54.<com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantParameters: double getCorrelation()>();
+
+        $r55 = <com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod: com.opengamma.analytics.financial.model.interestrate.G2ppPiecewiseConstantModel MODEL_G2PP>;
+
+        $r56 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantDataBundle: com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantParameters getG2ppParameter()>();
+
+        r14 = virtualinvoke $r55.<com.opengamma.analytics.financial.model.interestrate.G2ppPiecewiseConstantModel: double[][] gamma(com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantParameters,double,double)>($r56, 0.0, d1);
+
+        $r57 = r14[0];
+
+        $d9 = $r57[1];
+
+        $d13 = d114 * $d9;
+
+        $r58 = r14[0];
+
+        $d11 = $r58[0];
+
+        $r59 = r14[1];
+
+        $d10 = $r59[1];
+
+        $d12 = $d11 * $d10;
+
+        $d14 = staticinvoke <java.lang.Math: double sqrt(double)>($d12);
+
+        d4 = $d13 / $d14;
+
+        r15 = newarray (double[][])[2];
+
+        r16 = newarray (double[])[2];
+
+        r17 = newarray (double[][])[2];
+
+        r18 = newarray (double[])[2];
+
+        i23 = 0;
+
+     label09:
+        if i23 >= 2 goto label14;
+
+        $r78 = <com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod: com.opengamma.analytics.financial.model.interestrate.G2ppPiecewiseConstantModel MODEL_G2PP>;
+
+        $r79 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantDataBundle: com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantParameters getG2ppParameter()>();
+
+        $r80 = r5[i23];
+
+        r173 = virtualinvoke $r78.<com.opengamma.analytics.financial.model.interestrate.G2ppPiecewiseConstantModel: double[][] volatilityMaturityPart(com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantParameters,double,double[])>($r79, d1, $r80);
+
+        $i6 = $r26[i23];
+
+        $r81 = newmultiarray (double)[$i6][2];
+
+        r15[i23] = $r81;
+
+        $i7 = $r26[i23];
+
+        $r82 = newarray (double)[$i7];
+
+        r16[i23] = $r82;
+
+        i24 = 0;
+
+     label10:
+        $i8 = $r26[i23];
+
+        if i24 >= $i8 goto label11;
+
+        $r108 = r15[i23];
+
+        $r110 = $r108[i24];
+
+        $r109 = r14[0];
+
+        $d71 = $r109[0];
+
+        $d72 = staticinvoke <java.lang.Math: double sqrt(double)>($d71);
+
+        $r111 = r173[0];
+
+        $d73 = $r111[i24];
+
+        $d74 = $d72 * $d73;
+
+        $r110[0] = $d74;
+
+        $r112 = r15[i23];
+
+        $r114 = $r112[i24];
+
+        $r113 = r14[1];
+
+        $d75 = $r113[1];
+
+        $d76 = staticinvoke <java.lang.Math: double sqrt(double)>($d75);
+
+        $r115 = r173[1];
+
+        $d77 = $r115[i24];
+
+        $d78 = $d76 * $d77;
+
+        $r114[1] = $d78;
+
+        $r127 = r16[i23];
+
+        $r116 = r15[i23];
+
+        $r117 = $r116[i24];
+
+        $d80 = $r117[0];
+
+        $r118 = r15[i23];
+
+        $r119 = $r118[i24];
+
+        $d79 = $r119[0];
+
+        $d84 = $d80 * $d79;
+
+        $r120 = r15[i23];
+
+        $r121 = $r120[i24];
+
+        $d82 = $r121[1];
+
+        $r122 = r15[i23];
+
+        $r123 = $r122[i24];
+
+        $d81 = $r123[1];
+
+        $d83 = $d82 * $d81;
+
+        $d92 = $d84 + $d83;
+
+        $d86 = 2.0 * d114;
+
+        $r124 = r14[0];
+
+        $d85 = $r124[1];
+
+        $d88 = $d86 * $d85;
+
+        $r125 = r173[0];
+
+        $d87 = $r125[i24];
+
+        $d90 = $d88 * $d87;
+
+        $r126 = r173[1];
+
+        $d89 = $r126[i24];
+
+        $d91 = $d90 * $d89;
+
+        $d93 = $d92 + $d91;
+
+        $r127[i24] = $d93;
+
+        i24 = i24 + 1;
+
+        goto label10;
+
+     label11:
+        $r83 = <com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod: com.opengamma.analytics.financial.model.interestrate.G2ppPiecewiseConstantModel MODEL_G2PP>;
+
+        $r84 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantDataBundle: com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantParameters getG2ppParameter()>();
+
+        $r85 = r8[i23];
+
+        r174 = virtualinvoke $r83.<com.opengamma.analytics.financial.model.interestrate.G2ppPiecewiseConstantModel: double[][] volatilityMaturityPart(com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantParameters,double,double[])>($r84, d1, $r85);
+
+        $i9 = $r42[i23];
+
+        $r86 = newmultiarray (double)[$i9][2];
+
+        r17[i23] = $r86;
+
+        $i10 = $r42[i23];
+
+        $r87 = newarray (double)[$i10];
+
+        r18[i23] = $r87;
+
+        i25 = 0;
+
+     label12:
+        $i11 = $r42[i23];
+
+        if i25 >= $i11 goto label13;
+
+        $r88 = r17[i23];
+
+        $r90 = $r88[i25];
+
+        $r89 = r14[0];
+
+        $d48 = $r89[0];
+
+        $d49 = staticinvoke <java.lang.Math: double sqrt(double)>($d48);
+
+        $r91 = r174[0];
+
+        $d50 = $r91[i25];
+
+        $d51 = $d49 * $d50;
+
+        $r90[0] = $d51;
+
+        $r92 = r17[i23];
+
+        $r94 = $r92[i25];
+
+        $r93 = r14[1];
+
+        $d52 = $r93[1];
+
+        $d53 = staticinvoke <java.lang.Math: double sqrt(double)>($d52);
+
+        $r95 = r174[1];
+
+        $d54 = $r95[i25];
+
+        $d55 = $d53 * $d54;
+
+        $r94[1] = $d55;
+
+        $r107 = r18[i23];
+
+        $r96 = r17[i23];
+
+        $r97 = $r96[i25];
+
+        $d57 = $r97[0];
+
+        $r98 = r17[i23];
+
+        $r99 = $r98[i25];
+
+        $d56 = $r99[0];
+
+        $d61 = $d57 * $d56;
+
+        $r100 = r17[i23];
+
+        $r101 = $r100[i25];
+
+        $d59 = $r101[1];
+
+        $r102 = r17[i23];
+
+        $r103 = $r102[i25];
+
+        $d58 = $r103[1];
+
+        $d60 = $d59 * $d58;
+
+        $d69 = $d61 + $d60;
+
+        $d63 = 2.0 * d114;
+
+        $r104 = r14[0];
+
+        $d62 = $r104[1];
+
+        $d65 = $d63 * $d62;
+
+        $r105 = r174[0];
+
+        $d64 = $r105[i25];
+
+        $d67 = $d65 * $d64;
+
+        $r106 = r174[1];
+
+        $d66 = $r106[i25];
+
+        $d68 = $d67 * $d66;
+
+        $d70 = $d69 + $d68;
+
+        $r107[i25] = $d70;
+
+        i25 = i25 + 1;
+
+        goto label12;
+
+     label13:
+        i23 = i23 + 1;
+
+        goto label09;
+
+     label14:
+        $r60 = <com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod: com.opengamma.analytics.financial.model.interestrate.G2ppPiecewiseConstantModel MODEL_G2PP>;
+
+        $r61 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantDataBundle: com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantParameters getG2ppParameter()>();
+
+        r175 = virtualinvoke $r60.<com.opengamma.analytics.financial.model.interestrate.G2ppPiecewiseConstantModel: double[] volatilityMaturityPart(com.opengamma.analytics.financial.model.interestrate.definition.G2ppPiecewiseConstantParameters,double,double)>($r61, d1, d2);
+
+        $r62 = newarray (double)[2];
+
+        $r63 = r14[0];
+
+        $d15 = $r63[0];
+
+        $d16 = staticinvoke <java.lang.Math: double sqrt(double)>($d15);
+
+        $d17 = r175[0];
+
+        $d18 = $d16 * $d17;
+
+        $r62[0] = $d18;
+
+        $r64 = r14[1];
+
+        $d19 = $r64[1];
+
+        $d20 = staticinvoke <java.lang.Math: double sqrt(double)>($d19);
+
+        $d21 = r175[1];
+
+        $d22 = $d20 * $d21;
+
+        $r62[1] = $d22;
+
+        $d24 = $r62[0];
+
+        $d23 = $r62[0];
+
+        $d28 = $d24 * $d23;
+
+        $d26 = $r62[1];
+
+        $d25 = $r62[1];
+
+        $d27 = $d26 * $d25;
+
+        $d36 = $d28 + $d27;
+
+        $d30 = 2.0 * d114;
+
+        $r65 = r14[0];
+
+        $d29 = $r65[1];
+
+        $d32 = $d30 * $d29;
+
+        $d31 = r175[0];
+
+        $d34 = $d32 * $d31;
+
+        $d33 = r175[1];
+
+        $d35 = $d34 * $d33;
+
+        d115 = $d36 + $d35;
+
+        $r66 = new com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod$SpreadIntegrant;
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: boolean isCap()>();
+
+        specialinvoke $r66.<com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod$SpreadIntegrant: void <init>(double[][],double[][][],double[][],double[][],double[][][],double[][],double[],double,double,double,boolean)>(r7, r15, r16, r10, r17, r18, $r62, d115, d4, d0, $z0);
+
+        $r67 = new com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        specialinvoke $r67.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: void <init>(double,double,int)>(1.0E-6, 1.0E-6, 10);
+
+        $r68 = new com.opengamma.analytics.math.integration.IntegratorRepeated2D;
+
+        specialinvoke $r68.<com.opengamma.analytics.math.integration.IntegratorRepeated2D: void <init>(com.opengamma.analytics.math.integration.Integrator1D)>($r67);
+
+     label15:
+        $d37 = d4 * d4;
+
+        $d38 = 1.0 - $d37;
+
+        $d39 = staticinvoke <java.lang.Math: double sqrt(double)>($d38);
+
+        $d40 = 6.283185307179586 * $d39;
+
+        $d41 = 1.0 / $d40;
+
+        $r69 = newarray (java.lang.Double)[2];
+
+        $r70 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(-10.0);
+
+        $r69[0] = $r70;
+
+        $r71 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(-10.0);
+
+        $r69[1] = $r71;
+
+        $r72 = newarray (java.lang.Double)[2];
+
+        $r73 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(10.0);
+
+        $r72[0] = $r73;
+
+        $r74 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(10.0);
+
+        $r72[1] = $r74;
+
+        $r75 = virtualinvoke $r68.<com.opengamma.analytics.math.integration.IntegratorRepeated2D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function2D,java.lang.Double[],java.lang.Double[])>($r66, $r69, $r72);
+
+        $d42 = virtualinvoke $r75.<java.lang.Double: double doubleValue()>();
+
+        d117 = $d41 * $d42;
+
+     label16:
+        goto label18;
+
+     label17:
+        $r171 := @caughtexception;
+
+        $r172 = new com.opengamma.analytics.math.MathException;
+
+        specialinvoke $r172.<com.opengamma.analytics.math.MathException: void <init>(java.lang.Throwable)>($r171);
+
+        throw $r172;
+
+     label18:
+        $r76 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d43 = d3 * d117;
+
+        $d44 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: double getNotional()>();
+
+        $d45 = $d43 * $d44;
+
+        $d46 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMSSpread: double getPaymentYearFraction()>();
+
+        $d47 = $d45 * $d46;
+
+        $r77 = staticinvoke <com.opengamma.util.money.CurrencyAmount: com.opengamma.util.money.CurrencyAmount of(com.opengamma.util.money.Currency,double)>($r76, $d47);
+
+        return $r77;
+
+        catch java.lang.Exception from label15 to label16 with label17;
+    }
+
+    static com.opengamma.analytics.financial.model.interestrate.G2ppPiecewiseConstantModel access$000()
+    {
+        com.opengamma.analytics.financial.model.interestrate.G2ppPiecewiseConstantModel $r0;
+
+        $r0 = <com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod: com.opengamma.analytics.financial.model.interestrate.G2ppPiecewiseConstantModel MODEL_G2PP>;
+
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.model.interestrate.G2ppPiecewiseConstantModel $r0;
+        com.opengamma.analytics.financial.interestrate.CashFlowEquivalentCalculator $r1;
+
+        <com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod: double INTEGRATION_LIMIT> = 10.0;
+
+        <com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod: int NB_INTEGRATION> = 10;
+
+        $r0 = new com.opengamma.analytics.financial.model.interestrate.G2ppPiecewiseConstantModel;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.model.interestrate.G2ppPiecewiseConstantModel: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod: com.opengamma.analytics.financial.model.interestrate.G2ppPiecewiseConstantModel MODEL_G2PP> = $r0;
+
+        $r1 = staticinvoke <com.opengamma.analytics.financial.interestrate.CashFlowEquivalentCalculator: com.opengamma.analytics.financial.interestrate.CashFlowEquivalentCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.payments.method.CapFloorCMSSpreadG2ppNumericalIntegrationMethod: com.opengamma.analytics.financial.interestrate.CashFlowEquivalentCalculator CFEC> = $r1;
+
+        return;
+    }
+}

@@ -1,0 +1,386 @@
+public class com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer extends java.lang.Object implements com.opengamma.analytics.math.minimization.Minimizer
+{
+    private static final double SMALL;
+    private final double _eps;
+    private final int _maxIterations;
+    private final com.opengamma.analytics.math.minimization.LineSearch _lineSearch;
+
+    public void <init>(com.opengamma.analytics.math.minimization.ScalarMinimizer)
+    {
+        com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer r0;
+        com.opengamma.analytics.math.minimization.ScalarMinimizer r1;
+
+        r0 := @this: com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer;
+
+        r1 := @parameter0: com.opengamma.analytics.math.minimization.ScalarMinimizer;
+
+        specialinvoke r0.<com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer: void <init>(com.opengamma.analytics.math.minimization.ScalarMinimizer,double,int)>(r1, 1.0E-8, 100);
+
+        return;
+    }
+
+    public void <init>(com.opengamma.analytics.math.minimization.ScalarMinimizer, double, int)
+    {
+        com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer r0;
+        com.opengamma.analytics.math.minimization.ScalarMinimizer r1;
+        double d0;
+        int i0;
+        byte $b1, $b2;
+        com.opengamma.analytics.math.minimization.LineSearch $r2;
+        boolean $z0, $z1;
+
+        r0 := @this: com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer;
+
+        r1 := @parameter0: com.opengamma.analytics.math.minimization.ScalarMinimizer;
+
+        d0 := @parameter1: double;
+
+        i0 := @parameter2: int;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "minimizer");
+
+        $b1 = d0 cmpl 2.2250738585072014E-308;
+
+        if $b1 <= 0 goto label1;
+
+        $b2 = d0 cmpg 1.0;
+
+        if $b2 >= 0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "Tolerance must be greater than 2.2250738585072014E-308 and less than 1.0");
+
+        if i0 < 1 goto label3;
+
+        $z1 = 1;
+
+        goto label4;
+
+     label3:
+        $z1 = 0;
+
+     label4:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "Need at least one iteration");
+
+        $r2 = new com.opengamma.analytics.math.minimization.LineSearch;
+
+        specialinvoke $r2.<com.opengamma.analytics.math.minimization.LineSearch: void <init>(com.opengamma.analytics.math.minimization.ScalarMinimizer)>(r1);
+
+        r0.<com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer: com.opengamma.analytics.math.minimization.LineSearch _lineSearch> = $r2;
+
+        r0.<com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer: double _eps> = d0;
+
+        r0.<com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer: int _maxIterations> = i0;
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.matrix.DoubleMatrix1D minimize(com.opengamma.analytics.math.function.Function1D, com.opengamma.analytics.math.matrix.DoubleMatrix1D)
+    {
+        com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer r0;
+        com.opengamma.analytics.math.function.Function1D r1;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r2, $r27, r35, r36, r37, r38, r39;
+        int i0, $i1, $i2, $i6, $i7, i9, i10, i11;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D[] r3;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, d21, d22, d23, d25, d26, d27, d28;
+        com.opengamma.analytics.math.MathException $r4;
+        java.lang.StringBuilder $r5, $r6, $r7, $r8, $r9, $r10, $r12;
+        java.lang.String $r11, $r13;
+        java.lang.Object $r14, $r20, $r33;
+        java.lang.Double $r15, $r21, $r34;
+        byte $b3, $b4, $b5, $b8;
+        com.opengamma.analytics.math.matrix.OGMatrixAlgebra $r16, $r18, $r23, $r24, $r29, $r30;
+        com.opengamma.analytics.math.matrix.Matrix $r17, $r19, $r25, $r26, $r31, $r32;
+        com.opengamma.analytics.math.minimization.LineSearch $r22, $r28;
+
+        r0 := @this: com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer;
+
+        r1 := @parameter0: com.opengamma.analytics.math.function.Function1D;
+
+        r2 := @parameter1: com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "function");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "start position");
+
+        i0 = virtualinvoke r2.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: int getNumberOfElements()>();
+
+        r3 = virtualinvoke r0.<com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer: com.opengamma.analytics.math.matrix.DoubleMatrix1D[] getDefaultDirectionSet(int)>(i0);
+
+        r35 = r2;
+
+        i9 = 0;
+
+     label1:
+        $i1 = r0.<com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer: int _maxIterations>;
+
+        if i9 >= $i1 goto label7;
+
+        d21 = 0.0;
+
+        i10 = 0;
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r35);
+
+        $r15 = (java.lang.Double) $r14;
+
+        d0 = virtualinvoke $r15.<java.lang.Double: double doubleValue()>();
+
+        d22 = d0;
+
+        d23 = 0.0;
+
+        r36 = r35;
+
+        i11 = 0;
+
+     label2:
+        if i11 >= i0 goto label4;
+
+        r37 = r3[i11];
+
+        $r28 = r0.<com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer: com.opengamma.analytics.math.minimization.LineSearch _lineSearch>;
+
+        d25 = virtualinvoke $r28.<com.opengamma.analytics.math.minimization.LineSearch: double minimise(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.matrix.DoubleMatrix1D,com.opengamma.analytics.math.matrix.DoubleMatrix1D)>(r1, r37, r36);
+
+        $r30 = <com.opengamma.analytics.math.matrix.MatrixAlgebraFactory: com.opengamma.analytics.math.matrix.OGMatrixAlgebra OG_ALGEBRA>;
+
+        $r29 = <com.opengamma.analytics.math.matrix.MatrixAlgebraFactory: com.opengamma.analytics.math.matrix.OGMatrixAlgebra OG_ALGEBRA>;
+
+        $r31 = virtualinvoke $r29.<com.opengamma.analytics.math.matrix.OGMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix scale(com.opengamma.analytics.math.matrix.Matrix,double)>(r37, d25);
+
+        $r32 = virtualinvoke $r30.<com.opengamma.analytics.math.matrix.OGMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix add(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r36, $r31);
+
+        r36 = (com.opengamma.analytics.math.matrix.DoubleMatrix1D) $r32;
+
+        $r33 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r36);
+
+        $r34 = (java.lang.Double) $r33;
+
+        d23 = virtualinvoke $r34.<java.lang.Double: double doubleValue()>();
+
+        d26 = d22 - d23;
+
+        $b8 = d26 cmpl d21;
+
+        if $b8 <= 0 goto label3;
+
+        d21 = d26;
+
+        i10 = i11;
+
+     label3:
+        d22 = d23;
+
+        i11 = i11 + 1;
+
+        goto label2;
+
+     label4:
+        $d2 = d0 - d23;
+
+        $d3 = r0.<com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer: double _eps>;
+
+        $d4 = staticinvoke <java.lang.Math: double abs(double)>(d0);
+
+        $d5 = staticinvoke <java.lang.Math: double abs(double)>(d23);
+
+        $d6 = $d4 + $d5;
+
+        $d7 = $d3 * $d6;
+
+        $d8 = $d7 / 2.0;
+
+        $d9 = $d8 + 2.2250738585072014E-308;
+
+        $b3 = $d2 cmpg $d9;
+
+        if $b3 >= 0 goto label5;
+
+        return r36;
+
+     label5:
+        $r16 = <com.opengamma.analytics.math.matrix.MatrixAlgebraFactory: com.opengamma.analytics.math.matrix.OGMatrixAlgebra OG_ALGEBRA>;
+
+        $r17 = virtualinvoke $r16.<com.opengamma.analytics.math.matrix.OGMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix subtract(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r36, r35);
+
+        r38 = (com.opengamma.analytics.math.matrix.DoubleMatrix1D) $r17;
+
+        $r18 = <com.opengamma.analytics.math.matrix.MatrixAlgebraFactory: com.opengamma.analytics.math.matrix.OGMatrixAlgebra OG_ALGEBRA>;
+
+        $r19 = virtualinvoke $r18.<com.opengamma.analytics.math.matrix.OGMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix add(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r36, r38);
+
+        r39 = (com.opengamma.analytics.math.matrix.DoubleMatrix1D) $r19;
+
+        $r20 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r39);
+
+        $r21 = (java.lang.Double) $r20;
+
+        d27 = virtualinvoke $r21.<java.lang.Double: double doubleValue()>();
+
+        $b4 = d27 cmpg d0;
+
+        if $b4 >= 0 goto label6;
+
+        $d10 = 2.0 * d23;
+
+        $d11 = $d10 * d27;
+
+        $d12 = d0 - $d11;
+
+        $d15 = 2.0 * $d12;
+
+        $d13 = d0 - d23;
+
+        $d14 = $d13 - d21;
+
+        $d16 = staticinvoke <com.opengamma.analytics.math.FunctionUtils: double square(double)>($d14);
+
+        $d18 = $d15 * $d16;
+
+        $d17 = d0 - d27;
+
+        $d19 = staticinvoke <com.opengamma.analytics.math.FunctionUtils: double square(double)>($d17);
+
+        $d20 = $d19 * d21;
+
+        $b5 = $d18 cmpg $d20;
+
+        if $b5 >= 0 goto label6;
+
+        $r22 = r0.<com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer: com.opengamma.analytics.math.minimization.LineSearch _lineSearch>;
+
+        d28 = virtualinvoke $r22.<com.opengamma.analytics.math.minimization.LineSearch: double minimise(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.matrix.DoubleMatrix1D,com.opengamma.analytics.math.matrix.DoubleMatrix1D)>(r1, r38, r36);
+
+        $r24 = <com.opengamma.analytics.math.matrix.MatrixAlgebraFactory: com.opengamma.analytics.math.matrix.OGMatrixAlgebra OG_ALGEBRA>;
+
+        $r23 = <com.opengamma.analytics.math.matrix.MatrixAlgebraFactory: com.opengamma.analytics.math.matrix.OGMatrixAlgebra OG_ALGEBRA>;
+
+        $r25 = virtualinvoke $r23.<com.opengamma.analytics.math.matrix.OGMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix scale(com.opengamma.analytics.math.matrix.Matrix,double)>(r38, d28);
+
+        $r26 = virtualinvoke $r24.<com.opengamma.analytics.math.matrix.OGMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix add(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r36, $r25);
+
+        r36 = (com.opengamma.analytics.math.matrix.DoubleMatrix1D) $r26;
+
+        $i6 = i0 - 1;
+
+        $r27 = r3[$i6];
+
+        r3[i10] = $r27;
+
+        $i7 = i0 - 1;
+
+        r3[$i7] = r38;
+
+     label6:
+        r35 = r36;
+
+        i9 = i9 + 1;
+
+        goto label1;
+
+     label7:
+        $r4 = new com.opengamma.analytics.math.MathException;
+
+        $r5 = new java.lang.StringBuilder;
+
+        specialinvoke $r5.<java.lang.StringBuilder: void <init>()>();
+
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("ConjugateDirection failed to converge after ");
+
+        $i2 = r0.<com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer: int _maxIterations>;
+
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i2);
+
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" iterations, with a tolerance of ");
+
+        $d1 = r0.<com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer: double _eps>;
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d1);
+
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(". Final position reached was ");
+
+        $r11 = virtualinvoke r35.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: java.lang.String toString()>();
+
+        $r12 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r11);
+
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r4.<com.opengamma.analytics.math.MathException: void <init>(java.lang.String)>($r13);
+
+        throw $r4;
+    }
+
+    com.opengamma.analytics.math.matrix.DoubleMatrix1D[] getDefaultDirectionSet(int)
+    {
+        com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer r0;
+        int i0, i1;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D[] r1;
+        double[] r2;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r3;
+
+        r0 := @this: com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer;
+
+        i0 := @parameter0: int;
+
+        r1 = newarray (com.opengamma.analytics.math.matrix.DoubleMatrix1D)[i0];
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        r2 = newarray (double)[i0];
+
+        r2[i1] = 1.0;
+
+        $r3 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r3.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r2);
+
+        r1[i1] = $r3;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return r1;
+    }
+
+    public volatile java.lang.Object minimize(com.opengamma.analytics.math.function.Function1D, java.lang.Object)
+    {
+        com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer r0;
+        com.opengamma.analytics.math.function.Function1D r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r3, $r4;
+
+        r0 := @this: com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer;
+
+        r1 := @parameter0: com.opengamma.analytics.math.function.Function1D;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.math.matrix.DoubleMatrix1D) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer: com.opengamma.analytics.math.matrix.DoubleMatrix1D minimize(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.matrix.DoubleMatrix1D)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public static void <clinit>()
+    {
+        <com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer: double SMALL> = 2.2250738585072014E-308;
+
+        return;
+    }
+}

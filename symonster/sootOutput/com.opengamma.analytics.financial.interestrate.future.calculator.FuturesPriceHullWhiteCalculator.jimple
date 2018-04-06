@@ -1,0 +1,288 @@
+public final class com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator extends com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter
+{
+    private static final com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator INSTANCE;
+    private static final com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel MODEL;
+    private static final com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator CFEC;
+
+    public static com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator getInstance()
+    {
+        com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator $r0;
+
+        $r0 = <com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator: com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator INSTANCE>;
+
+        return $r0;
+    }
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator r0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter: void <init>()>();
+
+        return;
+    }
+
+    public java.lang.Double visitInterestRateFutureSecurity(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity, com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface r2;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r5;
+        com.opengamma.analytics.financial.instrument.index.IborIndex $r6;
+        com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel $r7;
+        com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters $r8;
+        java.lang.Double $r9;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Future");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Multi-curve with Hull-White");
+
+        $r5 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity: com.opengamma.analytics.financial.instrument.index.IborIndex getIborIndex()>();
+
+        $d3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity: double getFixingPeriodStartTime()>();
+
+        $d4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity: double getFixingPeriodEndTime()>();
+
+        $d5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity: double getFixingPeriodAccrualFactor()>();
+
+        d0 = interfaceinvoke $r5.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getSimplyCompoundForwardRate(com.opengamma.analytics.financial.instrument.index.IborIndex,double,double,double)>($r6, $d3, $d4, $d5);
+
+        $r7 = <com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator: com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel MODEL>;
+
+        $r8 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface: com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters getHullWhiteParameters()>();
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity: double getTradingLastTime()>();
+
+        $d7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity: double getFixingPeriodStartTime()>();
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity: double getFixingPeriodEndTime()>();
+
+        d1 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel: double futuresConvexityFactor(com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters,double,double,double)>($r8, $d6, $d7, $d8);
+
+        $d9 = d1 * d0;
+
+        $d10 = 1.0 - $d9;
+
+        $d11 = 1.0 - d1;
+
+        $d12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity: double getFixingPeriodAccrualFactor()>();
+
+        $d13 = $d11 / $d12;
+
+        d2 = $d10 + $d13;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        return $r9;
+    }
+
+    public java.lang.Double visitSwapFuturesPriceDeliverableSecurity(com.opengamma.analytics.financial.interestrate.future.derivative.SwapFuturesPriceDeliverableSecurity, com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.SwapFuturesPriceDeliverableSecurity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface r2;
+        com.opengamma.util.money.Currency r3, $r11;
+        com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters r4;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r5;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed r6;
+        int i0, i1, i2;
+        double[] r7, r8;
+        boolean $z0;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon $r12;
+        com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator $r13;
+        java.lang.Object $r14;
+        java.lang.Double $r15, $r23;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r16, $r19, $r21;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r17, $r20, $r22;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, d13;
+        com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel $r18;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.SwapFuturesPriceDeliverableSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Future");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Multi-curves with Hull-White");
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.SwapFuturesPriceDeliverableSecurity: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r11 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface: com.opengamma.util.money.Currency getHullWhiteCurrency()>();
+
+        $z0 = virtualinvoke $r11.<com.opengamma.util.money.Currency: boolean equals(java.lang.Object)>(r3);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Futures currency incompatible with data");
+
+        r4 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface: com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters getHullWhiteParameters()>();
+
+        r5 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.SwapFuturesPriceDeliverableSecurity: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        $r13 = <com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator CFEC>;
+
+        $r14 = virtualinvoke $r12.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r13, r5);
+
+        r6 = (com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed) $r14;
+
+        i0 = virtualinvoke r6.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        r7 = newarray (double)[i0];
+
+        r8 = newarray (double)[i0];
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $r18 = <com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator: com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel MODEL>;
+
+        $d7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.SwapFuturesPriceDeliverableSecurity: double getTradingLastTime()>();
+
+        $r19 = virtualinvoke r6.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i1);
+
+        $r20 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r19;
+
+        $d8 = virtualinvoke $r20.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getPaymentTime()>();
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.SwapFuturesPriceDeliverableSecurity: double getDeliveryTime()>();
+
+        $d10 = virtualinvoke $r18.<com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel: double futuresConvexityFactor(com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters,double,double,double)>(r4, $d7, $d8, $d9);
+
+        r7[i1] = $d10;
+
+        $r21 = virtualinvoke r6.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i1);
+
+        $r22 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r21;
+
+        $d11 = virtualinvoke $r22.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getPaymentTime()>();
+
+        $r23 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d11);
+
+        $d12 = interfaceinvoke r5.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r23);
+
+        r8[i1] = $d12;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        d13 = 1.0;
+
+        i2 = 0;
+
+     label3:
+        if i2 >= i0 goto label4;
+
+        $r16 = virtualinvoke r6.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i2);
+
+        $r17 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r16;
+
+        $d0 = virtualinvoke $r17.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        $d1 = r8[i2];
+
+        $d3 = $d0 * $d1;
+
+        $d2 = r7[i2];
+
+        $d5 = $d3 * $d2;
+
+        $d4 = r8[0];
+
+        $d6 = $d5 / $d4;
+
+        d13 = d13 + $d6;
+
+        i2 = i2 + 1;
+
+        goto label3;
+
+     label4:
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d13);
+
+        return $r15;
+    }
+
+    public volatile java.lang.Object visitSwapFuturesPriceDeliverableSecurity(com.opengamma.analytics.financial.interestrate.future.derivative.SwapFuturesPriceDeliverableSecurity, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.SwapFuturesPriceDeliverableSecurity r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.SwapFuturesPriceDeliverableSecurity;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator: java.lang.Double visitSwapFuturesPriceDeliverableSecurity(com.opengamma.analytics.financial.interestrate.future.derivative.SwapFuturesPriceDeliverableSecurity,com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitInterestRateFutureSecurity(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator: java.lang.Double visitInterestRateFutureSecurity(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity,com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator $r0;
+        com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel $r1;
+        com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator $r2;
+
+        $r0 = new com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator: com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator INSTANCE> = $r0;
+
+        $r1 = new com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator: com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel MODEL> = $r1;
+
+        $r2 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceHullWhiteCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator CFEC> = $r2;
+
+        return;
+    }
+}

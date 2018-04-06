@@ -1,0 +1,1074 @@
+public class com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle extends java.lang.Object implements com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle
+{
+    private final com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData;
+    private double[] _secondDerivatives;
+    private double[][] _secondDerivativesSensitivities;
+    private final double _leftFirstDev;
+    private final double _rightFirstDev;
+    private final boolean _leftNatural;
+    private final boolean _rightNatural;
+
+    public void <init>(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle)
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle r1;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        r1 := @parameter0: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "underlying data");
+
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData> = r1;
+
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double _leftFirstDev> = 0.0;
+
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double _rightFirstDev> = 0.0;
+
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: boolean _leftNatural> = 1;
+
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: boolean _rightNatural> = 1;
+
+        return;
+    }
+
+    public void <init>(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle, double, double)
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle r1;
+        double d0, d1;
+        boolean $z0, $z1;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        r1 := @parameter0: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "underlying data");
+
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData> = r1;
+
+        $z0 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d0);
+
+        if $z0 == 0 goto label1;
+
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double _leftFirstDev> = 0.0;
+
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: boolean _leftNatural> = 1;
+
+        goto label2;
+
+     label1:
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double _leftFirstDev> = d0;
+
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: boolean _leftNatural> = 0;
+
+     label2:
+        $z1 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d1);
+
+        if $z1 == 0 goto label3;
+
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double _rightFirstDev> = 0.0;
+
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: boolean _rightNatural> = 1;
+
+        goto label4;
+
+     label3:
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double _rightFirstDev> = d0;
+
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: boolean _rightNatural> = 0;
+
+     label4:
+        return;
+    }
+
+    private double[] calculateSecondDerivative()
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        double[] r1, r2, r3, r4, r5, $r10;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, i7;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r6, $r9;
+        com.opengamma.analytics.math.matrix.OGMatrixAlgebra $r7;
+        com.opengamma.analytics.math.matrix.Matrix $r8;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D r11;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        r1 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double[] getKeys()>();
+
+        r2 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double[] getValues()>();
+
+        i0 = lengthof r1;
+
+        $i1 = i0 - 1;
+
+        r3 = newarray (double)[$i1];
+
+        $i2 = i0 - 1;
+
+        r4 = newarray (double)[$i2];
+
+        $i3 = i0 - 1;
+
+        r5 = newarray (double)[$i3];
+
+        i7 = 0;
+
+     label1:
+        $i4 = i0 - 1;
+
+        if i7 >= $i4 goto label2;
+
+        $i5 = i7 + 1;
+
+        $d1 = r1[$i5];
+
+        $d0 = r1[i7];
+
+        $d2 = $d1 - $d0;
+
+        r3[i7] = $d2;
+
+        $d3 = r3[i7];
+
+        $d4 = 1.0 / $d3;
+
+        r5[i7] = $d4;
+
+        $i6 = i7 + 1;
+
+        $d6 = r2[$i6];
+
+        $d5 = r2[i7];
+
+        $d8 = $d6 - $d5;
+
+        $d7 = r5[i7];
+
+        $d9 = $d8 * $d7;
+
+        r4[i7] = $d9;
+
+        i7 = i7 + 1;
+
+        goto label1;
+
+     label2:
+        r11 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.matrix.DoubleMatrix2D getInverseTridiagonalMatrix(double[])>(r3);
+
+        r6 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.matrix.DoubleMatrix1D getRHSVector(double[])>(r4);
+
+        $r7 = <com.opengamma.analytics.math.matrix.MatrixAlgebraFactory: com.opengamma.analytics.math.matrix.OGMatrixAlgebra OG_ALGEBRA>;
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.math.matrix.OGMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r11, r6);
+
+        $r9 = (com.opengamma.analytics.math.matrix.DoubleMatrix1D) $r8;
+
+        $r10 = virtualinvoke $r9.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        return $r10;
+    }
+
+    public boolean containsKey(java.lang.Double)
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        java.lang.Double r1;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r2;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        r1 := @parameter0: java.lang.Double;
+
+        $r2 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        $z0 = interfaceinvoke $r2.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: boolean containsKey(java.lang.Double)>(r1);
+
+        return $z0;
+    }
+
+    public java.lang.Double firstKey()
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r1;
+        java.lang.Double $r2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        $r2 = interfaceinvoke $r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double firstKey()>();
+
+        return $r2;
+    }
+
+    public java.lang.Double firstValue()
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r1;
+        java.lang.Double $r2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        $r2 = interfaceinvoke $r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double firstValue()>();
+
+        return $r2;
+    }
+
+    public java.lang.Double get(java.lang.Double)
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        java.lang.Double r1, $r3;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        r1 := @parameter0: java.lang.Double;
+
+        $r2 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        $r3 = interfaceinvoke $r2.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double get(java.lang.Double)>(r1);
+
+        return $r3;
+    }
+
+    public com.opengamma.analytics.math.interpolation.data.InterpolationBoundedValues getBoundedValues(java.lang.Double)
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        java.lang.Double r1;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r2;
+        com.opengamma.analytics.math.interpolation.data.InterpolationBoundedValues $r3;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        r1 := @parameter0: java.lang.Double;
+
+        $r2 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        $r3 = interfaceinvoke $r2.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: com.opengamma.analytics.math.interpolation.data.InterpolationBoundedValues getBoundedValues(java.lang.Double)>(r1);
+
+        return $r3;
+    }
+
+    public double[] getKeys()
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r1;
+        double[] $r2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        $r2 = interfaceinvoke $r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: double[] getKeys()>();
+
+        return $r2;
+    }
+
+    public int getLowerBoundIndex(java.lang.Double)
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        java.lang.Double r1;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r2;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        r1 := @parameter0: java.lang.Double;
+
+        $r2 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        $i0 = interfaceinvoke $r2.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: int getLowerBoundIndex(java.lang.Double)>(r1);
+
+        return $i0;
+    }
+
+    public java.lang.Double getLowerBoundKey(java.lang.Double)
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        java.lang.Double r1, $r3;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        r1 := @parameter0: java.lang.Double;
+
+        $r2 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        $r3 = interfaceinvoke $r2.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double getLowerBoundKey(java.lang.Double)>(r1);
+
+        return $r3;
+    }
+
+    public double[] getValues()
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r1;
+        double[] $r2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        $r2 = interfaceinvoke $r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: double[] getValues()>();
+
+        return $r2;
+    }
+
+    public java.lang.Double higherKey(java.lang.Double)
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        java.lang.Double r1, $r3;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        r1 := @parameter0: java.lang.Double;
+
+        $r2 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        $r3 = interfaceinvoke $r2.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double higherKey(java.lang.Double)>(r1);
+
+        return $r3;
+    }
+
+    public java.lang.Double higherValue(java.lang.Double)
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        java.lang.Double r1, $r3;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        r1 := @parameter0: java.lang.Double;
+
+        $r2 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        $r3 = interfaceinvoke $r2.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double higherValue(java.lang.Double)>(r1);
+
+        return $r3;
+    }
+
+    public java.lang.Double lastKey()
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r1;
+        java.lang.Double $r2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        $r2 = interfaceinvoke $r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double lastKey()>();
+
+        return $r2;
+    }
+
+    public java.lang.Double lastValue()
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r1;
+        java.lang.Double $r2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        $r2 = interfaceinvoke $r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: java.lang.Double lastValue()>();
+
+        return $r2;
+    }
+
+    public int size()
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r1;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        $i0 = interfaceinvoke $r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: int size()>();
+
+        return $i0;
+    }
+
+    public double[] getSecondDerivatives()
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        double[] $r1, $r2, $r3;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double[] _secondDerivatives>;
+
+        if $r1 != null goto label1;
+
+        $r3 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double[] calculateSecondDerivative()>();
+
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double[] _secondDerivatives> = $r3;
+
+     label1:
+        $r2 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double[] _secondDerivatives>;
+
+        return $r2;
+    }
+
+    public double[][] getSecondDerivativesSensitivities()
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        double[] r1, r2, r3, r4, r5;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, i7;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D r6, $r11, r13;
+        double[][] $r7, $r8, $r12;
+        com.opengamma.analytics.math.matrix.OGMatrixAlgebra $r9;
+        com.opengamma.analytics.math.matrix.Matrix $r10;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        $r7 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double[][] _secondDerivativesSensitivities>;
+
+        if $r7 != null goto label3;
+
+        r1 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double[] getKeys()>();
+
+        r2 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double[] getValues()>();
+
+        i0 = lengthof r1;
+
+        $i1 = i0 - 1;
+
+        r3 = newarray (double)[$i1];
+
+        $i2 = i0 - 1;
+
+        r4 = newarray (double)[$i2];
+
+        $i3 = i0 - 1;
+
+        r5 = newarray (double)[$i3];
+
+        i7 = 0;
+
+     label1:
+        $i4 = i0 - 1;
+
+        if i7 >= $i4 goto label2;
+
+        $i5 = i7 + 1;
+
+        $d1 = r1[$i5];
+
+        $d0 = r1[i7];
+
+        $d2 = $d1 - $d0;
+
+        r3[i7] = $d2;
+
+        $d3 = r3[i7];
+
+        $d4 = 1.0 / $d3;
+
+        r5[i7] = $d4;
+
+        $i6 = i7 + 1;
+
+        $d6 = r2[$i6];
+
+        $d5 = r2[i7];
+
+        $d8 = $d6 - $d5;
+
+        $d7 = r5[i7];
+
+        $d9 = $d8 * $d7;
+
+        r4[i7] = $d9;
+
+        i7 = i7 + 1;
+
+        goto label1;
+
+     label2:
+        r13 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.matrix.DoubleMatrix2D getInverseTridiagonalMatrix(double[])>(r3);
+
+        r6 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.matrix.DoubleMatrix2D getRHSMatrix(double[])>(r5);
+
+        $r9 = <com.opengamma.analytics.math.matrix.MatrixAlgebraFactory: com.opengamma.analytics.math.matrix.OGMatrixAlgebra OG_ALGEBRA>;
+
+        $r10 = virtualinvoke $r9.<com.opengamma.analytics.math.matrix.OGMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r13, r6);
+
+        $r11 = (com.opengamma.analytics.math.matrix.DoubleMatrix2D) $r10;
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: double[][] getData()>();
+
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double[][] _secondDerivativesSensitivities> = $r12;
+
+     label3:
+        $r8 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double[][] _secondDerivativesSensitivities>;
+
+        return $r8;
+    }
+
+    private com.opengamma.analytics.math.matrix.DoubleMatrix2D getRHSMatrix(double[])
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        double[] r1, $r4, $r5, $r6, $r7, $r8, $r9, $r10;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, i13;
+        double[][] r2;
+        boolean $z0, $z1;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D $r3;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        r1 := @parameter0: double[];
+
+        $i1 = lengthof r1;
+
+        i0 = $i1 + 1;
+
+        r2 = newmultiarray (double)[i0][i0];
+
+        i13 = 1;
+
+     label1:
+        $i2 = i0 - 1;
+
+        if i13 >= $i2 goto label2;
+
+        $r8 = r2[i13];
+
+        $i10 = i13 - 1;
+
+        $i9 = i13 - 1;
+
+        $d6 = r1[$i9];
+
+        $r8[$i10] = $d6;
+
+        $r9 = r2[i13];
+
+        $d7 = r1[i13];
+
+        $d9 = neg $d7;
+
+        $i11 = i13 - 1;
+
+        $d8 = r1[$i11];
+
+        $d10 = $d9 - $d8;
+
+        $r9[i13] = $d10;
+
+        $r10 = r2[i13];
+
+        $i12 = i13 + 1;
+
+        $d11 = r1[i13];
+
+        $r10[$i12] = $d11;
+
+        i13 = i13 + 1;
+
+        goto label1;
+
+     label2:
+        $z0 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: boolean _leftNatural>;
+
+        if $z0 != 0 goto label3;
+
+        $r6 = r2[0];
+
+        $d3 = r1[0];
+
+        $r6[0] = $d3;
+
+        $r7 = r2[0];
+
+        $d4 = r1[0];
+
+        $d5 = neg $d4;
+
+        $r7[1] = $d5;
+
+     label3:
+        $z1 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: boolean _rightNatural>;
+
+        if $z1 != 0 goto label4;
+
+        $i3 = i0 - 1;
+
+        $r4 = r2[$i3];
+
+        $i5 = i0 - 1;
+
+        $i4 = i0 - 2;
+
+        $d0 = r1[$i4];
+
+        $d1 = neg $d0;
+
+        $r4[$i5] = $d1;
+
+        $i6 = i0 - 2;
+
+        $r5 = r2[$i6];
+
+        $i8 = i0 - 2;
+
+        $i7 = i0 - 2;
+
+        $d2 = r1[$i7];
+
+        $r5[$i8] = $d2;
+
+     label4:
+        $r3 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r3.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r2);
+
+        return $r3;
+    }
+
+    private com.opengamma.analytics.math.matrix.DoubleMatrix1D getRHSVector(double[])
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        double[] r1, r2;
+        int i0, $i1, $i2, $i3, $i4, $i5, i6;
+        boolean $z0, $z1;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r3;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        r1 := @parameter0: double[];
+
+        $i1 = lengthof r1;
+
+        i0 = $i1 + 1;
+
+        r2 = newarray (double)[i0];
+
+        i6 = 1;
+
+     label1:
+        $i2 = i0 - 1;
+
+        if i6 >= $i2 goto label2;
+
+        $d7 = r1[i6];
+
+        $i5 = i6 - 1;
+
+        $d6 = r1[$i5];
+
+        $d8 = $d7 - $d6;
+
+        r2[i6] = $d8;
+
+        i6 = i6 + 1;
+
+        goto label1;
+
+     label2:
+        $z0 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: boolean _leftNatural>;
+
+        if $z0 != 0 goto label3;
+
+        $d4 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double _leftFirstDev>;
+
+        $d3 = r1[0];
+
+        $d5 = $d4 - $d3;
+
+        r2[0] = $d5;
+
+     label3:
+        $z1 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: boolean _rightNatural>;
+
+        if $z1 != 0 goto label4;
+
+        $i4 = i0 - 1;
+
+        $d1 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double _rightFirstDev>;
+
+        $i3 = i0 - 2;
+
+        $d0 = r1[$i3];
+
+        $d2 = $d1 - $d0;
+
+        r2[$i4] = $d2;
+
+     label4:
+        $r3 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r3.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r2);
+
+        return $r3;
+    }
+
+    private com.opengamma.analytics.math.matrix.DoubleMatrix2D getInverseTridiagonalMatrix(double[])
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        double[] r1, r3, r4, r5;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, i14;
+        com.opengamma.analytics.math.linearalgebra.InverseTridiagonalMatrixCalculator $r6;
+        boolean $z0, $z1;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16;
+        com.opengamma.analytics.math.linearalgebra.TridiagonalMatrix $r7;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D $r8;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        r1 := @parameter0: double[];
+
+        $r6 = new com.opengamma.analytics.math.linearalgebra.InverseTridiagonalMatrixCalculator;
+
+        specialinvoke $r6.<com.opengamma.analytics.math.linearalgebra.InverseTridiagonalMatrixCalculator: void <init>()>();
+
+        $i1 = lengthof r1;
+
+        i0 = $i1 + 1;
+
+        r3 = newarray (double)[i0];
+
+        $i2 = i0 - 1;
+
+        r4 = newarray (double)[$i2];
+
+        $i3 = i0 - 1;
+
+        r5 = newarray (double)[$i3];
+
+        i14 = 1;
+
+     label1:
+        $i4 = i0 - 1;
+
+        if i14 >= $i4 goto label2;
+
+        $i11 = i14 - 1;
+
+        $d10 = r1[$i11];
+
+        $d9 = r1[i14];
+
+        $d11 = $d10 + $d9;
+
+        $d12 = $d11 / 3.0;
+
+        r3[i14] = $d12;
+
+        $d13 = r1[i14];
+
+        $d14 = $d13 / 6.0;
+
+        r4[i14] = $d14;
+
+        $i13 = i14 - 1;
+
+        $i12 = i14 - 1;
+
+        $d15 = r1[$i12];
+
+        $d16 = $d15 / 6.0;
+
+        r5[$i13] = $d16;
+
+        i14 = i14 + 1;
+
+        goto label1;
+
+     label2:
+        $z0 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: boolean _leftNatural>;
+
+        if $z0 == 0 goto label3;
+
+        r3[0] = 1.0;
+
+        r4[0] = 0.0;
+
+        goto label4;
+
+     label3:
+        $d0 = r1[0];
+
+        $d1 = neg $d0;
+
+        $d2 = $d1 / 3.0;
+
+        r3[0] = $d2;
+
+        $d3 = r1[0];
+
+        $d4 = $d3 / 6.0;
+
+        r4[0] = $d4;
+
+     label4:
+        $z1 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: boolean _rightNatural>;
+
+        if $z1 == 0 goto label5;
+
+        $i9 = i0 - 1;
+
+        r3[$i9] = 1.0;
+
+        $i10 = i0 - 2;
+
+        r5[$i10] = 0.0;
+
+        goto label6;
+
+     label5:
+        $i6 = i0 - 1;
+
+        $i5 = i0 - 2;
+
+        $d5 = r1[$i5];
+
+        $d6 = $d5 / 3.0;
+
+        r3[$i6] = $d6;
+
+        $i8 = i0 - 2;
+
+        $i7 = i0 - 2;
+
+        $d7 = r1[$i7];
+
+        $d8 = $d7 / 6.0;
+
+        r5[$i8] = $d8;
+
+     label6:
+        $r7 = new com.opengamma.analytics.math.linearalgebra.TridiagonalMatrix;
+
+        specialinvoke $r7.<com.opengamma.analytics.math.linearalgebra.TridiagonalMatrix: void <init>(double[],double[],double[])>(r3, r4, r5);
+
+        $r8 = virtualinvoke $r6.<com.opengamma.analytics.math.linearalgebra.InverseTridiagonalMatrixCalculator: com.opengamma.analytics.math.matrix.DoubleMatrix2D evaluate(com.opengamma.analytics.math.linearalgebra.TridiagonalMatrix)>($r7);
+
+        return $r8;
+    }
+
+    public void setYValueAtIndex(int, double)
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        int i0, $i2;
+        double d0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r1;
+        double[][] $r2;
+        java.lang.IllegalArgumentException $r3;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        i0 := @parameter0: int;
+
+        d0 := @parameter1: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: int notNegative(int,java.lang.String)>(i0, "index");
+
+        $i2 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: int size()>();
+
+        if i0 < $i2 goto label1;
+
+        $r3 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r3.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Index was greater than number of data points");
+
+        throw $r3;
+
+     label1:
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        interfaceinvoke $r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: void setYValueAtIndex(int,double)>(i0, d0);
+
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double[] _secondDerivatives> = null;
+
+        $r2 = (double[][]) null;
+
+        r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double[][] _secondDerivativesSensitivities> = $r2;
+
+        return;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0;
+        double $d0, $d1;
+        long $l1, $l2, $l6, $l7, l13, l16;
+        int $i3, $i4, $i5, $i8, $i9, $i10, $i11, i14, i15, i17, i18, $i19, i20;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r1, $r2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        $d0 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double _leftFirstDev>;
+
+        l13 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $i4 = 31 * 1;
+
+        $l1 = l13 >>> 32;
+
+        $l2 = l13 ^ $l1;
+
+        $i3 = (int) $l2;
+
+        i14 = $i4 + $i3;
+
+        $i5 = 31 * i14;
+
+        i15 = $i5 + 1237;
+
+        $d1 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double _rightFirstDev>;
+
+        l16 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d1);
+
+        $i9 = 31 * i15;
+
+        $l6 = l16 >>> 32;
+
+        $l7 = l16 ^ $l6;
+
+        $i8 = (int) $l7;
+
+        i17 = $i9 + $i8;
+
+        $i10 = 31 * i17;
+
+        i18 = $i10 + 1237;
+
+        $i11 = 31 * i18;
+
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        if $r1 != null goto label1;
+
+        $i19 = 0;
+
+        goto label2;
+
+     label1:
+        $r2 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        $i19 = virtualinvoke $r2.<java.lang.Object: int hashCode()>();
+
+     label2:
+        i20 = $i11 + $i19;
+
+        return i20;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle r0, r2;
+        java.lang.Object r1;
+        java.lang.Class $r3, $r4;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r5, $r6;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        double $d0, $d1, $d2, $d3;
+        long $l0, $l1, $l3, $l4;
+        byte $b2, $b5;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        if r1 != null goto label2;
+
+        return 0;
+
+     label2:
+        $r3 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r4 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+
+        if $r3 == $r4 goto label3;
+
+        return 0;
+
+     label3:
+        r2 = (com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle) r1;
+
+        $r6 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        $r5 = r2.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle _underlyingData>;
+
+        $z0 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r6, $r5);
+
+        if $z0 != 0 goto label4;
+
+        return 0;
+
+     label4:
+        $d0 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double _leftFirstDev>;
+
+        $l0 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $d1 = r2.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double _leftFirstDev>;
+
+        $l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d1);
+
+        $b2 = $l0 cmp $l1;
+
+        if $b2 == 0 goto label5;
+
+        return 0;
+
+     label5:
+        $z2 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: boolean _leftNatural>;
+
+        $z1 = r2.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: boolean _leftNatural>;
+
+        if $z2 == $z1 goto label6;
+
+        return 0;
+
+     label6:
+        $d2 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double _rightFirstDev>;
+
+        $l3 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d2);
+
+        $d3 = r2.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: double _rightFirstDev>;
+
+        $l4 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d3);
+
+        $b5 = $l3 cmp $l4;
+
+        if $b5 == 0 goto label7;
+
+        return 0;
+
+     label7:
+        $z4 = r0.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: boolean _rightNatural>;
+
+        $z3 = r2.<com.opengamma.analytics.math.interpolation.data.Interpolator1DCubicSplineDataBundle: boolean _rightNatural>;
+
+        if $z4 == $z3 goto label8;
+
+        return 0;
+
+     label8:
+        return 1;
+    }
+}

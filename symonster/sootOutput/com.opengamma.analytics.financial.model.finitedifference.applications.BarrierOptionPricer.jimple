@@ -1,0 +1,850 @@
+public class com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer extends java.lang.Object
+{
+    private static final com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider ICP;
+    private static final com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider PDE;
+    private static final com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference SOLVER;
+    private static final int DEFAULT_XNODES;
+    private static final int DEFAULT_TNODES;
+    private static final double DEFAULT_LAMBDA;
+    private static final double DEFAULT_BUNCHING;
+    private static final double DEFAULT_Z;
+    private final int _nTNodes;
+    private final int _nXNodes;
+    private final double _lambda;
+    private final double _bunching;
+    private final double _z;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double _z> = 2.0;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: int _nTNodes> = 50;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: int _nXNodes> = 100;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double _lambda> = 0.0;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double _bunching> = 1.0;
+
+        return;
+    }
+
+    public void <init>(int, int, double, double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer r0;
+        int i0, i1;
+        double d0, d1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        d0 := @parameter2: double;
+
+        d1 := @parameter3: double;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double _z> = 2.0;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: int _nXNodes> = i0;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: int _nTNodes> = i1;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double _lambda> = d0;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double _bunching> = d1;
+
+        return;
+    }
+
+    public double getPrice(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption, com.opengamma.analytics.financial.model.option.definition.Barrier, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r1;
+        com.opengamma.analytics.financial.model.option.definition.Barrier r2;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17;
+        boolean z0, z1, $z2, $z3, $z4, $z5, $z6;
+        com.opengamma.analytics.financial.model.option.definition.Barrier$KnockType $r3, $r4;
+        com.opengamma.analytics.financial.model.option.definition.Barrier$BarrierType $r5, $r6;
+        byte $b0, $b1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.Barrier;
+
+        d0 := @parameter2: double;
+
+        d1 := @parameter3: double;
+
+        d2 := @parameter4: double;
+
+        d3 := @parameter5: double;
+
+        d4 := @parameter6: double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "option");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "barrier");
+
+        $r3 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.Barrier: com.opengamma.analytics.financial.model.option.definition.Barrier$KnockType getKnockType()>();
+
+        $r4 = <com.opengamma.analytics.financial.model.option.definition.Barrier$KnockType: com.opengamma.analytics.financial.model.option.definition.Barrier$KnockType IN>;
+
+        if $r3 != $r4 goto label1;
+
+        $z5 = 1;
+
+        goto label2;
+
+     label1:
+        $z5 = 0;
+
+     label2:
+        z0 = $z5;
+
+        $r5 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.Barrier: com.opengamma.analytics.financial.model.option.definition.Barrier$BarrierType getBarrierType()>();
+
+        $r6 = <com.opengamma.analytics.financial.model.option.definition.Barrier$BarrierType: com.opengamma.analytics.financial.model.option.definition.Barrier$BarrierType DOWN>;
+
+        if $r5 != $r6 goto label3;
+
+        $z6 = 1;
+
+        goto label4;
+
+     label3:
+        $z6 = 0;
+
+     label4:
+        z1 = $z6;
+
+        if $z6 == 0 goto label5;
+
+        $d17 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.Barrier: double getBarrierLevel()>();
+
+        $b1 = d1 cmpg $d17;
+
+        if $b1 <= 0 goto label6;
+
+     label5:
+        if z1 != 0 goto label8;
+
+        $d13 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.Barrier: double getBarrierLevel()>();
+
+        $b0 = d1 cmpl $d13;
+
+        if $b0 < 0 goto label8;
+
+     label6:
+        if z0 == 0 goto label7;
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        $d15 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        $z4 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: boolean isCall()>();
+
+        $d16 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double blackPrice(double,double,double,double,double,double,boolean)>(d1, $d14, $d15, d3, d2, d4, $z4);
+
+        return $d16;
+
+     label7:
+        return d0;
+
+     label8:
+        if z0 == 0 goto label9;
+
+        $d9 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.Barrier: double getBarrierLevel()>();
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        $d11 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        $z3 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: boolean isCall()>();
+
+        $d12 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double inBarrier(double,double,double,double,double,double,double,boolean,double)>(d1, $d9, $d10, $d11, d3, d2, d4, $z3, d0);
+
+        return $d12;
+
+     label9:
+        $d5 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.Barrier: double getBarrierLevel()>();
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        $d7 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        $z2 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: boolean isCall()>();
+
+        $d8 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double outBarrier(double,double,double,double,double,double,double,boolean,double)>(d1, $d5, $d6, $d7, d3, d2, d4, $z2, d0);
+
+        return $d8;
+    }
+
+    public double outBarrier(double, double, double, double, double, double, double, boolean, double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d9, $d10, $d11, $d12, $d13, $d14, $d15, d16, d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30;
+        boolean z0, $z2;
+        com.opengamma.analytics.math.function.Function1D r1;
+        com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients r2;
+        com.opengamma.analytics.financial.model.finitedifference.PDEResults1D r6;
+        double[] r7;
+        int i0, $i2, $i3, $i4, $i5, $i6;
+        com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider $r8;
+        com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider $r9;
+        byte $b1;
+        com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition $r10, $r11, $r13, $r15, $r16, $r17, r18, r20;
+        com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$2 $r12;
+        com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$1 $r14;
+        com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing $r22;
+        com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing $r24;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r25;
+        com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle $r26;
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference $r27;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        d6 := @parameter6: double;
+
+        z0 := @parameter7: boolean;
+
+        d7 := @parameter8: double;
+
+        $r8 = <com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider ICP>;
+
+        r1 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider: com.opengamma.analytics.math.function.Function1D getEuropeanPayoff(double,boolean)>(d2, z0);
+
+        $r9 = <com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider PDE>;
+
+        $d10 = d4 - d5;
+
+        r2 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients getBlackScholes(double,double,double)>(d4, $d10, d6);
+
+        $b1 = d1 cmpl d0;
+
+        if $b1 <= 0 goto label1;
+
+        $z2 = 1;
+
+        goto label2;
+
+     label1:
+        $z2 = 0;
+
+     label2:
+        if $z2 == 0 goto label5;
+
+        d16 = 0.0;
+
+        $d15 = staticinvoke <java.lang.Math: double exp(double)>(-0.0);
+
+        d17 = d1 * $d15;
+
+        if z0 == 0 goto label3;
+
+        $r17 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r17.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(double,double)>(0.0, 0.0);
+
+        r18 = $r17;
+
+        goto label4;
+
+     label3:
+        $r14 = new com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$1;
+
+        specialinvoke $r14.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$1: void <init>(com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer,double,double)>(r0, d4, d2);
+
+        $r15 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r15.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(com.opengamma.analytics.math.function.Function1D,double)>($r14, 0.0);
+
+        r18 = $r15;
+
+     label4:
+        $r16 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r16.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(double,double)>(d7, d17);
+
+        r20 = $r16;
+
+        goto label7;
+
+     label5:
+        $d11 = staticinvoke <java.lang.Math: double exp(double)>(0.0);
+
+        d16 = d1 * $d11;
+
+        $d12 = staticinvoke <java.lang.Math: double sqrt(double)>(d3);
+
+        $d13 = 2.0 * $d12;
+
+        $d14 = staticinvoke <java.lang.Math: double exp(double)>($d13);
+
+        d17 = d0 * $d14;
+
+        $r10 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r10.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(double,double)>(d7, d16);
+
+        r18 = $r10;
+
+        if z0 == 0 goto label6;
+
+        $r12 = new com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$2;
+
+        specialinvoke $r12.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$2: void <init>(com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer,double,double,double,double)>(r0, d4, d0, d5, d2);
+
+        $r13 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r13.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(com.opengamma.analytics.math.function.Function1D,double)>($r12, d17);
+
+        r20 = $r13;
+
+        goto label7;
+
+     label6:
+        $r11 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r11.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(double,double)>(0.0, d17);
+
+        r20 = $r11;
+
+     label7:
+        $r22 = new com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing;
+
+        $i2 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: int _nTNodes>;
+
+        $d18 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double _lambda>;
+
+        specialinvoke $r22.<com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing: void <init>(double,double,int,double)>(0.0, d3, $i2, $d18);
+
+        $r24 = new com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing;
+
+        $i3 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: int _nXNodes>;
+
+        $d19 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double _bunching>;
+
+        specialinvoke $r24.<com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing: void <init>(double,double,double,int,double)>(d16, d17, d0, $i3, $d19);
+
+        $r25 = new com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        specialinvoke $r25.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: void <init>(com.opengamma.analytics.financial.model.finitedifference.MeshingFunction,com.opengamma.analytics.financial.model.finitedifference.MeshingFunction)>($r22, $r24);
+
+        $r26 = new com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle;
+
+        specialinvoke $r26.<com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle: void <init>(com.opengamma.analytics.financial.model.finitedifference.PDE1DCoefficients,com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition,com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D)>(r2, r1, r18, r20, $r25);
+
+        $r27 = <com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference SOLVER>;
+
+        r6 = virtualinvoke $r27.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: com.opengamma.analytics.financial.model.finitedifference.PDEResults1D solve(com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle)>($r26);
+
+        r7 = virtualinvoke $r25.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] getSpaceNodes()>();
+
+        i0 = staticinvoke <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SurfaceArrayUtils: int getLowerBoundIndex(double[],double)>(r7, d0);
+
+        $i4 = i0 + 1;
+
+        $d20 = r7[$i4];
+
+        $d21 = $d20 - d0;
+
+        $i5 = i0 + 1;
+
+        $d22 = r7[$i5];
+
+        $d23 = r7[i0];
+
+        $d24 = $d22 - $d23;
+
+        d9 = $d21 / $d24;
+
+        $d25 = interfaceinvoke r6.<com.opengamma.analytics.financial.model.finitedifference.PDEResults1D: double getFunctionValue(int)>(i0);
+
+        $d26 = d9 * $d25;
+
+        $d27 = 1.0 - d9;
+
+        $i6 = i0 + 1;
+
+        $d28 = interfaceinvoke r6.<com.opengamma.analytics.financial.model.finitedifference.PDEResults1D: double getFunctionValue(int)>($i6);
+
+        $d29 = $d27 * $d28;
+
+        $d30 = $d26 + $d29;
+
+        return $d30;
+    }
+
+    public double inBarrier(double, double, double, double, double, double, double, boolean, double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, $d10, $d11, $d12, $d13, $d14, $d15;
+        boolean z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        d6 := @parameter6: double;
+
+        z0 := @parameter7: boolean;
+
+        d7 := @parameter8: double;
+
+        d8 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double outBarrierSpecial(double,double,double,double,double,double,double,boolean,double)>(d0, d1, d2, d3, d4, d5, d6, z0, d7);
+
+        d9 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double blackPrice(double,double,double,double,double,double,boolean)>(d0, d2, d3, d4, d5, d6, z0);
+
+        $d10 = neg d4;
+
+        $d11 = $d10 * d3;
+
+        $d12 = staticinvoke <java.lang.Math: double exp(double)>($d11);
+
+        $d13 = $d12 * d7;
+
+        $d14 = d9 + $d13;
+
+        $d15 = $d14 - d8;
+
+        return $d15;
+    }
+
+    protected double outBarrierSpecial(double, double, double, double, double, double, double, boolean, double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, $d9, $d10, $d11, $d12, d13, d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27;
+        boolean z0, $z2;
+        com.opengamma.analytics.math.function.Function1D r1;
+        com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients r2;
+        com.opengamma.analytics.financial.model.finitedifference.PDEResults1D r7;
+        double[] r8;
+        int i0, $i2, $i3, $i4, $i5, $i6;
+        com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider $r9;
+        com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider $r10;
+        byte $b1;
+        com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$3 $r11;
+        com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition $r12, $r13, $r15, $r17, $r18, $r19, r20, r22;
+        com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$5 $r14;
+        com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$4 $r16;
+        com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing $r24;
+        com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing $r26;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r27;
+        com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle $r28;
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference $r29;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        d6 := @parameter6: double;
+
+        z0 := @parameter7: boolean;
+
+        d7 := @parameter8: double;
+
+        $r9 = <com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider ICP>;
+
+        r1 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider: com.opengamma.analytics.math.function.Function1D getEuropeanPayoff(double,boolean)>(d2, z0);
+
+        $r10 = <com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider PDE>;
+
+        $d9 = d4 - d5;
+
+        r2 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients getBlackScholes(double,double,double)>(d4, $d9, d6);
+
+        $b1 = d1 cmpl d0;
+
+        if $b1 <= 0 goto label1;
+
+        $z2 = 1;
+
+        goto label2;
+
+     label1:
+        $z2 = 0;
+
+     label2:
+        $r11 = new com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$3;
+
+        specialinvoke $r11.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$3: void <init>(com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer,double,double)>(r0, d7, d4);
+
+        if $z2 == 0 goto label5;
+
+        d13 = 0.0;
+
+        d14 = d1;
+
+        if z0 == 0 goto label3;
+
+        $r19 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r19.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(double,double)>(0.0, 0.0);
+
+        r20 = $r19;
+
+        goto label4;
+
+     label3:
+        $r16 = new com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$4;
+
+        specialinvoke $r16.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$4: void <init>(com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer,double,double)>(r0, d4, d2);
+
+        $r17 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r17.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(com.opengamma.analytics.math.function.Function1D,double)>($r16, 0.0);
+
+        r20 = $r17;
+
+     label4:
+        $r18 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r18.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(com.opengamma.analytics.math.function.Function1D,double)>($r11, d1);
+
+        r22 = $r18;
+
+        goto label7;
+
+     label5:
+        d13 = d1;
+
+        $d10 = staticinvoke <java.lang.Math: double sqrt(double)>(d3);
+
+        $d11 = 2.0 * $d10;
+
+        $d12 = staticinvoke <java.lang.Math: double exp(double)>($d11);
+
+        d14 = d0 * $d12;
+
+        $r12 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r12.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(com.opengamma.analytics.math.function.Function1D,double)>($r11, d1);
+
+        r20 = $r12;
+
+        if z0 == 0 goto label6;
+
+        $r14 = new com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$5;
+
+        specialinvoke $r14.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$5: void <init>(com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer,double,double,double,double)>(r0, d4, d0, d5, d2);
+
+        $r15 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r15.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(com.opengamma.analytics.math.function.Function1D,double)>($r14, d14);
+
+        r22 = $r15;
+
+        goto label7;
+
+     label6:
+        $r13 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r13.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(double,double)>(0.0, d14);
+
+        r22 = $r13;
+
+     label7:
+        $r24 = new com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing;
+
+        $i2 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: int _nTNodes>;
+
+        $d15 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double _lambda>;
+
+        specialinvoke $r24.<com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing: void <init>(double,double,int,double)>(0.0, d3, $i2, $d15);
+
+        $r26 = new com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing;
+
+        $i3 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: int _nXNodes>;
+
+        $d16 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double _bunching>;
+
+        specialinvoke $r26.<com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing: void <init>(double,double,double,int,double)>(d13, d14, d0, $i3, $d16);
+
+        $r27 = new com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        specialinvoke $r27.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: void <init>(com.opengamma.analytics.financial.model.finitedifference.MeshingFunction,com.opengamma.analytics.financial.model.finitedifference.MeshingFunction)>($r24, $r26);
+
+        $r28 = new com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle;
+
+        specialinvoke $r28.<com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle: void <init>(com.opengamma.analytics.financial.model.finitedifference.PDE1DCoefficients,com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition,com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D)>(r2, r1, r20, r22, $r27);
+
+        $r29 = <com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference SOLVER>;
+
+        r7 = virtualinvoke $r29.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: com.opengamma.analytics.financial.model.finitedifference.PDEResults1D solve(com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle)>($r28);
+
+        r8 = virtualinvoke $r27.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] getSpaceNodes()>();
+
+        i0 = staticinvoke <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SurfaceArrayUtils: int getLowerBoundIndex(double[],double)>(r8, d0);
+
+        $i4 = i0 + 1;
+
+        $d17 = r8[$i4];
+
+        $d18 = $d17 - d0;
+
+        $i5 = i0 + 1;
+
+        $d19 = r8[$i5];
+
+        $d20 = r8[i0];
+
+        $d21 = $d19 - $d20;
+
+        d8 = $d18 / $d21;
+
+        $d22 = interfaceinvoke r7.<com.opengamma.analytics.financial.model.finitedifference.PDEResults1D: double getFunctionValue(int)>(i0);
+
+        $d23 = d8 * $d22;
+
+        $d24 = 1.0 - d8;
+
+        $i6 = i0 + 1;
+
+        $d25 = interfaceinvoke r7.<com.opengamma.analytics.financial.model.finitedifference.PDEResults1D: double getFunctionValue(int)>($i6);
+
+        $d26 = $d24 * $d25;
+
+        $d27 = $d23 + $d26;
+
+        return $d27;
+    }
+
+    protected double blackPrice(double, double, double, double, double, double, boolean)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer r0;
+        double d0, d1, d2, d3, d4, d5, d7, d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25;
+        boolean z0;
+        com.opengamma.analytics.math.function.Function1D r1;
+        com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients r2;
+        com.opengamma.analytics.financial.model.finitedifference.PDEResults1D r6;
+        double[] r7;
+        int i0, $i1, $i2, $i3, $i4, $i5;
+        com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider $r8;
+        com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider $r9;
+        com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$7 $r10;
+        com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition $r11, $r12, $r18, $r20, r21, r23;
+        com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing $r13;
+        com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing $r14;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r15;
+        com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle $r16;
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference $r17;
+        com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$6 $r19;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        z0 := @parameter6: boolean;
+
+        $r8 = <com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider ICP>;
+
+        r1 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider: com.opengamma.analytics.math.function.Function1D getEuropeanPayoff(double,boolean)>(d1, z0);
+
+        $r9 = <com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider PDE>;
+
+        $d9 = d3 - d4;
+
+        r2 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients getBlackScholes(double,double,double)>(d3, $d9, d5);
+
+        $d10 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        $d11 = 2.0 * $d10;
+
+        $d12 = staticinvoke <java.lang.Math: double exp(double)>($d11);
+
+        d7 = d0 * $d12;
+
+        if z0 == 0 goto label1;
+
+        $r18 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r18.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(double,double)>(0.0, 0.0);
+
+        r21 = $r18;
+
+        $r19 = new com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$6;
+
+        specialinvoke $r19.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$6: void <init>(com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer,double,double,double,double)>(r0, d3, d0, d4, d1);
+
+        $r20 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r20.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(com.opengamma.analytics.math.function.Function1D,double)>($r19, d7);
+
+        r23 = $r20;
+
+        goto label2;
+
+     label1:
+        $r10 = new com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$7;
+
+        specialinvoke $r10.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer$7: void <init>(com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer,double,double)>(r0, d3, d1);
+
+        $r11 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r11.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(com.opengamma.analytics.math.function.Function1D,double)>($r10, 0.0);
+
+        r21 = $r11;
+
+        $r12 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r12.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(double,double)>(0.0, d7);
+
+        r23 = $r12;
+
+     label2:
+        $r13 = new com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing;
+
+        $i1 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: int _nTNodes>;
+
+        $d13 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double _lambda>;
+
+        specialinvoke $r13.<com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing: void <init>(double,double,int,double)>(0.0, d2, $i1, $d13);
+
+        $r14 = new com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing;
+
+        $i2 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: int _nXNodes>;
+
+        $d14 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double _bunching>;
+
+        specialinvoke $r14.<com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing: void <init>(double,double,double,int,double)>(0.0, d7, d0, $i2, $d14);
+
+        $r15 = new com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        specialinvoke $r15.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: void <init>(com.opengamma.analytics.financial.model.finitedifference.MeshingFunction,com.opengamma.analytics.financial.model.finitedifference.MeshingFunction)>($r13, $r14);
+
+        $r16 = new com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle;
+
+        specialinvoke $r16.<com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle: void <init>(com.opengamma.analytics.financial.model.finitedifference.PDE1DCoefficients,com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition,com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D)>(r2, r1, r21, r23, $r15);
+
+        $r17 = <com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference SOLVER>;
+
+        r6 = virtualinvoke $r17.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: com.opengamma.analytics.financial.model.finitedifference.PDEResults1D solve(com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle)>($r16);
+
+        r7 = virtualinvoke $r15.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] getSpaceNodes()>();
+
+        i0 = staticinvoke <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SurfaceArrayUtils: int getLowerBoundIndex(double[],double)>(r7, d0);
+
+        $i3 = i0 + 1;
+
+        $d15 = r7[$i3];
+
+        $d19 = $d15 - d0;
+
+        $i4 = i0 + 1;
+
+        $d17 = r7[$i4];
+
+        $d16 = r7[i0];
+
+        $d18 = $d17 - $d16;
+
+        d8 = $d19 / $d18;
+
+        $d20 = interfaceinvoke r6.<com.opengamma.analytics.financial.model.finitedifference.PDEResults1D: double getFunctionValue(int)>(i0);
+
+        $d21 = d8 * $d20;
+
+        $d22 = 1.0 - d8;
+
+        $i5 = i0 + 1;
+
+        $d23 = interfaceinvoke r6.<com.opengamma.analytics.financial.model.finitedifference.PDEResults1D: double getFunctionValue(int)>($i5);
+
+        $d24 = $d22 * $d23;
+
+        $d25 = $d21 + $d24;
+
+        return $d25;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider $r0;
+        com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider $r1;
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference $r2;
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double DEFAULT_Z> = 2.0;
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double DEFAULT_BUNCHING> = 1.0;
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: double DEFAULT_LAMBDA> = 0.0;
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: int DEFAULT_TNODES> = 50;
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: int DEFAULT_XNODES> = 100;
+
+        $r0 = new com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider ICP> = $r0;
+
+        $r1 = new com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider PDE> = $r1;
+
+        $r2 = new com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference;
+
+        specialinvoke $r2.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.BarrierOptionPricer: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference SOLVER> = $r2;
+
+        return;
+    }
+}

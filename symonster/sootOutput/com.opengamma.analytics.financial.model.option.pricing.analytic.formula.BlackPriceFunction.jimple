@@ -1,0 +1,778 @@
+public class com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction extends java.lang.Object implements com.opengamma.analytics.financial.model.option.pricing.analytic.formula.OptionPriceFunction
+{
+    private static final com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getPriceFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r1;
+        double d0, d1;
+        boolean z0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction$1 $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "option");
+
+        d0 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        z0 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: boolean isCall()>();
+
+        $r2 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction$1;
+
+        specialinvoke $r2.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction$1: void <init>(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction,double,double,boolean)>(r0, d0, d1, z0);
+
+        return $r2;
+    }
+
+    public double[] getPriceAdjoint(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption, com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r1;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData r2;
+        double[] r3;
+        double d1, d2, d3, d4, d5, d6, d7, d9, d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, d36, d37, d38, d39, d40, $d41, d45, $d46, d47, $d48, d49, d50;
+        boolean z0;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b7;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r4, $r7, $r9;
+        java.lang.Double $r5, $r8, $r10;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        r3 = newarray (double)[4];
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        d3 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: double getBlackVolatility()>();
+
+        d4 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: double getForward()>();
+
+        z0 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: boolean isCall()>();
+
+        d5 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: double getDiscountFactor()>();
+
+        d6 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        if z0 == 0 goto label01;
+
+        $d35 = 1.0;
+
+        goto label02;
+
+     label01:
+        $d35 = -1.0;
+
+     label02:
+        d7 = $d35;
+
+        d36 = 0.0;
+
+        d37 = 0.0;
+
+        d38 = 0.0;
+
+        d39 = 0.0;
+
+        d40 = 0.0;
+
+        $b0 = d1 cmpg 1.0E-16;
+
+        if $b0 < 0 goto label03;
+
+        $b7 = d6 cmpg 1.0E-16;
+
+        if $b7 >= 0 goto label06;
+
+     label03:
+        $d11 = d4 - d1;
+
+        d40 = d7 * $d11;
+
+        $b1 = d40 cmpl 0.0;
+
+        if $b1 <= 0 goto label04;
+
+        $d41 = d5 * d40;
+
+        goto label05;
+
+     label04:
+        $d41 = 0.0;
+
+     label05:
+        r3[0] = $d41;
+
+        goto label07;
+
+     label06:
+        d36 = d3 * d6;
+
+        $d23 = d4 / d1;
+
+        $d24 = staticinvoke <java.lang.Math: double log(double)>($d23);
+
+        $d26 = $d24 / d36;
+
+        $d25 = 0.5 * d36;
+
+        d37 = $d26 - $d25;
+
+        $r7 = <com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d27 = d37 + d36;
+
+        $d28 = $d35 * $d27;
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d28);
+
+        d38 = interfaceinvoke $r7.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r8);
+
+        $r9 = <com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d29 = $d35 * d37;
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d29);
+
+        d39 = interfaceinvoke $r9.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r10);
+
+        $d33 = d5 * $d35;
+
+        $d31 = d4 * d38;
+
+        $d30 = d1 * d39;
+
+        $d32 = $d31 - $d30;
+
+        $d34 = $d33 * $d32;
+
+        r3[0] = $d34;
+
+     label07:
+        d45 = 0.0;
+
+        $b2 = d1 cmpg 1.0E-16;
+
+        if $b2 < 0 goto label08;
+
+        $b5 = d6 cmpg 1.0E-16;
+
+        if $b5 >= 0 goto label13;
+
+     label08:
+        $b3 = d40 cmpl 0.0;
+
+        if $b3 <= 0 goto label09;
+
+        $d46 = d5 * d7;
+
+        goto label10;
+
+     label09:
+        $d46 = 0.0;
+
+     label10:
+        d47 = $d46;
+
+        $b4 = d40 cmpl 0.0;
+
+        if $b4 <= 0 goto label11;
+
+        $d12 = neg d5;
+
+        $d48 = $d12 * d7;
+
+        goto label12;
+
+     label11:
+        $d48 = 0.0;
+
+     label12:
+        d49 = $d48;
+
+        goto label14;
+
+     label13:
+        $d13 = d5 * d7;
+
+        $d14 = $d13 * d4;
+
+        d9 = $d14 * 1.0;
+
+        $r4 = <com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d15 = d37 + d36;
+
+        $d16 = d7 * $d15;
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d16);
+
+        d10 = interfaceinvoke $r4.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r5);
+
+        $d17 = d5 * d7;
+
+        $d18 = $d17 * d38;
+
+        d47 = $d18 * 1.0;
+
+        $d19 = neg d5;
+
+        $d20 = $d19 * d7;
+
+        $d21 = $d20 * d39;
+
+        d49 = $d21 * 1.0;
+
+        $d22 = d10 * d7;
+
+        d50 = $d22 * d9;
+
+        d45 = d6 * d50;
+
+     label14:
+        r3[1] = d47;
+
+        r3[2] = d45;
+
+        r3[3] = d49;
+
+        return r3;
+    }
+
+    public double getPriceAdjoint2(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption, com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData, double[], double[][])
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r1;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData r2;
+        double[] r3, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14, $r15;
+        double[][] r4;
+        double d1, d2, d3, d4, d5, d6, d7, d9, d10, d11, d12, d13, d14, d15, d16, d17, d18, d19, d20, d21, d22, d23, d24, d25, d26, d27, d28, d29, d30, d31, d32, d33, d34, d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, $d80, $d81, $d82, $d83, $d84, $d85, $d86, $d87, $d88, $d89, $d90, $d91, $d92, $d93, $d94, $d95, $d96, $d97, $d98, $d99, $d100, $d101, $d102, $d103, $d104, $d105, $d106, $d107, $d108, $d109, $d110, $d111, $d112, $d113, $d114, $d115, $d116, $d117, $d118, $d119, $d120, $d121, $d122, $d123, $d124, $d125, $d126, $d127, $d128, d130, d131, d132, d133, $d134, d135, $d136, d137, d138, d139, d143, $d144, d145, $d146, d147, d148;
+        boolean z0;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r5, $r16, $r18, $r20;
+        java.lang.Double $r6, $r17, $r19, $r21;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        r3 := @parameter2: double[];
+
+        r4 := @parameter3: double[][];
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        d3 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: double getBlackVolatility()>();
+
+        d4 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: double getForward()>();
+
+        z0 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: boolean isCall()>();
+
+        d5 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: double getDiscountFactor()>();
+
+        d6 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        if z0 == 0 goto label01;
+
+        $d128 = 1.0;
+
+        goto label02;
+
+     label01:
+        $d128 = -1.0;
+
+     label02:
+        d7 = $d128;
+
+        d130 = 0.0;
+
+        d131 = 0.0;
+
+        d132 = 0.0;
+
+        d133 = 0.0;
+
+        $b0 = d1 cmpg 1.0E-16;
+
+        if $b0 < 0 goto label03;
+
+        $b9 = d6 cmpg 1.0E-16;
+
+        if $b9 >= 0 goto label08;
+
+     label03:
+        $d36 = d4 - d1;
+
+        d133 = d7 * $d36;
+
+        $b1 = d133 cmpl 0.0;
+
+        if $b1 <= 0 goto label04;
+
+        $d134 = d5 * d133;
+
+        goto label05;
+
+     label04:
+        $d134 = 0.0;
+
+     label05:
+        d135 = $d134;
+
+        $b2 = d6 cmpg 1.0E-16;
+
+        if $b2 >= 0 goto label06;
+
+        $d136 = 0.0;
+
+        goto label07;
+
+     label06:
+        $d136 = d3 * d6;
+
+     label07:
+        d137 = $d136;
+
+        goto label09;
+
+     label08:
+        d137 = d3 * d6;
+
+        $d117 = d4 / d1;
+
+        $d118 = staticinvoke <java.lang.Math: double log(double)>($d117);
+
+        $d120 = $d118 / d137;
+
+        $d119 = 0.5 * d137;
+
+        d130 = $d120 - $d119;
+
+        $r18 = <com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d121 = d130 + d137;
+
+        $d122 = $d128 * $d121;
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d122);
+
+        d131 = interfaceinvoke $r18.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r19);
+
+        $r20 = <com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d123 = $d128 * d130;
+
+        $r21 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d123);
+
+        d132 = interfaceinvoke $r20.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r21);
+
+        $d127 = d5 * $d128;
+
+        $d125 = d4 * d131;
+
+        $d124 = d1 * d132;
+
+        $d126 = $d125 - $d124;
+
+        d135 = $d127 * $d126;
+
+     label09:
+        d138 = 0.0;
+
+        d139 = 0.0;
+
+        d143 = 0.0;
+
+        $b3 = d1 cmpg 1.0E-16;
+
+        if $b3 < 0 goto label10;
+
+        $b8 = d6 cmpg 1.0E-16;
+
+        if $b8 >= 0 goto label15;
+
+     label10:
+        $b4 = d133 cmpl 0.0;
+
+        if $b4 <= 0 goto label11;
+
+        $d144 = d5 * d7;
+
+        goto label12;
+
+     label11:
+        $d144 = 0.0;
+
+     label12:
+        d145 = $d144;
+
+        $b5 = d133 cmpl 0.0;
+
+        if $b5 <= 0 goto label13;
+
+        $d106 = neg d5;
+
+        $d146 = $d106 * d7;
+
+        goto label14;
+
+     label13:
+        $d146 = 0.0;
+
+     label14:
+        d147 = $d146;
+
+        goto label16;
+
+     label15:
+        $d107 = d5 * d7;
+
+        $d108 = $d107 * d4;
+
+        d139 = $d108 * 1.0;
+
+        $r16 = <com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d109 = d130 + d137;
+
+        $d110 = d7 * $d109;
+
+        $r17 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d110);
+
+        d138 = interfaceinvoke $r16.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r17);
+
+        $d111 = d5 * d7;
+
+        $d112 = $d111 * d131;
+
+        d145 = $d112 * 1.0;
+
+        $d113 = neg d5;
+
+        $d114 = $d113 * d7;
+
+        $d115 = $d114 * d132;
+
+        d147 = $d115 * 1.0;
+
+        $d116 = d138 * d7;
+
+        d148 = $d116 * d139;
+
+        d143 = d6 * d148;
+
+     label16:
+        r3[0] = d145;
+
+        r3[1] = d143;
+
+        r3[2] = d147;
+
+        $b6 = d1 cmpg 1.0E-16;
+
+        if $b6 < 0 goto label17;
+
+        $b7 = d6 cmpg 1.0E-16;
+
+        if $b7 >= 0 goto label18;
+
+     label17:
+        return d135;
+
+     label18:
+        $d37 = neg d5;
+
+        $d38 = $d37 * d7;
+
+        d9 = $d38 * d1;
+
+        $r5 = <com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d39 = d7 * d130;
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d39);
+
+        d10 = interfaceinvoke $r5.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r6);
+
+        d11 = d7 * d138;
+
+        $d40 = d130 + d137;
+
+        $d41 = neg $d40;
+
+        d12 = $d41 * d11;
+
+        d13 = d7 * d10;
+
+        $d42 = neg d130;
+
+        d14 = $d42 * d13;
+
+        $d44 = d12 * d139;
+
+        $d43 = d14 * d9;
+
+        d15 = $d44 + $d43;
+
+        $d45 = d4 / d1;
+
+        $d46 = staticinvoke <java.lang.Math: double log(double)>($d45);
+
+        $d48 = neg $d46;
+
+        $d47 = d137 * d137;
+
+        $d49 = $d48 / $d47;
+
+        d16 = $d49 - 0.5;
+
+        $d50 = d4 / d1;
+
+        $d51 = staticinvoke <java.lang.Math: double log(double)>($d50);
+
+        $d54 = 2.0 * $d51;
+
+        $d52 = d137 * d137;
+
+        $d53 = $d52 * d137;
+
+        d17 = $d54 / $d53;
+
+        $d62 = d138 * d7;
+
+        $d55 = d130 + d137;
+
+        $d57 = neg $d55;
+
+        $d56 = d16 + 1.0;
+
+        $d59 = $d57 * $d56;
+
+        $d58 = d16 + 1.0;
+
+        $d60 = $d59 * $d58;
+
+        $d61 = $d60 + d17;
+
+        d18 = $d62 * $d61;
+
+        $d63 = d14 * d16;
+
+        $d65 = $d63 * d16;
+
+        $d64 = d13 * d17;
+
+        d19 = $d65 + $d64;
+
+        $d67 = d139 * d18;
+
+        $d66 = d9 * d19;
+
+        d20 = $d67 + $d66;
+
+        d21 = d20 * d2;
+
+        $d68 = neg d5;
+
+        $d69 = $d68 * d7;
+
+        d22 = $d69 * d13;
+
+        $d70 = d1 * d137;
+
+        d23 = -1.0 / $d70;
+
+        $d72 = d15 * d23;
+
+        $d71 = 2.0 * d22;
+
+        $d73 = $d72 + $d71;
+
+        d24 = $d73 * d23;
+
+        $d75 = 1.0 / d1;
+
+        $d74 = d137 * d137;
+
+        d25 = $d75 / $d74;
+
+        $d77 = neg d7;
+
+        $d76 = d130 + d137;
+
+        $d78 = $d77 * $d76;
+
+        $d80 = $d78 * d138;
+
+        $d79 = d16 + 1.0;
+
+        $d81 = $d80 * $d79;
+
+        $d84 = $d81 * d23;
+
+        $d82 = d7 * d138;
+
+        $d83 = $d82 * d25;
+
+        d26 = $d84 + $d83;
+
+        d27 = d13 * d16;
+
+        $d85 = neg d7;
+
+        $d86 = $d85 * d130;
+
+        $d87 = $d86 * d10;
+
+        $d88 = $d87 * d16;
+
+        $d91 = $d88 * d23;
+
+        $d89 = d7 * d10;
+
+        $d90 = $d89 * d25;
+
+        d28 = $d91 + $d90;
+
+        $d92 = neg d5;
+
+        d29 = $d92 * d7;
+
+        $d94 = d29 * d27;
+
+        $d93 = d139 * d26;
+
+        $d96 = $d94 + $d93;
+
+        $d95 = d9 * d28;
+
+        d30 = $d96 + $d95;
+
+        d31 = d30 * d6;
+
+        $d97 = d4 * d137;
+
+        d32 = 1.0 / $d97;
+
+        $d98 = d5 * d7;
+
+        $d99 = $d98 * d11;
+
+        d33 = $d99 * d32;
+
+        $d100 = d5 * d7;
+
+        $d101 = $d100 * d11;
+
+        d34 = $d101 * d23;
+
+        $d102 = d5 * d7;
+
+        $d104 = $d102 * d11;
+
+        $d103 = d16 + 1.0;
+
+        $d105 = $d104 * $d103;
+
+        d35 = $d105 * d6;
+
+        $r7 = r4[0];
+
+        $r7[0] = d33;
+
+        $r8 = r4[0];
+
+        $r8[1] = d35;
+
+        $r9 = r4[1];
+
+        $r9[0] = d35;
+
+        $r10 = r4[0];
+
+        $r10[2] = d34;
+
+        $r11 = r4[2];
+
+        $r11[0] = d34;
+
+        $r12 = r4[1];
+
+        $r12[1] = d21;
+
+        $r13 = r4[1];
+
+        $r13[2] = d31;
+
+        $r14 = r4[2];
+
+        $r14[1] = d31;
+
+        $r15 = r4[2];
+
+        $r15[2] = d24;
+
+        return d135;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getVegaFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r1;
+        double d0, d1;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction$2 $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "option");
+
+        d0 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        $r2 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction$2;
+
+        specialinvoke $r2.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction$2: void <init>(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction,double,double)>(r0, d0, d1);
+
+        return $r2;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.math.statistics.distribution.NormalDistribution $r0;
+
+        $r0 = new com.opengamma.analytics.math.statistics.distribution.NormalDistribution;
+
+        specialinvoke $r0.<com.opengamma.analytics.math.statistics.distribution.NormalDistribution: void <init>(double,double)>(0.0, 1.0);
+
+        <com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL> = $r0;
+
+        return;
+    }
+}

@@ -1,0 +1,277 @@
+public class com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionOpenGamma extends com.opengamma.analytics.math.linearalgebra.Decomposition
+{
+    public static final double DEFAULT_SYMMETRY_THRESHOLD;
+    public static final double DEFAULT_POSITIVITY_THRESHOLD;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionOpenGamma r0;
+
+        r0 := @this: com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionOpenGamma;
+
+        specialinvoke r0.<com.opengamma.analytics.math.linearalgebra.Decomposition: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionResult evaluate(com.opengamma.analytics.math.matrix.DoubleMatrix2D)
+    {
+        com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionOpenGamma r0;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D r1;
+        com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionResult $r2;
+
+        r0 := @this: com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionOpenGamma;
+
+        r1 := @parameter0: com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionOpenGamma: com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionResult evaluate(com.opengamma.analytics.math.matrix.DoubleMatrix2D,double,double)>(r1, 1.0E-10, 1.0E-10);
+
+        return $r2;
+    }
+
+    public com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionResult evaluate(com.opengamma.analytics.math.matrix.DoubleMatrix2D, double, double)
+    {
+        com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionOpenGamma r0;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D r1;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, d23, d24;
+        int i0, i1, i4, i5, i6, i7, i8, i9;
+        double[][] r2, r3;
+        com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionOpenGammaResult $r4;
+        double[] $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18;
+        byte $b2, $b3;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionOpenGamma;
+
+        r1 := @parameter0: com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "Matrix null");
+
+        i0 = virtualinvoke r1.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: int getNumberOfRows()>();
+
+        i1 = virtualinvoke r1.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: int getNumberOfColumns()>();
+
+        if i0 != i1 goto label01;
+
+        $z0 = 1;
+
+        goto label02;
+
+     label01:
+        $z0 = 0;
+
+     label02:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "Matrix not square");
+
+        r2 = newmultiarray (double)[i0][i0];
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: double[][] getData()>();
+
+        i4 = 0;
+
+     label03:
+        if i4 >= i0 goto label08;
+
+        i5 = 0;
+
+     label04:
+        if i5 > i4 goto label07;
+
+        $r13 = r3[i4];
+
+        $d14 = $r13[i5];
+
+        $d15 = staticinvoke <java.lang.Math: double abs(double)>($d14);
+
+        $r14 = r3[i5];
+
+        $d16 = $r14[i4];
+
+        $d17 = staticinvoke <java.lang.Math: double abs(double)>($d16);
+
+        d2 = staticinvoke <java.lang.Math: double max(double,double)>($d15, $d17);
+
+        $r15 = r3[i4];
+
+        $d19 = $r15[i5];
+
+        $r16 = r3[i5];
+
+        $d18 = $r16[i4];
+
+        $d20 = $d19 - $d18;
+
+        d23 = staticinvoke <java.lang.Math: double abs(double)>($d20);
+
+        $d21 = d2 * d0;
+
+        $b3 = d23 cmpg $d21;
+
+        if $b3 > 0 goto label05;
+
+        $z1 = 1;
+
+        goto label06;
+
+     label05:
+        $z1 = 0;
+
+     label06:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "Matrix not symmetrical");
+
+        $r18 = r2[i4];
+
+        $r17 = r3[i4];
+
+        $d22 = $r17[i5];
+
+        $r18[i5] = $d22;
+
+        i5 = i5 + 1;
+
+        goto label04;
+
+     label07:
+        i4 = i4 + 1;
+
+        goto label03;
+
+     label08:
+        i6 = 0;
+
+     label09:
+        if i6 >= i1 goto label18;
+
+        $r5 = r2[i6];
+
+        $d3 = $r5[i6];
+
+        $b2 = $d3 cmpl d1;
+
+        if $b2 <= 0 goto label10;
+
+        $z2 = 1;
+
+        goto label11;
+
+     label10:
+        $z2 = 0;
+
+     label11:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z2, "Matrix not positive");
+
+        $r7 = r2[i6];
+
+        $r6 = r2[i6];
+
+        $d4 = $r6[i6];
+
+        $d5 = staticinvoke <java.lang.Math: double sqrt(double)>($d4);
+
+        $r7[i6] = $d5;
+
+        $r8 = r2[i6];
+
+        $d6 = $r8[i6];
+
+        d24 = 1.0 / $d6;
+
+        i7 = i6 + 1;
+
+     label12:
+        if i7 >= i0 goto label13;
+
+        $r12 = r2[i7];
+
+        $d12 = $r12[i6];
+
+        $d13 = $d12 * d24;
+
+        $r12[i6] = $d13;
+
+        i7 = i7 + 1;
+
+        goto label12;
+
+     label13:
+        i8 = i6 + 1;
+
+     label14:
+        if i8 >= i0 goto label17;
+
+        i9 = i8;
+
+     label15:
+        if i9 >= i0 goto label16;
+
+        $r9 = r2[i9];
+
+        $d10 = $r9[i8];
+
+        $r10 = r2[i9];
+
+        $d8 = $r10[i6];
+
+        $r11 = r2[i8];
+
+        $d7 = $r11[i6];
+
+        $d9 = $d8 * $d7;
+
+        $d11 = $d10 - $d9;
+
+        $r9[i8] = $d11;
+
+        i9 = i9 + 1;
+
+        goto label15;
+
+     label16:
+        i8 = i8 + 1;
+
+        goto label14;
+
+     label17:
+        i6 = i6 + 1;
+
+        goto label09;
+
+     label18:
+        $r4 = new com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionOpenGammaResult;
+
+        specialinvoke $r4.<com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionOpenGammaResult: void <init>(double[][])>(r2);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object evaluate(java.lang.Object)
+    {
+        com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionOpenGamma r0;
+        java.lang.Object r1;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D $r2;
+        com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionResult $r3;
+
+        r0 := @this: com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionOpenGamma;
+
+        r1 := @parameter0: java.lang.Object;
+
+        $r2 = (com.opengamma.analytics.math.matrix.DoubleMatrix2D) r1;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionOpenGamma: com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionResult evaluate(com.opengamma.analytics.math.matrix.DoubleMatrix2D)>($r2);
+
+        return $r3;
+    }
+
+    public static void <clinit>()
+    {
+        <com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionOpenGamma: double DEFAULT_POSITIVITY_THRESHOLD> = 1.0E-10;
+
+        <com.opengamma.analytics.math.linearalgebra.CholeskyDecompositionOpenGamma: double DEFAULT_SYMMETRY_THRESHOLD> = 1.0E-10;
+
+        return;
+    }
+}

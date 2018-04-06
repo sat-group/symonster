@@ -1,0 +1,731 @@
+public class com.opengamma.analytics.financial.volatilityswap.CarrLeeNewlyIssuedSyntheticVolatilitySwapCalculator extends java.lang.Object
+{
+    private static final double EPS;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.volatilityswap.CarrLeeNewlyIssuedSyntheticVolatilitySwapCalculator r0;
+
+        r0 := @this: com.opengamma.analytics.financial.volatilityswap.CarrLeeNewlyIssuedSyntheticVolatilitySwapCalculator;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.analytics.financial.volatilityswap.VolatilitySwapCalculatorResult evaluate(double, double[], double[], double, double, double, double[], double, double[])
+    {
+        com.opengamma.analytics.financial.volatilityswap.CarrLeeNewlyIssuedSyntheticVolatilitySwapCalculator r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, d62;
+        double[] r1, r2, r3, r4, r5, r6, r7, r8;
+        int i0, i1, $i2, $i3, $i7, $i8, $i9, $i12, $i13, $i14, $i15, $i19, $i20, $i24, $i25, i27, i28, $i29, i31, i32;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15, $z16, $z17, $z18, $z19, $z20;
+        byte $b4, $b5, $b6, $b10, $b11, $b16, $b17, $b18, $b21, $b22, $b23, $b26, $b30;
+        com.opengamma.analytics.financial.volatilityswap.VolatilitySwapCalculatorResult $r13;
+
+        r0 := @this: com.opengamma.analytics.financial.volatilityswap.CarrLeeNewlyIssuedSyntheticVolatilitySwapCalculator;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        r2 := @parameter2: double[];
+
+        d1 := @parameter3: double;
+
+        d2 := @parameter4: double;
+
+        d3 := @parameter5: double;
+
+        r3 := @parameter6: double[];
+
+        d4 := @parameter7: double;
+
+        r4 := @parameter8: double[];
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "callStrikes");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "putStrikes");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r4, "callVols");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "putVols");
+
+        i0 = lengthof r2;
+
+        i1 = lengthof r1;
+
+        $i2 = lengthof r4;
+
+        if $i2 != i0 goto label01;
+
+        $z9 = 1;
+
+        goto label02;
+
+     label01:
+        $z9 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z9, "callVols.length == callStrikes.length should hold");
+
+        $i3 = lengthof r3;
+
+        if $i3 != i1 goto label03;
+
+        $z10 = 1;
+
+        goto label04;
+
+     label03:
+        $z10 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z10, "putVols.length == putStrikes.length should hold");
+
+        $z0 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d0);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "spot should be finite");
+
+        $b4 = d0 cmpl 0.0;
+
+        if $b4 <= 0 goto label05;
+
+        $z11 = 1;
+
+        goto label06;
+
+     label05:
+        $z11 = 0;
+
+     label06:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z11, "spot should be positive");
+
+        $z1 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d1);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "timeToExpiry should be finite");
+
+        $b5 = d1 cmpl 0.0;
+
+        if $b5 <= 0 goto label07;
+
+        $z12 = 1;
+
+        goto label08;
+
+     label07:
+        $z12 = 0;
+
+     label08:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z12, "timeToExpiry should be positive");
+
+        $z2 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "interestRate should be finite");
+
+        $z3 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d3);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "dividend should be finite");
+
+        $z4 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d4);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z4, "strdVol should be finite");
+
+        $b6 = d4 cmpl 0.0;
+
+        if $b6 <= 0 goto label09;
+
+        $z13 = 1;
+
+        goto label10;
+
+     label09:
+        $z13 = 0;
+
+     label10:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z13, "strdVol should be positive");
+
+        $i7 = i0 - 1;
+
+        $d13 = r2[$i7];
+
+        $d12 = r1[0];
+
+        $d15 = $d13 - $d12;
+
+        $i8 = i0 + i1;
+
+        $i9 = $i8 - 1;
+
+        $d14 = (double) $i9;
+
+        d5 = $d15 / $d14;
+
+        i27 = 0;
+
+     label11:
+        if i27 >= i0 goto label19;
+
+        $d43 = r2[i27];
+
+        $z7 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d43);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z7, "callStrikes should be finite");
+
+        $d44 = r2[i27];
+
+        $b22 = $d44 cmpl 0.0;
+
+        if $b22 <= 0 goto label12;
+
+        $z14 = 1;
+
+        goto label13;
+
+     label12:
+        $z14 = 0;
+
+     label13:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z14, "callStrikes should be positive");
+
+        $d45 = r4[i27];
+
+        $z8 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d45);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z8, "callVols should be finite");
+
+        $d46 = r4[i27];
+
+        $b23 = $d46 cmpl 0.0;
+
+        if $b23 <= 0 goto label14;
+
+        $z15 = 1;
+
+        goto label15;
+
+     label14:
+        $z15 = 0;
+
+     label15:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z15, "callVols should be positive");
+
+        $i24 = i0 - 1;
+
+        if i27 >= $i24 goto label18;
+
+        $i25 = i27 + 1;
+
+        $d48 = r2[$i25];
+
+        $d47 = r2[i27];
+
+        $d49 = $d48 - $d47;
+
+        $d50 = $d49 - d5;
+
+        $d51 = staticinvoke <java.lang.Math: double abs(double)>($d50);
+
+        $b26 = $d51 cmpg 1.0E-12;
+
+        if $b26 >= 0 goto label16;
+
+        $z16 = 1;
+
+        goto label17;
+
+     label16:
+        $z16 = 0;
+
+     label17:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z16, "All of the strikes  should be equally spaced");
+
+     label18:
+        i27 = i27 + 1;
+
+        goto label11;
+
+     label19:
+        i28 = 0;
+
+     label20:
+        if i28 >= i1 goto label28;
+
+        $d34 = r1[i28];
+
+        $z5 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d34);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "putStrikes should be finite");
+
+        $d35 = r1[i28];
+
+        $b17 = $d35 cmpl 0.0;
+
+        if $b17 <= 0 goto label21;
+
+        $z17 = 1;
+
+        goto label22;
+
+     label21:
+        $z17 = 0;
+
+     label22:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z17, "putStrikes should be positive");
+
+        $d36 = r3[i28];
+
+        $z6 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d36);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z6, "putVols should be finite");
+
+        $d37 = r3[i28];
+
+        $b18 = $d37 cmpl 0.0;
+
+        if $b18 <= 0 goto label23;
+
+        $z18 = 1;
+
+        goto label24;
+
+     label23:
+        $z18 = 0;
+
+     label24:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z18, "putVols should be positive");
+
+        $i19 = i1 - 1;
+
+        if i28 >= $i19 goto label27;
+
+        $i20 = i28 + 1;
+
+        $d39 = r1[$i20];
+
+        $d38 = r1[i28];
+
+        $d40 = $d39 - $d38;
+
+        $d41 = $d40 - d5;
+
+        $d42 = staticinvoke <java.lang.Math: double abs(double)>($d41);
+
+        $b21 = $d42 cmpg 1.0E-12;
+
+        if $b21 >= 0 goto label25;
+
+        $z19 = 1;
+
+        goto label26;
+
+     label25:
+        $z19 = 0;
+
+     label26:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z19, "All of the strikes  should be equally spaced");
+
+     label27:
+        i28 = i28 + 1;
+
+        goto label20;
+
+     label28:
+        d52 = d2 - d3;
+
+        $d16 = neg d2;
+
+        $d17 = $d16 * d1;
+
+        d6 = staticinvoke <java.lang.Math: double exp(double)>($d17);
+
+        $d18 = d52 * d1;
+
+        $d19 = staticinvoke <java.lang.Math: double exp(double)>($d18);
+
+        d7 = d0 * $d19;
+
+        $d20 = r2[0];
+
+        $b10 = $d20 cmpl d7;
+
+        if $b10 <= 0 goto label29;
+
+        $i15 = i1 - 1;
+
+        $d33 = r1[$i15];
+
+        $b16 = $d33 cmpg d7;
+
+        if $b16 >= 0 goto label29;
+
+        $z20 = 1;
+
+        goto label30;
+
+     label29:
+        $z20 = 0;
+
+     label30:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z20, "Max(putStrikes) < forward < Min(callStrikes) should hold");
+
+        $d53 = staticinvoke <java.lang.Math: double sqrt(double)>(d1);
+
+        $d54 = 100.0 / $d53;
+
+        $d55 = staticinvoke <java.lang.Math: double sqrt(double)>(1.5707963267948966);
+
+        d8 = $d54 * $d55;
+
+        d9 = d8 / d7;
+
+        r5 = specialinvoke r0.<com.opengamma.analytics.financial.volatilityswap.CarrLeeNewlyIssuedSyntheticVolatilitySwapCalculator: double[] getWeight(double,double[],double,double)>(d7, r2, d5, d9);
+
+        r6 = specialinvoke r0.<com.opengamma.analytics.financial.volatilityswap.CarrLeeNewlyIssuedSyntheticVolatilitySwapCalculator: double[] getWeight(double,double[],double,double)>(d7, r1, d5, d9);
+
+        $d56 = r2[0];
+
+        $i29 = i1 - 1;
+
+        $d57 = r1[$i29];
+
+        $d58 = $d56 + $d57;
+
+        $d59 = 2.0 * d7;
+
+        d10 = $d58 - $d59;
+
+        $b30 = d10 cmpg -1.0E-12;
+
+        if $b30 >= 0 goto label31;
+
+        $d31 = r2[0];
+
+        $d32 = specialinvoke r0.<com.opengamma.analytics.financial.volatilityswap.CarrLeeNewlyIssuedSyntheticVolatilitySwapCalculator: double getNearestWeight(double,double,double,double)>(d7, d5, $d31, d9);
+
+        r5[0] = $d32;
+
+        goto label32;
+
+     label31:
+        $b11 = d10 cmpl 1.0E-12;
+
+        if $b11 <= 0 goto label32;
+
+        $i14 = i1 - 1;
+
+        $i13 = i1 - 1;
+
+        $d29 = r1[$i13];
+
+        $d30 = specialinvoke r0.<com.opengamma.analytics.financial.volatilityswap.CarrLeeNewlyIssuedSyntheticVolatilitySwapCalculator: double getNearestWeight(double,double,double,double)>(d7, d5, $d29, d9);
+
+        r6[$i14] = $d30;
+
+     label32:
+        r7 = newarray (double)[i1];
+
+        r8 = newarray (double)[i0];
+
+        $d60 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double price(double,double,double,double,double,double,boolean)>(d0, d7, d1, d4, d2, d52, 1);
+
+        $d61 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double price(double,double,double,double,double,double,boolean)>(d0, d7, d1, d4, d2, d52, 0);
+
+        d11 = $d60 + $d61;
+
+        i31 = 0;
+
+     label33:
+        if i31 >= i0 goto label34;
+
+        $d27 = r2[i31];
+
+        $d26 = r4[i31];
+
+        $d28 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double price(double,double,double,double,double,double,boolean)>(d0, $d27, d1, $d26, d2, d52, 1);
+
+        r8[i31] = $d28;
+
+        i31 = i31 + 1;
+
+        goto label33;
+
+     label34:
+        i32 = 0;
+
+     label35:
+        if i32 >= i1 goto label36;
+
+        $d24 = r1[i32];
+
+        $d23 = r3[i32];
+
+        $d25 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double price(double,double,double,double,double,double,boolean)>(d0, $d24, d1, $d23, d2, d52, 0);
+
+        r7[i32] = $d25;
+
+        i32 = i32 + 1;
+
+        goto label35;
+
+     label36:
+        $d22 = r2[0];
+
+        $i12 = i1 - 1;
+
+        $d21 = r1[$i12];
+
+        d62 = specialinvoke r0.<com.opengamma.analytics.financial.volatilityswap.CarrLeeNewlyIssuedSyntheticVolatilitySwapCalculator: double getCashAmount(double,double,double,double,double)>($d22, $d21, d7, d6, d8);
+
+        $r13 = new com.opengamma.analytics.financial.volatilityswap.VolatilitySwapCalculatorResult;
+
+        specialinvoke $r13.<com.opengamma.analytics.financial.volatilityswap.VolatilitySwapCalculatorResult: void <init>(double[],double,double[],double[],double,double[],double)>(r6, d9, r5, r7, d11, r8, d62);
+
+        return $r13;
+    }
+
+    private double[] getWeight(double, double[], double, double)
+    {
+        com.opengamma.analytics.financial.volatilityswap.CarrLeeNewlyIssuedSyntheticVolatilitySwapCalculator r0;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18;
+        double[] r1, r2;
+        int i0, i1;
+
+        r0 := @this: com.opengamma.analytics.financial.volatilityswap.CarrLeeNewlyIssuedSyntheticVolatilitySwapCalculator;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        d1 := @parameter2: double;
+
+        d2 := @parameter3: double;
+
+        i0 = lengthof r1;
+
+        r2 = newarray (double)[i0];
+
+        $d5 = 0.5 * d2;
+
+        $d6 = $d5 * d1;
+
+        d3 = $d6 / d0;
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $d7 = r1[i1];
+
+        $d8 = $d7 / d0;
+
+        $d9 = staticinvoke <java.lang.Math: double log(double)>($d8);
+
+        d4 = 0.5 * $d9;
+
+        $d10 = staticinvoke <java.lang.Math: double signum(double)>(d4);
+
+        $d12 = d3 * $d10;
+
+        $d11 = -3.0 * d4;
+
+        $d13 = staticinvoke <java.lang.Math: double exp(double)>($d11);
+
+        $d14 = $d12 * $d13;
+
+        $d15 = staticinvoke <cern.jet.math.Bessel: double i1(double)>(d4);
+
+        $d16 = staticinvoke <cern.jet.math.Bessel: double i0(double)>(d4);
+
+        $d17 = $d15 - $d16;
+
+        $d18 = $d14 * $d17;
+
+        r2[i1] = $d18;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return r2;
+    }
+
+    private double getNearestWeight(double, double, double, double)
+    {
+        com.opengamma.analytics.financial.volatilityswap.CarrLeeNewlyIssuedSyntheticVolatilitySwapCalculator r0;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28;
+
+        r0 := @this: com.opengamma.analytics.financial.volatilityswap.CarrLeeNewlyIssuedSyntheticVolatilitySwapCalculator;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $d6 = 0.5 * d1;
+
+        $d7 = d2 + $d6;
+
+        $d8 = $d7 / d0;
+
+        $d9 = staticinvoke <java.lang.Math: double log(double)>($d8);
+
+        d4 = 0.5 * $d9;
+
+        $d10 = 0.5 * d1;
+
+        $d11 = d2 - $d10;
+
+        $d12 = $d11 / d0;
+
+        $d13 = staticinvoke <java.lang.Math: double log(double)>($d12);
+
+        d5 = 0.5 * $d13;
+
+        $d14 = staticinvoke <java.lang.Math: double signum(double)>(d4);
+
+        $d15 = neg d4;
+
+        $d16 = staticinvoke <java.lang.Math: double exp(double)>($d15);
+
+        $d17 = $d14 * $d16;
+
+        $d18 = staticinvoke <cern.jet.math.Bessel: double i0(double)>(d4);
+
+        $d19 = $d17 * $d18;
+
+        $d20 = staticinvoke <java.lang.Math: double signum(double)>(d5);
+
+        $d21 = neg d5;
+
+        $d22 = staticinvoke <java.lang.Math: double exp(double)>($d21);
+
+        $d23 = $d20 * $d22;
+
+        $d24 = staticinvoke <cern.jet.math.Bessel: double i0(double)>(d5);
+
+        $d25 = $d23 * $d24;
+
+        $d26 = $d19 - $d25;
+
+        $d27 = $d26 - 2.0;
+
+        $d28 = d3 * $d27;
+
+        return $d28;
+    }
+
+    private double getCashAmount(double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.volatilityswap.CarrLeeNewlyIssuedSyntheticVolatilitySwapCalculator r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45;
+
+        r0 := @this: com.opengamma.analytics.financial.volatilityswap.CarrLeeNewlyIssuedSyntheticVolatilitySwapCalculator;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        $d9 = d0 / d2;
+
+        d5 = staticinvoke <java.lang.Math: double log(double)>($d9);
+
+        $d10 = d1 / d2;
+
+        d6 = staticinvoke <java.lang.Math: double log(double)>($d10);
+
+        $d12 = d0 - d2;
+
+        $d11 = 0.5 * d6;
+
+        $d13 = staticinvoke <java.lang.Math: double exp(double)>($d11);
+
+        $d15 = $d13 * d6;
+
+        $d14 = 0.5 * d6;
+
+        $d16 = staticinvoke <cern.jet.math.Bessel: double i0(double)>($d14);
+
+        $d17 = 0.5 * d6;
+
+        $d18 = staticinvoke <cern.jet.math.Bessel: double i1(double)>($d17);
+
+        $d19 = $d16 - $d18;
+
+        $d20 = $d15 * $d19;
+
+        $d21 = staticinvoke <java.lang.Math: double abs(double)>($d20);
+
+        $d22 = d1 / d2;
+
+        $d23 = $d22 - 1.0;
+
+        $d24 = staticinvoke <java.lang.Math: double abs(double)>($d23);
+
+        $d25 = $d21 - $d24;
+
+        d7 = $d12 * $d25;
+
+        $d27 = d2 - d1;
+
+        $d26 = 0.5 * d5;
+
+        $d28 = staticinvoke <java.lang.Math: double exp(double)>($d26);
+
+        $d30 = $d28 * d5;
+
+        $d29 = 0.5 * d5;
+
+        $d31 = staticinvoke <cern.jet.math.Bessel: double i0(double)>($d29);
+
+        $d32 = 0.5 * d5;
+
+        $d33 = staticinvoke <cern.jet.math.Bessel: double i1(double)>($d32);
+
+        $d34 = $d31 - $d33;
+
+        $d35 = $d30 * $d34;
+
+        $d36 = staticinvoke <java.lang.Math: double abs(double)>($d35);
+
+        $d37 = d0 / d2;
+
+        $d38 = $d37 - 1.0;
+
+        $d39 = staticinvoke <java.lang.Math: double abs(double)>($d38);
+
+        $d40 = $d36 - $d39;
+
+        d8 = $d27 * $d40;
+
+        $d42 = d3 * d4;
+
+        $d41 = d7 + d8;
+
+        $d44 = $d42 * $d41;
+
+        $d43 = d0 - d1;
+
+        $d45 = $d44 / $d43;
+
+        return $d45;
+    }
+
+    public static void <clinit>()
+    {
+        <com.opengamma.analytics.financial.volatilityswap.CarrLeeNewlyIssuedSyntheticVolatilitySwapCalculator: double EPS> = 1.0E-12;
+
+        return;
+    }
+}

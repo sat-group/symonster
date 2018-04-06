@@ -1,0 +1,1463 @@
+public class com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle extends java.lang.Object
+{
+    private static final double TOL;
+    private final int _indexSize;
+    private final int _nDefaults;
+    private final double _indexFactor;
+    private final double[] _weights;
+    private final double[] _lgd;
+    private final com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] _creditCurves;
+    private final java.util.BitSet _defaulted;
+
+    public void <init>(com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[], double[])
+    {
+        com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle r0;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] r1;
+        double[] r2, $r8, $r9, $r10, $r19;
+        double d0, $d1, $d2, $d3, $d4;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, i11, $i12;
+        java.lang.Object[] $r5;
+        java.lang.Integer $r6, $r7;
+        java.util.BitSet $r11;
+        byte $b9, $b10;
+        java.lang.IllegalArgumentException $r12;
+        java.lang.StringBuilder $r13, $r14, $r15, $r16, $r17;
+        java.lang.String $r18;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[];
+
+        r2 := @parameter1: double[];
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object[] noNulls(java.lang.Object[],java.lang.String)>(r1, "creditCurves");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: double[] notEmpty(double[],java.lang.String)>(r2, "recoveryRates");
+
+        $i0 = lengthof r1;
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize> = $i0;
+
+        $i2 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $i1 = lengthof r2;
+
+        if $i2 != $i1 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        $r5 = newarray (java.lang.Object)[2];
+
+        $i3 = lengthof r2;
+
+        $r6 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i3);
+
+        $r5[0] = $r6;
+
+        $i4 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i4);
+
+        $r5[1] = $r7;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z0, "Length of recoveryRates ({}) does not match index size ({})", $r5);
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _nDefaults> = 0;
+
+        $i5 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r8 = newarray (double)[$i5];
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _lgd> = $r8;
+
+        i11 = 0;
+
+     label3:
+        $i12 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        if i11 >= $i12 goto label6;
+
+        $d3 = r2[i11];
+
+        d0 = 1.0 - $d3;
+
+        $b9 = d0 cmpg 0.0;
+
+        if $b9 < 0 goto label4;
+
+        $b10 = d0 cmpl 1.0;
+
+        if $b10 <= 0 goto label5;
+
+     label4:
+        $r12 = new java.lang.IllegalArgumentException;
+
+        $r13 = new java.lang.StringBuilder;
+
+        specialinvoke $r13.<java.lang.StringBuilder: void <init>()>();
+
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("recovery rate must be between 0 and 1.Value of ");
+
+        $d4 = r2[i11];
+
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d4);
+
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" given at index ");
+
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i11);
+
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r12.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r18);
+
+        throw $r12;
+
+     label5:
+        $r19 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _lgd>;
+
+        $r19[i11] = d0;
+
+        i11 = i11 + 1;
+
+        goto label3;
+
+     label6:
+        $i6 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r9 = newarray (double)[$i6];
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _weights> = $r9;
+
+        $r10 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _weights>;
+
+        $i7 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $d1 = (double) $i7;
+
+        $d2 = 1.0 / $d1;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>($r10, $d2);
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] _creditCurves> = r1;
+
+        $r11 = new java.util.BitSet;
+
+        $i8 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        specialinvoke $r11.<java.util.BitSet: void <init>(int)>($i8);
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: java.util.BitSet _defaulted> = $r11;
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double _indexFactor> = 1.0;
+
+        return;
+    }
+
+    public void <init>(com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[], double[], double[])
+    {
+        com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle r0;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] r1;
+        double[] r2, r3, $r13, $r14, $r15, $r29;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, d8;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i11, $i12, $i13, i17, $i18;
+        java.lang.Object[] $r7, $r10;
+        java.lang.Integer $r8, $r9, $r11, $r12;
+        byte $b10, $b14, $b15, $b16;
+        java.util.BitSet $r16;
+        java.lang.IllegalArgumentException $r17, $r22, $r30;
+        java.lang.StringBuilder $r18, $r19, $r20, $r23, $r24, $r25, $r26, $r27, $r31, $r32, $r33, $r34, $r35;
+        java.lang.String $r21, $r28, $r36;
+        boolean $z0, $z1;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[];
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object[] noNulls(java.lang.Object[],java.lang.String)>(r1, "creditCurves");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: double[] notEmpty(double[],java.lang.String)>(r2, "recoveryRates");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: double[] notEmpty(double[],java.lang.String)>(r3, "weights");
+
+        $i0 = lengthof r1;
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize> = $i0;
+
+        $i2 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $i1 = lengthof r2;
+
+        if $i2 != $i1 goto label01;
+
+        $z0 = 1;
+
+        goto label02;
+
+     label01:
+        $z0 = 0;
+
+     label02:
+        $r7 = newarray (java.lang.Object)[2];
+
+        $i3 = lengthof r2;
+
+        $r8 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i3);
+
+        $r7[0] = $r8;
+
+        $i4 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r9 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i4);
+
+        $r7[1] = $r9;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z0, "Length of recoveryRates ({}) does not match index size ({})", $r7);
+
+        $i6 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $i5 = lengthof r3;
+
+        if $i6 != $i5 goto label03;
+
+        $z1 = 1;
+
+        goto label04;
+
+     label03:
+        $z1 = 0;
+
+     label04:
+        $r10 = newarray (java.lang.Object)[2];
+
+        $i7 = lengthof r3;
+
+        $r11 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i7);
+
+        $r10[0] = $r11;
+
+        $i8 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r12 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i8);
+
+        $r10[1] = $r12;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z1, "Length of weights ({}) does not match index size ({})", $r10);
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _nDefaults> = 0;
+
+        $i9 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r13 = newarray (double)[$i9];
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _lgd> = $r13;
+
+        d8 = 0.0;
+
+        i17 = 0;
+
+     label05:
+        $i18 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        if i17 >= $i18 goto label09;
+
+        $d3 = r3[i17];
+
+        $b14 = $d3 cmpg 0.0;
+
+        if $b14 > 0 goto label06;
+
+        $r30 = new java.lang.IllegalArgumentException;
+
+        $r31 = new java.lang.StringBuilder;
+
+        specialinvoke $r31.<java.lang.StringBuilder: void <init>()>();
+
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("weights must be positive. Value of ");
+
+        $d7 = r3[i17];
+
+        $r33 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d7);
+
+        $r34 = virtualinvoke $r33.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" given at index ");
+
+        $r35 = virtualinvoke $r34.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i17);
+
+        $r36 = virtualinvoke $r35.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r30.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r36);
+
+        throw $r30;
+
+     label06:
+        $d4 = r3[i17];
+
+        d8 = d8 + $d4;
+
+        $d5 = r2[i17];
+
+        d0 = 1.0 - $d5;
+
+        $b15 = d0 cmpg 0.0;
+
+        if $b15 < 0 goto label07;
+
+        $b16 = d0 cmpl 1.0;
+
+        if $b16 <= 0 goto label08;
+
+     label07:
+        $r22 = new java.lang.IllegalArgumentException;
+
+        $r23 = new java.lang.StringBuilder;
+
+        specialinvoke $r23.<java.lang.StringBuilder: void <init>()>();
+
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("recovery rate must be between 0 and 1.Value of ");
+
+        $d6 = r2[i17];
+
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d6);
+
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" given at index ");
+
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i17);
+
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r22.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r28);
+
+        throw $r22;
+
+     label08:
+        $r29 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _lgd>;
+
+        $r29[i17] = d0;
+
+        i17 = i17 + 1;
+
+        goto label05;
+
+     label09:
+        $d1 = d8 - 1.0;
+
+        $d2 = staticinvoke <java.lang.Math: double abs(double)>($d1);
+
+        $b10 = $d2 cmpl 1.0E-12;
+
+        if $b10 <= 0 goto label10;
+
+        $r17 = new java.lang.IllegalArgumentException;
+
+        $r18 = new java.lang.StringBuilder;
+
+        specialinvoke $r18.<java.lang.StringBuilder: void <init>()>();
+
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("weights do not sum to 1.0, but ");
+
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d8);
+
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r17.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r21);
+
+        throw $r17;
+
+     label10:
+        $i11 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r14 = newarray (double)[$i11];
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _weights> = $r14;
+
+        $r15 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _weights>;
+
+        $i12 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r3, 0, $r15, 0, $i12);
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] _creditCurves> = r1;
+
+        $r16 = new java.util.BitSet;
+
+        $i13 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        specialinvoke $r16.<java.util.BitSet: void <init>(int)>($i13);
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: java.util.BitSet _defaulted> = $r16;
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double _indexFactor> = 1.0;
+
+        return;
+    }
+
+    public void <init>(com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[], double[], java.util.BitSet)
+    {
+        com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle r0;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] r1;
+        double[] r2, $r13, $r14, $r15, $r16, $r25;
+        java.util.BitSet r3;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, i17, $i18;
+        java.lang.Object[] $r7, $r10;
+        java.lang.Integer $r8, $r9, $r11, $r12;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve $r17;
+        byte $b15, $b16;
+        java.lang.IllegalArgumentException $r18, $r26;
+        java.lang.StringBuilder $r19, $r20, $r21, $r22, $r23, $r27, $r28, $r29;
+        java.lang.String $r24, $r30;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: java.util.BitSet;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "creditCurves");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: double[] notEmpty(double[],java.lang.String)>(r2, "recoveryRates");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "defaulted");
+
+        $i0 = lengthof r1;
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize> = $i0;
+
+        $i2 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $i1 = lengthof r2;
+
+        if $i2 != $i1 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        $r7 = newarray (java.lang.Object)[2];
+
+        $i3 = lengthof r2;
+
+        $r8 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i3);
+
+        $r7[0] = $r8;
+
+        $i4 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r9 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i4);
+
+        $r7[1] = $r9;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z1, "Length of recoveryRates ({}) does not match index size ({})", $r7);
+
+        $i5 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $i6 = virtualinvoke r3.<java.util.BitSet: int length()>();
+
+        if $i5 < $i6 goto label3;
+
+        $z2 = 1;
+
+        goto label4;
+
+     label3:
+        $z2 = 0;
+
+     label4:
+        $r10 = newarray (java.lang.Object)[2];
+
+        $i7 = virtualinvoke r3.<java.util.BitSet: int length()>();
+
+        $r11 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i7);
+
+        $r10[0] = $r11;
+
+        $i8 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r12 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i8);
+
+        $r10[1] = $r12;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z2, "Length of defaulted ({}) is greater than index size ({})", $r10);
+
+        $i9 = virtualinvoke r3.<java.util.BitSet: int cardinality()>();
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _nDefaults> = $i9;
+
+        $i10 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r13 = newarray (double)[$i10];
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _lgd> = $r13;
+
+        i17 = 0;
+
+     label5:
+        $i18 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        if i17 >= $i18 goto label9;
+
+        $r17 = r1[i17];
+
+        if $r17 != null goto label6;
+
+        $z0 = virtualinvoke r3.<java.util.BitSet: boolean get(int)>(i17);
+
+        if $z0 != 0 goto label6;
+
+        $r26 = new java.lang.IllegalArgumentException;
+
+        $r27 = new java.lang.StringBuilder;
+
+        specialinvoke $r27.<java.lang.StringBuilder: void <init>()>();
+
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Null credit curve, but not set as defaulted in alive list. Index is ");
+
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i17);
+
+        $r30 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r26.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r30);
+
+        throw $r26;
+
+     label6:
+        $d8 = r2[i17];
+
+        d0 = 1.0 - $d8;
+
+        $b15 = d0 cmpg 0.0;
+
+        if $b15 < 0 goto label7;
+
+        $b16 = d0 cmpl 1.0;
+
+        if $b16 <= 0 goto label8;
+
+     label7:
+        $r18 = new java.lang.IllegalArgumentException;
+
+        $r19 = new java.lang.StringBuilder;
+
+        specialinvoke $r19.<java.lang.StringBuilder: void <init>()>();
+
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("recovery rate must be between 0 and 1.Value of ");
+
+        $d9 = r2[i17];
+
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d9);
+
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" given at index ");
+
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i17);
+
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r18.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r24);
+
+        throw $r18;
+
+     label8:
+        $r25 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _lgd>;
+
+        $r25[i17] = d0;
+
+        i17 = i17 + 1;
+
+        goto label5;
+
+     label9:
+        $i11 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r14 = newarray (double)[$i11];
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _weights> = $r14;
+
+        $r15 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _weights>;
+
+        $i12 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $d1 = (double) $i12;
+
+        $d2 = 1.0 / $d1;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>($r15, $d2);
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] _creditCurves> = r1;
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: java.util.BitSet _defaulted> = r3;
+
+        $i13 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $d4 = (double) $i13;
+
+        $i14 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _nDefaults>;
+
+        $d3 = (double) $i14;
+
+        $d6 = $d4 - $d3;
+
+        $r16 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _weights>;
+
+        $d5 = $r16[0];
+
+        $d7 = $d6 * $d5;
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double _indexFactor> = $d7;
+
+        return;
+    }
+
+    public void <init>(com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[], double[], double[], java.util.BitSet)
+    {
+        com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle r0;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] r1;
+        double[] r2, r3, $r18, $r19, $r20, $r34;
+        java.util.BitSet r4;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, d9, d10;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i17, $i18, $i19, i23, $i24, i25;
+        java.lang.Object[] $r9, $r12, $r15;
+        java.lang.Integer $r10, $r11, $r13, $r14, $r16, $r17;
+        byte $b16, $b20, $b21, $b22;
+        java.lang.IllegalArgumentException $r21, $r27, $r35, $r42;
+        java.lang.StringBuilder $r22, $r23, $r24, $r28, $r29, $r30, $r31, $r32, $r36, $r37, $r38, $r39, $r40, $r43, $r44, $r45;
+        java.lang.String $r25, $r33, $r41, $r46;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve $r26;
+        boolean $z0, $z1, $z2, $z3;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[];
+
+        r4 := @parameter3: java.util.BitSet;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "creditCurves");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: double[] notEmpty(double[],java.lang.String)>(r2, "recoveryRates");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: double[] notEmpty(double[],java.lang.String)>(r3, "weights");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r4, "defaulted");
+
+        $i0 = lengthof r1;
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize> = $i0;
+
+        $i2 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $i1 = lengthof r2;
+
+        if $i2 != $i1 goto label01;
+
+        $z1 = 1;
+
+        goto label02;
+
+     label01:
+        $z1 = 0;
+
+     label02:
+        $r9 = newarray (java.lang.Object)[2];
+
+        $i3 = lengthof r2;
+
+        $r10 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i3);
+
+        $r9[0] = $r10;
+
+        $i4 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r11 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i4);
+
+        $r9[1] = $r11;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z1, "Length of recoveryRates ({}) does not match index size ({})", $r9);
+
+        $i6 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $i5 = lengthof r3;
+
+        if $i6 != $i5 goto label03;
+
+        $z2 = 1;
+
+        goto label04;
+
+     label03:
+        $z2 = 0;
+
+     label04:
+        $r12 = newarray (java.lang.Object)[2];
+
+        $i7 = lengthof r3;
+
+        $r13 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i7);
+
+        $r12[0] = $r13;
+
+        $i8 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r14 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i8);
+
+        $r12[1] = $r14;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z2, "Length of weights ({}) does not match index size ({})", $r12);
+
+        $i9 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $i10 = virtualinvoke r4.<java.util.BitSet: int length()>();
+
+        if $i9 < $i10 goto label05;
+
+        $z3 = 1;
+
+        goto label06;
+
+     label05:
+        $z3 = 0;
+
+     label06:
+        $r15 = newarray (java.lang.Object)[2];
+
+        $i11 = virtualinvoke r4.<java.util.BitSet: int length()>();
+
+        $r16 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i11);
+
+        $r15[0] = $r16;
+
+        $i12 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r17 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i12);
+
+        $r15[1] = $r17;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z3, "Length of defaulted ({}) is greater than index size ({})", $r15);
+
+        $i13 = virtualinvoke r4.<java.util.BitSet: int cardinality()>();
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _nDefaults> = $i13;
+
+        $i14 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r18 = newarray (double)[$i14];
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _lgd> = $r18;
+
+        d9 = 0.0;
+
+        i23 = 0;
+
+     label07:
+        $i24 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        if i23 >= $i24 goto label12;
+
+        $r26 = r1[i23];
+
+        if $r26 != null goto label08;
+
+        $z0 = virtualinvoke r4.<java.util.BitSet: boolean get(int)>(i23);
+
+        if $z0 != 0 goto label08;
+
+        $r42 = new java.lang.IllegalArgumentException;
+
+        $r43 = new java.lang.StringBuilder;
+
+        specialinvoke $r43.<java.lang.StringBuilder: void <init>()>();
+
+        $r44 = virtualinvoke $r43.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Null credit curve, but not set as defaulted in alive list. Index is ");
+
+        $r45 = virtualinvoke $r44.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i23);
+
+        $r46 = virtualinvoke $r45.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r42.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r46);
+
+        throw $r42;
+
+     label08:
+        $d4 = r3[i23];
+
+        $b20 = $d4 cmpg 0.0;
+
+        if $b20 > 0 goto label09;
+
+        $r35 = new java.lang.IllegalArgumentException;
+
+        $r36 = new java.lang.StringBuilder;
+
+        specialinvoke $r36.<java.lang.StringBuilder: void <init>()>();
+
+        $r37 = virtualinvoke $r36.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("weights must be positive. Value of ");
+
+        $d8 = r3[i23];
+
+        $r38 = virtualinvoke $r37.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d8);
+
+        $r39 = virtualinvoke $r38.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" given at index ");
+
+        $r40 = virtualinvoke $r39.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i23);
+
+        $r41 = virtualinvoke $r40.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r35.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r41);
+
+        throw $r35;
+
+     label09:
+        $d5 = r3[i23];
+
+        d9 = d9 + $d5;
+
+        $d6 = r2[i23];
+
+        d0 = 1.0 - $d6;
+
+        $b21 = d0 cmpg 0.0;
+
+        if $b21 < 0 goto label10;
+
+        $b22 = d0 cmpl 1.0;
+
+        if $b22 <= 0 goto label11;
+
+     label10:
+        $r27 = new java.lang.IllegalArgumentException;
+
+        $r28 = new java.lang.StringBuilder;
+
+        specialinvoke $r28.<java.lang.StringBuilder: void <init>()>();
+
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("recovery rate must be between 0 and 1.Value of ");
+
+        $d7 = r2[i23];
+
+        $r30 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d7);
+
+        $r31 = virtualinvoke $r30.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" given at index ");
+
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i23);
+
+        $r33 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r27.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r33);
+
+        throw $r27;
+
+     label11:
+        $r34 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _lgd>;
+
+        $r34[i23] = d0;
+
+        i23 = i23 + 1;
+
+        goto label07;
+
+     label12:
+        d10 = 1.0;
+
+        $i15 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _nDefaults>;
+
+        if $i15 <= 0 goto label14;
+
+        i25 = virtualinvoke r4.<java.util.BitSet: int nextSetBit(int)>(0);
+
+     label13:
+        if i25 < 0 goto label14;
+
+        $d3 = r3[i25];
+
+        d10 = d10 - $d3;
+
+        $i19 = i25 + 1;
+
+        i25 = virtualinvoke r4.<java.util.BitSet: int nextSetBit(int)>($i19);
+
+        goto label13;
+
+     label14:
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double _indexFactor> = d10;
+
+        $d1 = d9 - 1.0;
+
+        $d2 = staticinvoke <java.lang.Math: double abs(double)>($d1);
+
+        $b16 = $d2 cmpl 1.0E-12;
+
+        if $b16 <= 0 goto label15;
+
+        $r21 = new java.lang.IllegalArgumentException;
+
+        $r22 = new java.lang.StringBuilder;
+
+        specialinvoke $r22.<java.lang.StringBuilder: void <init>()>();
+
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("weights do not sum to 1.0, but ");
+
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d9);
+
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r21.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r25);
+
+        throw $r21;
+
+     label15:
+        $i17 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r19 = newarray (double)[$i17];
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _weights> = $r19;
+
+        $r20 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _weights>;
+
+        $i18 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r3, 0, $r20, 0, $i18);
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] _creditCurves> = r1;
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: java.util.BitSet _defaulted> = r4;
+
+        return;
+    }
+
+    private void <init>(int, int, double, double[], double[], com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[], java.util.BitSet)
+    {
+        com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle r0;
+        int i0, i1;
+        double d0;
+        double[] r1, r2;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] r3;
+        java.util.BitSet r4;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        d0 := @parameter2: double;
+
+        r1 := @parameter3: double[];
+
+        r2 := @parameter4: double[];
+
+        r3 := @parameter5: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[];
+
+        r4 := @parameter6: java.util.BitSet;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize> = i0;
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _nDefaults> = i1;
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double _indexFactor> = d0;
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _weights> = r1;
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _lgd> = r2;
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] _creditCurves> = r3;
+
+        r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: java.util.BitSet _defaulted> = r4;
+
+        return;
+    }
+
+    public int getIndexSize()
+    {
+        com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle r0;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        $i0 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        return $i0;
+    }
+
+    public int getNumOfDefaults()
+    {
+        com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle r0;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        $i0 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _nDefaults>;
+
+        return $i0;
+    }
+
+    public double getWeight(int)
+    {
+        com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle r0;
+        int i0;
+        double[] $r1;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _weights>;
+
+        $d0 = $r1[i0];
+
+        return $d0;
+    }
+
+    public double getLGD(int)
+    {
+        com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle r0;
+        int i0;
+        double[] $r1;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _lgd>;
+
+        $d0 = $r1[i0];
+
+        return $d0;
+    }
+
+    public com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve getCreditCurve(int)
+    {
+        com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle r0;
+        int i0;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] $r1;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] _creditCurves>;
+
+        $r2 = $r1[i0];
+
+        return $r2;
+    }
+
+    public com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] getCreditCurves()
+    {
+        com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle r0;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        $r1 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] _creditCurves>;
+
+        return $r1;
+    }
+
+    public boolean isDefaulted(int)
+    {
+        com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle r0;
+        int i0;
+        java.util.BitSet $r1;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: java.util.BitSet _defaulted>;
+
+        $z0 = virtualinvoke $r1.<java.util.BitSet: boolean get(int)>(i0);
+
+        return $z0;
+    }
+
+    public double getIndexFactor()
+    {
+        com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        $d0 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double _indexFactor>;
+
+        return $d0;
+    }
+
+    public com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle withCreditCurves(com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[])
+    {
+        com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle r0, $r6;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] r1;
+        int i0, $i1, $i2, $i3, $i4, i5;
+        java.lang.Object[] $r3;
+        java.lang.Integer $r4, $r5;
+        java.util.BitSet $r7, $r11;
+        double[] $r8, $r9;
+        double $d0;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve $r10;
+        boolean $z0, $z1;
+        java.lang.IllegalArgumentException $r12;
+        java.lang.StringBuilder $r13, $r14, $r15, $r16;
+        java.lang.String $r17;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[];
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "curves");
+
+        i0 = lengthof r1;
+
+        $i1 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        if i0 != $i1 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        $r3 = newarray (java.lang.Object)[2];
+
+        $i2 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r4 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i2);
+
+        $r3[0] = $r4;
+
+        $r5 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        $r3[1] = $r5;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z1, "wrong number of curves. Require {}, but {} given", $r3);
+
+        i5 = 0;
+
+     label3:
+        if i5 >= i0 goto label5;
+
+        $r10 = r1[i5];
+
+        if $r10 != null goto label4;
+
+        $r11 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: java.util.BitSet _defaulted>;
+
+        $z0 = virtualinvoke $r11.<java.util.BitSet: boolean get(int)>(i5);
+
+        if $z0 != 0 goto label4;
+
+        $r12 = new java.lang.IllegalArgumentException;
+
+        $r13 = new java.lang.StringBuilder;
+
+        specialinvoke $r13.<java.lang.StringBuilder: void <init>()>();
+
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("null curve at index ");
+
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i5);
+
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", but this is not listed as defaulted");
+
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r12.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r17);
+
+        throw $r12;
+
+     label4:
+        i5 = i5 + 1;
+
+        goto label3;
+
+     label5:
+        $r6 = new com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        $i4 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $i3 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _nDefaults>;
+
+        $d0 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double _indexFactor>;
+
+        $r9 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _weights>;
+
+        $r8 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _lgd>;
+
+        $r7 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: java.util.BitSet _defaulted>;
+
+        specialinvoke $r6.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: void <init>(int,int,double,double[],double[],com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[],java.util.BitSet)>($i4, $i3, $d0, $r9, $r8, r1, $r7);
+
+        return $r6;
+    }
+
+    public com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle withDefault(int)
+    {
+        com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle r0, $r8;
+        int i0, $i1, $i2, $i3, $i4, $i5;
+        java.util.BitSet r1, $r5, $r6;
+        java.lang.Object[] $r2;
+        java.lang.Integer $r3, $r4;
+        boolean $z0, $z1;
+        java.lang.Object $r7;
+        double[] $r9, $r11, $r12;
+        double $d0, $d1, $d2;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] $r10;
+        java.lang.IllegalArgumentException $r13;
+        java.lang.StringBuilder $r14, $r15, $r16, $r17;
+        java.lang.String $r18;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        i0 := @parameter0: int;
+
+        $i1 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        if i0 >= $i1 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        $r2 = newarray (java.lang.Object)[2];
+
+        $r3 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        $r2[0] = $r3;
+
+        $i2 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r4 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i2);
+
+        $r2[1] = $r4;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z1, "index ({}) should be smaller than index size ({})", $r2);
+
+        $r5 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: java.util.BitSet _defaulted>;
+
+        $z0 = virtualinvoke $r5.<java.util.BitSet: boolean get(int)>(i0);
+
+        if $z0 == 0 goto label3;
+
+        $r13 = new java.lang.IllegalArgumentException;
+
+        $r14 = new java.lang.StringBuilder;
+
+        specialinvoke $r14.<java.lang.StringBuilder: void <init>()>();
+
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Index ");
+
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" is already defaulted");
+
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r13.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r18);
+
+        throw $r13;
+
+     label3:
+        $r6 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: java.util.BitSet _defaulted>;
+
+        $r7 = virtualinvoke $r6.<java.util.BitSet: java.lang.Object clone()>();
+
+        r1 = (java.util.BitSet) $r7;
+
+        virtualinvoke r1.<java.util.BitSet: void set(int)>(i0);
+
+        $r8 = new com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        $i5 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $i3 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _nDefaults>;
+
+        $i4 = $i3 + 1;
+
+        $d1 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double _indexFactor>;
+
+        $r9 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _weights>;
+
+        $d0 = $r9[i0];
+
+        $d2 = $d1 - $d0;
+
+        $r12 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _weights>;
+
+        $r11 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _lgd>;
+
+        $r10 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] _creditCurves>;
+
+        specialinvoke $r8.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: void <init>(int,int,double,double[],double[],com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[],java.util.BitSet)>($i5, $i4, $d2, $r12, $r11, $r10, r1);
+
+        return $r8;
+    }
+
+    public transient com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle withDefault(int[])
+    {
+        com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle r0, $r6;
+        int[] r1;
+        java.util.BitSet r2, $r4;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, i7;
+        java.lang.Object $r5;
+        double $d0, $d1, $d2, d3;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] $r7;
+        double[] $r8, $r9, $r13;
+        java.lang.Object[] $r10;
+        java.lang.Integer $r11, $r12;
+        boolean $z0, $z1;
+        java.lang.IllegalArgumentException $r14;
+        java.lang.StringBuilder $r15, $r16, $r17, $r18;
+        java.lang.String $r19;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        r1 := @parameter0: int[];
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: int[] notEmpty(int[],java.lang.String)>(r1, "index");
+
+        $r4 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: java.util.BitSet _defaulted>;
+
+        $r5 = virtualinvoke $r4.<java.util.BitSet: java.lang.Object clone()>();
+
+        r2 = (java.util.BitSet) $r5;
+
+        i0 = lengthof r1;
+
+        d3 = 0.0;
+
+        i7 = 0;
+
+     label1:
+        if i7 >= i0 goto label5;
+
+        i1 = r1[i7];
+
+        $i5 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        if i1 >= $i5 goto label2;
+
+        $z1 = 1;
+
+        goto label3;
+
+     label2:
+        $z1 = 0;
+
+     label3:
+        $r10 = newarray (java.lang.Object)[2];
+
+        $r11 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i1);
+
+        $r10[0] = $r11;
+
+        $i6 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $r12 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i6);
+
+        $r10[1] = $r12;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z1, "index ({}) should be smaller than index size ({})", $r10);
+
+        $z0 = virtualinvoke r2.<java.util.BitSet: boolean get(int)>(i1);
+
+        if $z0 == 0 goto label4;
+
+        $r14 = new java.lang.IllegalArgumentException;
+
+        $r15 = new java.lang.StringBuilder;
+
+        specialinvoke $r15.<java.lang.StringBuilder: void <init>()>();
+
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Index ");
+
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i1);
+
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" is already defaulted");
+
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r14.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r19);
+
+        throw $r14;
+
+     label4:
+        virtualinvoke r2.<java.util.BitSet: void set(int)>(i1);
+
+        $r13 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _weights>;
+
+        $d2 = $r13[i1];
+
+        d3 = d3 + $d2;
+
+        i7 = i7 + 1;
+
+        goto label1;
+
+     label5:
+        $r6 = new com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle;
+
+        $i4 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _indexSize>;
+
+        $i2 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: int _nDefaults>;
+
+        $i3 = $i2 + i0;
+
+        $d0 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double _indexFactor>;
+
+        $d1 = $d0 - d3;
+
+        $r9 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _weights>;
+
+        $r8 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double[] _lgd>;
+
+        $r7 = r0.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[] _creditCurves>;
+
+        specialinvoke $r6.<com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: void <init>(int,int,double,double[],double[],com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve[],java.util.BitSet)>($i4, $i3, $d1, $r9, $r8, $r7, r2);
+
+        return $r6;
+    }
+
+    public static void <clinit>()
+    {
+        <com.opengamma.analytics.financial.credit.index.IntrinsicIndexDataBundle: double TOL> = 1.0E-12;
+
+        return;
+    }
+}

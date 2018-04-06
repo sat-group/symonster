@@ -1,0 +1,246 @@
+public final class com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor extends com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter
+{
+    private static final com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor COUPON_VISITOR;
+    private static final com.opengamma.analytics.financial.interestrate.swap.provider.CouponPaymentDiscountFactorVisitor DISCOUNT_FACTOR_VISITOR;
+    private static final com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor INSTANCE;
+
+    public static com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor getInstance()
+    {
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor $r0;
+
+        $r0 = <com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor INSTANCE>;
+
+        return $r0;
+    }
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor r0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.util.money.CurrencyAmount[] visitGenericAnnuity(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity, com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r2;
+        int i0, i1, i2;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment r4;
+        java.util.ArrayList $r5;
+        com.opengamma.util.money.CurrencyAmount[] $r6, $r8;
+        java.lang.Object[] $r7;
+        com.opengamma.analytics.financial.interestrate.swap.provider.CouponPaymentDiscountFactorVisitor $r9;
+        java.lang.Object $r10, $r13;
+        java.lang.Double $r11;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor $r12;
+        com.opengamma.util.money.MultipleCurrencyAmount $r14;
+        com.opengamma.util.money.Currency $r15;
+        com.opengamma.util.money.CurrencyAmount $r16, $r17;
+        double $d0, d1;
+        java.lang.UnsupportedOperationException $r18;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface;
+
+        i0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: int getNumberOfPayments()>();
+
+        $r5 = new java.util.ArrayList;
+
+        specialinvoke $r5.<java.util.ArrayList: void <init>()>();
+
+        i1 = 0;
+
+        i2 = 0;
+
+     label1:
+        if i2 >= i0 goto label6;
+
+        r4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i2);
+
+     label2:
+        $r9 = <com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor: com.opengamma.analytics.financial.interestrate.swap.provider.CouponPaymentDiscountFactorVisitor DISCOUNT_FACTOR_VISITOR>;
+
+        $r10 = virtualinvoke r4.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r9, r2);
+
+        $r11 = (java.lang.Double) $r10;
+
+        d1 = virtualinvoke $r11.<java.lang.Double: double doubleValue()>();
+
+        $r12 = <com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor COUPON_VISITOR>;
+
+        $r13 = virtualinvoke r4.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r12, r2);
+
+        $r14 = (com.opengamma.util.money.MultipleCurrencyAmount) $r13;
+
+        $r15 = virtualinvoke r4.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r16 = virtualinvoke $r14.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.CurrencyAmount getCurrencyAmount(com.opengamma.util.money.Currency)>($r15);
+
+        $d0 = 1.0 / d1;
+
+        $r17 = virtualinvoke $r16.<com.opengamma.util.money.CurrencyAmount: com.opengamma.util.money.CurrencyAmount multipliedBy(double)>($d0);
+
+        interfaceinvoke $r5.<java.util.List: boolean add(java.lang.Object)>($r17);
+
+     label3:
+        goto label5;
+
+     label4:
+        $r18 := @caughtexception;
+
+        interfaceinvoke $r5.<java.util.List: boolean add(java.lang.Object)>(null);
+
+     label5:
+        i1 = i1 + 1;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label6:
+        $r6 = newarray (com.opengamma.util.money.CurrencyAmount)[i1];
+
+        $r7 = interfaceinvoke $r5.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r6);
+
+        $r8 = (com.opengamma.util.money.CurrencyAmount[]) $r7;
+
+        return $r8;
+
+        catch java.lang.UnsupportedOperationException from label2 to label3 with label4;
+    }
+
+    public com.opengamma.util.money.CurrencyAmount[] visitFixedCouponAnnuity(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed, com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r2;
+        com.opengamma.util.money.CurrencyAmount[] $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor: com.opengamma.util.money.CurrencyAmount[] visitGenericAnnuity(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>(r1, r2);
+
+        return $r3;
+    }
+
+    public com.opengamma.util.money.CurrencyAmount[] visitAnnuityCouponIborRatchet(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet, com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r2;
+        java.lang.Object $r3;
+        com.opengamma.util.money.CurrencyAmount[] $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor: java.lang.Object visitGenericAnnuity(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity)>(r1);
+
+        $r4 = (com.opengamma.util.money.CurrencyAmount[]) $r3;
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitAnnuityCouponIborRatchet(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r3;
+        com.opengamma.util.money.CurrencyAmount[] $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor: com.opengamma.util.money.CurrencyAmount[] visitAnnuityCouponIborRatchet(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitGenericAnnuity(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r3;
+        com.opengamma.util.money.CurrencyAmount[] $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor: com.opengamma.util.money.CurrencyAmount[] visitGenericAnnuity(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitFixedCouponAnnuity(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r3;
+        com.opengamma.util.money.CurrencyAmount[] $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor: com.opengamma.util.money.CurrencyAmount[] visitFixedCouponAnnuity(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator $r0;
+        com.opengamma.analytics.financial.interestrate.swap.provider.CouponPaymentDiscountFactorVisitor $r1;
+        com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor $r2;
+
+        $r0 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor COUPON_VISITOR> = $r0;
+
+        $r1 = new com.opengamma.analytics.financial.interestrate.swap.provider.CouponPaymentDiscountFactorVisitor;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.interestrate.swap.provider.CouponPaymentDiscountFactorVisitor: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor: com.opengamma.analytics.financial.interestrate.swap.provider.CouponPaymentDiscountFactorVisitor DISCOUNT_FACTOR_VISITOR> = $r1;
+
+        $r2 = new com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor;
+
+        specialinvoke $r2.<com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.swap.provider.AnnuityProjectedPaymentsVisitor: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor INSTANCE> = $r2;
+
+        return;
+    }
+}

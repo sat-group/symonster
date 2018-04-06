@@ -1,0 +1,293 @@
+public class com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator extends com.opengamma.analytics.math.function.Function1D
+{
+    private final com.opengamma.analytics.math.matrix.MatrixAlgebra _algebra;
+    private final com.opengamma.analytics.math.function.Function1D _std;
+
+    public void <init>(com.opengamma.analytics.math.matrix.MatrixAlgebra)
+    {
+        com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator r0;
+        com.opengamma.analytics.math.matrix.MatrixAlgebra r1;
+        com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixStandardDeviationCalculator $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.math.matrix.MatrixAlgebra;
+
+        specialinvoke r0.<com.opengamma.analytics.math.function.Function1D: void <init>()>();
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "algebra");
+
+        r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.matrix.MatrixAlgebra _algebra> = r1;
+
+        $r2 = new com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixStandardDeviationCalculator;
+
+        specialinvoke $r2.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixStandardDeviationCalculator: void <init>(com.opengamma.analytics.math.matrix.MatrixAlgebra)>(r1);
+
+        r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.function.Function1D _std> = $r2;
+
+        return;
+    }
+
+    public java.lang.Double evaluate(java.util.Map)
+    {
+        com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator r0;
+        java.util.Map r1;
+        com.opengamma.analytics.financial.var.parametric.ParametricVaRDataBundle r2, r3;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r4;
+        com.opengamma.analytics.math.matrix.Matrix r5, r8, $r13, $r27, $r28, $r34;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D r6, r7, $r21, $r26, $r31;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14;
+        java.lang.Integer $r9, $r11;
+        java.lang.Object $r10, $r12, $r17;
+        java.lang.Double $r14, $r18, $r35, $r37;
+        int $i0, $i1, $i2;
+        com.opengamma.analytics.math.matrix.MatrixAlgebra $r15, $r19, $r20, $r22, $r23, $r24, $r25, $r29, $r30, $r32, $r33;
+        com.opengamma.analytics.math.function.Function1D $r16;
+        java.lang.IllegalArgumentException $r36;
+
+        r0 := @this: com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator;
+
+        r1 := @parameter0: java.util.Map;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "data");
+
+        $r9 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(1);
+
+        $r10 = interfaceinvoke r1.<java.util.Map: java.lang.Object get(java.lang.Object)>($r9);
+
+        r2 = (com.opengamma.analytics.financial.var.parametric.ParametricVaRDataBundle) $r10;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "first order data");
+
+        $r11 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(2);
+
+        $r12 = interfaceinvoke r1.<java.util.Map: java.lang.Object get(java.lang.Object)>($r11);
+
+        r3 = (com.opengamma.analytics.financial.var.parametric.ParametricVaRDataBundle) $r12;
+
+        if r3 != null goto label1;
+
+        $r37 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        return $r37;
+
+     label1:
+        $r13 = virtualinvoke r2.<com.opengamma.analytics.financial.var.parametric.ParametricVaRDataBundle: com.opengamma.analytics.math.matrix.Matrix getSensitivities()>();
+
+        r4 = (com.opengamma.analytics.math.matrix.DoubleMatrix1D) $r13;
+
+        r5 = virtualinvoke r3.<com.opengamma.analytics.financial.var.parametric.ParametricVaRDataBundle: com.opengamma.analytics.math.matrix.Matrix getSensitivities()>();
+
+        if r5 == null goto label2;
+
+        $i0 = interfaceinvoke r5.<com.opengamma.analytics.math.matrix.Matrix: int getNumberOfElements()>();
+
+        if $i0 != 0 goto label3;
+
+     label2:
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        return $r14;
+
+     label3:
+        r6 = (com.opengamma.analytics.math.matrix.DoubleMatrix2D) r5;
+
+        r7 = virtualinvoke r2.<com.opengamma.analytics.financial.var.parametric.ParametricVaRDataBundle: com.opengamma.analytics.math.matrix.DoubleMatrix2D getCovarianceMatrix()>();
+
+        $i1 = virtualinvoke r6.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: int getNumberOfColumns()>();
+
+        $i2 = virtualinvoke r7.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: int getNumberOfColumns()>();
+
+        if $i1 == $i2 goto label4;
+
+        $r36 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r36.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Gamma matrix and covariance matrix were incompatible sizes");
+
+        throw $r36;
+
+     label4:
+        $r15 = r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.matrix.MatrixAlgebra _algebra>;
+
+        r8 = virtualinvoke $r15.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r6, r7);
+
+        $r16 = r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.function.Function1D _std>;
+
+        $r17 = virtualinvoke $r16.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r1);
+
+        $r18 = (java.lang.Double) $r17;
+
+        d0 = virtualinvoke $r18.<java.lang.Double: double doubleValue()>();
+
+        $r20 = r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.matrix.MatrixAlgebra _algebra>;
+
+        $r19 = r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.matrix.MatrixAlgebra _algebra>;
+
+        $r21 = virtualinvoke $r19.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.DoubleMatrix2D getPower(com.opengamma.analytics.math.matrix.Matrix,int)>(r8, 4);
+
+        $d3 = virtualinvoke $r20.<com.opengamma.analytics.math.matrix.MatrixAlgebra: double getTrace(com.opengamma.analytics.math.matrix.Matrix)>($r21);
+
+        $r23 = r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.matrix.MatrixAlgebra _algebra>;
+
+        $r24 = r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.matrix.MatrixAlgebra _algebra>;
+
+        $r25 = r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.matrix.MatrixAlgebra _algebra>;
+
+        $r22 = r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.matrix.MatrixAlgebra _algebra>;
+
+        $r26 = virtualinvoke $r22.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.DoubleMatrix2D getPower(com.opengamma.analytics.math.matrix.Matrix,int)>(r8, 2);
+
+        $r27 = virtualinvoke $r25.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r7, $r26);
+
+        $r28 = virtualinvoke $r24.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>($r27, r4);
+
+        $d4 = virtualinvoke $r23.<com.opengamma.analytics.math.matrix.MatrixAlgebra: double getInnerProduct(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r4, $r28);
+
+        $d5 = 12.0 * $d4;
+
+        $d8 = $d3 + $d5;
+
+        $d6 = 3.0 * d0;
+
+        $d7 = $d6 * d0;
+
+        d1 = $d8 + $d7;
+
+        $r30 = r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.matrix.MatrixAlgebra _algebra>;
+
+        $r29 = r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.matrix.MatrixAlgebra _algebra>;
+
+        $r31 = virtualinvoke $r29.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.DoubleMatrix2D getPower(com.opengamma.analytics.math.matrix.Matrix,int)>(r8, 2);
+
+        $d9 = virtualinvoke $r30.<com.opengamma.analytics.math.matrix.MatrixAlgebra: double getTrace(com.opengamma.analytics.math.matrix.Matrix)>($r31);
+
+        $d10 = 0.5 * $d9;
+
+        $r33 = r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.matrix.MatrixAlgebra _algebra>;
+
+        $r32 = r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.matrix.MatrixAlgebra _algebra>;
+
+        $r34 = virtualinvoke $r32.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r7, r4);
+
+        $d11 = virtualinvoke $r33.<com.opengamma.analytics.math.matrix.MatrixAlgebra: double getInnerProduct(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r4, $r34);
+
+        $d12 = $d10 + $d11;
+
+        d2 = staticinvoke <java.lang.Math: double pow(double,double)>($d12, 2.0);
+
+        $d13 = d1 / d2;
+
+        $d14 = $d13 - 3.0;
+
+        $r35 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d14);
+
+        return $r35;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator r0;
+        com.opengamma.analytics.math.matrix.MatrixAlgebra $r1;
+        int $i1, $i2, $i3, $i4, i6, i7;
+        com.opengamma.analytics.math.function.Function1D $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator;
+
+        $i1 = 31 * 1;
+
+        $r1 = r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.matrix.MatrixAlgebra _algebra>;
+
+        $i2 = virtualinvoke $r1.<java.lang.Object: int hashCode()>();
+
+        i6 = $i1 + $i2;
+
+        $i3 = 31 * i6;
+
+        $r2 = r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.function.Function1D _std>;
+
+        $i4 = virtualinvoke $r2.<java.lang.Object: int hashCode()>();
+
+        i7 = $i3 + $i4;
+
+        return i7;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator r0, r2;
+        java.lang.Object r1;
+        java.lang.Class $r3, $r4;
+        com.opengamma.analytics.math.matrix.MatrixAlgebra $r5, $r6;
+        boolean $z0, $z1, $z2;
+        com.opengamma.analytics.math.function.Function1D $r7, $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        if r1 != null goto label2;
+
+        return 0;
+
+     label2:
+        $r3 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r4 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+
+        if $r3 == $r4 goto label3;
+
+        return 0;
+
+     label3:
+        r2 = (com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator) r1;
+
+        $r6 = r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.matrix.MatrixAlgebra _algebra>;
+
+        $r5 = r2.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.matrix.MatrixAlgebra _algebra>;
+
+        $z0 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r6, $r5);
+
+        if $z0 == 0 goto label4;
+
+        $r8 = r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.function.Function1D _std>;
+
+        $r7 = r2.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: com.opengamma.analytics.math.function.Function1D _std>;
+
+        $z1 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r8, $r7);
+
+        if $z1 == 0 goto label4;
+
+        $z2 = 1;
+
+        goto label5;
+
+     label4:
+        $z2 = 0;
+
+     label5:
+        return $z2;
+    }
+
+    public volatile java.lang.Object evaluate(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator r0;
+        java.lang.Object r1;
+        java.util.Map $r2;
+        java.lang.Double $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator;
+
+        r1 := @parameter0: java.lang.Object;
+
+        $r2 = (java.util.Map) r1;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.var.parametric.DeltaGammaCovarianceMatrixFisherKurtosisCalculator: java.lang.Double evaluate(java.util.Map)>($r2);
+
+        return $r3;
+    }
+}

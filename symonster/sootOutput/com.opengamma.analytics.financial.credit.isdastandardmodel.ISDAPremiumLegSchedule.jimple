@@ -1,0 +1,861 @@
+public class com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule extends java.lang.Object
+{
+    private final int _nPayments;
+    private final org.threeten.bp.LocalDate[] _accStartDates;
+    private final org.threeten.bp.LocalDate[] _accEndDates;
+    private final org.threeten.bp.LocalDate[] _paymentDates;
+    private final org.threeten.bp.LocalDate[] _nominalPaymentDates;
+
+    public static org.threeten.bp.LocalDate[] getUnadjustedDates(org.threeten.bp.LocalDate, org.threeten.bp.LocalDate, org.threeten.bp.Period, com.opengamma.analytics.financial.credit.isdastandardmodel.StubType)
+    {
+        org.threeten.bp.LocalDate r0, r1, $r16, r25, r27;
+        org.threeten.bp.Period r2, r26, r28;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.StubType r3, $r10, $r14, $r17, $r19, $r22;
+        long l0, $l5, l10;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8;
+        int i1, $i2, $i3, $i4, $i6, $i7, $i8, $i9, i11, i12, i13, i14, i15, i16, i17;
+        org.threeten.bp.LocalDate[] r5, $r21, r24, r29;
+        boolean $z0, $z1, $z2, $z6, $z7, $z11, $z12;
+        org.threeten.bp.temporal.TemporalField $r11, $r12;
+        java.util.ArrayList $r13;
+        java.lang.Object $r15;
+        java.lang.Object[] $r20;
+
+        r0 := @parameter0: org.threeten.bp.LocalDate;
+
+        r1 := @parameter1: org.threeten.bp.LocalDate;
+
+        r2 := @parameter2: org.threeten.bp.Period;
+
+        r3 := @parameter3: com.opengamma.analytics.financial.credit.isdastandardmodel.StubType;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r0, "null startDate");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "null endDate");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "step");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "null stubType");
+
+        $z0 = virtualinvoke r1.<org.threeten.bp.LocalDate: boolean isBefore(org.threeten.bp.chrono.ChronoLocalDate)>(r0);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z0, "end date is before startDate");
+
+        $z1 = virtualinvoke r0.<org.threeten.bp.LocalDate: boolean isEqual(org.threeten.bp.chrono.ChronoLocalDate)>(r1);
+
+        if $z1 == 0 goto label01;
+
+        r24 = newarray (org.threeten.bp.LocalDate)[2];
+
+        r24[0] = r0;
+
+        r24[1] = r1;
+
+        return r24;
+
+     label01:
+        $r10 = <com.opengamma.analytics.financial.credit.isdastandardmodel.StubType: com.opengamma.analytics.financial.credit.isdastandardmodel.StubType NONE>;
+
+        if r3 != $r10 goto label02;
+
+        $z11 = 1;
+
+        goto label03;
+
+     label02:
+        $z11 = 0;
+
+     label03:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z11, "NONE is not allowed as a stubType");
+
+        $r11 = <org.threeten.bp.temporal.JulianFields: org.threeten.bp.temporal.TemporalField MODIFIED_JULIAN_DAY>;
+
+        l10 = virtualinvoke r0.<org.threeten.bp.LocalDate: long getLong(org.threeten.bp.temporal.TemporalField)>($r11);
+
+        $r12 = <org.threeten.bp.temporal.JulianFields: org.threeten.bp.temporal.TemporalField MODIFIED_JULIAN_DAY>;
+
+        l0 = virtualinvoke r1.<org.threeten.bp.LocalDate: long getLong(org.threeten.bp.temporal.TemporalField)>($r12);
+
+        $i2 = virtualinvoke r2.<org.threeten.bp.Period: int getDays()>();
+
+        $d1 = (double) $i2;
+
+        $i3 = virtualinvoke r2.<org.threeten.bp.Period: int getMonths()>();
+
+        $d2 = (double) $i3;
+
+        $d3 = $d2 / 12.0;
+
+        $i4 = virtualinvoke r2.<org.threeten.bp.Period: int getYears()>();
+
+        $d4 = (double) $i4;
+
+        $d5 = $d3 + $d4;
+
+        $d6 = 365.0 * $d5;
+
+        d0 = $d1 + $d6;
+
+        $l5 = l0 - l10;
+
+        $d7 = (double) $l5;
+
+        $d8 = $d7 / d0;
+
+        $i6 = (int) $d8;
+
+        i1 = 3 + $i6;
+
+        $r13 = new java.util.ArrayList;
+
+        specialinvoke $r13.<java.util.ArrayList: void <init>(int)>(i1);
+
+        $r14 = <com.opengamma.analytics.financial.credit.isdastandardmodel.StubType: com.opengamma.analytics.financial.credit.isdastandardmodel.StubType FRONTSHORT>;
+
+        if r3 == $r14 goto label04;
+
+        $r19 = <com.opengamma.analytics.financial.credit.isdastandardmodel.StubType: com.opengamma.analytics.financial.credit.isdastandardmodel.StubType FRONTLONG>;
+
+        if r3 != $r19 goto label12;
+
+     label04:
+        i11 = 0;
+
+        r25 = r1;
+
+     label05:
+        $z12 = virtualinvoke r25.<org.threeten.bp.LocalDate: boolean isAfter(org.threeten.bp.chrono.ChronoLocalDate)>(r0);
+
+        if $z12 == 0 goto label06;
+
+        interfaceinvoke $r13.<java.util.List: boolean add(java.lang.Object)>(r25);
+
+        i11 = i11 + 1;
+
+        r26 = virtualinvoke r2.<org.threeten.bp.Period: org.threeten.bp.Period multipliedBy(int)>(i11);
+
+        r25 = virtualinvoke r1.<org.threeten.bp.LocalDate: org.threeten.bp.LocalDate minus(org.threeten.bp.temporal.TemporalAmount)>(r26);
+
+        goto label05;
+
+     label06:
+        i12 = interfaceinvoke $r13.<java.util.List: int size()>();
+
+        $z2 = virtualinvoke r25.<org.threeten.bp.LocalDate: boolean isEqual(org.threeten.bp.chrono.ChronoLocalDate)>(r0);
+
+        if $z2 != 0 goto label07;
+
+        if i12 == 1 goto label07;
+
+        $r17 = <com.opengamma.analytics.financial.credit.isdastandardmodel.StubType: com.opengamma.analytics.financial.credit.isdastandardmodel.StubType FRONTSHORT>;
+
+        if r3 != $r17 goto label08;
+
+     label07:
+        interfaceinvoke $r13.<java.util.List: boolean add(java.lang.Object)>(r0);
+
+        goto label09;
+
+     label08:
+        $i7 = i12 - 1;
+
+        interfaceinvoke $r13.<java.util.List: java.lang.Object remove(int)>($i7);
+
+        interfaceinvoke $r13.<java.util.List: boolean add(java.lang.Object)>(r0);
+
+     label09:
+        i13 = interfaceinvoke $r13.<java.util.List: int size()>();
+
+        r5 = newarray (org.threeten.bp.LocalDate)[i13];
+
+        i14 = i13 - 1;
+
+        i15 = 0;
+
+     label10:
+        if i15 >= i13 goto label11;
+
+        $r15 = interfaceinvoke $r13.<java.util.List: java.lang.Object get(int)>(i15);
+
+        $r16 = (org.threeten.bp.LocalDate) $r15;
+
+        r5[i14] = $r16;
+
+        i15 = i15 + 1;
+
+        i14 = i14 + -1;
+
+        goto label10;
+
+     label11:
+        return r5;
+
+     label12:
+        i16 = 0;
+
+        r27 = r0;
+
+     label13:
+        $z6 = virtualinvoke r27.<org.threeten.bp.LocalDate: boolean isBefore(org.threeten.bp.chrono.ChronoLocalDate)>(r1);
+
+        if $z6 == 0 goto label14;
+
+        interfaceinvoke $r13.<java.util.List: boolean add(java.lang.Object)>(r27);
+
+        i16 = i16 + 1;
+
+        r28 = virtualinvoke r2.<org.threeten.bp.Period: org.threeten.bp.Period multipliedBy(int)>(i16);
+
+        r27 = virtualinvoke r0.<org.threeten.bp.LocalDate: org.threeten.bp.LocalDate plus(org.threeten.bp.temporal.TemporalAmount)>(r28);
+
+        goto label13;
+
+     label14:
+        i17 = interfaceinvoke $r13.<java.util.List: int size()>();
+
+        $z7 = virtualinvoke r27.<org.threeten.bp.LocalDate: boolean isEqual(org.threeten.bp.chrono.ChronoLocalDate)>(r1);
+
+        if $z7 != 0 goto label15;
+
+        if i17 == 1 goto label15;
+
+        $r22 = <com.opengamma.analytics.financial.credit.isdastandardmodel.StubType: com.opengamma.analytics.financial.credit.isdastandardmodel.StubType BACKSHORT>;
+
+        if r3 != $r22 goto label16;
+
+     label15:
+        interfaceinvoke $r13.<java.util.List: boolean add(java.lang.Object)>(r1);
+
+        goto label17;
+
+     label16:
+        $i9 = i17 - 1;
+
+        interfaceinvoke $r13.<java.util.List: java.lang.Object remove(int)>($i9);
+
+        interfaceinvoke $r13.<java.util.List: boolean add(java.lang.Object)>(r1);
+
+     label17:
+        $i8 = interfaceinvoke $r13.<java.util.List: int size()>();
+
+        r29 = newarray (org.threeten.bp.LocalDate)[$i8];
+
+        $r20 = interfaceinvoke $r13.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>(r29);
+
+        $r21 = (org.threeten.bp.LocalDate[]) $r20;
+
+        return $r21;
+    }
+
+    public static com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule truncateSchedule(org.threeten.bp.LocalDate, com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule)
+    {
+        org.threeten.bp.LocalDate r0;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r1, $r2;
+
+        r0 := @parameter0: org.threeten.bp.LocalDate;
+
+        r1 := @parameter1: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        $r2 = virtualinvoke r1.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule truncateSchedule(org.threeten.bp.LocalDate)>(r0);
+
+        return $r2;
+    }
+
+    public com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule truncateSchedule(org.threeten.bp.LocalDate)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r0, $r4;
+        org.threeten.bp.LocalDate r1, $r3;
+        org.threeten.bp.LocalDate[] $r2;
+        boolean $z0;
+        int $i0, $i1, i2;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        r1 := @parameter0: org.threeten.bp.LocalDate;
+
+        $r2 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _accStartDates>;
+
+        $r3 = $r2[0];
+
+        $z0 = virtualinvoke $r3.<org.threeten.bp.LocalDate: boolean isBefore(org.threeten.bp.chrono.ChronoLocalDate)>(r1);
+
+        if $z0 != 0 goto label1;
+
+        return r0;
+
+     label1:
+        i2 = virtualinvoke r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int getAccStartDateIndex(org.threeten.bp.LocalDate)>(r1);
+
+        if i2 >= 0 goto label2;
+
+        $i0 = i2 + 1;
+
+        $i1 = neg $i0;
+
+        i2 = $i1 - 1;
+
+     label2:
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule truncateSchedule(int)>(i2);
+
+        return $r4;
+    }
+
+    public com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule truncateSchedule(int)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r0, $r1;
+        int i0;
+        org.threeten.bp.LocalDate[] $r2, $r3, $r4, $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        i0 := @parameter0: int;
+
+        $r1 = new com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        $r5 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _nominalPaymentDates>;
+
+        $r4 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _paymentDates>;
+
+        $r3 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _accStartDates>;
+
+        $r2 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _accEndDates>;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: void <init>(org.threeten.bp.LocalDate[],org.threeten.bp.LocalDate[],org.threeten.bp.LocalDate[],org.threeten.bp.LocalDate[],int)>($r5, $r4, $r3, $r2, i0);
+
+        return $r1;
+    }
+
+    private void <init>(org.threeten.bp.LocalDate[], org.threeten.bp.LocalDate[], org.threeten.bp.LocalDate[], org.threeten.bp.LocalDate[], int)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r0;
+        org.threeten.bp.LocalDate[] r1, r2, r3, r4, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19;
+        java.lang.Object[] $r9, $r12, $r15;
+        java.lang.Integer $r10, $r11, $r13, $r14, $r16, $r17;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        r1 := @parameter0: org.threeten.bp.LocalDate[];
+
+        r2 := @parameter1: org.threeten.bp.LocalDate[];
+
+        r3 := @parameter2: org.threeten.bp.LocalDate[];
+
+        r4 := @parameter3: org.threeten.bp.LocalDate[];
+
+        i0 := @parameter4: int;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object[] noNulls(java.lang.Object[],java.lang.String)>(r1, "unadjustedDates");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object[] noNulls(java.lang.Object[],java.lang.String)>(r2, "paymentDates");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object[] noNulls(java.lang.Object[],java.lang.String)>(r3, "accStartDates");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object[] noNulls(java.lang.Object[],java.lang.String)>(r4, "accEndDates");
+
+        i1 = lengthof r2;
+
+        $i2 = i1 - i0;
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments> = $i2;
+
+        $i3 = lengthof r1;
+
+        if i1 != $i3 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        $r9 = newarray (java.lang.Object)[2];
+
+        $i4 = lengthof r1;
+
+        $r10 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i4);
+
+        $r9[0] = $r10;
+
+        $i5 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        $r11 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i5);
+
+        $r9[1] = $r11;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z0, "nominalPaymentDates length of {} does not match paymentDates length of {}", $r9);
+
+        $i6 = lengthof r3;
+
+        if i1 != $i6 goto label3;
+
+        $z1 = 1;
+
+        goto label4;
+
+     label3:
+        $z1 = 0;
+
+     label4:
+        $r12 = newarray (java.lang.Object)[2];
+
+        $i7 = lengthof r3;
+
+        $r13 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i7);
+
+        $r12[0] = $r13;
+
+        $i8 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        $r14 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i8);
+
+        $r12[1] = $r14;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z1, "accStartDates length of {} does not match paymentDates length of {}", $r12);
+
+        $i9 = lengthof r4;
+
+        if i1 != $i9 goto label5;
+
+        $z2 = 1;
+
+        goto label6;
+
+     label5:
+        $z2 = 0;
+
+     label6:
+        $r15 = newarray (java.lang.Object)[2];
+
+        $i10 = lengthof r4;
+
+        $r16 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i10);
+
+        $r15[0] = $r16;
+
+        $i11 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        $r17 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i11);
+
+        $r15[1] = $r17;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z2, "accEndDates length of {} does not match paymentDates length of {}", $r15);
+
+        $i12 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        $r18 = newarray (org.threeten.bp.LocalDate)[$i12];
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _nominalPaymentDates> = $r18;
+
+        $i13 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        $r19 = newarray (org.threeten.bp.LocalDate)[$i13];
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _paymentDates> = $r19;
+
+        $i14 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        $r20 = newarray (org.threeten.bp.LocalDate)[$i14];
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _accStartDates> = $r20;
+
+        $i15 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        $r21 = newarray (org.threeten.bp.LocalDate)[$i15];
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _accEndDates> = $r21;
+
+        $r22 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _nominalPaymentDates>;
+
+        $i16 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r1, i0, $r22, 0, $i16);
+
+        $r23 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _paymentDates>;
+
+        $i17 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r2, i0, $r23, 0, $i17);
+
+        $r24 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _accStartDates>;
+
+        $i18 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r3, i0, $r24, 0, $i18);
+
+        $r25 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _accEndDates>;
+
+        $i19 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r4, i0, $r25, 0, $i19);
+
+        return;
+    }
+
+    public void <init>(org.threeten.bp.LocalDate, org.threeten.bp.LocalDate, org.threeten.bp.Period, com.opengamma.analytics.financial.credit.isdastandardmodel.StubType, com.opengamma.financial.convention.businessday.BusinessDayConvention, com.opengamma.financial.convention.calendar.Calendar, boolean)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r0;
+        org.threeten.bp.LocalDate r1, r2;
+        org.threeten.bp.Period r3;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.StubType r4;
+        com.opengamma.financial.convention.businessday.BusinessDayConvention r5;
+        com.opengamma.financial.convention.calendar.Calendar r6;
+        boolean z0;
+        org.threeten.bp.LocalDate[] $r7;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        r1 := @parameter0: org.threeten.bp.LocalDate;
+
+        r2 := @parameter1: org.threeten.bp.LocalDate;
+
+        r3 := @parameter2: org.threeten.bp.Period;
+
+        r4 := @parameter3: com.opengamma.analytics.financial.credit.isdastandardmodel.StubType;
+
+        r5 := @parameter4: com.opengamma.financial.convention.businessday.BusinessDayConvention;
+
+        r6 := @parameter5: com.opengamma.financial.convention.calendar.Calendar;
+
+        z0 := @parameter6: boolean;
+
+        $r7 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] getUnadjustedDates(org.threeten.bp.LocalDate,org.threeten.bp.LocalDate,org.threeten.bp.Period,com.opengamma.analytics.financial.credit.isdastandardmodel.StubType)>(r1, r2, r3, r4);
+
+        specialinvoke r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: void <init>(org.threeten.bp.LocalDate[],com.opengamma.financial.convention.businessday.BusinessDayConvention,com.opengamma.financial.convention.calendar.Calendar,boolean)>($r7, r5, r6, z0);
+
+        return;
+    }
+
+    public void <init>(org.threeten.bp.LocalDate[], com.opengamma.financial.convention.businessday.BusinessDayConvention, com.opengamma.financial.convention.calendar.Calendar, boolean)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r0;
+        org.threeten.bp.LocalDate[] r1, $r6, $r7, $r8, $r9, $r11, $r13, $r14, $r15, $r16;
+        com.opengamma.financial.convention.businessday.BusinessDayConvention r2;
+        com.opengamma.financial.convention.calendar.Calendar r3;
+        boolean z0;
+        org.threeten.bp.LocalDate r4, r5, $r10, $r12, r17, r18;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, i11;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        r1 := @parameter0: org.threeten.bp.LocalDate[];
+
+        r2 := @parameter1: com.opengamma.financial.convention.businessday.BusinessDayConvention;
+
+        r3 := @parameter2: com.opengamma.financial.convention.calendar.Calendar;
+
+        z0 := @parameter3: boolean;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $i0 = lengthof r1;
+
+        $i1 = $i0 - 1;
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments> = $i1;
+
+        $i2 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        $r6 = newarray (org.threeten.bp.LocalDate)[$i2];
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _nominalPaymentDates> = $r6;
+
+        $i3 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        $r7 = newarray (org.threeten.bp.LocalDate)[$i3];
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _paymentDates> = $r7;
+
+        $i4 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        $r8 = newarray (org.threeten.bp.LocalDate)[$i4];
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _accStartDates> = $r8;
+
+        $i5 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        $r9 = newarray (org.threeten.bp.LocalDate)[$i5];
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _accEndDates> = $r9;
+
+        r17 = r1[0];
+
+        r18 = r17;
+
+        i11 = 0;
+
+     label1:
+        $i6 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        if i11 >= $i6 goto label2;
+
+        $i10 = i11 + 1;
+
+        r4 = r1[$i10];
+
+        r5 = specialinvoke r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate businessDayAdjustDate(org.threeten.bp.LocalDate,com.opengamma.financial.convention.calendar.Calendar,com.opengamma.financial.convention.businessday.BusinessDayConvention)>(r4, r3, r2);
+
+        $r13 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _accStartDates>;
+
+        $r13[i11] = r18;
+
+        $r14 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _accEndDates>;
+
+        $r14[i11] = r5;
+
+        $r15 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _nominalPaymentDates>;
+
+        $r15[i11] = r4;
+
+        $r16 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _paymentDates>;
+
+        $r16[i11] = r5;
+
+        r18 = r5;
+
+        i11 = i11 + 1;
+
+        goto label1;
+
+     label2:
+        $r11 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _accEndDates>;
+
+        $i7 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        $i9 = $i7 - 1;
+
+        $i8 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        $r10 = r1[$i8];
+
+        $r12 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate getFinalAccEndDate(org.threeten.bp.LocalDate,boolean)>($r10, z0);
+
+        $r11[$i9] = $r12;
+
+        return;
+    }
+
+    public static org.threeten.bp.LocalDate getFinalAccEndDate(org.threeten.bp.LocalDate, boolean)
+    {
+        org.threeten.bp.LocalDate r0, $r2;
+        boolean z0;
+
+        r0 := @parameter0: org.threeten.bp.LocalDate;
+
+        z0 := @parameter1: boolean;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r0, "unadjustedDate");
+
+        if z0 == 0 goto label1;
+
+        $r2 = virtualinvoke r0.<org.threeten.bp.LocalDate: org.threeten.bp.LocalDate plusDays(long)>(1L);
+
+        return $r2;
+
+     label1:
+        return r0;
+    }
+
+    public int getNumPayments()
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r0;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        $i0 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int _nPayments>;
+
+        return $i0;
+    }
+
+    public org.threeten.bp.LocalDate getAccStartDate(int)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r0;
+        int i0;
+        org.threeten.bp.LocalDate[] $r1;
+        org.threeten.bp.LocalDate $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _accStartDates>;
+
+        $r2 = $r1[i0];
+
+        return $r2;
+    }
+
+    public org.threeten.bp.LocalDate getAccEndDate(int)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r0;
+        int i0;
+        org.threeten.bp.LocalDate[] $r1;
+        org.threeten.bp.LocalDate $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _accEndDates>;
+
+        $r2 = $r1[i0];
+
+        return $r2;
+    }
+
+    public org.threeten.bp.LocalDate getPaymentDate(int)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r0;
+        int i0;
+        org.threeten.bp.LocalDate[] $r1;
+        org.threeten.bp.LocalDate $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _paymentDates>;
+
+        $r2 = $r1[i0];
+
+        return $r2;
+    }
+
+    public org.threeten.bp.LocalDate getNominalPaymentDate(int)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r0;
+        int i0;
+        org.threeten.bp.LocalDate[] $r1;
+        org.threeten.bp.LocalDate $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _nominalPaymentDates>;
+
+        $r2 = $r1[i0];
+
+        return $r2;
+    }
+
+    public int getAccStartDateIndex(org.threeten.bp.LocalDate)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r0;
+        org.threeten.bp.LocalDate r1;
+        org.threeten.bp.LocalDate[] $r2;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        r1 := @parameter0: org.threeten.bp.LocalDate;
+
+        $r2 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _accStartDates>;
+
+        $i0 = staticinvoke <java.util.Arrays: int binarySearch(java.lang.Object[],java.lang.Object,java.util.Comparator)>($r2, r1, null);
+
+        return $i0;
+    }
+
+    public int getPaymentDateIndex(org.threeten.bp.LocalDate)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r0;
+        org.threeten.bp.LocalDate r1;
+        org.threeten.bp.LocalDate[] $r2;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        r1 := @parameter0: org.threeten.bp.LocalDate;
+
+        $r2 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _paymentDates>;
+
+        $i0 = staticinvoke <java.util.Arrays: int binarySearch(java.lang.Object[],java.lang.Object,java.util.Comparator)>($r2, r1, null);
+
+        return $i0;
+    }
+
+    public int getNominalPaymentDateIndex(org.threeten.bp.LocalDate)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r0;
+        org.threeten.bp.LocalDate r1;
+        org.threeten.bp.LocalDate[] $r2;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        r1 := @parameter0: org.threeten.bp.LocalDate;
+
+        $r2 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _nominalPaymentDates>;
+
+        $i0 = staticinvoke <java.util.Arrays: int binarySearch(java.lang.Object[],java.lang.Object,java.util.Comparator)>($r2, r1, null);
+
+        return $i0;
+    }
+
+    public org.threeten.bp.LocalDate[] getAccPaymentDateTriplet(int)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r0;
+        int i0;
+        org.threeten.bp.LocalDate[] $r1, $r2, $r4, $r6;
+        org.threeten.bp.LocalDate $r3, $r5, $r7;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        i0 := @parameter0: int;
+
+        $r1 = newarray (org.threeten.bp.LocalDate)[3];
+
+        $r2 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _accStartDates>;
+
+        $r3 = $r2[i0];
+
+        $r1[0] = $r3;
+
+        $r4 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _accEndDates>;
+
+        $r5 = $r4[i0];
+
+        $r1[1] = $r5;
+
+        $r6 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate[] _paymentDates>;
+
+        $r7 = $r6[i0];
+
+        $r1[2] = $r7;
+
+        return $r1;
+    }
+
+    private org.threeten.bp.LocalDate businessDayAdjustDate(org.threeten.bp.LocalDate, com.opengamma.financial.convention.calendar.Calendar, com.opengamma.financial.convention.businessday.BusinessDayConvention)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r0;
+        org.threeten.bp.LocalDate r1, $r7;
+        com.opengamma.financial.convention.calendar.Calendar r2;
+        com.opengamma.financial.convention.businessday.BusinessDayConvention r3;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        r1 := @parameter0: org.threeten.bp.LocalDate;
+
+        r2 := @parameter1: com.opengamma.financial.convention.calendar.Calendar;
+
+        r3 := @parameter2: com.opengamma.financial.convention.businessday.BusinessDayConvention;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "date");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Calendar");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "Business day adjustment");
+
+        $r7 = interfaceinvoke r3.<com.opengamma.financial.convention.businessday.BusinessDayConvention: org.threeten.bp.LocalDate adjustDate(com.opengamma.financial.convention.calendar.Calendar,org.threeten.bp.LocalDate)>(r2, r1);
+
+        return $r7;
+    }
+}

@@ -1,0 +1,429 @@
+public final class com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator extends com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter
+{
+    private static final com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator INSTANCE;
+    private static final com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer MODEL;
+
+    public static com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator getInstance()
+    {
+        com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator $r0;
+
+        $r0 = <com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator: com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator INSTANCE>;
+
+        return $r0;
+    }
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator r0;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter: void <init>()>();
+
+        return;
+    }
+
+    public java.lang.Double visitEquityIndexOption(com.opengamma.analytics.financial.equity.option.EquityIndexOption, com.opengamma.analytics.financial.equity.StaticReplicationDataBundle)
+    {
+        com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator r0;
+        com.opengamma.analytics.financial.equity.option.EquityIndexOption r1;
+        com.opengamma.analytics.financial.equity.StaticReplicationDataBundle r2;
+        double d0, d1, d2, d3, d4, $d6, $d7, $d8;
+        boolean z0, z1;
+        com.opengamma.analytics.financial.ExerciseDecisionType r3, $r8, $r9;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve $r6;
+        com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface $r7;
+        java.lang.IllegalArgumentException $r10;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r11;
+        java.lang.Double $r12, $r14;
+        com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer $r13;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.option.EquityIndexOption;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.equity.StaticReplicationDataBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "option");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "data");
+
+        $r6 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        d0 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: double getSpot()>();
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityIndexOption: double getStrike()>();
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityIndexOption: double getTimeToExpiry()>();
+
+        $r7 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface getVolatilitySurface()>();
+
+        d3 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface: double getVolatility(double,double)>(d2, d1);
+
+        z0 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityIndexOption: boolean isCall()>();
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityIndexOption: com.opengamma.analytics.financial.ExerciseDecisionType getExerciseType()>();
+
+        $r8 = <com.opengamma.analytics.financial.ExerciseDecisionType: com.opengamma.analytics.financial.ExerciseDecisionType AMERICAN>;
+
+        if r3 != $r8 goto label1;
+
+        z1 = 1;
+
+        goto label3;
+
+     label1:
+        $r9 = <com.opengamma.analytics.financial.ExerciseDecisionType: com.opengamma.analytics.financial.ExerciseDecisionType EUROPEAN>;
+
+        if r3 != $r9 goto label2;
+
+        z1 = 0;
+
+        goto label3;
+
+     label2:
+        $r10 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r10.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Can only price American or European expiry options");
+
+        throw $r10;
+
+     label3:
+        $r11 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getDiscountCurve()>();
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        d4 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getInterestRate(java.lang.Object)>($r12);
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityIndexOption: double getUnitAmount()>();
+
+        $r13 = <com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator: com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer MODEL>;
+
+        $d7 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double price(double,double,double,double,double,double,boolean,boolean,int,int)>(d0, d1, d4, d4, d2, d3, z0, z1, 10, 500);
+
+        $d8 = $d6 * $d7;
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d8);
+
+        return $r14;
+    }
+
+    public java.lang.Double visitEquityOption(com.opengamma.analytics.financial.equity.option.EquityOption, com.opengamma.analytics.financial.equity.StaticReplicationDataBundle)
+    {
+        com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator r0;
+        com.opengamma.analytics.financial.equity.option.EquityOption r1;
+        com.opengamma.analytics.financial.equity.StaticReplicationDataBundle r2;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, d19, d20;
+        boolean z0, $z1, z2;
+        com.opengamma.analytics.financial.ExerciseDecisionType r3, $r10, $r11;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve r4, $r8;
+        com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends r5;
+        int i0, i2;
+        com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface $r9;
+        java.lang.IllegalArgumentException $r12;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r13, $r18;
+        java.lang.Double $r14, $r16;
+        com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer $r15;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends $r17;
+        byte $b1;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.option.EquityOption;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.equity.StaticReplicationDataBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "option");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "data");
+
+        $r8 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        d0 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: double getSpot()>();
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityOption: double getStrike()>();
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityOption: double getTimeToExpiry()>();
+
+        $r9 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface getVolatilitySurface()>();
+
+        d3 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface: double getVolatility(double,double)>(d2, d1);
+
+        z0 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityOption: boolean isCall()>();
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityOption: com.opengamma.analytics.financial.ExerciseDecisionType getExerciseType()>();
+
+        $r10 = <com.opengamma.analytics.financial.ExerciseDecisionType: com.opengamma.analytics.financial.ExerciseDecisionType AMERICAN>;
+
+        if r3 != $r10 goto label1;
+
+        z2 = 1;
+
+        goto label3;
+
+     label1:
+        $r11 = <com.opengamma.analytics.financial.ExerciseDecisionType: com.opengamma.analytics.financial.ExerciseDecisionType EUROPEAN>;
+
+        if r3 != $r11 goto label2;
+
+        z2 = 0;
+
+        goto label3;
+
+     label2:
+        $r12 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r12.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Can only price American or European expiry options");
+
+        throw $r12;
+
+     label3:
+        $r13 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getDiscountCurve()>();
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        d4 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getInterestRate(java.lang.Object)>($r14);
+
+        d19 = d4;
+
+        d20 = d0;
+
+        r4 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        $z1 = r4 instanceof com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends;
+
+        if $z1 == 0 goto label6;
+
+        $r17 = (com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends) r4;
+
+        r5 = virtualinvoke $r17.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends: com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends getDividends()>();
+
+        i0 = virtualinvoke r5.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: int getNumberOfDividends()>();
+
+        i2 = 0;
+
+     label4:
+        if i2 >= i0 goto label5;
+
+        $d11 = virtualinvoke r5.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getTau(int)>(i2);
+
+        $b1 = $d11 cmpg d2;
+
+        if $b1 >= 0 goto label5;
+
+        $d12 = virtualinvoke r5.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getBeta(int)>(i2);
+
+        $d13 = 1.0 - $d12;
+
+        $d14 = d20 * $d13;
+
+        $d15 = virtualinvoke r5.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getAlpha(int)>(i2);
+
+        $r18 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getDiscountCurve()>();
+
+        $d16 = virtualinvoke r5.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getTau(int)>(i2);
+
+        $d17 = virtualinvoke $r18.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d16);
+
+        $d18 = $d15 * $d17;
+
+        d20 = $d14 - $d18;
+
+        i2 = i2 + 1;
+
+        goto label4;
+
+     label5:
+        goto label7;
+
+     label6:
+        $d5 = virtualinvoke r4.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: double getForward(double)>(d2);
+
+        $d6 = $d5 / d0;
+
+        $d7 = staticinvoke <java.lang.Math: double log(double)>($d6);
+
+        d19 = $d7 / d2;
+
+     label7:
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityOption: double getUnitAmount()>();
+
+        $r15 = <com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator: com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer MODEL>;
+
+        $d9 = virtualinvoke $r15.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double price(double,double,double,double,double,double,boolean,boolean,int,int)>(d20, d1, d4, d19, d2, d3, z0, z2, 10, 500);
+
+        $d10 = $d8 * $d9;
+
+        $r16 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        return $r16;
+    }
+
+    public java.lang.Double visitEquityIndexFutureOption(com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption, com.opengamma.analytics.financial.equity.StaticReplicationDataBundle)
+    {
+        com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator r0;
+        com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption r1;
+        com.opengamma.analytics.financial.equity.StaticReplicationDataBundle r2;
+        double d0, d1, d2, d3, d4, $d6, $d7, $d8;
+        boolean z0, z1;
+        com.opengamma.analytics.financial.ExerciseDecisionType r3, $r8, $r9;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve $r6;
+        com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface $r7;
+        java.lang.IllegalArgumentException $r10;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r11;
+        java.lang.Double $r12, $r14;
+        com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer $r13;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.equity.StaticReplicationDataBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "option");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "data");
+
+        $r6 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        d0 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: double getSpot()>();
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption: double getStrike()>();
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption: double getExpiry()>();
+
+        $r7 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface getVolatilitySurface()>();
+
+        d3 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface: double getVolatility(double,double)>(d2, d1);
+
+        z0 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption: boolean isCall()>();
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption: com.opengamma.analytics.financial.ExerciseDecisionType getExerciseType()>();
+
+        $r8 = <com.opengamma.analytics.financial.ExerciseDecisionType: com.opengamma.analytics.financial.ExerciseDecisionType AMERICAN>;
+
+        if r3 != $r8 goto label1;
+
+        z1 = 1;
+
+        goto label3;
+
+     label1:
+        $r9 = <com.opengamma.analytics.financial.ExerciseDecisionType: com.opengamma.analytics.financial.ExerciseDecisionType EUROPEAN>;
+
+        if r3 != $r9 goto label2;
+
+        z1 = 0;
+
+        goto label3;
+
+     label2:
+        $r10 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r10.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Can only price American or European expiry options");
+
+        throw $r10;
+
+     label3:
+        $r11 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getDiscountCurve()>();
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        d4 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getInterestRate(java.lang.Object)>($r12);
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption: double getPointValue()>();
+
+        $r13 = <com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator: com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer MODEL>;
+
+        $d7 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: double price(double,double,double,double,double,double,boolean,boolean,int,int)>(d0, d1, d4, d4, d2, d3, z0, z1, 10, 500);
+
+        $d8 = $d6 * $d7;
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d8);
+
+        return $r14;
+    }
+
+    public volatile java.lang.Object visitEquityOption(com.opengamma.analytics.financial.equity.option.EquityOption, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator r0;
+        com.opengamma.analytics.financial.equity.option.EquityOption r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.equity.StaticReplicationDataBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.option.EquityOption;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.equity.StaticReplicationDataBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator: java.lang.Double visitEquityOption(com.opengamma.analytics.financial.equity.option.EquityOption,com.opengamma.analytics.financial.equity.StaticReplicationDataBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitEquityIndexFutureOption(com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator r0;
+        com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.equity.StaticReplicationDataBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.equity.StaticReplicationDataBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator: java.lang.Double visitEquityIndexFutureOption(com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption,com.opengamma.analytics.financial.equity.StaticReplicationDataBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitEquityIndexOption(com.opengamma.analytics.financial.equity.option.EquityIndexOption, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator r0;
+        com.opengamma.analytics.financial.equity.option.EquityIndexOption r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.equity.StaticReplicationDataBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.option.EquityIndexOption;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.equity.StaticReplicationDataBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator: java.lang.Double visitEquityIndexOption(com.opengamma.analytics.financial.equity.option.EquityIndexOption,com.opengamma.analytics.financial.equity.StaticReplicationDataBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator $r0;
+        com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer $r1;
+
+        $r0 = new com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator: void <init>()>();
+
+        <com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator: com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator INSTANCE> = $r0;
+
+        $r1 = new com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer: void <init>()>();
+
+        <com.opengamma.analytics.financial.equity.EqyOptPDEPresentValueCalculator: com.opengamma.analytics.financial.model.finitedifference.applications.BlackScholesMertonPDEPricer MODEL> = $r1;
+
+        return;
+    }
+}

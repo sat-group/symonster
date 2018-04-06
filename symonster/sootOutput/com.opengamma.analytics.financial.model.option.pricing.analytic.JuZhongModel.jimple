@@ -1,0 +1,492 @@
+public class com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel extends com.opengamma.analytics.financial.model.option.pricing.analytic.AnalyticOptionModel
+{
+    private static final com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL;
+    private static final com.opengamma.analytics.financial.model.option.pricing.analytic.AnalyticOptionModel BSM;
+    private static final java.util.Set PRICE;
+    private static final com.opengamma.analytics.math.rootfinding.RealSingleRootFinder FINDER;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.AnalyticOptionModel: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getPricingFunction(com.opengamma.analytics.financial.model.option.definition.AmericanVanillaOptionDefinition)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel r0;
+        com.opengamma.analytics.financial.model.option.definition.AmericanVanillaOptionDefinition r1;
+        java.lang.Boolean $r3;
+        boolean $z0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel$1 $r4;
+        double $d1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.definition.AmericanVanillaOptionDefinition;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object)>(r1);
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.definition.AmericanVanillaOptionDefinition: java.lang.Boolean isCall()>();
+
+        $z0 = virtualinvoke $r3.<java.lang.Boolean: boolean booleanValue()>();
+
+        if $z0 == 0 goto label1;
+
+        $d1 = 1.0;
+
+        goto label2;
+
+     label1:
+        $d1 = -1.0;
+
+     label2:
+        $r4 = new com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel$1;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel$1: void <init>(com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel,com.opengamma.analytics.financial.model.option.definition.AmericanVanillaOptionDefinition,double)>(r0, r1, $d1);
+
+        return $r4;
+    }
+
+    protected double getH(double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel r0;
+        double d0, d1, $d2, $d3, $d4, $d5;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $d2 = neg d0;
+
+        $d3 = $d2 * d1;
+
+        $d4 = staticinvoke <java.lang.Math: double exp(double)>($d3);
+
+        $d5 = 1.0 - $d4;
+
+        return $d5;
+    }
+
+    protected double getAlpha(double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel r0;
+        double d0, d1, $d2, $d3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $d2 = 2.0 * d0;
+
+        $d3 = $d2 / d1;
+
+        return $d3;
+    }
+
+    protected double getBeta(double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel r0;
+        double d0, d1, d2, $d3, $d4, $d5;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        $d3 = d0 - d1;
+
+        $d4 = 2.0 * $d3;
+
+        $d5 = $d4 / d2;
+
+        return $d5;
+    }
+
+    protected double getLambda(double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel r0;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 = d2 - 1.0;
+
+        $d9 = neg d2;
+
+        $d7 = d4 * d4;
+
+        $d5 = 4.0 * d1;
+
+        $d6 = $d5 / d3;
+
+        $d8 = $d7 + $d6;
+
+        $d10 = staticinvoke <java.lang.Math: double sqrt(double)>($d8);
+
+        $d11 = d0 * $d10;
+
+        $d12 = $d9 + $d11;
+
+        $d13 = $d12 / 2.0;
+
+        return $d13;
+    }
+
+    protected double getLambdaDash(double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel r0;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $d10 = d0 * d1;
+
+        $d11 = d3 * d3;
+
+        $d5 = d2 - 1.0;
+
+        $d4 = d2 - 1.0;
+
+        $d8 = $d5 * $d4;
+
+        $d6 = 4.0 * d1;
+
+        $d7 = $d6 / d3;
+
+        $d9 = $d8 + $d7;
+
+        $d12 = staticinvoke <java.lang.Math: double sqrt(double)>($d9);
+
+        $d13 = $d11 * $d12;
+
+        $d14 = $d10 / $d13;
+
+        return $d14;
+    }
+
+    protected double getC(double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel r0;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        $d5 = 1.0 - d0;
+
+        $d6 = $d5 * d1;
+
+        $d11 = $d6 * d2;
+
+        $d7 = 2.0 * d3;
+
+        $d8 = $d7 + d4;
+
+        $d9 = $d8 - 1.0;
+
+        $d10 = 2.0 * $d9;
+
+        $d12 = $d11 / $d10;
+
+        return $d12;
+    }
+
+    protected double getD(double, double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        d6 := @parameter6: double;
+
+        $d8 = 2.0 * d5;
+
+        $d9 = $d8 + d6;
+
+        d7 = $d9 - 1.0;
+
+        $d10 = 1.0 - d0;
+
+        $d16 = $d10 * d1;
+
+        $d12 = d2 / d3;
+
+        $d11 = 1.0 / d0;
+
+        $d14 = $d12 + $d11;
+
+        $d13 = d4 / d7;
+
+        $d15 = $d14 + $d13;
+
+        $d17 = $d16 * $d15;
+
+        $d18 = $d17 / d7;
+
+        return $d18;
+    }
+
+    protected double getDerivative(double, double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r1, $r3, $r5;
+        java.lang.Double $r2, $r4, $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        d6 := @parameter6: double;
+
+        $d10 = d1 - d2;
+
+        $d11 = d3 * $d10;
+
+        d7 = staticinvoke <java.lang.Math: double exp(double)>($d11);
+
+        d8 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel: double getD1(double,double,double,double,double)>(d6, d0, d3, d4, d2);
+
+        d9 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel: double getD2(double,double,double)>(d8, d4, d3);
+
+        $r1 = <com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r2 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d8);
+
+        $d12 = interfaceinvoke $r1.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r2);
+
+        $d13 = d6 * $d12;
+
+        $d14 = $d13 * d4;
+
+        $d15 = $d14 * d7;
+
+        $d16 = 2.0 * d1;
+
+        $d17 = staticinvoke <java.lang.Math: double sqrt(double)>(d3);
+
+        $d18 = $d16 * $d17;
+
+        $d21 = $d15 / $d18;
+
+        $d19 = d5 * d2;
+
+        $d22 = $d19 * d6;
+
+        $r3 = <com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d20 = d5 * d8;
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d20);
+
+        $d23 = interfaceinvoke $r3.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r4);
+
+        $d24 = $d22 * $d23;
+
+        $d25 = $d24 * d7;
+
+        $d26 = $d25 / d1;
+
+        $d28 = $d21 - $d26;
+
+        $d29 = d5 * d0;
+
+        $r5 = <com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d27 = d5 * d9;
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d27);
+
+        $d30 = interfaceinvoke $r5.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r6);
+
+        $d31 = $d29 * $d30;
+
+        $d32 = $d28 + $d31;
+
+        return $d32;
+    }
+
+    protected com.opengamma.analytics.math.function.Function1D getFunction(double, double, double, double, double, double, double, com.opengamma.analytics.financial.model.option.definition.OptionDefinition, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel r0;
+        double d0, d1, d2, d3, d4, d5, d6;
+        com.opengamma.analytics.financial.model.option.definition.OptionDefinition r1;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r2;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel$2 $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        d6 := @parameter6: double;
+
+        r1 := @parameter7: com.opengamma.analytics.financial.model.option.definition.OptionDefinition;
+
+        r2 := @parameter8: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        $r3 = new com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel$2;
+
+        specialinvoke $r3.<com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel$2: void <init>(com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel,com.opengamma.analytics.financial.model.option.definition.OptionDefinition,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,double,double,double,double,double,double,double)>(r0, r1, r2, d0, d1, d2, d3, d4, d5, d6);
+
+        return $r3;
+    }
+
+    public volatile com.opengamma.analytics.math.function.Function1D getPricingFunction(com.opengamma.analytics.financial.model.option.definition.OptionDefinition)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel r0;
+        com.opengamma.analytics.financial.model.option.definition.OptionDefinition r1;
+        com.opengamma.analytics.financial.model.option.definition.AmericanVanillaOptionDefinition $r2;
+        com.opengamma.analytics.math.function.Function1D $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.definition.OptionDefinition;
+
+        $r2 = (com.opengamma.analytics.financial.model.option.definition.AmericanVanillaOptionDefinition) r1;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel: com.opengamma.analytics.math.function.Function1D getPricingFunction(com.opengamma.analytics.financial.model.option.definition.AmericanVanillaOptionDefinition)>($r2);
+
+        return $r3;
+    }
+
+    static java.util.Set access$000()
+    {
+        java.util.Set $r0;
+
+        $r0 = <com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel: java.util.Set PRICE>;
+
+        return $r0;
+    }
+
+    static com.opengamma.analytics.financial.model.option.pricing.analytic.AnalyticOptionModel access$100()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.AnalyticOptionModel $r0;
+
+        $r0 = <com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel: com.opengamma.analytics.financial.model.option.pricing.analytic.AnalyticOptionModel BSM>;
+
+        return $r0;
+    }
+
+    static com.opengamma.analytics.math.rootfinding.RealSingleRootFinder access$200()
+    {
+        com.opengamma.analytics.math.rootfinding.RealSingleRootFinder $r0;
+
+        $r0 = <com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel: com.opengamma.analytics.math.rootfinding.RealSingleRootFinder FINDER>;
+
+        return $r0;
+    }
+
+    static com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution access$300()
+    {
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r0;
+
+        $r0 = <com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.math.statistics.distribution.NormalDistribution $r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.BlackScholesMertonModel $r1;
+        com.opengamma.analytics.financial.greeks.Greek $r2;
+        java.util.Set $r3;
+        com.opengamma.analytics.math.rootfinding.BisectionSingleRootFinder $r4;
+
+        $r0 = new com.opengamma.analytics.math.statistics.distribution.NormalDistribution;
+
+        specialinvoke $r0.<com.opengamma.analytics.math.statistics.distribution.NormalDistribution: void <init>(double,double)>(0.0, 1.0);
+
+        <com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL> = $r0;
+
+        $r1 = new com.opengamma.analytics.financial.model.option.pricing.analytic.BlackScholesMertonModel;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.BlackScholesMertonModel: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel: com.opengamma.analytics.financial.model.option.pricing.analytic.AnalyticOptionModel BSM> = $r1;
+
+        $r2 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek FAIR_PRICE>;
+
+        $r3 = staticinvoke <java.util.Collections: java.util.Set singleton(java.lang.Object)>($r2);
+
+        <com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel: java.util.Set PRICE> = $r3;
+
+        $r4 = new com.opengamma.analytics.math.rootfinding.BisectionSingleRootFinder;
+
+        specialinvoke $r4.<com.opengamma.analytics.math.rootfinding.BisectionSingleRootFinder: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.option.pricing.analytic.JuZhongModel: com.opengamma.analytics.math.rootfinding.RealSingleRootFinder FINDER> = $r4;
+
+        return;
+    }
+}

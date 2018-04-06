@@ -1,0 +1,484 @@
+public final class com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod extends java.lang.Object implements com.opengamma.analytics.financial.provider.method.CapFloorIborSABRCapMethodInterface
+{
+    private static final com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod INSTANCE;
+    private static final com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION;
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod r0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public static com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod getInstance()
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod $r0;
+
+        $r0 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod INSTANCE>;
+
+        return $r0;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor, com.opengamma.analytics.financial.provider.description.interestrate.SABRCapProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.SABRCapProviderInterface r2;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18;
+        com.opengamma.analytics.math.function.Function1D r5;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r8;
+        boolean $z0;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r9, $r11;
+        com.opengamma.analytics.financial.instrument.index.IborIndex $r10;
+        com.opengamma.util.money.Currency $r12, $r19;
+        java.lang.Double $r13, $r18;
+        com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters $r14;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r15;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r16;
+        java.lang.Object $r17;
+        com.opengamma.util.money.MultipleCurrencyAmount $r20;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.SABRCapProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "The cap/floor shoud not be null");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "SABR cap provider");
+
+        $r8 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingTime()>();
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: boolean isCap()>();
+
+        specialinvoke $r8.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>($d5, $d6, $z0);
+
+        $r9 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRCapProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.analytics.financial.instrument.index.IborIndex getIndex()>();
+
+        $d7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        d0 = interfaceinvoke $r9.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getSimplyCompoundForwardRate(com.opengamma.analytics.financial.instrument.index.IborIndex,double,double,double)>($r10, $d7, $d8, $d9);
+
+        $r11 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRCapProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentTime()>();
+
+        $r13 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        d1 = interfaceinvoke $r11.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r12, $r13);
+
+        $d11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        d2 = $d11 - $d12;
+
+        $r14 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRCapProviderInterface: com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters getSABRParameter()>();
+
+        $d13 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingTime()>();
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        d3 = virtualinvoke $r14.<com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters: double getVolatility(double,double,double,double)>($d13, d2, $d14, d0);
+
+        $r15 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r15.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d0, d1, d3);
+
+        $r16 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        r5 = virtualinvoke $r16.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: com.opengamma.analytics.math.function.Function1D getPriceFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)>($r8);
+
+        $r17 = virtualinvoke r5.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r15);
+
+        $r18 = (java.lang.Double) $r17;
+
+        $d15 = virtualinvoke $r18.<java.lang.Double: double doubleValue()>();
+
+        $d16 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getNotional()>();
+
+        $d17 = $d15 * $d16;
+
+        $d18 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentYearFraction()>();
+
+        d4 = $d17 * $d18;
+
+        $r19 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r20 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r19, d4);
+
+        return $r20;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity presentValueCurveSensitivity(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor, com.opengamma.analytics.financial.provider.description.interestrate.SABRCapProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.SABRCapProviderInterface r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r3;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity r5, $r29, r32, r33, r34, r35;
+        double[] r6, r8;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r13;
+        boolean $z0;
+        com.opengamma.analytics.financial.instrument.index.IborIndex $r14, $r17;
+        com.opengamma.util.money.Currency $r15, $r26, $r30;
+        java.lang.Double $r16;
+        java.lang.String $r18, $r27;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.SimplyCompoundedForwardSensitivity $r19;
+        com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters $r20;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r21;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r22;
+        java.util.ArrayList $r23;
+        com.opengamma.util.tuple.DoublesPair $r24;
+        java.util.HashMap $r25;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity $r31;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.SABRCapProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "The cap/floor shoud not be null");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "SABR cap provider");
+
+        r3 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRCapProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r13 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $d5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingTime()>();
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: boolean isCap()>();
+
+        specialinvoke $r13.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>($d4, $d5, $z0);
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.analytics.financial.instrument.index.IborIndex getIndex()>();
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $d7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        d0 = interfaceinvoke r3.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getSimplyCompoundForwardRate(com.opengamma.analytics.financial.instrument.index.IborIndex,double,double,double)>($r14, $d6, $d7, $d8);
+
+        $r15 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentTime()>();
+
+        $r16 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d9);
+
+        d1 = interfaceinvoke r3.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r15, $r16);
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.analytics.financial.instrument.index.IborIndex getIndex()>();
+
+        $r18 = interfaceinvoke r3.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: java.lang.String getName(com.opengamma.analytics.financial.instrument.index.IborIndex)>($r17);
+
+        $r19 = new com.opengamma.analytics.financial.provider.sensitivity.multicurve.SimplyCompoundedForwardSensitivity;
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $d11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        specialinvoke $r19.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.SimplyCompoundedForwardSensitivity: void <init>(double,double,double,double)>($d10, $d11, $d12, 1.0);
+
+        r5 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity ofForward(java.lang.String,com.opengamma.analytics.financial.provider.sensitivity.multicurve.ForwardSensitivity)>($r18, $r19);
+
+        $d13 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentTime()>();
+
+        $d14 = neg $d13;
+
+        d2 = $d14 * d1;
+
+        $d15 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d16 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        d3 = $d15 - $d16;
+
+        $r20 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRCapProviderInterface: com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters getSABRParameter()>();
+
+        $d17 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingTime()>();
+
+        $d18 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        r6 = virtualinvoke $r20.<com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters: double[] getVolatilityAdjoint(double,double,double,double)>($d17, d3, $d18, d0);
+
+        $r21 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        $d19 = r6[0];
+
+        specialinvoke $r21.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d0, 1.0, $d19);
+
+        $r22 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        r8 = virtualinvoke $r22.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: double[] getPriceAdjoint(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData)>($r13, $r21);
+
+        $r23 = new java.util.ArrayList;
+
+        specialinvoke $r23.<java.util.ArrayList: void <init>()>();
+
+        $d20 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentTime()>();
+
+        $r24 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d20, d2);
+
+        interfaceinvoke $r23.<java.util.List: boolean add(java.lang.Object)>($r24);
+
+        $r25 = new java.util.HashMap;
+
+        specialinvoke $r25.<java.util.HashMap: void <init>()>();
+
+        $r26 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r27 = interfaceinvoke r3.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: java.lang.String getName(com.opengamma.util.money.Currency)>($r26);
+
+        interfaceinvoke $r25.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r27, $r23);
+
+        r32 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity ofYieldDiscounting(java.util.Map)>($r25);
+
+        $d21 = r8[0];
+
+        r33 = virtualinvoke r32.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>($d21);
+
+        $d25 = r8[1];
+
+        $d23 = r8[2];
+
+        $d22 = r6[1];
+
+        $d24 = $d23 * $d22;
+
+        $d26 = $d25 + $d24;
+
+        $d27 = d1 * $d26;
+
+        $r29 = virtualinvoke r5.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>($d27);
+
+        r34 = virtualinvoke r33.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity plus(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>($r29);
+
+        $d28 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getNotional()>();
+
+        $d29 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentYearFraction()>();
+
+        $d30 = $d28 * $d29;
+
+        r35 = virtualinvoke r34.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>($d30);
+
+        $r30 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r31 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity of(com.opengamma.util.money.Currency,com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>($r30, r35);
+
+        return $r31;
+    }
+
+    public com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle presentValueSABRSensitivity(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor, com.opengamma.analytics.financial.provider.description.interestrate.SABRCapProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.SABRCapProviderInterface r2;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46;
+        double[] r4, r6;
+        com.opengamma.util.tuple.DoublesPair r7;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r11;
+        boolean $z0;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r12, $r14;
+        com.opengamma.analytics.financial.instrument.index.IborIndex $r13;
+        com.opengamma.util.money.Currency $r15;
+        java.lang.Double $r16;
+        com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters $r17;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r18;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r19;
+        com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle $r20;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.SABRCapProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "The cap/floor shoud not be null");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "SABR cap provider");
+
+        $r11 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $d4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingTime()>();
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: boolean isCap()>();
+
+        specialinvoke $r11.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>($d3, $d4, $z0);
+
+        $r12 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRCapProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r13 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.analytics.financial.instrument.index.IborIndex getIndex()>();
+
+        $d5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        d0 = interfaceinvoke $r12.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getSimplyCompoundForwardRate(com.opengamma.analytics.financial.instrument.index.IborIndex,double,double,double)>($r13, $d5, $d6, $d7);
+
+        $r14 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRCapProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r15 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentTime()>();
+
+        $r16 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d8);
+
+        d1 = interfaceinvoke $r14.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r15, $r16);
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        d2 = $d9 - $d10;
+
+        $r17 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRCapProviderInterface: com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters getSABRParameter()>();
+
+        $d11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingTime()>();
+
+        $d12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        r4 = virtualinvoke $r17.<com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters: double[] getVolatilityAdjoint(double,double,double,double)>($d11, d2, $d12, d0);
+
+        $r18 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        $d13 = r4[0];
+
+        specialinvoke $r18.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d0, 1.0, $d13);
+
+        $r19 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        r6 = virtualinvoke $r19.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: double[] getPriceAdjoint(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData)>($r11, $r18);
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingTime()>();
+
+        r7 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d14, d2);
+
+        $r20 = new com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle;
+
+        specialinvoke $r20.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void <init>()>();
+
+        $d15 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getNotional()>();
+
+        $d16 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentYearFraction()>();
+
+        $d17 = $d15 * $d16;
+
+        $d19 = $d17 * d1;
+
+        $d18 = r6[2];
+
+        $d21 = $d19 * $d18;
+
+        $d20 = r4[3];
+
+        $d22 = $d21 * $d20;
+
+        virtualinvoke $r20.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void addAlpha(com.opengamma.util.tuple.DoublesPair,double)>(r7, $d22);
+
+        $d23 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getNotional()>();
+
+        $d24 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentYearFraction()>();
+
+        $d25 = $d23 * $d24;
+
+        $d27 = $d25 * d1;
+
+        $d26 = r6[2];
+
+        $d29 = $d27 * $d26;
+
+        $d28 = r4[4];
+
+        $d30 = $d29 * $d28;
+
+        virtualinvoke $r20.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void addBeta(com.opengamma.util.tuple.DoublesPair,double)>(r7, $d30);
+
+        $d31 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getNotional()>();
+
+        $d32 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentYearFraction()>();
+
+        $d33 = $d31 * $d32;
+
+        $d35 = $d33 * d1;
+
+        $d34 = r6[2];
+
+        $d37 = $d35 * $d34;
+
+        $d36 = r4[5];
+
+        $d38 = $d37 * $d36;
+
+        virtualinvoke $r20.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void addRho(com.opengamma.util.tuple.DoublesPair,double)>(r7, $d38);
+
+        $d39 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getNotional()>();
+
+        $d40 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentYearFraction()>();
+
+        $d41 = $d39 * $d40;
+
+        $d43 = $d41 * d1;
+
+        $d42 = r6[2];
+
+        $d45 = $d43 * $d42;
+
+        $d44 = r4[6];
+
+        $d46 = $d45 * $d44;
+
+        virtualinvoke $r20.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void addNu(com.opengamma.util.tuple.DoublesPair,double)>(r7, $d46);
+
+        return $r20;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod $r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r1;
+
+        $r0 = new com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod INSTANCE> = $r0;
+
+        $r1 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborSABRCapMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION> = $r1;
+
+        return;
+    }
+}

@@ -1,0 +1,148 @@
+public class com.opengamma.financial.convention.daycount.ActualActualAFB extends com.opengamma.financial.convention.daycount.ActualTypeDayCount
+{
+    private static final long serialVersionUID;
+
+    public void <init>()
+    {
+        com.opengamma.financial.convention.daycount.ActualActualAFB r0;
+
+        r0 := @this: com.opengamma.financial.convention.daycount.ActualActualAFB;
+
+        specialinvoke r0.<com.opengamma.financial.convention.daycount.ActualTypeDayCount: void <init>()>();
+
+        return;
+    }
+
+    public double getDayCountFraction(org.threeten.bp.LocalDate, org.threeten.bp.LocalDate)
+    {
+        com.opengamma.financial.convention.daycount.ActualActualAFB r0;
+        org.threeten.bp.LocalDate r1, r2, r3, r8;
+        long l0;
+        org.threeten.bp.temporal.ChronoUnit $r4;
+        boolean $z0, $z1, $z2, $z3;
+        int $i1, $i2, $i3;
+        org.threeten.bp.Month $r5, $r6;
+        double $d0, $d2, $d3, $d4, $d5, $d6, $d7;
+        org.threeten.bp.LocalDate[] r7;
+
+        r0 := @this: com.opengamma.financial.convention.daycount.ActualActualAFB;
+
+        r1 := @parameter0: org.threeten.bp.LocalDate;
+
+        r2 := @parameter1: org.threeten.bp.LocalDate;
+
+        virtualinvoke r0.<com.opengamma.financial.convention.daycount.ActualActualAFB: void testDates(org.threeten.bp.LocalDate,org.threeten.bp.LocalDate)>(r1, r2);
+
+        $r4 = <org.threeten.bp.temporal.ChronoUnit: org.threeten.bp.temporal.ChronoUnit DAYS>;
+
+        l0 = virtualinvoke r1.<org.threeten.bp.LocalDate: long periodUntil(org.threeten.bp.temporal.Temporal,org.threeten.bp.temporal.TemporalUnit)>(r2, $r4);
+
+        r3 = virtualinvoke r1.<org.threeten.bp.LocalDate: org.threeten.bp.LocalDate plusYears(long)>(1L);
+
+        $z0 = virtualinvoke r2.<org.threeten.bp.LocalDate: boolean isBefore(org.threeten.bp.chrono.ChronoLocalDate)>(r3);
+
+        if $z0 != 0 goto label1;
+
+        $z2 = virtualinvoke r3.<org.threeten.bp.LocalDate: boolean equals(java.lang.Object)>(r2);
+
+        if $z2 == 0 goto label4;
+
+     label1:
+        $z1 = virtualinvoke r2.<org.threeten.bp.LocalDate: boolean isLeapYear()>();
+
+        if $z1 == 0 goto label2;
+
+        $i1 = virtualinvoke r2.<org.threeten.bp.LocalDate: int getMonthValue()>();
+
+        if $i1 <= 2 goto label2;
+
+        $d0 = 366.0;
+
+        goto label3;
+
+     label2:
+        $d0 = 365.0;
+
+     label3:
+        $d2 = (double) l0;
+
+        $d3 = $d2 / $d0;
+
+        return $d3;
+
+     label4:
+        r7 = staticinvoke <com.opengamma.analytics.financial.schedule.ScheduleFactory: org.threeten.bp.LocalDate[] getSchedule(org.threeten.bp.LocalDate,org.threeten.bp.LocalDate,int,boolean,boolean,boolean)>(r1, r2, 1, 1, 1, 0);
+
+        r8 = r7[0];
+
+        $z3 = virtualinvoke r8.<org.threeten.bp.LocalDate: boolean isLeapYear()>();
+
+        if $z3 == 0 goto label5;
+
+        $r5 = virtualinvoke r8.<org.threeten.bp.LocalDate: org.threeten.bp.Month getMonth()>();
+
+        $r6 = <org.threeten.bp.Month: org.threeten.bp.Month FEBRUARY>;
+
+        if $r5 != $r6 goto label5;
+
+        $i2 = virtualinvoke r8.<org.threeten.bp.LocalDate: int getDayOfMonth()>();
+
+        if $i2 != 28 goto label5;
+
+        r8 = virtualinvoke r8.<org.threeten.bp.LocalDate: org.threeten.bp.LocalDate plusDays(long)>(1L);
+
+     label5:
+        $i3 = lengthof r7;
+
+        $d4 = (double) $i3;
+
+        $d5 = $d4 - 1.0;
+
+        $d6 = virtualinvoke r0.<com.opengamma.financial.convention.daycount.ActualActualAFB: double getDayCountFraction(org.threeten.bp.LocalDate,org.threeten.bp.LocalDate)>(r1, r8);
+
+        $d7 = $d5 + $d6;
+
+        return $d7;
+    }
+
+    public double getAccruedInterest(org.threeten.bp.LocalDate, org.threeten.bp.LocalDate, org.threeten.bp.LocalDate, double, double)
+    {
+        com.opengamma.financial.convention.daycount.ActualActualAFB r0;
+        org.threeten.bp.LocalDate r1, r2, r3;
+        double d0, d1, $d2, $d3;
+
+        r0 := @this: com.opengamma.financial.convention.daycount.ActualActualAFB;
+
+        r1 := @parameter0: org.threeten.bp.LocalDate;
+
+        r2 := @parameter1: org.threeten.bp.LocalDate;
+
+        r3 := @parameter2: org.threeten.bp.LocalDate;
+
+        d0 := @parameter3: double;
+
+        d1 := @parameter4: double;
+
+        $d2 = virtualinvoke r0.<com.opengamma.financial.convention.daycount.ActualActualAFB: double getDayCountFraction(org.threeten.bp.LocalDate,org.threeten.bp.LocalDate)>(r1, r2);
+
+        $d3 = d0 * $d2;
+
+        return $d3;
+    }
+
+    public java.lang.String getName()
+    {
+        com.opengamma.financial.convention.daycount.ActualActualAFB r0;
+
+        r0 := @this: com.opengamma.financial.convention.daycount.ActualActualAFB;
+
+        return "Actual/Actual AFB";
+    }
+
+    public static void <clinit>()
+    {
+        <com.opengamma.financial.convention.daycount.ActualActualAFB: long serialVersionUID> = 1L;
+
+        return;
+    }
+}

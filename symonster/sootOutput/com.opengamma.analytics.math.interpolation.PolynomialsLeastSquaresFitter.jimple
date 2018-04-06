@@ -1,0 +1,753 @@
+public class com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter extends java.lang.Object
+{
+    private com.opengamma.analytics.math.linearalgebra.QRDecompositionResult _qrResult;
+    private final double[] _renorm;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter r0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $r1 = newarray (double)[2];
+
+        r0.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter: double[] _renorm> = $r1;
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.regression.LeastSquaresRegressionResult regress(double[], double[], int)
+    {
+        com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter r0;
+        double[] r1, r2;
+        int i0;
+        com.opengamma.analytics.math.regression.LeastSquaresRegressionResult $r3;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        i0 := @parameter2: int;
+
+        $r3 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter: com.opengamma.analytics.math.regression.LeastSquaresRegressionResult regress(double[],double[],int,boolean)>(r1, r2, i0, 0);
+
+        return $r3;
+    }
+
+    public com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitterResult regressVerbose(double[], double[], int, boolean)
+    {
+        com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter r0;
+        double[] r1, r2, $r8, $r11, $r13, $r14;
+        int i0, i1, $i2, $i3, $i4, $i5;
+        boolean z0;
+        com.opengamma.analytics.math.regression.LeastSquaresRegressionResult r3;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D r4;
+        double d0;
+        com.opengamma.analytics.math.linearalgebra.QRDecompositionResult $r6;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r7;
+        com.opengamma.analytics.math.matrix.OGMatrixAlgebra $r9;
+        com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitterResult $r10, $r12;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        i0 := @parameter2: int;
+
+        z0 := @parameter3: boolean;
+
+        r3 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter: com.opengamma.analytics.math.regression.LeastSquaresRegressionResult regress(double[],double[],int,boolean)>(r1, r2, i0, z0);
+
+        i1 = lengthof r1;
+
+        $r6 = r0.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter: com.opengamma.analytics.math.linearalgebra.QRDecompositionResult _qrResult>;
+
+        r4 = interfaceinvoke $r6.<com.opengamma.analytics.math.linearalgebra.QRDecompositionResult: com.opengamma.analytics.math.matrix.DoubleMatrix2D getR()>();
+
+        $r7 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        $r8 = virtualinvoke r3.<com.opengamma.analytics.math.regression.LeastSquaresRegressionResult: double[] getResiduals()>();
+
+        specialinvoke $r7.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>($r8);
+
+        $r9 = <com.opengamma.analytics.math.matrix.MatrixAlgebraFactory: com.opengamma.analytics.math.matrix.OGMatrixAlgebra OG_ALGEBRA>;
+
+        d0 = virtualinvoke $r9.<com.opengamma.analytics.math.matrix.OGMatrixAlgebra: double getNorm2(com.opengamma.analytics.math.matrix.Matrix)>($r7);
+
+        if z0 != 1 goto label1;
+
+        $r12 = new com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitterResult;
+
+        $r13 = virtualinvoke r3.<com.opengamma.analytics.math.regression.LeastSquaresRegressionResult: double[] getBetas()>();
+
+        $i4 = i1 - i0;
+
+        $i5 = $i4 - 1;
+
+        $r14 = r0.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter: double[] _renorm>;
+
+        specialinvoke $r12.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitterResult: void <init>(double[],com.opengamma.analytics.math.matrix.DoubleMatrix2D,int,double,double[])>($r13, r4, $i5, d0, $r14);
+
+        return $r12;
+
+     label1:
+        $r10 = new com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitterResult;
+
+        $r11 = virtualinvoke r3.<com.opengamma.analytics.math.regression.LeastSquaresRegressionResult: double[] getBetas()>();
+
+        $i2 = i1 - i0;
+
+        $i3 = $i2 - 1;
+
+        specialinvoke $r10.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitterResult: void <init>(double[],com.opengamma.analytics.math.matrix.DoubleMatrix2D,int,double)>($r11, r4, $i3, d0);
+
+        return $r10;
+    }
+
+    private com.opengamma.analytics.math.regression.LeastSquaresRegressionResult regress(double[], double[], int, boolean)
+    {
+        com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter r0;
+        double[] r1, r2, $r9, $r10, r12;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i9, $i10, i15, i16, i17, i18, i19, i20, i21, i22, i23, i24;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D $r5;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r6;
+        com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra $r7;
+        byte $b8, $b11, $b12, $b13, $b14;
+        com.opengamma.analytics.math.regression.LeastSquaresRegressionResult $r8;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, d18;
+        double[][] r11;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        i0 := @parameter2: int;
+
+        z0 := @parameter3: boolean;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "xData");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "yData");
+
+        if i0 < 0 goto label01;
+
+        $z5 = 1;
+
+        goto label02;
+
+     label01:
+        $z5 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "Minus degree");
+
+        $i3 = lengthof r1;
+
+        $i2 = lengthof r2;
+
+        if $i3 != $i2 goto label03;
+
+        $z6 = 1;
+
+        goto label04;
+
+     label03:
+        $z6 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z6, "xData length should be the same as yData length");
+
+        $i4 = lengthof r1;
+
+        if $i4 <= i0 goto label05;
+
+        $z7 = 1;
+
+        goto label06;
+
+     label05:
+        $z7 = 0;
+
+     label06:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z7, "Not enough amount of data");
+
+        i1 = lengthof r1;
+
+        i15 = 0;
+
+     label07:
+        if i15 >= i1 goto label08;
+
+        $d14 = r1[i15];
+
+        $z1 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d14);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z1, "xData containing NaN");
+
+        $d15 = r1[i15];
+
+        $z2 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d15);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z2, "xData containing Infinity");
+
+        $d16 = r2[i15];
+
+        $z3 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d16);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z3, "yData containing NaN");
+
+        $d17 = r2[i15];
+
+        $z4 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d17);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z4, "yData containing Infinity");
+
+        i15 = i15 + 1;
+
+        goto label07;
+
+     label08:
+        i16 = 0;
+
+     label09:
+        if i16 >= i1 goto label14;
+
+        i17 = i16 + 1;
+
+     label10:
+        if i17 >= i1 goto label13;
+
+        $d11 = r1[i16];
+
+        $d10 = r1[i17];
+
+        $b13 = $d11 cmpl $d10;
+
+        if $b13 != 0 goto label11;
+
+        $d13 = r2[i16];
+
+        $d12 = r2[i17];
+
+        $b14 = $d13 cmpl $d12;
+
+        if $b14 == 0 goto label11;
+
+        $z8 = 1;
+
+        goto label12;
+
+     label11:
+        $z8 = 0;
+
+     label12:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z8, "Two distinct data on x=const. line");
+
+        i17 = i17 + 1;
+
+        goto label10;
+
+     label13:
+        i16 = i16 + 1;
+
+        goto label09;
+
+     label14:
+        i18 = 0;
+
+        i19 = 0;
+
+     label15:
+        if i19 >= i1 goto label19;
+
+        i20 = i19 + 1;
+
+     label16:
+        if i20 >= i1 goto label18;
+
+        $d7 = r1[i19];
+
+        $d6 = r1[i20];
+
+        $b11 = $d7 cmpl $d6;
+
+        if $b11 != 0 goto label17;
+
+        $d9 = r2[i19];
+
+        $d8 = r2[i20];
+
+        $b12 = $d9 cmpl $d8;
+
+        if $b12 != 0 goto label17;
+
+        i18 = i18 + 1;
+
+     label17:
+        i20 = i20 + 1;
+
+        goto label16;
+
+     label18:
+        i19 = i19 + 1;
+
+        goto label15;
+
+     label19:
+        $i5 = i1 - i0;
+
+        $i6 = $i5 - 1;
+
+        if i18 <= $i6 goto label20;
+
+        $z9 = 1;
+
+        goto label21;
+
+     label20:
+        $z9 = 0;
+
+     label21:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z9, "Too many repeated data");
+
+        $i7 = i0 + 1;
+
+        r11 = newmultiarray (double)[i1][$i7];
+
+        if z0 != 1 goto label26;
+
+        r12 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter: double[] normaliseData(double[])>(r1);
+
+        i21 = 0;
+
+     label22:
+        if i21 >= i1 goto label25;
+
+        i22 = 0;
+
+     label23:
+        $i10 = i0 + 1;
+
+        if i22 >= $i10 goto label24;
+
+        $r10 = r11[i21];
+
+        $d4 = r12[i21];
+
+        $d3 = (double) i22;
+
+        $d5 = staticinvoke <java.lang.Math: double pow(double,double)>($d4, $d3);
+
+        $r10[i22] = $d5;
+
+        i22 = i22 + 1;
+
+        goto label23;
+
+     label24:
+        i21 = i21 + 1;
+
+        goto label22;
+
+     label25:
+        goto label30;
+
+     label26:
+        i23 = 0;
+
+     label27:
+        if i23 >= i1 goto label30;
+
+        i24 = 0;
+
+     label28:
+        $i9 = i0 + 1;
+
+        if i24 >= $i9 goto label29;
+
+        $r9 = r11[i23];
+
+        $d1 = r1[i23];
+
+        $d0 = (double) i24;
+
+        $d2 = staticinvoke <java.lang.Math: double pow(double,double)>($d1, $d0);
+
+        $r9[i24] = $d2;
+
+        i24 = i24 + 1;
+
+        goto label28;
+
+     label29:
+        i23 = i23 + 1;
+
+        goto label27;
+
+     label30:
+        $r5 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r5.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r11);
+
+        $r6 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r6.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r2);
+
+        $r7 = <com.opengamma.analytics.math.matrix.MatrixAlgebraFactory: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra COMMONS_ALGEBRA>;
+
+        d18 = virtualinvoke $r7.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: double getNorm2(com.opengamma.analytics.math.matrix.Matrix)>($r5);
+
+        $b8 = d18 cmpl 1.0E9;
+
+        if $b8 <= 0 goto label31;
+
+        $z10 = 1;
+
+        goto label32;
+
+     label31:
+        $z10 = 0;
+
+     label32:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z10, "Too large input data or too many degrees");
+
+        $r8 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter: com.opengamma.analytics.math.regression.LeastSquaresRegressionResult regress(com.opengamma.analytics.math.matrix.DoubleMatrix2D,com.opengamma.analytics.math.matrix.DoubleMatrix1D,int,int)>($r5, $r6, i1, i0);
+
+        return $r8;
+    }
+
+    private com.opengamma.analytics.math.regression.LeastSquaresRegressionResult regress(com.opengamma.analytics.math.matrix.DoubleMatrix2D, com.opengamma.analytics.math.matrix.DoubleMatrix1D, int, int)
+    {
+        com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter r0;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D r1, r5, r6;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r2;
+        int i0, i1, $i2, i3, i4;
+        com.opengamma.analytics.math.linearalgebra.DecompositionResult r4;
+        double[] r7, r8;
+        com.opengamma.analytics.math.linearalgebra.QRDecompositionCommons $r9;
+        java.lang.Object $r10;
+        com.opengamma.analytics.math.linearalgebra.QRDecompositionResult $r11, $r12, $r13;
+        com.opengamma.analytics.math.regression.LeastSquaresRegressionResult $r14;
+        double $d0, $d1;
+        boolean $z0, $z1;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter;
+
+        r1 := @parameter0: com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        r2 := @parameter1: com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        i0 := @parameter2: int;
+
+        i1 := @parameter3: int;
+
+        $r9 = new com.opengamma.analytics.math.linearalgebra.QRDecompositionCommons;
+
+        specialinvoke $r9.<com.opengamma.analytics.math.linearalgebra.QRDecompositionCommons: void <init>()>();
+
+        $r10 = virtualinvoke $r9.<com.opengamma.analytics.math.linearalgebra.Decomposition: java.lang.Object evaluate(java.lang.Object)>(r1);
+
+        r4 = (com.opengamma.analytics.math.linearalgebra.DecompositionResult) $r10;
+
+        $r11 = (com.opengamma.analytics.math.linearalgebra.QRDecompositionResult) r4;
+
+        r0.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter: com.opengamma.analytics.math.linearalgebra.QRDecompositionResult _qrResult> = $r11;
+
+        $r12 = r0.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter: com.opengamma.analytics.math.linearalgebra.QRDecompositionResult _qrResult>;
+
+        r5 = interfaceinvoke $r12.<com.opengamma.analytics.math.linearalgebra.QRDecompositionResult: com.opengamma.analytics.math.matrix.DoubleMatrix2D getQ()>();
+
+        $r13 = r0.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter: com.opengamma.analytics.math.linearalgebra.QRDecompositionResult _qrResult>;
+
+        r6 = interfaceinvoke $r13.<com.opengamma.analytics.math.linearalgebra.QRDecompositionResult: com.opengamma.analytics.math.matrix.DoubleMatrix2D getR()>();
+
+        r7 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter: double[] backSubstitution(com.opengamma.analytics.math.matrix.DoubleMatrix2D,com.opengamma.analytics.math.matrix.DoubleMatrix2D,com.opengamma.analytics.math.matrix.DoubleMatrix1D,int)>(r5, r6, r2, i1);
+
+        r8 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter: double[] residualsSolver(com.opengamma.analytics.math.matrix.DoubleMatrix2D,double[],com.opengamma.analytics.math.matrix.DoubleMatrix1D)>(r1, r7, r2);
+
+        i3 = 0;
+
+     label1:
+        $i2 = i1 + 1;
+
+        if i3 >= $i2 goto label2;
+
+        $d1 = r7[i3];
+
+        $z1 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d1);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z1, "Input is too large or small");
+
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label2:
+        i4 = 0;
+
+     label3:
+        if i4 >= i0 goto label4;
+
+        $d0 = r8[i4];
+
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d0);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z0, "Input is too large or small");
+
+        i4 = i4 + 1;
+
+        goto label3;
+
+     label4:
+        $r14 = new com.opengamma.analytics.math.regression.LeastSquaresRegressionResult;
+
+        specialinvoke $r14.<com.opengamma.analytics.math.regression.LeastSquaresRegressionResult: void <init>(double[],double[],double,double[],double,double,double[],double[],boolean)>(r7, r8, 0.0, null, 0.0, 0.0, null, null, 1);
+
+        return $r14;
+    }
+
+    private double[] backSubstitution(com.opengamma.analytics.math.matrix.DoubleMatrix2D, com.opengamma.analytics.math.matrix.DoubleMatrix2D, com.opengamma.analytics.math.matrix.DoubleMatrix1D, int)
+    {
+        com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter r0;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D r1, r2, r5;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r3, r6;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, i12, i13;
+        double[] r4, r7, $r12, $r13, $r14;
+        double[][] r8;
+        com.opengamma.analytics.math.matrix.OGMatrixAlgebra $r9, $r10;
+        com.opengamma.analytics.math.matrix.Matrix $r11;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, d9;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter;
+
+        r1 := @parameter0: com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        r2 := @parameter1: com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        r3 := @parameter2: com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        i0 := @parameter3: int;
+
+        $i1 = i0 + 1;
+
+        r4 = newarray (double)[$i1];
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>(r4, 0.0);
+
+        $r9 = <com.opengamma.analytics.math.matrix.MatrixAlgebraFactory: com.opengamma.analytics.math.matrix.OGMatrixAlgebra OG_ALGEBRA>;
+
+        r5 = virtualinvoke $r9.<com.opengamma.analytics.math.matrix.OGMatrixAlgebra: com.opengamma.analytics.math.matrix.DoubleMatrix2D getTranspose(com.opengamma.analytics.math.matrix.Matrix)>(r1);
+
+        $r10 = <com.opengamma.analytics.math.matrix.MatrixAlgebraFactory: com.opengamma.analytics.math.matrix.OGMatrixAlgebra OG_ALGEBRA>;
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.math.matrix.OGMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r5, r3);
+
+        r6 = (com.opengamma.analytics.math.matrix.DoubleMatrix1D) $r11;
+
+        r7 = virtualinvoke r6.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        r8 = virtualinvoke r2.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: double[][] getData()>();
+
+        i12 = 0;
+
+     label1:
+        $i2 = i0 + 1;
+
+        if i12 >= $i2 goto label4;
+
+        d9 = 0.0;
+
+        i13 = 0;
+
+     label2:
+        if i13 >= i12 goto label3;
+
+        $i7 = i0 - i12;
+
+        $r13 = r8[$i7];
+
+        $i8 = i0 - i13;
+
+        $d5 = $r13[$i8];
+
+        $i9 = i0 - i13;
+
+        $d4 = r4[$i9];
+
+        $d7 = $d5 * $d4;
+
+        $i10 = i0 - i12;
+
+        $r14 = r8[$i10];
+
+        $i11 = i0 - i12;
+
+        $d6 = $r14[$i11];
+
+        $d8 = $d7 / $d6;
+
+        d9 = d9 - $d8;
+
+        i13 = i13 + 1;
+
+        goto label2;
+
+     label3:
+        $i6 = i0 - i12;
+
+        $i3 = i0 - i12;
+
+        $d1 = r7[$i3];
+
+        $i4 = i0 - i12;
+
+        $r12 = r8[$i4];
+
+        $i5 = i0 - i12;
+
+        $d0 = $r12[$i5];
+
+        $d2 = $d1 / $d0;
+
+        $d3 = $d2 + d9;
+
+        r4[$i6] = $d3;
+
+        i12 = i12 + 1;
+
+        goto label1;
+
+     label4:
+        return r4;
+    }
+
+    private double[] residualsSolver(com.opengamma.analytics.math.matrix.DoubleMatrix2D, double[], com.opengamma.analytics.math.matrix.DoubleMatrix1D)
+    {
+        com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter r0;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D r1;
+        double[] r2, $r12;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r3, r5, r6, $r7;
+        com.opengamma.analytics.math.matrix.OGMatrixAlgebra $r8, $r10;
+        com.opengamma.analytics.math.matrix.Matrix $r9, $r11;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter;
+
+        r1 := @parameter0: com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        $r7 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r7.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r2);
+
+        $r8 = <com.opengamma.analytics.math.matrix.MatrixAlgebraFactory: com.opengamma.analytics.math.matrix.OGMatrixAlgebra OG_ALGEBRA>;
+
+        $r9 = virtualinvoke $r8.<com.opengamma.analytics.math.matrix.OGMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r1, $r7);
+
+        r5 = (com.opengamma.analytics.math.matrix.DoubleMatrix1D) $r9;
+
+        $r10 = <com.opengamma.analytics.math.matrix.MatrixAlgebraFactory: com.opengamma.analytics.math.matrix.OGMatrixAlgebra OG_ALGEBRA>;
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.math.matrix.OGMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix subtract(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r3, r5);
+
+        r6 = (com.opengamma.analytics.math.matrix.DoubleMatrix1D) $r11;
+
+        $r12 = virtualinvoke r6.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        return $r12;
+    }
+
+    private double[] normaliseData(double[])
+    {
+        com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter r0;
+        double[] r1, r2, $r4, $r8, $r11, $r12, $r13;
+        int i0, i1;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8;
+        com.opengamma.analytics.math.statistics.descriptive.MeanCalculator $r3;
+        java.lang.Object $r5, $r9;
+        java.lang.Double $r6, $r10;
+        com.opengamma.analytics.math.statistics.descriptive.SampleStandardDeviationCalculator $r7;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter;
+
+        r1 := @parameter0: double[];
+
+        i0 = lengthof r1;
+
+        r2 = newarray (double)[i0];
+
+        $r3 = new com.opengamma.analytics.math.statistics.descriptive.MeanCalculator;
+
+        specialinvoke $r3.<com.opengamma.analytics.math.statistics.descriptive.MeanCalculator: void <init>()>();
+
+        $r4 = r0.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter: double[] _renorm>;
+
+        $r5 = virtualinvoke $r3.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r1);
+
+        $r6 = (java.lang.Double) $r5;
+
+        $d1 = virtualinvoke $r6.<java.lang.Double: double doubleValue()>();
+
+        $r4[0] = $d1;
+
+        $r7 = new com.opengamma.analytics.math.statistics.descriptive.SampleStandardDeviationCalculator;
+
+        specialinvoke $r7.<com.opengamma.analytics.math.statistics.descriptive.SampleStandardDeviationCalculator: void <init>()>();
+
+        $r8 = r0.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter: double[] _renorm>;
+
+        $r9 = virtualinvoke $r7.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r1);
+
+        $r10 = (java.lang.Double) $r9;
+
+        $d2 = virtualinvoke $r10.<java.lang.Double: double doubleValue()>();
+
+        $r8[1] = $d2;
+
+        $r11 = r0.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter: double[] _renorm>;
+
+        $d4 = $r11[0];
+
+        $r12 = r0.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter: double[] _renorm>;
+
+        $d3 = $r12[1];
+
+        d0 = $d4 / $d3;
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $d6 = r1[i1];
+
+        $r13 = r0.<com.opengamma.analytics.math.interpolation.PolynomialsLeastSquaresFitter: double[] _renorm>;
+
+        $d5 = $r13[1];
+
+        $d7 = $d6 / $d5;
+
+        $d8 = $d7 - d0;
+
+        r2[i1] = $d8;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return r2;
+    }
+}

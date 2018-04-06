@@ -1,0 +1,852 @@
+public final class com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod extends java.lang.Object
+{
+    private static final com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod INSTANCE;
+    private static final com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator PRDC;
+    private static final com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator PRCSDC;
+    private static final com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod METHOD_SWAP;
+
+    public static com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod getInstance()
+    {
+        com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod $r0;
+
+        $r0 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod INSTANCE>;
+
+        return $r0;
+    }
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod r0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor, com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface r2;
+        com.opengamma.analytics.financial.instrument.index.GeneratorInstrument r3;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9;
+        com.opengamma.analytics.math.function.Function1D r7;
+        com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters $r10, $r34;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        java.lang.IllegalArgumentException $r11;
+        java.lang.StringBuilder $r12, $r13, $r15;
+        java.lang.Class $r14;
+        java.lang.String $r16;
+        com.opengamma.util.money.Currency $r17;
+        com.opengamma.util.money.MultipleCurrencyAmount $r18;
+        com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor r19;
+        com.opengamma.financial.convention.calendar.Calendar r20;
+        com.opengamma.financial.convention.daycount.DayCount r21;
+        com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON r22;
+        com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded r23;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r24;
+        com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod $r25, $r30;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon $r26, $r28, $r31;
+        com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator $r27;
+        java.lang.Double $r29, $r37;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r32;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r33;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r35;
+        java.lang.Object $r36;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Swaption");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Black volatility for swaption and multicurve");
+
+        $r10 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface: com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters getBlackParameters()>();
+
+        r3 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters: com.opengamma.analytics.financial.instrument.index.GeneratorInstrument getGeneratorSwap()>();
+
+        $z0 = r3 instanceof com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor;
+
+        if $z0 == 0 goto label1;
+
+        r19 = (com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor) r3;
+
+        r20 = virtualinvoke r19.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor: com.opengamma.financial.convention.calendar.Calendar getCalendar()>();
+
+        r21 = virtualinvoke r19.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor: com.opengamma.financial.convention.daycount.DayCount getFixedLegDayCount()>();
+
+        goto label4;
+
+     label1:
+        $z1 = r3 instanceof com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON;
+
+        if $z1 == 0 goto label2;
+
+        r22 = (com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON) r3;
+
+        r20 = virtualinvoke r22.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON: com.opengamma.financial.convention.calendar.Calendar getOvernightCalendar()>();
+
+        r21 = virtualinvoke r22.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON: com.opengamma.financial.convention.daycount.DayCount getFixedLegDayCount()>();
+
+        goto label4;
+
+     label2:
+        $z2 = r3 instanceof com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded;
+
+        if $z2 == 0 goto label3;
+
+        r23 = (com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded) r3;
+
+        r20 = virtualinvoke r23.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded: com.opengamma.financial.convention.calendar.Calendar getOvernightCalendar()>();
+
+        r21 = virtualinvoke r23.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded: com.opengamma.financial.convention.daycount.DayCount getFixedLegDayCount()>();
+
+        goto label4;
+
+     label3:
+        $r11 = new java.lang.IllegalArgumentException;
+
+        $r12 = new java.lang.StringBuilder;
+
+        specialinvoke $r12.<java.lang.StringBuilder: void <init>()>();
+
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Cannot handle swap with underlying generator of type ");
+
+        $r14 = virtualinvoke r3.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r15 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r14);
+
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r11.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r16);
+
+        throw $r11;
+
+     label4:
+        r24 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r25 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod METHOD_SWAP>;
+
+        $r26 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        d0 = virtualinvoke $r25.<com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod: double presentValueBasisPoint(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.financial.convention.daycount.DayCount,com.opengamma.financial.convention.calendar.Calendar,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r26, r21, r20, r24);
+
+        $r27 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator PRDC>;
+
+        $r28 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        $r29 = virtualinvoke $r27.<com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator: java.lang.Double visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.financial.convention.daycount.DayCount,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>($r28, r21, r24);
+
+        d1 = virtualinvoke $r29.<java.lang.Double: double doubleValue()>();
+
+        $r30 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod METHOD_SWAP>;
+
+        $r31 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        d2 = virtualinvoke $r30.<com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod: double couponEquivalent(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,double,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r31, d0, r24);
+
+        d3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getMaturityTime()>();
+
+        $r32 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getTimeToExpiry()>();
+
+        $z3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: boolean isCall()>();
+
+        specialinvoke $r32.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>(d2, $d7, $z3);
+
+        $r33 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction;
+
+        specialinvoke $r33.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: void <init>()>();
+
+        $r34 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface: com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters getBlackParameters()>();
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getTimeToExpiry()>();
+
+        d4 = virtualinvoke $r34.<com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters: double getVolatility(double,double)>($d8, d3);
+
+        $r35 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r35.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d1, d0, d4);
+
+        r7 = virtualinvoke $r33.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: com.opengamma.analytics.math.function.Function1D getPriceFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)>($r32);
+
+        $r36 = virtualinvoke r7.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r35);
+
+        $r37 = (java.lang.Double) $r36;
+
+        $d6 = virtualinvoke $r37.<java.lang.Double: double doubleValue()>();
+
+        $z4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: boolean isLong()>();
+
+        if $z4 == 0 goto label5;
+
+        $d9 = 1.0;
+
+        goto label6;
+
+     label5:
+        $d9 = -1.0;
+
+     label6:
+        d5 = $d6 * $d9;
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r18 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r17, d5);
+
+        return $r18;
+    }
+
+    public double impliedVolatility(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor, com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface r2;
+        double d0, d1, $d2;
+        com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Swaption");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Black volatility for swaption and multicurve");
+
+        d0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getMaturityTime()>();
+
+        $r5 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface: com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters getBlackParameters()>();
+
+        $d2 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getTimeToExpiry()>();
+
+        d1 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters: double getVolatility(double,double)>($d2, d0);
+
+        return d1;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity presentValueCurveSensitivity(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor, com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface r2;
+        com.opengamma.analytics.financial.instrument.index.GeneratorInstrument r3;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity r4, r5, r42, $r43, r44;
+        double[] r9;
+        com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters $r12, $r40;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        java.lang.IllegalArgumentException $r13;
+        java.lang.StringBuilder $r14, $r15, $r17;
+        java.lang.Class $r16;
+        java.lang.String $r18;
+        com.opengamma.util.money.Currency $r19;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity $r20;
+        com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor r21;
+        com.opengamma.financial.convention.calendar.Calendar r22;
+        com.opengamma.financial.convention.daycount.DayCount r23;
+        com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON r24;
+        com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded r25;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r26;
+        com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod $r27, $r32, $r34;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon $r28, $r30, $r33, $r35, $r37;
+        com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator $r29;
+        java.lang.Double $r31;
+        com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator $r36;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r38;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r39;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r41;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Swaption");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Black volatility for swaption and multicurve");
+
+        $r12 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface: com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters getBlackParameters()>();
+
+        r3 = virtualinvoke $r12.<com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters: com.opengamma.analytics.financial.instrument.index.GeneratorInstrument getGeneratorSwap()>();
+
+        $z0 = r3 instanceof com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor;
+
+        if $z0 == 0 goto label1;
+
+        r21 = (com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor) r3;
+
+        r22 = virtualinvoke r21.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor: com.opengamma.financial.convention.calendar.Calendar getCalendar()>();
+
+        r23 = virtualinvoke r21.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor: com.opengamma.financial.convention.daycount.DayCount getFixedLegDayCount()>();
+
+        goto label4;
+
+     label1:
+        $z1 = r3 instanceof com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON;
+
+        if $z1 == 0 goto label2;
+
+        r24 = (com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON) r3;
+
+        r22 = virtualinvoke r24.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON: com.opengamma.financial.convention.calendar.Calendar getOvernightCalendar()>();
+
+        r23 = virtualinvoke r24.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON: com.opengamma.financial.convention.daycount.DayCount getFixedLegDayCount()>();
+
+        goto label4;
+
+     label2:
+        $z2 = r3 instanceof com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded;
+
+        if $z2 == 0 goto label3;
+
+        r25 = (com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded) r3;
+
+        r22 = virtualinvoke r25.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded: com.opengamma.financial.convention.calendar.Calendar getOvernightCalendar()>();
+
+        r23 = virtualinvoke r25.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded: com.opengamma.financial.convention.daycount.DayCount getFixedLegDayCount()>();
+
+        goto label4;
+
+     label3:
+        $r13 = new java.lang.IllegalArgumentException;
+
+        $r14 = new java.lang.StringBuilder;
+
+        specialinvoke $r14.<java.lang.StringBuilder: void <init>()>();
+
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Cannot handle swap with underlying generator of type ");
+
+        $r16 = virtualinvoke r3.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r17 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r16);
+
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r13.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r18);
+
+        throw $r13;
+
+     label4:
+        r26 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r27 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod METHOD_SWAP>;
+
+        $r28 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        d0 = virtualinvoke $r27.<com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod: double presentValueBasisPoint(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.financial.convention.daycount.DayCount,com.opengamma.financial.convention.calendar.Calendar,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r28, r23, r22, r26);
+
+        $r29 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator PRDC>;
+
+        $r30 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        $r31 = virtualinvoke $r29.<com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator: java.lang.Double visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.financial.convention.daycount.DayCount,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>($r30, r23, r26);
+
+        d1 = virtualinvoke $r31.<java.lang.Double: double doubleValue()>();
+
+        $r32 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod METHOD_SWAP>;
+
+        $r33 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        d2 = virtualinvoke $r32.<com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod: double couponEquivalent(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,double,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r33, d0, r26);
+
+        d3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getMaturityTime()>();
+
+        $r34 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod METHOD_SWAP>;
+
+        $r35 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        r4 = virtualinvoke $r34.<com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity presentValueBasisPointCurveSensitivity(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.financial.convention.daycount.DayCount,com.opengamma.financial.convention.calendar.Calendar,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r35, r23, r22, r26);
+
+        $r36 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator PRCSDC>;
+
+        $r37 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        r5 = virtualinvoke $r36.<com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.financial.convention.daycount.DayCount,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r37, r23, r26);
+
+        $r38 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getTimeToExpiry()>();
+
+        $z3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: boolean isCall()>();
+
+        specialinvoke $r38.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>(d2, $d5, $z3);
+
+        $r39 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction;
+
+        specialinvoke $r39.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: void <init>()>();
+
+        $r40 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface: com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters getBlackParameters()>();
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getTimeToExpiry()>();
+
+        d4 = virtualinvoke $r40.<com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters: double getVolatility(double,double)>($d6, d3);
+
+        $r41 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r41.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d1, 1.0, d4);
+
+        r9 = virtualinvoke $r39.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: double[] getPriceAdjoint(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData)>($r38, $r41);
+
+        $d7 = r9[0];
+
+        r42 = virtualinvoke r4.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>($d7);
+
+        $d8 = r9[1];
+
+        $d9 = d0 * $d8;
+
+        $r43 = virtualinvoke r5.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>($d9);
+
+        r44 = virtualinvoke r42.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity plus(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>($r43);
+
+        $z4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: boolean isLong()>();
+
+        if $z4 != 0 goto label5;
+
+        r44 = virtualinvoke r44.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>(-1.0);
+
+     label5:
+        $r19 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r20 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity of(com.opengamma.util.money.Currency,com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>($r19, r44);
+
+        return $r20;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity presentValueSecondOrderCurveSensitivity(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor, com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface r2;
+        com.opengamma.analytics.financial.instrument.index.GeneratorInstrument r3;
+        double d0, d1, d2, d3, d4, d5, d6, d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity r4, r5, r6, r7, r41, $r42, $r43, r44, $r45, r46, $r47, $r48, r49;
+        com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters $r10, $r40;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5;
+        java.lang.IllegalArgumentException $r11;
+        java.lang.StringBuilder $r12, $r13, $r15;
+        java.lang.Class $r14;
+        java.lang.String $r16;
+        com.opengamma.util.money.Currency $r17;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity $r18;
+        com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor r19;
+        com.opengamma.financial.convention.calendar.Calendar r20;
+        com.opengamma.financial.convention.daycount.DayCount r21;
+        com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON r22;
+        com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded r23;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r24;
+        com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod $r25, $r30, $r32, $r36;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon $r26, $r28, $r31, $r33, $r35, $r37, $r39;
+        com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator $r27;
+        java.lang.Double $r29;
+        com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator $r34, $r38;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Swaption");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Black volatility for swaption and multicurve");
+
+        $r10 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface: com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters getBlackParameters()>();
+
+        r3 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters: com.opengamma.analytics.financial.instrument.index.GeneratorInstrument getGeneratorSwap()>();
+
+        $z0 = r3 instanceof com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor;
+
+        if $z0 == 0 goto label1;
+
+        r19 = (com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor) r3;
+
+        r20 = virtualinvoke r19.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor: com.opengamma.financial.convention.calendar.Calendar getCalendar()>();
+
+        r21 = virtualinvoke r19.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor: com.opengamma.financial.convention.daycount.DayCount getFixedLegDayCount()>();
+
+        goto label4;
+
+     label1:
+        $z1 = r3 instanceof com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON;
+
+        if $z1 == 0 goto label2;
+
+        r22 = (com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON) r3;
+
+        r20 = virtualinvoke r22.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON: com.opengamma.financial.convention.calendar.Calendar getOvernightCalendar()>();
+
+        r21 = virtualinvoke r22.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON: com.opengamma.financial.convention.daycount.DayCount getFixedLegDayCount()>();
+
+        goto label4;
+
+     label2:
+        $z2 = r3 instanceof com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded;
+
+        if $z2 == 0 goto label3;
+
+        r23 = (com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded) r3;
+
+        r20 = virtualinvoke r23.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded: com.opengamma.financial.convention.calendar.Calendar getOvernightCalendar()>();
+
+        r21 = virtualinvoke r23.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded: com.opengamma.financial.convention.daycount.DayCount getFixedLegDayCount()>();
+
+        goto label4;
+
+     label3:
+        $r11 = new java.lang.IllegalArgumentException;
+
+        $r12 = new java.lang.StringBuilder;
+
+        specialinvoke $r12.<java.lang.StringBuilder: void <init>()>();
+
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Cannot handle swap with underlying generator of type ");
+
+        $r14 = virtualinvoke r3.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r15 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r14);
+
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r11.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r16);
+
+        throw $r11;
+
+     label4:
+        r24 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r25 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod METHOD_SWAP>;
+
+        $r26 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        d0 = virtualinvoke $r25.<com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod: double presentValueBasisPoint(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.financial.convention.daycount.DayCount,com.opengamma.financial.convention.calendar.Calendar,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r26, r21, r20, r24);
+
+        $r27 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator PRDC>;
+
+        $r28 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        $r29 = virtualinvoke $r27.<com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator: java.lang.Double visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.financial.convention.daycount.DayCount,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>($r28, r21, r24);
+
+        d1 = virtualinvoke $r29.<java.lang.Double: double doubleValue()>();
+
+        $r30 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod METHOD_SWAP>;
+
+        $r31 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        d2 = virtualinvoke $r30.<com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod: double couponEquivalent(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,double,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r31, d0, r24);
+
+        d3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getMaturityTime()>();
+
+        $r32 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod METHOD_SWAP>;
+
+        $r33 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        r4 = virtualinvoke $r32.<com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity presentValueBasisPointCurveSensitivity(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.financial.convention.daycount.DayCount,com.opengamma.financial.convention.calendar.Calendar,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r33, r21, r20, r24);
+
+        $r34 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator PRCSDC>;
+
+        $r35 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        r5 = virtualinvoke $r34.<com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.financial.convention.daycount.DayCount,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r35, r21, r24);
+
+        $r36 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod METHOD_SWAP>;
+
+        $r37 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        r6 = virtualinvoke $r36.<com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity presentValueBasisPointSecondOrderCurveSensitivity(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.financial.convention.daycount.DayCount,com.opengamma.financial.convention.calendar.Calendar,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r37, r21, r20, r24);
+
+        $r38 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator PRCSDC>;
+
+        $r39 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        r7 = virtualinvoke $r38.<com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity visitFixedCouponSwapDerivative(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.financial.convention.daycount.DayCount,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r39, r21, r24);
+
+        $r40 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface: com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters getBlackParameters()>();
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getTimeToExpiry()>();
+
+        d4 = virtualinvoke $r40.<com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters: double getVolatility(double,double)>($d8, d3);
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getTimeToExpiry()>();
+
+        $z3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: boolean isCall()>();
+
+        d5 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double price(double,double,double,double,boolean)>(d1, d2, d4, $d9, $z3);
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getTimeToExpiry()>();
+
+        $z4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: boolean isCall()>();
+
+        d6 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double delta(double,double,double,double,boolean)>(d1, d2, d4, $d10, $z4);
+
+        $d11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getTimeToExpiry()>();
+
+        d7 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double gamma(double,double,double,double)>(d1, d2, d4, $d11);
+
+        r41 = virtualinvoke r6.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>(d5);
+
+        $d12 = 2.0 * d0;
+
+        $d13 = $d12 * d6;
+
+        $r42 = virtualinvoke r5.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>($d13);
+
+        $r43 = virtualinvoke r4.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity productOf(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>($r42);
+
+        r44 = virtualinvoke r41.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity plus(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>($r43);
+
+        $d14 = d0 * d6;
+
+        $r45 = virtualinvoke r7.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>($d14);
+
+        r46 = virtualinvoke r44.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity plus(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>($r45);
+
+        $d15 = d0 * d7;
+
+        $r47 = virtualinvoke r5.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>($d15);
+
+        $r48 = virtualinvoke r5.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity productOf(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>($r47);
+
+        r49 = virtualinvoke r46.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity plus(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>($r48);
+
+        $z5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: boolean isLong()>();
+
+        if $z5 != 0 goto label5;
+
+        r49 = virtualinvoke r49.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>(-1.0);
+
+     label5:
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r18 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity of(com.opengamma.util.money.Currency,com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>($r17, r49);
+
+        return $r18;
+    }
+
+    public com.opengamma.analytics.financial.interestrate.sensitivity.PresentValueSwaptionSurfaceSensitivity presentValueBlackSensitivity(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor, com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface r2;
+        com.opengamma.analytics.financial.instrument.index.GeneratorInstrument r3, $r23;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10;
+        com.opengamma.util.tuple.DoublesPair r5;
+        double[] r8;
+        com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters $r12, $r22, $r41;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        java.lang.IllegalArgumentException $r13;
+        java.lang.StringBuilder $r14, $r15, $r17;
+        java.lang.Class $r16;
+        java.lang.String $r18;
+        java.lang.Double $r19, $r36;
+        com.opengamma.analytics.financial.interestrate.sensitivity.PresentValueSwaptionSurfaceSensitivity $r21;
+        com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor r26;
+        com.opengamma.financial.convention.calendar.Calendar r27;
+        com.opengamma.financial.convention.daycount.DayCount r28;
+        com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON r29;
+        com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded r30;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r31;
+        com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod $r32, $r37;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon $r33, $r35, $r38;
+        com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator $r34;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r39;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r40;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r42;
+        java.util.HashMap $r43;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Swaption");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Black volatility for swaption and multicurve");
+
+        $r12 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface: com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters getBlackParameters()>();
+
+        r3 = virtualinvoke $r12.<com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters: com.opengamma.analytics.financial.instrument.index.GeneratorInstrument getGeneratorSwap()>();
+
+        $z0 = r3 instanceof com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor;
+
+        if $z0 == 0 goto label1;
+
+        r26 = (com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor) r3;
+
+        r27 = virtualinvoke r26.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor: com.opengamma.financial.convention.calendar.Calendar getCalendar()>();
+
+        r28 = virtualinvoke r26.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor: com.opengamma.financial.convention.daycount.DayCount getFixedLegDayCount()>();
+
+        goto label4;
+
+     label1:
+        $z1 = r3 instanceof com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON;
+
+        if $z1 == 0 goto label2;
+
+        r29 = (com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON) r3;
+
+        r27 = virtualinvoke r29.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON: com.opengamma.financial.convention.calendar.Calendar getOvernightCalendar()>();
+
+        r28 = virtualinvoke r29.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedON: com.opengamma.financial.convention.daycount.DayCount getFixedLegDayCount()>();
+
+        goto label4;
+
+     label2:
+        $z2 = r3 instanceof com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded;
+
+        if $z2 == 0 goto label3;
+
+        r30 = (com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded) r3;
+
+        r27 = virtualinvoke r30.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded: com.opengamma.financial.convention.calendar.Calendar getOvernightCalendar()>();
+
+        r28 = virtualinvoke r30.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedCompoundedONCompounded: com.opengamma.financial.convention.daycount.DayCount getFixedLegDayCount()>();
+
+        goto label4;
+
+     label3:
+        $r13 = new java.lang.IllegalArgumentException;
+
+        $r14 = new java.lang.StringBuilder;
+
+        specialinvoke $r14.<java.lang.StringBuilder: void <init>()>();
+
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Cannot handle swap with underlying generator of type ");
+
+        $r16 = virtualinvoke r3.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r17 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r16);
+
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r13.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r18);
+
+        throw $r13;
+
+     label4:
+        r31 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r32 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod METHOD_SWAP>;
+
+        $r33 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        d0 = virtualinvoke $r32.<com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod: double presentValueBasisPoint(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.financial.convention.daycount.DayCount,com.opengamma.financial.convention.calendar.Calendar,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r33, r28, r27, r31);
+
+        $r34 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator PRDC>;
+
+        $r35 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        $r36 = virtualinvoke $r34.<com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator: java.lang.Double visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.financial.convention.daycount.DayCount,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>($r35, r28, r31);
+
+        d1 = virtualinvoke $r36.<java.lang.Double: double doubleValue()>();
+
+        $r37 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod METHOD_SWAP>;
+
+        $r38 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        d2 = virtualinvoke $r37.<com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod: double couponEquivalent(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,double,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r38, d0, r31);
+
+        d3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getMaturityTime()>();
+
+        $r39 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getTimeToExpiry()>();
+
+        $z3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: boolean isCall()>();
+
+        specialinvoke $r39.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>(d2, $d7, $z3);
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getTimeToExpiry()>();
+
+        r5 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d8, d3);
+
+        $r40 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction;
+
+        specialinvoke $r40.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: void <init>()>();
+
+        $r41 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface: com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters getBlackParameters()>();
+
+        d4 = virtualinvoke $r41.<com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters: double getVolatility(com.opengamma.util.tuple.DoublesPair)>(r5);
+
+        $r42 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r42.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d1, 1.0, d4);
+
+        r8 = virtualinvoke $r40.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: double[] getPriceAdjoint(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData)>($r39, $r42);
+
+        $r43 = new java.util.HashMap;
+
+        specialinvoke $r43.<java.util.HashMap: void <init>()>();
+
+        $d9 = r8[2];
+
+        $d5 = $d9 * d0;
+
+        $z4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: boolean isLong()>();
+
+        if $z4 == 0 goto label5;
+
+        $d10 = 1.0;
+
+        goto label6;
+
+     label5:
+        $d10 = -1.0;
+
+     label6:
+        $d6 = $d5 * $d10;
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d6);
+
+        interfaceinvoke $r43.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r5, $r19);
+
+        $r21 = new com.opengamma.analytics.financial.interestrate.sensitivity.PresentValueSwaptionSurfaceSensitivity;
+
+        $r22 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSwaptionFlatProviderInterface: com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters getBlackParameters()>();
+
+        $r23 = virtualinvoke $r22.<com.opengamma.analytics.financial.model.option.parameters.BlackFlatSwaptionParameters: com.opengamma.analytics.financial.instrument.index.GeneratorInstrument getGeneratorSwap()>();
+
+        specialinvoke $r21.<com.opengamma.analytics.financial.interestrate.sensitivity.PresentValueSwaptionSurfaceSensitivity: void <init>(java.util.Map,com.opengamma.analytics.financial.instrument.index.GeneratorInstrument)>($r43, $r23);
+
+        return $r21;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod $r0;
+        com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator $r1;
+        com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator $r2;
+        com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod $r3;
+
+        $r0 = new com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod INSTANCE> = $r0;
+
+        $r1 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator PRDC> = $r1;
+
+        $r2 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator PRCSDC> = $r2;
+
+        $r3 = staticinvoke <com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborBlackMethod: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod METHOD_SWAP> = $r3;
+
+        return;
+    }
+}

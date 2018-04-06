@@ -1,0 +1,191 @@
+public class com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample extends java.lang.Object
+{
+    private static final double ALPHA;
+    private static final double BETA;
+    private static final double RHO;
+    private static final double NU;
+    private static final com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData SABR_DATA;
+    private static final double FORWARD;
+    private static final double CUT_OFF_STRIKE;
+    private static final double RANGE_STRIKE;
+    private static final double N_PTS;
+    private static final double TIME_TO_EXPIRY;
+    private static final double[] MU_VALUES;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample r0;
+
+        r0 := @this: com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public static void generateSabrData(java.io.PrintStream) throws java.io.IOException
+    {
+        java.io.PrintStream r0;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9;
+        com.opengamma.analytics.financial.model.volatility.BlackImpliedVolatilityFormula $r5;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r6;
+        double[] $r7, $r8;
+        int $i0, i2, i3;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.SABRExtrapolationRightFunction $r9;
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData $r10;
+        byte $b1;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r11;
+        java.lang.Object[] $r12;
+        java.lang.Double $r13, $r14, $r15, $r16;
+
+        r0 := @parameter0: java.io.PrintStream;
+
+        $r5 = new com.opengamma.analytics.financial.model.volatility.BlackImpliedVolatilityFormula;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.model.volatility.BlackImpliedVolatilityFormula: void <init>()>();
+
+        $r6 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r6.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(0.05, 1.0, 0.0);
+
+        virtualinvoke r0.<java.io.PrintStream: void println(java.lang.String)>("Mu\tPrice\tStrike\tImpliedVolPct");
+
+        i2 = 0;
+
+     label1:
+        $r7 = <com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample: double[] MU_VALUES>;
+
+        $i0 = lengthof $r7;
+
+        if i2 >= $i0 goto label4;
+
+        $r8 = <com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample: double[] MU_VALUES>;
+
+        d0 = $r8[i2];
+
+        $r9 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.SABRExtrapolationRightFunction;
+
+        $r10 = <com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample: com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData SABR_DATA>;
+
+        specialinvoke $r9.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.SABRExtrapolationRightFunction: void <init>(double,com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData,double,double,double)>(0.05, $r10, 0.1, 2.0, d0);
+
+        i3 = 0;
+
+     label2:
+        $d4 = (double) i3;
+
+        $b1 = $d4 cmpg 100.0;
+
+        if $b1 > 0 goto label3;
+
+        $d5 = (double) i3;
+
+        $d6 = $d5 * 4.0;
+
+        $d7 = $d6 * 0.02;
+
+        $d8 = $d7 / 100.0;
+
+        d1 = 0.08 + $d8;
+
+        $r11 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        specialinvoke $r11.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>(d1, 2.0, 1);
+
+        d2 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.SABRExtrapolationRightFunction: double price(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)>($r11);
+
+        $d9 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.volatility.BlackImpliedVolatilityFormula: double getImpliedVolatility(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,double)>($r6, $r11, d2);
+
+        d3 = $d9 * 100.0;
+
+        $r12 = newarray (java.lang.Object)[4];
+
+        $r13 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r12[0] = $r13;
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r12[1] = $r14;
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r12[2] = $r15;
+
+        $r16 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r12[3] = $r16;
+
+        virtualinvoke r0.<java.io.PrintStream: java.io.PrintStream format(java.lang.String,java.lang.Object[])>("%4.0f\t%1.10f\t%1.10f\t%1.10f%n", $r12);
+
+        i3 = i3 + 1;
+
+        goto label2;
+
+     label3:
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label4:
+        return;
+    }
+
+    public static void main(java.lang.String[]) throws java.lang.Exception
+    {
+        java.lang.String[] r0;
+        java.io.PrintStream $r1;
+
+        r0 := @parameter0: java.lang.String[];
+
+        $r1 = <java.lang.System: java.io.PrintStream out>;
+
+        staticinvoke <com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample: void generateSabrData(java.io.PrintStream)>($r1);
+
+        return;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData $r0;
+        double[] $r1;
+
+        <com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample: double TIME_TO_EXPIRY> = 2.0;
+
+        <com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample: double N_PTS> = 100.0;
+
+        <com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample: double RANGE_STRIKE> = 0.02;
+
+        <com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample: double CUT_OFF_STRIKE> = 0.1;
+
+        <com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample: double FORWARD> = 0.05;
+
+        <com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample: double NU> = 0.5;
+
+        <com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample: double RHO> = -0.25;
+
+        <com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample: double BETA> = 0.5;
+
+        <com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample: double ALPHA> = 0.05;
+
+        $r0 = new com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData: void <init>(double,double,double,double)>(0.05, 0.5, -0.25, 0.5);
+
+        <com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample: com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData SABR_DATA> = $r0;
+
+        $r1 = newarray (double)[4];
+
+        $r1[0] = 5.0;
+
+        $r1[1] = 40.0;
+
+        $r1[2] = 90.0;
+
+        $r1[3] = 150.0;
+
+        <com.opengamma.analytics.example.sabrextrapolation.SabrExtrapolationExample: double[] MU_VALUES> = $r1;
+
+        return;
+    }
+}

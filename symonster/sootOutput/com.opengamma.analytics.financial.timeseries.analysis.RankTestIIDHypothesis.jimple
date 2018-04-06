@@ -1,0 +1,153 @@
+public class com.opengamma.analytics.financial.timeseries.analysis.RankTestIIDHypothesis extends com.opengamma.analytics.financial.timeseries.analysis.IIDHypothesis
+{
+    private final double _criticalValue;
+
+    public void <init>(double)
+    {
+        com.opengamma.analytics.financial.timeseries.analysis.RankTestIIDHypothesis r0;
+        double d0, $d1, $d2, $d3;
+        boolean $z0;
+        com.opengamma.analytics.math.statistics.distribution.NormalDistribution $r1;
+        java.lang.Double $r2;
+        java.lang.IllegalArgumentException $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.timeseries.analysis.RankTestIIDHypothesis;
+
+        d0 := @parameter0: double;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.timeseries.analysis.IIDHypothesis: void <init>()>();
+
+        $z0 = staticinvoke <com.opengamma.util.ArgumentChecker: boolean isInRangeExcludingLow(double,double,double)>(0.0, 1.0, d0);
+
+        if $z0 != 0 goto label1;
+
+        $r3 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r3.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Level must be between 0 and 1");
+
+        throw $r3;
+
+     label1:
+        $r1 = new com.opengamma.analytics.math.statistics.distribution.NormalDistribution;
+
+        specialinvoke $r1.<com.opengamma.analytics.math.statistics.distribution.NormalDistribution: void <init>(double,double)>(0.0, 1.0);
+
+        $d1 = d0 / 2.0;
+
+        $d2 = 1.0 - $d1;
+
+        $r2 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d2);
+
+        $d3 = virtualinvoke $r1.<com.opengamma.analytics.math.statistics.distribution.NormalDistribution: double getInverseCDF(java.lang.Double)>($r2);
+
+        r0.<com.opengamma.analytics.financial.timeseries.analysis.RankTestIIDHypothesis: double _criticalValue> = $d3;
+
+        return;
+    }
+
+    public boolean testIID(com.opengamma.timeseries.DoubleTimeSeries)
+    {
+        com.opengamma.analytics.financial.timeseries.analysis.RankTestIIDHypothesis r0;
+        com.opengamma.timeseries.DoubleTimeSeries r1;
+        double[] r2;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, i9, i10, i11;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, d14;
+        byte $b7, $b8;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.timeseries.analysis.RankTestIIDHypothesis;
+
+        r1 := @parameter0: com.opengamma.timeseries.DoubleTimeSeries;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "x");
+
+        r2 = interfaceinvoke r1.<com.opengamma.timeseries.DoubleTimeSeries: double[] valuesArrayFast()>();
+
+        i9 = 0;
+
+        i0 = interfaceinvoke r1.<com.opengamma.timeseries.DoubleTimeSeries: int size()>();
+
+        i10 = 0;
+
+     label1:
+        $i1 = i0 - 1;
+
+        if i10 >= $i1 goto label5;
+
+        d0 = r2[i10];
+
+        i11 = i10 + 1;
+
+     label2:
+        if i11 >= i0 goto label4;
+
+        $d13 = r2[i11];
+
+        $b8 = $d13 cmpl d0;
+
+        if $b8 <= 0 goto label3;
+
+        i9 = i9 + 1;
+
+     label3:
+        i11 = i11 + 1;
+
+        goto label2;
+
+     label4:
+        i10 = i10 + 1;
+
+        goto label1;
+
+     label5:
+        $i2 = i0 - 1;
+
+        $i3 = i0 * $i2;
+
+        $d2 = (double) $i3;
+
+        d14 = $d2 / 4.0;
+
+        $i4 = i0 - 1;
+
+        $i5 = i0 * $i4;
+
+        $d5 = (double) $i5;
+
+        $i6 = 2 * i0;
+
+        $d3 = (double) $i6;
+
+        $d4 = $d3 + 5.0;
+
+        $d6 = $d5 * $d4;
+
+        $d7 = $d6 / 72.0;
+
+        d1 = staticinvoke <java.lang.Math: double sqrt(double)>($d7);
+
+        $d8 = (double) i9;
+
+        $d9 = $d8 - d14;
+
+        $d10 = staticinvoke <java.lang.Math: double abs(double)>($d9);
+
+        $d12 = $d10 / d1;
+
+        $d11 = r0.<com.opengamma.analytics.financial.timeseries.analysis.RankTestIIDHypothesis: double _criticalValue>;
+
+        $b7 = $d12 cmpg $d11;
+
+        if $b7 >= 0 goto label6;
+
+        $z0 = 1;
+
+        goto label7;
+
+     label6:
+        $z0 = 0;
+
+     label7:
+        return $z0;
+    }
+}

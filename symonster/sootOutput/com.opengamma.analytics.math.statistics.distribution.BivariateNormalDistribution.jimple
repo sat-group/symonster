@@ -1,0 +1,610 @@
+public class com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution extends java.lang.Object implements com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution
+{
+    private static final com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL;
+    private static final double TWO_PI;
+    private static final double[] X;
+    private static final double[] Y;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution r0;
+
+        r0 := @this: com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public double getCDF(double[])
+    {
+        com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution r0;
+        double[] r1, $r6, $r7, $r14, $r15;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, d70, d71, d72, d73, d74, d75, d76, d77, d78, $d79, d81, d82, d83, d84, $d85;
+        int $i0, i13, i14;
+        byte $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11, $b12;
+        boolean $z0, $z1, $z2, $z3;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r2, $r4, $r8, $r10, $r12;
+        java.lang.Double $r3, $r5, $r9, $r11, $r13;
+
+        r0 := @this: com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution;
+
+        r1 := @parameter0: double[];
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object)>(r1);
+
+        $i0 = lengthof r1;
+
+        if $i0 != 3 goto label01;
+
+        $z2 = 1;
+
+        goto label02;
+
+     label01:
+        $z2 = 0;
+
+     label02:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z2, "Need a, b and rho values");
+
+        $d9 = r1[2];
+
+        $b1 = $d9 cmpl -1.0;
+
+        if $b1 < 0 goto label03;
+
+        $d69 = r1[2];
+
+        $b11 = $d69 cmpg 1.0;
+
+        if $b11 > 0 goto label03;
+
+        $z3 = 1;
+
+        goto label04;
+
+     label03:
+        $z3 = 0;
+
+     label04:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z3, "Correlation must be >= -1 and <= 1");
+
+        d0 = r1[0];
+
+        d70 = r1[1];
+
+        d1 = r1[2];
+
+        $b12 = d0 cmpl #Infinity;
+
+        if $b12 == 0 goto label05;
+
+        $b2 = d70 cmpl #Infinity;
+
+        if $b2 != 0 goto label06;
+
+     label05:
+        return 1.0;
+
+     label06:
+        $b3 = d0 cmpl #-Infinity;
+
+        if $b3 == 0 goto label07;
+
+        $b4 = d70 cmpl #-Infinity;
+
+        if $b4 != 0 goto label08;
+
+     label07:
+        return 0.0;
+
+     label08:
+        $d11 = d0 * d0;
+
+        $d10 = d70 * d70;
+
+        $d12 = $d11 + $d10;
+
+        d2 = $d12 / 2.0;
+
+        d71 = 0.0;
+
+        $d13 = staticinvoke <java.lang.Math: double abs(double)>(d1);
+
+        $b5 = $d13 cmpl 0.7;
+
+        if $b5 < 0 goto label17;
+
+        $d28 = d1 * d1;
+
+        d72 = 1.0 - $d28;
+
+        d3 = staticinvoke <java.lang.Math: double sqrt(double)>(d72);
+
+        $b7 = d1 cmpg 0.0;
+
+        if $b7 >= 0 goto label09;
+
+        d70 = d70 * -1.0;
+
+     label09:
+        d73 = d0 * d70;
+
+        $d29 = neg d73;
+
+        $d30 = $d29 / 2.0;
+
+        d8 = staticinvoke <java.lang.Math: double exp(double)>($d30);
+
+        $d31 = staticinvoke <java.lang.Math: double abs(double)>(d1);
+
+        $b8 = $d31 cmpg 1.0;
+
+        if $b8 >= 0 goto label13;
+
+        $d36 = d0 - d70;
+
+        d74 = staticinvoke <java.lang.Math: double abs(double)>($d36);
+
+        $d37 = d74 * d74;
+
+        d4 = $d37 / 2.0;
+
+        d75 = d74 / d3;
+
+        $d38 = d73 / 8.0;
+
+        d5 = 0.5 - $d38;
+
+        $d39 = 2.0 * d5;
+
+        $d40 = $d39 * d4;
+
+        d6 = 3.0 - $d40;
+
+        $d41 = 0.13298076 * d75;
+
+        $d42 = $d41 * d6;
+
+        $r12 = <com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r13 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d75);
+
+        $d43 = interfaceinvoke $r12.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r13);
+
+        $d44 = 1.0 - $d43;
+
+        $d47 = $d42 * $d44;
+
+        $d45 = neg d4;
+
+        $d46 = $d45 / d72;
+
+        $d48 = staticinvoke <java.lang.Math: double exp(double)>($d46);
+
+        $d49 = d5 * d72;
+
+        $d50 = d6 + $d49;
+
+        $d51 = $d48 * $d50;
+
+        $d52 = $d51 * 0.053051647;
+
+        d71 = $d47 - $d52;
+
+        i13 = 0;
+
+     label10:
+        if i13 >= 5 goto label13;
+
+        $r14 = <com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution: double[] X>;
+
+        $d53 = $r14[i13];
+
+        d76 = d3 * $d53;
+
+        d7 = d76 * d76;
+
+        $d54 = 1.0 - d7;
+
+        d77 = staticinvoke <java.lang.Math: double sqrt(double)>($d54);
+
+        $b10 = d8 cmpl 0.0;
+
+        if $b10 != 0 goto label11;
+
+        d78 = 0.0;
+
+        goto label12;
+
+     label11:
+        $d56 = neg d73;
+
+        $d55 = 1.0 + d77;
+
+        $d57 = $d56 / $d55;
+
+        $d58 = staticinvoke <java.lang.Math: double exp(double)>($d57);
+
+        $d59 = $d58 / d77;
+
+        d78 = $d59 / d8;
+
+     label12:
+        $r15 = <com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution: double[] Y>;
+
+        $d62 = $r15[i13];
+
+        $d60 = neg d4;
+
+        $d61 = $d60 / d7;
+
+        $d63 = staticinvoke <java.lang.Math: double exp(double)>($d61);
+
+        $d67 = $d62 * $d63;
+
+        $d65 = d78 - 1.0;
+
+        $d64 = d5 * d7;
+
+        $d66 = $d65 - $d64;
+
+        $d68 = $d67 * $d66;
+
+        d71 = d71 - $d68;
+
+        i13 = i13 + 1;
+
+        goto label10;
+
+     label13:
+        $z1 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d71);
+
+        if $z1 == 0 goto label14;
+
+        $d79 = 0.0;
+
+        goto label15;
+
+     label14:
+        $d32 = d71 * d3;
+
+        $d79 = $d32 * d8;
+
+     label15:
+        $r8 = <com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d33 = staticinvoke <java.lang.Math: double min(double,double)>(d0, d70);
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d33);
+
+        $d34 = interfaceinvoke $r8.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r9);
+
+        d81 = $d79 + $d34;
+
+        $b9 = d1 cmpg 0.0;
+
+        if $b9 >= 0 goto label16;
+
+        $r10 = <com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r11 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $d35 = interfaceinvoke $r10.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r11);
+
+        d81 = $d35 - d81;
+
+     label16:
+        return d81;
+
+     label17:
+        d82 = d0 * d70;
+
+        $b6 = d1 cmpl 0.0;
+
+        if $b6 == 0 goto label19;
+
+        i14 = 0;
+
+     label18:
+        if i14 >= 5 goto label19;
+
+        $r6 = <com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution: double[] X>;
+
+        $d18 = $r6[i14];
+
+        d83 = d1 * $d18;
+
+        $d19 = d83 * d83;
+
+        d84 = 1.0 - $d19;
+
+        $r7 = <com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution: double[] Y>;
+
+        $d23 = $r7[i14];
+
+        $d20 = d83 * d82;
+
+        $d21 = $d20 - d2;
+
+        $d22 = $d21 / d84;
+
+        $d24 = staticinvoke <java.lang.Math: double exp(double)>($d22);
+
+        $d25 = $d23 * $d24;
+
+        $d26 = staticinvoke <java.lang.Math: double sqrt(double)>(d84);
+
+        $d27 = $d25 / $d26;
+
+        d71 = d71 + $d27;
+
+        i14 = i14 + 1;
+
+        goto label18;
+
+     label19:
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d71);
+
+        if $z0 == 0 goto label20;
+
+        $d85 = 0.0;
+
+        goto label21;
+
+     label20:
+        $d85 = d1 * d71;
+
+     label21:
+        $r2 = <com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $d14 = interfaceinvoke $r2.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r3);
+
+        $r4 = <com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d70);
+
+        $d15 = interfaceinvoke $r4.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r5);
+
+        $d16 = $d14 * $d15;
+
+        $d17 = $d16 + $d85;
+
+        return $d17;
+    }
+
+    public double getInverseCDF(double[])
+    {
+        com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution r0;
+        double[] r1;
+        org.apache.commons.lang.NotImplementedException $r2;
+
+        r0 := @this: com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution;
+
+        r1 := @parameter0: double[];
+
+        $r2 = new org.apache.commons.lang.NotImplementedException;
+
+        specialinvoke $r2.<org.apache.commons.lang.NotImplementedException: void <init>()>();
+
+        throw $r2;
+    }
+
+    public double getPDF(double[])
+    {
+        com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution r0;
+        double[] r1;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26;
+        int $i0;
+        byte $b1, $b2;
+        boolean $z0, $z1;
+
+        r0 := @this: com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution;
+
+        r1 := @parameter0: double[];
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object)>(r1);
+
+        $i0 = lengthof r1;
+
+        if $i0 != 3 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "Need a, b and rho values");
+
+        $d1 = r1[2];
+
+        $b1 = $d1 cmpl -1.0;
+
+        if $b1 < 0 goto label3;
+
+        $d2 = r1[2];
+
+        $b2 = $d2 cmpg 1.0;
+
+        if $b2 > 0 goto label3;
+
+        $z1 = 1;
+
+        goto label4;
+
+     label3:
+        $z1 = 0;
+
+     label4:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "Correlation must be >= -1 and <= 1");
+
+        $d3 = r1[2];
+
+        $d4 = r1[2];
+
+        $d5 = $d3 * $d4;
+
+        d0 = 1.0 - $d5;
+
+        $d6 = r1[0];
+
+        $d7 = r1[0];
+
+        $d8 = $d6 * $d7;
+
+        $d9 = r1[2];
+
+        $d10 = 2.0 * $d9;
+
+        $d11 = r1[0];
+
+        $d12 = $d10 * $d11;
+
+        $d13 = r1[1];
+
+        $d14 = $d12 * $d13;
+
+        $d15 = $d8 - $d14;
+
+        $d16 = r1[1];
+
+        $d17 = r1[1];
+
+        $d18 = $d16 * $d17;
+
+        $d19 = $d15 + $d18;
+
+        $d20 = neg $d19;
+
+        $d21 = 2.0 * d0;
+
+        $d22 = $d20 / $d21;
+
+        $d23 = staticinvoke <java.lang.Math: double exp(double)>($d22);
+
+        $d24 = staticinvoke <java.lang.Math: double sqrt(double)>(d0);
+
+        $d25 = 6.283185307179586 * $d24;
+
+        $d26 = $d23 / $d25;
+
+        return $d26;
+    }
+
+    public double nextRandom()
+    {
+        com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution r0;
+        org.apache.commons.lang.NotImplementedException $r1;
+
+        r0 := @this: com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution;
+
+        $r1 = new org.apache.commons.lang.NotImplementedException;
+
+        specialinvoke $r1.<org.apache.commons.lang.NotImplementedException: void <init>()>();
+
+        throw $r1;
+    }
+
+    public volatile double getInverseCDF(java.lang.Object)
+    {
+        com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution r0;
+        java.lang.Object r1;
+        double[] $r2;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution;
+
+        r1 := @parameter0: java.lang.Object;
+
+        $r2 = (double[]) r1;
+
+        $d0 = virtualinvoke r0.<com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution: double getInverseCDF(double[])>($r2);
+
+        return $d0;
+    }
+
+    public volatile double getCDF(java.lang.Object)
+    {
+        com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution r0;
+        java.lang.Object r1;
+        double[] $r2;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution;
+
+        r1 := @parameter0: java.lang.Object;
+
+        $r2 = (double[]) r1;
+
+        $d0 = virtualinvoke r0.<com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution: double getCDF(double[])>($r2);
+
+        return $d0;
+    }
+
+    public volatile double getPDF(java.lang.Object)
+    {
+        com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution r0;
+        java.lang.Object r1;
+        double[] $r2;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution;
+
+        r1 := @parameter0: java.lang.Object;
+
+        $r2 = (double[]) r1;
+
+        $d0 = virtualinvoke r0.<com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution: double getPDF(double[])>($r2);
+
+        return $d0;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.math.statistics.distribution.NormalDistribution $r0;
+        double[] $r1, $r2;
+
+        <com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution: double TWO_PI> = 6.283185307179586;
+
+        $r0 = new com.opengamma.analytics.math.statistics.distribution.NormalDistribution;
+
+        specialinvoke $r0.<com.opengamma.analytics.math.statistics.distribution.NormalDistribution: void <init>(double,double)>(0.0, 1.0);
+
+        <com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL> = $r0;
+
+        $r1 = newarray (double)[5];
+
+        $r1[0] = 0.04691008;
+
+        $r1[1] = 0.23076534;
+
+        $r1[2] = 0.5;
+
+        $r1[3] = 0.76923466;
+
+        $r1[4] = 0.95308992;
+
+        <com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution: double[] X> = $r1;
+
+        $r2 = newarray (double)[5];
+
+        $r2[0] = 0.018854042;
+
+        $r2[1] = 0.038088059;
+
+        $r2[2] = 0.0452707394;
+
+        $r2[3] = 0.038088059;
+
+        $r2[4] = 0.018854042;
+
+        <com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution: double[] Y> = $r2;
+
+        return;
+    }
+}

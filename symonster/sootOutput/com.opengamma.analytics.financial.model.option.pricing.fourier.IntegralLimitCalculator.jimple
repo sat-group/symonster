@@ -1,0 +1,162 @@
+public class com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator extends java.lang.Object
+{
+    private static org.slf4j.Logger s_log;
+    private static com.opengamma.analytics.math.rootfinding.BracketRoot s_bracketRoot;
+    private static final com.opengamma.analytics.math.rootfinding.RealSingleRootFinder s_root;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public double solve(com.opengamma.analytics.math.function.Function1D, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator r0;
+        com.opengamma.analytics.math.function.Function1D r1;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10;
+        byte $b0, $b1, $b2;
+        com.opengamma.analytics.math.number.ComplexNumber $r3, $r5;
+        java.lang.Object $r4;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator$1 $r6;
+        com.opengamma.analytics.math.rootfinding.BracketRoot $r7;
+        com.opengamma.analytics.math.rootfinding.RealSingleRootFinder $r8;
+        java.lang.Double $r9, $r10, $r11;
+        com.opengamma.analytics.math.MathException $r12;
+        org.slf4j.Logger $r13;
+        boolean $z0, $z1;
+        double[] r14;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.math.function.Function1D;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "psi null");
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 == 0 goto label1;
+
+        $b1 = d0 cmpl -1.0;
+
+        if $b1 == 0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "alpha cannot be -1 or 0");
+
+        $b2 = d1 cmpl 0.0;
+
+        if $b2 <= 0 goto label3;
+
+        $z1 = 1;
+
+        goto label4;
+
+     label3:
+        $z1 = 0;
+
+     label4:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "need tol > 0");
+
+        $d3 = staticinvoke <java.lang.Math: double log(double)>(d1);
+
+        $r3 = new com.opengamma.analytics.math.number.ComplexNumber;
+
+        $d4 = 1.0 + d0;
+
+        $d5 = neg $d4;
+
+        specialinvoke $r3.<com.opengamma.analytics.math.number.ComplexNumber: void <init>(double,double)>(0.0, $d5);
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r3);
+
+        $r5 = (com.opengamma.analytics.math.number.ComplexNumber) $r4;
+
+        $d6 = staticinvoke <com.opengamma.analytics.math.ComplexMathUtils: double mod(com.opengamma.analytics.math.number.ComplexNumber)>($r5);
+
+        $d7 = staticinvoke <java.lang.Math: double log(double)>($d6);
+
+        d2 = $d3 + $d7;
+
+        $r6 = new com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator$1;
+
+        specialinvoke $r6.<com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator$1: void <init>(com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator,double,com.opengamma.analytics.math.function.Function1D,double)>(r0, d0, r1, d2);
+
+     label5:
+        $r7 = <com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator: com.opengamma.analytics.math.rootfinding.BracketRoot s_bracketRoot>;
+
+        r14 = virtualinvoke $r7.<com.opengamma.analytics.math.rootfinding.BracketRoot: double[] getBracketedPoints(com.opengamma.analytics.math.function.Function1D,double,double)>($r6, 0.0, 200.0);
+
+     label6:
+        goto label8;
+
+     label7:
+        $r12 := @caughtexception;
+
+        $r13 = <com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator: org.slf4j.Logger s_log>;
+
+        interfaceinvoke $r13.<org.slf4j.Logger: void warn(java.lang.String)>("Could not find integral limit. Using default of 500");
+
+        return 500.0;
+
+     label8:
+        $r8 = <com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator: com.opengamma.analytics.math.rootfinding.RealSingleRootFinder s_root>;
+
+        $d8 = r14[0];
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d8);
+
+        $d9 = r14[1];
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d9);
+
+        $r11 = virtualinvoke $r8.<com.opengamma.analytics.math.rootfinding.RealSingleRootFinder: java.lang.Double getRoot(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r6, $r9, $r10);
+
+        $d10 = virtualinvoke $r11.<java.lang.Double: double doubleValue()>();
+
+        return $d10;
+
+        catch com.opengamma.analytics.math.MathException from label5 to label6 with label7;
+    }
+
+    static void <clinit>()
+    {
+        org.slf4j.Logger $r0;
+        com.opengamma.analytics.math.rootfinding.BracketRoot $r1;
+        com.opengamma.analytics.math.rootfinding.BrentSingleRootFinder $r2;
+
+        $r0 = staticinvoke <org.slf4j.LoggerFactory: org.slf4j.Logger getLogger(java.lang.Class)>(class "com/opengamma/analytics/financial/model/option/pricing/fourier/IntegralLimitCalculator");
+
+        <com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator: org.slf4j.Logger s_log> = $r0;
+
+        $r1 = new com.opengamma.analytics.math.rootfinding.BracketRoot;
+
+        specialinvoke $r1.<com.opengamma.analytics.math.rootfinding.BracketRoot: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator: com.opengamma.analytics.math.rootfinding.BracketRoot s_bracketRoot> = $r1;
+
+        $r2 = new com.opengamma.analytics.math.rootfinding.BrentSingleRootFinder;
+
+        specialinvoke $r2.<com.opengamma.analytics.math.rootfinding.BrentSingleRootFinder: void <init>(double)>(0.1);
+
+        <com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator: com.opengamma.analytics.math.rootfinding.RealSingleRootFinder s_root> = $r2;
+
+        return;
+    }
+}

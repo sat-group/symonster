@@ -1,0 +1,373 @@
+public final class com.opengamma.analytics.math.FunctionUtils extends java.lang.Object
+{
+
+    private void <init>()
+    {
+        com.opengamma.analytics.math.FunctionUtils r0;
+
+        r0 := @this: com.opengamma.analytics.math.FunctionUtils;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public static double square(double)
+    {
+        double d0, $d1;
+
+        d0 := @parameter0: double;
+
+        $d1 = d0 * d0;
+
+        return $d1;
+    }
+
+    public static double cube(double)
+    {
+        double d0, $d1, $d2;
+
+        d0 := @parameter0: double;
+
+        $d1 = d0 * d0;
+
+        $d2 = $d1 * d0;
+
+        return $d2;
+    }
+
+    public static int toTensorIndex(int[], int[])
+    {
+        int[] r0, r1;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, i7, i8, i9;
+        boolean $z0, $z1;
+
+        r0 := @parameter0: int[];
+
+        r1 := @parameter1: int[];
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r0, "indices");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "dimensions");
+
+        i0 = lengthof r0;
+
+        $i1 = lengthof r1;
+
+        if i0 != $i1 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean)>($z0);
+
+        i7 = 0;
+
+        i8 = 1;
+
+        i9 = 0;
+
+     label3:
+        if i9 >= i0 goto label6;
+
+        $i3 = r0[i9];
+
+        $i2 = r1[i9];
+
+        if $i3 >= $i2 goto label4;
+
+        $z1 = 1;
+
+        goto label5;
+
+     label4:
+        $z1 = 0;
+
+     label5:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "index out of bounds");
+
+        $i4 = r0[i9];
+
+        $i5 = $i4 * i8;
+
+        i7 = i7 + $i5;
+
+        $i6 = r1[i9];
+
+        i8 = i8 * $i6;
+
+        i9 = i9 + 1;
+
+        goto label3;
+
+     label6:
+        return i7;
+    }
+
+    public static int[] fromTensorIndex(int, int[])
+    {
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, i12, i13, i14, i15;
+        int[] r0, r1, r2;
+
+        i0 := @parameter0: int;
+
+        r0 := @parameter1: int[];
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r0, "dimensions");
+
+        i1 = lengthof r0;
+
+        r1 = newarray (int)[i1];
+
+        i12 = 1;
+
+        $i2 = i1 - 1;
+
+        r2 = newarray (int)[$i2];
+
+        i13 = 0;
+
+     label1:
+        $i3 = i1 - 1;
+
+        if i13 >= $i3 goto label2;
+
+        $i11 = r0[i13];
+
+        i12 = i12 * $i11;
+
+        r2[i13] = i12;
+
+        i13 = i13 + 1;
+
+        goto label1;
+
+     label2:
+        i14 = i0;
+
+        i15 = i1 - 1;
+
+     label3:
+        if i15 <= 0 goto label4;
+
+        $i4 = i15 - 1;
+
+        $i5 = r2[$i4];
+
+        $i6 = i14 / $i5;
+
+        r1[i15] = $i6;
+
+        $i9 = r1[i15];
+
+        $i7 = i15 - 1;
+
+        $i8 = r2[$i7];
+
+        $i10 = $i9 * $i8;
+
+        i14 = i14 - $i10;
+
+        i15 = i15 + -1;
+
+        goto label3;
+
+     label4:
+        r1[0] = i14;
+
+        return r1;
+    }
+
+    public static double[] unique(double[])
+    {
+        double[] r0, r1, $r2;
+        int i0, $i1, $i2, $i3, i4, i5;
+        double $d0, $d1, $d2, $d3;
+
+        r0 := @parameter0: double[];
+
+        staticinvoke <java.util.Arrays: void sort(double[])>(r0);
+
+        i0 = lengthof r0;
+
+        r1 = newarray (double)[i0];
+
+        $d0 = r0[0];
+
+        r1[0] = $d0;
+
+        i4 = 1;
+
+        i5 = 1;
+
+     label1:
+        if i5 >= i0 goto label3;
+
+        $d2 = r0[i5];
+
+        $i1 = i5 - 1;
+
+        $d1 = r0[$i1];
+
+        $i2 = staticinvoke <java.lang.Double: int compare(double,double)>($d2, $d1);
+
+        if $i2 == 0 goto label2;
+
+        $i3 = i4;
+
+        i4 = i4 + 1;
+
+        $d3 = r0[i5];
+
+        r1[$i3] = $d3;
+
+     label2:
+        i5 = i5 + 1;
+
+        goto label1;
+
+     label3:
+        if i4 != i0 goto label4;
+
+        return r1;
+
+     label4:
+        $r2 = staticinvoke <java.util.Arrays: double[] copyOf(double[],int)>(r1, i4);
+
+        return $r2;
+    }
+
+    public static int[] unique(int[])
+    {
+        int[] r0, r1, $r2;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, i7, i8;
+
+        r0 := @parameter0: int[];
+
+        staticinvoke <java.util.Arrays: void sort(int[])>(r0);
+
+        i0 = lengthof r0;
+
+        r1 = newarray (int)[i0];
+
+        $i1 = r0[0];
+
+        r1[0] = $i1;
+
+        i7 = 1;
+
+        i8 = 1;
+
+     label1:
+        if i8 >= i0 goto label3;
+
+        $i4 = r0[i8];
+
+        $i2 = i8 - 1;
+
+        $i3 = r0[$i2];
+
+        if $i4 == $i3 goto label2;
+
+        $i5 = i7;
+
+        i7 = i7 + 1;
+
+        $i6 = r0[i8];
+
+        r1[$i5] = $i6;
+
+     label2:
+        i8 = i8 + 1;
+
+        goto label1;
+
+     label3:
+        if i7 != i0 goto label4;
+
+        return r1;
+
+     label4:
+        $r2 = staticinvoke <java.util.Arrays: int[] copyOf(int[],int)>(r0, i7);
+
+        return $r2;
+    }
+
+    public static int getLowerBoundIndex(double[], double)
+    {
+        double[] r0;
+        double d0, $d1, $d2, $d3;
+        int i0, $i2, $i5, $i6, $i8, $i9, i10, i11;
+        byte $b1, $b3, $b4, $b7;
+
+        r0 := @parameter0: double[];
+
+        d0 := @parameter1: double;
+
+        i0 = lengthof r0;
+
+        $d1 = r0[0];
+
+        $b1 = d0 cmpg $d1;
+
+        if $b1 >= 0 goto label1;
+
+        return 0;
+
+     label1:
+        $i2 = i0 - 1;
+
+        $d2 = r0[$i2];
+
+        $b3 = d0 cmpl $d2;
+
+        if $b3 <= 0 goto label2;
+
+        $i9 = i0 - 1;
+
+        return $i9;
+
+     label2:
+        i10 = staticinvoke <java.util.Arrays: int binarySearch(double[],double)>(r0, d0);
+
+        if i10 < 0 goto label3;
+
+        return i10;
+
+     label3:
+        if i10 >= 0 goto label4;
+
+        $i8 = i10 + 1;
+
+        i11 = neg $i8;
+
+        i10 = i11 + -1;
+
+     label4:
+        $b4 = d0 cmpl -0.0;
+
+        if $b4 != 0 goto label5;
+
+        $i5 = i0 - 1;
+
+        if i10 >= $i5 goto label5;
+
+        $i6 = i10 + 1;
+
+        $d3 = r0[$i6];
+
+        $b7 = $d3 cmpl 0.0;
+
+        if $b7 != 0 goto label5;
+
+        i10 = i10 + 1;
+
+     label5:
+        return i10;
+    }
+}

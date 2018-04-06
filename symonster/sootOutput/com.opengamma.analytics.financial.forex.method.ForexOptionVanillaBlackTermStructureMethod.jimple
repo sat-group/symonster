@@ -1,0 +1,1904 @@
+public final class com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod extends java.lang.Object implements com.opengamma.analytics.financial.forex.method.ForexPricingMethod
+{
+    private static final com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod INSTANCE;
+    private static final com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION;
+
+    public static com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod getInstance()
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod $r0;
+
+        $r0 = <com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod INSTANCE>;
+
+        return $r0;
+    }
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla, com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla r1;
+        com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle r2;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14;
+        com.opengamma.analytics.math.function.Function1D r4;
+        com.opengamma.util.money.CurrencyAmount r5;
+        com.opengamma.util.money.Currency $r6, $r7, $r19, $r20, $r32;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.forex.derivative.Forex $r8, $r12, $r13, $r17, $r29, $r31;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r9, $r14, $r30;
+        java.lang.String $r10, $r15;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r11, $r16;
+        com.opengamma.analytics.financial.forex.method.FXMatrix $r18;
+        com.opengamma.analytics.financial.model.volatility.VolatilityModel $r21;
+        com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters $r22;
+        java.lang.Double $r23, $r24, $r28;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r25;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r26;
+        java.lang.Object $r27;
+        com.opengamma.util.money.CurrencyAmount[] $r33;
+        com.opengamma.util.money.MultipleCurrencyAmount $r34;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "Forex option");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "Smile");
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        $z0 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: boolean checkCurrencies(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r6, $r7);
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "Option currencies not compatible with smile data");
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r9 = virtualinvoke $r8.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency2()>();
+
+        $r10 = virtualinvoke $r9.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r11 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r10);
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d6 = virtualinvoke $r12.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        d0 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d6);
+
+        $r13 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r14 = virtualinvoke $r13.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $r15 = virtualinvoke $r14.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r16 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r15);
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d7 = virtualinvoke $r17.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        d1 = virtualinvoke $r16.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d7);
+
+        $r18 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r19 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r20 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        d2 = virtualinvoke $r18.<com.opengamma.analytics.financial.forex.method.FXMatrix: double getFxRate(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r19, $r20);
+
+        $d8 = d2 * d1;
+
+        d3 = $d8 / d0;
+
+        $r21 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.volatility.VolatilityModel getVolatilityModel()>();
+
+        $r22 = (com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters) $r21;
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $r23 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d9);
+
+        $r24 = virtualinvoke $r22.<com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters: java.lang.Double getVolatility(java.lang.Double)>($r23);
+
+        d4 = virtualinvoke $r24.<java.lang.Double: double doubleValue()>();
+
+        $r25 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r25.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d3, d0, d4);
+
+        $r26 = <com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        r4 = virtualinvoke $r26.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: com.opengamma.analytics.math.function.Function1D getPriceFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)>(r1);
+
+        $r27 = virtualinvoke r4.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r25);
+
+        $r28 = (java.lang.Double) $r27;
+
+        $d10 = virtualinvoke $r28.<java.lang.Double: double doubleValue()>();
+
+        $r29 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r30 = virtualinvoke $r29.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $d11 = virtualinvoke $r30.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        $d12 = staticinvoke <java.lang.Math: double abs(double)>($d11);
+
+        $d13 = $d10 * $d12;
+
+        $z1 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: boolean isLong()>();
+
+        if $z1 == 0 goto label1;
+
+        $d14 = 1.0;
+
+        goto label2;
+
+     label1:
+        $d14 = -1.0;
+
+     label2:
+        d5 = $d13 * $d14;
+
+        $r31 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r32 = virtualinvoke $r31.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.util.money.Currency getCurrency2()>();
+
+        r5 = staticinvoke <com.opengamma.util.money.CurrencyAmount: com.opengamma.util.money.CurrencyAmount of(com.opengamma.util.money.Currency,double)>($r32, d5);
+
+        $r33 = newarray (com.opengamma.util.money.CurrencyAmount)[1];
+
+        $r33[0] = r5;
+
+        $r34 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.CurrencyAmount[])>($r33);
+
+        return $r34;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.InstrumentDerivative, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle $r3;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla $r4;
+        com.opengamma.util.money.MultipleCurrencyAmount $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivative;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $z0 = r1 instanceof com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Vanilla Forex option");
+
+        $z1 = r2 instanceof com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "Smile delta data bundle required");
+
+        $r4 = (com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla) r1;
+
+        $r3 = (com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle) r2;
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod: com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla,com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle)>($r4, $r3);
+
+        return $r5;
+    }
+
+    public double impliedVolatility(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle r3;
+        double d0, $d1;
+        boolean $z0, $z1;
+        com.opengamma.util.money.Currency $r6, $r7;
+        com.opengamma.analytics.financial.model.volatility.VolatilityModel $r8;
+        com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters $r9;
+        java.lang.Double $r10, $r11;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Curves");
+
+        $z0 = r2 instanceof com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Yield curve bundle should contain Black volatility data");
+
+        r3 = (com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle) r2;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Forex option");
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        $z1 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: boolean checkCurrencies(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r6, $r7);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "Option currencies not compatible with data");
+
+        $r8 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.volatility.VolatilityModel getVolatilityModel()>();
+
+        $r9 = (com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters) $r8;
+
+        $d1 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d1);
+
+        $r11 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters: java.lang.Double getVolatility(java.lang.Double)>($r10);
+
+        d0 = virtualinvoke $r11.<java.lang.Double: double doubleValue()>();
+
+        return d0;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount currencyExposure(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla, com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla r1;
+        com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle r2;
+        double d0, d1, d2, d3, d4, d6, d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29;
+        double[] r4;
+        com.opengamma.util.money.CurrencyAmount[] r5;
+        com.opengamma.util.money.Currency $r6, $r7, $r19, $r20, $r30, $r35;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.forex.derivative.Forex $r8, $r12, $r13, $r17, $r27, $r29, $r31, $r34, $r36;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r9, $r14, $r28, $r32, $r37;
+        java.lang.String $r10, $r15;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r11, $r16;
+        com.opengamma.analytics.financial.forex.method.FXMatrix $r18;
+        com.opengamma.analytics.financial.model.volatility.VolatilityModel $r21;
+        com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters $r22;
+        java.lang.Double $r23, $r24;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r25;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r26;
+        com.opengamma.util.money.CurrencyAmount $r33, $r38;
+        com.opengamma.util.money.MultipleCurrencyAmount $r39;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "Forex option");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "Smile");
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        $z0 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: boolean checkCurrencies(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r6, $r7);
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "Option currencies not compatible with smile data");
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r9 = virtualinvoke $r8.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency2()>();
+
+        $r10 = virtualinvoke $r9.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r11 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r10);
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d8 = virtualinvoke $r12.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        d0 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d8);
+
+        $r13 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r14 = virtualinvoke $r13.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $r15 = virtualinvoke $r14.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r16 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r15);
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d9 = virtualinvoke $r17.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        d1 = virtualinvoke $r16.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d9);
+
+        $r18 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r19 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r20 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        d2 = virtualinvoke $r18.<com.opengamma.analytics.financial.forex.method.FXMatrix: double getFxRate(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r19, $r20);
+
+        $d10 = d2 * d1;
+
+        d3 = $d10 / d0;
+
+        $r21 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.volatility.VolatilityModel getVolatilityModel()>();
+
+        $r22 = (com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters) $r21;
+
+        $d11 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $r23 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d11);
+
+        $r24 = virtualinvoke $r22.<com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters: java.lang.Double getVolatility(java.lang.Double)>($r23);
+
+        d4 = virtualinvoke $r24.<java.lang.Double: double doubleValue()>();
+
+        $r25 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r25.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d3, d0, d4);
+
+        $r26 = <com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        r4 = virtualinvoke $r26.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: double[] getPriceAdjoint(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData)>(r1, $r25);
+
+        $z1 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: boolean isLong()>();
+
+        if $z1 == 0 goto label1;
+
+        $d29 = 1.0;
+
+        goto label2;
+
+     label1:
+        $d29 = -1.0;
+
+     label2:
+        $d12 = r4[0];
+
+        $r27 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r28 = virtualinvoke $r27.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $d13 = virtualinvoke $r28.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        $d14 = staticinvoke <java.lang.Math: double abs(double)>($d13);
+
+        $d15 = $d12 * $d14;
+
+        d6 = $d15 * $d29;
+
+        $d16 = r4[1];
+
+        $d17 = $d16 * d1;
+
+        d7 = $d17 / d0;
+
+        r5 = newarray (com.opengamma.util.money.CurrencyAmount)[2];
+
+        $r29 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r30 = virtualinvoke $r29.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r31 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r32 = virtualinvoke $r31.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $d18 = virtualinvoke $r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        $d19 = staticinvoke <java.lang.Math: double abs(double)>($d18);
+
+        $d20 = d7 * $d19;
+
+        $d21 = $d20 * $d29;
+
+        $r33 = staticinvoke <com.opengamma.util.money.CurrencyAmount: com.opengamma.util.money.CurrencyAmount of(com.opengamma.util.money.Currency,double)>($r30, $d21);
+
+        r5[0] = $r33;
+
+        $r34 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r35 = virtualinvoke $r34.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.util.money.Currency getCurrency2()>();
+
+        $d22 = neg d7;
+
+        $r36 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r37 = virtualinvoke $r36.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $d23 = virtualinvoke $r37.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        $d24 = staticinvoke <java.lang.Math: double abs(double)>($d23);
+
+        $d25 = $d22 * $d24;
+
+        $d26 = $d25 * d2;
+
+        $d27 = $d26 * $d29;
+
+        $d28 = $d27 + d6;
+
+        $r38 = staticinvoke <com.opengamma.util.money.CurrencyAmount: com.opengamma.util.money.CurrencyAmount of(com.opengamma.util.money.Currency,double)>($r35, $d28);
+
+        r5[1] = $r38;
+
+        $r39 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.CurrencyAmount[])>(r5);
+
+        return $r39;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount currencyExposure(com.opengamma.analytics.financial.interestrate.InstrumentDerivative, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle $r3;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla $r4;
+        com.opengamma.util.money.MultipleCurrencyAmount $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivative;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $z0 = r1 instanceof com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "Vanilla Forex option");
+
+        $z1 = r2 instanceof com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle;
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "Smile delta data bundle required");
+
+        $r4 = (com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla) r1;
+
+        $r3 = (com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle) r2;
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod: com.opengamma.util.money.MultipleCurrencyAmount currencyExposure(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla,com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle)>($r4, $r3);
+
+        return $r5;
+    }
+
+    public double deltaRelative(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla, com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle, boolean)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla r1;
+        com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle r2;
+        boolean z0, $z1, $z2, $z3;
+        double d0, d1, d2, d3, d4, d6, d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18;
+        com.opengamma.util.money.Currency $r3, $r4, $r16, $r17;
+        com.opengamma.analytics.financial.forex.derivative.Forex $r5, $r9, $r10, $r14;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r6, $r11;
+        java.lang.String $r7, $r12;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r8, $r13;
+        com.opengamma.analytics.financial.forex.method.FXMatrix $r15;
+        com.opengamma.analytics.financial.model.volatility.VolatilityModel $r18;
+        com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters $r19;
+        java.lang.Double $r20, $r21;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle;
+
+        z0 := @parameter2: boolean;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "Forex option");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "Smile");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        $z1 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: boolean checkCurrencies(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r3, $r4);
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "Option currencies not compatible with smile data");
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r6 = virtualinvoke $r5.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency2()>();
+
+        $r7 = virtualinvoke $r6.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r8 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r7);
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d8 = virtualinvoke $r9.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        d0 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d8);
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r13 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r12);
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d9 = virtualinvoke $r14.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        d1 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d9);
+
+        $r15 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        d2 = virtualinvoke $r15.<com.opengamma.analytics.financial.forex.method.FXMatrix: double getFxRate(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r16, $r17);
+
+        $d10 = d2 * d1;
+
+        d3 = $d10 / d0;
+
+        $r18 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.volatility.VolatilityModel getVolatilityModel()>();
+
+        $r19 = (com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters) $r18;
+
+        $d11 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $r20 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d11);
+
+        $r21 = virtualinvoke $r19.<com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters: java.lang.Double getVolatility(java.lang.Double)>($r20);
+
+        d4 = virtualinvoke $r21.<java.lang.Double: double doubleValue()>();
+
+        $z2 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: boolean isLong()>();
+
+        if $z2 == 0 goto label1;
+
+        $d18 = 1.0;
+
+        goto label2;
+
+     label1:
+        $d18 = -1.0;
+
+     label2:
+        $d12 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getStrike()>();
+
+        $d13 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $z3 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: boolean isCall()>();
+
+        $d14 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double delta(double,double,double,double,boolean)>(d3, $d12, $d13, d4, $z3);
+
+        $d15 = $d14 * d1;
+
+        d6 = $d15 * $d18;
+
+        if z0 == 0 goto label3;
+
+        return d6;
+
+     label3:
+        $d16 = neg d6;
+
+        $d17 = $d16 * d2;
+
+        d7 = $d17 * d2;
+
+        return d7;
+    }
+
+    public double deltaRelativeSpot(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla, com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle, boolean)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla r1;
+        com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle r2;
+        boolean z0, $z1, $z2, $z3;
+        double d0, d1, d2, d3, d4, d6, d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18;
+        com.opengamma.util.money.Currency $r3, $r4, $r16, $r17;
+        com.opengamma.analytics.financial.forex.derivative.Forex $r5, $r9, $r10, $r14;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r6, $r11;
+        java.lang.String $r7, $r12;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r8, $r13;
+        com.opengamma.analytics.financial.forex.method.FXMatrix $r15;
+        com.opengamma.analytics.financial.model.volatility.VolatilityModel $r18;
+        com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters $r19;
+        java.lang.Double $r20, $r21;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle;
+
+        z0 := @parameter2: boolean;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "Forex option");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "Smile");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        $z1 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: boolean checkCurrencies(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r3, $r4);
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "Option currencies not compatible with smile data");
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r6 = virtualinvoke $r5.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency2()>();
+
+        $r7 = virtualinvoke $r6.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r8 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r7);
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d8 = virtualinvoke $r9.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        d0 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d8);
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r13 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r12);
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d9 = virtualinvoke $r14.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        d1 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d9);
+
+        $r15 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        d2 = virtualinvoke $r15.<com.opengamma.analytics.financial.forex.method.FXMatrix: double getFxRate(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r16, $r17);
+
+        $d10 = d2 * d1;
+
+        d3 = $d10 / d0;
+
+        $r18 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.volatility.VolatilityModel getVolatilityModel()>();
+
+        $r19 = (com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters) $r18;
+
+        $d11 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $r20 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d11);
+
+        $r21 = virtualinvoke $r19.<com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters: java.lang.Double getVolatility(java.lang.Double)>($r20);
+
+        d4 = virtualinvoke $r21.<java.lang.Double: double doubleValue()>();
+
+        $z2 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: boolean isLong()>();
+
+        if $z2 == 0 goto label1;
+
+        $d18 = 1.0;
+
+        goto label2;
+
+     label1:
+        $d18 = -1.0;
+
+     label2:
+        $d12 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getStrike()>();
+
+        $d13 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $z3 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: boolean isCall()>();
+
+        $d14 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double delta(double,double,double,double,boolean)>(d3, $d12, $d13, d4, $z3);
+
+        $d15 = $d14 * d1;
+
+        d6 = $d15 * $d18;
+
+        if z0 == 0 goto label3;
+
+        $d17 = d6 * d2;
+
+        return $d17;
+
+     label3:
+        $d16 = neg d6;
+
+        d7 = $d16 * d2;
+
+        return d7;
+    }
+
+    public double gammaRelative(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla, com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle, boolean)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla r1;
+        com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle r2;
+        boolean z0, $z1, $z2, $z3;
+        double d0, d1, d2, d3, d4, d6, d7, d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28;
+        com.opengamma.util.money.Currency $r3, $r4, $r16, $r17;
+        com.opengamma.analytics.financial.forex.derivative.Forex $r5, $r9, $r10, $r14;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r6, $r11;
+        java.lang.String $r7, $r12;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r8, $r13;
+        com.opengamma.analytics.financial.forex.method.FXMatrix $r15;
+        com.opengamma.analytics.financial.model.volatility.VolatilityModel $r18;
+        com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters $r19;
+        java.lang.Double $r20, $r21;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle;
+
+        z0 := @parameter2: boolean;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "Forex option");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "Smile");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        $z1 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: boolean checkCurrencies(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r3, $r4);
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "Option currencies not compatible with smile data");
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r6 = virtualinvoke $r5.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency2()>();
+
+        $r7 = virtualinvoke $r6.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r8 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r7);
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d9 = virtualinvoke $r9.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        d0 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d9);
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r13 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r12);
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d10 = virtualinvoke $r14.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        d1 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d10);
+
+        $r15 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        d2 = virtualinvoke $r15.<com.opengamma.analytics.financial.forex.method.FXMatrix: double getFxRate(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r16, $r17);
+
+        $d11 = d2 * d1;
+
+        d3 = $d11 / d0;
+
+        $r18 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.volatility.VolatilityModel getVolatilityModel()>();
+
+        $r19 = (com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters) $r18;
+
+        $d12 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $r20 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d12);
+
+        $r21 = virtualinvoke $r19.<com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters: java.lang.Double getVolatility(java.lang.Double)>($r20);
+
+        d4 = virtualinvoke $r21.<java.lang.Double: double doubleValue()>();
+
+        $z2 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: boolean isLong()>();
+
+        if $z2 == 0 goto label1;
+
+        $d28 = 1.0;
+
+        goto label2;
+
+     label1:
+        $d28 = -1.0;
+
+     label2:
+        $d13 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getStrike()>();
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $d15 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double gamma(double,double,double,double)>(d3, $d13, $d14, d4);
+
+        $d16 = d1 * d1;
+
+        $d17 = $d15 * $d16;
+
+        $d18 = $d17 / d0;
+
+        d6 = $d18 * $d28;
+
+        if z0 == 0 goto label3;
+
+        return d6;
+
+     label3:
+        $d19 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getStrike()>();
+
+        $d20 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $z3 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: boolean isCall()>();
+
+        $d21 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double delta(double,double,double,double,boolean)>(d3, $d19, $d20, d4, $z3);
+
+        $d22 = $d21 * d1;
+
+        d7 = $d22 * $d28;
+
+        $d24 = d6 * d2;
+
+        $d23 = 2.0 * d7;
+
+        $d25 = $d24 + $d23;
+
+        $d26 = $d25 * d2;
+
+        $d27 = $d26 * d2;
+
+        d8 = $d27 * d2;
+
+        return d8;
+    }
+
+    public double gammaRelativeSpot(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla, com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle, boolean)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla r1;
+        com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle r2;
+        boolean z0, $z1, $z2, $z3;
+        double d0, d1, d2, d3, d4, d6, d7, d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28;
+        com.opengamma.util.money.Currency $r3, $r4, $r16, $r17;
+        com.opengamma.analytics.financial.forex.derivative.Forex $r5, $r9, $r10, $r14;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r6, $r11;
+        java.lang.String $r7, $r12;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r8, $r13;
+        com.opengamma.analytics.financial.forex.method.FXMatrix $r15;
+        com.opengamma.analytics.financial.model.volatility.VolatilityModel $r18;
+        com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters $r19;
+        java.lang.Double $r20, $r21;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle;
+
+        z0 := @parameter2: boolean;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "Forex option");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "Smile");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        $z1 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: boolean checkCurrencies(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r3, $r4);
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "Option currencies not compatible with smile data");
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r6 = virtualinvoke $r5.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency2()>();
+
+        $r7 = virtualinvoke $r6.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r8 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r7);
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d9 = virtualinvoke $r9.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        d0 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d9);
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r13 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r12);
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d10 = virtualinvoke $r14.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        d1 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d10);
+
+        $r15 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        d2 = virtualinvoke $r15.<com.opengamma.analytics.financial.forex.method.FXMatrix: double getFxRate(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r16, $r17);
+
+        $d11 = d2 * d1;
+
+        d3 = $d11 / d0;
+
+        $r18 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.volatility.VolatilityModel getVolatilityModel()>();
+
+        $r19 = (com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters) $r18;
+
+        $d12 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $r20 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d12);
+
+        $r21 = virtualinvoke $r19.<com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters: java.lang.Double getVolatility(java.lang.Double)>($r20);
+
+        d4 = virtualinvoke $r21.<java.lang.Double: double doubleValue()>();
+
+        $z2 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: boolean isLong()>();
+
+        if $z2 == 0 goto label1;
+
+        $d28 = 1.0;
+
+        goto label2;
+
+     label1:
+        $d28 = -1.0;
+
+     label2:
+        $d13 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getStrike()>();
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $d15 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double gamma(double,double,double,double)>(d3, $d13, $d14, d4);
+
+        $d16 = d1 * d1;
+
+        $d17 = $d15 * $d16;
+
+        $d18 = $d17 / d0;
+
+        d6 = $d18 * $d28;
+
+        if z0 == 0 goto label3;
+
+        $d27 = d6 * d2;
+
+        return $d27;
+
+     label3:
+        $d19 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getStrike()>();
+
+        $d20 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $z3 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: boolean isCall()>();
+
+        $d21 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double delta(double,double,double,double,boolean)>(d3, $d19, $d20, d4, $z3);
+
+        $d22 = $d21 * d1;
+
+        d7 = $d22 * $d28;
+
+        $d24 = d6 * d2;
+
+        $d23 = 2.0 * d7;
+
+        $d25 = $d24 + $d23;
+
+        $d26 = $d25 * d2;
+
+        d8 = $d26 * d2;
+
+        return d8;
+    }
+
+    public com.opengamma.util.money.CurrencyAmount gamma(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla, com.opengamma.analytics.financial.interestrate.YieldCurveBundle, boolean)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        boolean z0, $z1;
+        com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle r3;
+        double d0, $d1, $d2, $d3;
+        com.opengamma.analytics.financial.forex.derivative.Forex $r5, $r7;
+        com.opengamma.util.money.Currency $r6;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r8;
+        com.opengamma.util.money.CurrencyAmount $r9;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        z0 := @parameter2: boolean;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Curves");
+
+        $z1 = r2 instanceof com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "Yield curve bundle should contain smile data");
+
+        r3 = (com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle) r2;
+
+        d0 = virtualinvoke r0.<com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod: double gammaRelative(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla,com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle,boolean)>(r1, r3, z0);
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r6 = virtualinvoke $r5.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.util.money.Currency getCurrency2()>();
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $d1 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        $d2 = staticinvoke <java.lang.Math: double abs(double)>($d1);
+
+        $d3 = d0 * $d2;
+
+        $r9 = staticinvoke <com.opengamma.util.money.CurrencyAmount: com.opengamma.util.money.CurrencyAmount of(com.opengamma.util.money.Currency,double)>($r6, $d3);
+
+        return $r9;
+    }
+
+    public com.opengamma.util.money.CurrencyAmount gammaSpot(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla, com.opengamma.analytics.financial.interestrate.YieldCurveBundle, boolean)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        boolean z0, $z1;
+        com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle r3;
+        double d0, $d1, $d2, $d3;
+        com.opengamma.analytics.financial.forex.derivative.Forex $r5, $r7;
+        com.opengamma.util.money.Currency $r6;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r8;
+        com.opengamma.util.money.CurrencyAmount $r9;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        z0 := @parameter2: boolean;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Curves");
+
+        $z1 = r2 instanceof com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "Yield curve bundle should contain smile data");
+
+        r3 = (com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle) r2;
+
+        d0 = virtualinvoke r0.<com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod: double gammaRelativeSpot(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla,com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle,boolean)>(r1, r3, z0);
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r6 = virtualinvoke $r5.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.util.money.Currency getCurrency2()>();
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $d1 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        $d2 = staticinvoke <java.lang.Math: double abs(double)>($d1);
+
+        $d3 = d0 * $d2;
+
+        $r9 = staticinvoke <com.opengamma.util.money.CurrencyAmount: com.opengamma.util.money.CurrencyAmount of(com.opengamma.util.money.Currency,double)>($r6, $d3);
+
+        return $r9;
+    }
+
+    public com.opengamma.util.money.CurrencyAmount thetaTheoretical(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle r3;
+        double d0, d1, d2, d3, d4, d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.forex.derivative.Forex $r5, $r9, $r10, $r14, $r22, $r24;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r6, $r11, $r23;
+        java.lang.String $r7, $r12;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r8, $r13;
+        com.opengamma.analytics.financial.forex.method.FXMatrix $r15;
+        com.opengamma.util.money.Currency $r16, $r17, $r25;
+        com.opengamma.analytics.financial.model.volatility.VolatilityModel $r18;
+        com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters $r19;
+        java.lang.Double $r20, $r21;
+        com.opengamma.util.money.CurrencyAmount $r26;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Curves");
+
+        $z0 = r2 instanceof com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Yield curve bundle should contain smile data");
+
+        r3 = (com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle) r2;
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r6 = virtualinvoke $r5.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency2()>();
+
+        $r7 = virtualinvoke $r6.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r8 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r7);
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d7 = virtualinvoke $r9.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        d0 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d7);
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r13 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r12);
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d8 = virtualinvoke $r14.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        d1 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d8);
+
+        $r15 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        d2 = virtualinvoke $r15.<com.opengamma.analytics.financial.forex.method.FXMatrix: double getFxRate(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r16, $r17);
+
+        $d9 = d2 * d1;
+
+        d3 = $d9 / d0;
+
+        $r18 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.volatility.VolatilityModel getVolatilityModel()>();
+
+        $r19 = (com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters) $r18;
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $r20 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        $r21 = virtualinvoke $r19.<com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters: java.lang.Double getVolatility(java.lang.Double)>($r20);
+
+        d4 = virtualinvoke $r21.<java.lang.Double: double doubleValue()>();
+
+        $z1 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: boolean isLong()>();
+
+        if $z1 == 0 goto label1;
+
+        $d17 = 1.0;
+
+        goto label2;
+
+     label1:
+        $d17 = -1.0;
+
+     label2:
+        $d11 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getStrike()>();
+
+        $d12 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $d13 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double driftlessTheta(double,double,double,double)>(d3, $d11, $d12, d4);
+
+        $d14 = $d13 * $d17;
+
+        $r22 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r23 = virtualinvoke $r22.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $d15 = virtualinvoke $r23.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        $d16 = staticinvoke <java.lang.Math: double abs(double)>($d15);
+
+        d6 = $d14 * $d16;
+
+        $r24 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r25 = virtualinvoke $r24.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.util.money.Currency getCurrency2()>();
+
+        $r26 = staticinvoke <com.opengamma.util.money.CurrencyAmount: com.opengamma.util.money.CurrencyAmount of(com.opengamma.util.money.Currency,double)>($r25, d6);
+
+        return $r26;
+    }
+
+    public double forwardForexRate(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        com.opengamma.analytics.financial.forex.method.ForexDiscountingMethod r3;
+        com.opengamma.analytics.financial.forex.derivative.Forex $r4;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        r3 = staticinvoke <com.opengamma.analytics.financial.forex.method.ForexDiscountingMethod: com.opengamma.analytics.financial.forex.method.ForexDiscountingMethod getInstance()>();
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d0 = virtualinvoke r3.<com.opengamma.analytics.financial.forex.method.ForexDiscountingMethod: double forwardForexRate(com.opengamma.analytics.financial.forex.derivative.Forex,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>($r4, r2);
+
+        return $d0;
+    }
+
+    public com.opengamma.analytics.financial.forex.method.MultipleCurrencyInterestRateCurveSensitivity presentValueCurveSensitivity(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla, com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla r1;
+        com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle r2;
+        double d0, d1, d2, d3, d4, d5, d7, d8, d9, d10, d11, d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33;
+        java.lang.String r3, r4;
+        double[] r6;
+        com.opengamma.util.money.Currency $r11, $r12, $r14, $r15, $r42;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.forex.method.FXMatrix $r13;
+        com.opengamma.analytics.financial.forex.derivative.Forex $r16, $r17, $r19, $r29, $r41;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r18, $r20, $r30;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r21, $r22;
+        com.opengamma.analytics.financial.model.volatility.VolatilityModel $r23;
+        com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters $r24;
+        java.lang.Double $r25, $r26;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r27;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r28;
+        java.util.ArrayList $r31, $r36;
+        com.opengamma.util.tuple.DoublesPair $r32, $r37;
+        java.util.HashMap $r33, $r38;
+        com.opengamma.analytics.financial.interestrate.InterestRateCurveSensitivity $r35, $r40, r45;
+        com.opengamma.analytics.financial.forex.method.MultipleCurrencyInterestRateCurveSensitivity $r43;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "Forex option");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "Smile");
+
+        $r11 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        $z0 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: boolean checkCurrencies(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r11, $r12);
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "Option currencies not compatible with smile data");
+
+        $r13 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r15 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        d0 = virtualinvoke $r13.<com.opengamma.analytics.financial.forex.method.FXMatrix: double getFxRate(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r14, $r15);
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        d1 = virtualinvoke $r16.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r18 = virtualinvoke $r17.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency2()>();
+
+        r3 = virtualinvoke $r18.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r19 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r20 = virtualinvoke $r19.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        r4 = virtualinvoke $r20.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r21 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>(r3);
+
+        d2 = virtualinvoke $r21.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>(d1);
+
+        $r22 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>(r4);
+
+        d3 = virtualinvoke $r22.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>(d1);
+
+        $d13 = d0 * d3;
+
+        d4 = $d13 / d2;
+
+        $r23 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.volatility.VolatilityModel getVolatilityModel()>();
+
+        $r24 = (com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters) $r23;
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $r25 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d14);
+
+        $r26 = virtualinvoke $r24.<com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters: java.lang.Double getVolatility(java.lang.Double)>($r25);
+
+        d5 = virtualinvoke $r26.<java.lang.Double: double doubleValue()>();
+
+        $r27 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r27.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d4, 1.0, d5);
+
+        $r28 = <com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        r6 = virtualinvoke $r28.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: double[] getPriceAdjoint(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData)>(r1, $r27);
+
+        $d15 = r6[1];
+
+        $d16 = $d15 * d2;
+
+        d7 = $d16 * 1.0;
+
+        $d17 = d0 / d2;
+
+        d8 = $d17 * d7;
+
+        $d19 = neg d0;
+
+        $d18 = d2 * d2;
+
+        $d20 = $d19 / $d18;
+
+        $d21 = $d20 * d3;
+
+        $d24 = $d21 * d7;
+
+        $d22 = r6[0];
+
+        $d23 = $d22 * 1.0;
+
+        d9 = $d24 + $d23;
+
+        $d25 = neg d1;
+
+        $d26 = $d25 * d3;
+
+        d10 = $d26 * d8;
+
+        $d27 = neg d1;
+
+        $d28 = $d27 * d2;
+
+        d11 = $d28 * d9;
+
+        $r29 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r30 = virtualinvoke $r29.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $d29 = virtualinvoke $r30.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        $d30 = staticinvoke <java.lang.Math: double abs(double)>($d29);
+
+        $z1 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: boolean isLong()>();
+
+        if $z1 == 0 goto label1;
+
+        $d33 = 1.0;
+
+        goto label2;
+
+     label1:
+        $d33 = -1.0;
+
+     label2:
+        d12 = $d30 * $d33;
+
+        $r31 = new java.util.ArrayList;
+
+        specialinvoke $r31.<java.util.ArrayList: void <init>()>();
+
+        $d31 = d10 * d12;
+
+        $r32 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>(d1, $d31);
+
+        interfaceinvoke $r31.<java.util.List: boolean add(java.lang.Object)>($r32);
+
+        $r33 = new java.util.HashMap;
+
+        specialinvoke $r33.<java.util.HashMap: void <init>()>();
+
+        interfaceinvoke $r33.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r4, $r31);
+
+        $r35 = new com.opengamma.analytics.financial.interestrate.InterestRateCurveSensitivity;
+
+        specialinvoke $r35.<com.opengamma.analytics.financial.interestrate.InterestRateCurveSensitivity: void <init>(java.util.Map)>($r33);
+
+        $r36 = new java.util.ArrayList;
+
+        specialinvoke $r36.<java.util.ArrayList: void <init>()>();
+
+        $d32 = d11 * d12;
+
+        $r37 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>(d1, $d32);
+
+        interfaceinvoke $r36.<java.util.List: boolean add(java.lang.Object)>($r37);
+
+        $r38 = new java.util.HashMap;
+
+        specialinvoke $r38.<java.util.HashMap: void <init>()>();
+
+        interfaceinvoke $r38.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r3, $r36);
+
+        $r40 = new com.opengamma.analytics.financial.interestrate.InterestRateCurveSensitivity;
+
+        specialinvoke $r40.<com.opengamma.analytics.financial.interestrate.InterestRateCurveSensitivity: void <init>(java.util.Map)>($r38);
+
+        r45 = virtualinvoke $r35.<com.opengamma.analytics.financial.interestrate.InterestRateCurveSensitivity: com.opengamma.analytics.financial.interestrate.InterestRateCurveSensitivity plus(com.opengamma.analytics.financial.interestrate.InterestRateCurveSensitivity)>($r40);
+
+        $r41 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r42 = virtualinvoke $r41.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.util.money.Currency getCurrency2()>();
+
+        $r43 = staticinvoke <com.opengamma.analytics.financial.forex.method.MultipleCurrencyInterestRateCurveSensitivity: com.opengamma.analytics.financial.forex.method.MultipleCurrencyInterestRateCurveSensitivity of(com.opengamma.util.money.Currency,com.opengamma.analytics.financial.interestrate.InterestRateCurveSensitivity)>($r42, r45);
+
+        return $r43;
+    }
+
+    public com.opengamma.analytics.financial.forex.method.MultipleCurrencyInterestRateCurveSensitivity presentValueCurveSensitivity(com.opengamma.analytics.financial.interestrate.InstrumentDerivative, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle $r3;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla $r4;
+        com.opengamma.analytics.financial.forex.method.MultipleCurrencyInterestRateCurveSensitivity $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivative;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $z0 = r1 instanceof com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "Vanilla Forex option");
+
+        $z1 = r2 instanceof com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle;
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "Smile delta data bundle required");
+
+        $r4 = (com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla) r1;
+
+        $r3 = (com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle) r2;
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod: com.opengamma.analytics.financial.forex.method.MultipleCurrencyInterestRateCurveSensitivity presentValueCurveSensitivity(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla,com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle)>($r4, $r3);
+
+        return $r5;
+    }
+
+    public com.opengamma.analytics.financial.forex.method.PresentValueForexBlackVolatilitySensitivity presentValueBlackVolatilitySensitivity(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla, com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla r1;
+        com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle r2;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17;
+        double[] r4;
+        com.opengamma.util.tuple.DoublesPair r5;
+        com.opengamma.analytics.util.amount.SurfaceValue r6;
+        com.opengamma.util.money.Currency $r8, $r9, $r16, $r17, $r31, $r37, $r39;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.forex.derivative.Forex $r10, $r14, $r18, $r22, $r29, $r36, $r38;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r11, $r19, $r30;
+        java.lang.String $r12, $r20;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r13, $r21;
+        com.opengamma.analytics.financial.forex.method.FXMatrix $r15;
+        com.opengamma.analytics.financial.model.volatility.VolatilityModel $r23;
+        com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters $r24;
+        java.lang.Double $r25, $r26, $r34;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r27;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r28;
+        com.opengamma.util.tuple.Pair $r32;
+        java.lang.Object $r33;
+        com.opengamma.analytics.financial.forex.method.PresentValueForexBlackVolatilitySensitivity $r35;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "Forex option");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "Smile");
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        $z0 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: boolean checkCurrencies(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r8, $r9);
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "Option currencies not compatible with smile data");
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency2()>();
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r13 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r12);
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d5 = virtualinvoke $r14.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        d0 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d5);
+
+        $r15 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        d1 = virtualinvoke $r15.<com.opengamma.analytics.financial.forex.method.FXMatrix: double getFxRate(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r16, $r17);
+
+        $r18 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r19 = virtualinvoke $r18.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $r20 = virtualinvoke $r19.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r21 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r20);
+
+        $r22 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d6 = virtualinvoke $r22.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        $d7 = virtualinvoke $r21.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d6);
+
+        $d8 = d1 * $d7;
+
+        d2 = $d8 / d0;
+
+        $r23 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.volatility.VolatilityModel getVolatilityModel()>();
+
+        $r24 = (com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters) $r23;
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $r25 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d9);
+
+        $r26 = virtualinvoke $r24.<com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters: java.lang.Double getVolatility(java.lang.Double)>($r25);
+
+        d3 = virtualinvoke $r26.<java.lang.Double: double doubleValue()>();
+
+        $r27 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r27.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d2, d0, d3);
+
+        $r28 = <com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        r4 = virtualinvoke $r28.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: double[] getPriceAdjoint(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData)>(r1, $r27);
+
+        $d10 = r4[2];
+
+        $r29 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r30 = virtualinvoke $r29.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $d11 = virtualinvoke $r30.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        $d12 = staticinvoke <java.lang.Math: double abs(double)>($d11);
+
+        $d13 = $d10 * $d12;
+
+        $z1 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: boolean isLong()>();
+
+        if $z1 == 0 goto label1;
+
+        $d16 = 1.0;
+
+        goto label2;
+
+     label1:
+        $d16 = -1.0;
+
+     label2:
+        d4 = $d13 * $d16;
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $r31 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r32 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.util.tuple.Pair getCurrencyPair()>();
+
+        $r33 = virtualinvoke $r32.<com.opengamma.util.tuple.Pair: java.lang.Object getFirst()>();
+
+        if $r31 != $r33 goto label3;
+
+        $d17 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getStrike()>();
+
+        goto label4;
+
+     label3:
+        $d15 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getStrike()>();
+
+        $d17 = 1.0 / $d15;
+
+     label4:
+        r5 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d14, $d17);
+
+        $r34 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d4);
+
+        r6 = staticinvoke <com.opengamma.analytics.util.amount.SurfaceValue: com.opengamma.analytics.util.amount.SurfaceValue 'from'(com.opengamma.util.tuple.DoublesPair,java.lang.Double)>(r5, $r34);
+
+        $r35 = new com.opengamma.analytics.financial.forex.method.PresentValueForexBlackVolatilitySensitivity;
+
+        $r36 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r37 = virtualinvoke $r36.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r38 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r39 = virtualinvoke $r38.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.util.money.Currency getCurrency2()>();
+
+        specialinvoke $r35.<com.opengamma.analytics.financial.forex.method.PresentValueForexBlackVolatilitySensitivity: void <init>(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency,com.opengamma.analytics.util.amount.SurfaceValue)>($r37, $r39, r6);
+
+        return $r35;
+    }
+
+    public com.opengamma.analytics.financial.forex.method.PresentValueForexBlackVolatilitySensitivity presentValueBlackVolatilitySensitivity(com.opengamma.analytics.financial.interestrate.InstrumentDerivative, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle $r3;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla $r4;
+        com.opengamma.analytics.financial.forex.method.PresentValueForexBlackVolatilitySensitivity $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivative;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $z0 = r1 instanceof com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "Vanilla Forex option");
+
+        $z1 = r2 instanceof com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle;
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "Smile delta data bundle required");
+
+        $r4 = (com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla) r1;
+
+        $r3 = (com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle) r2;
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod: com.opengamma.analytics.financial.forex.method.PresentValueForexBlackVolatilitySensitivity presentValueBlackVolatilitySensitivity(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla,com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle)>($r4, $r3);
+
+        return $r5;
+    }
+
+    public double[] presentValueBlackVolatilityNodeSensitivity(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla, com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle)
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla r1;
+        com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle r2;
+        int i0, i1;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17;
+        double[] r4, r6;
+        java.lang.Double[] r5;
+        com.opengamma.util.money.Currency $r7, $r8, $r18, $r19;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.volatility.VolatilityModel $r9, $r25, $r33;
+        com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters $r10, $r26, $r34;
+        com.opengamma.analytics.math.curve.DoublesCurve $r11;
+        com.opengamma.analytics.financial.forex.derivative.Forex $r12, $r16, $r20, $r24, $r31;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r13, $r21, $r32;
+        java.lang.String $r14, $r22;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r15, $r23;
+        com.opengamma.analytics.financial.forex.method.FXMatrix $r17;
+        java.lang.Double $r27, $r28, $r35;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r29;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r30;
+
+        r0 := @this: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "Forex option");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "Smile");
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        $z0 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: boolean checkCurrencies(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r7, $r8);
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "Option currencies not compatible with smile data");
+
+        $r9 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.volatility.VolatilityModel getVolatilityModel()>();
+
+        $r10 = (com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters) $r9;
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters: com.opengamma.analytics.math.curve.DoublesCurve getVolatilityCurve()>();
+
+        i0 = virtualinvoke $r11.<com.opengamma.analytics.math.curve.DoublesCurve: int size()>();
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r13 = virtualinvoke $r12.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency2()>();
+
+        $r14 = virtualinvoke $r13.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r15 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r14);
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d5 = virtualinvoke $r16.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        d0 = virtualinvoke $r15.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d5);
+
+        $r17 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r18 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r19 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency2()>();
+
+        d1 = virtualinvoke $r17.<com.opengamma.analytics.financial.forex.method.FXMatrix: double getFxRate(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>($r18, $r19);
+
+        $r20 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r21 = virtualinvoke $r20.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $r22 = virtualinvoke $r21.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        $r23 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r22);
+
+        $r24 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $d6 = virtualinvoke $r24.<com.opengamma.analytics.financial.forex.derivative.Forex: double getPaymentTime()>();
+
+        $d7 = virtualinvoke $r23.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d6);
+
+        $d8 = d1 * $d7;
+
+        d2 = $d8 / d0;
+
+        $r25 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.volatility.VolatilityModel getVolatilityModel()>();
+
+        $r26 = (com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters) $r25;
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        $r27 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d9);
+
+        $r28 = virtualinvoke $r26.<com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters: java.lang.Double getVolatility(java.lang.Double)>($r27);
+
+        d3 = virtualinvoke $r28.<java.lang.Double: double doubleValue()>();
+
+        $r29 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r29.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d2, d0, d3);
+
+        $r30 = <com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        r4 = virtualinvoke $r30.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: double[] getPriceAdjoint(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData)>(r1, $r29);
+
+        $d10 = r4[2];
+
+        $r31 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.analytics.financial.forex.derivative.Forex getUnderlyingForex()>();
+
+        $r32 = virtualinvoke $r31.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $d11 = virtualinvoke $r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        $d12 = staticinvoke <java.lang.Math: double abs(double)>($d11);
+
+        $d13 = $d10 * $d12;
+
+        $z1 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: boolean isLong()>();
+
+        if $z1 == 0 goto label1;
+
+        $d17 = 1.0;
+
+        goto label2;
+
+     label1:
+        $d17 = -1.0;
+
+     label2:
+        d4 = $d13 * $d17;
+
+        $r33 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.definition.YieldCurveWithBlackForexTermStructureBundle: com.opengamma.analytics.financial.model.volatility.VolatilityModel getVolatilityModel()>();
+
+        $r34 = (com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters) $r33;
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: double getTimeToExpiry()>();
+
+        r5 = virtualinvoke $r34.<com.opengamma.analytics.financial.model.volatility.curve.BlackForexTermStructureParameters: java.lang.Double[] getVolatilityTimeSensitivity(double)>($d14);
+
+        r6 = newarray (double)[i0];
+
+        i1 = 0;
+
+     label3:
+        if i1 >= i0 goto label4;
+
+        $r35 = r5[i1];
+
+        $d15 = virtualinvoke $r35.<java.lang.Double: double doubleValue()>();
+
+        $d16 = $d15 * d4;
+
+        r6[i1] = $d16;
+
+        i1 = i1 + 1;
+
+        goto label3;
+
+     label4:
+        return r6;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod $r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r1;
+
+        $r0 = new com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod: void <init>()>();
+
+        <com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod: com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod INSTANCE> = $r0;
+
+        $r1 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: void <init>()>();
+
+        <com.opengamma.analytics.financial.forex.method.ForexOptionVanillaBlackTermStructureMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION> = $r1;
+
+        return;
+    }
+}

@@ -1,0 +1,270 @@
+public final class com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod extends com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod
+{
+    private static final com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod INSTANCE;
+    private static final com.opengamma.analytics.financial.interestrate.payments.provider.CouponIborSpreadDiscountingMethod METHOD_CPN_IBOR_SPREAD;
+
+    public static com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod getInstance()
+    {
+        com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod $r0;
+
+        $r0 = <com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod INSTANCE>;
+
+        return $r0;
+    }
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod r0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedCouponDiscountingMethod: void <init>()>();
+
+        return;
+    }
+
+    public double couponEquivalentSpreadModified(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon, double, com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod r0;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon r1;
+        double d0, d1, d2, $d3, $d4;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r2;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity $r3, $r5, $r10;
+        com.opengamma.util.money.Currency $r4, $r6;
+        com.opengamma.analytics.financial.interestrate.annuity.provider.AnnuityDiscountingMethod $r7;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed $r8;
+        com.opengamma.util.money.CurrencyAmount $r9, $r11;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon;
+
+        d0 := @parameter1: double;
+
+        r2 := @parameter2: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface;
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFirstLeg()>();
+
+        $r4 = virtualinvoke $r3.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getSecondLeg()>();
+
+        $r6 = virtualinvoke $r5.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.util.money.Currency getCurrency()>();
+
+        if $r4 != $r6 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Both legs should be in the same currency");
+
+        $r7 = <com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod: com.opengamma.analytics.financial.interestrate.annuity.provider.AnnuityDiscountingMethod METHOD_ANNUITY>;
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $r9 = virtualinvoke $r7.<com.opengamma.analytics.financial.interestrate.annuity.provider.AnnuityDiscountingMethod: com.opengamma.util.money.CurrencyAmount presentValuePositiveNotional(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r8, r2);
+
+        d1 = virtualinvoke $r9.<com.opengamma.util.money.CurrencyAmount: double getAmount()>();
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getSecondLeg()>();
+
+        $r11 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod: com.opengamma.util.money.CurrencyAmount presentValueSpreadPositiveNotional(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r10, r2);
+
+        d2 = virtualinvoke $r11.<com.opengamma.util.money.CurrencyAmount: double getAmount()>();
+
+        $d3 = d1 - d2;
+
+        $d4 = $d3 / d0;
+
+        return $d4;
+    }
+
+    public double forwardSwapSpreadModified(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon, double, com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod r0;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon r1;
+        double d0, d1, $d2;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r2;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity $r3;
+        com.opengamma.util.money.CurrencyAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon;
+
+        d0 := @parameter1: double;
+
+        r2 := @parameter2: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface;
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getSecondLeg()>();
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod: com.opengamma.util.money.CurrencyAmount presentValueIborNoSpreadPositiveNotional(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r3, r2);
+
+        d1 = virtualinvoke $r4.<com.opengamma.util.money.CurrencyAmount: double getAmount()>();
+
+        $d2 = d1 / d0;
+
+        return $d2;
+    }
+
+    public com.opengamma.util.money.CurrencyAmount presentValueSpreadPositiveNotional(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity, com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r2;
+        com.opengamma.util.money.Currency r3, $r5;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread r4;
+        int $i0, i1;
+        com.opengamma.util.money.CurrencyAmount $r6;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r7, $r8;
+        boolean $z0;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, d9;
+        java.lang.Double $r9;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface;
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.util.money.Currency getCurrency()>();
+
+        d9 = 0.0;
+
+        i1 = 0;
+
+     label1:
+        $i0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: int getNumberOfPayments()>();
+
+        if i1 >= $i0 goto label2;
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i1);
+
+        $z0 = $r7 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Coupon should be Ibor with spread");
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i1);
+
+        r4 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread) $r8;
+
+        $d0 = virtualinvoke r4.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread: double getNotional()>();
+
+        $d1 = staticinvoke <java.lang.Math: double abs(double)>($d0);
+
+        $d2 = virtualinvoke r4.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread: double getSpread()>();
+
+        $d3 = $d1 * $d2;
+
+        $d4 = virtualinvoke r4.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread: double getPaymentYearFraction()>();
+
+        $d5 = $d3 * $d4;
+
+        $d6 = virtualinvoke r4.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread: double getPaymentTime()>();
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d6);
+
+        $d7 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r9);
+
+        $d8 = $d5 * $d7;
+
+        d9 = d9 + $d8;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r6 = staticinvoke <com.opengamma.util.money.CurrencyAmount: com.opengamma.util.money.CurrencyAmount of(com.opengamma.util.money.Currency,double)>($r5, d9);
+
+        return $r6;
+    }
+
+    public com.opengamma.util.money.CurrencyAmount presentValueIborNoSpreadPositiveNotional(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity, com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r2;
+        com.opengamma.util.money.Currency r3, $r4;
+        int $i0, i1;
+        com.opengamma.util.money.CurrencyAmount $r5;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r6, $r8;
+        boolean $z0;
+        com.opengamma.analytics.financial.interestrate.payments.provider.CouponIborSpreadDiscountingMethod $r7;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread $r9;
+        com.opengamma.util.money.MultipleCurrencyAmount $r10;
+        double $d0, d1;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface;
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.util.money.Currency getCurrency()>();
+
+        d1 = 0.0;
+
+        i1 = 0;
+
+     label1:
+        $i0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: int getNumberOfPayments()>();
+
+        if i1 >= $i0 goto label2;
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i1);
+
+        $z0 = $r6 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Coupon should be Ibor with spread");
+
+        $r7 = <com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod: com.opengamma.analytics.financial.interestrate.payments.provider.CouponIborSpreadDiscountingMethod METHOD_CPN_IBOR_SPREAD>;
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i1);
+
+        $r9 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread) $r8;
+
+        $r10 = virtualinvoke $r7.<com.opengamma.analytics.financial.interestrate.payments.provider.CouponIborSpreadDiscountingMethod: com.opengamma.util.money.MultipleCurrencyAmount presentValueNoSpreadPositiveNotional(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r9, r2);
+
+        $d0 = virtualinvoke $r10.<com.opengamma.util.money.MultipleCurrencyAmount: double getAmount(com.opengamma.util.money.Currency)>(r3);
+
+        d1 = d1 + $d0;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r5 = staticinvoke <com.opengamma.util.money.CurrencyAmount: com.opengamma.util.money.CurrencyAmount of(com.opengamma.util.money.Currency,double)>($r4, d1);
+
+        return $r5;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod $r0;
+        com.opengamma.analytics.financial.interestrate.payments.provider.CouponIborSpreadDiscountingMethod $r1;
+
+        $r0 = new com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod: com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod INSTANCE> = $r0;
+
+        $r1 = staticinvoke <com.opengamma.analytics.financial.interestrate.payments.provider.CouponIborSpreadDiscountingMethod: com.opengamma.analytics.financial.interestrate.payments.provider.CouponIborSpreadDiscountingMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.swap.provider.SwapFixedIborSpreadDiscountingMethod: com.opengamma.analytics.financial.interestrate.payments.provider.CouponIborSpreadDiscountingMethod METHOD_CPN_IBOR_SPREAD> = $r1;
+
+        return;
+    }
+}

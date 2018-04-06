@@ -1,0 +1,203 @@
+public class org.apache.commons.math.stat.regression.GLSMultipleLinearRegression extends org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression
+{
+    private org.apache.commons.math.linear.RealMatrix Omega;
+    private org.apache.commons.math.linear.RealMatrix OmegaInverse;
+
+    public void <init>()
+    {
+        org.apache.commons.math.stat.regression.GLSMultipleLinearRegression r0;
+
+        r0 := @this: org.apache.commons.math.stat.regression.GLSMultipleLinearRegression;
+
+        specialinvoke r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: void <init>()>();
+
+        return;
+    }
+
+    public void newSampleData(double[], double[][], double[][])
+    {
+        org.apache.commons.math.stat.regression.GLSMultipleLinearRegression r0;
+        double[] r1;
+        double[][] r2, r3;
+
+        r0 := @this: org.apache.commons.math.stat.regression.GLSMultipleLinearRegression;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[][];
+
+        r3 := @parameter2: double[][];
+
+        virtualinvoke r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: void validateSampleData(double[][],double[])>(r2, r1);
+
+        virtualinvoke r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: void newYSampleData(double[])>(r1);
+
+        virtualinvoke r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: void newXSampleData(double[][])>(r2);
+
+        virtualinvoke r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: void validateCovarianceData(double[][],double[][])>(r2, r3);
+
+        virtualinvoke r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: void newCovarianceData(double[][])>(r3);
+
+        return;
+    }
+
+    protected void newCovarianceData(double[][])
+    {
+        org.apache.commons.math.stat.regression.GLSMultipleLinearRegression r0;
+        double[][] r1;
+        org.apache.commons.math.linear.Array2DRowRealMatrix $r2;
+
+        r0 := @this: org.apache.commons.math.stat.regression.GLSMultipleLinearRegression;
+
+        r1 := @parameter0: double[][];
+
+        $r2 = new org.apache.commons.math.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r2.<org.apache.commons.math.linear.Array2DRowRealMatrix: void <init>(double[][])>(r1);
+
+        r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix Omega> = $r2;
+
+        r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix OmegaInverse> = null;
+
+        return;
+    }
+
+    protected org.apache.commons.math.linear.RealMatrix getOmegaInverse()
+    {
+        org.apache.commons.math.stat.regression.GLSMultipleLinearRegression r0;
+        org.apache.commons.math.linear.RealMatrix $r1, $r2, $r4, $r6;
+        org.apache.commons.math.linear.LUDecompositionImpl $r3;
+        org.apache.commons.math.linear.DecompositionSolver $r5;
+
+        r0 := @this: org.apache.commons.math.stat.regression.GLSMultipleLinearRegression;
+
+        $r1 = r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix OmegaInverse>;
+
+        if $r1 != null goto label1;
+
+        $r3 = new org.apache.commons.math.linear.LUDecompositionImpl;
+
+        $r4 = r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix Omega>;
+
+        specialinvoke $r3.<org.apache.commons.math.linear.LUDecompositionImpl: void <init>(org.apache.commons.math.linear.RealMatrix)>($r4);
+
+        $r5 = virtualinvoke $r3.<org.apache.commons.math.linear.LUDecompositionImpl: org.apache.commons.math.linear.DecompositionSolver getSolver()>();
+
+        $r6 = interfaceinvoke $r5.<org.apache.commons.math.linear.DecompositionSolver: org.apache.commons.math.linear.RealMatrix getInverse()>();
+
+        r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix OmegaInverse> = $r6;
+
+     label1:
+        $r2 = r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix OmegaInverse>;
+
+        return $r2;
+    }
+
+    protected org.apache.commons.math.linear.RealVector calculateBeta()
+    {
+        org.apache.commons.math.stat.regression.GLSMultipleLinearRegression r0;
+        org.apache.commons.math.linear.RealMatrix r1, r2, r3, r4, $r5, $r6, $r7, $r10, $r11;
+        org.apache.commons.math.linear.LUDecompositionImpl $r8;
+        org.apache.commons.math.linear.DecompositionSolver $r9;
+        org.apache.commons.math.linear.RealVector $r12, $r13;
+
+        r0 := @this: org.apache.commons.math.stat.regression.GLSMultipleLinearRegression;
+
+        r1 = virtualinvoke r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix getOmegaInverse()>();
+
+        $r5 = r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix X>;
+
+        r2 = interfaceinvoke $r5.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealMatrix transpose()>();
+
+        $r6 = interfaceinvoke r2.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealMatrix multiply(org.apache.commons.math.linear.RealMatrix)>(r1);
+
+        $r7 = r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix X>;
+
+        r3 = interfaceinvoke $r6.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealMatrix multiply(org.apache.commons.math.linear.RealMatrix)>($r7);
+
+        $r8 = new org.apache.commons.math.linear.LUDecompositionImpl;
+
+        specialinvoke $r8.<org.apache.commons.math.linear.LUDecompositionImpl: void <init>(org.apache.commons.math.linear.RealMatrix)>(r3);
+
+        $r9 = virtualinvoke $r8.<org.apache.commons.math.linear.LUDecompositionImpl: org.apache.commons.math.linear.DecompositionSolver getSolver()>();
+
+        r4 = interfaceinvoke $r9.<org.apache.commons.math.linear.DecompositionSolver: org.apache.commons.math.linear.RealMatrix getInverse()>();
+
+        $r10 = interfaceinvoke r4.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealMatrix multiply(org.apache.commons.math.linear.RealMatrix)>(r2);
+
+        $r11 = interfaceinvoke $r10.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealMatrix multiply(org.apache.commons.math.linear.RealMatrix)>(r1);
+
+        $r12 = r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: org.apache.commons.math.linear.RealVector Y>;
+
+        $r13 = interfaceinvoke $r11.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealVector operate(org.apache.commons.math.linear.RealVector)>($r12);
+
+        return $r13;
+    }
+
+    protected org.apache.commons.math.linear.RealMatrix calculateBetaVariance()
+    {
+        org.apache.commons.math.stat.regression.GLSMultipleLinearRegression r0;
+        org.apache.commons.math.linear.RealMatrix r1, r2, $r3, $r4, $r5, $r6, $r9;
+        org.apache.commons.math.linear.LUDecompositionImpl $r7;
+        org.apache.commons.math.linear.DecompositionSolver $r8;
+
+        r0 := @this: org.apache.commons.math.stat.regression.GLSMultipleLinearRegression;
+
+        r1 = virtualinvoke r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix getOmegaInverse()>();
+
+        $r3 = r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix X>;
+
+        $r4 = interfaceinvoke $r3.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealMatrix transpose()>();
+
+        $r5 = interfaceinvoke $r4.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealMatrix multiply(org.apache.commons.math.linear.RealMatrix)>(r1);
+
+        $r6 = r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix X>;
+
+        r2 = interfaceinvoke $r5.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealMatrix multiply(org.apache.commons.math.linear.RealMatrix)>($r6);
+
+        $r7 = new org.apache.commons.math.linear.LUDecompositionImpl;
+
+        specialinvoke $r7.<org.apache.commons.math.linear.LUDecompositionImpl: void <init>(org.apache.commons.math.linear.RealMatrix)>(r2);
+
+        $r8 = virtualinvoke $r7.<org.apache.commons.math.linear.LUDecompositionImpl: org.apache.commons.math.linear.DecompositionSolver getSolver()>();
+
+        $r9 = interfaceinvoke $r8.<org.apache.commons.math.linear.DecompositionSolver: org.apache.commons.math.linear.RealMatrix getInverse()>();
+
+        return $r9;
+    }
+
+    protected double calculateErrorVariance()
+    {
+        org.apache.commons.math.stat.regression.GLSMultipleLinearRegression r0;
+        org.apache.commons.math.linear.RealVector r1, $r3;
+        double d0, $d1, $d2;
+        org.apache.commons.math.linear.RealMatrix $r2, $r4, $r5;
+        int $i0, $i1, $i2;
+
+        r0 := @this: org.apache.commons.math.stat.regression.GLSMultipleLinearRegression;
+
+        r1 = virtualinvoke r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: org.apache.commons.math.linear.RealVector calculateResiduals()>();
+
+        $r2 = virtualinvoke r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix getOmegaInverse()>();
+
+        $r3 = interfaceinvoke $r2.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealVector operate(org.apache.commons.math.linear.RealVector)>(r1);
+
+        d0 = interfaceinvoke r1.<org.apache.commons.math.linear.RealVector: double dotProduct(org.apache.commons.math.linear.RealVector)>($r3);
+
+        $r4 = r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix X>;
+
+        $i0 = interfaceinvoke $r4.<org.apache.commons.math.linear.RealMatrix: int getRowDimension()>();
+
+        $r5 = r0.<org.apache.commons.math.stat.regression.GLSMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix X>;
+
+        $i1 = interfaceinvoke $r5.<org.apache.commons.math.linear.RealMatrix: int getColumnDimension()>();
+
+        $i2 = $i0 - $i1;
+
+        $d1 = (double) $i2;
+
+        $d2 = d0 / $d1;
+
+        return $d2;
+    }
+}

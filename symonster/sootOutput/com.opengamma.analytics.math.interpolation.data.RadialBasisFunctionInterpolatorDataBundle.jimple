@@ -1,0 +1,443 @@
+public class com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle extends com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle
+{
+    private final com.opengamma.analytics.math.function.Function1D _basisFunction;
+    private final boolean _useNormalized;
+    private final double[] _weights;
+    private com.opengamma.analytics.math.linearalgebra.DecompositionResult _decompRes;
+    private final com.opengamma.analytics.math.linearalgebra.Decomposition _decomp;
+
+    public void <init>(java.util.List, com.opengamma.analytics.math.function.Function1D, boolean)
+    {
+        com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle r0;
+        java.util.List r1;
+        com.opengamma.analytics.math.function.Function1D r2;
+        boolean z0;
+        com.opengamma.analytics.math.linearalgebra.Decomposition $r3;
+        double[] $r4;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle;
+
+        r1 := @parameter0: java.util.List;
+
+        r2 := @parameter1: com.opengamma.analytics.math.function.Function1D;
+
+        z0 := @parameter2: boolean;
+
+        specialinvoke r0.<com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle: void <init>(java.util.List)>(r1);
+
+        $r3 = <com.opengamma.analytics.math.linearalgebra.DecompositionFactory: com.opengamma.analytics.math.linearalgebra.Decomposition LU_COMMONS>;
+
+        r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.linearalgebra.Decomposition _decomp> = $r3;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "basis function");
+
+        r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.function.Function1D _basisFunction> = r2;
+
+        r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: boolean _useNormalized> = z0;
+
+        $r4 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: double[] calculateWeights()>();
+
+        r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: double[] _weights> = $r4;
+
+        return;
+    }
+
+    public double[] getWeights()
+    {
+        com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle r0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle;
+
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: double[] _weights>;
+
+        return $r1;
+    }
+
+    public com.opengamma.analytics.math.linearalgebra.DecompositionResult getDecompositionResult()
+    {
+        com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle r0;
+        com.opengamma.analytics.math.linearalgebra.DecompositionResult $r1;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle;
+
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.linearalgebra.DecompositionResult _decompRes>;
+
+        return $r1;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getBasisFunction()
+    {
+        com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle r0;
+        com.opengamma.analytics.math.function.Function1D $r1;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle;
+
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.function.Function1D _basisFunction>;
+
+        return $r1;
+    }
+
+    public boolean isNormalized()
+    {
+        com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle r0;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle;
+
+        $z0 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: boolean _useNormalized>;
+
+        return $z0;
+    }
+
+    private double[] calculateWeights()
+    {
+        com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle r0;
+        java.util.List r1;
+        int i0, i1, i2, i3;
+        double[][] r2;
+        double[] r3, r4, r5, $r16, $r20, $r29, $r37, $r38;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, d7;
+        com.opengamma.analytics.math.function.Function1D $r6, $r33;
+        java.lang.Double $r7, $r9, $r24, $r28, $r34, $r36;
+        java.lang.Object $r8, $r12, $r17, $r19, $r21, $r23, $r25, $r27, $r30, $r32, $r35;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D $r10;
+        com.opengamma.analytics.math.linearalgebra.Decomposition $r11;
+        com.opengamma.analytics.math.linearalgebra.DecompositionResult $r13, $r15;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r14, r39;
+        com.opengamma.util.tuple.Pair $r18, $r22, $r26, $r31;
+        boolean $z0, $z1, $z2, $z3;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle;
+
+        r1 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: java.util.List getData()>();
+
+        i0 = interfaceinvoke r1.<java.util.List: int size()>();
+
+        r2 = newmultiarray (double)[i0][i0];
+
+        r3 = newarray (double)[i0];
+
+        $r6 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.function.Function1D _basisFunction>;
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $r8 = virtualinvoke $r6.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r7);
+
+        $r9 = (java.lang.Double) $r8;
+
+        d1 = virtualinvoke $r9.<java.lang.Double: double doubleValue()>();
+
+        i1 = 0;
+
+     label01:
+        if i1 >= i0 goto label11;
+
+        $r17 = interfaceinvoke r1.<java.util.List: java.lang.Object get(int)>(i1);
+
+        $r18 = (com.opengamma.util.tuple.Pair) $r17;
+
+        $r19 = virtualinvoke $r18.<com.opengamma.util.tuple.Pair: java.lang.Object getFirst()>();
+
+        r4 = (double[]) $r19;
+
+        $r20 = r2[i1];
+
+        $r20[i1] = d1;
+
+        i2 = i1 + 1;
+
+     label02:
+        if i2 >= i0 goto label06;
+
+        $r30 = interfaceinvoke r1.<java.util.List: java.lang.Object get(int)>(i2);
+
+        $r31 = (com.opengamma.util.tuple.Pair) $r30;
+
+        $r32 = virtualinvoke $r31.<com.opengamma.util.tuple.Pair: java.lang.Object getFirst()>();
+
+        r5 = (double[]) $r32;
+
+        $r33 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.function.Function1D _basisFunction>;
+
+        $d6 = staticinvoke <com.opengamma.analytics.math.interpolation.DistanceCalculator: double getDistance(double[],double[])>(r4, r5);
+
+        $r34 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d6);
+
+        $r35 = virtualinvoke $r33.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r34);
+
+        $r36 = (java.lang.Double) $r35;
+
+        d0 = virtualinvoke $r36.<java.lang.Double: double doubleValue()>();
+
+        $z1 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d0);
+
+        if $z1 == 0 goto label03;
+
+        $z2 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d0);
+
+        if $z2 != 0 goto label04;
+
+     label03:
+        $z3 = 1;
+
+        goto label05;
+
+     label04:
+        $z3 = 0;
+
+     label05:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z3, "basis function return invalide number");
+
+        $r37 = r2[i1];
+
+        $r37[i2] = d0;
+
+        $r38 = r2[i2];
+
+        $r38[i1] = d0;
+
+        i2 = i2 + 1;
+
+        goto label02;
+
+     label06:
+        $z0 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: boolean _useNormalized>;
+
+        if $z0 == 0 goto label09;
+
+        d7 = 0.0;
+
+        i3 = 0;
+
+     label07:
+        if i3 >= i0 goto label08;
+
+        $r29 = r2[i1];
+
+        $d5 = $r29[i3];
+
+        d7 = d7 + $d5;
+
+        i3 = i3 + 1;
+
+        goto label07;
+
+     label08:
+        $r25 = interfaceinvoke r1.<java.util.List: java.lang.Object get(int)>(i1);
+
+        $r26 = (com.opengamma.util.tuple.Pair) $r25;
+
+        $r27 = virtualinvoke $r26.<com.opengamma.util.tuple.Pair: java.lang.Object getSecond()>();
+
+        $r28 = (java.lang.Double) $r27;
+
+        $d3 = virtualinvoke $r28.<java.lang.Double: double doubleValue()>();
+
+        $d4 = d7 * $d3;
+
+        r3[i1] = $d4;
+
+        goto label10;
+
+     label09:
+        $r21 = interfaceinvoke r1.<java.util.List: java.lang.Object get(int)>(i1);
+
+        $r22 = (com.opengamma.util.tuple.Pair) $r21;
+
+        $r23 = virtualinvoke $r22.<com.opengamma.util.tuple.Pair: java.lang.Object getSecond()>();
+
+        $r24 = (java.lang.Double) $r23;
+
+        $d2 = virtualinvoke $r24.<java.lang.Double: double doubleValue()>();
+
+        r3[i1] = $d2;
+
+     label10:
+        i1 = i1 + 1;
+
+        goto label01;
+
+     label11:
+        $r11 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.linearalgebra.Decomposition _decomp>;
+
+        $r10 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r10.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r2);
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.math.linearalgebra.Decomposition: java.lang.Object evaluate(java.lang.Object)>($r10);
+
+        $r13 = (com.opengamma.analytics.math.linearalgebra.DecompositionResult) $r12;
+
+        r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.linearalgebra.DecompositionResult _decompRes> = $r13;
+
+        $r15 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.linearalgebra.DecompositionResult _decompRes>;
+
+        $r14 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r14.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r3);
+
+        r39 = interfaceinvoke $r15.<com.opengamma.analytics.math.linearalgebra.DecompositionResult: com.opengamma.analytics.math.matrix.DoubleMatrix1D solve(com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r14);
+
+        $r16 = virtualinvoke r39.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] toArray()>();
+
+        return $r16;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle r0;
+        com.opengamma.analytics.math.function.Function1D $r1;
+        int $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, i10, i11, i12, i13, i15, i16;
+        com.opengamma.analytics.math.linearalgebra.Decomposition $r2;
+        com.opengamma.analytics.math.linearalgebra.DecompositionResult $r3;
+        boolean $z0;
+        double[] $r4;
+        short $s14;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle;
+
+        i10 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle: int hashCode()>();
+
+        $i1 = 31 * i10;
+
+        $r1 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.function.Function1D _basisFunction>;
+
+        $i2 = virtualinvoke $r1.<java.lang.Object: int hashCode()>();
+
+        i11 = $i1 + $i2;
+
+        $i3 = 31 * i11;
+
+        $r2 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.linearalgebra.Decomposition _decomp>;
+
+        $i4 = virtualinvoke $r2.<java.lang.Object: int hashCode()>();
+
+        i12 = $i3 + $i4;
+
+        $i5 = 31 * i12;
+
+        $r3 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.linearalgebra.DecompositionResult _decompRes>;
+
+        $i6 = virtualinvoke $r3.<java.lang.Object: int hashCode()>();
+
+        i13 = $i5 + $i6;
+
+        $i7 = 31 * i13;
+
+        $z0 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: boolean _useNormalized>;
+
+        if $z0 == 0 goto label1;
+
+        $s14 = 1231;
+
+        goto label2;
+
+     label1:
+        $s14 = 1237;
+
+     label2:
+        i15 = $i7 + $s14;
+
+        $i8 = 31 * i15;
+
+        $r4 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: double[] _weights>;
+
+        $i9 = staticinvoke <java.util.Arrays: int hashCode(double[])>($r4);
+
+        i16 = $i8 + $i9;
+
+        return i16;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle r0, r2;
+        java.lang.Object r1;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        double[] $r3, $r4;
+        com.opengamma.analytics.math.function.Function1D $r5, $r6;
+        com.opengamma.analytics.math.linearalgebra.Decomposition $r7, $r8;
+        com.opengamma.analytics.math.linearalgebra.DecompositionResult $r9, $r10;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        $z0 = specialinvoke r0.<com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle: boolean equals(java.lang.Object)>(r1);
+
+        if $z0 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        $z1 = r1 instanceof com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle;
+
+        if $z1 != 0 goto label3;
+
+        return 0;
+
+     label3:
+        r2 = (com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle) r1;
+
+        $z3 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: boolean _useNormalized>;
+
+        $z2 = r2.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: boolean _useNormalized>;
+
+        if $z3 == $z2 goto label4;
+
+        return 0;
+
+     label4:
+        $r4 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: double[] _weights>;
+
+        $r3 = r2.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: double[] _weights>;
+
+        $z4 = staticinvoke <java.util.Arrays: boolean equals(double[],double[])>($r4, $r3);
+
+        if $z4 != 0 goto label5;
+
+        return 0;
+
+     label5:
+        $r6 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.function.Function1D _basisFunction>;
+
+        $r5 = r2.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.function.Function1D _basisFunction>;
+
+        $z5 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r6, $r5);
+
+        if $z5 != 0 goto label6;
+
+        return 0;
+
+     label6:
+        $r8 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.linearalgebra.Decomposition _decomp>;
+
+        $r7 = r2.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.linearalgebra.Decomposition _decomp>;
+
+        $z6 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r8, $r7);
+
+        if $z6 != 0 goto label7;
+
+        return 0;
+
+     label7:
+        $r10 = r0.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.linearalgebra.DecompositionResult _decompRes>;
+
+        $r9 = r2.<com.opengamma.analytics.math.interpolation.data.RadialBasisFunctionInterpolatorDataBundle: com.opengamma.analytics.math.linearalgebra.DecompositionResult _decompRes>;
+
+        $z7 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r10, $r9);
+
+        if $z7 != 0 goto label8;
+
+        return 0;
+
+     label8:
+        return 1;
+    }
+}

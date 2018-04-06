@@ -1,0 +1,1003 @@
+public class com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod extends com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationAbstractMethod
+{
+    private static final com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod INSTANCE;
+    private static final com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator PRDC;
+    private static final com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator PRCSDC;
+
+    public static com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod getDefaultInstance()
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod $r0;
+
+        $r0 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod INSTANCE>;
+
+        return $r0;
+    }
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod r0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationAbstractMethod: void <init>(double)>(1.0);
+
+        return;
+    }
+
+    public void <init>(double)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod r0;
+        double d0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod;
+
+        d0 := @parameter0: double;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationAbstractMethod: void <init>(double)>(d0);
+
+        return;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS, com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface r2;
+        com.opengamma.util.money.Currency r3, $r21;
+        com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters r4;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon r5;
+        double d0, d1, d2, d3, d4, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, d27, d28;
+        com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator $r10;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r11, $r14;
+        java.lang.Object $r12;
+        java.lang.Double $r13, $r15, $r18, $r19, $r20, $r23, $r24, $r25;
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSIntegrant $r16;
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D $r17;
+        int $i0;
+        boolean $z0;
+        com.opengamma.util.money.MultipleCurrencyAmount $r22;
+        java.lang.Exception $r26;
+        com.opengamma.analytics.math.MathException $r27;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "CMA cap/floor");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "SABR swaption provider");
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: com.opengamma.util.money.Currency getCurrency()>();
+
+        r4 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters getSABRParameter()>();
+
+        r5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        $r10 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator PRDC>;
+
+        $r11 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r12 = virtualinvoke r5.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r10, $r11);
+
+        $r13 = (java.lang.Double) $r12;
+
+        d0 = virtualinvoke $r13.<java.lang.Double: double doubleValue()>();
+
+        $r14 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getPaymentTime()>();
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d6);
+
+        d1 = interfaceinvoke $r14.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r15);
+
+        $r16 = new com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSIntegrant;
+
+        specialinvoke $r16.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSIntegrant: void <init>(com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod,com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS,com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters,double)>(r0, r1, r4, d0);
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getStrike()>();
+
+        $d7 = virtualinvoke $r16.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSIntegrant: double g(double)>(d0);
+
+        $d8 = d1 * $d7;
+
+        $d9 = virtualinvoke $r16.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSIntegrant: double h(double)>(d0);
+
+        $d10 = $d8 / $d9;
+
+        $d11 = virtualinvoke $r16.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSIntegrant: double k(double)>(d2);
+
+        $d12 = $d10 * $d11;
+
+        $d13 = virtualinvoke $r16.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSIntegrant: double bs(double)>(d2);
+
+        d3 = $d12 * $d13;
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getNotional()>();
+
+        $d15 = staticinvoke <java.lang.Math: double abs(double)>($d14);
+
+        $d16 = d1 * $d15;
+
+        $d17 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getPaymentYearFraction()>();
+
+        $d18 = $d16 * $d17;
+
+        d4 = 0.1 / $d18;
+
+        $r17 = new com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        $i0 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: int getNbIteration()>();
+
+        specialinvoke $r17.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: void <init>(double,double,int)>(d4, 1.0E-6, $i0);
+
+     label1:
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: boolean isCap()>();
+
+        if $z0 == 0 goto label2;
+
+        $r23 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $d24 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: double getIntegrationInterval()>();
+
+        $d25 = d2 + $d24;
+
+        $r24 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d25);
+
+        $r25 = virtualinvoke $r17.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r16, $r23, $r24);
+
+        $d26 = virtualinvoke $r25.<java.lang.Double: double doubleValue()>();
+
+        d27 = d1 * $d26;
+
+        goto label3;
+
+     label2:
+        $r18 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r20 = virtualinvoke $r17.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r16, $r18, $r19);
+
+        $d19 = virtualinvoke $r20.<java.lang.Double: double doubleValue()>();
+
+        d27 = d1 * $d19;
+
+     label3:
+        goto label5;
+
+     label4:
+        $r26 := @caughtexception;
+
+        $r27 = new com.opengamma.analytics.math.MathException;
+
+        specialinvoke $r27.<com.opengamma.analytics.math.MathException: void <init>(java.lang.Throwable)>($r26);
+
+        throw $r27;
+
+     label5:
+        $d20 = d3 + d27;
+
+        $d21 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getNotional()>();
+
+        $d22 = $d20 * $d21;
+
+        $d23 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getPaymentYearFraction()>();
+
+        d28 = $d22 * $d23;
+
+        $r21 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r22 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r21, d28);
+
+        return $r22;
+
+        catch java.lang.Exception from label1 to label3 with label4;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity presentValueCurveSensitivity(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS, com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface r2;
+        com.opengamma.util.money.Currency r3;
+        com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters r4;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon r5, $r38;
+        double d0, d1, d2, d3, d4, d6, d7, d8, d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, d53, d54, d55, d56;
+        double[] r9, r10;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity r13, r14, $r42, $r43;
+        com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator $r17;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r18, $r21, $r35, $r40;
+        java.lang.Object $r19, $r41;
+        java.lang.Double $r20, $r22, $r26, $r27, $r28, $r29, $r30, $r31, $r45, $r46, $r47, $r48, $r49, $r50;
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSIntegrant $r23;
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSDeltaIntegrant $r24;
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D $r25;
+        int $i0;
+        boolean $z0, $z1;
+        java.util.ArrayList $r32;
+        com.opengamma.util.tuple.DoublesPair $r33;
+        java.util.HashMap $r34;
+        java.lang.String $r36;
+        com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator $r39;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity $r44;
+        java.lang.Exception $r51, $r53;
+        java.lang.RuntimeException $r52, $r54;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "CMA cap/floor");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "SABR swaption provider");
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: com.opengamma.util.money.Currency getCurrency()>();
+
+        r4 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters getSABRParameter()>();
+
+        r5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        $r17 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator PRDC>;
+
+        $r18 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r19 = virtualinvoke r5.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r17, $r18);
+
+        $r20 = (java.lang.Double) $r19;
+
+        d0 = virtualinvoke $r20.<java.lang.Double: double doubleValue()>();
+
+        $r21 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getPaymentTime()>();
+
+        $r22 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        d1 = interfaceinvoke $r21.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r22);
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getStrike()>();
+
+        $r23 = new com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSIntegrant;
+
+        specialinvoke $r23.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSIntegrant: void <init>(com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod,com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS,com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters,double)>(r0, r1, r4, d0);
+
+        $r24 = new com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSDeltaIntegrant;
+
+        specialinvoke $r24.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSDeltaIntegrant: void <init>(com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod,com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS,com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters,double)>(r0, r1, r4, d0);
+
+        $d11 = virtualinvoke $r24.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSDeltaIntegrant: double h(double)>(d0);
+
+        $d12 = d1 / $d11;
+
+        $d13 = virtualinvoke $r24.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSDeltaIntegrant: double g(double)>(d0);
+
+        d3 = $d12 * $d13;
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getNotional()>();
+
+        $d15 = staticinvoke <java.lang.Math: double abs(double)>($d14);
+
+        $d16 = d3 * $d15;
+
+        $d17 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getPaymentYearFraction()>();
+
+        $d18 = $d16 * $d17;
+
+        d4 = 10.0 / $d18;
+
+        $r25 = new com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        $i0 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: int getNbIteration()>();
+
+        specialinvoke $r25.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: void <init>(double,double,int)>(d4, 0.01, $i0);
+
+        r9 = virtualinvoke $r24.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSDeltaIntegrant: double[] bsbsp(double)>(d2);
+
+        r10 = staticinvoke <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSDeltaIntegrant: double[] access$000(com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSDeltaIntegrant,double)>($r24, d0);
+
+        $d19 = virtualinvoke $r24.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSDeltaIntegrant: double k(double)>(d2);
+
+        $d21 = d1 * $d19;
+
+        $d20 = r10[0];
+
+        $d23 = $d21 * $d20;
+
+        $d22 = r9[0];
+
+        d6 = $d23 * $d22;
+
+     label01:
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: boolean isCap()>();
+
+        if $z0 == 0 goto label02;
+
+        $r48 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $d50 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: double getIntegrationInterval()>();
+
+        $d51 = d2 + $d50;
+
+        $r49 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d51);
+
+        $r50 = virtualinvoke $r25.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r23, $r48, $r49);
+
+        $d52 = virtualinvoke $r50.<java.lang.Double: double doubleValue()>();
+
+        d53 = d1 * $d52;
+
+        goto label03;
+
+     label02:
+        $r26 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $r27 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r28 = virtualinvoke $r25.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r23, $r26, $r27);
+
+        $d24 = virtualinvoke $r28.<java.lang.Double: double doubleValue()>();
+
+        d53 = d1 * $d24;
+
+     label03:
+        goto label05;
+
+     label04:
+        $r53 := @caughtexception;
+
+        $r54 = new java.lang.RuntimeException;
+
+        specialinvoke $r54.<java.lang.RuntimeException: void <init>(java.lang.Throwable)>($r53);
+
+        throw $r54;
+
+     label05:
+        $d25 = d6 + d53;
+
+        $d26 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getNotional()>();
+
+        $d27 = $d25 * $d26;
+
+        $d28 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getPaymentYearFraction()>();
+
+        d54 = $d27 * $d28;
+
+        $d29 = virtualinvoke $r24.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSDeltaIntegrant: double k(double)>(d2);
+
+        $d37 = d1 * $d29;
+
+        $d31 = r10[1];
+
+        $d30 = r9[0];
+
+        $d35 = $d31 * $d30;
+
+        $d33 = r10[0];
+
+        $d32 = r9[1];
+
+        $d34 = $d33 * $d32;
+
+        $d36 = $d35 + $d34;
+
+        d7 = $d37 * $d36;
+
+     label06:
+        $z1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: boolean isCap()>();
+
+        if $z1 == 0 goto label07;
+
+        $r45 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $d47 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: double getIntegrationInterval()>();
+
+        $d48 = d2 + $d47;
+
+        $r46 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d48);
+
+        $r47 = virtualinvoke $r25.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r24, $r45, $r46);
+
+        $d49 = virtualinvoke $r47.<java.lang.Double: double doubleValue()>();
+
+        d55 = d1 * $d49;
+
+        goto label08;
+
+     label07:
+        $r29 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $r30 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r31 = virtualinvoke $r25.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r24, $r29, $r30);
+
+        $d38 = virtualinvoke $r31.<java.lang.Double: double doubleValue()>();
+
+        d55 = d1 * $d38;
+
+     label08:
+        goto label10;
+
+     label09:
+        $r51 := @caughtexception;
+
+        $r52 = new java.lang.RuntimeException;
+
+        specialinvoke $r52.<java.lang.RuntimeException: void <init>(java.lang.Throwable)>($r51);
+
+        throw $r52;
+
+     label10:
+        $d39 = d7 + d55;
+
+        $d40 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getNotional()>();
+
+        $d41 = $d39 * $d40;
+
+        $d42 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getPaymentYearFraction()>();
+
+        d56 = $d41 * $d42;
+
+        d8 = d54 / d1;
+
+        $d43 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getPaymentTime()>();
+
+        $d44 = neg $d43;
+
+        $d45 = $d44 * d1;
+
+        d9 = $d45 * d8;
+
+        $r32 = new java.util.ArrayList;
+
+        specialinvoke $r32.<java.util.ArrayList: void <init>()>();
+
+        $d46 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getPaymentTime()>();
+
+        $r33 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d46, d9);
+
+        interfaceinvoke $r32.<java.util.List: boolean add(java.lang.Object)>($r33);
+
+        $r34 = new java.util.HashMap;
+
+        specialinvoke $r34.<java.util.HashMap: void <init>()>();
+
+        $r35 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r36 = interfaceinvoke $r35.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: java.lang.String getName(com.opengamma.util.money.Currency)>(r3);
+
+        interfaceinvoke $r34.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r36, $r32);
+
+        r13 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity ofYieldDiscounting(java.util.Map)>($r34);
+
+        $r38 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        $r39 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator PRCSDC>;
+
+        $r40 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r41 = virtualinvoke $r38.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r39, $r40);
+
+        r14 = (com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity) $r41;
+
+        $r42 = virtualinvoke r14.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>(d56);
+
+        $r43 = virtualinvoke r13.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity plus(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>($r42);
+
+        $r44 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity of(com.opengamma.util.money.Currency,com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>(r3, $r43);
+
+        return $r44;
+
+        catch java.lang.Exception from label01 to label03 with label04;
+        catch java.lang.Exception from label06 to label08 with label09;
+    }
+
+    public com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle presentValueSABRSensitivity(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS, com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface r2;
+        com.opengamma.util.money.Currency r3;
+        com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters r4, $r26;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon r5;
+        double d0, d1, d2, d3, d4, d5, d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48;
+        double[] r8, r9, r10, r11;
+        com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator $r14;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r15, $r18;
+        java.lang.Object $r16;
+        java.lang.Double $r17, $r19, $r28, $r29, $r30, $r31, $r32, $r33;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed $r20, $r21;
+        int $i0, $i1, $i2, i3;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r22;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed $r23;
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSVegaIntegrant $r24;
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D $r25;
+        com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle $r27;
+        boolean $z0;
+        java.lang.Exception $r34;
+        java.lang.RuntimeException $r35;
+        com.opengamma.util.tuple.DoublesPair r38;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "CMA cap/floor");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "SABR swaption provider");
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: com.opengamma.util.money.Currency getCurrency()>();
+
+        r4 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters getSABRParameter()>();
+
+        r5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        $r14 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator PRDC>;
+
+        $r15 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r16 = virtualinvoke r5.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r14, $r15);
+
+        $r17 = (java.lang.Double) $r16;
+
+        d0 = virtualinvoke $r17.<java.lang.Double: double doubleValue()>();
+
+        $r18 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getPaymentTime()>();
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d8);
+
+        d1 = interfaceinvoke $r18.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r19);
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getStrike()>();
+
+        $r20 = virtualinvoke r5.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $r21 = virtualinvoke r5.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $i0 = virtualinvoke $r21.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: int getNumberOfPayments()>();
+
+        $i1 = $i0 - 1;
+
+        $r22 = virtualinvoke $r20.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>($i1);
+
+        $r23 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed) $r22;
+
+        $d9 = virtualinvoke $r23.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: double getPaymentTime()>();
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getSettlementTime()>();
+
+        d3 = $d9 - $d10;
+
+        $r24 = new com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSVegaIntegrant;
+
+        specialinvoke $r24.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSVegaIntegrant: void <init>(com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod,com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS,com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters,double)>(r0, r1, r4, d0);
+
+        $d11 = virtualinvoke $r24.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSVegaIntegrant: double h(double)>(d0);
+
+        $d12 = d1 / $d11;
+
+        $d13 = virtualinvoke $r24.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSVegaIntegrant: double g(double)>(d0);
+
+        d4 = $d12 * $d13;
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getNotional()>();
+
+        $d15 = staticinvoke <java.lang.Math: double abs(double)>($d14);
+
+        $d16 = d4 * $d15;
+
+        $d17 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getPaymentYearFraction()>();
+
+        $d18 = $d16 * $d17;
+
+        d5 = 1.0 / $d18;
+
+        $r25 = new com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        $i2 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: int getNbIteration()>();
+
+        specialinvoke $r25.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: void <init>(double,double,int)>(d5, 0.001, $i2);
+
+        $d19 = virtualinvoke $r24.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSVegaIntegrant: double k(double)>(d2);
+
+        $d20 = d4 * $d19;
+
+        $d21 = virtualinvoke $r24.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSVegaIntegrant: double bs(double)>(d2);
+
+        d7 = $d20 * $d21;
+
+        r8 = newarray (double)[4];
+
+        $r26 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters getSABRParameter()>();
+
+        $d22 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getFixingTime()>();
+
+        r9 = virtualinvoke $r26.<com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters: double[] getVolatilityAdjoint(double,double,double,double)>($d22, d3, d2, d0);
+
+        $d23 = r9[3];
+
+        $d24 = d7 * $d23;
+
+        r8[0] = $d24;
+
+        $d25 = r9[4];
+
+        $d26 = d7 * $d25;
+
+        r8[1] = $d26;
+
+        $d27 = r9[5];
+
+        $d28 = d7 * $d27;
+
+        r8[2] = $d28;
+
+        $d29 = r9[6];
+
+        $d30 = d7 * $d29;
+
+        r8[3] = $d30;
+
+        r10 = newarray (double)[4];
+
+        r11 = newarray (double)[4];
+
+        i3 = 0;
+
+     label1:
+        if i3 >= 4 goto label7;
+
+        virtualinvoke $r24.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSVegaIntegrant: void setParameterIndex(int)>(i3);
+
+     label2:
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: boolean isCap()>();
+
+        if $z0 == 0 goto label3;
+
+        $r31 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $d45 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: double getIntegrationInterval()>();
+
+        $d46 = d2 + $d45;
+
+        $r32 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d46);
+
+        $r33 = virtualinvoke $r25.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r24, $r31, $r32);
+
+        $d47 = virtualinvoke $r33.<java.lang.Double: double doubleValue()>();
+
+        $d48 = d1 * $d47;
+
+        r10[i3] = $d48;
+
+        goto label4;
+
+     label3:
+        $r28 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $r29 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r30 = virtualinvoke $r25.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r24, $r28, $r29);
+
+        $d36 = virtualinvoke $r30.<java.lang.Double: double doubleValue()>();
+
+        $d37 = d1 * $d36;
+
+        r10[i3] = $d37;
+
+     label4:
+        goto label6;
+
+     label5:
+        $r34 := @caughtexception;
+
+        $r35 = new java.lang.RuntimeException;
+
+        specialinvoke $r35.<java.lang.RuntimeException: void <init>(java.lang.Throwable)>($r34);
+
+        throw $r35;
+
+     label6:
+        $d39 = r8[i3];
+
+        $d38 = r10[i3];
+
+        $d40 = $d39 + $d38;
+
+        $d41 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getNotional()>();
+
+        $d42 = $d40 * $d41;
+
+        $d43 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getPaymentYearFraction()>();
+
+        $d44 = $d42 * $d43;
+
+        r11[i3] = $d44;
+
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label7:
+        $r27 = new com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle;
+
+        specialinvoke $r27.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void <init>()>();
+
+        $d31 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getFixingTime()>();
+
+        r38 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d31, d3);
+
+        $d32 = r11[0];
+
+        virtualinvoke $r27.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void addAlpha(com.opengamma.util.tuple.DoublesPair,double)>(r38, $d32);
+
+        $d33 = r11[1];
+
+        virtualinvoke $r27.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void addBeta(com.opengamma.util.tuple.DoublesPair,double)>(r38, $d33);
+
+        $d34 = r11[2];
+
+        virtualinvoke $r27.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void addRho(com.opengamma.util.tuple.DoublesPair,double)>(r38, $d34);
+
+        $d35 = r11[3];
+
+        virtualinvoke $r27.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void addNu(com.opengamma.util.tuple.DoublesPair,double)>(r38, $d35);
+
+        return $r27;
+
+        catch java.lang.Exception from label2 to label4 with label5;
+    }
+
+    public double presentValueStrikeSensitivity(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS, com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface r2;
+        com.opengamma.util.money.Currency r3;
+        com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters r4;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon r5;
+        double d0, d1, d2, d3, d4, d7, d8, d9, d10, d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, d42, d43;
+        com.opengamma.util.tuple.DoublesPair r6;
+        com.opengamma.analytics.math.function.Function1D r11;
+        double[] r12, r15, r16;
+        com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator $r19;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r20, $r23;
+        java.lang.Object $r21, $r34;
+        java.lang.Double $r22, $r24, $r37, $r38, $r39, $r40, $r41, $r42;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed $r25, $r26;
+        int $i0, $i1, $i2;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r27;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed $r28;
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSStrikeIntegrant $r29;
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D $r30;
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData $r31;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r32;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider $r33;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r35;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r36;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "CMA cap/floor");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "SABR swaption provider");
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: com.opengamma.util.money.Currency getCurrency()>();
+
+        r4 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters getSABRParameter()>();
+
+        r5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        $r19 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator PRDC>;
+
+        $r20 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r21 = virtualinvoke r5.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r19, $r20);
+
+        $r22 = (java.lang.Double) $r21;
+
+        d0 = virtualinvoke $r22.<java.lang.Double: double doubleValue()>();
+
+        $r23 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $d12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getPaymentTime()>();
+
+        $r24 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d12);
+
+        d1 = interfaceinvoke $r23.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r24);
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getStrike()>();
+
+        $r25 = virtualinvoke r5.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $r26 = virtualinvoke r5.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $i0 = virtualinvoke $r26.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: int getNumberOfPayments()>();
+
+        $i1 = $i0 - 1;
+
+        $r27 = virtualinvoke $r25.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>($i1);
+
+        $r28 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed) $r27;
+
+        $d13 = virtualinvoke $r28.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: double getPaymentTime()>();
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getSettlementTime()>();
+
+        d3 = $d13 - $d14;
+
+        $d15 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getFixingTime()>();
+
+        r6 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d15, d3);
+
+        $r29 = new com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSStrikeIntegrant;
+
+        specialinvoke $r29.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSStrikeIntegrant: void <init>(com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod,com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS,com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters,double)>(r0, r1, r4, d0);
+
+        $d16 = virtualinvoke $r29.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSStrikeIntegrant: double g(double)>(d0);
+
+        $d17 = d1 * $d16;
+
+        $d18 = virtualinvoke $r29.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSStrikeIntegrant: double h(double)>(d0);
+
+        d4 = $d17 / $d18;
+
+        $r30 = new com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        $i2 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: int getNbIteration()>();
+
+        specialinvoke $r30.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: void <init>(double,double,int)>(1.0E-9, 1.0E-5, $i2);
+
+        d7 = virtualinvoke r4.<com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters: double getAlpha(com.opengamma.util.tuple.DoublesPair)>(r6);
+
+        d8 = virtualinvoke r4.<com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters: double getBeta(com.opengamma.util.tuple.DoublesPair)>(r6);
+
+        d9 = virtualinvoke r4.<com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters: double getRho(com.opengamma.util.tuple.DoublesPair)>(r6);
+
+        d10 = virtualinvoke r4.<com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters: double getNu(com.opengamma.util.tuple.DoublesPair)>(r6);
+
+        $r31 = new com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData;
+
+        specialinvoke $r31.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData: void <init>(double,double,double,double)>(d7, d8, d9, d10);
+
+        $r32 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d19 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getFixingTime()>();
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: boolean isCap()>();
+
+        specialinvoke $r32.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>(d2, $d19, $z0);
+
+        $r33 = virtualinvoke r4.<com.opengamma.analytics.financial.model.option.definition.SABRInterestRateParameters: com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider getSabrFunction()>();
+
+        r11 = virtualinvoke $r33.<com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider: com.opengamma.analytics.math.function.Function1D getVolatilityAdjointFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,double)>($r32, d0);
+
+        $r34 = virtualinvoke r11.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r31);
+
+        r12 = (double[]) $r34;
+
+        $r35 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        $d20 = r12[0];
+
+        specialinvoke $r35.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d0, 1.0, $d20);
+
+        $r36 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction;
+
+        specialinvoke $r36.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: void <init>()>();
+
+        r15 = virtualinvoke $r36.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: double[] getPriceAdjoint(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData)>($r32, $r35);
+
+        r16 = virtualinvoke $r29.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSStrikeIntegrant: double[] kpkpp(double)>(d2);
+
+        $z1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: boolean isCap()>();
+
+        if $z1 == 0 goto label1;
+
+        $d37 = r16[0];
+
+        $d38 = neg $d37;
+
+        $d39 = virtualinvoke $r29.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSStrikeIntegrant: double bs(double)>(d2);
+
+        d42 = $d38 * $d39;
+
+        $r40 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $d40 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: double getIntegrationInterval()>();
+
+        $d41 = d2 + $d40;
+
+        $r41 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d41);
+
+        $r42 = virtualinvoke $r30.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r29, $r40, $r41);
+
+        d43 = virtualinvoke $r42.<java.lang.Double: double doubleValue()>();
+
+        goto label2;
+
+     label1:
+        $d21 = r16[0];
+
+        $d22 = 3.0 * $d21;
+
+        $d23 = virtualinvoke $r29.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSStrikeIntegrant: double bs(double)>(d2);
+
+        d42 = $d22 * $d23;
+
+        $r37 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $r38 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r39 = virtualinvoke $r30.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r29, $r37, $r38);
+
+        d43 = virtualinvoke $r39.<java.lang.Double: double doubleValue()>();
+
+     label2:
+        $d24 = virtualinvoke $r29.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod$CMSStrikeIntegrant: double k(double)>(d2);
+
+        $d28 = r15[3];
+
+        $d26 = r15[2];
+
+        $d25 = r12[2];
+
+        $d27 = $d26 * $d25;
+
+        $d29 = $d28 + $d27;
+
+        d11 = $d24 * $d29;
+
+        $d30 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getNotional()>();
+
+        $d31 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getPaymentYearFraction()>();
+
+        $d32 = $d30 * $d31;
+
+        $d35 = $d32 * d4;
+
+        $d33 = d42 + d11;
+
+        $d34 = $d33 + d43;
+
+        $d36 = $d35 * $d34;
+
+        return $d36;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod $r0;
+        com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator $r1;
+        com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator $r2;
+
+        $r0 = new com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod INSTANCE> = $r0;
+
+        $r1 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateDiscountingCalculator PRDC> = $r1;
+
+        $r2 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSSABRReplicationMethod: com.opengamma.analytics.financial.provider.calculator.discounting.ParRateCurveSensitivityDiscountingCalculator PRCSDC> = $r2;
+
+        return;
+    }
+}

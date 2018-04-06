@@ -1,0 +1,460 @@
+public class com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction extends com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider
+{
+    private static final com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer FFT_PRICER;
+    private static final com.opengamma.analytics.math.interpolation.Interpolator1D DEFAULT_INTERPOLATOR1D;
+    private static final double DEFAULT_LIMIT_SIGMA;
+    private static final double DEFAULT_ALPHA;
+    private final double _limitSigma;
+    private final double _alpha;
+    private final double _limitTolerance;
+    private final com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction r0;
+        com.opengamma.analytics.math.interpolation.Interpolator1D $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: double _limitSigma> = 0.3;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: double _alpha> = -0.5;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: double _limitTolerance> = 1.0E-8;
+
+        $r1 = <com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: com.opengamma.analytics.math.interpolation.Interpolator1D DEFAULT_INTERPOLATOR1D>;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator> = $r1;
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getVolatilityFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r1;
+        double d0, $d1, $d2;
+        com.opengamma.analytics.math.function.Function1D r2;
+        double[] $r3;
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$1 $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        d0 := @parameter1: double;
+
+        $r3 = newarray (double)[1];
+
+        $d1 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        $r3[0] = $d1;
+
+        $d2 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        r2 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: com.opengamma.analytics.math.function.Function1D getVolatilityFunction(double,double[],double)>(d0, $r3, $d2);
+
+        $r4 = new com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$1;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$1: void <init>(com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction,com.opengamma.analytics.math.function.Function1D)>(r0, r2);
+
+        return $r4;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getVolatilityFunction(double, double[], double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction r0;
+        double d0, d1, d2, d3;
+        double[] r1;
+        int i0, $i1;
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$2 $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        d1 := @parameter2: double;
+
+        i0 = lengthof r1;
+
+        d2 = r1[0];
+
+        $i1 = i0 - 1;
+
+        d3 = r1[$i1];
+
+        $r2 = new com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$2;
+
+        specialinvoke $r2.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$2: void <init>(com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction,double,double,double,double,int,double[])>(r0, d0, d1, d2, d3, i0, r1);
+
+        return $r2;
+    }
+
+    public double getVolatility(double, double, double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, $d8;
+        com.opengamma.analytics.math.function.Function1D r1;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r3;
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonModelData $r4;
+        java.lang.Object $r5;
+        java.lang.Double $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        d6 := @parameter6: double;
+
+        d7 := @parameter7: double;
+
+        $r3 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        specialinvoke $r3.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>(d1, d2, 1);
+
+        r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: com.opengamma.analytics.math.function.Function1D getVolatilityFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,double)>($r3, d0);
+
+        $r4 = new com.opengamma.analytics.financial.model.volatility.smile.function.HestonModelData;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonModelData: void <init>(double,double,double,double,double)>(d3, d4, d5, d6, d7);
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r4);
+
+        $r6 = (java.lang.Double) $r5;
+
+        $d8 = virtualinvoke $r6.<java.lang.Double: double doubleValue()>();
+
+        return $d8;
+    }
+
+    public double[] getVolatilitySet(double, double[], double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction r0;
+        double d0, d1, d2, d3, d4, d5, d6;
+        double[] r1, $r6;
+        com.opengamma.analytics.math.function.Function1D r2;
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonModelData $r4;
+        java.lang.Object $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        d1 := @parameter2: double;
+
+        d2 := @parameter3: double;
+
+        d3 := @parameter4: double;
+
+        d4 := @parameter5: double;
+
+        d5 := @parameter6: double;
+
+        d6 := @parameter7: double;
+
+        r2 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: com.opengamma.analytics.math.function.Function1D getVolatilityFunction(double,double[],double)>(d0, r1, d1);
+
+        $r4 = new com.opengamma.analytics.financial.model.volatility.smile.function.HestonModelData;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonModelData: void <init>(double,double,double,double,double)>(d2, d3, d4, d5, d6);
+
+        $r5 = virtualinvoke r2.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r4);
+
+        $r6 = (double[]) $r5;
+
+        return $r6;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getVolatilityAdjointFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r1;
+        double d0, $d1, $d2;
+        com.opengamma.analytics.math.function.Function1D r2;
+        double[] $r3;
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$3 $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        d0 := @parameter1: double;
+
+        $r3 = newarray (double)[1];
+
+        $d1 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        $r3[0] = $d1;
+
+        $d2 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        r2 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: com.opengamma.analytics.math.function.Function1D getVolatilityAdjointFunction(double,double[],double)>(d0, $r3, $d2);
+
+        $r4 = new com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$3;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$3: void <init>(com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction,com.opengamma.analytics.math.function.Function1D)>(r0, r2);
+
+        return $r4;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getVolatilityAdjointFunction(double, double[], double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction r0;
+        double d0, d1, d2, d3;
+        double[] r1;
+        int i0, $i1;
+        double[][] r3;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.FFTModelGreeks $r4;
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$4 $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        d1 := @parameter2: double;
+
+        $r4 = new com.opengamma.analytics.financial.model.option.pricing.fourier.FFTModelGreeks;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.model.option.pricing.fourier.FFTModelGreeks: void <init>()>();
+
+        i0 = lengthof r1;
+
+        d2 = r1[0];
+
+        $i1 = i0 - 1;
+
+        d3 = r1[$i1];
+
+        r3 = newarray (double[])[i0];
+
+        $r5 = new com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$4;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$4: void <init>(com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction,com.opengamma.analytics.financial.model.option.pricing.fourier.FFTModelGreeks,double,double,double,double,int,double[][],double[])>(r0, $r4, d0, d1, d2, d3, i0, r3, r1);
+
+        return $r5;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getModelAdjointFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r1;
+        double d0, $d1, $d2;
+        com.opengamma.analytics.math.function.Function1D r2;
+        double[] $r3;
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$5 $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        d0 := @parameter1: double;
+
+        $r3 = newarray (double)[1];
+
+        $d1 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        $r3[0] = $d1;
+
+        $d2 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        r2 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: com.opengamma.analytics.math.function.Function1D getModelAdjointFunction(double,double[],double)>(d0, $r3, $d2);
+
+        $r4 = new com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$5;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$5: void <init>(com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction,com.opengamma.analytics.math.function.Function1D)>(r0, r2);
+
+        return $r4;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getModelAdjointFunction(double, double[], double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction r0;
+        double d0, d1, d2, d3;
+        double[] r1;
+        int i0, $i1;
+        double[][] r3;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.FFTModelGreeks $r4;
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$6 $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        d1 := @parameter2: double;
+
+        $r4 = new com.opengamma.analytics.financial.model.option.pricing.fourier.FFTModelGreeks;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.model.option.pricing.fourier.FFTModelGreeks: void <init>()>();
+
+        i0 = lengthof r1;
+
+        d2 = r1[0];
+
+        $i1 = i0 - 1;
+
+        d3 = r1[$i1];
+
+        r3 = newarray (double[])[i0];
+
+        $r5 = new com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$6;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction$6: void <init>(com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction,com.opengamma.analytics.financial.model.option.pricing.fourier.FFTModelGreeks,double,double,double,double,int,double[][],double[])>(r0, $r4, d0, d1, d2, d3, i0, r3, r1);
+
+        return $r5;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction r0;
+        java.lang.String $r1;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: java.lang.String toString()>();
+
+        $i0 = virtualinvoke $r1.<java.lang.String: int hashCode()>();
+
+        return $i0;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction r0;
+        java.lang.Object r1;
+        java.lang.Class $r2, $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r1 != null goto label1;
+
+        return 0;
+
+     label1:
+        if r0 != r1 goto label2;
+
+        return 1;
+
+     label2:
+        $r2 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r3 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+
+        if $r2 == $r3 goto label3;
+
+        return 0;
+
+     label3:
+        return 1;
+    }
+
+    public java.lang.String toString()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction;
+
+        return "Heston";
+    }
+
+    static double access$000(com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction r0;
+        double $d0;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: double _limitSigma>;
+
+        return $d0;
+    }
+
+    static double access$100(com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction r0;
+        double $d0;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: double _alpha>;
+
+        return $d0;
+    }
+
+    static double access$200(com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction r0;
+        double $d0;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: double _limitTolerance>;
+
+        return $d0;
+    }
+
+    static com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer access$300()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer $r0;
+
+        $r0 = <com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer FFT_PRICER>;
+
+        return $r0;
+    }
+
+    static com.opengamma.analytics.math.interpolation.Interpolator1D access$400(com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction r0;
+        com.opengamma.analytics.math.interpolation.Interpolator1D $r1;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        return $r1;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer $r0;
+        com.opengamma.analytics.math.interpolation.CombinedInterpolatorExtrapolator $r1;
+
+        <com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: double DEFAULT_ALPHA> = -0.5;
+
+        <com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: double DEFAULT_LIMIT_SIGMA> = 0.3;
+
+        $r0 = new com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer FFT_PRICER> = $r0;
+
+        $r1 = staticinvoke <com.opengamma.analytics.math.interpolation.CombinedInterpolatorExtrapolatorFactory: com.opengamma.analytics.math.interpolation.CombinedInterpolatorExtrapolator getInterpolator(java.lang.String,java.lang.String,java.lang.String)>("DoubleQuadratic", "FlatExtrapolator", "FlatExtrapolator");
+
+        <com.opengamma.analytics.financial.model.volatility.smile.function.HestonVolatilityFunction: com.opengamma.analytics.math.interpolation.Interpolator1D DEFAULT_INTERPOLATOR1D> = $r1;
+
+        return;
+    }
+}

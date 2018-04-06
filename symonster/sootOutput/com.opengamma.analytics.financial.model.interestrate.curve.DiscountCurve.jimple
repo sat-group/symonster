@@ -1,0 +1,416 @@
+public class com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve extends com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve
+{
+    private final com.opengamma.analytics.math.curve.DoublesCurve _curve;
+    private static final double SMALL_TIME;
+
+    public void <init>(java.lang.String, com.opengamma.analytics.math.curve.DoublesCurve)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve r0;
+        java.lang.String r1;
+        com.opengamma.analytics.math.curve.DoublesCurve r2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve;
+
+        r1 := @parameter0: java.lang.String;
+
+        r2 := @parameter1: com.opengamma.analytics.math.curve.DoublesCurve;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: void <init>(java.lang.String)>(r1);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Curve");
+
+        r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve> = r2;
+
+        return;
+    }
+
+    public static com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve 'from'(com.opengamma.analytics.math.curve.DoublesCurve)
+    {
+        com.opengamma.analytics.math.curve.DoublesCurve r0;
+        com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve $r2;
+        java.lang.String $r3;
+
+        r0 := @parameter0: com.opengamma.analytics.math.curve.DoublesCurve;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r0, "Curve");
+
+        $r2 = new com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.math.curve.DoublesCurve: java.lang.String getName()>();
+
+        specialinvoke $r2.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: void <init>(java.lang.String,com.opengamma.analytics.math.curve.DoublesCurve)>($r3, r0);
+
+        return $r2;
+    }
+
+    public static com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve fromYieldsInterpolated(double[], double[], com.opengamma.analytics.math.interpolation.Interpolator1D, java.lang.String)
+    {
+        double[] r0, r1, r4;
+        com.opengamma.analytics.math.interpolation.Interpolator1D r2;
+        java.lang.String r3;
+        int i0, $i1, i2;
+        com.opengamma.analytics.math.curve.InterpolatedDoublesCurve $r5;
+        com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve $r6;
+        double $d0, $d1, $d2, $d3, $d4;
+        boolean $z0;
+
+        r0 := @parameter0: double[];
+
+        r1 := @parameter1: double[];
+
+        r2 := @parameter2: com.opengamma.analytics.math.interpolation.Interpolator1D;
+
+        r3 := @parameter3: java.lang.String;
+
+        i0 = lengthof r1;
+
+        $i1 = lengthof r0;
+
+        if $i1 != i0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Yields array of incorrect length");
+
+        r4 = newarray (double)[i0];
+
+        i2 = 0;
+
+     label3:
+        if i2 >= i0 goto label4;
+
+        $d0 = r0[i2];
+
+        $d2 = neg $d0;
+
+        $d1 = r1[i2];
+
+        $d3 = $d2 * $d1;
+
+        $d4 = staticinvoke <java.lang.Math: double exp(double)>($d3);
+
+        r4[i2] = $d4;
+
+        i2 = i2 + 1;
+
+        goto label3;
+
+     label4:
+        $r5 = new com.opengamma.analytics.math.curve.InterpolatedDoublesCurve;
+
+        specialinvoke $r5.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: void <init>(double[],double[],com.opengamma.analytics.math.interpolation.Interpolator1D,boolean)>(r0, r4, r2, 0);
+
+        $r6 = new com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve;
+
+        specialinvoke $r6.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: void <init>(java.lang.String,com.opengamma.analytics.math.curve.DoublesCurve)>(r3, $r5);
+
+        return $r6;
+    }
+
+    public double getInterestRate(java.lang.Double)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve r0;
+        java.lang.Double r1;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15;
+        byte $b0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve;
+
+        r1 := @parameter0: java.lang.Double;
+
+        $d2 = virtualinvoke r1.<java.lang.Double: double doubleValue()>();
+
+        $d3 = staticinvoke <java.lang.Math: double abs(double)>($d2);
+
+        $b0 = $d3 cmpl 1.0E-6;
+
+        if $b0 <= 0 goto label1;
+
+        $d10 = virtualinvoke r1.<java.lang.Double: double doubleValue()>();
+
+        $d11 = virtualinvoke r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: double getDiscountFactor(double)>($d10);
+
+        $d12 = staticinvoke <java.lang.Math: double log(double)>($d11);
+
+        $d13 = neg $d12;
+
+        $d14 = virtualinvoke r1.<java.lang.Double: double doubleValue()>();
+
+        $d15 = $d13 / $d14;
+
+        return $d15;
+
+     label1:
+        $d4 = virtualinvoke r1.<java.lang.Double: double doubleValue()>();
+
+        $d5 = $d4 + 1.0E-6;
+
+        d0 = virtualinvoke r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: double getDiscountFactor(double)>($d5);
+
+        $d6 = virtualinvoke r1.<java.lang.Double: double doubleValue()>();
+
+        d1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: double getDiscountFactor(double)>($d6);
+
+        $d8 = d1 - d0;
+
+        $d7 = 1.0E-6 * d1;
+
+        $d9 = $d8 / $d7;
+
+        return $d9;
+    }
+
+    public double getDiscountFactor(double)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve r0;
+        double d0, $d1;
+        com.opengamma.analytics.math.curve.DoublesCurve $r1;
+        java.lang.Double $r2, $r4;
+        java.lang.Object $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve;
+
+        d0 := @parameter0: double;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve>;
+
+        $r2 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r3 = virtualinvoke $r1.<com.opengamma.analytics.math.curve.DoublesCurve: java.lang.Object getYValue(java.lang.Comparable)>($r2);
+
+        $r4 = (java.lang.Double) $r3;
+
+        $d1 = virtualinvoke $r4.<java.lang.Double: double doubleValue()>();
+
+        return $d1;
+    }
+
+    public double getForwardRate(double)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve r0;
+        double d0, $d1, $d2, $d3, $d4;
+        com.opengamma.analytics.math.curve.DoublesCurve $r1, $r2;
+        java.lang.Double $r3, $r5;
+        java.lang.Object $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve;
+
+        d0 := @parameter0: double;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve>;
+
+        $d1 = virtualinvoke $r1.<com.opengamma.analytics.math.curve.DoublesCurve: double getDyDx(double)>(d0);
+
+        $d2 = neg $d1;
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve>;
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r4 = virtualinvoke $r2.<com.opengamma.analytics.math.curve.DoublesCurve: java.lang.Object getYValue(java.lang.Comparable)>($r3);
+
+        $r5 = (java.lang.Double) $r4;
+
+        $d3 = virtualinvoke $r5.<java.lang.Double: double doubleValue()>();
+
+        $d4 = $d2 / $d3;
+
+        return $d4;
+    }
+
+    public double[] getInterestRateParameterSensitivity(double)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve r0;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6;
+        java.lang.Double[] r1;
+        double[] r2;
+        com.opengamma.analytics.math.curve.DoublesCurve $r3;
+        java.lang.Double $r4, $r5;
+        int $i0, $i2, i3;
+        byte $b1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve;
+
+        d0 := @parameter0: double;
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve>;
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        r1 = virtualinvoke $r3.<com.opengamma.analytics.math.curve.DoublesCurve: java.lang.Double[] getYValueParameterSensitivity(java.lang.Double)>($r4);
+
+        $i0 = lengthof r1;
+
+        r2 = newarray (double)[$i0];
+
+        $d2 = staticinvoke <java.lang.Math: double abs(double)>(d0);
+
+        $b1 = $d2 cmpg 1.0E-6;
+
+        if $b1 >= 0 goto label1;
+
+        return r2;
+
+     label1:
+        d1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: double getDiscountFactor(double)>(d0);
+
+        i3 = 0;
+
+     label2:
+        $i2 = lengthof r1;
+
+        if i3 >= $i2 goto label3;
+
+        $r5 = r1[i3];
+
+        $d3 = virtualinvoke $r5.<java.lang.Double: double doubleValue()>();
+
+        $d5 = neg $d3;
+
+        $d4 = d0 * d1;
+
+        $d6 = $d5 / $d4;
+
+        r2[i3] = $d6;
+
+        i3 = i3 + 1;
+
+        goto label2;
+
+     label3:
+        return r2;
+    }
+
+    public int getNumberOfParameters()
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve r0;
+        com.opengamma.analytics.math.curve.DoublesCurve $r1;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve>;
+
+        $i0 = virtualinvoke $r1.<com.opengamma.analytics.math.curve.DoublesCurve: int size()>();
+
+        return $i0;
+    }
+
+    public java.util.List getUnderlyingCurvesNames()
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve r0;
+        java.util.ArrayList $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve;
+
+        $r1 = new java.util.ArrayList;
+
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+
+        return $r1;
+    }
+
+    public com.opengamma.analytics.math.curve.Curve getCurve()
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve r0;
+        com.opengamma.analytics.math.curve.DoublesCurve $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve>;
+
+        return $r1;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve r0;
+        com.opengamma.analytics.math.curve.DoublesCurve $r1;
+        int $i1, $i2, i4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve;
+
+        $i1 = 31 * 1;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve>;
+
+        $i2 = virtualinvoke $r1.<com.opengamma.analytics.math.curve.DoublesCurve: int hashCode()>();
+
+        i4 = $i1 + $i2;
+
+        return i4;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve r0, r2;
+        java.lang.Object r1;
+        java.lang.Class $r3, $r4;
+        com.opengamma.analytics.math.curve.DoublesCurve $r5, $r6;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        if r1 != null goto label2;
+
+        return 0;
+
+     label2:
+        $r3 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r4 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+
+        if $r3 == $r4 goto label3;
+
+        return 0;
+
+     label3:
+        r2 = (com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve) r1;
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve>;
+
+        $r5 = r2.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve>;
+
+        $z0 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r6, $r5);
+
+        return $z0;
+    }
+
+    public volatile double getInterestRate(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve r0;
+        java.lang.Object r1;
+        java.lang.Double $r2;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve;
+
+        r1 := @parameter0: java.lang.Object;
+
+        $r2 = (java.lang.Double) r1;
+
+        $d0 = virtualinvoke r0.<com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: double getInterestRate(java.lang.Double)>($r2);
+
+        return $d0;
+    }
+
+    public static void <clinit>()
+    {
+        <com.opengamma.analytics.financial.model.interestrate.curve.DiscountCurve: double SMALL_TIME> = 1.0E-6;
+
+        return;
+    }
+}

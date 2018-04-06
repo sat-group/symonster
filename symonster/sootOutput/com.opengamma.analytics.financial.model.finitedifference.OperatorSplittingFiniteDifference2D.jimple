@@ -1,0 +1,1136 @@
+public class com.opengamma.analytics.financial.model.finitedifference.OperatorSplittingFiniteDifference2D extends java.lang.Object implements com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDESolver2D
+{
+    private static final int SOR_MAX;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.OperatorSplittingFiniteDifference2D r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.OperatorSplittingFiniteDifference2D;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public double[][] solve(com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusion2DPDEDataBundle, int, int, int, double, com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D, com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D, com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D, com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.OperatorSplittingFiniteDifference2D r0;
+        com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusion2DPDEDataBundle r1;
+        int i0, i1, i2;
+        double d0;
+        com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D r2, r3, r4, r5;
+        double[][] $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.OperatorSplittingFiniteDifference2D;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusion2DPDEDataBundle;
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        i2 := @parameter3: int;
+
+        d0 := @parameter4: double;
+
+        r2 := @parameter5: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D;
+
+        r3 := @parameter6: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D;
+
+        r4 := @parameter7: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D;
+
+        r5 := @parameter8: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D;
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.OperatorSplittingFiniteDifference2D: double[][] solve(com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusion2DPDEDataBundle,int,int,int,double,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D,com.opengamma.analytics.math.cube.Cube)>(r1, i0, i1, i2, d0, r2, r3, r4, r5, null);
+
+        return $r6;
+    }
+
+    public double[][] solve(com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusion2DPDEDataBundle, int, int, int, double, com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D, com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D, com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D, com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D, com.opengamma.analytics.math.cube.Cube)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.OperatorSplittingFiniteDifference2D r0;
+        com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusion2DPDEDataBundle r1;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i21, $i22, $i23, $i24, $i25, $i26, $i27, $i28, $i29, $i30, $i31, $i32, $i33, $i34, $i35, $i36, $i37, $i38, $i40, $i41, $i42, $i43, $i44, $i45, $i46, $i47, $i48, $i49, $i50, $i51, $i52, $i53, i54, i55, i56, i57, i58, i59, i60, i61, i62, i63, i64, i65, i66, i67, $i68, i69, $i70, i71, i72, i73, i74, i75, i76, i77, i78, i79, i80, i81, i82, $i83, i84, $i85, i86, i87;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, $d80, $d81, $d82, $d83, $d84, $d85, $d86, $d87, $d88, $d89, $d90, $d91, $d92, $d93, $d94, $d95, $d96, $d97, $d98, $d99, $d100, $d101, $d102, $d103, $d104, $d105, $d106, $d107, $d108, $d109, $d110, $d111, $d112, $d113, $d114, $d115, $d116, $d117, $d118, $d119, $d120, $d121, $d122, $d123, $d124, $d125, $d126, $d127, $d128, $d129, $d130, $d131, $d132, $d133, $d134, $d135, $d136, $d137, $d138, $d139, $d140, $d141, $d142, $d143, $d144, $d145, $d146, $d147, $d148, $d149, $d150, $d151, $d152, $d153, $d154, $d155, $d156, $d157, $d158, $d159, $d160, $d161, $d162, $d163, $d164, $d165, $d166, $d167, $d168, $d169, $d170, $d171, $d172, $d173, d176, d177, d178, d179, d180, d181, d182, d184, d185, d186, d187, d188, d189, d190, d191, d193, d194, d195, d196;
+        com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D r2, r3, r4, r5;
+        com.opengamma.analytics.math.cube.Cube r6;
+        double[][] r7, r8, r13, r14;
+        double[] r9, r10, r11, r12, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r30, $r31, $r32, $r33, $r34, $r35, $r36, $r37, $r38, $r39, $r40, $r41, $r42, $r43, $r44, $r45, $r46, $r47, $r48, $r49, $r50, $r51, $r52, $r53, $r54, $r55, $r56, $r57, $r58, $r59, $r60, $r61, $r62, $r63, $r64, $r65, r66, r67, r68, r69, r70, r71, r72, r73;
+        byte $b20, $b39;
+        boolean $z0, $z1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.OperatorSplittingFiniteDifference2D;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusion2DPDEDataBundle;
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        i2 := @parameter3: int;
+
+        d0 := @parameter4: double;
+
+        r2 := @parameter5: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D;
+
+        r3 := @parameter6: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D;
+
+        r4 := @parameter7: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D;
+
+        r5 := @parameter8: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D;
+
+        r6 := @parameter9: com.opengamma.analytics.math.cube.Cube;
+
+        $d14 = (double) i0;
+
+        d1 = d0 / $d14;
+
+        $d15 = interfaceinvoke r3.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double getLevel()>();
+
+        $d16 = interfaceinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double getLevel()>();
+
+        $d18 = $d15 - $d16;
+
+        $d17 = (double) i1;
+
+        d2 = $d18 / $d17;
+
+        $d19 = interfaceinvoke r5.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double getLevel()>();
+
+        $d20 = interfaceinvoke r4.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double getLevel()>();
+
+        $d22 = $d19 - $d20;
+
+        $d21 = (double) i2;
+
+        d3 = $d22 / $d21;
+
+        $d23 = d1 / d2;
+
+        d4 = $d23 / d2;
+
+        d5 = d1 / d2;
+
+        $d24 = d1 / d3;
+
+        d6 = $d24 / d3;
+
+        d7 = d1 / d3;
+
+        $d25 = d1 / d2;
+
+        d8 = $d25 / d3;
+
+        $i4 = i1 + 1;
+
+        $i3 = i2 + 1;
+
+        r7 = newmultiarray (double)[$i4][$i3];
+
+        $i6 = i1 + 1;
+
+        $i5 = i2 + 1;
+
+        r8 = newmultiarray (double)[$i6][$i5];
+
+        $i7 = i1 + 1;
+
+        r9 = newarray (double)[$i7];
+
+        $i8 = i2 + 1;
+
+        r10 = newarray (double)[$i8];
+
+        $i9 = i1 + 1;
+
+        r11 = newarray (double)[$i9];
+
+        $i10 = i2 + 1;
+
+        r12 = newarray (double)[$i10];
+
+        $i12 = i1 + 1;
+
+        $i11 = i1 + 1;
+
+        r13 = newmultiarray (double)[$i12][$i11];
+
+        $i14 = i2 + 1;
+
+        $i13 = i2 + 1;
+
+        r14 = newmultiarray (double)[$i14][$i13];
+
+        i54 = 0;
+
+     label01:
+        if i54 > i2 goto label02;
+
+        $d171 = interfaceinvoke r4.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double getLevel()>();
+
+        $d172 = (double) i54;
+
+        $d173 = $d172 * d3;
+
+        d176 = $d171 + $d173;
+
+        r10[i54] = d176;
+
+        i54 = i54 + 1;
+
+        goto label01;
+
+     label02:
+        i55 = 0;
+
+     label03:
+        if i55 > i1 goto label06;
+
+        $d165 = interfaceinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double getLevel()>();
+
+        $d166 = (double) i55;
+
+        $d167 = $d166 * d2;
+
+        d177 = $d165 + $d167;
+
+        r9[i55] = d177;
+
+        i56 = 0;
+
+     label04:
+        if i56 > i2 goto label05;
+
+        $r65 = r7[i55];
+
+        $d169 = r9[i55];
+
+        $d168 = r10[i56];
+
+        $d170 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusion2DPDEDataBundle: double getInitialValue(double,double)>($d169, $d168);
+
+        $r65[i56] = $d170;
+
+        i56 = i56 + 1;
+
+        goto label04;
+
+     label05:
+        i55 = i55 + 1;
+
+        goto label03;
+
+     label06:
+        i57 = 0;
+
+     label07:
+        if i57 >= i0 goto label64;
+
+        $d26 = (double) i57;
+
+        d178 = $d26 * d1;
+
+        i58 = 1;
+
+     label08:
+        if i58 >= i1 goto label11;
+
+        i59 = 1;
+
+     label09:
+        if i59 >= i2 goto label10;
+
+        $d151 = r9[i58];
+
+        $d150 = r10[i59];
+
+        d179 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusion2DPDEDataBundle: double getE(double,double,double)>(d178, $d151, $d150);
+
+        $r59 = r8[i58];
+
+        $r58 = r7[i58];
+
+        $d152 = $r58[i59];
+
+        $r59[i59] = $d152;
+
+        $r60 = r8[i58];
+
+        $d163 = $r60[i59];
+
+        $d153 = 0.125 * d8;
+
+        $d161 = $d153 * d179;
+
+        $i46 = i58 + 1;
+
+        $r61 = r7[$i46];
+
+        $i47 = i59 + 1;
+
+        $d155 = $r61[$i47];
+
+        $i48 = i58 - 1;
+
+        $r62 = r7[$i48];
+
+        $i49 = i59 - 1;
+
+        $d154 = $r62[$i49];
+
+        $d157 = $d155 + $d154;
+
+        $i50 = i58 + 1;
+
+        $r63 = r7[$i50];
+
+        $i51 = i59 - 1;
+
+        $d156 = $r63[$i51];
+
+        $d159 = $d157 - $d156;
+
+        $i52 = i58 - 1;
+
+        $r64 = r7[$i52];
+
+        $i53 = i59 + 1;
+
+        $d158 = $r64[$i53];
+
+        $d160 = $d159 - $d158;
+
+        $d162 = $d161 * $d160;
+
+        $d164 = $d163 - $d162;
+
+        $r60[i59] = $d164;
+
+        i59 = i59 + 1;
+
+        goto label09;
+
+     label10:
+        $r55 = r8[i58];
+
+        $r54 = r7[i58];
+
+        $d148 = $r54[0];
+
+        $r55[0] = $d148;
+
+        $r57 = r8[i58];
+
+        $r56 = r7[i58];
+
+        $d149 = $r56[i2];
+
+        $r57[i2] = $d149;
+
+        i58 = i58 + 1;
+
+        goto label08;
+
+     label11:
+        $d27 = 0.5 * d1;
+
+        d180 = d178 + $d27;
+
+        i60 = 0;
+
+     label12:
+        if i60 > i2 goto label35;
+
+        i61 = 1;
+
+     label13:
+        if i61 >= i1 goto label14;
+
+        $d129 = r9[i61];
+
+        $d128 = r10[i60];
+
+        d9 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusion2DPDEDataBundle: double getA(double,double,double)>(d180, $d129, $d128);
+
+        $d131 = r9[i61];
+
+        $d130 = r10[i60];
+
+        d10 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusion2DPDEDataBundle: double getB(double,double,double)>(d180, $d131, $d130);
+
+        $d133 = r9[i61];
+
+        $d132 = r10[i60];
+
+        d11 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusion2DPDEDataBundle: double getC(double,double,double)>(d180, $d133, $d132);
+
+        $r50 = r13[i61];
+
+        $i44 = i61 - 1;
+
+        $d136 = d4 * d9;
+
+        $d134 = 0.5 * d5;
+
+        $d135 = $d134 * d10;
+
+        $d137 = $d136 - $d135;
+
+        $r50[$i44] = $d137;
+
+        $r51 = r13[i61];
+
+        $d138 = -2.0 * d4;
+
+        $d140 = $d138 * d9;
+
+        $d139 = d1 * d11;
+
+        $d141 = $d140 + $d139;
+
+        $d142 = 1.0 + $d141;
+
+        $r51[i61] = $d142;
+
+        $r52 = r13[i61];
+
+        $i45 = i61 + 1;
+
+        $d145 = d4 * d9;
+
+        $d143 = 0.5 * d5;
+
+        $d144 = $d143 * d10;
+
+        $d146 = $d145 + $d144;
+
+        $r52[$i45] = $d146;
+
+        $r53 = r8[i61];
+
+        $d147 = $r53[i60];
+
+        r11[i61] = $d147;
+
+        i61 = i61 + 1;
+
+        goto label13;
+
+     label14:
+        $d95 = r10[i60];
+
+        r66 = interfaceinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double[] getLeftMatrixCondition(double,double)>(d180, $d95);
+
+        i62 = 0;
+
+     label15:
+        $i35 = lengthof r66;
+
+        if i62 >= $i35 goto label16;
+
+        $r49 = r13[0];
+
+        $d127 = r66[i62];
+
+        $r49[i62] = $d127;
+
+        i62 = i62 + 1;
+
+        goto label15;
+
+     label16:
+        $d96 = r10[i60];
+
+        r67 = interfaceinvoke r3.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double[] getLeftMatrixCondition(double,double)>(d180, $d96);
+
+        i63 = 0;
+
+     label17:
+        $i36 = lengthof r67;
+
+        if i63 >= $i36 goto label18;
+
+        $r48 = r13[i1];
+
+        $i43 = i1 - i63;
+
+        $d126 = r67[i63];
+
+        $r48[$i43] = $d126;
+
+        i63 = i63 + 1;
+
+        goto label17;
+
+     label18:
+        $d97 = r10[i60];
+
+        r68 = interfaceinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double[] getRightMatrixCondition(double,double)>(d180, $d97);
+
+        d181 = 0.0;
+
+        i64 = 0;
+
+     label19:
+        $i37 = lengthof r68;
+
+        if i64 >= $i37 goto label20;
+
+        $d124 = r68[i64];
+
+        $r47 = r7[i64];
+
+        $d123 = $r47[i60];
+
+        $d125 = $d124 * $d123;
+
+        d181 = d181 + $d125;
+
+        i64 = i64 + 1;
+
+        goto label19;
+
+     label20:
+        $d98 = r10[i60];
+
+        $d99 = interfaceinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double getConstant(double,double,double)>(d180, $d98, d2);
+
+        $d100 = d181 + $d99;
+
+        r11[0] = $d100;
+
+        $d101 = r10[i60];
+
+        r69 = interfaceinvoke r3.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double[] getRightMatrixCondition(double,double)>(d180, $d101);
+
+        d182 = 0.0;
+
+        i65 = 0;
+
+     label21:
+        $i38 = lengthof r69;
+
+        if i65 >= $i38 goto label22;
+
+        $d121 = r69[i65];
+
+        $i42 = i1 - i65;
+
+        $r46 = r7[$i42];
+
+        $d120 = $r46[i60];
+
+        $d122 = $d121 * $d120;
+
+        d182 = d182 + $d122;
+
+        i65 = i65 + 1;
+
+        goto label21;
+
+     label22:
+        $d102 = r10[i60];
+
+        $d103 = interfaceinvoke r3.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double getConstant(double,double,double)>(d180, $d102, d2);
+
+        $d104 = d182 + $d103;
+
+        r11[i1] = $d104;
+
+        d184 = 1.0;
+
+        d185 = #Infinity;
+
+        i66 = 0;
+
+     label23:
+        $d105 = d184 + 1.0E-10;
+
+        $d106 = d185 / $d105;
+
+        $b39 = $d106 cmpl 1.0E-18;
+
+        if $b39 <= 0 goto label32;
+
+        if i66 >= 5000 goto label32;
+
+        d185 = 0.0;
+
+        d184 = 0.0;
+
+        i67 = 0;
+
+     label24:
+        if i67 > i1 goto label31;
+
+        if i67 != i1 goto label25;
+
+        $i68 = 0;
+
+        goto label26;
+
+     label25:
+        $i40 = i67 - 1;
+
+        $i68 = staticinvoke <java.lang.Math: int max(int,int)>(0, $i40);
+
+     label26:
+        i69 = $i68;
+
+        if i67 != 0 goto label27;
+
+        $i70 = i1;
+
+        goto label28;
+
+     label27:
+        $i41 = i67 + 1;
+
+        $i70 = staticinvoke <java.lang.Math: int min(int,int)>(i1, $i41);
+
+     label28:
+        i71 = $i70;
+
+        d186 = 0.0;
+
+        i72 = i69;
+
+     label29:
+        if i72 > i71 goto label30;
+
+        $r44 = r13[i67];
+
+        $d118 = $r44[i72];
+
+        $r45 = r8[i72];
+
+        $d117 = $r45[i60];
+
+        $d119 = $d118 * $d117;
+
+        d186 = d186 + $d119;
+
+        i72 = i72 + 1;
+
+        goto label29;
+
+     label30:
+        $r40 = r13[i67];
+
+        $d107 = $r40[i67];
+
+        $d110 = 1.5 / $d107;
+
+        $d108 = r11[i67];
+
+        $d109 = $d108 - d186;
+
+        d187 = $d110 * $d109;
+
+        $d111 = d187 * d187;
+
+        d185 = d185 + $d111;
+
+        $r41 = r8[i67];
+
+        $d112 = $r41[i60];
+
+        $d113 = $d112 + d187;
+
+        $r41[i60] = $d113;
+
+        $r42 = r8[i67];
+
+        $d115 = $r42[i60];
+
+        $r43 = r8[i67];
+
+        $d114 = $r43[i60];
+
+        $d116 = $d115 * $d114;
+
+        d184 = d184 + $d116;
+
+        i67 = i67 + 1;
+
+        goto label24;
+
+     label31:
+        i66 = i66 + 1;
+
+        goto label23;
+
+     label32:
+        if i66 >= 5000 goto label33;
+
+        $z0 = 1;
+
+        goto label34;
+
+     label33:
+        $z0 = 0;
+
+     label34:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "SOR exceeded max interations");
+
+        i60 = i60 + 1;
+
+        goto label12;
+
+     label35:
+        i73 = 1;
+
+     label36:
+        if i73 >= i2 goto label39;
+
+        i74 = 1;
+
+     label37:
+        if i74 >= i1 goto label38;
+
+        $d81 = r9[i74];
+
+        $d80 = r10[i73];
+
+        d188 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusion2DPDEDataBundle: double getE(double,double,double)>(d180, $d81, $d80);
+
+        $r34 = r7[i74];
+
+        $r33 = r8[i74];
+
+        $d82 = $r33[i73];
+
+        $r34[i73] = $d82;
+
+        $r35 = r7[i74];
+
+        $d93 = $r35[i73];
+
+        $d83 = 0.125 * d8;
+
+        $d91 = $d83 * d188;
+
+        $i27 = i74 + 1;
+
+        $r36 = r8[$i27];
+
+        $i28 = i73 + 1;
+
+        $d85 = $r36[$i28];
+
+        $i29 = i74 - 1;
+
+        $r37 = r8[$i29];
+
+        $i30 = i73 - 1;
+
+        $d84 = $r37[$i30];
+
+        $d87 = $d85 + $d84;
+
+        $i31 = i74 + 1;
+
+        $r38 = r8[$i31];
+
+        $i32 = i73 - 1;
+
+        $d86 = $r38[$i32];
+
+        $d89 = $d87 - $d86;
+
+        $i33 = i74 - 1;
+
+        $r39 = r8[$i33];
+
+        $i34 = i73 + 1;
+
+        $d88 = $r39[$i34];
+
+        $d90 = $d89 - $d88;
+
+        $d92 = $d91 * $d90;
+
+        $d94 = $d93 - $d92;
+
+        $r35[i73] = $d94;
+
+        i74 = i74 + 1;
+
+        goto label37;
+
+     label38:
+        $r30 = r7[0];
+
+        $r29 = r8[0];
+
+        $d78 = $r29[i73];
+
+        $r30[i73] = $d78;
+
+        $r32 = r7[i1];
+
+        $r31 = r8[i1];
+
+        $d79 = $r31[i73];
+
+        $r32[i73] = $d79;
+
+        i73 = i73 + 1;
+
+        goto label36;
+
+     label39:
+        $i15 = i57 + 1;
+
+        $d28 = (double) $i15;
+
+        d189 = $d28 * d1;
+
+        i75 = 0;
+
+     label40:
+        if i75 > i1 goto label63;
+
+        i76 = 1;
+
+     label41:
+        if i76 >= i2 goto label42;
+
+        $d63 = r9[i75];
+
+        $d62 = r10[i76];
+
+        d12 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusion2DPDEDataBundle: double getD(double,double,double)>(d189, $d63, $d62);
+
+        $d65 = r9[i75];
+
+        $d64 = r10[i76];
+
+        d13 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusion2DPDEDataBundle: double getF(double,double,double)>(d189, $d65, $d64);
+
+        $r25 = r14[i76];
+
+        $i25 = i76 - 1;
+
+        $d68 = d6 * d12;
+
+        $d66 = 0.5 * d7;
+
+        $d67 = $d66 * d13;
+
+        $d69 = $d68 - $d67;
+
+        $r25[$i25] = $d69;
+
+        $r26 = r14[i76];
+
+        $d70 = -2.0 * d6;
+
+        $d71 = $d70 * d12;
+
+        $d72 = 1.0 + $d71;
+
+        $r26[i76] = $d72;
+
+        $r27 = r14[i76];
+
+        $i26 = i76 + 1;
+
+        $d75 = d6 * d12;
+
+        $d73 = 0.5 * d7;
+
+        $d74 = $d73 * d13;
+
+        $d76 = $d75 + $d74;
+
+        $r27[$i26] = $d76;
+
+        $r28 = r7[i75];
+
+        $d77 = $r28[i76];
+
+        r12[i76] = $d77;
+
+        i76 = i76 + 1;
+
+        goto label41;
+
+     label42:
+        $d29 = r9[i75];
+
+        r70 = interfaceinvoke r4.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double[] getLeftMatrixCondition(double,double)>(d189, $d29);
+
+        i77 = 0;
+
+     label43:
+        $i16 = lengthof r70;
+
+        if i77 >= $i16 goto label44;
+
+        $r24 = r14[0];
+
+        $d61 = r70[i77];
+
+        $r24[i77] = $d61;
+
+        i77 = i77 + 1;
+
+        goto label43;
+
+     label44:
+        $d30 = r9[i75];
+
+        r71 = interfaceinvoke r5.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double[] getLeftMatrixCondition(double,double)>(d189, $d30);
+
+        i78 = 0;
+
+     label45:
+        $i17 = lengthof r71;
+
+        if i78 >= $i17 goto label46;
+
+        $r23 = r14[i2];
+
+        $i24 = i2 - i78;
+
+        $d60 = r71[i78];
+
+        $r23[$i24] = $d60;
+
+        i78 = i78 + 1;
+
+        goto label45;
+
+     label46:
+        $d31 = r9[i75];
+
+        r72 = interfaceinvoke r4.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double[] getRightMatrixCondition(double,double)>(d189, $d31);
+
+        d190 = 0.0;
+
+        i79 = 0;
+
+     label47:
+        $i18 = lengthof r72;
+
+        if i79 >= $i18 goto label48;
+
+        $d58 = r72[i79];
+
+        $r22 = r8[i75];
+
+        $d57 = $r22[i79];
+
+        $d59 = $d58 * $d57;
+
+        d190 = d190 + $d59;
+
+        i79 = i79 + 1;
+
+        goto label47;
+
+     label48:
+        $d32 = r9[i75];
+
+        $d33 = interfaceinvoke r4.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double getConstant(double,double,double)>(d189, $d32, d3);
+
+        $d34 = d190 + $d33;
+
+        r12[0] = $d34;
+
+        $d35 = r9[i75];
+
+        r73 = interfaceinvoke r5.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double[] getRightMatrixCondition(double,double)>(d189, $d35);
+
+        d191 = 0.0;
+
+        i80 = 0;
+
+     label49:
+        $i19 = lengthof r73;
+
+        if i80 >= $i19 goto label50;
+
+        $d55 = r73[i80];
+
+        $r21 = r8[i75];
+
+        $i23 = i2 - i80;
+
+        $d54 = $r21[$i23];
+
+        $d56 = $d55 * $d54;
+
+        d191 = d191 + $d56;
+
+        i80 = i80 + 1;
+
+        goto label49;
+
+     label50:
+        $d36 = r9[i75];
+
+        $d37 = interfaceinvoke r5.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition2D: double getConstant(double,double,double)>(d189, $d36, d3);
+
+        $d38 = d191 + $d37;
+
+        r12[i2] = $d38;
+
+        d193 = 1.0;
+
+        d194 = #Infinity;
+
+        i81 = 0;
+
+     label51:
+        $d39 = d193 + 1.0E-10;
+
+        $d40 = d194 / $d39;
+
+        $b20 = $d40 cmpl 1.0E-18;
+
+        if $b20 <= 0 goto label60;
+
+        if i81 >= 5000 goto label60;
+
+        d194 = 0.0;
+
+        d193 = 0.0;
+
+        i82 = 0;
+
+     label52:
+        if i82 > i2 goto label59;
+
+        if i82 != i2 goto label53;
+
+        $i83 = 0;
+
+        goto label54;
+
+     label53:
+        $i21 = i82 - 1;
+
+        $i83 = staticinvoke <java.lang.Math: int max(int,int)>(0, $i21);
+
+     label54:
+        i84 = $i83;
+
+        if i82 != 0 goto label55;
+
+        $i85 = i2;
+
+        goto label56;
+
+     label55:
+        $i22 = i82 + 1;
+
+        $i85 = staticinvoke <java.lang.Math: int min(int,int)>(i2, $i22);
+
+     label56:
+        i86 = $i85;
+
+        d195 = 0.0;
+
+        i87 = i84;
+
+     label57:
+        if i87 > i86 goto label58;
+
+        $r19 = r14[i82];
+
+        $d52 = $r19[i87];
+
+        $r20 = r7[i75];
+
+        $d51 = $r20[i87];
+
+        $d53 = $d52 * $d51;
+
+        d195 = d195 + $d53;
+
+        i87 = i87 + 1;
+
+        goto label57;
+
+     label58:
+        $r15 = r14[i82];
+
+        $d41 = $r15[i82];
+
+        $d44 = 1.5 / $d41;
+
+        $d42 = r12[i82];
+
+        $d43 = $d42 - d195;
+
+        d196 = $d44 * $d43;
+
+        $d45 = d196 * d196;
+
+        d194 = d194 + $d45;
+
+        $r16 = r7[i75];
+
+        $d46 = $r16[i82];
+
+        $d47 = $d46 + d196;
+
+        $r16[i82] = $d47;
+
+        $r17 = r7[i75];
+
+        $d49 = $r17[i82];
+
+        $r18 = r7[i75];
+
+        $d48 = $r18[i82];
+
+        $d50 = $d49 * $d48;
+
+        d193 = d193 + $d50;
+
+        i82 = i82 + 1;
+
+        goto label52;
+
+     label59:
+        i81 = i81 + 1;
+
+        goto label51;
+
+     label60:
+        if i81 >= 5000 goto label61;
+
+        $z1 = 1;
+
+        goto label62;
+
+     label61:
+        $z1 = 0;
+
+     label62:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "SOR exceeded max interations");
+
+        i75 = i75 + 1;
+
+        goto label40;
+
+     label63:
+        i57 = i57 + 1;
+
+        goto label07;
+
+     label64:
+        return r7;
+    }
+
+    public static void <clinit>()
+    {
+        <com.opengamma.analytics.financial.model.finitedifference.OperatorSplittingFiniteDifference2D: int SOR_MAX> = 5000;
+
+        return;
+    }
+}

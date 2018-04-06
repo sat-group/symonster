@@ -1,0 +1,852 @@
+class com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath extends java.lang.Object
+{
+    private final com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends _dividends;
+    private final double _spot;
+    private final int[] _steps;
+    private final int _nSteps;
+    private final int _nDivs;
+    private final com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike _localVol;
+    private final double _dt;
+    private final double _rootDt;
+    private final double[] _drift;
+    final com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator this$0;
+
+    public void <init>(com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator, com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends, double, double, com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve, com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike)
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath r0;
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator r1;
+        com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends r2;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, d32;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve r3;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike r4;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i10, $i11, $i12, $i13, $i14, $i16, $i17, $i18, $i20, $i21, $i22, $i23, $i24, $i25, $i26, $i27, $i28, $i29, $i30, i31, i32, i34, i35, $i36;
+        double[] r5, $r7, $r10;
+        int[] r6, $r8;
+        byte $b9, $b15, $b19;
+        java.lang.Double $r9;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends;
+
+        d0 := @parameter2: double;
+
+        d1 := @parameter3: double;
+
+        r3 := @parameter4: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve;
+
+        r4 := @parameter5: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike;
+
+        r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator this$0> = r1;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends _dividends> = r2;
+
+        r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _spot> = d1;
+
+        r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike _localVol> = r4;
+
+        i0 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: int getNumberOfDividends()>();
+
+        r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _dt> = 0.003968253968253968;
+
+        $d2 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _dt>;
+
+        $d3 = staticinvoke <java.lang.Math: double sqrt(double)>($d2);
+
+        r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _rootDt> = $d3;
+
+        $d4 = d0 * 252.0;
+
+        $d5 = staticinvoke <java.lang.Math: double ceil(double)>($d4);
+
+        $i1 = (int) $d5;
+
+        r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: int _nSteps> = $i1;
+
+        $i2 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: int _nSteps>;
+
+        $r7 = newarray (double)[$i2];
+
+        r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double[] _drift> = $r7;
+
+        $i3 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: int _nSteps>;
+
+        $i4 = $i3 + 1;
+
+        r5 = newarray (double)[$i4];
+
+        r5[0] = 0.0;
+
+        i31 = 0;
+
+     label01:
+        $i5 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: int _nSteps>;
+
+        if i31 >= $i5 goto label02;
+
+        $i28 = i31 + 1;
+
+        $d22 = (double) $i28;
+
+        $d21 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _dt>;
+
+        d32 = $d22 * $d21;
+
+        $i29 = i31 + 1;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d32);
+
+        $d23 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getInterestRate(java.lang.Object)>($r9);
+
+        $d24 = neg $d23;
+
+        $d25 = $d24 * d32;
+
+        r5[$i29] = $d25;
+
+        $r10 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double[] _drift>;
+
+        $i30 = i31 + 1;
+
+        $d27 = r5[$i30];
+
+        $d26 = r5[i31];
+
+        $d28 = $d27 - $d26;
+
+        $d30 = neg $d28;
+
+        $d29 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _dt>;
+
+        $d31 = $d30 / $d29;
+
+        $r10[i31] = $d31;
+
+        i31 = i31 + 1;
+
+        goto label01;
+
+     label02:
+        i32 = 0;
+
+        $i6 = i0 + 1;
+
+        r6 = newarray (int)[$i6];
+
+        if i0 == 0 goto label03;
+
+        $d8 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getTau(int)>(0);
+
+        $b9 = $d8 cmpl d0;
+
+        if $b9 <= 0 goto label04;
+
+     label03:
+        $d6 = d0 * 252.0;
+
+        $d7 = staticinvoke <java.lang.Math: double ceil(double)>($d6);
+
+        $i7 = (int) $d7;
+
+        r6[0] = $i7;
+
+        i34 = r6[0];
+
+        goto label08;
+
+     label04:
+        $d9 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getTau(int)>(0);
+
+        $d10 = $d9 * 252.0;
+
+        $d11 = staticinvoke <java.lang.Math: double ceil(double)>($d10);
+
+        $i10 = (int) $d11;
+
+        $i11 = $i10 - 1;
+
+        r6[0] = $i11;
+
+        $i12 = r6[0];
+
+        $i13 = $i12 + 1;
+
+        i34 = 0 + $i13;
+
+        i32 = 0 + 1;
+
+        i35 = 1;
+
+     label05:
+        if i35 >= i0 goto label07;
+
+        $d15 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getTau(int)>(i35);
+
+        $b19 = $d15 cmpl d0;
+
+        if $b19 <= 0 goto label06;
+
+        $d19 = d0 * 252.0;
+
+        $d20 = staticinvoke <java.lang.Math: double ceil(double)>($d19);
+
+        $i25 = (int) $d20;
+
+        $i26 = $i25 - i34;
+
+        r6[i35] = $i26;
+
+        $i27 = r6[i35];
+
+        i34 = i34 + $i27;
+
+        goto label07;
+
+     label06:
+        $d16 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getTau(int)>(i35);
+
+        $d17 = $d16 * 252.0;
+
+        $d18 = staticinvoke <java.lang.Math: double ceil(double)>($d17);
+
+        $i20 = (int) $d18;
+
+        $i21 = $i20 - i34;
+
+        $i22 = $i21 - 1;
+
+        r6[i35] = $i22;
+
+        $i23 = r6[i35];
+
+        $i24 = $i23 + 1;
+
+        i34 = i34 + $i24;
+
+        i32 = i32 + 1;
+
+        i35 = i35 + 1;
+
+        goto label05;
+
+     label07:
+        $i14 = i0 - 1;
+
+        $d12 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getTau(int)>($i14);
+
+        $b15 = $d12 cmpg d0;
+
+        if $b15 >= 0 goto label08;
+
+        $d13 = d0 * 252.0;
+
+        $d14 = staticinvoke <java.lang.Math: double ceil(double)>($d13);
+
+        $i16 = (int) $d14;
+
+        $i17 = $i16 - i34;
+
+        r6[i0] = $i17;
+
+        $i18 = r6[i0];
+
+        i34 = i34 + $i18;
+
+     label08:
+        $i36 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: int _nSteps>;
+
+        if i34 != $i36 goto label09;
+
+        $z0 = 1;
+
+        goto label10;
+
+     label09:
+        $z0 = 0;
+
+     label10:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "got the steps wrong");
+
+        $i8 = i32 + 1;
+
+        $r8 = staticinvoke <java.util.Arrays: int[] copyOfRange(int[],int,int)>(r6, 0, $i8);
+
+        r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: int[] _steps> = $r8;
+
+        r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: int _nDivs> = i32;
+
+        return;
+    }
+
+    public double[] runMC(int, boolean, boolean)
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath r0;
+        int i0, $i2, $i3, $i4, $i5, $i6, $i7, i9, i10, i11, i12, i13, i14, $i15, i16, i17, i18;
+        boolean z0, z1;
+        double[] r1, r2, r3, r4;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30;
+        byte $b8;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath;
+
+        i0 := @parameter0: int;
+
+        z0 := @parameter1: boolean;
+
+        z1 := @parameter2: boolean;
+
+        if z1 == 0 goto label01;
+
+        $b8 = 6;
+
+        goto label02;
+
+     label01:
+        $b8 = 3;
+
+     label02:
+        r1 = newarray (double)[$b8];
+
+        i9 = 0;
+
+     label03:
+        if i9 >= i0 goto label14;
+
+        r2 = specialinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double[] getNormals()>();
+
+        r3 = virtualinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double[] runPath(double[])>(r2);
+
+        i10 = 0;
+
+     label04:
+        if i10 >= 3 goto label05;
+
+        $d29 = r1[i10];
+
+        $d28 = r3[i10];
+
+        $d30 = $d29 + $d28;
+
+        r1[i10] = $d30;
+
+        i10 = i10 + 1;
+
+        goto label04;
+
+     label05:
+        if z1 == 0 goto label07;
+
+        i11 = 0;
+
+     label06:
+        if i11 >= 3 goto label07;
+
+        $i7 = i11 + 3;
+
+        $d26 = r1[$i7];
+
+        $d24 = r3[i11];
+
+        $d23 = r3[i11];
+
+        $d25 = $d24 * $d23;
+
+        $d27 = $d26 + $d25;
+
+        r1[$i7] = $d27;
+
+        i11 = i11 + 1;
+
+        goto label06;
+
+     label07:
+        if z0 == 0 goto label13;
+
+        i12 = 0;
+
+     label08:
+        $i5 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: int _nSteps>;
+
+        if i12 >= $i5 goto label09;
+
+        $d21 = r2[i12];
+
+        $d22 = $d21 * -1.0;
+
+        r2[i12] = $d22;
+
+        i12 = i12 + 1;
+
+        goto label08;
+
+     label09:
+        r4 = virtualinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double[] runPath(double[])>(r2);
+
+        i13 = 0;
+
+     label10:
+        if i13 >= 3 goto label11;
+
+        $d19 = r1[i13];
+
+        $d18 = r4[i13];
+
+        $d20 = $d19 + $d18;
+
+        r1[i13] = $d20;
+
+        i13 = i13 + 1;
+
+        goto label10;
+
+     label11:
+        if z1 == 0 goto label13;
+
+        i14 = 0;
+
+     label12:
+        if i14 >= 3 goto label13;
+
+        $i6 = i14 + 3;
+
+        $d16 = r1[$i6];
+
+        $d14 = r4[i14];
+
+        $d13 = r4[i14];
+
+        $d15 = $d14 * $d13;
+
+        $d17 = $d16 + $d15;
+
+        r1[$i6] = $d17;
+
+        i14 = i14 + 1;
+
+        goto label12;
+
+     label13:
+        i9 = i9 + 1;
+
+        goto label03;
+
+     label14:
+        if z0 == 0 goto label15;
+
+        $i15 = 2 * i0;
+
+        goto label16;
+
+     label15:
+        $i15 = i0;
+
+     label16:
+        i16 = $i15;
+
+        i17 = 0;
+
+     label17:
+        if i17 >= 3 goto label18;
+
+        $d11 = r1[i17];
+
+        $d10 = (double) i16;
+
+        $d12 = $d11 / $d10;
+
+        r1[i17] = $d12;
+
+        i17 = i17 + 1;
+
+        goto label17;
+
+     label18:
+        if z1 == 0 goto label20;
+
+        i18 = 0;
+
+     label19:
+        if i18 >= 3 goto label20;
+
+        $i3 = i18 + 3;
+
+        $i2 = i18 + 3;
+
+        $d1 = r1[$i2];
+
+        $d2 = (double) i16;
+
+        $d0 = r1[i18];
+
+        $d3 = staticinvoke <com.opengamma.analytics.math.FunctionUtils: double square(double)>($d0);
+
+        $d4 = $d2 * $d3;
+
+        $d6 = $d1 - $d4;
+
+        $i4 = i16 - 1;
+
+        $d5 = (double) $i4;
+
+        $d8 = $d6 / $d5;
+
+        $d7 = (double) i16;
+
+        $d9 = $d8 / $d7;
+
+        r1[$i3] = $d9;
+
+        i18 = i18 + 1;
+
+        goto label19;
+
+     label20:
+        return r1;
+    }
+
+    public double[] runPath(double[])
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath r0;
+        double[] r1, $r3, $r5, $r8, $r12;
+        int $i0, $i1, $i2, $i3, $i4, $i5, i6, i7, i8, i9, i10, i11;
+        int[] $r2, $r6;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, d56, d57, d58, d59, d60, d61, d62, d63, d64, d65, d66, d67, d68, d69, d70, d71, d72, d73, d74, d75, d76, d77, d78, d79, d80, d81, d82;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike $r4, $r7, $r11;
+        com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends $r9, $r10;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath;
+
+        r1 := @parameter0: double[];
+
+        d56 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _spot>;
+
+        d57 = 0.0;
+
+        d58 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _spot>;
+
+        d59 = 0.0;
+
+        d60 = 0.0;
+
+        d61 = 0.0;
+
+        d62 = 0.0;
+
+        i6 = 0;
+
+        i7 = 0;
+
+     label1:
+        $i0 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: int _nDivs>;
+
+        if i7 >= $i0 goto label4;
+
+        $r6 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: int[] _steps>;
+
+        i8 = $r6[i7];
+
+        i9 = 0;
+
+     label2:
+        if i9 >= i8 goto label3;
+
+        $r11 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike _localVol>;
+
+        d63 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike: double getVolatility(double,double)>(d62, d56);
+
+        $r12 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double[] _drift>;
+
+        d64 = $r12[i6];
+
+        $d46 = d63 * d63;
+
+        $d47 = $d46 / 2.0;
+
+        $d49 = d64 - $d47;
+
+        $d48 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _dt>;
+
+        $d54 = $d49 * $d48;
+
+        $d50 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _rootDt>;
+
+        $d52 = d63 * $d50;
+
+        $d51 = r1[i6];
+
+        $d53 = $d52 * $d51;
+
+        d65 = $d54 + $d53;
+
+        d66 = staticinvoke <java.lang.Math: double exp(double)>(d65);
+
+        d67 = d56 * d66;
+
+        d68 = d58 * d66;
+
+        d69 = d65 * d65;
+
+        d60 = d60 + d69;
+
+        d61 = d61 + d69;
+
+        d56 = d67;
+
+        d58 = d68;
+
+        $d55 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _dt>;
+
+        d62 = d62 + $d55;
+
+        i6 = i6 + 1;
+
+        i9 = i9 + 1;
+
+        goto label2;
+
+     label3:
+        $r7 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike _localVol>;
+
+        d70 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike: double getVolatility(double,double)>(d62, d56);
+
+        $r8 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double[] _drift>;
+
+        d71 = $r8[i6];
+
+        $d25 = d70 * d70;
+
+        $d26 = $d25 / 2.0;
+
+        $d28 = d71 - $d26;
+
+        $d27 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _dt>;
+
+        $d33 = $d28 * $d27;
+
+        $d29 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _rootDt>;
+
+        $d31 = d70 * $d29;
+
+        $d30 = r1[i6];
+
+        $d32 = $d31 * $d30;
+
+        $d34 = $d33 + $d32;
+
+        d72 = staticinvoke <java.lang.Math: double exp(double)>($d34);
+
+        d73 = d56 * d72;
+
+        d59 = d58 * d72;
+
+        $r9 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends _dividends>;
+
+        $d35 = virtualinvoke $r9.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getBeta(int)>(i7);
+
+        $d36 = 1.0 - $d35;
+
+        $d37 = d73 * $d36;
+
+        $r10 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends _dividends>;
+
+        $d38 = virtualinvoke $r10.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getAlpha(int)>(i7);
+
+        d57 = $d37 - $d38;
+
+        $d39 = d73 / d56;
+
+        $d40 = staticinvoke <java.lang.Math: double log(double)>($d39);
+
+        $d41 = staticinvoke <com.opengamma.analytics.math.FunctionUtils: double square(double)>($d40);
+
+        d60 = d60 + $d41;
+
+        $d42 = d57 / d56;
+
+        $d43 = staticinvoke <java.lang.Math: double log(double)>($d42);
+
+        $d44 = staticinvoke <com.opengamma.analytics.math.FunctionUtils: double square(double)>($d43);
+
+        d61 = d61 + $d44;
+
+        d56 = d57;
+
+        d58 = d59;
+
+        $d45 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _dt>;
+
+        d62 = d62 + $d45;
+
+        i6 = i6 + 1;
+
+        i7 = i7 + 1;
+
+        goto label1;
+
+     label4:
+        $r2 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: int[] _steps>;
+
+        $i1 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: int _nDivs>;
+
+        i10 = $r2[$i1];
+
+        i11 = 0;
+
+     label5:
+        if i11 >= i10 goto label6;
+
+        $r4 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike _localVol>;
+
+        d74 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike: double getVolatility(double,double)>(d62, d56);
+
+        $r5 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double[] _drift>;
+
+        d75 = $r5[i6];
+
+        $d13 = d74 * d74;
+
+        $d14 = $d13 / 2.0;
+
+        $d16 = d75 - $d14;
+
+        $d15 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _dt>;
+
+        $d21 = $d16 * $d15;
+
+        $d17 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _rootDt>;
+
+        $d19 = d74 * $d17;
+
+        $d18 = r1[i6];
+
+        $d20 = $d19 * $d18;
+
+        d76 = $d21 + $d20;
+
+        d77 = staticinvoke <java.lang.Math: double exp(double)>(d76);
+
+        d59 = d58 * d77;
+
+        d57 = d56 * d77;
+
+        $d22 = d76 * d76;
+
+        d60 = d60 + $d22;
+
+        $d23 = d76 * d76;
+
+        d61 = d61 + $d23;
+
+        d56 = d57;
+
+        d58 = d59;
+
+        $d24 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _dt>;
+
+        d62 = d62 + $d24;
+
+        i6 = i6 + 1;
+
+        i11 = i11 + 1;
+
+        goto label5;
+
+     label6:
+        $d0 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _spot>;
+
+        $d1 = d59 / $d0;
+
+        $d2 = staticinvoke <java.lang.Math: double log(double)>($d1);
+
+        $d3 = staticinvoke <com.opengamma.analytics.math.FunctionUtils: double square(double)>($d2);
+
+        $i2 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: int _nSteps>;
+
+        $d4 = (double) $i2;
+
+        $d5 = $d3 / $d4;
+
+        d78 = d60 - $d5;
+
+        $d6 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: double _spot>;
+
+        $d7 = d57 / $d6;
+
+        $d8 = staticinvoke <java.lang.Math: double log(double)>($d7);
+
+        $d9 = staticinvoke <com.opengamma.analytics.math.FunctionUtils: double square(double)>($d8);
+
+        $i3 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: int _nSteps>;
+
+        $d10 = (double) $i3;
+
+        $d11 = $d9 / $d10;
+
+        d79 = d61 - $d11;
+
+        $i4 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: int _nSteps>;
+
+        $i5 = $i4 - 1;
+
+        $d12 = (double) $i5;
+
+        d80 = 252.0 / $d12;
+
+        d81 = d78 * d80;
+
+        d82 = d79 * d80;
+
+        $r3 = newarray (double)[3];
+
+        $r3[0] = d57;
+
+        $r3[1] = d81;
+
+        $r3[2] = d82;
+
+        return $r3;
+    }
+
+    private double[] getNormals()
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath r0;
+        double[] r1;
+        int $i0, $i1, i2;
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator $r2;
+        com.opengamma.analytics.math.statistics.distribution.NormalDistribution $r3;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath;
+
+        $i0 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: int _nSteps>;
+
+        r1 = newarray (double)[$i0];
+
+        i2 = 0;
+
+     label1:
+        $i1 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: int _nSteps>;
+
+        if i2 >= $i1 goto label2;
+
+        $r2 = r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator$MonteCarloPath: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator this$0>;
+
+        $r3 = staticinvoke <com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator: com.opengamma.analytics.math.statistics.distribution.NormalDistribution access$000(com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapMonteCarloCalculator)>($r2);
+
+        $d0 = virtualinvoke $r3.<com.opengamma.analytics.math.statistics.distribution.NormalDistribution: double nextRandom()>();
+
+        r1[i2] = $d0;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        return r1;
+    }
+}

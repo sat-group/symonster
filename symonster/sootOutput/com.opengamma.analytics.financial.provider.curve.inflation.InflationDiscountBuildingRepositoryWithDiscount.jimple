@@ -1,0 +1,882 @@
+public class com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount extends java.lang.Object
+{
+    private final double _toleranceAbs;
+    private final double _toleranceRel;
+    private final int _stepMaximum;
+    private final com.opengamma.analytics.math.rootfinding.newton.BroydenVectorRootFinder _rootFinder;
+    private static final com.opengamma.analytics.math.matrix.MatrixAlgebra MATRIX_ALGEBRA;
+
+    public void <init>(double, double, int)
+    {
+        com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount r0;
+        double d0, d1, $d2, $d3;
+        int i0, $i1;
+        com.opengamma.analytics.math.rootfinding.newton.BroydenVectorRootFinder $r1;
+        com.opengamma.analytics.math.linearalgebra.Decomposition $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        i0 := @parameter2: int;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount: double _toleranceAbs> = d0;
+
+        r0.<com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount: double _toleranceRel> = d1;
+
+        r0.<com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount: int _stepMaximum> = i0;
+
+        $r1 = new com.opengamma.analytics.math.rootfinding.newton.BroydenVectorRootFinder;
+
+        $d2 = r0.<com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount: double _toleranceAbs>;
+
+        $d3 = r0.<com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount: double _toleranceRel>;
+
+        $i1 = r0.<com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount: int _stepMaximum>;
+
+        $r2 = staticinvoke <com.opengamma.analytics.math.linearalgebra.DecompositionFactory: com.opengamma.analytics.math.linearalgebra.Decomposition getDecomposition(java.lang.String)>("SV_COLT");
+
+        specialinvoke $r1.<com.opengamma.analytics.math.rootfinding.newton.BroydenVectorRootFinder: void <init>(double,double,int,com.opengamma.analytics.math.linearalgebra.Decomposition)>($d2, $d3, $i1, $r2);
+
+        r0.<com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount: com.opengamma.analytics.math.rootfinding.newton.BroydenVectorRootFinder _rootFinder> = $r1;
+
+        return;
+    }
+
+    private com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount makeUnit(com.opengamma.analytics.financial.interestrate.InstrumentDerivative[], double[], com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount, java.util.LinkedHashMap, java.util.LinkedHashMap, java.util.LinkedHashMap, java.util.LinkedHashMap, com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor, com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)
+    {
+        com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative[] r1;
+        double[] r2, r14;
+        com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount r3, r15;
+        java.util.LinkedHashMap r4, r5, r6, r7;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor r8, r9;
+        com.opengamma.analytics.financial.provider.curve.inflation.GeneratorInflationProviderDiscount $r16, $r24;
+        com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingData $r17;
+        com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountFinderFunction $r18;
+        com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountFinderJacobian $r19;
+        com.opengamma.analytics.financial.provider.sensitivity.inflation.ParameterSensitivityInflationMatrixCalculator $r20;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r21, $r23, $r25;
+        com.opengamma.analytics.math.rootfinding.newton.BroydenVectorRootFinder $r22;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivative[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount;
+
+        r4 := @parameter3: java.util.LinkedHashMap;
+
+        r5 := @parameter4: java.util.LinkedHashMap;
+
+        r6 := @parameter5: java.util.LinkedHashMap;
+
+        r7 := @parameter6: java.util.LinkedHashMap;
+
+        r8 := @parameter7: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        r9 := @parameter8: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        $r16 = new com.opengamma.analytics.financial.provider.curve.inflation.GeneratorInflationProviderDiscount;
+
+        specialinvoke $r16.<com.opengamma.analytics.financial.provider.curve.inflation.GeneratorInflationProviderDiscount: void <init>(com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount,java.util.LinkedHashMap,java.util.LinkedHashMap,java.util.LinkedHashMap,java.util.LinkedHashMap)>(r3, r4, r5, r6, r7);
+
+        $r17 = new com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingData;
+
+        specialinvoke $r17.<com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingData: void <init>(com.opengamma.analytics.financial.interestrate.InstrumentDerivative[],com.opengamma.analytics.financial.provider.curve.inflation.GeneratorInflationProviderDiscount)>(r1, $r16);
+
+        $r18 = new com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountFinderFunction;
+
+        specialinvoke $r18.<com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountFinderFunction: void <init>(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingData)>(r8, $r17);
+
+        $r19 = new com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountFinderJacobian;
+
+        $r20 = new com.opengamma.analytics.financial.provider.sensitivity.inflation.ParameterSensitivityInflationMatrixCalculator;
+
+        specialinvoke $r20.<com.opengamma.analytics.financial.provider.sensitivity.inflation.ParameterSensitivityInflationMatrixCalculator: void <init>(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)>(r9);
+
+        specialinvoke $r19.<com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountFinderJacobian: void <init>(com.opengamma.analytics.financial.provider.sensitivity.inflation.ParameterSensitivityInflationMatrixProviderAbstractCalculator,com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingData)>($r20, $r17);
+
+        $r22 = r0.<com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount: com.opengamma.analytics.math.rootfinding.newton.BroydenVectorRootFinder _rootFinder>;
+
+        $r21 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r21.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r2);
+
+        $r23 = virtualinvoke $r22.<com.opengamma.analytics.math.rootfinding.newton.BroydenVectorRootFinder: com.opengamma.analytics.math.matrix.DoubleMatrix1D getRoot(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r18, $r19, $r21);
+
+        r14 = virtualinvoke $r23.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        $r24 = virtualinvoke $r17.<com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingData: com.opengamma.analytics.financial.provider.curve.inflation.GeneratorInflationProviderDiscount getGeneratorMarket()>();
+
+        $r25 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r25.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r14);
+
+        r15 = virtualinvoke $r24.<com.opengamma.analytics.financial.provider.curve.inflation.GeneratorInflationProviderDiscount: com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount evaluate(com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r25);
+
+        return r15;
+    }
+
+    private void updateBlockBundle(com.opengamma.analytics.financial.interestrate.InstrumentDerivative[], com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount, java.util.List, com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle, com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)
+    {
+        com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative[] r1;
+        com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount r2;
+        java.util.List r3;
+        com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle r4;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor r5;
+        java.util.Set r8, r16;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, i25, i26, i27, i28, i29, i30, i31, i32, i33, i34, i35, i36, i37, i38, i39, i40, i41, i42, i43;
+        int[] r12, r13, r86, r87;
+        double[][] r15, r17, r81, r83, r84, r90, r102, r105;
+        java.util.Iterator r18, r77, r79, r88, r91, r97, r99, r103;
+        java.lang.String r19, r78, r80, r89, r92, r98, r100, r104;
+        java.lang.Integer r20, $r39, $r40, $r52, $r53, $r63, $r65, $r74;
+        com.opengamma.analytics.financial.provider.sensitivity.inflation.ParameterSensitivityInflationUnderlyingMatrixCalculator $r21;
+        java.util.LinkedHashMap $r22;
+        java.util.LinkedHashSet $r23, $r24, $r25, $r26;
+        boolean $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z11, $z14;
+        double[] $r27, $r28, $r34, $r35, $r36, $r37, $r61, $r62, $r66, $r67, $r68, $r69, $r72;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D $r29, $r33, $r43, $r48, $r59, r82, r85, r96;
+        com.opengamma.analytics.math.matrix.MatrixAlgebra $r30, $r44, $r45, $r49;
+        com.opengamma.analytics.financial.provider.curve.CurveBuildingBlock $r31, r94;
+        java.lang.Object $r32, $r38, $r51, $r56, $r57, $r58, $r60, $r64, $r73, $r75;
+        com.opengamma.util.tuple.ObjectsPair $r41, $r54;
+        com.opengamma.analytics.math.matrix.Matrix $r46, $r47, $r50;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative $r70;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r71;
+        java.util.Map $r76;
+        com.opengamma.util.tuple.Pair r93;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivative[];
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount;
+
+        r3 := @parameter2: java.util.List;
+
+        r4 := @parameter3: com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle;
+
+        r5 := @parameter4: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        $r21 = new com.opengamma.analytics.financial.provider.sensitivity.inflation.ParameterSensitivityInflationUnderlyingMatrixCalculator;
+
+        specialinvoke $r21.<com.opengamma.analytics.financial.provider.sensitivity.inflation.ParameterSensitivityInflationUnderlyingMatrixCalculator: void <init>(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)>(r5);
+
+        $r22 = new java.util.LinkedHashMap;
+
+        specialinvoke $r22.<java.util.LinkedHashMap: void <init>()>();
+
+        r8 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount: java.util.Set getAllNames()>();
+
+        i0 = interfaceinvoke r3.<java.util.List: int size()>();
+
+        $r23 = new java.util.LinkedHashSet;
+
+        specialinvoke $r23.<java.util.LinkedHashSet: void <init>(java.util.Collection)>(r3);
+
+        $r24 = new java.util.LinkedHashSet;
+
+        specialinvoke $r24.<java.util.LinkedHashSet: void <init>(java.util.Collection)>(r8);
+
+        virtualinvoke $r24.<java.util.LinkedHashSet: boolean removeAll(java.util.Collection)>($r23);
+
+        $r25 = new java.util.LinkedHashSet;
+
+        specialinvoke $r25.<java.util.LinkedHashSet: void <init>(java.util.Collection)>($r24);
+
+        virtualinvoke $r25.<java.util.LinkedHashSet: boolean addAll(java.util.Collection)>($r23);
+
+        r77 = virtualinvoke $r24.<java.util.LinkedHashSet: java.util.Iterator iterator()>();
+
+     label01:
+        $z2 = interfaceinvoke r77.<java.util.Iterator: boolean hasNext()>();
+
+        if $z2 == 0 goto label03;
+
+        $r75 = interfaceinvoke r77.<java.util.Iterator: java.lang.Object next()>();
+
+        r78 = (java.lang.String) $r75;
+
+        $r76 = virtualinvoke r4.<com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle: java.util.Map getData()>();
+
+        $z11 = interfaceinvoke $r76.<java.util.Map: boolean containsKey(java.lang.Object)>(r78);
+
+        if $z11 != 0 goto label02;
+
+        virtualinvoke $r24.<java.util.LinkedHashSet: boolean remove(java.lang.Object)>(r78);
+
+     label02:
+        goto label01;
+
+     label03:
+        i25 = virtualinvoke $r25.<java.util.LinkedHashSet: int size()>();
+
+        i26 = i25 - i0;
+
+        i27 = 0;
+
+        r12 = newarray (int)[i0];
+
+        r13 = newarray (int)[i0];
+
+        i28 = 0;
+
+        $r26 = new java.util.LinkedHashSet;
+
+        specialinvoke $r26.<java.util.LinkedHashSet: void <init>(java.util.Collection)>($r24);
+
+        r79 = virtualinvoke $r23.<java.util.LinkedHashSet: java.util.Iterator iterator()>();
+
+     label04:
+        $z3 = interfaceinvoke r79.<java.util.Iterator: boolean hasNext()>();
+
+        if $z3 == 0 goto label05;
+
+        $r73 = interfaceinvoke r79.<java.util.Iterator: java.lang.Object next()>();
+
+        r80 = (java.lang.String) $r73;
+
+        r13[i28] = i27;
+
+        $r74 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount: java.lang.Integer getNumberOfIntrinsicParameters(java.lang.String,java.util.Set)>(r80, $r26);
+
+        $i23 = virtualinvoke $r74.<java.lang.Integer: int intValue()>();
+
+        r12[i28] = $i23;
+
+        virtualinvoke $r26.<java.util.LinkedHashSet: boolean add(java.lang.Object)>(r80);
+
+        $i24 = r12[i28];
+
+        i27 = i27 + $i24;
+
+        i28 = i28 + 1;
+
+        goto label04;
+
+     label05:
+        i29 = lengthof r1;
+
+        r81 = newarray (double[])[i27];
+
+        i30 = 0;
+
+     label06:
+        if i30 >= i29 goto label07;
+
+        $r70 = r1[i30];
+
+        $r71 = virtualinvoke $r21.<com.opengamma.analytics.financial.provider.sensitivity.inflation.ParameterSensitivityInflationUnderlyingMatrixCalculator: com.opengamma.analytics.math.matrix.DoubleMatrix1D calculateSensitivity(com.opengamma.analytics.financial.interestrate.InstrumentDerivative,com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface,java.util.Set)>($r70, r2, $r25);
+
+        $r72 = virtualinvoke $r71.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        r81[i30] = $r72;
+
+        i30 = i30 + 1;
+
+        goto label06;
+
+     label07:
+        $r27 = r81[0];
+
+        i31 = lengthof $r27;
+
+        $r28 = r81[0];
+
+        $i2 = lengthof $r28;
+
+        i1 = $i2 - i27;
+
+        r15 = newmultiarray (double)[i27][i27];
+
+        i32 = 0;
+
+     label08:
+        if i32 >= i29 goto label09;
+
+        $r69 = r81[i32];
+
+        $r68 = r15[i32];
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r69, i1, $r68, 0, i27);
+
+        i32 = i32 + 1;
+
+        goto label08;
+
+     label09:
+        $r30 = <com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount: com.opengamma.analytics.math.matrix.MatrixAlgebra MATRIX_ALGEBRA>;
+
+        $r29 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r29.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r15);
+
+        r82 = virtualinvoke $r30.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.DoubleMatrix2D getInverse(com.opengamma.analytics.math.matrix.Matrix)>($r29);
+
+        r83 = newmultiarray (double)[0][0];
+
+        if i1 <= 0 goto label21;
+
+        r84 = newmultiarray (double)[i27][i1];
+
+        i33 = 0;
+
+     label10:
+        if i33 >= i29 goto label11;
+
+        $r67 = r81[i33];
+
+        $r66 = r84[i33];
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r67, 0, $r66, 0, i1);
+
+        i33 = i33 + 1;
+
+        goto label10;
+
+     label11:
+        $r44 = <com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount: com.opengamma.analytics.math.matrix.MatrixAlgebra MATRIX_ALGEBRA>;
+
+        $r45 = <com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount: com.opengamma.analytics.math.matrix.MatrixAlgebra MATRIX_ALGEBRA>;
+
+        $r43 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r43.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r84);
+
+        $r46 = virtualinvoke $r45.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r82, $r43);
+
+        $r47 = virtualinvoke $r44.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix scale(com.opengamma.analytics.math.matrix.Matrix,double)>($r46, -1.0);
+
+        r85 = (com.opengamma.analytics.math.matrix.DoubleMatrix2D) $r47;
+
+        r86 = newarray (int)[i26];
+
+        r87 = newarray (int)[i26];
+
+        i34 = 0;
+
+        i35 = 0;
+
+        r88 = virtualinvoke $r24.<java.util.LinkedHashSet: java.util.Iterator iterator()>();
+
+     label12:
+        $z5 = interfaceinvoke r88.<java.util.Iterator: boolean hasNext()>();
+
+        if $z5 == 0 goto label13;
+
+        $r64 = interfaceinvoke r88.<java.util.Iterator: java.lang.Object next()>();
+
+        r89 = (java.lang.String) $r64;
+
+        $r65 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount: java.lang.Integer getNumberOfParameters(java.lang.String)>(r89);
+
+        $i21 = virtualinvoke $r65.<java.lang.Integer: int intValue()>();
+
+        r86[i35] = $i21;
+
+        r87[i35] = i34;
+
+        $i22 = r86[i35];
+
+        i34 = i34 + $i22;
+
+        i35 = i35 + 1;
+
+        goto label12;
+
+     label13:
+        r90 = newmultiarray (double)[i1][i1];
+
+        i36 = 0;
+
+        r91 = virtualinvoke $r24.<java.util.LinkedHashSet: java.util.Iterator iterator()>();
+
+     label14:
+        $z6 = interfaceinvoke r91.<java.util.Iterator: boolean hasNext()>();
+
+        if $z6 == 0 goto label19;
+
+        $r56 = interfaceinvoke r91.<java.util.Iterator: java.lang.Object next()>();
+
+        r92 = (java.lang.String) $r56;
+
+        r93 = virtualinvoke r4.<com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle: com.opengamma.util.tuple.Pair getBlock(java.lang.String)>(r92);
+
+        $r57 = virtualinvoke r93.<com.opengamma.util.tuple.Pair: java.lang.Object getFirst()>();
+
+        r94 = (com.opengamma.analytics.financial.provider.curve.CurveBuildingBlock) $r57;
+
+        r16 = virtualinvoke r94.<com.opengamma.analytics.financial.provider.curve.CurveBuildingBlock: java.util.Set getAllNames()>();
+
+        $r58 = virtualinvoke r93.<com.opengamma.util.tuple.Pair: java.lang.Object getSecond()>();
+
+        $r59 = (com.opengamma.analytics.math.matrix.DoubleMatrix2D) $r58;
+
+        r17 = virtualinvoke $r59.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: double[][] getData()>();
+
+        i37 = 0;
+
+        r18 = virtualinvoke $r24.<java.util.LinkedHashSet: java.util.Iterator iterator()>();
+
+     label15:
+        $z8 = interfaceinvoke r18.<java.util.Iterator: boolean hasNext()>();
+
+        if $z8 == 0 goto label18;
+
+        $r60 = interfaceinvoke r18.<java.util.Iterator: java.lang.Object next()>();
+
+        r19 = (java.lang.String) $r60;
+
+        $z9 = interfaceinvoke r16.<java.util.Set: boolean contains(java.lang.Object)>(r19);
+
+        if $z9 == 0 goto label17;
+
+        r20 = virtualinvoke r94.<com.opengamma.analytics.financial.provider.curve.CurveBuildingBlock: java.lang.Integer getStart(java.lang.String)>(r19);
+
+        i38 = 0;
+
+     label16:
+        $i15 = r86[i36];
+
+        if i38 >= $i15 goto label17;
+
+        $r61 = r17[i38];
+
+        $i16 = virtualinvoke r20.<java.lang.Integer: int intValue()>();
+
+        $i17 = r87[i36];
+
+        $i18 = $i17 + i38;
+
+        $r62 = r90[$i18];
+
+        $i19 = r87[i37];
+
+        $r63 = virtualinvoke r94.<com.opengamma.analytics.financial.provider.curve.CurveBuildingBlock: java.lang.Integer getNbParameters(java.lang.String)>(r19);
+
+        $i20 = virtualinvoke $r63.<java.lang.Integer: int intValue()>();
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r61, $i16, $r62, $i19, $i20);
+
+        i38 = i38 + 1;
+
+        goto label16;
+
+     label17:
+        i37 = i37 + 1;
+
+        goto label15;
+
+     label18:
+        i36 = i36 + 1;
+
+        goto label14;
+
+     label19:
+        $r48 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r48.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r90);
+
+        $r49 = <com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount: com.opengamma.analytics.math.matrix.MatrixAlgebra MATRIX_ALGEBRA>;
+
+        $r50 = virtualinvoke $r49.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r85, $r48);
+
+        r96 = (com.opengamma.analytics.math.matrix.DoubleMatrix2D) $r50;
+
+        r83 = virtualinvoke r96.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: double[][] getData()>();
+
+        i39 = 0;
+
+        r97 = virtualinvoke $r24.<java.util.LinkedHashSet: java.util.Iterator iterator()>();
+
+     label20:
+        $z7 = interfaceinvoke r97.<java.util.Iterator: boolean hasNext()>();
+
+        if $z7 == 0 goto label21;
+
+        $r51 = interfaceinvoke r97.<java.util.Iterator: java.lang.Object next()>();
+
+        r98 = (java.lang.String) $r51;
+
+        $i13 = r87[i39];
+
+        $r52 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i13);
+
+        $i14 = r86[i39];
+
+        $r53 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i14);
+
+        $r54 = staticinvoke <com.opengamma.util.tuple.ObjectsPair: com.opengamma.util.tuple.ObjectsPair of(java.lang.Object,java.lang.Object)>($r52, $r53);
+
+        virtualinvoke $r22.<java.util.LinkedHashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(r98, $r54);
+
+        i39 = i39 + 1;
+
+        goto label20;
+
+     label21:
+        i40 = 0;
+
+        r99 = virtualinvoke $r23.<java.util.LinkedHashSet: java.util.Iterator iterator()>();
+
+     label22:
+        $z14 = interfaceinvoke r99.<java.util.Iterator: boolean hasNext()>();
+
+        if $z14 == 0 goto label23;
+
+        $r38 = interfaceinvoke r99.<java.util.Iterator: java.lang.Object next()>();
+
+        r100 = (java.lang.String) $r38;
+
+        $i10 = r13[i40];
+
+        $i11 = i1 + $i10;
+
+        $r39 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i11);
+
+        $i12 = r12[i40];
+
+        $r40 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i12);
+
+        $r41 = staticinvoke <com.opengamma.util.tuple.ObjectsPair: com.opengamma.util.tuple.ObjectsPair of(java.lang.Object,java.lang.Object)>($r39, $r40);
+
+        virtualinvoke $r22.<java.util.LinkedHashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(r100, $r41);
+
+        i40 = i40 + 1;
+
+        goto label22;
+
+     label23:
+        $r31 = new com.opengamma.analytics.financial.provider.curve.CurveBuildingBlock;
+
+        specialinvoke $r31.<com.opengamma.analytics.financial.provider.curve.CurveBuildingBlock: void <init>(java.util.LinkedHashMap)>($r22);
+
+        r102 = virtualinvoke r82.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: double[][] getData()>();
+
+        i41 = 0;
+
+        r103 = virtualinvoke $r23.<java.util.LinkedHashSet: java.util.Iterator iterator()>();
+
+     label24:
+        $z4 = interfaceinvoke r103.<java.util.Iterator: boolean hasNext()>();
+
+        if $z4 == 0 goto label29;
+
+        $r32 = interfaceinvoke r103.<java.util.Iterator: java.lang.Object next()>();
+
+        r104 = (java.lang.String) $r32;
+
+        $i3 = r12[i41];
+
+        r105 = newmultiarray (double)[$i3][i31];
+
+        i42 = 0;
+
+     label25:
+        $i4 = r12[i41];
+
+        if i42 >= $i4 goto label26;
+
+        $i8 = r13[i41];
+
+        $i9 = $i8 + i42;
+
+        $r37 = r102[$i9];
+
+        $r36 = r105[i42];
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r37, 0, $r36, i1, i27);
+
+        i42 = i42 + 1;
+
+        goto label25;
+
+     label26:
+        if i1 <= 0 goto label28;
+
+        i43 = 0;
+
+     label27:
+        $i5 = r12[i41];
+
+        if i43 >= $i5 goto label28;
+
+        $i6 = r13[i41];
+
+        $i7 = $i6 + i43;
+
+        $r35 = r83[$i7];
+
+        $r34 = r105[i43];
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r35, 0, $r34, 0, i1);
+
+        i43 = i43 + 1;
+
+        goto label27;
+
+     label28:
+        $r33 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r33.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r105);
+
+        virtualinvoke r4.<com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle: void add(java.lang.String,com.opengamma.analytics.financial.provider.curve.CurveBuildingBlock,com.opengamma.analytics.math.matrix.DoubleMatrix2D)>(r104, $r31, $r33);
+
+        i41 = i41 + 1;
+
+        goto label24;
+
+     label29:
+        return;
+    }
+
+    public com.opengamma.util.tuple.Pair makeCurvesFromDerivatives(com.opengamma.analytics.financial.provider.curve.MultiCurveBundle[], com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount, java.util.LinkedHashMap, java.util.LinkedHashMap, java.util.LinkedHashMap, com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor, com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)
+    {
+        com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount r0;
+        com.opengamma.analytics.financial.provider.curve.MultiCurveBundle[] r1;
+        com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount r2;
+        java.util.LinkedHashMap r3, r4, r5;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor r6, r7;
+        com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle $r8;
+        com.opengamma.util.tuple.Pair $r9;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.provider.curve.MultiCurveBundle[];
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount;
+
+        r3 := @parameter2: java.util.LinkedHashMap;
+
+        r4 := @parameter3: java.util.LinkedHashMap;
+
+        r5 := @parameter4: java.util.LinkedHashMap;
+
+        r6 := @parameter5: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        r7 := @parameter6: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        $r8 = new com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle;
+
+        specialinvoke $r8.<com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle: void <init>()>();
+
+        $r9 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount: com.opengamma.util.tuple.Pair makeCurvesFromDerivatives(com.opengamma.analytics.financial.provider.curve.MultiCurveBundle[],com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount,com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle,java.util.LinkedHashMap,java.util.LinkedHashMap,java.util.LinkedHashMap,com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)>(r1, r2, $r8, r3, r4, r5, r6, r7);
+
+        return $r9;
+    }
+
+    public com.opengamma.util.tuple.Pair makeCurvesFromDerivatives(com.opengamma.analytics.financial.provider.curve.MultiCurveBundle[], com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount, com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle, java.util.LinkedHashMap, java.util.LinkedHashMap, java.util.LinkedHashMap, com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor, com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)
+    {
+        com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount r0;
+        com.opengamma.analytics.financial.provider.curve.MultiCurveBundle[] r1;
+        com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount r2, r42;
+        com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle r3, $r27;
+        java.util.LinkedHashMap r4, r5, r6, $r29, $r30, $r32;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor r7, r8;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, i12, i13, i14, i15, i16;
+        com.opengamma.analytics.financial.provider.curve.MultiCurveBundle r13;
+        int[] r14, r16;
+        com.opengamma.analytics.financial.provider.curve.SingleCurveBundle r17, r43;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative[] r18, $r40, r44;
+        com.opengamma.analytics.financial.curve.interestrate.generator.GeneratorCurve r19, $r35;
+        java.lang.String r20;
+        java.util.ArrayList $r28, $r33;
+        com.opengamma.util.tuple.Pair $r31, $r38;
+        double[] $r34, r45;
+        java.util.List $r41;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.provider.curve.MultiCurveBundle[];
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle;
+
+        r4 := @parameter3: java.util.LinkedHashMap;
+
+        r5 := @parameter4: java.util.LinkedHashMap;
+
+        r6 := @parameter5: java.util.LinkedHashMap;
+
+        r7 := @parameter6: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        r8 := @parameter7: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "curve bundles");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "known data");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r4, "discounting map");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r5, "forward overnight map");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r7, "calculator");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r8, "sensitivity calculator");
+
+        i0 = lengthof r1;
+
+        r42 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount: com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount copy()>();
+
+        $r27 = new com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle;
+
+        specialinvoke $r27.<com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle: void <init>()>();
+
+        virtualinvoke $r27.<com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle: void addAll(com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle)>(r3);
+
+        $r28 = new java.util.ArrayList;
+
+        specialinvoke $r28.<java.util.ArrayList: void <init>()>();
+
+        $r29 = new java.util.LinkedHashMap;
+
+        specialinvoke $r29.<java.util.LinkedHashMap: void <init>()>();
+
+        $r30 = new java.util.LinkedHashMap;
+
+        specialinvoke $r30.<java.util.LinkedHashMap: void <init>()>();
+
+        i12 = 0;
+
+        i13 = 0;
+
+     label1:
+        if i13 >= i0 goto label6;
+
+        r13 = r1[i13];
+
+        i1 = virtualinvoke r13.<com.opengamma.analytics.financial.provider.curve.MultiCurveBundle: int size()>();
+
+        r14 = newarray (int)[i1];
+
+        $r32 = new java.util.LinkedHashMap;
+
+        specialinvoke $r32.<java.util.LinkedHashMap: void <init>()>();
+
+        $i2 = virtualinvoke r13.<com.opengamma.analytics.financial.provider.curve.MultiCurveBundle: int getNumberOfInstruments()>();
+
+        r16 = newarray (int)[$i2];
+
+        i14 = 0;
+
+        i15 = 0;
+
+     label2:
+        if i15 >= i1 goto label3;
+
+        r43 = virtualinvoke r13.<com.opengamma.analytics.financial.provider.curve.MultiCurveBundle: com.opengamma.analytics.financial.provider.curve.SingleCurveBundle getCurveBundle(int)>(i15);
+
+        r14[i15] = i14;
+
+        $i10 = virtualinvoke r43.<com.opengamma.analytics.financial.provider.curve.SingleCurveBundle: int size()>();
+
+        r16[i15] = $i10;
+
+        $i11 = r16[i15];
+
+        i14 = i14 + $i11;
+
+        $r40 = virtualinvoke r43.<com.opengamma.analytics.financial.provider.curve.SingleCurveBundle: com.opengamma.analytics.financial.interestrate.InstrumentDerivative[] getDerivatives()>();
+
+        $r41 = staticinvoke <java.util.Arrays: java.util.List asList(java.lang.Object[])>($r40);
+
+        interfaceinvoke $r28.<java.util.List: boolean addAll(java.util.Collection)>($r41);
+
+        i15 = i15 + 1;
+
+        goto label2;
+
+     label3:
+        r44 = newarray (com.opengamma.analytics.financial.interestrate.InstrumentDerivative)[i14];
+
+        r45 = newarray (double)[i14];
+
+        i16 = 0;
+
+     label4:
+        if i16 >= i1 goto label5;
+
+        r17 = virtualinvoke r13.<com.opengamma.analytics.financial.provider.curve.MultiCurveBundle: com.opengamma.analytics.financial.provider.curve.SingleCurveBundle getCurveBundle(int)>(i16);
+
+        r18 = virtualinvoke r17.<com.opengamma.analytics.financial.provider.curve.SingleCurveBundle: com.opengamma.analytics.financial.interestrate.InstrumentDerivative[] getDerivatives()>();
+
+        $i4 = r14[i16];
+
+        $i3 = r16[i16];
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r18, 0, r44, $i4, $i3);
+
+        $r34 = virtualinvoke r17.<com.opengamma.analytics.financial.provider.curve.SingleCurveBundle: double[] getStartingPoint()>();
+
+        $i6 = r14[i16];
+
+        $i5 = r16[i16];
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r34, 0, r45, $i6, $i5);
+
+        $r35 = virtualinvoke r17.<com.opengamma.analytics.financial.provider.curve.SingleCurveBundle: com.opengamma.analytics.financial.curve.interestrate.generator.GeneratorCurve getCurveGenerator()>();
+
+        r19 = virtualinvoke $r35.<com.opengamma.analytics.financial.curve.interestrate.generator.GeneratorCurve: com.opengamma.analytics.financial.curve.interestrate.generator.GeneratorCurve finalGenerator(java.lang.Object)>(r18);
+
+        r20 = virtualinvoke r17.<com.opengamma.analytics.financial.provider.curve.SingleCurveBundle: java.lang.String getCurveName()>();
+
+        virtualinvoke $r32.<java.util.LinkedHashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(r20, r19);
+
+        virtualinvoke $r29.<java.util.LinkedHashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(r20, r19);
+
+        $i7 = r14[i16];
+
+        $i9 = i12 + $i7;
+
+        $i8 = r16[i16];
+
+        $r38 = staticinvoke <com.opengamma.util.tuple.Pairs: com.opengamma.util.tuple.Pair of(int,int)>($i9, $i8);
+
+        virtualinvoke $r30.<java.util.LinkedHashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(r20, $r38);
+
+        i16 = i16 + 1;
+
+        goto label4;
+
+     label5:
+        r42 = specialinvoke r0.<com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount: com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount makeUnit(com.opengamma.analytics.financial.interestrate.InstrumentDerivative[],double[],com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount,java.util.LinkedHashMap,java.util.LinkedHashMap,java.util.LinkedHashMap,java.util.LinkedHashMap,com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)>(r44, r45, r42, r4, r5, r6, $r32, r7, r8);
+
+        $r33 = virtualinvoke r13.<com.opengamma.analytics.financial.provider.curve.MultiCurveBundle: java.util.ArrayList getNames()>();
+
+        specialinvoke r0.<com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount: void updateBlockBundle(com.opengamma.analytics.financial.interestrate.InstrumentDerivative[],com.opengamma.analytics.financial.provider.description.inflation.InflationProviderDiscount,java.util.List,com.opengamma.analytics.financial.provider.curve.CurveBuildingBlockBundle,com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)>(r44, r42, $r33, $r27, r8);
+
+        i12 = i12 + i14;
+
+        i13 = i13 + 1;
+
+        goto label1;
+
+     label6:
+        $r31 = staticinvoke <com.opengamma.util.tuple.Pairs: com.opengamma.util.tuple.Pair of(java.lang.Object,java.lang.Object)>(r42, $r27);
+
+        return $r31;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra $r0;
+
+        $r0 = new com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra;
+
+        specialinvoke $r0.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: void <init>()>();
+
+        <com.opengamma.analytics.financial.provider.curve.inflation.InflationDiscountBuildingRepositoryWithDiscount: com.opengamma.analytics.math.matrix.MatrixAlgebra MATRIX_ALGEBRA> = $r0;
+
+        return;
+    }
+}

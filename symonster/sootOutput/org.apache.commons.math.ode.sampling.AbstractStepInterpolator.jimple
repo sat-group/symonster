@@ -1,0 +1,771 @@
+public abstract class org.apache.commons.math.ode.sampling.AbstractStepInterpolator extends java.lang.Object implements org.apache.commons.math.ode.sampling.StepInterpolator
+{
+    protected double h;
+    protected double[] currentState;
+    protected double interpolatedTime;
+    protected double[] interpolatedState;
+    protected double[] interpolatedDerivatives;
+    private double globalPreviousTime;
+    private double globalCurrentTime;
+    private double softPreviousTime;
+    private double softCurrentTime;
+    private boolean finalized;
+    private boolean forward;
+    private boolean dirtyState;
+
+    protected void <init>()
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalPreviousTime> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalCurrentTime> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softPreviousTime> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softCurrentTime> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double h> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double interpolatedTime> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] currentState> = null;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] interpolatedState> = null;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] interpolatedDerivatives> = null;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean finalized> = 0;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean forward> = 1;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean dirtyState> = 1;
+
+        return;
+    }
+
+    protected void <init>(double[], boolean)
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        double[] r1, $r2, $r3;
+        boolean z0;
+        int $i0, $i1;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        r1 := @parameter0: double[];
+
+        z0 := @parameter1: boolean;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalPreviousTime> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalCurrentTime> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softPreviousTime> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softCurrentTime> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double h> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double interpolatedTime> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] currentState> = r1;
+
+        $i0 = lengthof r1;
+
+        $r2 = newarray (double)[$i0];
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] interpolatedState> = $r2;
+
+        $i1 = lengthof r1;
+
+        $r3 = newarray (double)[$i1];
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] interpolatedDerivatives> = $r3;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean finalized> = 0;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean forward> = z0;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean dirtyState> = 1;
+
+        return;
+    }
+
+    protected void <init>(org.apache.commons.math.ode.sampling.AbstractStepInterpolator)
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0, r1;
+        double $d0, $d1, $d2, $d3, $d4, $d5;
+        double[] $r2, $r3, $r5, $r6, $r8, $r9, $r11;
+        boolean $z0, $z1, $z2;
+        java.lang.Object $r4, $r7, $r10;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        r1 := @parameter0: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $d0 = r1.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalPreviousTime>;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalPreviousTime> = $d0;
+
+        $d1 = r1.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalCurrentTime>;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalCurrentTime> = $d1;
+
+        $d2 = r1.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softPreviousTime>;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softPreviousTime> = $d2;
+
+        $d3 = r1.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softCurrentTime>;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softCurrentTime> = $d3;
+
+        $d4 = r1.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double h>;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double h> = $d4;
+
+        $d5 = r1.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double interpolatedTime>;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double interpolatedTime> = $d5;
+
+        $r2 = r1.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] currentState>;
+
+        if $r2 == null goto label1;
+
+        $r3 = r1.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] currentState>;
+
+        $r4 = virtualinvoke $r3.<java.lang.Object: java.lang.Object clone()>();
+
+        $r5 = (double[]) $r4;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] currentState> = $r5;
+
+        $r6 = r1.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] interpolatedState>;
+
+        $r7 = virtualinvoke $r6.<java.lang.Object: java.lang.Object clone()>();
+
+        $r8 = (double[]) $r7;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] interpolatedState> = $r8;
+
+        $r9 = r1.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] interpolatedDerivatives>;
+
+        $r10 = virtualinvoke $r9.<java.lang.Object: java.lang.Object clone()>();
+
+        $r11 = (double[]) $r10;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] interpolatedDerivatives> = $r11;
+
+        goto label2;
+
+     label1:
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] currentState> = null;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] interpolatedState> = null;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] interpolatedDerivatives> = null;
+
+     label2:
+        $z0 = r1.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean finalized>;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean finalized> = $z0;
+
+        $z1 = r1.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean forward>;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean forward> = $z1;
+
+        $z2 = r1.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean dirtyState>;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean dirtyState> = $z2;
+
+        return;
+    }
+
+    protected void reinitialize(double[], boolean)
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        double[] r1, $r2, $r3;
+        boolean z0;
+        int $i0, $i1;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        r1 := @parameter0: double[];
+
+        z0 := @parameter1: boolean;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalPreviousTime> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalCurrentTime> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softPreviousTime> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softCurrentTime> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double h> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double interpolatedTime> = #NaN;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] currentState> = r1;
+
+        $i0 = lengthof r1;
+
+        $r2 = newarray (double)[$i0];
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] interpolatedState> = $r2;
+
+        $i1 = lengthof r1;
+
+        $r3 = newarray (double)[$i1];
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] interpolatedDerivatives> = $r3;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean finalized> = 0;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean forward> = z0;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean dirtyState> = 1;
+
+        return;
+    }
+
+    public org.apache.commons.math.ode.sampling.StepInterpolator copy() throws org.apache.commons.math.ode.DerivativeException
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        org.apache.commons.math.ode.sampling.StepInterpolator $r1;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        virtualinvoke r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: void finalizeStep()>();
+
+        $r1 = virtualinvoke r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: org.apache.commons.math.ode.sampling.StepInterpolator doCopy()>();
+
+        return $r1;
+    }
+
+    protected abstract org.apache.commons.math.ode.sampling.StepInterpolator doCopy();
+
+    public void shift()
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        double $d0, $d1, $d2;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        $d0 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalCurrentTime>;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalPreviousTime> = $d0;
+
+        $d1 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalPreviousTime>;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softPreviousTime> = $d1;
+
+        $d2 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalCurrentTime>;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softCurrentTime> = $d2;
+
+        return;
+    }
+
+    public void storeTime(double)
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        double d0, $d1, $d2, $d3, $d4;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        d0 := @parameter0: double;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalCurrentTime> = d0;
+
+        $d1 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalCurrentTime>;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softCurrentTime> = $d1;
+
+        $d3 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalCurrentTime>;
+
+        $d2 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalPreviousTime>;
+
+        $d4 = $d3 - $d2;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double h> = $d4;
+
+        virtualinvoke r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: void setInterpolatedTime(double)>(d0);
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean finalized> = 0;
+
+        return;
+    }
+
+    public void setSoftPreviousTime(double)
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        d0 := @parameter0: double;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softPreviousTime> = d0;
+
+        return;
+    }
+
+    public void setSoftCurrentTime(double)
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        d0 := @parameter0: double;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softCurrentTime> = d0;
+
+        return;
+    }
+
+    public double getGlobalPreviousTime()
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        $d0 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalPreviousTime>;
+
+        return $d0;
+    }
+
+    public double getGlobalCurrentTime()
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        $d0 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalCurrentTime>;
+
+        return $d0;
+    }
+
+    public double getPreviousTime()
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        $d0 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softPreviousTime>;
+
+        return $d0;
+    }
+
+    public double getCurrentTime()
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        $d0 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softCurrentTime>;
+
+        return $d0;
+    }
+
+    public double getInterpolatedTime()
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        $d0 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double interpolatedTime>;
+
+        return $d0;
+    }
+
+    public void setInterpolatedTime(double)
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        d0 := @parameter0: double;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double interpolatedTime> = d0;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean dirtyState> = 1;
+
+        return;
+    }
+
+    public boolean isForward()
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        $z0 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean forward>;
+
+        return $z0;
+    }
+
+    protected abstract void computeInterpolatedStateAndDerivatives(double, double) throws org.apache.commons.math.ode.DerivativeException;
+
+    public double[] getInterpolatedState() throws org.apache.commons.math.ode.DerivativeException
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        double d0, $d2, $d3, $d4, $d5, $d6, $d7, $d8;
+        boolean $z0;
+        byte $b0;
+        double[] $r1;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        $z0 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean dirtyState>;
+
+        if $z0 == 0 goto label3;
+
+        $d3 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalCurrentTime>;
+
+        $d2 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double interpolatedTime>;
+
+        d0 = $d3 - $d2;
+
+        $d4 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double h>;
+
+        $b0 = $d4 cmpl 0.0;
+
+        if $b0 != 0 goto label1;
+
+        $d8 = 0.0;
+
+        goto label2;
+
+     label1:
+        $d5 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double h>;
+
+        $d7 = $d5 - d0;
+
+        $d6 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double h>;
+
+        $d8 = $d7 / $d6;
+
+     label2:
+        virtualinvoke r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: void computeInterpolatedStateAndDerivatives(double,double)>($d8, d0);
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean dirtyState> = 0;
+
+     label3:
+        $r1 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] interpolatedState>;
+
+        return $r1;
+    }
+
+    public double[] getInterpolatedDerivatives() throws org.apache.commons.math.ode.DerivativeException
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        double d0, $d2, $d3, $d4, $d5, $d6, $d7, $d8;
+        boolean $z0;
+        byte $b0;
+        double[] $r1;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        $z0 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean dirtyState>;
+
+        if $z0 == 0 goto label3;
+
+        $d3 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalCurrentTime>;
+
+        $d2 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double interpolatedTime>;
+
+        d0 = $d3 - $d2;
+
+        $d4 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double h>;
+
+        $b0 = $d4 cmpl 0.0;
+
+        if $b0 != 0 goto label1;
+
+        $d8 = 0.0;
+
+        goto label2;
+
+     label1:
+        $d5 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double h>;
+
+        $d7 = $d5 - d0;
+
+        $d6 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double h>;
+
+        $d8 = $d7 / $d6;
+
+     label2:
+        virtualinvoke r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: void computeInterpolatedStateAndDerivatives(double,double)>($d8, d0);
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean dirtyState> = 0;
+
+     label3:
+        $r1 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] interpolatedDerivatives>;
+
+        return $r1;
+    }
+
+    public final void finalizeStep() throws org.apache.commons.math.ode.DerivativeException
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        $z0 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean finalized>;
+
+        if $z0 != 0 goto label1;
+
+        virtualinvoke r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: void doFinalize()>();
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean finalized> = 1;
+
+     label1:
+        return;
+    }
+
+    protected void doFinalize() throws org.apache.commons.math.ode.DerivativeException
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        return;
+    }
+
+    public abstract void writeExternal(java.io.ObjectOutput) throws java.io.IOException;
+
+    public abstract void readExternal(java.io.ObjectInput) throws java.io.IOException, java.lang.ClassNotFoundException;
+
+    protected void writeBaseExternal(java.io.ObjectOutput) throws java.io.IOException
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        java.io.ObjectOutput r1;
+        double[] $r3, $r4, $r5, $r6, $r7;
+        int $i0, $i1, i2;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6;
+        boolean $z0;
+        org.apache.commons.math.ode.DerivativeException $r8;
+        java.io.IOException $r9;
+        java.lang.String $r10;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        r1 := @parameter0: java.io.ObjectOutput;
+
+        $r3 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] currentState>;
+
+        if $r3 != null goto label1;
+
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeInt(int)>(-1);
+
+        goto label2;
+
+     label1:
+        $r4 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] currentState>;
+
+        $i0 = lengthof $r4;
+
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeInt(int)>($i0);
+
+     label2:
+        $d0 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalPreviousTime>;
+
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeDouble(double)>($d0);
+
+        $d1 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalCurrentTime>;
+
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeDouble(double)>($d1);
+
+        $d2 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softPreviousTime>;
+
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeDouble(double)>($d2);
+
+        $d3 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softCurrentTime>;
+
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeDouble(double)>($d3);
+
+        $d4 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double h>;
+
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeDouble(double)>($d4);
+
+        $z0 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean forward>;
+
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeBoolean(boolean)>($z0);
+
+        $r5 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] currentState>;
+
+        if $r5 == null goto label4;
+
+        i2 = 0;
+
+     label3:
+        $r6 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] currentState>;
+
+        $i1 = lengthof $r6;
+
+        if i2 >= $i1 goto label4;
+
+        $r7 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] currentState>;
+
+        $d6 = $r7[i2];
+
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeDouble(double)>($d6);
+
+        i2 = i2 + 1;
+
+        goto label3;
+
+     label4:
+        $d5 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double interpolatedTime>;
+
+        interfaceinvoke r1.<java.io.ObjectOutput: void writeDouble(double)>($d5);
+
+     label5:
+        virtualinvoke r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: void finalizeStep()>();
+
+     label6:
+        goto label8;
+
+     label7:
+        $r8 := @caughtexception;
+
+        $r9 = new java.io.IOException;
+
+        $r10 = virtualinvoke $r8.<org.apache.commons.math.ode.DerivativeException: java.lang.String getLocalizedMessage()>();
+
+        specialinvoke $r9.<java.io.IOException: void <init>(java.lang.String)>($r10);
+
+        virtualinvoke $r9.<java.io.IOException: java.lang.Throwable initCause(java.lang.Throwable)>($r8);
+
+        throw $r9;
+
+     label8:
+        return;
+
+        catch org.apache.commons.math.ode.DerivativeException from label5 to label6 with label7;
+    }
+
+    protected double readBaseExternal(java.io.ObjectInput) throws java.io.IOException
+    {
+        org.apache.commons.math.ode.sampling.AbstractStepInterpolator r0;
+        java.io.ObjectInput r1;
+        int i0, $i1, i2;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6;
+        boolean $z0;
+        double[] $r2, $r3, $r6, $r7, $r8;
+
+        r0 := @this: org.apache.commons.math.ode.sampling.AbstractStepInterpolator;
+
+        r1 := @parameter0: java.io.ObjectInput;
+
+        i0 = interfaceinvoke r1.<java.io.ObjectInput: int readInt()>();
+
+        $d0 = interfaceinvoke r1.<java.io.ObjectInput: double readDouble()>();
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalPreviousTime> = $d0;
+
+        $d1 = interfaceinvoke r1.<java.io.ObjectInput: double readDouble()>();
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double globalCurrentTime> = $d1;
+
+        $d2 = interfaceinvoke r1.<java.io.ObjectInput: double readDouble()>();
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softPreviousTime> = $d2;
+
+        $d3 = interfaceinvoke r1.<java.io.ObjectInput: double readDouble()>();
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double softCurrentTime> = $d3;
+
+        $d4 = interfaceinvoke r1.<java.io.ObjectInput: double readDouble()>();
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double h> = $d4;
+
+        $z0 = interfaceinvoke r1.<java.io.ObjectInput: boolean readBoolean()>();
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean forward> = $z0;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean dirtyState> = 1;
+
+        if i0 >= 0 goto label1;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] currentState> = null;
+
+        goto label3;
+
+     label1:
+        $r2 = newarray (double)[i0];
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] currentState> = $r2;
+
+        i2 = 0;
+
+     label2:
+        $r3 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] currentState>;
+
+        $i1 = lengthof $r3;
+
+        if i2 >= $i1 goto label3;
+
+        $r6 = r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] currentState>;
+
+        $d6 = interfaceinvoke r1.<java.io.ObjectInput: double readDouble()>();
+
+        $r6[i2] = $d6;
+
+        i2 = i2 + 1;
+
+        goto label2;
+
+     label3:
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double interpolatedTime> = #NaN;
+
+        if i0 >= 0 goto label4;
+
+        $r7 = null;
+
+        goto label5;
+
+     label4:
+        $r7 = newarray (double)[i0];
+
+     label5:
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] interpolatedState> = $r7;
+
+        if i0 >= 0 goto label6;
+
+        $r8 = null;
+
+        goto label7;
+
+     label6:
+        $r8 = newarray (double)[i0];
+
+     label7:
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: double[] interpolatedDerivatives> = $r8;
+
+        r0.<org.apache.commons.math.ode.sampling.AbstractStepInterpolator: boolean finalized> = 1;
+
+        $d5 = interfaceinvoke r1.<java.io.ObjectInput: double readDouble()>();
+
+        return $d5;
+    }
+}

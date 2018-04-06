@@ -1,0 +1,164 @@
+public class com.opengamma.analytics.math.performance.SimpleTimer extends java.lang.Object
+{
+    private final org.slf4j.Logger _timerLog;
+    private long _startTime;
+    private long _stopTime;
+    private long _elapsedTime;
+    private long _totalTime;
+    private boolean _isRunning;
+    private boolean _hasBeenStarted;
+    private boolean _hasBeenStopped;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.math.performance.SimpleTimer r0;
+        org.slf4j.Logger $r1;
+
+        r0 := @this: com.opengamma.analytics.math.performance.SimpleTimer;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $r1 = staticinvoke <org.slf4j.LoggerFactory: org.slf4j.Logger getLogger(java.lang.Class)>(class "com/opengamma/analytics/math/performance/SimpleTimer");
+
+        r0.<com.opengamma.analytics.math.performance.SimpleTimer: org.slf4j.Logger _timerLog> = $r1;
+
+        return;
+    }
+
+    public void startTimer()
+    {
+        com.opengamma.analytics.math.performance.SimpleTimer r0;
+        boolean $z0;
+        long $l0;
+        org.slf4j.Logger $r1;
+
+        r0 := @this: com.opengamma.analytics.math.performance.SimpleTimer;
+
+        $z0 = r0.<com.opengamma.analytics.math.performance.SimpleTimer: boolean _isRunning>;
+
+        if $z0 == 0 goto label1;
+
+        $r1 = r0.<com.opengamma.analytics.math.performance.SimpleTimer: org.slf4j.Logger _timerLog>;
+
+        interfaceinvoke $r1.<org.slf4j.Logger: void error(java.lang.String)>("Method startTimer() requested but the timer is already running.");
+
+     label1:
+        r0.<com.opengamma.analytics.math.performance.SimpleTimer: boolean _isRunning> = 1;
+
+        r0.<com.opengamma.analytics.math.performance.SimpleTimer: boolean _hasBeenStarted> = 1;
+
+        $l0 = specialinvoke r0.<com.opengamma.analytics.math.performance.SimpleTimer: long getCurrentTime()>();
+
+        r0.<com.opengamma.analytics.math.performance.SimpleTimer: long _startTime> = $l0;
+
+        return;
+    }
+
+    public void stopTimer()
+    {
+        com.opengamma.analytics.math.performance.SimpleTimer r0;
+        boolean $z0;
+        long $l0;
+        org.slf4j.Logger $r1;
+
+        r0 := @this: com.opengamma.analytics.math.performance.SimpleTimer;
+
+        $z0 = r0.<com.opengamma.analytics.math.performance.SimpleTimer: boolean _isRunning>;
+
+        if $z0 != 0 goto label1;
+
+        $r1 = r0.<com.opengamma.analytics.math.performance.SimpleTimer: org.slf4j.Logger _timerLog>;
+
+        interfaceinvoke $r1.<org.slf4j.Logger: void error(java.lang.String)>("Method stopTimer() requested but the timer is not running.");
+
+     label1:
+        r0.<com.opengamma.analytics.math.performance.SimpleTimer: boolean _isRunning> = 0;
+
+        r0.<com.opengamma.analytics.math.performance.SimpleTimer: boolean _hasBeenStopped> = 1;
+
+        $l0 = specialinvoke r0.<com.opengamma.analytics.math.performance.SimpleTimer: long getCurrentTime()>();
+
+        r0.<com.opengamma.analytics.math.performance.SimpleTimer: long _stopTime> = $l0;
+
+        return;
+    }
+
+    public long elapsedTime()
+    {
+        com.opengamma.analytics.math.performance.SimpleTimer r0;
+        boolean $z0;
+        long $l0, $l1, $l2, $l3;
+        org.slf4j.Logger $r1;
+
+        r0 := @this: com.opengamma.analytics.math.performance.SimpleTimer;
+
+        $z0 = r0.<com.opengamma.analytics.math.performance.SimpleTimer: boolean _hasBeenStarted>;
+
+        if $z0 != 0 goto label1;
+
+        $r1 = r0.<com.opengamma.analytics.math.performance.SimpleTimer: org.slf4j.Logger _timerLog>;
+
+        interfaceinvoke $r1.<org.slf4j.Logger: void error(java.lang.String)>("Method elapsedTime() requested but the timer has not been started OR has been reset.");
+
+     label1:
+        $l0 = specialinvoke r0.<com.opengamma.analytics.math.performance.SimpleTimer: long getCurrentTime()>();
+
+        $l1 = r0.<com.opengamma.analytics.math.performance.SimpleTimer: long _startTime>;
+
+        $l2 = $l0 - $l1;
+
+        r0.<com.opengamma.analytics.math.performance.SimpleTimer: long _elapsedTime> = $l2;
+
+        $l3 = r0.<com.opengamma.analytics.math.performance.SimpleTimer: long _elapsedTime>;
+
+        return $l3;
+    }
+
+    public long totalTime()
+    {
+        com.opengamma.analytics.math.performance.SimpleTimer r0;
+        boolean $z0, $z1;
+        org.slf4j.Logger $r1;
+        long $l0, $l1, $l2, $l3;
+
+        r0 := @this: com.opengamma.analytics.math.performance.SimpleTimer;
+
+        $z0 = r0.<com.opengamma.analytics.math.performance.SimpleTimer: boolean _hasBeenStarted>;
+
+        if $z0 == 0 goto label1;
+
+        $z1 = r0.<com.opengamma.analytics.math.performance.SimpleTimer: boolean _hasBeenStopped>;
+
+        if $z1 != 0 goto label2;
+
+     label1:
+        $r1 = r0.<com.opengamma.analytics.math.performance.SimpleTimer: org.slf4j.Logger _timerLog>;
+
+        interfaceinvoke $r1.<org.slf4j.Logger: void error(java.lang.String)>("Method totalTime() requested but the timer has not been started and stopped.");
+
+     label2:
+        $l0 = r0.<com.opengamma.analytics.math.performance.SimpleTimer: long _stopTime>;
+
+        $l1 = r0.<com.opengamma.analytics.math.performance.SimpleTimer: long _startTime>;
+
+        $l2 = $l0 - $l1;
+
+        r0.<com.opengamma.analytics.math.performance.SimpleTimer: long _totalTime> = $l2;
+
+        $l3 = r0.<com.opengamma.analytics.math.performance.SimpleTimer: long _totalTime>;
+
+        return $l3;
+    }
+
+    private long getCurrentTime()
+    {
+        com.opengamma.analytics.math.performance.SimpleTimer r0;
+        long l0;
+
+        r0 := @this: com.opengamma.analytics.math.performance.SimpleTimer;
+
+        l0 = staticinvoke <java.lang.System: long nanoTime()>();
+
+        return l0;
+    }
+}

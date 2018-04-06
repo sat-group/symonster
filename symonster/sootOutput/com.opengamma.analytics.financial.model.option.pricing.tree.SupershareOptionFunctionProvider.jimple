@@ -1,0 +1,317 @@
+public class com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider extends com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D
+{
+    private double _upperBound;
+
+    public void <init>(double, double, double, int)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider r0;
+        double d0, d1, d2;
+        int i0;
+        byte $b1, $b2;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        i0 := @parameter3: int;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: void <init>(double,double,int,boolean)>(d1, d0, i0, 1);
+
+        $b1 = d2 cmpl 0.0;
+
+        if $b1 <= 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "upperBound should be positive");
+
+        $z0 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "upperBound should be finite");
+
+        $b2 = d2 cmpl d1;
+
+        if $b2 <= 0 goto label3;
+
+        $z2 = 1;
+
+        goto label4;
+
+     label3:
+        $z2 = 0;
+
+     label4:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "upperBound should be larger than lowerBound");
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider: double _upperBound> = d2;
+
+        return;
+    }
+
+    public double[] getPayoffAtExpiry(double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider r0;
+        double d0, d1, d2, d3, $d4, $d5, $d6, d7, $d8;
+        int i0, i1, i4, $i5;
+        double[] r1;
+        byte $b2, $b3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double getStrike()>();
+
+        i0 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider: int getNumberOfSteps()>();
+
+        i1 = i0 + 1;
+
+        r1 = newarray (double)[i1];
+
+        $d4 = (double) i0;
+
+        $d5 = staticinvoke <java.lang.Math: double pow(double,double)>(d1, $d4);
+
+        d7 = d0 * $d5;
+
+        i4 = 0;
+
+     label1:
+        if i4 >= i1 goto label4;
+
+        $i5 = i4;
+
+        $b2 = d7 cmpl d3;
+
+        if $b2 < 0 goto label2;
+
+        $d6 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider: double _upperBound>;
+
+        $b3 = d7 cmpg $d6;
+
+        if $b3 >= 0 goto label2;
+
+        $d8 = d7 / d3;
+
+        goto label3;
+
+     label2:
+        $d8 = 0.0;
+
+     label3:
+        r1[$i5] = $d8;
+
+        d7 = d7 * d2;
+
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label4:
+        return r1;
+    }
+
+    public double[] getPayoffAtExpiryTrinomial(double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider r0;
+        double d0, d1, d2, d3, $d4, $d5, $d6, d7, $d8;
+        int i0, i1, $i2, $i3, i6, $i7;
+        double[] r1;
+        byte $b4, $b5;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double getStrike()>();
+
+        i0 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider: int getNumberOfSteps()>();
+
+        $i2 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider: int getNumberOfSteps()>();
+
+        $i3 = 2 * $i2;
+
+        i1 = $i3 + 1;
+
+        r1 = newarray (double)[i1];
+
+        $d4 = (double) i0;
+
+        $d5 = staticinvoke <java.lang.Math: double pow(double,double)>(d1, $d4);
+
+        d7 = d0 * $d5;
+
+        i6 = 0;
+
+     label1:
+        if i6 >= i1 goto label4;
+
+        $i7 = i6;
+
+        $b4 = d7 cmpl d3;
+
+        if $b4 < 0 goto label2;
+
+        $d6 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider: double _upperBound>;
+
+        $b5 = d7 cmpg $d6;
+
+        if $b5 >= 0 goto label2;
+
+        $d8 = d7 / d3;
+
+        goto label3;
+
+     label2:
+        $d8 = 0.0;
+
+     label3:
+        r1[$i7] = $d8;
+
+        d7 = d7 * d2;
+
+        i6 = i6 + 1;
+
+        goto label1;
+
+     label4:
+        return r1;
+    }
+
+    public double getLowerBound()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider;
+
+        $d0 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double getStrike()>();
+
+        return $d0;
+    }
+
+    public double getUpperBound()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider: double _upperBound>;
+
+        return $d0;
+    }
+
+    public double getSign()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider r0;
+        java.lang.IllegalArgumentException $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider;
+
+        $r1 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Call/put is not relevant for this option");
+
+        throw $r1;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider r0;
+        long l1, $l2, $l3;
+        double $d0;
+        int $i4, $i5, i6, i7;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider;
+
+        i6 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: int hashCode()>();
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider: double _upperBound>;
+
+        l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $i5 = 31 * i6;
+
+        $l2 = l1 >>> 32;
+
+        $l3 = l1 ^ $l2;
+
+        $i4 = (int) $l3;
+
+        i7 = $i5 + $i4;
+
+        return i7;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider r0, r2;
+        java.lang.Object r1;
+        boolean $z0, $z1;
+        double $d0, $d1;
+        long $l0, $l1;
+        byte $b2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        $z0 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: boolean equals(java.lang.Object)>(r1);
+
+        if $z0 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        $z1 = r1 instanceof com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider;
+
+        if $z1 != 0 goto label3;
+
+        return 0;
+
+     label3:
+        r2 = (com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider) r1;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider: double _upperBound>;
+
+        $l0 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $d1 = r2.<com.opengamma.analytics.financial.model.option.pricing.tree.SupershareOptionFunctionProvider: double _upperBound>;
+
+        $l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d1);
+
+        $b2 = $l0 cmp $l1;
+
+        if $b2 == 0 goto label4;
+
+        return 0;
+
+     label4:
+        return 1;
+    }
+}

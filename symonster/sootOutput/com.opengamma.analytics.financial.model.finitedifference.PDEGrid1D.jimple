@@ -1,0 +1,1442 @@
+public class com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D extends java.lang.Object
+{
+    private final int _nSpaceNodes;
+    private final double[] _tNodes;
+    private final double[] _xNodes;
+    private final double[] _dt;
+    private final double[] _dx;
+    private final double[][] _x1st;
+    private final double[][] _x1stFwd;
+    private final double[][] _x1stBkd;
+    private final double[][] _x2nd;
+
+    public void <init>(int, int, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        int i0, i1, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, i17, $i18, i19, i20, i21;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, d24;
+        byte $b2, $b3;
+        double[] $r1, $r2, $r3, $r4, $r5, $r6, $r12, $r14, $r16, $r18, $r20, $r22, $r24, $r26, $r28, $r30, $r31, $r32, $r33, $r34;
+        double[][] $r7, $r8, $r9, $r10, $r11, $r13, $r15, $r17, $r19, $r21, $r23, $r25, $r27, $r29;
+        boolean $z0, $z1, $z2, $z3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        d0 := @parameter2: double;
+
+        d1 := @parameter3: double;
+
+        d2 := @parameter4: double;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        if i0 <= 1 goto label01;
+
+        $z0 = 1;
+
+        goto label02;
+
+     label01:
+        $z0 = 0;
+
+     label02:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "need at least 2 time nodes");
+
+        if i1 <= 2 goto label03;
+
+        $z1 = 1;
+
+        goto label04;
+
+     label03:
+        $z1 = 0;
+
+     label04:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "need at least 3 space nodes");
+
+        $b2 = d0 cmpl 0.0;
+
+        if $b2 <= 0 goto label05;
+
+        $z2 = 1;
+
+        goto label06;
+
+     label05:
+        $z2 = 0;
+
+     label06:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z2, "need tMax > 0");
+
+        $b3 = d2 cmpl d1;
+
+        if $b3 <= 0 goto label07;
+
+        $z3 = 1;
+
+        goto label08;
+
+     label07:
+        $z3 = 0;
+
+     label08:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z3, "need xMax > xMin");
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int _nSpaceNodes> = i1;
+
+        $r1 = newarray (double)[i0];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes> = $r1;
+
+        $r2 = newarray (double)[i1];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _xNodes> = $r2;
+
+        $i4 = i0 - 1;
+
+        $r3 = newarray (double)[$i4];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dt> = $r3;
+
+        $i5 = i1 - 1;
+
+        $r4 = newarray (double)[$i5];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx> = $r4;
+
+        $i6 = i0 - 1;
+
+        $d4 = (double) $i6;
+
+        d3 = d0 / $d4;
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes>;
+
+        $i7 = i0 - 1;
+
+        $r5[$i7] = d0;
+
+        i17 = 0;
+
+     label09:
+        $i18 = i0 - 1;
+
+        if i17 >= $i18 goto label10;
+
+        $r33 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes>;
+
+        $d22 = (double) i17;
+
+        $d23 = $d22 * d3;
+
+        $r33[i17] = $d23;
+
+        $r34 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dt>;
+
+        $r34[i17] = d3;
+
+        i17 = i17 + 1;
+
+        goto label09;
+
+     label10:
+        $d6 = d2 - d1;
+
+        $i8 = i1 - 1;
+
+        $d5 = (double) $i8;
+
+        d24 = $d6 / $d5;
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _xNodes>;
+
+        $i9 = i1 - 1;
+
+        $r6[$i9] = d2;
+
+        i19 = 0;
+
+     label11:
+        $i10 = i1 - 1;
+
+        if i19 >= $i10 goto label12;
+
+        $r31 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _xNodes>;
+
+        $d19 = (double) i19;
+
+        $d20 = $d19 * d24;
+
+        $d21 = d1 + $d20;
+
+        $r31[i19] = $d21;
+
+        $r32 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $r32[i19] = d24;
+
+        i19 = i19 + 1;
+
+        goto label11;
+
+     label12:
+        $i11 = i1 - 2;
+
+        $r7 = newmultiarray (double)[$i11][3];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1st> = $r7;
+
+        $i12 = i1 - 2;
+
+        $r8 = newmultiarray (double)[$i12][3];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x2nd> = $r8;
+
+        i20 = 0;
+
+     label13:
+        $i13 = i1 - 2;
+
+        if i20 >= $i13 goto label14;
+
+        $r19 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1st>;
+
+        $r20 = $r19[i20];
+
+        $d11 = -0.5 / d24;
+
+        $r20[0] = $d11;
+
+        $r21 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1st>;
+
+        $r22 = $r21[i20];
+
+        $r22[1] = 0.0;
+
+        $r23 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1st>;
+
+        $r24 = $r23[i20];
+
+        $d12 = 0.5 / d24;
+
+        $r24[2] = $d12;
+
+        $r25 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x2nd>;
+
+        $r26 = $r25[i20];
+
+        $d13 = 1.0 / d24;
+
+        $d14 = $d13 / d24;
+
+        $r26[0] = $d14;
+
+        $r27 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x2nd>;
+
+        $r28 = $r27[i20];
+
+        $d15 = -2.0 / d24;
+
+        $d16 = $d15 / d24;
+
+        $r28[1] = $d16;
+
+        $r29 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x2nd>;
+
+        $r30 = $r29[i20];
+
+        $d17 = 1.0 / d24;
+
+        $d18 = $d17 / d24;
+
+        $r30[2] = $d18;
+
+        i20 = i20 + 1;
+
+        goto label13;
+
+     label14:
+        $i14 = i1 - 1;
+
+        $r9 = newmultiarray (double)[$i14][2];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stFwd> = $r9;
+
+        $i15 = i1 - 1;
+
+        $r10 = newmultiarray (double)[$i15][2];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stBkd> = $r10;
+
+        i21 = 0;
+
+     label15:
+        $i16 = i1 - 1;
+
+        if i21 >= $i16 goto label16;
+
+        $r11 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stFwd>;
+
+        $r12 = $r11[i21];
+
+        $d7 = -1.0 / d24;
+
+        $r12[0] = $d7;
+
+        $r13 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stFwd>;
+
+        $r14 = $r13[i21];
+
+        $d8 = 1.0 / d24;
+
+        $r14[1] = $d8;
+
+        $r15 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stBkd>;
+
+        $r16 = $r15[i21];
+
+        $d9 = -1.0 / d24;
+
+        $r16[0] = $d9;
+
+        $r17 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stBkd>;
+
+        $r18 = $r17[i21];
+
+        $d10 = 1.0 / d24;
+
+        $r18[1] = $d10;
+
+        i21 = i21 + 1;
+
+        goto label15;
+
+     label16:
+        return;
+    }
+
+    public void <init>(com.opengamma.analytics.financial.model.finitedifference.MeshingFunction, com.opengamma.analytics.financial.model.finitedifference.MeshingFunction)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        com.opengamma.analytics.financial.model.finitedifference.MeshingFunction r1, r2;
+        double[] $r3, $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.finitedifference.MeshingFunction;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.finitedifference.MeshingFunction;
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.MeshingFunction: double[] getPoints()>();
+
+        $r4 = virtualinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.MeshingFunction: double[] getPoints()>();
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: void <init>(double[],double[])>($r3, $r4);
+
+        return;
+    }
+
+    public void <init>(double[], double[])
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        double[] r1, r2, $r3, $r4, $r10, $r11, $r13, $r14, $r16, $r17, $r19, $r20, $r22, $r23, $r24, $r25, $r26, $r28, $r29, $r30, $r31, $r32, $r34, $r35, $r36, $r37, $r38, $r40, $r41, $r42, $r43, $r45, $r46, $r47, $r49, $r50, $r51, $r52, $r53, $r54, $r55, $r56;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i23, i25, $i26, i27, i28, i29;
+        double[][] $r5, $r6, $r7, $r8, $r9, $r12, $r15, $r18, $r21, $r27, $r33, $r39, $r44, $r48;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53;
+        byte $b22, $b24;
+        boolean $z0, $z1, $z2, $z3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        i0 = lengthof r1;
+
+        i1 = lengthof r2;
+
+        if i0 <= 1 goto label01;
+
+        $z0 = 1;
+
+        goto label02;
+
+     label01:
+        $z0 = 0;
+
+     label02:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "need at least 2 time nodes");
+
+        if i1 <= 2 goto label03;
+
+        $z1 = 1;
+
+        goto label04;
+
+     label03:
+        $z1 = 0;
+
+     label04:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "need at least 3 space nodes");
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int _nSpaceNodes> = i1;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes> = r1;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _xNodes> = r2;
+
+        $i2 = i0 - 1;
+
+        $r3 = newarray (double)[$i2];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dt> = $r3;
+
+        i25 = 0;
+
+     label05:
+        $i26 = i0 - 1;
+
+        if i25 >= $i26 goto label08;
+
+        $r55 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dt>;
+
+        $i23 = i25 + 1;
+
+        $d51 = r1[$i23];
+
+        $d50 = r1[i25];
+
+        $d52 = $d51 - $d50;
+
+        $r55[i25] = $d52;
+
+        $r56 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dt>;
+
+        $d53 = $r56[i25];
+
+        $b24 = $d53 cmpl 0.0;
+
+        if $b24 <= 0 goto label06;
+
+        $z2 = 1;
+
+        goto label07;
+
+     label06:
+        $z2 = 0;
+
+     label07:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z2, "time steps must be increasing");
+
+        i25 = i25 + 1;
+
+        goto label05;
+
+     label08:
+        $i3 = i1 - 1;
+
+        $r4 = newarray (double)[$i3];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx> = $r4;
+
+        i27 = 0;
+
+     label09:
+        $i4 = i1 - 1;
+
+        if i27 >= $i4 goto label12;
+
+        $r53 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $i21 = i27 + 1;
+
+        $d47 = r2[$i21];
+
+        $d46 = r2[i27];
+
+        $d48 = $d47 - $d46;
+
+        $r53[i27] = $d48;
+
+        $r54 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $d49 = $r54[i27];
+
+        $b22 = $d49 cmpl 0.0;
+
+        if $b22 <= 0 goto label10;
+
+        $z3 = 1;
+
+        goto label11;
+
+     label10:
+        $z3 = 0;
+
+     label11:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z3, "space steps must be increasing");
+
+        i27 = i27 + 1;
+
+        goto label09;
+
+     label12:
+        $i5 = i1 - 2;
+
+        $r5 = newmultiarray (double)[$i5][3];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1st> = $r5;
+
+        $i6 = i1 - 2;
+
+        $r6 = newmultiarray (double)[$i6][3];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x2nd> = $r6;
+
+        i28 = 0;
+
+     label13:
+        $i7 = i1 - 2;
+
+        if i28 >= $i7 goto label14;
+
+        $r21 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1st>;
+
+        $r26 = $r21[i28];
+
+        $r22 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $i11 = i28 + 1;
+
+        $d8 = $r22[$i11];
+
+        $d10 = neg $d8;
+
+        $r23 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $d9 = $r23[i28];
+
+        $d14 = $d10 / $d9;
+
+        $r24 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $d12 = $r24[i28];
+
+        $r25 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $i12 = i28 + 1;
+
+        $d11 = $r25[$i12];
+
+        $d13 = $d12 + $d11;
+
+        $d15 = $d14 / $d13;
+
+        $r26[0] = $d15;
+
+        $r27 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1st>;
+
+        $r32 = $r27[i28];
+
+        $r28 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $i13 = i28 + 1;
+
+        $d17 = $r28[$i13];
+
+        $r29 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $d16 = $r29[i28];
+
+        $d19 = $d17 - $d16;
+
+        $r30 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $d18 = $r30[i28];
+
+        $d21 = $d19 / $d18;
+
+        $r31 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $i14 = i28 + 1;
+
+        $d20 = $r31[$i14];
+
+        $d22 = $d21 / $d20;
+
+        $r32[1] = $d22;
+
+        $r33 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1st>;
+
+        $r38 = $r33[i28];
+
+        $r34 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $d24 = $r34[i28];
+
+        $r35 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $i15 = i28 + 1;
+
+        $d23 = $r35[$i15];
+
+        $d28 = $d24 / $d23;
+
+        $r36 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $d26 = $r36[i28];
+
+        $r37 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $i16 = i28 + 1;
+
+        $d25 = $r37[$i16];
+
+        $d27 = $d26 + $d25;
+
+        $d29 = $d28 / $d27;
+
+        $r38[2] = $d29;
+
+        $r39 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x2nd>;
+
+        $r43 = $r39[i28];
+
+        $r40 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $d30 = $r40[i28];
+
+        $d34 = 2.0 / $d30;
+
+        $r41 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $d32 = $r41[i28];
+
+        $r42 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $i17 = i28 + 1;
+
+        $d31 = $r42[$i17];
+
+        $d33 = $d32 + $d31;
+
+        $d35 = $d34 / $d33;
+
+        $r43[0] = $d35;
+
+        $r44 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x2nd>;
+
+        $r47 = $r44[i28];
+
+        $r45 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $d36 = $r45[i28];
+
+        $d38 = -2.0 / $d36;
+
+        $r46 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $i18 = i28 + 1;
+
+        $d37 = $r46[$i18];
+
+        $d39 = $d38 / $d37;
+
+        $r47[1] = $d39;
+
+        $r48 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x2nd>;
+
+        $r52 = $r48[i28];
+
+        $r49 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $i19 = i28 + 1;
+
+        $d40 = $r49[$i19];
+
+        $d44 = 2.0 / $d40;
+
+        $r50 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $d42 = $r50[i28];
+
+        $r51 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $i20 = i28 + 1;
+
+        $d41 = $r51[$i20];
+
+        $d43 = $d42 + $d41;
+
+        $d45 = $d44 / $d43;
+
+        $r52[2] = $d45;
+
+        i28 = i28 + 1;
+
+        goto label13;
+
+     label14:
+        $i8 = i1 - 1;
+
+        $r7 = newmultiarray (double)[$i8][2];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stFwd> = $r7;
+
+        $i9 = i1 - 1;
+
+        $r8 = newmultiarray (double)[$i9][2];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stBkd> = $r8;
+
+        i29 = 0;
+
+     label15:
+        $i10 = i1 - 1;
+
+        if i29 >= $i10 goto label16;
+
+        $r9 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stFwd>;
+
+        $r11 = $r9[i29];
+
+        $r10 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $d0 = $r10[i29];
+
+        $d1 = -1.0 / $d0;
+
+        $r11[0] = $d1;
+
+        $r12 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stFwd>;
+
+        $r14 = $r12[i29];
+
+        $r13 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $d2 = $r13[i29];
+
+        $d3 = 1.0 / $d2;
+
+        $r14[1] = $d3;
+
+        $r15 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stBkd>;
+
+        $r17 = $r15[i29];
+
+        $r16 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $d4 = $r16[i29];
+
+        $d5 = -1.0 / $d4;
+
+        $r17[0] = $d5;
+
+        $r18 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stBkd>;
+
+        $r20 = $r18[i29];
+
+        $r19 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $d6 = $r19[i29];
+
+        $d7 = 1.0 / $d6;
+
+        $r20[1] = $d7;
+
+        i29 = i29 + 1;
+
+        goto label15;
+
+     label16:
+        return;
+    }
+
+    public int getNumTimeNodes()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        double[] $r1;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes>;
+
+        $i0 = lengthof $r1;
+
+        return $i0;
+    }
+
+    public int getNumSpaceNodes()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        double[] $r1;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _xNodes>;
+
+        $i0 = lengthof $r1;
+
+        return $i0;
+    }
+
+    public double getTimeNode(int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        int i0;
+        double[] $r1;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes>;
+
+        $d0 = $r1[i0];
+
+        return $d0;
+    }
+
+    public double getSpaceNode(int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        int i0;
+        double[] $r1;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _xNodes>;
+
+        $d0 = $r1[i0];
+
+        return $d0;
+    }
+
+    public double getTimeStep(int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        int i0;
+        double[] $r1;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dt>;
+
+        $d0 = $r1[i0];
+
+        return $d0;
+    }
+
+    public double getSpaceStep(int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        int i0;
+        double[] $r1;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $d0 = $r1[i0];
+
+        return $d0;
+    }
+
+    public double[] getTimeNodes()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes>;
+
+        return $r1;
+    }
+
+    public double[] getSpaceNodes()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _xNodes>;
+
+        return $r1;
+    }
+
+    public int getLowerBoundIndexForTime(double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        double d0;
+        double[] $r1;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        d0 := @parameter0: double;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes>;
+
+        $i0 = specialinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getLowerBoundIndex(double[],double)>($r1, d0);
+
+        return $i0;
+    }
+
+    public int getLowerBoundIndexForSpace(double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        double d0;
+        double[] $r1;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        d0 := @parameter0: double;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _xNodes>;
+
+        $i0 = specialinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getLowerBoundIndex(double[],double)>($r1, d0);
+
+        return $i0;
+    }
+
+    public double[] getFirstDerivativeCoefficients(int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        int i0, $i1, $i2, $i3;
+        boolean $z0;
+        double[][] $r1;
+        double[] $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        i0 := @parameter0: int;
+
+        if i0 <= 0 goto label1;
+
+        $i1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int _nSpaceNodes>;
+
+        $i2 = $i1 - 1;
+
+        if i0 >= $i2 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "Can\'t take central difference at first or last node. Use Forward or backwards");
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1st>;
+
+        $i3 = i0 - 1;
+
+        $r2 = $r1[$i3];
+
+        return $r2;
+    }
+
+    public double[] getFirstDerivativeForwardCoefficients(int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        int i0, $i1, $i2;
+        double[][] $r1;
+        double[] $r2;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        i0 := @parameter0: int;
+
+        $i1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int _nSpaceNodes>;
+
+        $i2 = $i1 - 1;
+
+        if i0 >= $i2 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "Can\'t take forward difference at last node. Use central or backwards");
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stFwd>;
+
+        $r2 = $r1[i0];
+
+        return $r2;
+    }
+
+    public double[] getFirstDerivativeBackwardCoefficients(int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        int i0, $i1;
+        double[][] $r1;
+        double[] $r2;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        i0 := @parameter0: int;
+
+        if i0 <= 0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "Can\'t take backwards difference at first node. Use central or forwards");
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stBkd>;
+
+        $i1 = i0 - 1;
+
+        $r2 = $r1[$i1];
+
+        return $r2;
+    }
+
+    public double[] getSecondDerivativeCoefficients(int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        int i0, $i1, $i2, $i3, $i4, $i5;
+        double[][] $r1, $r3, $r5;
+        double[] $r2, $r4, $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        i0 := @parameter0: int;
+
+        if i0 != 0 goto label1;
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x2nd>;
+
+        $r6 = $r5[0];
+
+        return $r6;
+
+     label1:
+        $i1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int _nSpaceNodes>;
+
+        $i2 = $i1 - 1;
+
+        if i0 != $i2 goto label2;
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x2nd>;
+
+        $i4 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int _nSpaceNodes>;
+
+        $i5 = $i4 - 3;
+
+        $r4 = $r3[$i5];
+
+        return $r4;
+
+     label2:
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x2nd>;
+
+        $i3 = i0 - 1;
+
+        $r2 = $r1[$i3];
+
+        return $r2;
+    }
+
+    public com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D withDoubleTimeSteps()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0, $r7;
+        double[] r1, $r2, $r3, $r4, $r5, $r6, $r8, $r9, $r10, $r11;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, i14;
+        double $d0, $d1, $d2, $d3, $d4, $d5;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes>;
+
+        $i0 = lengthof $r2;
+
+        $i1 = $i0 * 2;
+
+        $i2 = $i1 - 1;
+
+        r1 = newarray (double)[$i2];
+
+        i14 = 0;
+
+     label1:
+        $r3 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes>;
+
+        $i3 = lengthof $r3;
+
+        $i4 = $i3 - 1;
+
+        if i14 >= $i4 goto label2;
+
+        $i10 = 2 * i14;
+
+        $r9 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes>;
+
+        $d1 = $r9[i14];
+
+        r1[$i10] = $d1;
+
+        $i11 = 2 * i14;
+
+        $i13 = $i11 + 1;
+
+        $r10 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes>;
+
+        $d3 = $r10[i14];
+
+        $r11 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes>;
+
+        $i12 = i14 + 1;
+
+        $d2 = $r11[$i12];
+
+        $d4 = $d3 + $d2;
+
+        $d5 = $d4 / 2.0;
+
+        r1[$i13] = $d5;
+
+        i14 = i14 + 1;
+
+        goto label1;
+
+     label2:
+        $r4 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes>;
+
+        $i5 = lengthof $r4;
+
+        $i6 = $i5 - 1;
+
+        $i9 = 2 * $i6;
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes>;
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes>;
+
+        $i7 = lengthof $r5;
+
+        $i8 = $i7 - 1;
+
+        $d0 = $r6[$i8];
+
+        r1[$i9] = $d0;
+
+        $r7 = new com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _xNodes>;
+
+        specialinvoke $r7.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: void <init>(double[],double[])>(r1, $r8);
+
+        return $r7;
+    }
+
+    private int getLowerBoundIndex(double[], double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        double[] r1;
+        double d0, $d1, $d2;
+        int i0, $i2, $i4, $i5, i6, i7;
+        byte $b1, $b3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        r1 := @parameter0: double[];
+
+        d0 := @parameter1: double;
+
+        i0 = lengthof r1;
+
+        $d1 = r1[0];
+
+        $b1 = d0 cmpg $d1;
+
+        if $b1 >= 0 goto label1;
+
+        return 0;
+
+     label1:
+        $i2 = i0 - 1;
+
+        $d2 = r1[$i2];
+
+        $b3 = d0 cmpl $d2;
+
+        if $b3 <= 0 goto label2;
+
+        $i5 = i0 - 1;
+
+        return $i5;
+
+     label2:
+        i6 = staticinvoke <java.util.Arrays: int binarySearch(double[],double)>(r1, d0);
+
+        if i6 < 0 goto label3;
+
+        return i6;
+
+     label3:
+        if i6 >= 0 goto label4;
+
+        $i4 = i6 + 1;
+
+        i7 = neg $i4;
+
+        i6 = i7 + -1;
+
+     label4:
+        return i6;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0;
+        double[] $r1, $r2, $r3, $r8;
+        int $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, i20, i21, i22, i23, i24, i25, i26, i27, i28;
+        double[][] $r4, $r5, $r6, $r7;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        $i1 = 31 * 1;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dt>;
+
+        $i2 = staticinvoke <java.util.Arrays: int hashCode(double[])>($r1);
+
+        i20 = $i1 + $i2;
+
+        $i3 = 31 * i20;
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $i4 = staticinvoke <java.util.Arrays: int hashCode(double[])>($r2);
+
+        i21 = $i3 + $i4;
+
+        $i6 = 31 * i21;
+
+        $i5 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int _nSpaceNodes>;
+
+        i22 = $i6 + $i5;
+
+        $i7 = 31 * i22;
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes>;
+
+        $i8 = staticinvoke <java.util.Arrays: int hashCode(double[])>($r3);
+
+        i23 = $i7 + $i8;
+
+        $i9 = 31 * i23;
+
+        $r4 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1st>;
+
+        $i10 = staticinvoke <java.util.Arrays: int hashCode(java.lang.Object[])>($r4);
+
+        i24 = $i9 + $i10;
+
+        $i11 = 31 * i24;
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stBkd>;
+
+        $i12 = staticinvoke <java.util.Arrays: int hashCode(java.lang.Object[])>($r5);
+
+        i25 = $i11 + $i12;
+
+        $i13 = 31 * i25;
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stFwd>;
+
+        $i14 = staticinvoke <java.util.Arrays: int hashCode(java.lang.Object[])>($r6);
+
+        i26 = $i13 + $i14;
+
+        $i15 = 31 * i26;
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x2nd>;
+
+        $i16 = staticinvoke <java.util.Arrays: int hashCode(java.lang.Object[])>($r7);
+
+        i27 = $i15 + $i16;
+
+        $i17 = 31 * i27;
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _xNodes>;
+
+        $i18 = staticinvoke <java.util.Arrays: int hashCode(double[])>($r8);
+
+        i28 = $i17 + $i18;
+
+        return i28;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r0, r2;
+        java.lang.Object r1;
+        java.lang.Class $r3, $r4;
+        double[] $r5, $r6, $r7, $r8, $r9, $r10, $r19, $r20;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        int $i0, $i1;
+        double[][] $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label01;
+
+        return 1;
+
+     label01:
+        if r1 != null goto label02;
+
+        return 0;
+
+     label02:
+        $r3 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r4 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+
+        if $r3 == $r4 goto label03;
+
+        return 0;
+
+     label03:
+        r2 = (com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D) r1;
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dt>;
+
+        $r5 = r2.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dt>;
+
+        $z0 = staticinvoke <java.util.Arrays: boolean equals(double[],double[])>($r6, $r5);
+
+        if $z0 != 0 goto label04;
+
+        return 0;
+
+     label04:
+        $r8 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $r7 = r2.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _dx>;
+
+        $z1 = staticinvoke <java.util.Arrays: boolean equals(double[],double[])>($r8, $r7);
+
+        if $z1 != 0 goto label05;
+
+        return 0;
+
+     label05:
+        $i1 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int _nSpaceNodes>;
+
+        $i0 = r2.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int _nSpaceNodes>;
+
+        if $i1 == $i0 goto label06;
+
+        return 0;
+
+     label06:
+        $r10 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes>;
+
+        $r9 = r2.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _tNodes>;
+
+        $z2 = staticinvoke <java.util.Arrays: boolean equals(double[],double[])>($r10, $r9);
+
+        if $z2 != 0 goto label07;
+
+        return 0;
+
+     label07:
+        $r12 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1st>;
+
+        $r11 = r2.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1st>;
+
+        $z3 = staticinvoke <java.util.Arrays: boolean equals(java.lang.Object[],java.lang.Object[])>($r12, $r11);
+
+        if $z3 != 0 goto label08;
+
+        return 0;
+
+     label08:
+        $r14 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stBkd>;
+
+        $r13 = r2.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stBkd>;
+
+        $z4 = staticinvoke <java.util.Arrays: boolean equals(java.lang.Object[],java.lang.Object[])>($r14, $r13);
+
+        if $z4 != 0 goto label09;
+
+        return 0;
+
+     label09:
+        $r16 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stFwd>;
+
+        $r15 = r2.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x1stFwd>;
+
+        $z5 = staticinvoke <java.util.Arrays: boolean equals(java.lang.Object[],java.lang.Object[])>($r16, $r15);
+
+        if $z5 != 0 goto label10;
+
+        return 0;
+
+     label10:
+        $r18 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x2nd>;
+
+        $r17 = r2.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[][] _x2nd>;
+
+        $z6 = staticinvoke <java.util.Arrays: boolean equals(java.lang.Object[],java.lang.Object[])>($r18, $r17);
+
+        if $z6 != 0 goto label11;
+
+        return 0;
+
+     label11:
+        $r20 = r0.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _xNodes>;
+
+        $r19 = r2.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] _xNodes>;
+
+        $z7 = staticinvoke <java.util.Arrays: boolean equals(double[],double[])>($r20, $r19);
+
+        if $z7 != 0 goto label12;
+
+        return 0;
+
+     label12:
+        return 1;
+    }
+}

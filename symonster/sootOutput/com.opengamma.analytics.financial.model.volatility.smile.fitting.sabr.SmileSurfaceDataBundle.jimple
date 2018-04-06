@@ -1,0 +1,406 @@
+public abstract class com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle extends java.lang.Object
+{
+    private static final org.slf4j.Logger s_logger;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public abstract int getNumExpiries();
+
+    public abstract double[] getExpiries();
+
+    public abstract double[][] getStrikes();
+
+    public abstract double[][] getVolatilities();
+
+    public abstract double[] getForwards();
+
+    public abstract com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve();
+
+    public abstract com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle withBumpedPoint(int, int, double);
+
+    protected void checkVolatilities(double[], double[][])
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle r0;
+        double[] r1, r3, $r4, $r5;
+        double[][] r2;
+        int i0, i1, $i2, $i4, i5, i6;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7;
+        byte $b3;
+        java.lang.Object[] $r6;
+        java.lang.Double $r7, $r8;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[][];
+
+        i0 = lengthof r1;
+
+        $r4 = r2[0];
+
+        i1 = lengthof $r4;
+
+        i5 = 0;
+
+     label1:
+        if i5 >= i1 goto label7;
+
+        r3 = newarray (double)[i0];
+
+        i6 = 0;
+
+     label2:
+        if i6 >= i0 goto label6;
+
+        $r5 = r2[i6];
+
+        d0 = $r5[i5];
+
+        $d2 = d0 * d0;
+
+        $d1 = r1[i6];
+
+        $d3 = $d2 * $d1;
+
+        r3[i6] = $d3;
+
+        if i6 <= 0 goto label5;
+
+        $d5 = r3[i6];
+
+        $i2 = i6 - 1;
+
+        $d4 = r3[$i2];
+
+        $b3 = $d5 cmpl $d4;
+
+        if $b3 < 0 goto label3;
+
+        $z0 = 1;
+
+        goto label4;
+
+     label3:
+        $z0 = 0;
+
+     label4:
+        $r6 = newarray (java.lang.Object)[2];
+
+        $i4 = i6 - 1;
+
+        $d6 = r3[$i4];
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d6);
+
+        $r6[0] = $r7;
+
+        $d7 = r3[i6];
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d7);
+
+        $r6[1] = $r8;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z0, "integrated variance not increasing, have {}, {}", $r6);
+
+     label5:
+        i6 = i6 + 1;
+
+        goto label2;
+
+     label6:
+        i5 = i5 + 1;
+
+        goto label1;
+
+     label7:
+        return;
+    }
+
+    protected void checkVolatilities(double[], double[][], double[][])
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle r0;
+        double[] r1, $r6, $r28, $r29, $r32, $r33, $r35, $r38, $r41, $r42, $r46, $r47, $r49;
+        double[][] r2, r3;
+        int i0, $i1, $i2, $i4, $i5, i6, i7, i8, i9, i10, i11;
+        java.util.HashMap $r5;
+        java.util.Set $r7;
+        boolean $z0, $z1;
+        java.lang.Object $r8, $r9, $r10, $r12, $r19, $r24, $r40;
+        java.lang.Double $r11, $r13, $r30, $r34, $r36, $r39, $r44, $r48, $r50;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20;
+        byte $b3;
+        java.lang.StringBuilder $r14, $r16, $r17, $r18, $r20, $r21, $r22, $r23, $r25, $r26;
+        org.slf4j.Logger $r15;
+        java.lang.String $r27;
+        java.util.ArrayList $r31, $r43, $r45, r56;
+        java.util.Iterator r54;
+        java.util.Map$Entry r55;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[][];
+
+        r3 := @parameter2: double[][];
+
+        i0 = lengthof r1;
+
+        $r5 = new java.util.HashMap;
+
+        specialinvoke $r5.<java.util.HashMap: void <init>()>();
+
+        i6 = 0;
+
+     label01:
+        $r6 = r2[0];
+
+        $i1 = lengthof $r6;
+
+        if i6 >= $i1 goto label02;
+
+        $r45 = new java.util.ArrayList;
+
+        specialinvoke $r45.<java.util.ArrayList: void <init>()>();
+
+        $r46 = r3[0];
+
+        $d16 = $r46[i6];
+
+        $r47 = r3[0];
+
+        $d15 = $r47[i6];
+
+        $d18 = $d16 * $d15;
+
+        $d17 = r1[0];
+
+        $d19 = $d18 * $d17;
+
+        $r48 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d19);
+
+        virtualinvoke $r45.<java.util.ArrayList: boolean add(java.lang.Object)>($r48);
+
+        $r49 = r2[0];
+
+        $d20 = $r49[i6];
+
+        $r50 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d20);
+
+        virtualinvoke $r5.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>($r50, $r45);
+
+        i6 = i6 + 1;
+
+        goto label01;
+
+     label02:
+        i7 = 1;
+
+     label03:
+        if i7 >= i0 goto label08;
+
+        $r28 = r2[i7];
+
+        i8 = lengthof $r28;
+
+        i9 = 0;
+
+     label04:
+        if i9 >= i8 goto label07;
+
+        $r29 = r2[i7];
+
+        $d2 = $r29[i9];
+
+        $r30 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d2);
+
+        $z1 = virtualinvoke $r5.<java.util.HashMap: boolean containsKey(java.lang.Object)>($r30);
+
+        if $z1 == 0 goto label05;
+
+        $r38 = r2[i7];
+
+        $d9 = $r38[i9];
+
+        $r39 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d9);
+
+        $r40 = virtualinvoke $r5.<java.util.HashMap: java.lang.Object get(java.lang.Object)>($r39);
+
+        $r43 = (java.util.ArrayList) $r40;
+
+        $r41 = r3[i7];
+
+        $d11 = $r41[i9];
+
+        $r42 = r3[i7];
+
+        $d10 = $r42[i9];
+
+        $d13 = $d11 * $d10;
+
+        $d12 = r1[i7];
+
+        $d14 = $d13 * $d12;
+
+        $r44 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d14);
+
+        virtualinvoke $r43.<java.util.ArrayList: boolean add(java.lang.Object)>($r44);
+
+        goto label06;
+
+     label05:
+        $r31 = new java.util.ArrayList;
+
+        specialinvoke $r31.<java.util.ArrayList: void <init>()>();
+
+        $r32 = r3[i7];
+
+        $d4 = $r32[i9];
+
+        $r33 = r3[i7];
+
+        $d3 = $r33[i9];
+
+        $d6 = $d4 * $d3;
+
+        $d5 = r1[i7];
+
+        $d7 = $d6 * $d5;
+
+        $r34 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d7);
+
+        virtualinvoke $r31.<java.util.ArrayList: boolean add(java.lang.Object)>($r34);
+
+        $r35 = r2[i7];
+
+        $d8 = $r35[i9];
+
+        $r36 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d8);
+
+        virtualinvoke $r5.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>($r36, $r31);
+
+     label06:
+        i9 = i9 + 1;
+
+        goto label04;
+
+     label07:
+        i7 = i7 + 1;
+
+        goto label03;
+
+     label08:
+        $r7 = virtualinvoke $r5.<java.util.HashMap: java.util.Set entrySet()>();
+
+        r54 = interfaceinvoke $r7.<java.util.Set: java.util.Iterator iterator()>();
+
+     label09:
+        $z0 = interfaceinvoke r54.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label13;
+
+        $r8 = interfaceinvoke r54.<java.util.Iterator: java.lang.Object next()>();
+
+        r55 = (java.util.Map$Entry) $r8;
+
+        $r9 = interfaceinvoke r55.<java.util.Map$Entry: java.lang.Object getValue()>();
+
+        r56 = (java.util.ArrayList) $r9;
+
+        i10 = virtualinvoke r56.<java.util.ArrayList: int size()>();
+
+        if i10 <= 1 goto label12;
+
+        i11 = 1;
+
+     label10:
+        if i11 >= i10 goto label12;
+
+        $r10 = virtualinvoke r56.<java.util.ArrayList: java.lang.Object get(int)>(i11);
+
+        $r11 = (java.lang.Double) $r10;
+
+        $d0 = virtualinvoke $r11.<java.lang.Double: double doubleValue()>();
+
+        $i2 = i11 - 1;
+
+        $r12 = virtualinvoke r56.<java.util.ArrayList: java.lang.Object get(int)>($i2);
+
+        $r13 = (java.lang.Double) $r12;
+
+        $d1 = virtualinvoke $r13.<java.lang.Double: double doubleValue()>();
+
+        $b3 = $d0 cmpg $d1;
+
+        if $b3 >= 0 goto label11;
+
+        $r15 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle: org.slf4j.Logger s_logger>;
+
+        $r14 = new java.lang.StringBuilder;
+
+        specialinvoke $r14.<java.lang.StringBuilder: void <init>()>();
+
+        $r16 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Integrated variance not increasing, have (");
+
+        $i4 = i11 - 1;
+
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i4);
+
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(",");
+
+        $i5 = i11 - 1;
+
+        $r19 = virtualinvoke r56.<java.util.ArrayList: java.lang.Object get(int)>($i5);
+
+        $r20 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r19);
+
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("),(");
+
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i11);
+
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(",");
+
+        $r24 = virtualinvoke r56.<java.util.ArrayList: java.lang.Object get(int)>(i11);
+
+        $r25 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r24);
+
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(")");
+
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        interfaceinvoke $r15.<org.slf4j.Logger: void error(java.lang.String)>($r27);
+
+     label11:
+        i11 = i11 + 1;
+
+        goto label10;
+
+     label12:
+        goto label09;
+
+     label13:
+        return;
+    }
+
+    static void <clinit>()
+    {
+        org.slf4j.Logger $r0;
+
+        $r0 = staticinvoke <org.slf4j.LoggerFactory: org.slf4j.Logger getLogger(java.lang.Class)>(class "com/opengamma/analytics/financial/model/volatility/smile/fitting/sabr/SmileSurfaceDataBundle");
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle: org.slf4j.Logger s_logger> = $r0;
+
+        return;
+    }
+}

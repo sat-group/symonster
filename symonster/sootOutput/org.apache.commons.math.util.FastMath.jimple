@@ -1,0 +1,9521 @@
+public class org.apache.commons.math.util.FastMath extends java.lang.Object
+{
+    public static final double PI;
+    public static final double E;
+    private static final double[] EXP_INT_TABLE_A;
+    private static final double[] EXP_INT_TABLE_B;
+    private static final double[] EXP_FRAC_TABLE_A;
+    private static final double[] EXP_FRAC_TABLE_B;
+    private static final double[] FACT;
+    private static final double[][] LN_MANT;
+    private static final double LN_2_A;
+    private static final double LN_2_B;
+    private static final double[][] LN_SPLIT_COEF;
+    private static final double[][] LN_QUICK_COEF;
+    private static final double[][] LN_HI_PREC_COEF;
+    private static final double[] SINE_TABLE_A;
+    private static final double[] SINE_TABLE_B;
+    private static final double[] COSINE_TABLE_A;
+    private static final double[] COSINE_TABLE_B;
+    private static final double[] TANGENT_TABLE_A;
+    private static final double[] TANGENT_TABLE_B;
+    private static final long[] RECIP_2PI;
+    private static final long[] PI_O_4_BITS;
+    private static final double[] EIGHTHS;
+    private static final double[] CBRTTWO;
+    private static final long HEX_40000000;
+    private static final long MASK_30BITS;
+    private static final double TWO_POWER_52;
+
+    private void <init>()
+    {
+        org.apache.commons.math.util.FastMath r0;
+
+        r0 := @this: org.apache.commons.math.util.FastMath;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    private static double doubleHighPart(double)
+    {
+        double d0, $d1;
+        byte $b0, $b1;
+        long l2, l3;
+
+        d0 := @parameter0: double;
+
+        $b0 = d0 cmpl -2.2250738585072014E-308;
+
+        if $b0 <= 0 goto label1;
+
+        $b1 = d0 cmpg 2.2250738585072014E-308;
+
+        if $b1 >= 0 goto label1;
+
+        return d0;
+
+     label1:
+        l2 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d0);
+
+        l3 = l2 & -1073741824L;
+
+        $d1 = staticinvoke <java.lang.Double: double longBitsToDouble(long)>(l3);
+
+        return $d1;
+    }
+
+    public static double sqrt(double)
+    {
+        double d0, $d1;
+
+        d0 := @parameter0: double;
+
+        $d1 = staticinvoke <java.lang.Math: double sqrt(double)>(d0);
+
+        return $d1;
+    }
+
+    public static double cosh(double)
+    {
+        double[] r0;
+        double d0, d1, d2, d3, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, d36, d37, d38, d39, d40, d41, d42, d43, d44, d45, d47, d48, d50, d51;
+        byte $b0, $b1, $b2, $b3;
+
+        d36 := @parameter0: double;
+
+        $b0 = d36 cmpl d36;
+
+        if $b0 == 0 goto label1;
+
+        return d36;
+
+     label1:
+        $b1 = d36 cmpl 20.0;
+
+        if $b1 <= 0 goto label2;
+
+        $d34 = staticinvoke <org.apache.commons.math.util.FastMath: double exp(double)>(d36);
+
+        $d35 = $d34 / 2.0;
+
+        return $d35;
+
+     label2:
+        $b2 = d36 cmpg -20.0;
+
+        if $b2 >= 0 goto label3;
+
+        $d31 = neg d36;
+
+        $d32 = staticinvoke <org.apache.commons.math.util.FastMath: double exp(double)>($d31);
+
+        $d33 = $d32 / 2.0;
+
+        return $d33;
+
+     label3:
+        r0 = newarray (double)[2];
+
+        $b3 = d36 cmpg 0.0;
+
+        if $b3 >= 0 goto label4;
+
+        d36 = neg d36;
+
+     label4:
+        staticinvoke <org.apache.commons.math.util.FastMath: double exp(double,double,double[])>(d36, 0.0, r0);
+
+        $d6 = r0[0];
+
+        $d5 = r0[1];
+
+        d37 = $d6 + $d5;
+
+        $d7 = r0[0];
+
+        $d9 = d37 - $d7;
+
+        $d8 = r0[1];
+
+        $d10 = $d9 - $d8;
+
+        d38 = neg $d10;
+
+        d39 = d37 * 1.073741824E9;
+
+        $d11 = d37 + d39;
+
+        d0 = $d11 - d39;
+
+        d1 = d37 - d0;
+
+        d2 = 1.0 / d37;
+
+        d40 = d2 * 1.073741824E9;
+
+        $d12 = d2 + d40;
+
+        d3 = $d12 - d40;
+
+        d41 = d2 - d3;
+
+        $d13 = d0 * d3;
+
+        $d15 = 1.0 - $d13;
+
+        $d14 = d0 * d41;
+
+        $d17 = $d15 - $d14;
+
+        $d16 = d1 * d3;
+
+        $d19 = $d17 - $d16;
+
+        $d18 = d1 * d41;
+
+        $d20 = $d19 - $d18;
+
+        $d21 = $d20 * d2;
+
+        d42 = d41 + $d21;
+
+        $d22 = neg d38;
+
+        $d23 = $d22 * d2;
+
+        $d24 = $d23 * d2;
+
+        d43 = d42 + $d24;
+
+        d44 = d37 + d3;
+
+        $d25 = d44 - d37;
+
+        $d26 = $d25 - d3;
+
+        $d27 = neg $d26;
+
+        d45 = d38 + $d27;
+
+        d47 = d44 + d43;
+
+        $d28 = d47 - d44;
+
+        $d29 = $d28 - d43;
+
+        $d30 = neg $d29;
+
+        d48 = d45 + $d30;
+
+        d50 = d47 + d48;
+
+        d51 = d50 * 0.5;
+
+        return d51;
+    }
+
+    public static double sinh(double)
+    {
+        double d0, d1, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, d67, d68, d69, d70, d71, d72, d73, d74, d75, d76, d77, d78, d79, d80, d81, d82, d84, d85, d87, d88, d89, d90, d91, d92, d93, d94, d95, d96, d97, d98, d99, d100, d101, d102, d103, d105, d106, d108;
+        byte $b0, $b1, $b2, $b3, $b4, $b5;
+        boolean z0;
+        double[] r0, r1;
+
+        d67 := @parameter0: double;
+
+        z0 = 0;
+
+        $b0 = d67 cmpl d67;
+
+        if $b0 == 0 goto label1;
+
+        return d67;
+
+     label1:
+        $b1 = d67 cmpl 20.0;
+
+        if $b1 <= 0 goto label2;
+
+        $d65 = staticinvoke <org.apache.commons.math.util.FastMath: double exp(double)>(d67);
+
+        $d66 = $d65 / 2.0;
+
+        return $d66;
+
+     label2:
+        $b2 = d67 cmpg -20.0;
+
+        if $b2 >= 0 goto label3;
+
+        $d61 = neg d67;
+
+        $d62 = staticinvoke <org.apache.commons.math.util.FastMath: double exp(double)>($d61);
+
+        $d63 = neg $d62;
+
+        $d64 = $d63 / 2.0;
+
+        return $d64;
+
+     label3:
+        $b3 = d67 cmpl 0.0;
+
+        if $b3 != 0 goto label4;
+
+        return d67;
+
+     label4:
+        $b4 = d67 cmpg 0.0;
+
+        if $b4 >= 0 goto label5;
+
+        d67 = neg d67;
+
+        z0 = 1;
+
+     label5:
+        $b5 = d67 cmpl 0.25;
+
+        if $b5 <= 0 goto label6;
+
+        r0 = newarray (double)[2];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: double exp(double,double,double[])>(d67, 0.0, r0);
+
+        $d36 = r0[0];
+
+        $d35 = r0[1];
+
+        d68 = $d36 + $d35;
+
+        $d37 = r0[0];
+
+        $d39 = d68 - $d37;
+
+        $d38 = r0[1];
+
+        $d40 = $d39 - $d38;
+
+        d69 = neg $d40;
+
+        d70 = d68 * 1.073741824E9;
+
+        $d41 = d68 + d70;
+
+        d71 = $d41 - d70;
+
+        d72 = d68 - d71;
+
+        d73 = 1.0 / d68;
+
+        d74 = d73 * 1.073741824E9;
+
+        $d42 = d73 + d74;
+
+        d75 = $d42 - d74;
+
+        d76 = d73 - d75;
+
+        $d43 = d71 * d75;
+
+        $d45 = 1.0 - $d43;
+
+        $d44 = d71 * d76;
+
+        $d47 = $d45 - $d44;
+
+        $d46 = d72 * d75;
+
+        $d49 = $d47 - $d46;
+
+        $d48 = d72 * d76;
+
+        $d50 = $d49 - $d48;
+
+        $d51 = $d50 * d73;
+
+        d77 = d76 + $d51;
+
+        $d52 = neg d69;
+
+        $d53 = $d52 * d73;
+
+        $d54 = $d53 * d73;
+
+        d78 = d77 + $d54;
+
+        d79 = neg d75;
+
+        d80 = neg d78;
+
+        d81 = d68 + d79;
+
+        $d55 = d81 - d68;
+
+        $d56 = $d55 - d79;
+
+        $d57 = neg $d56;
+
+        d82 = d69 + $d57;
+
+        d84 = d81 + d80;
+
+        $d58 = d84 - d81;
+
+        $d59 = $d58 - d80;
+
+        $d60 = neg $d59;
+
+        d85 = d82 + $d60;
+
+        d87 = d84 + d85;
+
+        d88 = d87 * 0.5;
+
+        goto label7;
+
+     label6:
+        r1 = newarray (double)[2];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: double expm1(double,double[])>(d67, r1);
+
+        $d4 = r1[0];
+
+        $d3 = r1[1];
+
+        d89 = $d4 + $d3;
+
+        $d5 = r1[0];
+
+        $d7 = d89 - $d5;
+
+        $d6 = r1[1];
+
+        $d8 = $d7 - $d6;
+
+        d90 = neg $d8;
+
+        d91 = 1.0 + d89;
+
+        d92 = 1.0 / d91;
+
+        $d9 = d91 - 1.0;
+
+        $d10 = $d9 - d89;
+
+        $d11 = neg $d10;
+
+        d93 = $d11 + d90;
+
+        d94 = d89 * d92;
+
+        d95 = d94 * 1.073741824E9;
+
+        $d12 = d94 + d95;
+
+        d96 = $d12 - d95;
+
+        d97 = d94 - d96;
+
+        d98 = d91 * 1.073741824E9;
+
+        $d13 = d91 + d98;
+
+        d0 = $d13 - d98;
+
+        d1 = d91 - d0;
+
+        $d14 = d0 * d96;
+
+        $d16 = d89 - $d14;
+
+        $d15 = d0 * d97;
+
+        $d18 = $d16 - $d15;
+
+        $d17 = d1 * d96;
+
+        $d20 = $d18 - $d17;
+
+        $d19 = d1 * d97;
+
+        $d21 = $d20 - $d19;
+
+        $d22 = $d21 * d92;
+
+        d99 = d97 + $d22;
+
+        $d23 = d90 * d92;
+
+        d100 = d99 + $d23;
+
+        $d24 = neg d89;
+
+        $d25 = $d24 * d93;
+
+        $d26 = $d25 * d92;
+
+        $d27 = $d26 * d92;
+
+        d101 = d100 + $d27;
+
+        d102 = d89 + d96;
+
+        $d28 = d102 - d89;
+
+        $d29 = $d28 - d96;
+
+        $d30 = neg $d29;
+
+        d103 = d90 + $d30;
+
+        d105 = d102 + d101;
+
+        $d31 = d105 - d102;
+
+        $d32 = $d31 - d101;
+
+        $d33 = neg $d32;
+
+        d106 = d103 + $d33;
+
+        d108 = d105 + d106;
+
+        d88 = d108 * 0.5;
+
+     label7:
+        if z0 == 0 goto label8;
+
+        d88 = neg d88;
+
+     label8:
+        return d88;
+    }
+
+    public static double tanh(double)
+    {
+        byte $b0, $b1, $b2, $b3, $b4, $b5;
+        double $d0, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, d63, d64, d65, d66, d67, d68, d69, d71, d72, d73, d74, d76, d77, d78, d79, d80, d81, d82, d83, d84, d85, d86, d87, d88, d91, d92, d93, d94, d96, d97, d98, d99, d100, d101, d102, d103, d104, d105;
+        boolean z0;
+        double[] r0, r1;
+
+        d63 := @parameter0: double;
+
+        z0 = 0;
+
+        $b0 = d63 cmpl d63;
+
+        if $b0 == 0 goto label1;
+
+        return d63;
+
+     label1:
+        $b1 = d63 cmpl 20.0;
+
+        if $b1 <= 0 goto label2;
+
+        return 1.0;
+
+     label2:
+        $b2 = d63 cmpg -20.0;
+
+        if $b2 >= 0 goto label3;
+
+        return -1.0;
+
+     label3:
+        $b3 = d63 cmpl 0.0;
+
+        if $b3 != 0 goto label4;
+
+        return d63;
+
+     label4:
+        $b4 = d63 cmpg 0.0;
+
+        if $b4 >= 0 goto label5;
+
+        d63 = neg d63;
+
+        z0 = 1;
+
+     label5:
+        $b5 = d63 cmpl 0.5;
+
+        if $b5 < 0 goto label6;
+
+        r0 = newarray (double)[2];
+
+        $d29 = d63 * 2.0;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: double exp(double,double,double[])>($d29, 0.0, r0);
+
+        $d32 = r0[0];
+
+        $d31 = r0[1];
+
+        d64 = $d32 + $d31;
+
+        $d33 = r0[0];
+
+        $d35 = d64 - $d33;
+
+        $d34 = r0[1];
+
+        $d36 = $d35 - $d34;
+
+        d65 = neg $d36;
+
+        d66 = -1.0 + d64;
+
+        $d37 = d66 + 1.0;
+
+        $d38 = $d37 - d64;
+
+        d67 = neg $d38;
+
+        d68 = d66 + d65;
+
+        $d39 = d68 - d66;
+
+        $d40 = $d39 - d65;
+
+        $d41 = neg $d40;
+
+        d69 = d67 + $d41;
+
+        d71 = 1.0 + d64;
+
+        $d42 = d71 - 1.0;
+
+        $d43 = $d42 - d64;
+
+        d72 = neg $d43;
+
+        d73 = d71 + d65;
+
+        $d44 = d73 - d71;
+
+        $d45 = $d44 - d65;
+
+        $d46 = neg $d45;
+
+        d74 = d72 + $d46;
+
+        d76 = d73 * 1.073741824E9;
+
+        $d47 = d73 + d76;
+
+        d77 = $d47 - d76;
+
+        d78 = d73 - d77;
+
+        d79 = d68 / d73;
+
+        d80 = d79 * 1.073741824E9;
+
+        $d48 = d79 + d80;
+
+        d81 = $d48 - d80;
+
+        d82 = d79 - d81;
+
+        $d49 = d77 * d81;
+
+        $d51 = d68 - $d49;
+
+        $d50 = d77 * d82;
+
+        $d53 = $d51 - $d50;
+
+        $d52 = d78 * d81;
+
+        $d55 = $d53 - $d52;
+
+        $d54 = d78 * d82;
+
+        $d56 = $d55 - $d54;
+
+        $d57 = $d56 / d73;
+
+        d83 = d82 + $d57;
+
+        $d58 = d69 / d73;
+
+        d84 = d83 + $d58;
+
+        $d59 = neg d74;
+
+        $d60 = $d59 * d68;
+
+        $d61 = $d60 / d73;
+
+        $d62 = $d61 / d73;
+
+        d85 = d84 + $d62;
+
+        d86 = d81 + d85;
+
+        goto label7;
+
+     label6:
+        r1 = newarray (double)[2];
+
+        $d0 = d63 * 2.0;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: double expm1(double,double[])>($d0, r1);
+
+        $d3 = r1[0];
+
+        $d2 = r1[1];
+
+        d87 = $d3 + $d2;
+
+        $d4 = r1[0];
+
+        $d6 = d87 - $d4;
+
+        $d5 = r1[1];
+
+        $d7 = $d6 - $d5;
+
+        d88 = neg $d7;
+
+        d91 = 2.0 + d87;
+
+        $d8 = d91 - 2.0;
+
+        $d9 = $d8 - d87;
+
+        d92 = neg $d9;
+
+        d93 = d91 + d88;
+
+        $d10 = d93 - d91;
+
+        $d11 = $d10 - d88;
+
+        $d12 = neg $d11;
+
+        d94 = d92 + $d12;
+
+        d96 = d93 * 1.073741824E9;
+
+        $d13 = d93 + d96;
+
+        d97 = $d13 - d96;
+
+        d98 = d93 - d97;
+
+        d99 = d87 / d93;
+
+        d100 = d99 * 1.073741824E9;
+
+        $d14 = d99 + d100;
+
+        d101 = $d14 - d100;
+
+        d102 = d99 - d101;
+
+        $d15 = d97 * d101;
+
+        $d17 = d87 - $d15;
+
+        $d16 = d97 * d102;
+
+        $d19 = $d17 - $d16;
+
+        $d18 = d98 * d101;
+
+        $d21 = $d19 - $d18;
+
+        $d20 = d98 * d102;
+
+        $d22 = $d21 - $d20;
+
+        $d23 = $d22 / d93;
+
+        d103 = d102 + $d23;
+
+        $d24 = d88 / d93;
+
+        d104 = d103 + $d24;
+
+        $d25 = neg d94;
+
+        $d26 = $d25 * d87;
+
+        $d27 = $d26 / d93;
+
+        $d28 = $d27 / d93;
+
+        d105 = d104 + $d28;
+
+        d86 = d101 + d105;
+
+     label7:
+        if z0 == 0 goto label8;
+
+        d86 = neg d86;
+
+     label8:
+        return d86;
+    }
+
+    public static double acosh(double)
+    {
+        double d0, $d1, $d2, $d3, $d4, $d5;
+
+        d0 := @parameter0: double;
+
+        $d1 = d0 * d0;
+
+        $d2 = $d1 - 1.0;
+
+        $d3 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>($d2);
+
+        $d4 = d0 + $d3;
+
+        $d5 = staticinvoke <org.apache.commons.math.util.FastMath: double log(double)>($d4);
+
+        return $d5;
+    }
+
+    public static double asinh(double)
+    {
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, $d80, d81, d82, $d83;
+        byte $b0, $b1, $b2, $b3, $b4;
+        boolean z0;
+
+        d81 := @parameter0: double;
+
+        z0 = 0;
+
+        $b0 = d81 cmpg 0.0;
+
+        if $b0 >= 0 goto label1;
+
+        z0 = 1;
+
+        d81 = neg d81;
+
+     label1:
+        $b1 = d81 cmpl 0.167;
+
+        if $b1 <= 0 goto label2;
+
+        $d77 = d81 * d81;
+
+        $d78 = $d77 + 1.0;
+
+        $d79 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>($d78);
+
+        $d80 = $d79 + d81;
+
+        d82 = staticinvoke <org.apache.commons.math.util.FastMath: double log(double)>($d80);
+
+        goto label6;
+
+     label2:
+        d0 = d81 * d81;
+
+        $b2 = d81 cmpl 0.097;
+
+        if $b2 <= 0 goto label3;
+
+        $d46 = d0 * 0.058823529411764705;
+
+        $d47 = $d46 * 15.0;
+
+        $d48 = $d47 / 16.0;
+
+        $d49 = 0.06666666666666667 - $d48;
+
+        $d50 = d0 * $d49;
+
+        $d51 = $d50 * 13.0;
+
+        $d52 = $d51 / 14.0;
+
+        $d53 = 0.07692307692307693 - $d52;
+
+        $d54 = d0 * $d53;
+
+        $d55 = $d54 * 11.0;
+
+        $d56 = $d55 / 12.0;
+
+        $d57 = 0.09090909090909091 - $d56;
+
+        $d58 = d0 * $d57;
+
+        $d59 = $d58 * 9.0;
+
+        $d60 = $d59 / 10.0;
+
+        $d61 = 0.1111111111111111 - $d60;
+
+        $d62 = d0 * $d61;
+
+        $d63 = $d62 * 7.0;
+
+        $d64 = $d63 / 8.0;
+
+        $d65 = 0.14285714285714285 - $d64;
+
+        $d66 = d0 * $d65;
+
+        $d67 = $d66 * 5.0;
+
+        $d68 = $d67 / 6.0;
+
+        $d69 = 0.2 - $d68;
+
+        $d70 = d0 * $d69;
+
+        $d71 = $d70 * 3.0;
+
+        $d72 = $d71 / 4.0;
+
+        $d73 = 0.3333333333333333 - $d72;
+
+        $d74 = d0 * $d73;
+
+        $d75 = $d74 / 2.0;
+
+        $d76 = 1.0 - $d75;
+
+        d82 = d81 * $d76;
+
+        goto label6;
+
+     label3:
+        $b3 = d81 cmpl 0.036;
+
+        if $b3 <= 0 goto label4;
+
+        $d23 = d0 * 0.07692307692307693;
+
+        $d24 = $d23 * 11.0;
+
+        $d25 = $d24 / 12.0;
+
+        $d26 = 0.09090909090909091 - $d25;
+
+        $d27 = d0 * $d26;
+
+        $d28 = $d27 * 9.0;
+
+        $d29 = $d28 / 10.0;
+
+        $d30 = 0.1111111111111111 - $d29;
+
+        $d31 = d0 * $d30;
+
+        $d32 = $d31 * 7.0;
+
+        $d33 = $d32 / 8.0;
+
+        $d34 = 0.14285714285714285 - $d33;
+
+        $d35 = d0 * $d34;
+
+        $d36 = $d35 * 5.0;
+
+        $d37 = $d36 / 6.0;
+
+        $d38 = 0.2 - $d37;
+
+        $d39 = d0 * $d38;
+
+        $d40 = $d39 * 3.0;
+
+        $d41 = $d40 / 4.0;
+
+        $d42 = 0.3333333333333333 - $d41;
+
+        $d43 = d0 * $d42;
+
+        $d44 = $d43 / 2.0;
+
+        $d45 = 1.0 - $d44;
+
+        d82 = d81 * $d45;
+
+        goto label6;
+
+     label4:
+        $b4 = d81 cmpl 0.0036;
+
+        if $b4 <= 0 goto label5;
+
+        $d8 = d0 * 0.1111111111111111;
+
+        $d9 = $d8 * 7.0;
+
+        $d10 = $d9 / 8.0;
+
+        $d11 = 0.14285714285714285 - $d10;
+
+        $d12 = d0 * $d11;
+
+        $d13 = $d12 * 5.0;
+
+        $d14 = $d13 / 6.0;
+
+        $d15 = 0.2 - $d14;
+
+        $d16 = d0 * $d15;
+
+        $d17 = $d16 * 3.0;
+
+        $d18 = $d17 / 4.0;
+
+        $d19 = 0.3333333333333333 - $d18;
+
+        $d20 = d0 * $d19;
+
+        $d21 = $d20 / 2.0;
+
+        $d22 = 1.0 - $d21;
+
+        d82 = d81 * $d22;
+
+        goto label6;
+
+     label5:
+        $d1 = d0 * 0.2;
+
+        $d2 = $d1 * 3.0;
+
+        $d3 = $d2 / 4.0;
+
+        $d4 = 0.3333333333333333 - $d3;
+
+        $d5 = d0 * $d4;
+
+        $d6 = $d5 / 2.0;
+
+        $d7 = 1.0 - $d6;
+
+        d82 = d81 * $d7;
+
+     label6:
+        if z0 == 0 goto label7;
+
+        $d83 = neg d82;
+
+        goto label8;
+
+     label7:
+        $d83 = d82;
+
+     label8:
+        return $d83;
+    }
+
+    public static double atanh(double)
+    {
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, d45, d46, $d47;
+        byte $b0, $b1, $b2, $b3, $b4;
+        boolean z0;
+
+        d45 := @parameter0: double;
+
+        z0 = 0;
+
+        $b0 = d45 cmpg 0.0;
+
+        if $b0 >= 0 goto label1;
+
+        z0 = 1;
+
+        d45 = neg d45;
+
+     label1:
+        $b1 = d45 cmpl 0.15;
+
+        if $b1 <= 0 goto label2;
+
+        $d42 = 1.0 + d45;
+
+        $d41 = 1.0 - d45;
+
+        $d43 = $d42 / $d41;
+
+        $d44 = staticinvoke <org.apache.commons.math.util.FastMath: double log(double)>($d43);
+
+        d46 = 0.5 * $d44;
+
+        goto label6;
+
+     label2:
+        d0 = d45 * d45;
+
+        $b2 = d45 cmpl 0.087;
+
+        if $b2 <= 0 goto label3;
+
+        $d25 = d0 * 0.058823529411764705;
+
+        $d26 = 0.06666666666666667 + $d25;
+
+        $d27 = d0 * $d26;
+
+        $d28 = 0.07692307692307693 + $d27;
+
+        $d29 = d0 * $d28;
+
+        $d30 = 0.09090909090909091 + $d29;
+
+        $d31 = d0 * $d30;
+
+        $d32 = 0.1111111111111111 + $d31;
+
+        $d33 = d0 * $d32;
+
+        $d34 = 0.14285714285714285 + $d33;
+
+        $d35 = d0 * $d34;
+
+        $d36 = 0.2 + $d35;
+
+        $d37 = d0 * $d36;
+
+        $d38 = 0.3333333333333333 + $d37;
+
+        $d39 = d0 * $d38;
+
+        $d40 = 1.0 + $d39;
+
+        d46 = d45 * $d40;
+
+        goto label6;
+
+     label3:
+        $b3 = d45 cmpl 0.031;
+
+        if $b3 <= 0 goto label4;
+
+        $d13 = d0 * 0.07692307692307693;
+
+        $d14 = 0.09090909090909091 + $d13;
+
+        $d15 = d0 * $d14;
+
+        $d16 = 0.1111111111111111 + $d15;
+
+        $d17 = d0 * $d16;
+
+        $d18 = 0.14285714285714285 + $d17;
+
+        $d19 = d0 * $d18;
+
+        $d20 = 0.2 + $d19;
+
+        $d21 = d0 * $d20;
+
+        $d22 = 0.3333333333333333 + $d21;
+
+        $d23 = d0 * $d22;
+
+        $d24 = 1.0 + $d23;
+
+        d46 = d45 * $d24;
+
+        goto label6;
+
+     label4:
+        $b4 = d45 cmpl 0.003;
+
+        if $b4 <= 0 goto label5;
+
+        $d5 = d0 * 0.1111111111111111;
+
+        $d6 = 0.14285714285714285 + $d5;
+
+        $d7 = d0 * $d6;
+
+        $d8 = 0.2 + $d7;
+
+        $d9 = d0 * $d8;
+
+        $d10 = 0.3333333333333333 + $d9;
+
+        $d11 = d0 * $d10;
+
+        $d12 = 1.0 + $d11;
+
+        d46 = d45 * $d12;
+
+        goto label6;
+
+     label5:
+        $d1 = d0 * 0.2;
+
+        $d2 = 0.3333333333333333 + $d1;
+
+        $d3 = d0 * $d2;
+
+        $d4 = 1.0 + $d3;
+
+        d46 = d45 * $d4;
+
+     label6:
+        if z0 == 0 goto label7;
+
+        $d47 = neg d46;
+
+        goto label8;
+
+     label7:
+        $d47 = d46;
+
+     label8:
+        return $d47;
+    }
+
+    public static double signum(double)
+    {
+        double d0, $d1;
+        byte $b0, $b1;
+
+        d0 := @parameter0: double;
+
+        $b0 = d0 cmpg 0.0;
+
+        if $b0 >= 0 goto label1;
+
+        $d1 = -1.0;
+
+        goto label3;
+
+     label1:
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 <= 0 goto label2;
+
+        $d1 = 1.0;
+
+        goto label3;
+
+     label2:
+        $d1 = d0;
+
+     label3:
+        return $d1;
+    }
+
+    public static float signum(float)
+    {
+        float f0, $f1;
+        byte $b0, $b1;
+
+        f0 := @parameter0: float;
+
+        $b0 = f0 cmpg 0.0F;
+
+        if $b0 >= 0 goto label1;
+
+        $f1 = -1.0F;
+
+        goto label3;
+
+     label1:
+        $b1 = f0 cmpl 0.0F;
+
+        if $b1 <= 0 goto label2;
+
+        $f1 = 1.0F;
+
+        goto label3;
+
+     label2:
+        $f1 = f0;
+
+     label3:
+        return $f1;
+    }
+
+    public static double nextUp(double)
+    {
+        double d0, $d1;
+
+        d0 := @parameter0: double;
+
+        $d1 = staticinvoke <org.apache.commons.math.util.FastMath: double nextAfter(double,double)>(d0, #Infinity);
+
+        return $d1;
+    }
+
+    public static float nextUp(float)
+    {
+        float f0, $f1;
+
+        f0 := @parameter0: float;
+
+        $f1 = staticinvoke <org.apache.commons.math.util.FastMath: float nextAfter(float,double)>(f0, #Infinity);
+
+        return $f1;
+    }
+
+    public static double random()
+    {
+        double $d0;
+
+        $d0 = staticinvoke <java.lang.Math: double random()>();
+
+        return $d0;
+    }
+
+    public static double exp(double)
+    {
+        double d0, $d1;
+
+        d0 := @parameter0: double;
+
+        $d1 = staticinvoke <org.apache.commons.math.util.FastMath: double exp(double,double,double[])>(d0, 0.0, null);
+
+        return $d1;
+    }
+
+    private static double exp(double, double, double[])
+    {
+        double d0, d1, d2, d3, d4, d5, d6, d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, d52, d53, d54, d55, d57, d58, d59, d60, d61;
+        double[] r0, $r1, $r2, $r3, $r4, $r5, $r6;
+        byte $b0, $b3;
+        int $i1, $i2, $i4, $i5, i6, i7, i8, i9;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        r0 := @parameter2: double[];
+
+        $b0 = d0 cmpg 0.0;
+
+        if $b0 >= 0 goto label07;
+
+        $d39 = neg d0;
+
+        i6 = (int) $d39;
+
+        if i6 <= 746 goto label02;
+
+        if r0 == null goto label01;
+
+        r0[0] = 0.0;
+
+        r0[1] = 0.0;
+
+     label01:
+        return 0.0;
+
+     label02:
+        if i6 <= 709 goto label04;
+
+        $d46 = d0 + 40.19140625;
+
+        $d47 = staticinvoke <org.apache.commons.math.util.FastMath: double exp(double,double,double[])>($d46, d1, r0);
+
+        d52 = $d47 / 2.85040095144011776E17;
+
+        if r0 == null goto label03;
+
+        $d48 = r0[0];
+
+        $d49 = $d48 / 2.85040095144011776E17;
+
+        r0[0] = $d49;
+
+        $d50 = r0[1];
+
+        $d51 = $d50 / 2.85040095144011776E17;
+
+        r0[1] = $d51;
+
+     label03:
+        return d52;
+
+     label04:
+        if i6 != 709 goto label06;
+
+        $d40 = d0 + 1.494140625;
+
+        $d41 = staticinvoke <org.apache.commons.math.util.FastMath: double exp(double,double,double[])>($d40, d1, r0);
+
+        d53 = $d41 / 4.455505956692757;
+
+        if r0 == null goto label05;
+
+        $d42 = r0[0];
+
+        $d43 = $d42 / 4.455505956692757;
+
+        r0[0] = $d43;
+
+        $d44 = r0[1];
+
+        $d45 = $d44 / 4.455505956692757;
+
+        r0[1] = $d45;
+
+     label05:
+        return d53;
+
+     label06:
+        i7 = i6 + 1;
+
+        $r5 = <org.apache.commons.math.util.FastMath: double[] EXP_INT_TABLE_A>;
+
+        $i4 = 750 - i7;
+
+        d54 = $r5[$i4];
+
+        $r6 = <org.apache.commons.math.util.FastMath: double[] EXP_INT_TABLE_B>;
+
+        $i5 = 750 - i7;
+
+        d55 = $r6[$i5];
+
+        i8 = neg i7;
+
+        goto label10;
+
+     label07:
+        i8 = (int) d0;
+
+        if i8 <= 709 goto label09;
+
+        if r0 == null goto label08;
+
+        r0[0] = #Infinity;
+
+        r0[1] = 0.0;
+
+     label08:
+        return #Infinity;
+
+     label09:
+        $r1 = <org.apache.commons.math.util.FastMath: double[] EXP_INT_TABLE_A>;
+
+        $i1 = 750 + i8;
+
+        d54 = $r1[$i1];
+
+        $r2 = <org.apache.commons.math.util.FastMath: double[] EXP_INT_TABLE_B>;
+
+        $i2 = 750 + i8;
+
+        d55 = $r2[$i2];
+
+     label10:
+        $d8 = (double) i8;
+
+        $d9 = d0 - $d8;
+
+        $d10 = $d9 * 1024.0;
+
+        i9 = (int) $d10;
+
+        $r3 = <org.apache.commons.math.util.FastMath: double[] EXP_FRAC_TABLE_A>;
+
+        d2 = $r3[i9];
+
+        $r4 = <org.apache.commons.math.util.FastMath: double[] EXP_FRAC_TABLE_B>;
+
+        d3 = $r4[i9];
+
+        $d13 = (double) i8;
+
+        $d11 = (double) i9;
+
+        $d12 = $d11 / 1024.0;
+
+        $d14 = $d13 + $d12;
+
+        d4 = d0 - $d14;
+
+        $d15 = 0.04168701738764507 * d4;
+
+        d57 = $d15 + 0.1666666505023083;
+
+        $d16 = d57 * d4;
+
+        d58 = $d16 + 0.5000000000042687;
+
+        $d17 = d58 * d4;
+
+        d59 = $d17 + 1.0;
+
+        $d18 = d59 * d4;
+
+        d60 = $d18 + -3.940510424527919E-20;
+
+        d5 = d54 * d2;
+
+        $d20 = d54 * d3;
+
+        $d19 = d55 * d2;
+
+        $d22 = $d20 + $d19;
+
+        $d21 = d55 * d3;
+
+        d6 = $d22 + $d21;
+
+        d7 = d6 + d5;
+
+        $b3 = d1 cmpl 0.0;
+
+        if $b3 == 0 goto label11;
+
+        $d32 = d7 * d1;
+
+        $d34 = $d32 * d60;
+
+        $d33 = d7 * d1;
+
+        $d36 = $d34 + $d33;
+
+        $d35 = d7 * d60;
+
+        $d37 = $d36 + $d35;
+
+        $d38 = $d37 + d6;
+
+        d61 = $d38 + d5;
+
+        goto label12;
+
+     label11:
+        $d23 = d7 * d60;
+
+        $d24 = $d23 + d6;
+
+        d61 = $d24 + d5;
+
+     label12:
+        if r0 == null goto label13;
+
+        r0[0] = d5;
+
+        $d25 = d7 * d1;
+
+        $d27 = $d25 * d60;
+
+        $d26 = d7 * d1;
+
+        $d29 = $d27 + $d26;
+
+        $d28 = d7 * d60;
+
+        $d30 = $d29 + $d28;
+
+        $d31 = $d30 + d6;
+
+        r0[1] = $d31;
+
+     label13:
+        return d61;
+    }
+
+    public static double expm1(double)
+    {
+        double d0, $d1;
+
+        d0 := @parameter0: double;
+
+        $d1 = staticinvoke <org.apache.commons.math.util.FastMath: double expm1(double,double[])>(d0, null);
+
+        return $d1;
+    }
+
+    private static double expm1(double, double[])
+    {
+        double[] r0, $r1, $r2, r3;
+        double d0, d1, d2, d3, d4, d5, d6, d7, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, d80, d81, d82, d83, d84, d85, d86, d88, d89, d91, d92, d93, d94, d95, d97, d98, d100, d101, d102, d104, d105, d106, d108, d109, d111, d112, d114, d115, d117, d118, d120, d121, d123, d124, d125, d126, d127, d128, d129, d130, d131, d132, d133;
+        byte $b0, $b1, $b2, $b3, $b4, $b5;
+        boolean z0;
+        int i6;
+
+        d80 := @parameter0: double;
+
+        r0 := @parameter1: double[];
+
+        $b0 = d80 cmpl d80;
+
+        if $b0 != 0 goto label1;
+
+        $b1 = d80 cmpl 0.0;
+
+        if $b1 != 0 goto label2;
+
+     label1:
+        return d80;
+
+     label2:
+        $b2 = d80 cmpg -1.0;
+
+        if $b2 <= 0 goto label3;
+
+        $b4 = d80 cmpl 1.0;
+
+        if $b4 < 0 goto label5;
+
+     label3:
+        r3 = newarray (double)[2];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: double exp(double,double,double[])>(d80, 0.0, r3);
+
+        $b3 = d80 cmpl 0.0;
+
+        if $b3 <= 0 goto label4;
+
+        $d15 = r3[0];
+
+        $d17 = -1.0 + $d15;
+
+        $d16 = r3[1];
+
+        $d18 = $d17 + $d16;
+
+        return $d18;
+
+     label4:
+        $d9 = r3[0];
+
+        d0 = -1.0 + $d9;
+
+        $d11 = d0 + 1.0;
+
+        $d10 = r3[0];
+
+        $d12 = $d11 - $d10;
+
+        d81 = neg $d12;
+
+        $d13 = r3[1];
+
+        d82 = d81 + $d13;
+
+        $d14 = d0 + d82;
+
+        return $d14;
+
+     label5:
+        z0 = 0;
+
+        $b5 = d80 cmpg 0.0;
+
+        if $b5 >= 0 goto label6;
+
+        d80 = neg d80;
+
+        z0 = 1;
+
+     label6:
+        $d19 = d80 * 1024.0;
+
+        i6 = (int) $d19;
+
+        $r1 = <org.apache.commons.math.util.FastMath: double[] EXP_FRAC_TABLE_A>;
+
+        $d20 = $r1[i6];
+
+        d83 = $d20 - 1.0;
+
+        $r2 = <org.apache.commons.math.util.FastMath: double[] EXP_FRAC_TABLE_B>;
+
+        d84 = $r2[i6];
+
+        d85 = d83 + d84;
+
+        $d21 = d85 - d83;
+
+        $d22 = $d21 - d84;
+
+        d86 = neg $d22;
+
+        d88 = d85 * 1.073741824E9;
+
+        $d23 = d85 + d88;
+
+        d89 = $d23 - d88;
+
+        $d24 = d85 - d89;
+
+        d1 = d86 + $d24;
+
+        $d25 = (double) i6;
+
+        $d26 = $d25 / 1024.0;
+
+        d2 = d80 - $d26;
+
+        $d27 = 0.008336750013465571 * d2;
+
+        d91 = $d27 + 0.041666663879186654;
+
+        $d28 = d91 * d2;
+
+        d92 = $d28 + 0.16666666666745392;
+
+        $d29 = d92 * d2;
+
+        d93 = $d29 + 0.49999999999999994;
+
+        d94 = d93 * d2;
+
+        d95 = d94 * d2;
+
+        d97 = d2 + d95;
+
+        $d30 = d97 - d2;
+
+        $d31 = $d30 - d95;
+
+        d98 = neg $d31;
+
+        d100 = d97 * 1.073741824E9;
+
+        $d32 = d97 + d100;
+
+        d101 = $d32 - d100;
+
+        $d33 = d97 - d101;
+
+        d102 = d98 + $d33;
+
+        d104 = d101 * d89;
+
+        $d34 = d101 * d1;
+
+        d105 = d104 + $d34;
+
+        $d36 = d105 - d104;
+
+        $d35 = d101 * d1;
+
+        $d37 = $d36 - $d35;
+
+        d106 = neg $d37;
+
+        $d38 = d102 * d89;
+
+        d108 = d105 + $d38;
+
+        $d40 = d108 - d105;
+
+        $d39 = d102 * d89;
+
+        $d41 = $d40 - $d39;
+
+        $d42 = neg $d41;
+
+        d109 = d106 + $d42;
+
+        $d43 = d102 * d1;
+
+        d111 = d108 + $d43;
+
+        $d45 = d111 - d108;
+
+        $d44 = d102 * d1;
+
+        $d46 = $d45 - $d44;
+
+        $d47 = neg $d46;
+
+        d112 = d109 + $d47;
+
+        d114 = d111 + d89;
+
+        $d48 = d114 - d89;
+
+        $d49 = $d48 - d111;
+
+        $d50 = neg $d49;
+
+        d115 = d112 + $d50;
+
+        d117 = d114 + d101;
+
+        $d51 = d117 - d114;
+
+        $d52 = $d51 - d101;
+
+        $d53 = neg $d52;
+
+        d118 = d115 + $d53;
+
+        d120 = d117 + d1;
+
+        $d54 = d120 - d117;
+
+        $d55 = $d54 - d1;
+
+        $d56 = neg $d55;
+
+        d121 = d118 + $d56;
+
+        d123 = d120 + d102;
+
+        $d57 = d123 - d120;
+
+        $d58 = $d57 - d102;
+
+        $d59 = neg $d58;
+
+        d124 = d121 + $d59;
+
+        d125 = d123;
+
+        if z0 == 0 goto label7;
+
+        d3 = 1.0 + d123;
+
+        d4 = 1.0 / d3;
+
+        $d61 = d3 - 1.0;
+
+        $d62 = $d61 - d123;
+
+        $d63 = neg $d62;
+
+        d5 = $d63 + d124;
+
+        d6 = d123 * d4;
+
+        d126 = d6 * 1.073741824E9;
+
+        $d64 = d6 + d126;
+
+        d7 = $d64 - d126;
+
+        d127 = d6 - d7;
+
+        d128 = d3 * 1.073741824E9;
+
+        $d65 = d3 + d128;
+
+        d129 = $d65 - d128;
+
+        d130 = d3 - d129;
+
+        $d66 = d129 * d7;
+
+        $d68 = d123 - $d66;
+
+        $d67 = d129 * d127;
+
+        $d70 = $d68 - $d67;
+
+        $d69 = d130 * d7;
+
+        $d72 = $d70 - $d69;
+
+        $d71 = d130 * d127;
+
+        $d73 = $d72 - $d71;
+
+        $d74 = $d73 * d4;
+
+        d131 = d127 + $d74;
+
+        $d75 = d124 * d4;
+
+        d132 = d131 + $d75;
+
+        $d76 = neg d123;
+
+        $d77 = $d76 * d5;
+
+        $d78 = $d77 * d4;
+
+        $d79 = $d78 * d4;
+
+        d133 = d132 + $d79;
+
+        d125 = neg d7;
+
+        d124 = neg d133;
+
+     label7:
+        if r0 == null goto label8;
+
+        r0[0] = d125;
+
+        r0[1] = d124;
+
+     label8:
+        $d60 = d125 + d124;
+
+        return $d60;
+    }
+
+    private static double slowexp(double, double[])
+    {
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10;
+        double[] r0, r1, r2, r3, r4, $r5;
+        int i0;
+
+        d0 := @parameter0: double;
+
+        r0 := @parameter1: double[];
+
+        r1 = newarray (double)[2];
+
+        r2 = newarray (double)[2];
+
+        r3 = newarray (double)[2];
+
+        r4 = newarray (double)[2];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void split(double,double[])>(d0, r1);
+
+        r2[1] = 0.0;
+
+        r2[0] = 0.0;
+
+        i0 = 19;
+
+     label1:
+        if i0 < 0 goto label2;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r1, r2, r4);
+
+        $d6 = r4[0];
+
+        r2[0] = $d6;
+
+        $d7 = r4[1];
+
+        r2[1] = $d7;
+
+        $r5 = <org.apache.commons.math.util.FastMath: double[] FACT>;
+
+        $d8 = $r5[i0];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void split(double,double[])>($d8, r4);
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitReciprocal(double[],double[])>(r4, r3);
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitAdd(double[],double[],double[])>(r2, r3, r4);
+
+        $d9 = r4[0];
+
+        r2[0] = $d9;
+
+        $d10 = r4[1];
+
+        r2[1] = $d10;
+
+        i0 = i0 + -1;
+
+        goto label1;
+
+     label2:
+        if r0 == null goto label3;
+
+        $d4 = r2[0];
+
+        r0[0] = $d4;
+
+        $d5 = r2[1];
+
+        r0[1] = $d5;
+
+     label3:
+        $d2 = r2[0];
+
+        $d1 = r2[1];
+
+        $d3 = $d2 + $d1;
+
+        return $d3;
+    }
+
+    private static void split(double, double[])
+    {
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, d10, d11;
+        double[] r0;
+        byte $b0, $b1;
+
+        d0 := @parameter0: double;
+
+        r0 := @parameter1: double[];
+
+        $b0 = d0 cmpg 8.0E298;
+
+        if $b0 >= 0 goto label1;
+
+        $b1 = d0 cmpl -8.0E298;
+
+        if $b1 <= 0 goto label1;
+
+        d10 = d0 * 1.073741824E9;
+
+        $d6 = d0 + d10;
+
+        $d7 = $d6 - d10;
+
+        r0[0] = $d7;
+
+        $d8 = r0[0];
+
+        $d9 = d0 - $d8;
+
+        r0[1] = $d9;
+
+        goto label2;
+
+     label1:
+        d11 = d0 * 9.313225746154785E-10;
+
+        $d1 = d0 + d11;
+
+        $d2 = $d1 - d0;
+
+        $d3 = $d2 * 1.073741824E9;
+
+        r0[0] = $d3;
+
+        $d4 = r0[0];
+
+        $d5 = d0 - $d4;
+
+        r0[1] = $d5;
+
+     label2:
+        return;
+    }
+
+    private static void resplit(double[])
+    {
+        double[] r0;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, d19, d20;
+        byte $b0, $b1;
+
+        r0 := @parameter0: double[];
+
+        $d3 = r0[0];
+
+        $d2 = r0[1];
+
+        d0 = $d3 + $d2;
+
+        $d4 = r0[0];
+
+        $d6 = d0 - $d4;
+
+        $d5 = r0[1];
+
+        $d7 = $d6 - $d5;
+
+        d1 = neg $d7;
+
+        $b0 = d0 cmpg 8.0E298;
+
+        if $b0 >= 0 goto label1;
+
+        $b1 = d0 cmpl -8.0E298;
+
+        if $b1 <= 0 goto label1;
+
+        d19 = d0 * 1.073741824E9;
+
+        $d14 = d0 + d19;
+
+        $d15 = $d14 - d19;
+
+        r0[0] = $d15;
+
+        $d16 = r0[0];
+
+        $d17 = d0 - $d16;
+
+        $d18 = $d17 + d1;
+
+        r0[1] = $d18;
+
+        goto label2;
+
+     label1:
+        d20 = d0 * 9.313225746154785E-10;
+
+        $d8 = d0 + d20;
+
+        $d9 = $d8 - d0;
+
+        $d10 = $d9 * 1.073741824E9;
+
+        r0[0] = $d10;
+
+        $d11 = r0[0];
+
+        $d12 = d0 - $d11;
+
+        $d13 = $d12 + d1;
+
+        r0[1] = $d13;
+
+     label2:
+        return;
+    }
+
+    private static void splitMult(double[], double[], double[])
+    {
+        double[] r0, r1, r2;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13;
+
+        r0 := @parameter0: double[];
+
+        r1 := @parameter1: double[];
+
+        r2 := @parameter2: double[];
+
+        $d1 = r0[0];
+
+        $d0 = r1[0];
+
+        $d2 = $d1 * $d0;
+
+        r2[0] = $d2;
+
+        $d4 = r0[0];
+
+        $d3 = r1[1];
+
+        $d8 = $d4 * $d3;
+
+        $d6 = r0[1];
+
+        $d5 = r1[0];
+
+        $d7 = $d6 * $d5;
+
+        $d12 = $d8 + $d7;
+
+        $d10 = r0[1];
+
+        $d9 = r1[1];
+
+        $d11 = $d10 * $d9;
+
+        $d13 = $d12 + $d11;
+
+        r2[1] = $d13;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void resplit(double[])>(r2);
+
+        return;
+    }
+
+    private static void splitAdd(double[], double[], double[])
+    {
+        double[] r0, r1, r2;
+        double $d0, $d1, $d2, $d3, $d4, $d5;
+
+        r0 := @parameter0: double[];
+
+        r1 := @parameter1: double[];
+
+        r2 := @parameter2: double[];
+
+        $d1 = r0[0];
+
+        $d0 = r1[0];
+
+        $d2 = $d1 + $d0;
+
+        r2[0] = $d2;
+
+        $d4 = r0[1];
+
+        $d3 = r1[1];
+
+        $d5 = $d4 + $d3;
+
+        r2[1] = $d5;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void resplit(double[])>(r2);
+
+        return;
+    }
+
+    private static void splitReciprocal(double[], double[])
+    {
+        double[] r0, r1;
+        double $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, d41, d42;
+        byte $b0, $b1;
+        int i2;
+
+        r0 := @parameter0: double[];
+
+        r1 := @parameter1: double[];
+
+        $d2 = r0[0];
+
+        $b0 = $d2 cmpl 0.0;
+
+        if $b0 != 0 goto label1;
+
+        $d40 = r0[1];
+
+        r0[0] = $d40;
+
+        r0[1] = 0.0;
+
+     label1:
+        $d3 = r0[0];
+
+        $d4 = 0.9999997615814209 / $d3;
+
+        r1[0] = $d4;
+
+        $d5 = r0[0];
+
+        $d8 = 2.384185791015625E-7 * $d5;
+
+        $d6 = r0[1];
+
+        $d7 = 0.9999997615814209 * $d6;
+
+        $d16 = $d8 - $d7;
+
+        $d10 = r0[0];
+
+        $d9 = r0[0];
+
+        $d14 = $d10 * $d9;
+
+        $d12 = r0[0];
+
+        $d11 = r0[1];
+
+        $d13 = $d12 * $d11;
+
+        $d15 = $d14 + $d13;
+
+        $d17 = $d16 / $d15;
+
+        r1[1] = $d17;
+
+        $d19 = r1[1];
+
+        $d18 = r1[1];
+
+        $b1 = $d19 cmpl $d18;
+
+        if $b1 == 0 goto label2;
+
+        r1[1] = 0.0;
+
+     label2:
+        staticinvoke <org.apache.commons.math.util.FastMath: void resplit(double[])>(r1);
+
+        i2 = 0;
+
+     label3:
+        if i2 >= 2 goto label4;
+
+        $d21 = r1[0];
+
+        $d20 = r0[0];
+
+        $d22 = $d21 * $d20;
+
+        $d26 = 1.0 - $d22;
+
+        $d24 = r1[0];
+
+        $d23 = r0[1];
+
+        $d25 = $d24 * $d23;
+
+        $d30 = $d26 - $d25;
+
+        $d28 = r1[1];
+
+        $d27 = r0[0];
+
+        $d29 = $d28 * $d27;
+
+        $d34 = $d30 - $d29;
+
+        $d32 = r1[1];
+
+        $d31 = r0[1];
+
+        $d33 = $d32 * $d31;
+
+        d41 = $d34 - $d33;
+
+        $d36 = r1[0];
+
+        $d35 = r1[1];
+
+        $d37 = $d36 + $d35;
+
+        d42 = d41 * $d37;
+
+        $d38 = r1[1];
+
+        $d39 = $d38 + d42;
+
+        r1[1] = $d39;
+
+        i2 = i2 + 1;
+
+        goto label3;
+
+     label4:
+        return;
+    }
+
+    private static void quadMult(double[], double[], double[])
+    {
+        double[] r0, r1, r2, r3, r4, r5;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, d57, d58, d59, d60, d61, d62;
+
+        r0 := @parameter0: double[];
+
+        r1 := @parameter1: double[];
+
+        r2 := @parameter2: double[];
+
+        r3 = newarray (double)[2];
+
+        r4 = newarray (double)[2];
+
+        r5 = newarray (double)[2];
+
+        $d0 = r0[0];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void split(double,double[])>($d0, r3);
+
+        $d1 = r1[0];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void split(double,double[])>($d1, r4);
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r3, r4, r5);
+
+        $d2 = r5[0];
+
+        r2[0] = $d2;
+
+        $d3 = r5[1];
+
+        r2[1] = $d3;
+
+        $d4 = r1[1];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void split(double,double[])>($d4, r4);
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r3, r4, r5);
+
+        $d6 = r2[0];
+
+        $d5 = r5[0];
+
+        d57 = $d6 + $d5;
+
+        $d11 = r2[1];
+
+        $d7 = r2[0];
+
+        $d9 = d57 - $d7;
+
+        $d8 = r5[0];
+
+        $d10 = $d9 - $d8;
+
+        $d12 = $d11 - $d10;
+
+        r2[1] = $d12;
+
+        r2[0] = d57;
+
+        $d14 = r2[0];
+
+        $d13 = r5[1];
+
+        d58 = $d14 + $d13;
+
+        $d19 = r2[1];
+
+        $d15 = r2[0];
+
+        $d17 = d58 - $d15;
+
+        $d16 = r5[1];
+
+        $d18 = $d17 - $d16;
+
+        $d20 = $d19 - $d18;
+
+        r2[1] = $d20;
+
+        r2[0] = d58;
+
+        $d21 = r0[1];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void split(double,double[])>($d21, r3);
+
+        $d22 = r1[0];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void split(double,double[])>($d22, r4);
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r3, r4, r5);
+
+        $d24 = r2[0];
+
+        $d23 = r5[0];
+
+        d59 = $d24 + $d23;
+
+        $d29 = r2[1];
+
+        $d25 = r2[0];
+
+        $d27 = d59 - $d25;
+
+        $d26 = r5[0];
+
+        $d28 = $d27 - $d26;
+
+        $d30 = $d29 - $d28;
+
+        r2[1] = $d30;
+
+        r2[0] = d59;
+
+        $d32 = r2[0];
+
+        $d31 = r5[1];
+
+        d60 = $d32 + $d31;
+
+        $d37 = r2[1];
+
+        $d33 = r2[0];
+
+        $d35 = d60 - $d33;
+
+        $d34 = r5[1];
+
+        $d36 = $d35 - $d34;
+
+        $d38 = $d37 - $d36;
+
+        r2[1] = $d38;
+
+        r2[0] = d60;
+
+        $d39 = r0[1];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void split(double,double[])>($d39, r3);
+
+        $d40 = r1[1];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void split(double,double[])>($d40, r4);
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r3, r4, r5);
+
+        $d42 = r2[0];
+
+        $d41 = r5[0];
+
+        d61 = $d42 + $d41;
+
+        $d47 = r2[1];
+
+        $d43 = r2[0];
+
+        $d45 = d61 - $d43;
+
+        $d44 = r5[0];
+
+        $d46 = $d45 - $d44;
+
+        $d48 = $d47 - $d46;
+
+        r2[1] = $d48;
+
+        r2[0] = d61;
+
+        $d50 = r2[0];
+
+        $d49 = r5[1];
+
+        d62 = $d50 + $d49;
+
+        $d55 = r2[1];
+
+        $d51 = r2[0];
+
+        $d53 = d62 - $d51;
+
+        $d52 = r5[1];
+
+        $d54 = $d53 - $d52;
+
+        $d56 = $d55 - $d54;
+
+        r2[1] = $d56;
+
+        r2[0] = d62;
+
+        return;
+    }
+
+    private static double expint(int, double[])
+    {
+        double[] r0, r1, r2, r3;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8;
+        int $i0, i1;
+
+        i1 := @parameter0: int;
+
+        r0 := @parameter1: double[];
+
+        r1 = newarray (double)[2];
+
+        r2 = newarray (double)[2];
+
+        r3 = newarray (double)[2];
+
+        r1[0] = 2.718281828459045;
+
+        r1[1] = 1.4456468917292502E-16;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void split(double,double[])>(1.0, r3);
+
+     label1:
+        if i1 <= 0 goto label3;
+
+        $i0 = i1 & 1;
+
+        if $i0 == 0 goto label2;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void quadMult(double[],double[],double[])>(r3, r1, r2);
+
+        $d7 = r2[0];
+
+        r3[0] = $d7;
+
+        $d8 = r2[1];
+
+        r3[1] = $d8;
+
+     label2:
+        staticinvoke <org.apache.commons.math.util.FastMath: void quadMult(double[],double[],double[])>(r1, r1, r2);
+
+        $d5 = r2[0];
+
+        r1[0] = $d5;
+
+        $d6 = r2[1];
+
+        r1[1] = $d6;
+
+        i1 = i1 >> 1;
+
+        goto label1;
+
+     label3:
+        if r0 == null goto label4;
+
+        $d3 = r3[0];
+
+        r0[0] = $d3;
+
+        $d4 = r3[1];
+
+        r0[1] = $d4;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void resplit(double[])>(r0);
+
+     label4:
+        $d1 = r3[0];
+
+        $d0 = r3[1];
+
+        $d2 = $d1 + $d0;
+
+        return $d2;
+    }
+
+    public static double log(double)
+    {
+        double d0, $d1;
+
+        d0 := @parameter0: double;
+
+        $d1 = staticinvoke <org.apache.commons.math.util.FastMath: double log(double,double[])>(d0, null);
+
+        return $d1;
+    }
+
+    private static double log(double, double[])
+    {
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, d70, d72, d73, d74, d77, d78, d79, d80, d81, d82, d83, d84, d85, d86, d87, d88, d89, d90, d91, $d92, $d93, $d94, d96, d97, d98, d99, d102, d103, d104, d105, d106, d107, d108, d109, d110, d111, d112, d113, d114, d115, d116, d118, d119, d120, d121, d122, d123, d125, d126, d128, d129, d130, d132, d133, d134, d136, d137, d138, d140, d141, d142, d144;
+        double[] r0, $r3, $r6, $r9, $r11, $r14, $r17, $r20, $r22, r24;
+        byte $b0, $b2, $b3, $b4, $b8, $b9, $b17, $b23, $b25, $b26;
+        long $l1, $l5, $l7, $l10, $l11, $l24, l27, $l30, $l31, $l33, $l34;
+        int $i6, $i12, $i13, $i14, $i15, $i16, $i18, $i19, $i20, $i21, $i22, i28, i29, $i32, i35;
+        double[][] $r1, $r2, $r4, $r5, $r7, $r8, $r10, $r12, $r13, $r15, $r16, $r18, $r19, $r21, $r23;
+
+        d0 := @parameter0: double;
+
+        r0 := @parameter1: double[];
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 != 0 goto label01;
+
+        return #-Infinity;
+
+     label01:
+        l27 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d0);
+
+        $l1 = l27 & -9223372036854775808L;
+
+        $b2 = $l1 cmp 0L;
+
+        if $b2 != 0 goto label02;
+
+        $b26 = d0 cmpl d0;
+
+        if $b26 == 0 goto label04;
+
+     label02:
+        $b3 = d0 cmpl 0.0;
+
+        if $b3 == 0 goto label04;
+
+        if r0 == null goto label03;
+
+        r0[0] = #NaN;
+
+     label03:
+        return #NaN;
+
+     label04:
+        $b4 = d0 cmpl #Infinity;
+
+        if $b4 != 0 goto label06;
+
+        if r0 == null goto label05;
+
+        r0[0] = #Infinity;
+
+     label05:
+        return #Infinity;
+
+     label06:
+        $l5 = l27 >> 52;
+
+        $i6 = (int) $l5;
+
+        i28 = $i6 - 1023;
+
+        $l7 = l27 & 9218868437227405312L;
+
+        $b8 = $l7 cmp 0L;
+
+        if $b8 != 0 goto label10;
+
+        $b23 = d0 cmpl 0.0;
+
+        if $b23 != 0 goto label08;
+
+        if r0 == null goto label07;
+
+        r0[0] = #-Infinity;
+
+     label07:
+        return #-Infinity;
+
+     label08:
+        l27 = l27 << 1;
+
+     label09:
+        $l24 = l27 & 4503599627370496L;
+
+        $b25 = $l24 cmp 0L;
+
+        if $b25 != 0 goto label10;
+
+        i28 = i28 + -1;
+
+        l27 = l27 << 1;
+
+        goto label09;
+
+     label10:
+        if i28 == -1 goto label11;
+
+        if i28 != 0 goto label14;
+
+     label11:
+        $b9 = d0 cmpg 1.01;
+
+        if $b9 >= 0 goto label14;
+
+        $b17 = d0 cmpl 0.99;
+
+        if $b17 <= 0 goto label14;
+
+        if r0 != null goto label14;
+
+        d70 = d0 - 1.0;
+
+        d72 = d70 * 1.073741824E9;
+
+        $d52 = d70 + d72;
+
+        d73 = $d52 - d72;
+
+        d74 = d70 - d73;
+
+        $r13 = <org.apache.commons.math.util.FastMath: double[][] LN_QUICK_COEF>;
+
+        $r12 = <org.apache.commons.math.util.FastMath: double[][] LN_QUICK_COEF>;
+
+        $i18 = lengthof $r12;
+
+        $i19 = $i18 - 1;
+
+        $r14 = $r13[$i19];
+
+        d77 = $r14[0];
+
+        $r16 = <org.apache.commons.math.util.FastMath: double[][] LN_QUICK_COEF>;
+
+        $r15 = <org.apache.commons.math.util.FastMath: double[][] LN_QUICK_COEF>;
+
+        $i20 = lengthof $r15;
+
+        $i21 = $i20 - 1;
+
+        $r17 = $r16[$i21];
+
+        d78 = $r17[1];
+
+        $r18 = <org.apache.commons.math.util.FastMath: double[][] LN_QUICK_COEF>;
+
+        $i22 = lengthof $r18;
+
+        i29 = $i22 - 2;
+
+     label12:
+        if i29 < 0 goto label13;
+
+        d79 = d77 * d73;
+
+        $d61 = d77 * d74;
+
+        $d60 = d78 * d73;
+
+        $d63 = $d61 + $d60;
+
+        $d62 = d78 * d74;
+
+        d80 = $d63 + $d62;
+
+        d81 = d79 * 1.073741824E9;
+
+        $d64 = d79 + d81;
+
+        d82 = $d64 - d81;
+
+        $d65 = d79 - d82;
+
+        d83 = $d65 + d80;
+
+        $r19 = <org.apache.commons.math.util.FastMath: double[][] LN_QUICK_COEF>;
+
+        $r20 = $r19[i29];
+
+        $d66 = $r20[0];
+
+        d84 = d82 + $d66;
+
+        $r21 = <org.apache.commons.math.util.FastMath: double[][] LN_QUICK_COEF>;
+
+        $r22 = $r21[i29];
+
+        $d67 = $r22[1];
+
+        d85 = d83 + $d67;
+
+        d86 = d84 * 1.073741824E9;
+
+        $d68 = d84 + d86;
+
+        d77 = $d68 - d86;
+
+        $d69 = d84 - d77;
+
+        d78 = $d69 + d85;
+
+        i29 = i29 + -1;
+
+        goto label12;
+
+     label13:
+        d87 = d77 * d73;
+
+        $d54 = d77 * d74;
+
+        $d53 = d78 * d73;
+
+        $d56 = $d54 + $d53;
+
+        $d55 = d78 * d74;
+
+        d88 = $d56 + $d55;
+
+        d89 = d87 * 1.073741824E9;
+
+        $d57 = d87 + d89;
+
+        d90 = $d57 - d89;
+
+        $d58 = d87 - d90;
+
+        d91 = $d58 + d88;
+
+        $d59 = d90 + d91;
+
+        return $d59;
+
+     label14:
+        $r23 = <org.apache.commons.math.util.FastMath: double[][] LN_MANT>;
+
+        $l30 = l27 & 4499201580859392L;
+
+        $l31 = $l30 >> 42;
+
+        $i32 = (int) $l31;
+
+        r24 = $r23[$i32];
+
+        $l33 = l27 & 4398046511103L;
+
+        $d92 = (double) $l33;
+
+        $l34 = l27 & 4499201580859392L;
+
+        $d93 = (double) $l34;
+
+        $d94 = 4.503599627370496E15 + $d93;
+
+        d1 = $d92 / $d94;
+
+        d96 = 0.0;
+
+        if r0 == null goto label17;
+
+        d97 = d1 * 1.073741824E9;
+
+        $d29 = d1 + d97;
+
+        d98 = $d29 - d97;
+
+        d99 = d1 - d98;
+
+        $l10 = l27 & 4398046511103L;
+
+        d2 = (double) $l10;
+
+        $l11 = l27 & 4499201580859392L;
+
+        $d30 = (double) $l11;
+
+        d3 = 4.503599627370496E15 + $d30;
+
+        $d31 = d98 * d3;
+
+        $d33 = d2 - $d31;
+
+        $d32 = d99 * d3;
+
+        d102 = $d33 - $d32;
+
+        $d34 = d102 / d3;
+
+        d103 = d99 + $d34;
+
+        $r2 = <org.apache.commons.math.util.FastMath: double[][] LN_HI_PREC_COEF>;
+
+        $r1 = <org.apache.commons.math.util.FastMath: double[][] LN_HI_PREC_COEF>;
+
+        $i12 = lengthof $r1;
+
+        $i13 = $i12 - 1;
+
+        $r3 = $r2[$i13];
+
+        d104 = $r3[0];
+
+        $r5 = <org.apache.commons.math.util.FastMath: double[][] LN_HI_PREC_COEF>;
+
+        $r4 = <org.apache.commons.math.util.FastMath: double[][] LN_HI_PREC_COEF>;
+
+        $i14 = lengthof $r4;
+
+        $i15 = $i14 - 1;
+
+        $r6 = $r5[$i15];
+
+        d105 = $r6[1];
+
+        $r7 = <org.apache.commons.math.util.FastMath: double[][] LN_HI_PREC_COEF>;
+
+        $i16 = lengthof $r7;
+
+        i35 = $i16 - 2;
+
+     label15:
+        if i35 < 0 goto label16;
+
+        d106 = d104 * d98;
+
+        $d42 = d104 * d103;
+
+        $d41 = d105 * d98;
+
+        $d44 = $d42 + $d41;
+
+        $d43 = d105 * d103;
+
+        d107 = $d44 + $d43;
+
+        d108 = d106 * 1.073741824E9;
+
+        $d45 = d106 + d108;
+
+        d109 = $d45 - d108;
+
+        $d46 = d106 - d109;
+
+        d110 = $d46 + d107;
+
+        $r8 = <org.apache.commons.math.util.FastMath: double[][] LN_HI_PREC_COEF>;
+
+        $r9 = $r8[i35];
+
+        $d47 = $r9[0];
+
+        d111 = d109 + $d47;
+
+        $r10 = <org.apache.commons.math.util.FastMath: double[][] LN_HI_PREC_COEF>;
+
+        $r11 = $r10[i35];
+
+        $d48 = $r11[1];
+
+        d112 = d110 + $d48;
+
+        d113 = d111 * 1.073741824E9;
+
+        $d49 = d111 + d113;
+
+        d104 = $d49 - d113;
+
+        $d50 = d111 - d104;
+
+        d105 = $d50 + d112;
+
+        i35 = i35 + -1;
+
+        goto label15;
+
+     label16:
+        d114 = d104 * d98;
+
+        $d36 = d104 * d103;
+
+        $d35 = d105 * d98;
+
+        $d38 = $d36 + $d35;
+
+        $d37 = d105 * d103;
+
+        d115 = $d38 + $d37;
+
+        d116 = d114 + d115;
+
+        $d39 = d116 - d114;
+
+        $d40 = $d39 - d115;
+
+        d96 = neg $d40;
+
+        goto label18;
+
+     label17:
+        $d4 = -0.16624882440418567 * d1;
+
+        d118 = $d4 + 0.19999954120254515;
+
+        $d5 = d118 * d1;
+
+        d119 = $d5 + -0.2499999997677497;
+
+        $d6 = d119 * d1;
+
+        d120 = $d6 + 0.3333333333332802;
+
+        $d7 = d120 * d1;
+
+        d121 = $d7 + -0.5;
+
+        $d8 = d121 * d1;
+
+        d122 = $d8 + 1.0;
+
+        d116 = d122 * d1;
+
+     label18:
+        $d9 = (double) i28;
+
+        d123 = 0.6931470632553101 * $d9;
+
+        $d10 = r24[0];
+
+        d125 = d123 + $d10;
+
+        $d12 = d125 - d123;
+
+        $d11 = r24[0];
+
+        $d13 = $d12 - $d11;
+
+        d126 = neg $d13;
+
+        d128 = 0.0 + d126;
+
+        d129 = d125 + d116;
+
+        $d14 = d129 - d125;
+
+        $d15 = $d14 - d116;
+
+        d130 = neg $d15;
+
+        d132 = d128 + d130;
+
+        $d16 = (double) i28;
+
+        $d17 = 1.1730463525082348E-7 * $d16;
+
+        d133 = d129 + $d17;
+
+        $d20 = d133 - d129;
+
+        $d18 = (double) i28;
+
+        $d19 = 1.1730463525082348E-7 * $d18;
+
+        $d21 = $d20 - $d19;
+
+        d134 = neg $d21;
+
+        d136 = d132 + d134;
+
+        $d22 = r24[1];
+
+        d137 = d133 + $d22;
+
+        $d24 = d137 - d133;
+
+        $d23 = r24[1];
+
+        $d25 = $d24 - $d23;
+
+        d138 = neg $d25;
+
+        d140 = d136 + d138;
+
+        d141 = d137 + d96;
+
+        $d26 = d141 - d137;
+
+        $d27 = $d26 - d96;
+
+        d142 = neg $d27;
+
+        d144 = d140 + d142;
+
+        if r0 == null goto label19;
+
+        r0[0] = d141;
+
+        r0[1] = d144;
+
+     label19:
+        $d28 = d141 + d144;
+
+        return $d28;
+    }
+
+    public static double log1p(double)
+    {
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, d16, d17, d18, d19, d20;
+        byte $b0, $b1, $b2, $b3, $b4;
+        boolean $z0;
+        double[] r0;
+
+        d0 := @parameter0: double;
+
+        d1 = 1.0 + d0;
+
+        $d5 = d1 - 1.0;
+
+        $d6 = $d5 - d0;
+
+        d2 = neg $d6;
+
+        $b0 = d0 cmpl -1.0;
+
+        if $b0 != 0 goto label1;
+
+        $d15 = d0 / 0.0;
+
+        return $d15;
+
+     label1:
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 <= 0 goto label2;
+
+        $d14 = 1.0 / d0;
+
+        $b4 = $d14 cmpl 0.0;
+
+        if $b4 != 0 goto label2;
+
+        return d0;
+
+     label2:
+        $b2 = d0 cmpl 1.0E-6;
+
+        if $b2 > 0 goto label3;
+
+        $b3 = d0 cmpg -1.0E-6;
+
+        if $b3 >= 0 goto label5;
+
+     label3:
+        r0 = newarray (double)[2];
+
+        d3 = staticinvoke <org.apache.commons.math.util.FastMath: double log(double,double[])>(d1, r0);
+
+        $z0 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d3);
+
+        if $z0 == 0 goto label4;
+
+        return d3;
+
+     label4:
+        d4 = d2 / d1;
+
+        $d7 = 0.5 * d4;
+
+        d16 = $d7 + 1.0;
+
+        d17 = d16 * d4;
+
+        $d8 = r0[1];
+
+        $d10 = d17 + $d8;
+
+        $d9 = r0[0];
+
+        $d11 = $d10 + $d9;
+
+        return $d11;
+
+     label5:
+        $d12 = d0 * 0.333333333333333;
+
+        d18 = $d12 - 0.5;
+
+        $d13 = d18 * d0;
+
+        d19 = $d13 + 1.0;
+
+        d20 = d19 * d0;
+
+        return d20;
+    }
+
+    public static double log10(double)
+    {
+        double d0, d1, d2, d3, d4, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19;
+        double[] r0;
+        boolean $z0;
+
+        d0 := @parameter0: double;
+
+        r0 = newarray (double)[2];
+
+        d1 = staticinvoke <org.apache.commons.math.util.FastMath: double log(double,double[])>(d0, r0);
+
+        $z0 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d1);
+
+        if $z0 == 0 goto label1;
+
+        return d1;
+
+     label1:
+        $d7 = r0[0];
+
+        d2 = $d7 * 1.073741824E9;
+
+        $d8 = r0[0];
+
+        $d9 = $d8 + d2;
+
+        d3 = $d9 - d2;
+
+        $d10 = r0[0];
+
+        $d12 = $d10 - d3;
+
+        $d11 = r0[1];
+
+        d4 = $d12 + $d11;
+
+        $d14 = 1.9699272335463627E-8 * d4;
+
+        $d13 = 1.9699272335463627E-8 * d3;
+
+        $d16 = $d14 + $d13;
+
+        $d15 = 0.4342944622039795 * d4;
+
+        $d18 = $d16 + $d15;
+
+        $d17 = 0.4342944622039795 * d3;
+
+        $d19 = $d18 + $d17;
+
+        return $d19;
+    }
+
+    public static double pow(double, double)
+    {
+        double d0, d1, d2, d3, d4, d5, d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, d39, d40, d41, d42, d43, d44, d45, d46, d47, d49, d50, d52, d53, d54, d55, d56;
+        double[] r0;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11, $b13, $b16, $b17, $b18, $b19, $b20, $b21, $b22, $b24, $b25, $b27, $b28, $b29, $b30, $b31, $b33, $b34, $b35, $b36, $b38, $b39, $b41, $b42, $b44, $b47, $b48, $b49;
+        long $l12, $l14, $l15, $l23, $l26, $l32, $l37, $l40, $l43, l45, l46, l50, l51;
+        boolean $z0;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        r0 = newarray (double)[2];
+
+        $b0 = d1 cmpl 0.0;
+
+        if $b0 != 0 goto label01;
+
+        return 1.0;
+
+     label01:
+        $b1 = d0 cmpl d0;
+
+        if $b1 == 0 goto label02;
+
+        return d0;
+
+     label02:
+        $b2 = d0 cmpl 0.0;
+
+        if $b2 != 0 goto label08;
+
+        l45 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d0);
+
+        $l32 = l45 & -9223372036854775808L;
+
+        $b33 = $l32 cmp 0L;
+
+        if $b33 == 0 goto label05;
+
+        l46 = (long) d1;
+
+        $b35 = d1 cmpg 0.0;
+
+        if $b35 >= 0 goto label03;
+
+        $d37 = (double) l46;
+
+        $b42 = d1 cmpl $d37;
+
+        if $b42 != 0 goto label03;
+
+        $l43 = l46 & 1L;
+
+        $b44 = $l43 cmp 1L;
+
+        if $b44 != 0 goto label03;
+
+        return #-Infinity;
+
+     label03:
+        $b47 = d1 cmpg 0.0;
+
+        if $b47 >= 0 goto label04;
+
+        $d36 = (double) l46;
+
+        $b39 = d1 cmpl $d36;
+
+        if $b39 != 0 goto label04;
+
+        $l40 = l46 & 1L;
+
+        $b41 = $l40 cmp 1L;
+
+        if $b41 != 0 goto label04;
+
+        return -0.0;
+
+     label04:
+        $b48 = d1 cmpl 0.0;
+
+        if $b48 <= 0 goto label05;
+
+        $d35 = (double) l46;
+
+        $b36 = d1 cmpl $d35;
+
+        if $b36 != 0 goto label05;
+
+        $l37 = l46 & 1L;
+
+        $b38 = $l37 cmp 1L;
+
+        if $b38 != 0 goto label05;
+
+        return -0.0;
+
+     label05:
+        $b49 = d1 cmpg 0.0;
+
+        if $b49 >= 0 goto label06;
+
+        return #Infinity;
+
+     label06:
+        $b34 = d1 cmpl 0.0;
+
+        if $b34 <= 0 goto label07;
+
+        return 0.0;
+
+     label07:
+        return #NaN;
+
+     label08:
+        $b3 = d0 cmpl #Infinity;
+
+        if $b3 != 0 goto label11;
+
+        $b30 = d1 cmpl d1;
+
+        if $b30 == 0 goto label09;
+
+        return d1;
+
+     label09:
+        $b31 = d1 cmpg 0.0;
+
+        if $b31 >= 0 goto label10;
+
+        return 0.0;
+
+     label10:
+        return #Infinity;
+
+     label11:
+        $b4 = d1 cmpl #Infinity;
+
+        if $b4 != 0 goto label14;
+
+        $d33 = d0 * d0;
+
+        $b28 = $d33 cmpl 1.0;
+
+        if $b28 != 0 goto label12;
+
+        return #NaN;
+
+     label12:
+        $d34 = d0 * d0;
+
+        $b29 = $d34 cmpl 1.0;
+
+        if $b29 <= 0 goto label13;
+
+        return #Infinity;
+
+     label13:
+        return 0.0;
+
+     label14:
+        $b5 = d0 cmpl #-Infinity;
+
+        if $b5 != 0 goto label19;
+
+        $b19 = d1 cmpl d1;
+
+        if $b19 == 0 goto label15;
+
+        return d1;
+
+     label15:
+        $b20 = d1 cmpg 0.0;
+
+        if $b20 >= 0 goto label17;
+
+        l50 = (long) d1;
+
+        $d32 = (double) l50;
+
+        $b25 = d1 cmpl $d32;
+
+        if $b25 != 0 goto label16;
+
+        $l26 = l50 & 1L;
+
+        $b27 = $l26 cmp 1L;
+
+        if $b27 != 0 goto label16;
+
+        return -0.0;
+
+     label16:
+        return 0.0;
+
+     label17:
+        $b21 = d1 cmpl 0.0;
+
+        if $b21 <= 0 goto label19;
+
+        l51 = (long) d1;
+
+        $d31 = (double) l51;
+
+        $b22 = d1 cmpl $d31;
+
+        if $b22 != 0 goto label18;
+
+        $l23 = l51 & 1L;
+
+        $b24 = $l23 cmp 1L;
+
+        if $b24 != 0 goto label18;
+
+        return #-Infinity;
+
+     label18:
+        return #Infinity;
+
+     label19:
+        $b6 = d1 cmpl #-Infinity;
+
+        if $b6 != 0 goto label22;
+
+        $d29 = d0 * d0;
+
+        $b17 = $d29 cmpl 1.0;
+
+        if $b17 != 0 goto label20;
+
+        return #NaN;
+
+     label20:
+        $d30 = d0 * d0;
+
+        $b18 = $d30 cmpg 1.0;
+
+        if $b18 >= 0 goto label21;
+
+        return #Infinity;
+
+     label21:
+        return 0.0;
+
+     label22:
+        $b7 = d0 cmpg 0.0;
+
+        if $b7 >= 0 goto label28;
+
+        $b10 = d1 cmpl 4.503599627370496E15;
+
+        if $b10 >= 0 goto label23;
+
+        $b11 = d1 cmpg -4.503599627370496E15;
+
+        if $b11 > 0 goto label24;
+
+     label23:
+        $d23 = neg d0;
+
+        $d24 = staticinvoke <org.apache.commons.math.util.FastMath: double pow(double,double)>($d23, d1);
+
+        return $d24;
+
+     label24:
+        $l12 = (long) d1;
+
+        $d25 = (double) $l12;
+
+        $b13 = d1 cmpl $d25;
+
+        if $b13 != 0 goto label27;
+
+        $l14 = (long) d1;
+
+        $l15 = $l14 & 1L;
+
+        $b16 = $l15 cmp 0L;
+
+        if $b16 != 0 goto label25;
+
+        $d28 = neg d0;
+
+        $d38 = staticinvoke <org.apache.commons.math.util.FastMath: double pow(double,double)>($d28, d1);
+
+        goto label26;
+
+     label25:
+        $d26 = neg d0;
+
+        $d27 = staticinvoke <org.apache.commons.math.util.FastMath: double pow(double,double)>($d26, d1);
+
+        $d38 = neg $d27;
+
+     label26:
+        return $d38;
+
+     label27:
+        return #NaN;
+
+     label28:
+        $b8 = d1 cmpg 8.0E298;
+
+        if $b8 >= 0 goto label29;
+
+        $b9 = d1 cmpl -8.0E298;
+
+        if $b9 <= 0 goto label29;
+
+        d39 = d1 * 1.073741824E9;
+
+        $d22 = d1 + d39;
+
+        d40 = $d22 - d39;
+
+        d41 = d1 - d40;
+
+        goto label30;
+
+     label29:
+        d42 = d1 * 9.313225746154785E-10;
+
+        d43 = d42 * 9.313225746154785E-10;
+
+        $d7 = d42 + d43;
+
+        $d8 = $d7 - d42;
+
+        $d9 = $d8 * 1.073741824E9;
+
+        d40 = $d9 * 1.073741824E9;
+
+        d41 = d1 - d40;
+
+     label30:
+        d44 = staticinvoke <org.apache.commons.math.util.FastMath: double log(double,double[])>(d0, r0);
+
+        $z0 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d44);
+
+        if $z0 == 0 goto label31;
+
+        return d44;
+
+     label31:
+        d45 = r0[0];
+
+        d46 = r0[1];
+
+        d2 = d45 * 1.073741824E9;
+
+        $d10 = d45 + d2;
+
+        d3 = $d10 - d2;
+
+        $d11 = d45 - d3;
+
+        d47 = d46 + $d11;
+
+        d4 = d3 * d40;
+
+        $d13 = d3 * d41;
+
+        $d12 = d47 * d40;
+
+        $d15 = $d13 + $d12;
+
+        $d14 = d47 * d41;
+
+        d5 = $d15 + $d14;
+
+        d49 = d4 + d5;
+
+        $d16 = d49 - d4;
+
+        $d17 = $d16 - d5;
+
+        d50 = neg $d17;
+
+        $d18 = 0.008333333333333333 * d50;
+
+        d52 = $d18 + 0.041666666666666664;
+
+        $d19 = d52 * d50;
+
+        d53 = $d19 + 0.16666666666666666;
+
+        $d20 = d53 * d50;
+
+        d54 = $d20 + 0.5;
+
+        $d21 = d54 * d50;
+
+        d55 = $d21 + 1.0;
+
+        d56 = d55 * d50;
+
+        d6 = staticinvoke <org.apache.commons.math.util.FastMath: double exp(double,double,double[])>(d49, d56, null);
+
+        return d6;
+    }
+
+    private static double[] slowLog(double)
+    {
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14;
+        double[] r0, r1, r2, r3, $r6, $r9, $r12;
+        double[][] $r4, $r5, $r7, $r8, $r10, $r11;
+        int $i0, $i1, $i2, $i3, $i4, i5;
+
+        d0 := @parameter0: double;
+
+        r0 = newarray (double)[2];
+
+        r1 = newarray (double)[2];
+
+        r2 = newarray (double)[2];
+
+        r3 = newarray (double)[2];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void split(double,double[])>(d0, r0);
+
+        $d1 = r0[0];
+
+        $d2 = $d1 + 1.0;
+
+        r0[0] = $d2;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void resplit(double[])>(r0);
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitReciprocal(double[],double[])>(r0, r3);
+
+        $d3 = r0[0];
+
+        $d4 = $d3 - 2.0;
+
+        r0[0] = $d4;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void resplit(double[])>(r0);
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r0, r3, r2);
+
+        $d5 = r2[0];
+
+        r0[0] = $d5;
+
+        $d6 = r2[1];
+
+        r0[1] = $d6;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r0, r0, r1);
+
+        $r5 = <org.apache.commons.math.util.FastMath: double[][] LN_SPLIT_COEF>;
+
+        $r4 = <org.apache.commons.math.util.FastMath: double[][] LN_SPLIT_COEF>;
+
+        $i0 = lengthof $r4;
+
+        $i1 = $i0 - 1;
+
+        $r6 = $r5[$i1];
+
+        $d7 = $r6[0];
+
+        r2[0] = $d7;
+
+        $r8 = <org.apache.commons.math.util.FastMath: double[][] LN_SPLIT_COEF>;
+
+        $r7 = <org.apache.commons.math.util.FastMath: double[][] LN_SPLIT_COEF>;
+
+        $i2 = lengthof $r7;
+
+        $i3 = $i2 - 1;
+
+        $r9 = $r8[$i3];
+
+        $d8 = $r9[1];
+
+        r2[1] = $d8;
+
+        $r10 = <org.apache.commons.math.util.FastMath: double[][] LN_SPLIT_COEF>;
+
+        $i4 = lengthof $r10;
+
+        i5 = $i4 - 2;
+
+     label1:
+        if i5 < 0 goto label2;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r2, r1, r3);
+
+        $d11 = r3[0];
+
+        r2[0] = $d11;
+
+        $d12 = r3[1];
+
+        r2[1] = $d12;
+
+        $r11 = <org.apache.commons.math.util.FastMath: double[][] LN_SPLIT_COEF>;
+
+        $r12 = $r11[i5];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitAdd(double[],double[],double[])>(r2, $r12, r3);
+
+        $d13 = r3[0];
+
+        r2[0] = $d13;
+
+        $d14 = r3[1];
+
+        r2[1] = $d14;
+
+        i5 = i5 + -1;
+
+        goto label1;
+
+     label2:
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r2, r0, r3);
+
+        $d9 = r3[0];
+
+        r2[0] = $d9;
+
+        $d10 = r3[1];
+
+        r2[1] = $d10;
+
+        return r2;
+    }
+
+    private static double slowSin(double, double[])
+    {
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14;
+        double[] r0, r1, r2, r3, r4, $r5;
+        int $i0, $i1, i2;
+
+        d0 := @parameter0: double;
+
+        r0 := @parameter1: double[];
+
+        r1 = newarray (double)[2];
+
+        r2 = newarray (double)[2];
+
+        r3 = newarray (double)[2];
+
+        r4 = newarray (double)[2];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void split(double,double[])>(d0, r1);
+
+        r2[1] = 0.0;
+
+        r2[0] = 0.0;
+
+        i2 = 19;
+
+     label1:
+        if i2 < 0 goto label5;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r1, r2, r4);
+
+        $d6 = r4[0];
+
+        r2[0] = $d6;
+
+        $d7 = r4[1];
+
+        r2[1] = $d7;
+
+        $i0 = i2 & 1;
+
+        if $i0 != 0 goto label2;
+
+        goto label4;
+
+     label2:
+        $r5 = <org.apache.commons.math.util.FastMath: double[] FACT>;
+
+        $d8 = $r5[i2];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void split(double,double[])>($d8, r4);
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitReciprocal(double[],double[])>(r4, r3);
+
+        $i1 = i2 & 2;
+
+        if $i1 == 0 goto label3;
+
+        $d11 = r3[0];
+
+        $d12 = neg $d11;
+
+        r3[0] = $d12;
+
+        $d13 = r3[1];
+
+        $d14 = neg $d13;
+
+        r3[1] = $d14;
+
+     label3:
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitAdd(double[],double[],double[])>(r2, r3, r4);
+
+        $d9 = r4[0];
+
+        r2[0] = $d9;
+
+        $d10 = r4[1];
+
+        r2[1] = $d10;
+
+     label4:
+        i2 = i2 + -1;
+
+        goto label1;
+
+     label5:
+        if r0 == null goto label6;
+
+        $d4 = r2[0];
+
+        r0[0] = $d4;
+
+        $d5 = r2[1];
+
+        r0[1] = $d5;
+
+     label6:
+        $d2 = r2[0];
+
+        $d1 = r2[1];
+
+        $d3 = $d2 + $d1;
+
+        return $d3;
+    }
+
+    private static double slowCos(double, double[])
+    {
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14;
+        double[] r0, r1, r2, r3, r4, $r5;
+        int $i0, $i1, i2;
+
+        d0 := @parameter0: double;
+
+        r0 := @parameter1: double[];
+
+        r1 = newarray (double)[2];
+
+        r2 = newarray (double)[2];
+
+        r3 = newarray (double)[2];
+
+        r4 = newarray (double)[2];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void split(double,double[])>(d0, r1);
+
+        r2[1] = 0.0;
+
+        r2[0] = 0.0;
+
+        i2 = 19;
+
+     label1:
+        if i2 < 0 goto label5;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r1, r2, r4);
+
+        $d6 = r4[0];
+
+        r2[0] = $d6;
+
+        $d7 = r4[1];
+
+        r2[1] = $d7;
+
+        $i0 = i2 & 1;
+
+        if $i0 == 0 goto label2;
+
+        goto label4;
+
+     label2:
+        $r5 = <org.apache.commons.math.util.FastMath: double[] FACT>;
+
+        $d8 = $r5[i2];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void split(double,double[])>($d8, r4);
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitReciprocal(double[],double[])>(r4, r3);
+
+        $i1 = i2 & 2;
+
+        if $i1 == 0 goto label3;
+
+        $d11 = r3[0];
+
+        $d12 = neg $d11;
+
+        r3[0] = $d12;
+
+        $d13 = r3[1];
+
+        $d14 = neg $d13;
+
+        r3[1] = $d14;
+
+     label3:
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitAdd(double[],double[],double[])>(r2, r3, r4);
+
+        $d9 = r4[0];
+
+        r2[0] = $d9;
+
+        $d10 = r4[1];
+
+        r2[1] = $d10;
+
+     label4:
+        i2 = i2 + -1;
+
+        goto label1;
+
+     label5:
+        if r0 == null goto label6;
+
+        $d4 = r2[0];
+
+        r0[0] = $d4;
+
+        $d5 = r2[1];
+
+        r0[1] = $d5;
+
+     label6:
+        $d2 = r2[0];
+
+        $d1 = r2[1];
+
+        $d3 = $d2 + $d1;
+
+        return $d3;
+    }
+
+    private static void buildSinCosTables()
+    {
+        double[] r0, r1, r2, $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r30, $r31, $r32, r33, r34, r35, r36, r37, r38;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d38, $d39, $d41, $d42, d43;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, i17, i18, i19;
+
+        r0 = newarray (double)[2];
+
+        i17 = 0;
+
+     label1:
+        if i17 >= 7 goto label2;
+
+        $d36 = (double) i17;
+
+        d43 = $d36 / 8.0;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: double slowSin(double,double[])>(d43, r0);
+
+        $r29 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_A>;
+
+        $d38 = r0[0];
+
+        $r29[i17] = $d38;
+
+        $r30 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_B>;
+
+        $d39 = r0[1];
+
+        $r30[i17] = $d39;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: double slowCos(double,double[])>(d43, r0);
+
+        $r31 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_A>;
+
+        $d41 = r0[0];
+
+        $r31[i17] = $d41;
+
+        $r32 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_B>;
+
+        $d42 = r0[1];
+
+        $r32[i17] = $d42;
+
+        i17 = i17 + 1;
+
+        goto label1;
+
+     label2:
+        i18 = 7;
+
+     label3:
+        if i18 >= 14 goto label6;
+
+        r33 = newarray (double)[2];
+
+        r34 = newarray (double)[2];
+
+        r35 = newarray (double)[2];
+
+        r1 = newarray (double)[2];
+
+        r2 = newarray (double)[2];
+
+        $i0 = i18 & 1;
+
+        if $i0 != 0 goto label4;
+
+        $r21 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_A>;
+
+        $i13 = i18 / 2;
+
+        $d22 = $r21[$i13];
+
+        r33[0] = $d22;
+
+        $r22 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_B>;
+
+        $i14 = i18 / 2;
+
+        $d23 = $r22[$i14];
+
+        r33[1] = $d23;
+
+        $r23 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_A>;
+
+        $i15 = i18 / 2;
+
+        $d24 = $r23[$i15];
+
+        r34[0] = $d24;
+
+        $r24 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_B>;
+
+        $i16 = i18 / 2;
+
+        $d25 = $r24[$i16];
+
+        r34[1] = $d25;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r33, r34, r0);
+
+        $r25 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_A>;
+
+        $d26 = r0[0];
+
+        $d27 = $d26 * 2.0;
+
+        $r25[i18] = $d27;
+
+        $r26 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_B>;
+
+        $d28 = r0[1];
+
+        $d29 = $d28 * 2.0;
+
+        $r26[i18] = $d29;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r34, r34, r35);
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r33, r33, r2);
+
+        $d30 = r2[0];
+
+        $d31 = neg $d30;
+
+        r2[0] = $d31;
+
+        $d32 = r2[1];
+
+        $d33 = neg $d32;
+
+        r2[1] = $d33;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitAdd(double[],double[],double[])>(r35, r2, r0);
+
+        $r27 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_A>;
+
+        $d34 = r0[0];
+
+        $r27[i18] = $d34;
+
+        $r28 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_B>;
+
+        $d35 = r0[1];
+
+        $r28[i18] = $d35;
+
+        goto label5;
+
+     label4:
+        $r9 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_A>;
+
+        $i1 = i18 / 2;
+
+        $d6 = $r9[$i1];
+
+        r33[0] = $d6;
+
+        $r10 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_B>;
+
+        $i2 = i18 / 2;
+
+        $d7 = $r10[$i2];
+
+        r33[1] = $d7;
+
+        $r11 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_A>;
+
+        $i3 = i18 / 2;
+
+        $d8 = $r11[$i3];
+
+        r34[0] = $d8;
+
+        $r12 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_B>;
+
+        $i4 = i18 / 2;
+
+        $d9 = $r12[$i4];
+
+        r34[1] = $d9;
+
+        $r13 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_A>;
+
+        $i5 = i18 / 2;
+
+        $i6 = $i5 + 1;
+
+        $d10 = $r13[$i6];
+
+        r35[0] = $d10;
+
+        $r14 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_B>;
+
+        $i7 = i18 / 2;
+
+        $i8 = $i7 + 1;
+
+        $d11 = $r14[$i8];
+
+        r35[1] = $d11;
+
+        $r15 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_A>;
+
+        $i9 = i18 / 2;
+
+        $i10 = $i9 + 1;
+
+        $d12 = $r15[$i10];
+
+        r1[0] = $d12;
+
+        $r16 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_B>;
+
+        $i11 = i18 / 2;
+
+        $i12 = $i11 + 1;
+
+        $d13 = $r16[$i12];
+
+        r1[1] = $d13;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r33, r1, r2);
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r34, r35, r0);
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitAdd(double[],double[],double[])>(r0, r2, r0);
+
+        $r17 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_A>;
+
+        $d14 = r0[0];
+
+        $r17[i18] = $d14;
+
+        $r18 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_B>;
+
+        $d15 = r0[1];
+
+        $r18[i18] = $d15;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r34, r1, r0);
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r33, r35, r2);
+
+        $d16 = r2[0];
+
+        $d17 = neg $d16;
+
+        r2[0] = $d17;
+
+        $d18 = r2[1];
+
+        $d19 = neg $d18;
+
+        r2[1] = $d19;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitAdd(double[],double[],double[])>(r0, r2, r0);
+
+        $r19 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_A>;
+
+        $d20 = r0[0];
+
+        $r19[i18] = $d20;
+
+        $r20 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_B>;
+
+        $d21 = r0[1];
+
+        $r20[i18] = $d21;
+
+     label5:
+        i18 = i18 + 1;
+
+        goto label3;
+
+     label6:
+        i19 = 0;
+
+     label7:
+        if i19 >= 14 goto label8;
+
+        r36 = newarray (double)[2];
+
+        r37 = newarray (double)[2];
+
+        r38 = newarray (double)[2];
+
+        $r3 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_A>;
+
+        $d0 = $r3[i19];
+
+        r38[0] = $d0;
+
+        $r4 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_B>;
+
+        $d1 = $r4[i19];
+
+        r38[1] = $d1;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitReciprocal(double[],double[])>(r38, r37);
+
+        $r5 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_A>;
+
+        $d2 = $r5[i19];
+
+        r36[0] = $d2;
+
+        $r6 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_B>;
+
+        $d3 = $r6[i19];
+
+        r36[1] = $d3;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitMult(double[],double[],double[])>(r36, r37, r38);
+
+        $r7 = <org.apache.commons.math.util.FastMath: double[] TANGENT_TABLE_A>;
+
+        $d4 = r38[0];
+
+        $r7[i19] = $d4;
+
+        $r8 = <org.apache.commons.math.util.FastMath: double[] TANGENT_TABLE_B>;
+
+        $d5 = r38[1];
+
+        $r8[i19] = $d5;
+
+        i19 = i19 + 1;
+
+        goto label7;
+
+     label8:
+        return;
+    }
+
+    private static double polySine(double)
+    {
+        double d0, d1, $d2, $d3, $d4, $d5, d7, d8, d9, d10;
+
+        d0 := @parameter0: double;
+
+        d1 = d0 * d0;
+
+        $d2 = 2.7553817452272217E-6 * d1;
+
+        d7 = $d2 + -1.9841269659586505E-4;
+
+        $d3 = d7 * d1;
+
+        d8 = $d3 + 0.008333333333329196;
+
+        $d4 = d8 * d1;
+
+        d9 = $d4 + -0.16666666666666666;
+
+        $d5 = d9 * d1;
+
+        d10 = $d5 * d0;
+
+        return d10;
+    }
+
+    private static double polyCosine(double)
+    {
+        double d0, d1, $d2, $d3, $d4, d6, d7, d8, d9;
+
+        d0 := @parameter0: double;
+
+        d1 = d0 * d0;
+
+        $d2 = 2.479773539153719E-5 * d1;
+
+        d6 = $d2 + -0.0013888888689039883;
+
+        $d3 = d6 * d1;
+
+        d7 = $d3 + 0.041666666666621166;
+
+        $d4 = d7 * d1;
+
+        d8 = $d4 + -0.49999999999999994;
+
+        d9 = d8 * d1;
+
+        return d9;
+    }
+
+    private static double sinQ(double, double)
+    {
+        double d0, d1, d2, d3, d4, d5, d6, d8, d9, d10, d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, d40, d41, d46, d47, d49, d50, d51, d52, d53, d54, d55, d56, d57, d58, d59;
+        int i0;
+        double[] $r0, $r1, $r2, $r3, $r4;
+        byte $b1;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $d12 = d0 * 8.0;
+
+        $d13 = $d12 + 0.5;
+
+        i0 = (int) $d13;
+
+        $r0 = <org.apache.commons.math.util.FastMath: double[] EIGHTHS>;
+
+        $d14 = $r0[i0];
+
+        d2 = d0 - $d14;
+
+        $r1 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_A>;
+
+        d3 = $r1[i0];
+
+        $r2 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_B>;
+
+        d4 = $r2[i0];
+
+        $r3 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_A>;
+
+        d5 = $r3[i0];
+
+        $r4 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_B>;
+
+        d6 = $r4[i0];
+
+        d40 = staticinvoke <org.apache.commons.math.util.FastMath: double polySine(double)>(d2);
+
+        d8 = staticinvoke <org.apache.commons.math.util.FastMath: double polyCosine(double)>(d2);
+
+        d9 = d2 * 1.073741824E9;
+
+        $d15 = d2 + d9;
+
+        d10 = $d15 - d9;
+
+        $d16 = d2 - d10;
+
+        d41 = d40 + $d16;
+
+        d46 = 0.0 + d3;
+
+        $d17 = d46 - 0.0;
+
+        $d18 = $d17 - d3;
+
+        d47 = neg $d18;
+
+        d49 = 0.0 + d47;
+
+        d50 = d5 * d10;
+
+        d51 = d46 + d50;
+
+        $d19 = d51 - d46;
+
+        $d20 = $d19 - d50;
+
+        d52 = neg $d20;
+
+        d53 = d51;
+
+        d54 = d49 + d52;
+
+        $d21 = d3 * d8;
+
+        $d23 = d54 + $d21;
+
+        $d22 = d5 * d41;
+
+        d55 = $d23 + $d22;
+
+        $d25 = d55 + d4;
+
+        $d24 = d6 * d10;
+
+        $d27 = $d25 + $d24;
+
+        $d26 = d4 * d8;
+
+        $d29 = $d27 + $d26;
+
+        $d28 = d6 * d41;
+
+        d56 = $d29 + $d28;
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 == 0 goto label1;
+
+        $d31 = d5 + d6;
+
+        $d30 = 1.0 + d8;
+
+        $d35 = $d31 * $d30;
+
+        $d33 = d3 + d4;
+
+        $d32 = d10 + d41;
+
+        $d34 = $d33 * $d32;
+
+        $d36 = $d35 - $d34;
+
+        d57 = $d36 * d1;
+
+        d58 = d51 + d57;
+
+        $d37 = d58 - d51;
+
+        $d38 = $d37 - d57;
+
+        d59 = neg $d38;
+
+        d53 = d58;
+
+        d56 = d56 + d59;
+
+     label1:
+        d11 = d53 + d56;
+
+        return d11;
+    }
+
+    private static double cosQ(double, double)
+    {
+        double d0, d1, d4, $d5, $d6, $d7, $d8, d9, d10;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d4 = 1.5707963267948966 - d0;
+
+        $d5 = d4 - 1.5707963267948966;
+
+        $d6 = $d5 + d0;
+
+        d9 = neg $d6;
+
+        $d7 = 6.123233995736766E-17 - d1;
+
+        d10 = d9 + $d7;
+
+        $d8 = staticinvoke <org.apache.commons.math.util.FastMath: double sinQ(double,double)>(d4, d10);
+
+        return $d8;
+    }
+
+    private static double tanQ(double, double, boolean)
+    {
+        double d0, d1, d2, d3, d4, d5, d6, d8, d9, d10, d11, d12, d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, d69, d70, d71, d76, d77, d79, d80, d81, d82, d84, d85, d86, d87, d88, d93, d94, d95, d97, d98, d99, d100, d102, d103, d104, d105, d106, d107, d108, d109, d110, d111, d112, d113, d114, d115, $d116;
+        boolean z0;
+        int i0;
+        double[] $r0, $r1, $r2, $r3, $r4;
+        byte $b1;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        z0 := @parameter2: boolean;
+
+        $d14 = d0 * 8.0;
+
+        $d15 = $d14 + 0.5;
+
+        i0 = (int) $d15;
+
+        $r0 = <org.apache.commons.math.util.FastMath: double[] EIGHTHS>;
+
+        $d16 = $r0[i0];
+
+        d2 = d0 - $d16;
+
+        $r1 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_A>;
+
+        d3 = $r1[i0];
+
+        $r2 = <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_B>;
+
+        d4 = $r2[i0];
+
+        $r3 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_A>;
+
+        d5 = $r3[i0];
+
+        $r4 = <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_B>;
+
+        d6 = $r4[i0];
+
+        d69 = staticinvoke <org.apache.commons.math.util.FastMath: double polySine(double)>(d2);
+
+        d8 = staticinvoke <org.apache.commons.math.util.FastMath: double polyCosine(double)>(d2);
+
+        d70 = d2 * 1.073741824E9;
+
+        $d17 = d2 + d70;
+
+        d9 = $d17 - d70;
+
+        $d18 = d2 - d9;
+
+        d71 = d69 + $d18;
+
+        d76 = 0.0 + d3;
+
+        $d19 = d76 - 0.0;
+
+        $d20 = $d19 - d3;
+
+        d77 = neg $d20;
+
+        d79 = 0.0 + d77;
+
+        d80 = d5 * d9;
+
+        d81 = d76 + d80;
+
+        $d21 = d81 - d76;
+
+        $d22 = $d21 - d80;
+
+        d82 = neg $d22;
+
+        d84 = d79 + d82;
+
+        $d23 = d3 * d8;
+
+        $d25 = d84 + $d23;
+
+        $d24 = d5 * d71;
+
+        d85 = $d25 + $d24;
+
+        $d27 = d85 + d4;
+
+        $d26 = d6 * d9;
+
+        $d29 = $d27 + $d26;
+
+        $d28 = d4 * d8;
+
+        $d31 = $d29 + $d28;
+
+        $d30 = d6 * d71;
+
+        d86 = $d31 + $d30;
+
+        d87 = d81 + d86;
+
+        $d32 = d87 - d81;
+
+        $d33 = $d32 - d86;
+
+        d88 = neg $d33;
+
+        d93 = d5 * 1.0;
+
+        d94 = 0.0 + d93;
+
+        $d34 = d94 - 0.0;
+
+        $d35 = $d34 - d93;
+
+        d95 = neg $d35;
+
+        d97 = 0.0 + d95;
+
+        $d36 = neg d3;
+
+        d98 = $d36 * d9;
+
+        d99 = d94 + d98;
+
+        $d37 = d99 - d94;
+
+        $d38 = $d37 - d98;
+
+        d100 = neg $d38;
+
+        d102 = d97 + d100;
+
+        $d39 = d6 * 1.0;
+
+        $d41 = d102 + $d39;
+
+        $d40 = d5 * d8;
+
+        $d43 = $d41 + $d40;
+
+        $d42 = d6 * d8;
+
+        d103 = $d43 + $d42;
+
+        $d45 = d4 * d9;
+
+        $d44 = d3 * d71;
+
+        $d47 = $d45 + $d44;
+
+        $d46 = d4 * d71;
+
+        $d48 = $d47 + $d46;
+
+        d104 = d103 - $d48;
+
+        d105 = d99 + d104;
+
+        $d49 = d105 - d99;
+
+        $d50 = $d49 - d104;
+
+        d106 = neg $d50;
+
+        if z0 == 0 goto label1;
+
+        d107 = d105;
+
+        d105 = d87;
+
+        d87 = d107;
+
+        d108 = d106;
+
+        d106 = d88;
+
+        d88 = d108;
+
+     label1:
+        d109 = d87 / d105;
+
+        d110 = d109 * 1.073741824E9;
+
+        $d51 = d109 + d110;
+
+        d10 = $d51 - d110;
+
+        d11 = d109 - d10;
+
+        d111 = d105 * 1.073741824E9;
+
+        $d52 = d105 + d111;
+
+        d12 = $d52 - d111;
+
+        d13 = d105 - d12;
+
+        $d53 = d10 * d12;
+
+        $d55 = d87 - $d53;
+
+        $d54 = d10 * d13;
+
+        $d57 = $d55 - $d54;
+
+        $d56 = d11 * d12;
+
+        $d59 = $d57 - $d56;
+
+        $d58 = d11 * d13;
+
+        $d60 = $d59 - $d58;
+
+        d112 = $d60 / d105;
+
+        $d61 = d88 / d105;
+
+        d113 = d112 + $d61;
+
+        $d62 = neg d87;
+
+        $d63 = $d62 * d106;
+
+        $d64 = $d63 / d105;
+
+        $d65 = $d64 / d105;
+
+        d114 = d113 + $d65;
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 == 0 goto label3;
+
+        $d66 = d109 * d109;
+
+        $d67 = $d66 * d1;
+
+        d115 = d1 + $d67;
+
+        if z0 == 0 goto label2;
+
+        d115 = neg d115;
+
+     label2:
+        d114 = d114 + d115;
+
+     label3:
+        $d116 = d109 + d114;
+
+        return $d116;
+    }
+
+    private static void reducePayneHanek(double, double[])
+    {
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12;
+        double[] r0;
+        int i0, i1, i2, $i5, $i6, $i7, $i8, $i41, $i43, $i47, $i48, $i52, $i54, $i55, i60, i63;
+        long $l3, $l4, $l9, $l11, $l13, $l15, $l16, $l17, $l19, $l21, $l23, $l25, $l27, $l29, $l30, $l31, $l33, $l35, $l37, $l39, $l42, $l44, $l45, $l46, $l49, $l50, $l51, $l53, $l56, $l57, $l58, l59, l61, l62, l64, $l65, l67, l68, l69, $l70, l71, l72, l73, l74, l75, l76, l77, l78, $l79, l80, $l81, l82, $l83, $l85, l87, l88, l89, l90, l91, l92, l93, $l94, $l95, l96, $l97, l99, l100, l101, l102, l103, l104, $l105, $l106, $l107, l108, $l109, l110, $l111, l112, l113, l114, l115, $l116, l117, $l118, l119, l120, l121, l122, l123, $l124, l125, $l126, l127, $l128, $l130, l132, l133, $l134, l135, $l136, l137, l138, l139, l140, $l141, $l142, l143, $l144, l146, l147, l148, $l149, l150, $l151, l152, l153, l154, l155, $l156, $l157, l158, $l159, l161, $l162, $l163, $l164, $l165, $l166;
+        long[] $r1, $r2, $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14, $r15;
+        byte $b10, $b12, $b14, $b18, $b20, $b22, $b24, $b26, $b28, $b32, $b34, $b36, $b38, $b40, $b84, $b86, $b98, $b129, $b131, $b145, $b160;
+        boolean $z0, z1, $z2, z3, $z4, z5, $z6, z7, $z8, z9, $z10, z11, $z12, z13, $z14, z15, $z16, z17, $z18, z19, $z20, z21, $z22, z23, $z24, z25, $z26, z27, $z28, z29, $z30, z31, $z32, z33, $z34, z35, $z36, z37, $z38, z39, $z40, z41;
+
+        d0 := @parameter0: double;
+
+        r0 := @parameter1: double[];
+
+        l59 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d0);
+
+        $l3 = l59 >> 52;
+
+        $l4 = $l3 & 2047L;
+
+        $i5 = (int) $l4;
+
+        i60 = $i5 - 1023;
+
+        l61 = l59 & 4503599627370495L;
+
+        l62 = l61 | 4503599627370496L;
+
+        i63 = i60 + 1;
+
+        l64 = l62 << 11;
+
+        i0 = i63 >> 6;
+
+        $i6 = i0 << 6;
+
+        i1 = i63 - $i6;
+
+        if i1 == 0 goto label03;
+
+        if i0 != 0 goto label01;
+
+        $l65 = 0L;
+
+        goto label02;
+
+     label01:
+        $r4 = <org.apache.commons.math.util.FastMath: long[] RECIP_2PI>;
+
+        $i41 = i0 - 1;
+
+        $l42 = $r4[$i41];
+
+        $l65 = $l42 << i1;
+
+     label02:
+        $r5 = <org.apache.commons.math.util.FastMath: long[] RECIP_2PI>;
+
+        $l44 = $r5[i0];
+
+        $i43 = 64 - i1;
+
+        $l45 = $l44 >>> $i43;
+
+        l67 = $l65 | $l45;
+
+        $r6 = <org.apache.commons.math.util.FastMath: long[] RECIP_2PI>;
+
+        $l46 = $r6[i0];
+
+        $l51 = $l46 << i1;
+
+        $r7 = <org.apache.commons.math.util.FastMath: long[] RECIP_2PI>;
+
+        $i47 = i0 + 1;
+
+        $l49 = $r7[$i47];
+
+        $i48 = 64 - i1;
+
+        $l50 = $l49 >>> $i48;
+
+        l68 = $l51 | $l50;
+
+        $r8 = <org.apache.commons.math.util.FastMath: long[] RECIP_2PI>;
+
+        $i52 = i0 + 1;
+
+        $l53 = $r8[$i52];
+
+        $l58 = $l53 << i1;
+
+        $r9 = <org.apache.commons.math.util.FastMath: long[] RECIP_2PI>;
+
+        $i54 = i0 + 2;
+
+        $l56 = $r9[$i54];
+
+        $i55 = 64 - i1;
+
+        $l57 = $l56 >>> $i55;
+
+        l69 = $l58 | $l57;
+
+        goto label06;
+
+     label03:
+        if i0 != 0 goto label04;
+
+        $l70 = 0L;
+
+        goto label05;
+
+     label04:
+        $r1 = <org.apache.commons.math.util.FastMath: long[] RECIP_2PI>;
+
+        $i7 = i0 - 1;
+
+        $l70 = $r1[$i7];
+
+     label05:
+        l67 = $l70;
+
+        $r2 = <org.apache.commons.math.util.FastMath: long[] RECIP_2PI>;
+
+        l68 = $r2[i0];
+
+        $r3 = <org.apache.commons.math.util.FastMath: long[] RECIP_2PI>;
+
+        $i8 = i0 + 1;
+
+        l69 = $r3[$i8];
+
+     label06:
+        l71 = l64 >>> 32;
+
+        l72 = l64 & 4294967295L;
+
+        l73 = l68 >>> 32;
+
+        l74 = l68 & 4294967295L;
+
+        l75 = l71 * l73;
+
+        l76 = l72 * l74;
+
+        l77 = l72 * l73;
+
+        l78 = l71 * l74;
+
+        $l79 = l78 << 32;
+
+        l80 = l76 + $l79;
+
+        $l81 = l78 >>> 32;
+
+        l82 = l75 + $l81;
+
+        $l83 = l76 & -9223372036854775808L;
+
+        $b84 = $l83 cmp 0L;
+
+        if $b84 == 0 goto label07;
+
+        $z0 = 1;
+
+        goto label08;
+
+     label07:
+        $z0 = 0;
+
+     label08:
+        z1 = $z0;
+
+        $l9 = l78 & 2147483648L;
+
+        $b10 = $l9 cmp 0L;
+
+        if $b10 == 0 goto label09;
+
+        $z2 = 1;
+
+        goto label10;
+
+     label09:
+        $z2 = 0;
+
+     label10:
+        z3 = $z2;
+
+        $l11 = l80 & -9223372036854775808L;
+
+        $b12 = $l11 cmp 0L;
+
+        if $b12 == 0 goto label11;
+
+        $z4 = 1;
+
+        goto label12;
+
+     label11:
+        $z4 = 0;
+
+     label12:
+        z5 = $z4;
+
+        if z1 == 0 goto label13;
+
+        if z3 != 0 goto label15;
+
+     label13:
+        if z1 != 0 goto label14;
+
+        if z3 == 0 goto label16;
+
+     label14:
+        if z5 != 0 goto label16;
+
+     label15:
+        l82 = l82 + 1L;
+
+     label16:
+        $l85 = l80 & -9223372036854775808L;
+
+        $b86 = $l85 cmp 0L;
+
+        if $b86 == 0 goto label17;
+
+        $z6 = 1;
+
+        goto label18;
+
+     label17:
+        $z6 = 0;
+
+     label18:
+        z7 = $z6;
+
+        $l13 = l77 & 2147483648L;
+
+        $b14 = $l13 cmp 0L;
+
+        if $b14 == 0 goto label19;
+
+        $z8 = 1;
+
+        goto label20;
+
+     label19:
+        $z8 = 0;
+
+     label20:
+        z9 = $z8;
+
+        $l15 = l77 << 32;
+
+        l87 = l80 + $l15;
+
+        $l16 = l77 >>> 32;
+
+        l88 = l82 + $l16;
+
+        $l17 = l87 & -9223372036854775808L;
+
+        $b18 = $l17 cmp 0L;
+
+        if $b18 == 0 goto label21;
+
+        $z10 = 1;
+
+        goto label22;
+
+     label21:
+        $z10 = 0;
+
+     label22:
+        z11 = $z10;
+
+        if z7 == 0 goto label23;
+
+        if z9 != 0 goto label25;
+
+     label23:
+        if z7 != 0 goto label24;
+
+        if z9 == 0 goto label26;
+
+     label24:
+        if z11 != 0 goto label26;
+
+     label25:
+        l88 = l88 + 1L;
+
+     label26:
+        l89 = l69 >>> 32;
+
+        l90 = l69 & 4294967295L;
+
+        l91 = l71 * l89;
+
+        l92 = l72 * l89;
+
+        l93 = l71 * l90;
+
+        $l94 = l92 + l93;
+
+        $l95 = $l94 >>> 32;
+
+        l96 = l91 + $l95;
+
+        $l97 = l87 & -9223372036854775808L;
+
+        $b98 = $l97 cmp 0L;
+
+        if $b98 == 0 goto label27;
+
+        $z12 = 1;
+
+        goto label28;
+
+     label27:
+        $z12 = 0;
+
+     label28:
+        z13 = $z12;
+
+        $l19 = l96 & -9223372036854775808L;
+
+        $b20 = $l19 cmp 0L;
+
+        if $b20 == 0 goto label29;
+
+        $z14 = 1;
+
+        goto label30;
+
+     label29:
+        $z14 = 0;
+
+     label30:
+        z15 = $z14;
+
+        l99 = l87 + l96;
+
+        $l21 = l99 & -9223372036854775808L;
+
+        $b22 = $l21 cmp 0L;
+
+        if $b22 == 0 goto label31;
+
+        $z16 = 1;
+
+        goto label32;
+
+     label31:
+        $z16 = 0;
+
+     label32:
+        z17 = $z16;
+
+        if z13 == 0 goto label33;
+
+        if z15 != 0 goto label35;
+
+     label33:
+        if z13 != 0 goto label34;
+
+        if z15 == 0 goto label36;
+
+     label34:
+        if z17 != 0 goto label36;
+
+     label35:
+        l88 = l88 + 1L;
+
+     label36:
+        l100 = l67 >>> 32;
+
+        l101 = l67 & 4294967295L;
+
+        l102 = l72 * l101;
+
+        l103 = l72 * l100;
+
+        l104 = l71 * l101;
+
+        $l105 = l103 + l104;
+
+        $l106 = $l105 << 32;
+
+        $l107 = l102 + $l106;
+
+        l108 = l88 + $l107;
+
+        $l109 = l108 >>> 62;
+
+        i2 = (int) $l109;
+
+        l110 = l108 << 2;
+
+        $l111 = l99 >>> 62;
+
+        l112 = l110 | $l111;
+
+        l113 = l99 << 2;
+
+        l114 = l112 >>> 32;
+
+        l115 = l112 & 4294967295L;
+
+        $r10 = <org.apache.commons.math.util.FastMath: long[] PI_O_4_BITS>;
+
+        $l116 = $r10[0];
+
+        l117 = $l116 >>> 32;
+
+        $r11 = <org.apache.commons.math.util.FastMath: long[] PI_O_4_BITS>;
+
+        $l118 = $r11[0];
+
+        l119 = $l118 & 4294967295L;
+
+        l120 = l114 * l117;
+
+        l121 = l115 * l119;
+
+        l122 = l115 * l117;
+
+        l123 = l114 * l119;
+
+        $l124 = l123 << 32;
+
+        l125 = l121 + $l124;
+
+        $l126 = l123 >>> 32;
+
+        l127 = l120 + $l126;
+
+        $l128 = l121 & -9223372036854775808L;
+
+        $b129 = $l128 cmp 0L;
+
+        if $b129 == 0 goto label37;
+
+        $z18 = 1;
+
+        goto label38;
+
+     label37:
+        $z18 = 0;
+
+     label38:
+        z19 = $z18;
+
+        $l23 = l123 & 2147483648L;
+
+        $b24 = $l23 cmp 0L;
+
+        if $b24 == 0 goto label39;
+
+        $z20 = 1;
+
+        goto label40;
+
+     label39:
+        $z20 = 0;
+
+     label40:
+        z21 = $z20;
+
+        $l25 = l125 & -9223372036854775808L;
+
+        $b26 = $l25 cmp 0L;
+
+        if $b26 == 0 goto label41;
+
+        $z22 = 1;
+
+        goto label42;
+
+     label41:
+        $z22 = 0;
+
+     label42:
+        z23 = $z22;
+
+        if z19 == 0 goto label43;
+
+        if z21 != 0 goto label45;
+
+     label43:
+        if z19 != 0 goto label44;
+
+        if z21 == 0 goto label46;
+
+     label44:
+        if z23 != 0 goto label46;
+
+     label45:
+        l127 = l127 + 1L;
+
+     label46:
+        $l130 = l125 & -9223372036854775808L;
+
+        $b131 = $l130 cmp 0L;
+
+        if $b131 == 0 goto label47;
+
+        $z24 = 1;
+
+        goto label48;
+
+     label47:
+        $z24 = 0;
+
+     label48:
+        z25 = $z24;
+
+        $l27 = l122 & 2147483648L;
+
+        $b28 = $l27 cmp 0L;
+
+        if $b28 == 0 goto label49;
+
+        $z26 = 1;
+
+        goto label50;
+
+     label49:
+        $z26 = 0;
+
+     label50:
+        z27 = $z26;
+
+        $l29 = l122 << 32;
+
+        l132 = l125 + $l29;
+
+        $l30 = l122 >>> 32;
+
+        l133 = l127 + $l30;
+
+        $l31 = l132 & -9223372036854775808L;
+
+        $b32 = $l31 cmp 0L;
+
+        if $b32 == 0 goto label51;
+
+        $z28 = 1;
+
+        goto label52;
+
+     label51:
+        $z28 = 0;
+
+     label52:
+        z29 = $z28;
+
+        if z25 == 0 goto label53;
+
+        if z27 != 0 goto label55;
+
+     label53:
+        if z25 != 0 goto label54;
+
+        if z27 == 0 goto label56;
+
+     label54:
+        if z29 != 0 goto label56;
+
+     label55:
+        l133 = l133 + 1L;
+
+     label56:
+        $r12 = <org.apache.commons.math.util.FastMath: long[] PI_O_4_BITS>;
+
+        $l134 = $r12[1];
+
+        l135 = $l134 >>> 32;
+
+        $r13 = <org.apache.commons.math.util.FastMath: long[] PI_O_4_BITS>;
+
+        $l136 = $r13[1];
+
+        l137 = $l136 & 4294967295L;
+
+        l138 = l114 * l135;
+
+        l139 = l115 * l135;
+
+        l140 = l114 * l137;
+
+        $l141 = l139 + l140;
+
+        $l142 = $l141 >>> 32;
+
+        l143 = l138 + $l142;
+
+        $l144 = l132 & -9223372036854775808L;
+
+        $b145 = $l144 cmp 0L;
+
+        if $b145 == 0 goto label57;
+
+        $z30 = 1;
+
+        goto label58;
+
+     label57:
+        $z30 = 0;
+
+     label58:
+        z31 = $z30;
+
+        $l33 = l143 & -9223372036854775808L;
+
+        $b34 = $l33 cmp 0L;
+
+        if $b34 == 0 goto label59;
+
+        $z32 = 1;
+
+        goto label60;
+
+     label59:
+        $z32 = 0;
+
+     label60:
+        z33 = $z32;
+
+        l146 = l132 + l143;
+
+        $l35 = l146 & -9223372036854775808L;
+
+        $b36 = $l35 cmp 0L;
+
+        if $b36 == 0 goto label61;
+
+        $z34 = 1;
+
+        goto label62;
+
+     label61:
+        $z34 = 0;
+
+     label62:
+        z35 = $z34;
+
+        if z31 == 0 goto label63;
+
+        if z33 != 0 goto label65;
+
+     label63:
+        if z31 != 0 goto label64;
+
+        if z33 == 0 goto label66;
+
+     label64:
+        if z35 != 0 goto label66;
+
+     label65:
+        l133 = l133 + 1L;
+
+     label66:
+        l147 = l113 >>> 32;
+
+        l148 = l113 & 4294967295L;
+
+        $r14 = <org.apache.commons.math.util.FastMath: long[] PI_O_4_BITS>;
+
+        $l149 = $r14[0];
+
+        l150 = $l149 >>> 32;
+
+        $r15 = <org.apache.commons.math.util.FastMath: long[] PI_O_4_BITS>;
+
+        $l151 = $r15[0];
+
+        l152 = $l151 & 4294967295L;
+
+        l153 = l147 * l150;
+
+        l154 = l148 * l150;
+
+        l155 = l147 * l152;
+
+        $l156 = l154 + l155;
+
+        $l157 = $l156 >>> 32;
+
+        l158 = l153 + $l157;
+
+        $l159 = l146 & -9223372036854775808L;
+
+        $b160 = $l159 cmp 0L;
+
+        if $b160 == 0 goto label67;
+
+        $z36 = 1;
+
+        goto label68;
+
+     label67:
+        $z36 = 0;
+
+     label68:
+        z37 = $z36;
+
+        $l37 = l158 & -9223372036854775808L;
+
+        $b38 = $l37 cmp 0L;
+
+        if $b38 == 0 goto label69;
+
+        $z38 = 1;
+
+        goto label70;
+
+     label69:
+        $z38 = 0;
+
+     label70:
+        z39 = $z38;
+
+        l161 = l146 + l158;
+
+        $l39 = l161 & -9223372036854775808L;
+
+        $b40 = $l39 cmp 0L;
+
+        if $b40 == 0 goto label71;
+
+        $z40 = 1;
+
+        goto label72;
+
+     label71:
+        $z40 = 0;
+
+     label72:
+        z41 = $z40;
+
+        if z37 == 0 goto label73;
+
+        if z39 != 0 goto label75;
+
+     label73:
+        if z37 != 0 goto label74;
+
+        if z39 == 0 goto label76;
+
+     label74:
+        if z41 != 0 goto label76;
+
+     label75:
+        l133 = l133 + 1L;
+
+     label76:
+        $l162 = l133 >>> 12;
+
+        $d5 = (double) $l162;
+
+        d1 = $d5 / 4.503599627370496E15;
+
+        $l163 = l133 & 4095L;
+
+        $l164 = $l163 << 40;
+
+        $l165 = l161 >>> 24;
+
+        $l166 = $l164 + $l165;
+
+        $d6 = (double) $l166;
+
+        $d7 = $d6 / 4.503599627370496E15;
+
+        d2 = $d7 / 4.503599627370496E15;
+
+        d3 = d1 + d2;
+
+        $d8 = d3 - d1;
+
+        $d9 = $d8 - d2;
+
+        d4 = neg $d9;
+
+        $d10 = (double) i2;
+
+        r0[0] = $d10;
+
+        $d11 = d3 * 2.0;
+
+        r0[1] = $d11;
+
+        $d12 = d4 * 2.0;
+
+        r0[2] = $d12;
+
+        return;
+    }
+
+    public static double sin(double)
+    {
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, d19, d20, d21, d22, d23, d24, d26, d27, d28, d30, d31, $d32;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b9, $b11;
+        int $i6, $i7, $i8, $i10, i12, i14;
+        boolean z0;
+        long l13;
+        double[] r0;
+
+        d0 := @parameter0: double;
+
+        z0 = 0;
+
+        i12 = 0;
+
+        d19 = 0.0;
+
+        d20 = d0;
+
+        $b0 = d0 cmpg 0.0;
+
+        if $b0 >= 0 goto label01;
+
+        z0 = 1;
+
+        d20 = neg d0;
+
+     label01:
+        $b1 = d20 cmpl 0.0;
+
+        if $b1 != 0 goto label03;
+
+        l13 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d0);
+
+        $b11 = l13 cmp 0L;
+
+        if $b11 >= 0 goto label02;
+
+        return -0.0;
+
+     label02:
+        return 0.0;
+
+     label03:
+        $b2 = d20 cmpl d20;
+
+        if $b2 != 0 goto label04;
+
+        $b3 = d20 cmpl #Infinity;
+
+        if $b3 != 0 goto label05;
+
+     label04:
+        return #NaN;
+
+     label05:
+        $b4 = d20 cmpl 3294198.0;
+
+        if $b4 <= 0 goto label06;
+
+        r0 = newarray (double)[3];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void reducePayneHanek(double,double[])>(d20, r0);
+
+        $d18 = r0[0];
+
+        $i10 = (int) $d18;
+
+        i12 = $i10 & 3;
+
+        d20 = r0[1];
+
+        d19 = r0[2];
+
+        goto label10;
+
+     label06:
+        $b5 = d20 cmpl 1.5707963267948966;
+
+        if $b5 <= 0 goto label10;
+
+        $d6 = d20 * 0.6366197723675814;
+
+        i14 = (int) $d6;
+
+     label07:
+        $i6 = neg i14;
+
+        $d7 = (double) $i6;
+
+        d21 = $d7 * 1.570796251296997;
+
+        d22 = d20 + d21;
+
+        $d8 = d22 - d20;
+
+        $d9 = $d8 - d21;
+
+        d23 = neg $d9;
+
+        $i7 = neg i14;
+
+        $d10 = (double) $i7;
+
+        d24 = $d10 * 7.549789948768648E-8;
+
+        d26 = d24 + d22;
+
+        $d11 = d26 - d22;
+
+        $d12 = $d11 - d24;
+
+        $d13 = neg $d12;
+
+        d27 = d23 + $d13;
+
+        $i8 = neg i14;
+
+        $d14 = (double) $i8;
+
+        d28 = $d14 * 6.123233995736766E-17;
+
+        d30 = d28 + d26;
+
+        $d15 = d30 - d26;
+
+        $d16 = $d15 - d28;
+
+        $d17 = neg $d16;
+
+        d31 = d27 + $d17;
+
+        $b9 = d30 cmpl 0.0;
+
+        if $b9 <= 0 goto label08;
+
+        goto label09;
+
+     label08:
+        i14 = i14 + -1;
+
+        goto label07;
+
+     label09:
+        i12 = i14 & 3;
+
+        d20 = d30;
+
+        d19 = d31;
+
+     label10:
+        if z0 == 0 goto label11;
+
+        i12 = i12 ^ 2;
+
+     label11:
+        tableswitch(i12)
+        {
+            case 0: goto label12;
+            case 1: goto label13;
+            case 2: goto label14;
+            case 3: goto label15;
+            default: goto label16;
+        };
+
+     label12:
+        $d32 = staticinvoke <org.apache.commons.math.util.FastMath: double sinQ(double,double)>(d20, d19);
+
+        return $d32;
+
+     label13:
+        $d5 = staticinvoke <org.apache.commons.math.util.FastMath: double cosQ(double,double)>(d20, d19);
+
+        return $d5;
+
+     label14:
+        $d3 = staticinvoke <org.apache.commons.math.util.FastMath: double sinQ(double,double)>(d20, d19);
+
+        $d4 = neg $d3;
+
+        return $d4;
+
+     label15:
+        $d1 = staticinvoke <org.apache.commons.math.util.FastMath: double cosQ(double,double)>(d20, d19);
+
+        $d2 = neg $d1;
+
+        return $d2;
+
+     label16:
+        return #NaN;
+    }
+
+    public static double cos(double)
+    {
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, d19, d20, d21, d22, d23, d24, d26, d27, d28, d30, d31, $d32;
+        byte $b0, $b1, $b2, $b3, $b4, $b8;
+        int $i5, $i6, $i7, $i9, i10, i11;
+        double[] r0;
+
+        d0 := @parameter0: double;
+
+        i10 = 0;
+
+        d19 = d0;
+
+        $b0 = d0 cmpg 0.0;
+
+        if $b0 >= 0 goto label01;
+
+        d19 = neg d0;
+
+     label01:
+        $b1 = d19 cmpl d19;
+
+        if $b1 != 0 goto label02;
+
+        $b2 = d19 cmpl #Infinity;
+
+        if $b2 != 0 goto label03;
+
+     label02:
+        return #NaN;
+
+     label03:
+        d20 = 0.0;
+
+        $b3 = d19 cmpl 3294198.0;
+
+        if $b3 <= 0 goto label04;
+
+        r0 = newarray (double)[3];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void reducePayneHanek(double,double[])>(d19, r0);
+
+        $d18 = r0[0];
+
+        $i9 = (int) $d18;
+
+        i10 = $i9 & 3;
+
+        d19 = r0[1];
+
+        d20 = r0[2];
+
+        goto label08;
+
+     label04:
+        $b4 = d19 cmpl 1.5707963267948966;
+
+        if $b4 <= 0 goto label08;
+
+        $d6 = d19 * 0.6366197723675814;
+
+        i11 = (int) $d6;
+
+     label05:
+        $i5 = neg i11;
+
+        $d7 = (double) $i5;
+
+        d21 = $d7 * 1.570796251296997;
+
+        d22 = d19 + d21;
+
+        $d8 = d22 - d19;
+
+        $d9 = $d8 - d21;
+
+        d23 = neg $d9;
+
+        $i6 = neg i11;
+
+        $d10 = (double) $i6;
+
+        d24 = $d10 * 7.549789948768648E-8;
+
+        d26 = d24 + d22;
+
+        $d11 = d26 - d22;
+
+        $d12 = $d11 - d24;
+
+        $d13 = neg $d12;
+
+        d27 = d23 + $d13;
+
+        $i7 = neg i11;
+
+        $d14 = (double) $i7;
+
+        d28 = $d14 * 6.123233995736766E-17;
+
+        d30 = d28 + d26;
+
+        $d15 = d30 - d26;
+
+        $d16 = $d15 - d28;
+
+        $d17 = neg $d16;
+
+        d31 = d27 + $d17;
+
+        $b8 = d30 cmpl 0.0;
+
+        if $b8 <= 0 goto label06;
+
+        goto label07;
+
+     label06:
+        i11 = i11 + -1;
+
+        goto label05;
+
+     label07:
+        i10 = i11 & 3;
+
+        d19 = d30;
+
+        d20 = d31;
+
+     label08:
+        tableswitch(i10)
+        {
+            case 0: goto label09;
+            case 1: goto label10;
+            case 2: goto label11;
+            case 3: goto label12;
+            default: goto label13;
+        };
+
+     label09:
+        $d32 = staticinvoke <org.apache.commons.math.util.FastMath: double cosQ(double,double)>(d19, d20);
+
+        return $d32;
+
+     label10:
+        $d4 = staticinvoke <org.apache.commons.math.util.FastMath: double sinQ(double,double)>(d19, d20);
+
+        $d5 = neg $d4;
+
+        return $d5;
+
+     label11:
+        $d2 = staticinvoke <org.apache.commons.math.util.FastMath: double cosQ(double,double)>(d19, d20);
+
+        $d3 = neg $d2;
+
+        return $d3;
+
+     label12:
+        $d1 = staticinvoke <org.apache.commons.math.util.FastMath: double sinQ(double,double)>(d19, d20);
+
+        return $d1;
+
+     label13:
+        return #NaN;
+    }
+
+    public static double tan(double)
+    {
+        double d0, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, d22, d23, d24, d25, d26, d27, d29, d30, d31, d33, d34, d36, d37, d38;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b10, $b12, $b16;
+        int $i6, $i7, $i8, $i9, $i11, i13, i15;
+        boolean z0;
+        long l14;
+        double[] r0;
+
+        d0 := @parameter0: double;
+
+        z0 = 0;
+
+        i13 = 0;
+
+        d22 = d0;
+
+        $b0 = d0 cmpg 0.0;
+
+        if $b0 >= 0 goto label01;
+
+        z0 = 1;
+
+        d22 = neg d0;
+
+     label01:
+        $b1 = d22 cmpl 0.0;
+
+        if $b1 != 0 goto label03;
+
+        l14 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d0);
+
+        $b12 = l14 cmp 0L;
+
+        if $b12 >= 0 goto label02;
+
+        return -0.0;
+
+     label02:
+        return 0.0;
+
+     label03:
+        $b2 = d22 cmpl d22;
+
+        if $b2 != 0 goto label04;
+
+        $b3 = d22 cmpl #Infinity;
+
+        if $b3 != 0 goto label05;
+
+     label04:
+        return #NaN;
+
+     label05:
+        d23 = 0.0;
+
+        $b4 = d22 cmpl 3294198.0;
+
+        if $b4 <= 0 goto label06;
+
+        r0 = newarray (double)[3];
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void reducePayneHanek(double,double[])>(d22, r0);
+
+        $d21 = r0[0];
+
+        $i11 = (int) $d21;
+
+        i13 = $i11 & 3;
+
+        d22 = r0[1];
+
+        d23 = r0[2];
+
+        goto label10;
+
+     label06:
+        $b5 = d22 cmpl 1.5707963267948966;
+
+        if $b5 <= 0 goto label10;
+
+        $d9 = d22 * 0.6366197723675814;
+
+        i15 = (int) $d9;
+
+     label07:
+        $i7 = neg i15;
+
+        $d10 = (double) $i7;
+
+        d24 = $d10 * 1.570796251296997;
+
+        d25 = d22 + d24;
+
+        $d11 = d25 - d22;
+
+        $d12 = $d11 - d24;
+
+        d26 = neg $d12;
+
+        $i8 = neg i15;
+
+        $d13 = (double) $i8;
+
+        d27 = $d13 * 7.549789948768648E-8;
+
+        d29 = d27 + d25;
+
+        $d14 = d29 - d25;
+
+        $d15 = $d14 - d27;
+
+        $d16 = neg $d15;
+
+        d30 = d26 + $d16;
+
+        $i9 = neg i15;
+
+        $d17 = (double) $i9;
+
+        d31 = $d17 * 6.123233995736766E-17;
+
+        d33 = d31 + d29;
+
+        $d18 = d33 - d29;
+
+        $d19 = $d18 - d31;
+
+        $d20 = neg $d19;
+
+        d34 = d30 + $d20;
+
+        $b10 = d33 cmpl 0.0;
+
+        if $b10 <= 0 goto label08;
+
+        goto label09;
+
+     label08:
+        i15 = i15 + -1;
+
+        goto label07;
+
+     label09:
+        i13 = i15 & 3;
+
+        d22 = d33;
+
+        d23 = d34;
+
+     label10:
+        $b16 = d22 cmpl 1.5;
+
+        if $b16 <= 0 goto label11;
+
+        d2 = 1.5707963267948966 - d22;
+
+        $d4 = d2 - 1.5707963267948966;
+
+        $d5 = $d4 + d22;
+
+        d36 = neg $d5;
+
+        $d6 = 6.123233995736766E-17 - d23;
+
+        d37 = d36 + $d6;
+
+        d22 = d2 + d37;
+
+        $d7 = d22 - d2;
+
+        $d8 = $d7 - d37;
+
+        d23 = neg $d8;
+
+        i13 = i13 ^ 1;
+
+        z0 = z0 ^ 1;
+
+     label11:
+        $i6 = i13 & 1;
+
+        if $i6 != 0 goto label12;
+
+        d38 = staticinvoke <org.apache.commons.math.util.FastMath: double tanQ(double,double,boolean)>(d22, d23, 0);
+
+        goto label13;
+
+     label12:
+        $d3 = staticinvoke <org.apache.commons.math.util.FastMath: double tanQ(double,double,boolean)>(d22, d23, 1);
+
+        d38 = neg $d3;
+
+     label13:
+        if z0 == 0 goto label14;
+
+        d38 = neg d38;
+
+     label14:
+        return d38;
+    }
+
+    public static double atan(double)
+    {
+        double d0, $d1;
+
+        d0 := @parameter0: double;
+
+        $d1 = staticinvoke <org.apache.commons.math.util.FastMath: double atan(double,double,boolean)>(d0, 0.0, 0);
+
+        return $d1;
+    }
+
+    private static double atan(double, double, boolean)
+    {
+        boolean z0, $z1, $z2, z3;
+        byte $b0, $b1, $b2, $b3;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, d79, d80, $d81, $d82, d83, d84, d85, d86, d87, d88, d90, d91, d92, d94, d95, d96, d97, d98, d99, d100, d101, d102, d103, d105, d106, d107, d108, d109, d110, d111, d112, d113, d116, d118, d119, d120, d121, d122, d123, d125, d126, d128, d129, d130, d131, d132, d134, d135, d138, d139, d140;
+        double[] $r0, $r1, $r2, $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10;
+        int i4;
+
+        d79 := @parameter0: double;
+
+        d80 := @parameter1: double;
+
+        z0 := @parameter2: boolean;
+
+        z3 = 0;
+
+        $b0 = d79 cmpl 0.0;
+
+        if $b0 != 0 goto label03;
+
+        if z0 == 0 goto label01;
+
+        $d81 = staticinvoke <org.apache.commons.math.util.FastMath: double copySign(double,double)>(3.141592653589793, d79);
+
+        goto label02;
+
+     label01:
+        $d81 = d79;
+
+     label02:
+        return $d81;
+
+     label03:
+        $b1 = d79 cmpg 0.0;
+
+        if $b1 >= 0 goto label04;
+
+        d79 = neg d79;
+
+        d80 = neg d80;
+
+        z3 = 1;
+
+     label04:
+        $b2 = d79 cmpl 1.633123935319537E16;
+
+        if $b2 <= 0 goto label07;
+
+        $z2 = z3 ^ z0;
+
+        if $z2 == 0 goto label05;
+
+        $d82 = -1.5707963267948966;
+
+        goto label06;
+
+     label05:
+        $d82 = 1.5707963267948966;
+
+     label06:
+        return $d82;
+
+     label07:
+        $b3 = d79 cmpg 1.0;
+
+        if $b3 >= 0 goto label08;
+
+        $d74 = -1.7168146928204135 * d79;
+
+        $d75 = $d74 * d79;
+
+        $d76 = $d75 + 8.0;
+
+        $d77 = $d76 * d79;
+
+        $d78 = $d77 + 0.5;
+
+        i4 = (int) $d78;
+
+        goto label09;
+
+     label08:
+        d83 = 1.0 / d79;
+
+        $d0 = -1.7168146928204135 * d83;
+
+        $d1 = $d0 * d83;
+
+        $d2 = $d1 + 8.0;
+
+        $d3 = $d2 * d83;
+
+        $d4 = neg $d3;
+
+        $d5 = $d4 + 13.07;
+
+        i4 = (int) $d5;
+
+     label09:
+        $r0 = <org.apache.commons.math.util.FastMath: double[] TANGENT_TABLE_A>;
+
+        $d6 = $r0[i4];
+
+        d84 = d79 - $d6;
+
+        $d8 = d84 - d79;
+
+        $r1 = <org.apache.commons.math.util.FastMath: double[] TANGENT_TABLE_A>;
+
+        $d7 = $r1[i4];
+
+        $d9 = $d8 + $d7;
+
+        d85 = neg $d9;
+
+        $r2 = <org.apache.commons.math.util.FastMath: double[] TANGENT_TABLE_B>;
+
+        $d10 = $r2[i4];
+
+        $d11 = d80 - $d10;
+
+        d86 = d85 + $d11;
+
+        d87 = d84 + d86;
+
+        $d12 = d87 - d84;
+
+        $d13 = $d12 - d86;
+
+        d88 = neg $d13;
+
+        d90 = d79 * 1.073741824E9;
+
+        $d14 = d79 + d90;
+
+        d91 = $d14 - d90;
+
+        $d15 = d80 + d79;
+
+        d92 = $d15 - d91;
+
+        d94 = d80 + d92;
+
+        if i4 != 0 goto label10;
+
+        $d71 = d91 + d94;
+
+        $r9 = <org.apache.commons.math.util.FastMath: double[] TANGENT_TABLE_A>;
+
+        $d69 = $r9[i4];
+
+        $r10 = <org.apache.commons.math.util.FastMath: double[] TANGENT_TABLE_B>;
+
+        $d68 = $r10[i4];
+
+        $d70 = $d69 + $d68;
+
+        $d72 = $d71 * $d70;
+
+        $d73 = 1.0 + $d72;
+
+        d95 = 1.0 / $d73;
+
+        d96 = d87 * d95;
+
+        d97 = d88 * d95;
+
+        goto label11;
+
+     label10:
+        $r3 = <org.apache.commons.math.util.FastMath: double[] TANGENT_TABLE_A>;
+
+        $d16 = $r3[i4];
+
+        d98 = d91 * $d16;
+
+        d99 = 1.0 + d98;
+
+        $d17 = d99 - 1.0;
+
+        $d18 = $d17 - d98;
+
+        d100 = neg $d18;
+
+        $r4 = <org.apache.commons.math.util.FastMath: double[] TANGENT_TABLE_A>;
+
+        $d19 = $r4[i4];
+
+        $d22 = d94 * $d19;
+
+        $r5 = <org.apache.commons.math.util.FastMath: double[] TANGENT_TABLE_B>;
+
+        $d20 = $r5[i4];
+
+        $d21 = d91 * $d20;
+
+        d101 = $d22 + $d21;
+
+        d102 = d99 + d101;
+
+        $d23 = d102 - d99;
+
+        $d24 = $d23 - d101;
+
+        $d25 = neg $d24;
+
+        d103 = d100 + $d25;
+
+        $r6 = <org.apache.commons.math.util.FastMath: double[] TANGENT_TABLE_B>;
+
+        $d26 = $r6[i4];
+
+        $d27 = d94 * $d26;
+
+        d105 = d103 + $d27;
+
+        d96 = d87 / d102;
+
+        d106 = d96 * 1.073741824E9;
+
+        $d28 = d96 + d106;
+
+        d107 = $d28 - d106;
+
+        d108 = d96 - d107;
+
+        d109 = d102 * 1.073741824E9;
+
+        $d29 = d102 + d109;
+
+        d110 = $d29 - d109;
+
+        d111 = d102 - d110;
+
+        $d30 = d107 * d110;
+
+        $d32 = d87 - $d30;
+
+        $d31 = d107 * d111;
+
+        $d34 = $d32 - $d31;
+
+        $d33 = d108 * d110;
+
+        $d36 = $d34 - $d33;
+
+        $d35 = d108 * d111;
+
+        $d37 = $d36 - $d35;
+
+        d112 = $d37 / d102;
+
+        $d38 = neg d87;
+
+        $d39 = $d38 * d105;
+
+        $d40 = $d39 / d102;
+
+        $d41 = $d40 / d102;
+
+        d113 = d112 + $d41;
+
+        $d42 = d88 / d102;
+
+        d97 = d113 + $d42;
+
+     label11:
+        d116 = d96 * d96;
+
+        $d43 = 0.07490822288864472 * d116;
+
+        d118 = $d43 + -0.09088450866185192;
+
+        $d44 = d118 * d116;
+
+        d119 = $d44 + 0.11111095942313305;
+
+        $d45 = d119 * d116;
+
+        d120 = $d45 + -0.1428571423679182;
+
+        $d46 = d120 * d116;
+
+        d121 = $d46 + 0.19999999999923582;
+
+        $d47 = d121 * d116;
+
+        d122 = $d47 + -0.33333333333333287;
+
+        $d48 = d122 * d116;
+
+        d123 = $d48 * d96;
+
+        d125 = d96 + d123;
+
+        $d49 = d125 - d96;
+
+        $d50 = $d49 - d123;
+
+        d126 = neg $d50;
+
+        $d51 = d96 * d96;
+
+        $d52 = 1.0 + $d51;
+
+        $d53 = d97 / $d52;
+
+        d128 = d126 + $d53;
+
+        $r7 = <org.apache.commons.math.util.FastMath: double[] EIGHTHS>;
+
+        $d54 = $r7[i4];
+
+        d129 = $d54 + d125;
+
+        $r8 = <org.apache.commons.math.util.FastMath: double[] EIGHTHS>;
+
+        $d55 = $r8[i4];
+
+        $d56 = d129 - $d55;
+
+        $d57 = $d56 - d125;
+
+        d130 = neg $d57;
+
+        d131 = d129 + d128;
+
+        $d58 = d131 - d129;
+
+        $d59 = $d58 - d128;
+
+        $d60 = neg $d59;
+
+        d132 = d130 + $d60;
+
+        d134 = d131 + d132;
+
+        $d61 = d134 - d131;
+
+        $d62 = $d61 - d132;
+
+        d135 = neg $d62;
+
+        if z0 == 0 goto label12;
+
+        d138 = 3.141592653589793 - d134;
+
+        $d63 = d138 - 3.141592653589793;
+
+        $d64 = $d63 + d134;
+
+        d139 = neg $d64;
+
+        $d65 = 1.2246467991473532E-16 - d135;
+
+        d140 = d139 + $d65;
+
+        d134 = d138 + d140;
+
+     label12:
+        $z1 = z3 ^ z0;
+
+        if $z1 == 0 goto label13;
+
+        d134 = neg d134;
+
+     label13:
+        return d134;
+    }
+
+    public static double atan2(double, double)
+    {
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d19, $d22, $d23, $d24, $d25, $d26, $d27, $d28, d29, d30, d31, d32, d33, d34, d35, d36, d37;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11, $b12, $b13, $b14, $b15, $b16, $b17, $b18, $b19, $b20, $b21, $b22, $b23, $b24, $b25, $b26, $b27, $b28, $b29, $b30, $b31, $b32;
+        boolean $z0, $z1, $z2;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $b0 = d1 cmpl d1;
+
+        if $b0 != 0 goto label01;
+
+        $b1 = d0 cmpl d0;
+
+        if $b1 == 0 goto label02;
+
+     label01:
+        return #NaN;
+
+     label02:
+        $b2 = d0 cmpl 0.0;
+
+        if $b2 != 0 goto label09;
+
+        d29 = d1 * d0;
+
+        d30 = 1.0 / d1;
+
+        d31 = 1.0 / d0;
+
+        $b27 = d30 cmpl 0.0;
+
+        if $b27 != 0 goto label04;
+
+        $b32 = d1 cmpl 0.0;
+
+        if $b32 <= 0 goto label03;
+
+        return d0;
+
+     label03:
+        $d28 = staticinvoke <org.apache.commons.math.util.FastMath: double copySign(double,double)>(3.141592653589793, d0);
+
+        return $d28;
+
+     label04:
+        $b28 = d1 cmpg 0.0;
+
+        if $b28 < 0 goto label05;
+
+        $b31 = d30 cmpg 0.0;
+
+        if $b31 >= 0 goto label08;
+
+     label05:
+        $b29 = d0 cmpg 0.0;
+
+        if $b29 < 0 goto label06;
+
+        $b30 = d31 cmpg 0.0;
+
+        if $b30 >= 0 goto label07;
+
+     label06:
+        return -3.141592653589793;
+
+     label07:
+        return 3.141592653589793;
+
+     label08:
+        return d29;
+
+     label09:
+        $b3 = d0 cmpl #Infinity;
+
+        if $b3 != 0 goto label12;
+
+        $b25 = d1 cmpl #Infinity;
+
+        if $b25 != 0 goto label10;
+
+        return 0.7853981633974483;
+
+     label10:
+        $b26 = d1 cmpl #-Infinity;
+
+        if $b26 != 0 goto label11;
+
+        return 2.356194490192345;
+
+     label11:
+        return 1.5707963267948966;
+
+     label12:
+        $b4 = d0 cmpl #-Infinity;
+
+        if $b4 != 0 goto label15;
+
+        $b23 = d1 cmpl #Infinity;
+
+        if $b23 != 0 goto label13;
+
+        return -0.7853981633974483;
+
+     label13:
+        $b24 = d1 cmpl #-Infinity;
+
+        if $b24 != 0 goto label14;
+
+        return -2.356194490192345;
+
+     label14:
+        return -1.5707963267948966;
+
+     label15:
+        $b5 = d1 cmpl #Infinity;
+
+        if $b5 != 0 goto label19;
+
+        $b19 = d0 cmpl 0.0;
+
+        if $b19 > 0 goto label16;
+
+        $d26 = 1.0 / d0;
+
+        $b20 = $d26 cmpl 0.0;
+
+        if $b20 <= 0 goto label17;
+
+     label16:
+        return 0.0;
+
+     label17:
+        $b21 = d0 cmpg 0.0;
+
+        if $b21 < 0 goto label18;
+
+        $d27 = 1.0 / d0;
+
+        $b22 = $d27 cmpg 0.0;
+
+        if $b22 >= 0 goto label19;
+
+     label18:
+        return -0.0;
+
+     label19:
+        $b6 = d1 cmpl #-Infinity;
+
+        if $b6 != 0 goto label23;
+
+        $b15 = d0 cmpl 0.0;
+
+        if $b15 > 0 goto label20;
+
+        $d24 = 1.0 / d0;
+
+        $b16 = $d24 cmpl 0.0;
+
+        if $b16 <= 0 goto label21;
+
+     label20:
+        return 3.141592653589793;
+
+     label21:
+        $b17 = d0 cmpg 0.0;
+
+        if $b17 < 0 goto label22;
+
+        $d25 = 1.0 / d0;
+
+        $b18 = $d25 cmpg 0.0;
+
+        if $b18 >= 0 goto label23;
+
+     label22:
+        return -3.141592653589793;
+
+     label23:
+        $b7 = d1 cmpl 0.0;
+
+        if $b7 != 0 goto label27;
+
+        $b11 = d0 cmpl 0.0;
+
+        if $b11 > 0 goto label24;
+
+        $d22 = 1.0 / d0;
+
+        $b12 = $d22 cmpl 0.0;
+
+        if $b12 <= 0 goto label25;
+
+     label24:
+        return 1.5707963267948966;
+
+     label25:
+        $b13 = d0 cmpg 0.0;
+
+        if $b13 < 0 goto label26;
+
+        $d23 = 1.0 / d0;
+
+        $b14 = $d23 cmpg 0.0;
+
+        if $b14 >= 0 goto label27;
+
+     label26:
+        return -1.5707963267948966;
+
+     label27:
+        d32 = d0 / d1;
+
+        $z0 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d32);
+
+        if $z0 == 0 goto label30;
+
+        $b10 = d1 cmpg 0.0;
+
+        if $b10 >= 0 goto label28;
+
+        $z1 = 1;
+
+        goto label29;
+
+     label28:
+        $z1 = 0;
+
+     label29:
+        $d19 = staticinvoke <org.apache.commons.math.util.FastMath: double atan(double,double,boolean)>(d32, 0.0, $z1);
+
+        return $d19;
+
+     label30:
+        d33 = staticinvoke <org.apache.commons.math.util.FastMath: double doubleHighPart(double)>(d32);
+
+        d34 = d32 - d33;
+
+        d2 = staticinvoke <org.apache.commons.math.util.FastMath: double doubleHighPart(double)>(d1);
+
+        d3 = d1 - d2;
+
+        $d6 = d33 * d2;
+
+        $d8 = d0 - $d6;
+
+        $d7 = d33 * d3;
+
+        $d10 = $d8 - $d7;
+
+        $d9 = d34 * d2;
+
+        $d12 = $d10 - $d9;
+
+        $d11 = d34 * d3;
+
+        $d13 = $d12 - $d11;
+
+        $d14 = $d13 / d1;
+
+        d35 = d34 + $d14;
+
+        d4 = d33 + d35;
+
+        $d15 = d4 - d33;
+
+        $d16 = $d15 - d35;
+
+        d36 = neg $d16;
+
+        d37 = d4;
+
+        $b8 = d4 cmpl 0.0;
+
+        if $b8 != 0 goto label31;
+
+        d37 = staticinvoke <org.apache.commons.math.util.FastMath: double copySign(double,double)>(0.0, d0);
+
+     label31:
+        $d17 = d37;
+
+        $b9 = d1 cmpg 0.0;
+
+        if $b9 >= 0 goto label32;
+
+        $z2 = 1;
+
+        goto label33;
+
+     label32:
+        $z2 = 0;
+
+     label33:
+        d5 = staticinvoke <org.apache.commons.math.util.FastMath: double atan(double,double,boolean)>($d17, d36, $z2);
+
+        return d5;
+    }
+
+    public static double asin(double)
+    {
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, d43, d44, d45, d46, d47, d48, d49, d50, d51, d53, d54, d55, d56, d57, d58, d59, d60, d61, d62, d63;
+        byte $b0, $b1, $b2, $b3, $b4, $b5;
+
+        d0 := @parameter0: double;
+
+        $b0 = d0 cmpl d0;
+
+        if $b0 == 0 goto label1;
+
+        return #NaN;
+
+     label1:
+        $b1 = d0 cmpl 1.0;
+
+        if $b1 > 0 goto label2;
+
+        $b2 = d0 cmpg -1.0;
+
+        if $b2 >= 0 goto label3;
+
+     label2:
+        return #NaN;
+
+     label3:
+        $b3 = d0 cmpl 1.0;
+
+        if $b3 != 0 goto label4;
+
+        return 1.5707963267948966;
+
+     label4:
+        $b4 = d0 cmpl -1.0;
+
+        if $b4 != 0 goto label5;
+
+        return -1.5707963267948966;
+
+     label5:
+        $b5 = d0 cmpl 0.0;
+
+        if $b5 != 0 goto label6;
+
+        return d0;
+
+     label6:
+        d43 = d0 * 1.073741824E9;
+
+        $d6 = d0 + d43;
+
+        d1 = $d6 - d43;
+
+        d2 = d0 - d1;
+
+        d44 = d1 * d1;
+
+        $d7 = d1 * d2;
+
+        $d9 = $d7 * 2.0;
+
+        $d8 = d2 * d2;
+
+        d45 = $d9 + $d8;
+
+        d46 = neg d44;
+
+        d47 = neg d45;
+
+        d48 = 1.0 + d46;
+
+        $d10 = d48 - 1.0;
+
+        $d11 = $d10 - d46;
+
+        d49 = neg $d11;
+
+        d50 = d48 + d47;
+
+        $d12 = d50 - d48;
+
+        $d13 = $d12 - d47;
+
+        $d14 = neg $d13;
+
+        d51 = d49 + $d14;
+
+        d3 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>(d50);
+
+        d53 = d3 * 1.073741824E9;
+
+        $d15 = d3 + d53;
+
+        d54 = $d15 - d53;
+
+        d55 = d3 - d54;
+
+        $d16 = d54 * d54;
+
+        $d19 = d50 - $d16;
+
+        $d17 = 2.0 * d54;
+
+        $d18 = $d17 * d55;
+
+        $d21 = $d19 - $d18;
+
+        $d20 = d55 * d55;
+
+        $d23 = $d21 - $d20;
+
+        $d22 = 2.0 * d3;
+
+        $d24 = $d23 / $d22;
+
+        d56 = d55 + $d24;
+
+        $d25 = 2.0 * d3;
+
+        d4 = d51 / $d25;
+
+        d5 = d0 / d3;
+
+        d57 = d5 * 1.073741824E9;
+
+        $d26 = d5 + d57;
+
+        d58 = $d26 - d57;
+
+        d59 = d5 - d58;
+
+        $d27 = d58 * d54;
+
+        $d29 = d0 - $d27;
+
+        $d28 = d58 * d56;
+
+        $d31 = $d29 - $d28;
+
+        $d30 = d59 * d54;
+
+        $d33 = $d31 - $d30;
+
+        $d32 = d59 * d56;
+
+        $d34 = $d33 - $d32;
+
+        $d35 = $d34 / d3;
+
+        d60 = d59 + $d35;
+
+        $d36 = neg d0;
+
+        $d37 = $d36 * d4;
+
+        $d38 = $d37 / d3;
+
+        $d39 = $d38 / d3;
+
+        d61 = d60 + $d39;
+
+        d62 = d58 + d61;
+
+        $d40 = d62 - d58;
+
+        $d41 = $d40 - d61;
+
+        d63 = neg $d41;
+
+        $d42 = staticinvoke <org.apache.commons.math.util.FastMath: double atan(double,double,boolean)>(d62, d63, 0);
+
+        return $d42;
+    }
+
+    public static double acos(double)
+    {
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, d42, d43, d44, d45, d46, d47, d48, d49, d50, d52, d53, d54, d55, d56, d57, d58, d59, d60, d61, d62, d63, d64, d65;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6;
+        boolean $z0, $z1;
+
+        d0 := @parameter0: double;
+
+        $b0 = d0 cmpl d0;
+
+        if $b0 == 0 goto label1;
+
+        return #NaN;
+
+     label1:
+        $b1 = d0 cmpl 1.0;
+
+        if $b1 > 0 goto label2;
+
+        $b2 = d0 cmpg -1.0;
+
+        if $b2 >= 0 goto label3;
+
+     label2:
+        return #NaN;
+
+     label3:
+        $b3 = d0 cmpl -1.0;
+
+        if $b3 != 0 goto label4;
+
+        return 3.141592653589793;
+
+     label4:
+        $b4 = d0 cmpl 1.0;
+
+        if $b4 != 0 goto label5;
+
+        return 0.0;
+
+     label5:
+        $b5 = d0 cmpl 0.0;
+
+        if $b5 != 0 goto label6;
+
+        return 1.5707963267948966;
+
+     label6:
+        d42 = d0 * 1.073741824E9;
+
+        $d4 = d0 + d42;
+
+        d1 = $d4 - d42;
+
+        d2 = d0 - d1;
+
+        d43 = d1 * d1;
+
+        $d5 = d1 * d2;
+
+        $d7 = $d5 * 2.0;
+
+        $d6 = d2 * d2;
+
+        d44 = $d7 + $d6;
+
+        d45 = neg d43;
+
+        d46 = neg d44;
+
+        d47 = 1.0 + d45;
+
+        $d8 = d47 - 1.0;
+
+        $d9 = $d8 - d45;
+
+        d48 = neg $d9;
+
+        d49 = d47 + d46;
+
+        $d10 = d49 - d47;
+
+        $d11 = $d10 - d46;
+
+        $d12 = neg $d11;
+
+        d50 = d48 + $d12;
+
+        d52 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>(d49);
+
+        d53 = d52 * 1.073741824E9;
+
+        $d13 = d52 + d53;
+
+        d54 = $d13 - d53;
+
+        d55 = d52 - d54;
+
+        $d14 = d54 * d54;
+
+        $d17 = d49 - $d14;
+
+        $d15 = 2.0 * d54;
+
+        $d16 = $d15 * d55;
+
+        $d19 = $d17 - $d16;
+
+        $d18 = d55 * d55;
+
+        $d21 = $d19 - $d18;
+
+        $d20 = 2.0 * d52;
+
+        $d22 = $d21 / $d20;
+
+        d56 = d55 + $d22;
+
+        $d23 = 2.0 * d52;
+
+        $d24 = d50 / $d23;
+
+        d57 = d56 + $d24;
+
+        d58 = d54 + d57;
+
+        $d25 = d58 - d54;
+
+        $d26 = $d25 - d57;
+
+        d59 = neg $d26;
+
+        d3 = d58 / d0;
+
+        $z0 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d3);
+
+        if $z0 == 0 goto label7;
+
+        return 1.5707963267948966;
+
+     label7:
+        d60 = staticinvoke <org.apache.commons.math.util.FastMath: double doubleHighPart(double)>(d3);
+
+        d61 = d3 - d60;
+
+        $d27 = d60 * d1;
+
+        $d29 = d58 - $d27;
+
+        $d28 = d60 * d2;
+
+        $d31 = $d29 - $d28;
+
+        $d30 = d61 * d1;
+
+        $d33 = $d31 - $d30;
+
+        $d32 = d61 * d2;
+
+        $d34 = $d33 - $d32;
+
+        $d35 = $d34 / d0;
+
+        d62 = d61 + $d35;
+
+        $d36 = d59 / d0;
+
+        d63 = d62 + $d36;
+
+        d64 = d60 + d63;
+
+        $d37 = d64 - d60;
+
+        $d38 = $d37 - d63;
+
+        d65 = neg $d38;
+
+        $b6 = d0 cmpg 0.0;
+
+        if $b6 >= 0 goto label8;
+
+        $z1 = 1;
+
+        goto label9;
+
+     label8:
+        $z1 = 0;
+
+     label9:
+        $d39 = staticinvoke <org.apache.commons.math.util.FastMath: double atan(double,double,boolean)>(d64, d65, $z1);
+
+        return $d39;
+    }
+
+    public static double cbrt(double)
+    {
+        int i0, $i3, $i4, $i5, $i12, $i13, $i17, i19;
+        double d0, d1, d2, d3, d4, d5, d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, d42, d44, d45, d46, d47, d48, d49, d50, d51, d52, d53, d54, d55, d57, d58, d59, d60, d61, d62;
+        long $l1, $l2, $l6, $l7, $l8, $l9, $l10, $l11, $l15, $l16, l18;
+        double[] $r0;
+        byte $b14;
+        boolean z0;
+
+        d42 := @parameter0: double;
+
+        l18 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d42);
+
+        $l1 = l18 >> 52;
+
+        $l2 = $l1 & 2047L;
+
+        $i3 = (int) $l2;
+
+        i19 = $i3 - 1023;
+
+        z0 = 0;
+
+        if i19 != -1023 goto label2;
+
+        $b14 = d42 cmpl 0.0;
+
+        if $b14 != 0 goto label1;
+
+        return d42;
+
+     label1:
+        z0 = 1;
+
+        d42 = d42 * 1.8014398509481984E16;
+
+        l18 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d42);
+
+        $l15 = l18 >> 52;
+
+        $l16 = $l15 & 2047L;
+
+        $i17 = (int) $l16;
+
+        i19 = $i17 - 1023;
+
+     label2:
+        if i19 != 1024 goto label3;
+
+        return d42;
+
+     label3:
+        i0 = i19 / 3;
+
+        $l8 = l18 & -9223372036854775808L;
+
+        $i4 = i0 + 1023;
+
+        $i5 = $i4 & 2047;
+
+        $l6 = (long) $i5;
+
+        $l7 = $l6 << 52;
+
+        $l9 = $l8 | $l7;
+
+        d0 = staticinvoke <java.lang.Double: double longBitsToDouble(long)>($l9);
+
+        $l10 = l18 & 4503599627370495L;
+
+        $l11 = $l10 | 4607182418800017408L;
+
+        d1 = staticinvoke <java.lang.Double: double longBitsToDouble(long)>($l11);
+
+        $d7 = -0.010714690733195933 * d1;
+
+        d44 = $d7 + 0.0875862700108075;
+
+        $d8 = d44 * d1;
+
+        d45 = $d8 + -0.3058015757857271;
+
+        $d9 = d45 * d1;
+
+        d46 = $d9 + 0.7249995199969751;
+
+        $d10 = d46 * d1;
+
+        d47 = $d10 + 0.5039018405998233;
+
+        $r0 = <org.apache.commons.math.util.FastMath: double[] CBRTTWO>;
+
+        $i12 = i19 % 3;
+
+        $i13 = $i12 + 2;
+
+        $d11 = $r0[$i13];
+
+        d48 = d47 * $d11;
+
+        $d12 = d0 * d0;
+
+        $d13 = $d12 * d0;
+
+        d2 = d42 / $d13;
+
+        $d14 = d48 * d48;
+
+        $d15 = $d14 * d48;
+
+        $d18 = d2 - $d15;
+
+        $d16 = 3.0 * d48;
+
+        $d17 = $d16 * d48;
+
+        $d19 = $d18 / $d17;
+
+        d49 = d48 + $d19;
+
+        $d20 = d49 * d49;
+
+        $d21 = $d20 * d49;
+
+        $d24 = d2 - $d21;
+
+        $d22 = 3.0 * d49;
+
+        $d23 = $d22 * d49;
+
+        $d25 = $d24 / $d23;
+
+        d50 = d49 + $d25;
+
+        d51 = d50 * 1.073741824E9;
+
+        $d26 = d50 + d51;
+
+        d3 = $d26 - d51;
+
+        d4 = d50 - d3;
+
+        d52 = d3 * d3;
+
+        $d27 = d3 * d4;
+
+        $d29 = $d27 * 2.0;
+
+        $d28 = d4 * d4;
+
+        d53 = $d29 + $d28;
+
+        d54 = d52 * 1.073741824E9;
+
+        $d30 = d52 + d54;
+
+        d5 = $d30 - d54;
+
+        $d31 = d52 - d5;
+
+        d55 = d53 + $d31;
+
+        $d33 = d5 * d4;
+
+        $d32 = d3 * d55;
+
+        $d35 = $d33 + $d32;
+
+        $d34 = d55 * d4;
+
+        d57 = $d35 + $d34;
+
+        d58 = d5 * d3;
+
+        d6 = d2 - d58;
+
+        $d36 = d6 - d2;
+
+        $d37 = $d36 + d58;
+
+        d59 = neg $d37;
+
+        d60 = d59 - d57;
+
+        $d40 = d6 + d60;
+
+        $d38 = 3.0 * d50;
+
+        $d39 = $d38 * d50;
+
+        $d41 = $d40 / $d39;
+
+        d61 = d50 + $d41;
+
+        d62 = d61 * d0;
+
+        if z0 == 0 goto label4;
+
+        d62 = d62 * 3.814697265625E-6;
+
+     label4:
+        return d62;
+    }
+
+    public static double toRadians(double)
+    {
+        double d0, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, d11;
+        boolean $z0;
+        byte $b0, $b1;
+
+        d0 := @parameter0: double;
+
+        $z0 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d0);
+
+        if $z0 != 0 goto label1;
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 != 0 goto label2;
+
+     label1:
+        return d0;
+
+     label2:
+        d3 = staticinvoke <org.apache.commons.math.util.FastMath: double doubleHighPart(double)>(d0);
+
+        d4 = d0 - d3;
+
+        $d6 = d4 * 1.997844754509471E-9;
+
+        $d5 = d4 * 0.01745329052209854;
+
+        $d8 = $d6 + $d5;
+
+        $d7 = d3 * 1.997844754509471E-9;
+
+        $d10 = $d8 + $d7;
+
+        $d9 = d3 * 0.01745329052209854;
+
+        d11 = $d10 + $d9;
+
+        $b1 = d11 cmpl 0.0;
+
+        if $b1 != 0 goto label3;
+
+        d11 = d11 * d0;
+
+     label3:
+        return d11;
+    }
+
+    public static double toDegrees(double)
+    {
+        double d0, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11;
+        boolean $z0;
+        byte $b0;
+
+        d0 := @parameter0: double;
+
+        $z0 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d0);
+
+        if $z0 != 0 goto label1;
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 != 0 goto label2;
+
+     label1:
+        return d0;
+
+     label2:
+        d3 = staticinvoke <org.apache.commons.math.util.FastMath: double doubleHighPart(double)>(d0);
+
+        d4 = d0 - d3;
+
+        $d6 = d4 * 3.145894820876798E-6;
+
+        $d5 = d4 * 57.2957763671875;
+
+        $d8 = $d6 + $d5;
+
+        $d7 = d3 * 3.145894820876798E-6;
+
+        $d10 = $d8 + $d7;
+
+        $d9 = d3 * 57.2957763671875;
+
+        $d11 = $d10 + $d9;
+
+        return $d11;
+    }
+
+    public static int abs(int)
+    {
+        int i0, $i1;
+
+        i0 := @parameter0: int;
+
+        if i0 >= 0 goto label1;
+
+        $i1 = neg i0;
+
+        goto label2;
+
+     label1:
+        $i1 = i0;
+
+     label2:
+        return $i1;
+    }
+
+    public static long abs(long)
+    {
+        long l0, $l2;
+        byte $b1;
+
+        l0 := @parameter0: long;
+
+        $b1 = l0 cmp 0L;
+
+        if $b1 >= 0 goto label1;
+
+        $l2 = neg l0;
+
+        goto label2;
+
+     label1:
+        $l2 = l0;
+
+     label2:
+        return $l2;
+    }
+
+    public static float abs(float)
+    {
+        float f0, $f1;
+        byte $b0, $b1;
+
+        f0 := @parameter0: float;
+
+        $b0 = f0 cmpg 0.0F;
+
+        if $b0 >= 0 goto label1;
+
+        $f1 = neg f0;
+
+        goto label3;
+
+     label1:
+        $b1 = f0 cmpl 0.0F;
+
+        if $b1 != 0 goto label2;
+
+        $f1 = 0.0F;
+
+        goto label3;
+
+     label2:
+        $f1 = f0;
+
+     label3:
+        return $f1;
+    }
+
+    public static double abs(double)
+    {
+        double d0, $d1;
+        byte $b0, $b1;
+
+        d0 := @parameter0: double;
+
+        $b0 = d0 cmpg 0.0;
+
+        if $b0 >= 0 goto label1;
+
+        $d1 = neg d0;
+
+        goto label3;
+
+     label1:
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 != 0 goto label2;
+
+        $d1 = 0.0;
+
+        goto label3;
+
+     label2:
+        $d1 = d0;
+
+     label3:
+        return $d1;
+    }
+
+    public static double ulp(double)
+    {
+        double d0, $d1, $d2, $d3;
+        boolean $z0;
+        long $l0, $l1;
+
+        d0 := @parameter0: double;
+
+        $z0 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d0);
+
+        if $z0 == 0 goto label1;
+
+        return #Infinity;
+
+     label1:
+        $l0 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d0);
+
+        $l1 = $l0 ^ 1L;
+
+        $d1 = staticinvoke <java.lang.Double: double longBitsToDouble(long)>($l1);
+
+        $d2 = d0 - $d1;
+
+        $d3 = staticinvoke <org.apache.commons.math.util.FastMath: double abs(double)>($d2);
+
+        return $d3;
+    }
+
+    public static float ulp(float)
+    {
+        float f0, $f1, $f2, $f3;
+        boolean $z0;
+        int $i0, $i1;
+
+        f0 := @parameter0: float;
+
+        $z0 = staticinvoke <java.lang.Float: boolean isInfinite(float)>(f0);
+
+        if $z0 == 0 goto label1;
+
+        return #InfinityF;
+
+     label1:
+        $i0 = staticinvoke <java.lang.Float: int floatToIntBits(float)>(f0);
+
+        $i1 = $i0 ^ 1;
+
+        $f1 = staticinvoke <java.lang.Float: float intBitsToFloat(int)>($i1);
+
+        $f2 = f0 - $f1;
+
+        $f3 = staticinvoke <org.apache.commons.math.util.FastMath: float abs(float)>($f2);
+
+        return $f3;
+    }
+
+    public static double scalb(double, int)
+    {
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d8, $d10, $d11;
+        int i0, i3, $i7, $i21, $i23, $i32, i36, i39;
+        long l1, l2, l4, $l6, $l9, $l10, $l11, $l12, $l13, $l16, $l17, $l18, $l19, $l22, $l25, $l26, $l27, $l28, $l29, $l33, $l34, l35, l37, l38, l40;
+        boolean $z0, $z1;
+        byte $b5, $b8, $b14, $b15, $b20, $b24, $b30, $b31;
+
+        d0 := @parameter0: double;
+
+        i0 := @parameter1: int;
+
+        if i0 <= -1023 goto label01;
+
+        if i0 >= 1024 goto label01;
+
+        $i32 = i0 + 1023;
+
+        $l33 = (long) $i32;
+
+        $l34 = $l33 << 52;
+
+        $d5 = staticinvoke <java.lang.Double: double longBitsToDouble(long)>($l34);
+
+        $d6 = d0 * $d5;
+
+        return $d6;
+
+     label01:
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d0);
+
+        if $z0 != 0 goto label02;
+
+        $z1 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d0);
+
+        if $z1 != 0 goto label02;
+
+        $b5 = d0 cmpl 0.0;
+
+        if $b5 != 0 goto label03;
+
+     label02:
+        return d0;
+
+     label03:
+        if i0 >= -2098 goto label05;
+
+        $b31 = d0 cmpl 0.0;
+
+        if $b31 <= 0 goto label04;
+
+        goto label04;
+
+     label04:
+        return 0.0;
+
+     label05:
+        if i0 <= 2097 goto label08;
+
+        $b30 = d0 cmpl 0.0;
+
+        if $b30 <= 0 goto label06;
+
+        $d8 = #Infinity;
+
+        goto label07;
+
+     label06:
+        $d8 = #-Infinity;
+
+     label07:
+        return $d8;
+
+     label08:
+        l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d0);
+
+        l2 = l1 & -9223372036854775808L;
+
+        $l6 = l1 >>> 52;
+
+        $i7 = (int) $l6;
+
+        i3 = $i7 & 2047;
+
+        l35 = l1 & 4503599627370495L;
+
+        i36 = i3 + i0;
+
+        if i0 >= 0 goto label13;
+
+        if i36 <= 0 goto label09;
+
+        $l26 = (long) i36;
+
+        $l27 = $l26 << 52;
+
+        $l28 = l2 | $l27;
+
+        $l29 = $l28 | l35;
+
+        $d4 = staticinvoke <java.lang.Double: double longBitsToDouble(long)>($l29);
+
+        return $d4;
+
+     label09:
+        if i36 <= -53 goto label11;
+
+        l37 = l35 | 4503599627370496L;
+
+        $i21 = neg i36;
+
+        $l22 = 1L << $i21;
+
+        l4 = l37 & $l22;
+
+        $i23 = 1 - i36;
+
+        l38 = l37 >>> $i23;
+
+        $b24 = l4 cmp 0L;
+
+        if $b24 == 0 goto label10;
+
+        l38 = l38 + 1L;
+
+     label10:
+        $l25 = l2 | l38;
+
+        $d3 = staticinvoke <java.lang.Double: double longBitsToDouble(long)>($l25);
+
+        return $d3;
+
+     label11:
+        $b20 = l2 cmp 0L;
+
+        if $b20 != 0 goto label12;
+
+        goto label12;
+
+     label12:
+        return 0.0;
+
+     label13:
+        if i3 != 0 goto label19;
+
+     label14:
+        $l13 = l35 >>> 52;
+
+        $b14 = $l13 cmp 1L;
+
+        if $b14 == 0 goto label15;
+
+        l35 = l35 << 1;
+
+        i36 = i36 + -1;
+
+        goto label14;
+
+     label15:
+        i39 = i36 + 1;
+
+        l40 = l35 & 4503599627370495L;
+
+        if i39 >= 2047 goto label16;
+
+        $l16 = (long) i39;
+
+        $l17 = $l16 << 52;
+
+        $l18 = l2 | $l17;
+
+        $l19 = $l18 | l40;
+
+        $d2 = staticinvoke <java.lang.Double: double longBitsToDouble(long)>($l19);
+
+        return $d2;
+
+     label16:
+        $b15 = l2 cmp 0L;
+
+        if $b15 != 0 goto label17;
+
+        $d10 = #Infinity;
+
+        goto label18;
+
+     label17:
+        $d10 = #-Infinity;
+
+     label18:
+        return $d10;
+
+     label19:
+        if i36 >= 2047 goto label20;
+
+        $l9 = (long) i36;
+
+        $l10 = $l9 << 52;
+
+        $l11 = l2 | $l10;
+
+        $l12 = $l11 | l35;
+
+        $d1 = staticinvoke <java.lang.Double: double longBitsToDouble(long)>($l12);
+
+        return $d1;
+
+     label20:
+        $b8 = l2 cmp 0L;
+
+        if $b8 != 0 goto label21;
+
+        $d11 = #Infinity;
+
+        goto label22;
+
+     label21:
+        $d11 = #-Infinity;
+
+     label22:
+        return $d11;
+    }
+
+    public static float scalb(float, int)
+    {
+        float f0, $f1, $f2, $f3, $f4, $f5, $f6, $f8, $f10, $f11;
+        int i0, i1, i2, i3, i4, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i23, $i24, i25, i26, i27, i28, i29, i30;
+        boolean $z0, $z1;
+        byte $b5, $b21, $b22;
+
+        f0 := @parameter0: float;
+
+        i0 := @parameter1: int;
+
+        if i0 <= -127 goto label01;
+
+        if i0 >= 128 goto label01;
+
+        $i23 = i0 + 127;
+
+        $i24 = $i23 << 23;
+
+        $f5 = staticinvoke <java.lang.Float: float intBitsToFloat(int)>($i24);
+
+        $f6 = f0 * $f5;
+
+        return $f6;
+
+     label01:
+        $z0 = staticinvoke <java.lang.Float: boolean isNaN(float)>(f0);
+
+        if $z0 != 0 goto label02;
+
+        $z1 = staticinvoke <java.lang.Float: boolean isInfinite(float)>(f0);
+
+        if $z1 != 0 goto label02;
+
+        $b5 = f0 cmpl 0.0F;
+
+        if $b5 != 0 goto label03;
+
+     label02:
+        return f0;
+
+     label03:
+        if i0 >= -277 goto label05;
+
+        $b22 = f0 cmpl 0.0F;
+
+        if $b22 <= 0 goto label04;
+
+        goto label04;
+
+     label04:
+        return 0.0F;
+
+     label05:
+        if i0 <= 276 goto label08;
+
+        $b21 = f0 cmpl 0.0F;
+
+        if $b21 <= 0 goto label06;
+
+        $f8 = #InfinityF;
+
+        goto label07;
+
+     label06:
+        $f8 = #-InfinityF;
+
+     label07:
+        return $f8;
+
+     label08:
+        i1 = staticinvoke <java.lang.Float: int floatToIntBits(float)>(f0);
+
+        i2 = i1 & -2147483648;
+
+        $i6 = i1 >>> 23;
+
+        i3 = $i6 & 255;
+
+        i25 = i1 & 8388607;
+
+        i26 = i3 + i0;
+
+        if i0 >= 0 goto label13;
+
+        if i26 <= 0 goto label09;
+
+        $i18 = i26 << 23;
+
+        $i19 = i2 | $i18;
+
+        $i20 = $i19 | i25;
+
+        $f4 = staticinvoke <java.lang.Float: float intBitsToFloat(int)>($i20);
+
+        return $f4;
+
+     label09:
+        if i26 <= -24 goto label11;
+
+        i27 = i25 | 8388608;
+
+        $i14 = neg i26;
+
+        $i15 = 1 << $i14;
+
+        i4 = i27 & $i15;
+
+        $i16 = 1 - i26;
+
+        i28 = i27 >>> $i16;
+
+        if i4 == 0 goto label10;
+
+        i28 = i28 + 1;
+
+     label10:
+        $i17 = i2 | i28;
+
+        $f3 = staticinvoke <java.lang.Float: float intBitsToFloat(int)>($i17);
+
+        return $f3;
+
+     label11:
+        if i2 != 0 goto label12;
+
+        goto label12;
+
+     label12:
+        return 0.0F;
+
+     label13:
+        if i3 != 0 goto label19;
+
+     label14:
+        $i10 = i25 >>> 23;
+
+        if $i10 == 1 goto label15;
+
+        i25 = i25 << 1;
+
+        i26 = i26 + -1;
+
+        goto label14;
+
+     label15:
+        i29 = i26 + 1;
+
+        i30 = i25 & 8388607;
+
+        if i29 >= 255 goto label16;
+
+        $i11 = i29 << 23;
+
+        $i12 = i2 | $i11;
+
+        $i13 = $i12 | i30;
+
+        $f2 = staticinvoke <java.lang.Float: float intBitsToFloat(int)>($i13);
+
+        return $f2;
+
+     label16:
+        if i2 != 0 goto label17;
+
+        $f10 = #InfinityF;
+
+        goto label18;
+
+     label17:
+        $f10 = #-InfinityF;
+
+     label18:
+        return $f10;
+
+     label19:
+        if i26 >= 255 goto label20;
+
+        $i7 = i26 << 23;
+
+        $i8 = i2 | $i7;
+
+        $i9 = $i8 | i25;
+
+        $f1 = staticinvoke <java.lang.Float: float intBitsToFloat(int)>($i9);
+
+        return $f1;
+
+     label20:
+        if i2 != 0 goto label21;
+
+        $f11 = #InfinityF;
+
+        goto label22;
+
+     label21:
+        $f11 = #-InfinityF;
+
+     label22:
+        return $f11;
+    }
+
+    public static double nextAfter(double, double)
+    {
+        double d0, d1, $d2, $d3, $d4, $d5;
+        long l0, l1, $l6, $l7, $l8, $l9, $l10, $l11;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5;
+        byte $b2, $b3, $b4, $b5, $b12, $b13;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d0);
+
+        if $z0 != 0 goto label01;
+
+        $z1 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d1);
+
+        if $z1 == 0 goto label02;
+
+     label01:
+        return #NaN;
+
+     label02:
+        $b2 = d0 cmpl d1;
+
+        if $b2 != 0 goto label03;
+
+        return d1;
+
+     label03:
+        $z2 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d0);
+
+        if $z2 == 0 goto label06;
+
+        $b13 = d0 cmpg 0.0;
+
+        if $b13 >= 0 goto label04;
+
+        $d4 = -1.7976931348623157E308;
+
+        goto label05;
+
+     label04:
+        $d4 = 1.7976931348623157E308;
+
+     label05:
+        return $d4;
+
+     label06:
+        $b3 = d0 cmpl 0.0;
+
+        if $b3 != 0 goto label09;
+
+        $b12 = d1 cmpg 0.0;
+
+        if $b12 >= 0 goto label07;
+
+        $d5 = -4.9E-324;
+
+        goto label08;
+
+     label07:
+        $d5 = 4.9E-324;
+
+     label08:
+        return $d5;
+
+     label09:
+        l0 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d0);
+
+        l1 = l0 & -9223372036854775808L;
+
+        $b4 = d1 cmpg d0;
+
+        if $b4 >= 0 goto label10;
+
+        $z3 = 1;
+
+        goto label11;
+
+     label10:
+        $z3 = 0;
+
+     label11:
+        $b5 = l1 cmp 0L;
+
+        if $b5 != 0 goto label12;
+
+        $z4 = 1;
+
+        goto label13;
+
+     label12:
+        $z4 = 0;
+
+     label13:
+        $z5 = $z3 ^ $z4;
+
+        if $z5 == 0 goto label14;
+
+        $l9 = l0 & 9223372036854775807L;
+
+        $l10 = $l9 + 1L;
+
+        $l11 = l1 | $l10;
+
+        $d3 = staticinvoke <java.lang.Double: double longBitsToDouble(long)>($l11);
+
+        return $d3;
+
+     label14:
+        $l6 = l0 & 9223372036854775807L;
+
+        $l7 = $l6 - 1L;
+
+        $l8 = l1 | $l7;
+
+        $d2 = staticinvoke <java.lang.Double: double longBitsToDouble(long)>($l8);
+
+        return $d2;
+    }
+
+    public static float nextAfter(float, double)
+    {
+        float f0, $f1, $f2, $f3, $f4, $f5;
+        double d0, $d1, $d2, $d3;
+        int i0, i1, $i5, $i6, $i7, $i8, $i9, $i10;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5;
+        byte $b2, $b3, $b4, $b11, $b12;
+
+        f0 := @parameter0: float;
+
+        d0 := @parameter1: double;
+
+        $d1 = (double) f0;
+
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d1);
+
+        if $z0 != 0 goto label01;
+
+        $z1 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d0);
+
+        if $z1 == 0 goto label02;
+
+     label01:
+        return #NaNF;
+
+     label02:
+        $d2 = (double) f0;
+
+        $b2 = $d2 cmpl d0;
+
+        if $b2 != 0 goto label03;
+
+        $f3 = (float) d0;
+
+        return $f3;
+
+     label03:
+        $z2 = staticinvoke <java.lang.Float: boolean isInfinite(float)>(f0);
+
+        if $z2 == 0 goto label06;
+
+        $b12 = f0 cmpg 0.0F;
+
+        if $b12 >= 0 goto label04;
+
+        $f4 = -3.4028235E38F;
+
+        goto label05;
+
+     label04:
+        $f4 = 3.4028235E38F;
+
+     label05:
+        return $f4;
+
+     label06:
+        $b3 = f0 cmpl 0.0F;
+
+        if $b3 != 0 goto label09;
+
+        $b11 = d0 cmpg 0.0;
+
+        if $b11 >= 0 goto label07;
+
+        $f5 = -1.4E-45F;
+
+        goto label08;
+
+     label07:
+        $f5 = 1.4E-45F;
+
+     label08:
+        return $f5;
+
+     label09:
+        i0 = staticinvoke <java.lang.Float: int floatToIntBits(float)>(f0);
+
+        i1 = i0 & -2147483648;
+
+        $d3 = (double) f0;
+
+        $b4 = d0 cmpg $d3;
+
+        if $b4 >= 0 goto label10;
+
+        $z3 = 1;
+
+        goto label11;
+
+     label10:
+        $z3 = 0;
+
+     label11:
+        if i1 != 0 goto label12;
+
+        $z4 = 1;
+
+        goto label13;
+
+     label12:
+        $z4 = 0;
+
+     label13:
+        $z5 = $z3 ^ $z4;
+
+        if $z5 == 0 goto label14;
+
+        $i8 = i0 & 2147483647;
+
+        $i9 = $i8 + 1;
+
+        $i10 = i1 | $i9;
+
+        $f2 = staticinvoke <java.lang.Float: float intBitsToFloat(int)>($i10);
+
+        return $f2;
+
+     label14:
+        $i5 = i0 & 2147483647;
+
+        $i6 = $i5 - 1;
+
+        $i7 = i1 | $i6;
+
+        $f1 = staticinvoke <java.lang.Float: float intBitsToFloat(int)>($i7);
+
+        return $f1;
+    }
+
+    public static double floor(double)
+    {
+        double d0, $d1, $d2, $d3, $d4;
+        byte $b0, $b1, $b2, $b3, $b4, $b6;
+        long l5;
+
+        d0 := @parameter0: double;
+
+        $b0 = d0 cmpl d0;
+
+        if $b0 == 0 goto label1;
+
+        return d0;
+
+     label1:
+        $b1 = d0 cmpl 4.503599627370496E15;
+
+        if $b1 >= 0 goto label2;
+
+        $b2 = d0 cmpg -4.503599627370496E15;
+
+        if $b2 > 0 goto label3;
+
+     label2:
+        return d0;
+
+     label3:
+        l5 = (long) d0;
+
+        $b3 = d0 cmpg 0.0;
+
+        if $b3 >= 0 goto label4;
+
+        $d4 = (double) l5;
+
+        $b4 = $d4 cmpl d0;
+
+        if $b4 == 0 goto label4;
+
+        l5 = l5 - 1L;
+
+     label4:
+        $b6 = l5 cmp 0L;
+
+        if $b6 != 0 goto label5;
+
+        $d2 = (double) l5;
+
+        $d3 = d0 * $d2;
+
+        return $d3;
+
+     label5:
+        $d1 = (double) l5;
+
+        return $d1;
+    }
+
+    public static double ceil(double)
+    {
+        double d0, $d1, d2, d3;
+        byte $b0, $b1, $b2;
+
+        d0 := @parameter0: double;
+
+        $b0 = d0 cmpl d0;
+
+        if $b0 == 0 goto label1;
+
+        return d0;
+
+     label1:
+        d2 = staticinvoke <org.apache.commons.math.util.FastMath: double floor(double)>(d0);
+
+        $b1 = d2 cmpl d0;
+
+        if $b1 != 0 goto label2;
+
+        return d2;
+
+     label2:
+        d3 = d2 + 1.0;
+
+        $b2 = d3 cmpl 0.0;
+
+        if $b2 != 0 goto label3;
+
+        $d1 = d0 * d3;
+
+        return $d1;
+
+     label3:
+        return d3;
+    }
+
+    public static double rint(double)
+    {
+        double d0, d1, d2, $d3, $d4;
+        long l0, $l3;
+        byte $b1, $b2, $b4, $b5;
+
+        d0 := @parameter0: double;
+
+        d1 = staticinvoke <org.apache.commons.math.util.FastMath: double floor(double)>(d0);
+
+        d2 = d0 - d1;
+
+        $b1 = d2 cmpl 0.5;
+
+        if $b1 <= 0 goto label2;
+
+        $b5 = d1 cmpl -1.0;
+
+        if $b5 != 0 goto label1;
+
+        return -0.0;
+
+     label1:
+        $d3 = d1 + 1.0;
+
+        return $d3;
+
+     label2:
+        $b2 = d2 cmpg 0.5;
+
+        if $b2 >= 0 goto label3;
+
+        return d1;
+
+     label3:
+        l0 = (long) d1;
+
+        $l3 = l0 & 1L;
+
+        $b4 = $l3 cmp 0L;
+
+        if $b4 != 0 goto label4;
+
+        $d4 = d1;
+
+        goto label5;
+
+     label4:
+        $d4 = d1 + 1.0;
+
+     label5:
+        return $d4;
+    }
+
+    public static long round(double)
+    {
+        double d0, $d1, $d2;
+        long $l0;
+
+        d0 := @parameter0: double;
+
+        $d1 = d0 + 0.5;
+
+        $d2 = staticinvoke <org.apache.commons.math.util.FastMath: double floor(double)>($d1);
+
+        $l0 = (long) $d2;
+
+        return $l0;
+    }
+
+    public static int round(float)
+    {
+        float f0, $f1;
+        double $d0, $d1;
+        int $i0;
+
+        f0 := @parameter0: float;
+
+        $f1 = f0 + 0.5F;
+
+        $d0 = (double) $f1;
+
+        $d1 = staticinvoke <org.apache.commons.math.util.FastMath: double floor(double)>($d0);
+
+        $i0 = (int) $d1;
+
+        return $i0;
+    }
+
+    public static int min(int, int)
+    {
+        int i0, i1, $i2;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        if i0 > i1 goto label1;
+
+        $i2 = i0;
+
+        goto label2;
+
+     label1:
+        $i2 = i1;
+
+     label2:
+        return $i2;
+    }
+
+    public static long min(long, long)
+    {
+        long l0, l1, $l3;
+        byte $b2;
+
+        l0 := @parameter0: long;
+
+        l1 := @parameter1: long;
+
+        $b2 = l0 cmp l1;
+
+        if $b2 > 0 goto label1;
+
+        $l3 = l0;
+
+        goto label2;
+
+     label1:
+        $l3 = l1;
+
+     label2:
+        return $l3;
+    }
+
+    public static float min(float, float)
+    {
+        float f0, f1;
+        int i0;
+        byte $b1, $b2, $b3;
+
+        f0 := @parameter0: float;
+
+        f1 := @parameter1: float;
+
+        $b1 = f0 cmpl f1;
+
+        if $b1 <= 0 goto label1;
+
+        return f1;
+
+     label1:
+        $b2 = f0 cmpg f1;
+
+        if $b2 >= 0 goto label2;
+
+        return f0;
+
+     label2:
+        $b3 = f0 cmpl f1;
+
+        if $b3 == 0 goto label3;
+
+        return #NaNF;
+
+     label3:
+        i0 = staticinvoke <java.lang.Float: int floatToRawIntBits(float)>(f0);
+
+        if i0 != -2147483648 goto label4;
+
+        return f0;
+
+     label4:
+        return f1;
+    }
+
+    public static double min(double, double)
+    {
+        double d0, d1;
+        long l0;
+        byte $b1, $b2, $b3, $b4;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $b1 = d0 cmpl d1;
+
+        if $b1 <= 0 goto label1;
+
+        return d1;
+
+     label1:
+        $b2 = d0 cmpg d1;
+
+        if $b2 >= 0 goto label2;
+
+        return d0;
+
+     label2:
+        $b3 = d0 cmpl d1;
+
+        if $b3 == 0 goto label3;
+
+        return #NaN;
+
+     label3:
+        l0 = staticinvoke <java.lang.Double: long doubleToRawLongBits(double)>(d0);
+
+        $b4 = l0 cmp -9223372036854775808L;
+
+        if $b4 != 0 goto label4;
+
+        return d0;
+
+     label4:
+        return d1;
+    }
+
+    public static int max(int, int)
+    {
+        int i0, i1, $i2;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        if i0 > i1 goto label1;
+
+        $i2 = i1;
+
+        goto label2;
+
+     label1:
+        $i2 = i0;
+
+     label2:
+        return $i2;
+    }
+
+    public static long max(long, long)
+    {
+        long l0, l1, $l3;
+        byte $b2;
+
+        l0 := @parameter0: long;
+
+        l1 := @parameter1: long;
+
+        $b2 = l0 cmp l1;
+
+        if $b2 > 0 goto label1;
+
+        $l3 = l1;
+
+        goto label2;
+
+     label1:
+        $l3 = l0;
+
+     label2:
+        return $l3;
+    }
+
+    public static float max(float, float)
+    {
+        float f0, f1;
+        int i0;
+        byte $b1, $b2, $b3;
+
+        f0 := @parameter0: float;
+
+        f1 := @parameter1: float;
+
+        $b1 = f0 cmpl f1;
+
+        if $b1 <= 0 goto label1;
+
+        return f0;
+
+     label1:
+        $b2 = f0 cmpg f1;
+
+        if $b2 >= 0 goto label2;
+
+        return f1;
+
+     label2:
+        $b3 = f0 cmpl f1;
+
+        if $b3 == 0 goto label3;
+
+        return #NaNF;
+
+     label3:
+        i0 = staticinvoke <java.lang.Float: int floatToRawIntBits(float)>(f0);
+
+        if i0 != -2147483648 goto label4;
+
+        return f1;
+
+     label4:
+        return f0;
+    }
+
+    public static double max(double, double)
+    {
+        double d0, d1;
+        long l0;
+        byte $b1, $b2, $b3, $b4;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $b1 = d0 cmpl d1;
+
+        if $b1 <= 0 goto label1;
+
+        return d0;
+
+     label1:
+        $b2 = d0 cmpg d1;
+
+        if $b2 >= 0 goto label2;
+
+        return d1;
+
+     label2:
+        $b3 = d0 cmpl d1;
+
+        if $b3 == 0 goto label3;
+
+        return #NaN;
+
+     label3:
+        l0 = staticinvoke <java.lang.Double: long doubleToRawLongBits(double)>(d0);
+
+        $b4 = l0 cmp -9223372036854775808L;
+
+        if $b4 != 0 goto label4;
+
+        return d1;
+
+     label4:
+        return d0;
+    }
+
+    public static double hypot(double, double)
+    {
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7;
+        boolean $z0, $z1, $z2, $z3;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $z0 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d0);
+
+        if $z0 != 0 goto label1;
+
+        $z1 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d1);
+
+        if $z1 == 0 goto label2;
+
+     label1:
+        return #Infinity;
+
+     label2:
+        $z2 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d0);
+
+        if $z2 != 0 goto label3;
+
+        $z3 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d1);
+
+        if $z3 == 0 goto label4;
+
+     label3:
+        return #NaN;
+
+     label4:
+        i0 = staticinvoke <org.apache.commons.math.util.FastMath: int getExponent(double)>(d0);
+
+        i1 = staticinvoke <org.apache.commons.math.util.FastMath: int getExponent(double)>(d1);
+
+        $i3 = i1 + 27;
+
+        if i0 <= $i3 goto label5;
+
+        $d10 = staticinvoke <org.apache.commons.math.util.FastMath: double abs(double)>(d0);
+
+        return $d10;
+
+     label5:
+        $i4 = i0 + 27;
+
+        if i1 <= $i4 goto label6;
+
+        $d9 = staticinvoke <org.apache.commons.math.util.FastMath: double abs(double)>(d1);
+
+        return $d9;
+
+     label6:
+        $i5 = i0 + i1;
+
+        i2 = $i5 / 2;
+
+        $i6 = neg i2;
+
+        d2 = staticinvoke <org.apache.commons.math.util.FastMath: double scalb(double,int)>(d0, $i6);
+
+        $i7 = neg i2;
+
+        d3 = staticinvoke <org.apache.commons.math.util.FastMath: double scalb(double,int)>(d1, $i7);
+
+        $d6 = d2 * d2;
+
+        $d5 = d3 * d3;
+
+        $d7 = $d6 + $d5;
+
+        d4 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>($d7);
+
+        $d8 = staticinvoke <org.apache.commons.math.util.FastMath: double scalb(double,int)>(d4, i2);
+
+        return $d8;
+    }
+
+    public static double IEEEremainder(double, double)
+    {
+        double d0, d1, $d2;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $d2 = staticinvoke <java.lang.StrictMath: double IEEEremainder(double,double)>(d0, d1);
+
+        return $d2;
+    }
+
+    public static double copySign(double, double)
+    {
+        double d0, d1, $d2;
+        long l0, l1;
+        byte $b2, $b3, $b4, $b5;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        l0 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d0);
+
+        l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d1);
+
+        $b2 = l0 cmp 0L;
+
+        if $b2 < 0 goto label1;
+
+        $b5 = l1 cmp 0L;
+
+        if $b5 >= 0 goto label2;
+
+     label1:
+        $b3 = l0 cmp 0L;
+
+        if $b3 >= 0 goto label3;
+
+        $b4 = l1 cmp 0L;
+
+        if $b4 >= 0 goto label3;
+
+     label2:
+        return d0;
+
+     label3:
+        $d2 = neg d0;
+
+        return $d2;
+    }
+
+    public static float copySign(float, float)
+    {
+        float f0, f1, $f2;
+        int i0, i1;
+
+        f0 := @parameter0: float;
+
+        f1 := @parameter1: float;
+
+        i0 = staticinvoke <java.lang.Float: int floatToIntBits(float)>(f0);
+
+        i1 = staticinvoke <java.lang.Float: int floatToIntBits(float)>(f1);
+
+        if i0 < 0 goto label1;
+
+        if i1 >= 0 goto label2;
+
+     label1:
+        if i0 >= 0 goto label3;
+
+        if i1 >= 0 goto label3;
+
+     label2:
+        return f0;
+
+     label3:
+        $f2 = neg f0;
+
+        return $f2;
+    }
+
+    public static int getExponent(double)
+    {
+        double d0;
+        long $l0, $l1, $l2;
+        int $i3, $i4;
+
+        d0 := @parameter0: double;
+
+        $l0 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d0);
+
+        $l1 = $l0 >>> 52;
+
+        $l2 = $l1 & 2047L;
+
+        $i3 = (int) $l2;
+
+        $i4 = $i3 - 1023;
+
+        return $i4;
+    }
+
+    public static int getExponent(float)
+    {
+        float f0;
+        int $i0, $i1, $i2, $i3;
+
+        f0 := @parameter0: float;
+
+        $i0 = staticinvoke <java.lang.Float: int floatToIntBits(float)>(f0);
+
+        $i1 = $i0 >>> 23;
+
+        $i2 = $i1 & 255;
+
+        $i3 = $i2 - 127;
+
+        return $i3;
+    }
+
+    static void <clinit>()
+    {
+        double[] r0, r1, $r2, $r3, $r4, $r5, $r6, $r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r26, $r27, $r28, $r29, $r30, $r31, $r32, $r33, $r34, $r36, $r37, $r38, $r39, $r40, $r41, $r42, $r43, $r44, $r45, $r46, $r47, $r50, $r51, $r52, $r53, $r54, $r57, $r58, $r59, $r60, $r61, $r62, $r63, $r64, $r65;
+        double d0, $d1, $d2, $d4, $d5, $d7, $d8, $d9, $d10, $d11, $d12, $d13;
+        double[][] $r7, $r8, $r25, $r35, $r55, $r56;
+        long[] $r48, $r49;
+        int $i0, $i1, $i2, $i6, $i7, $i8, $i9, $i10, i11, i12, i13, i14;
+        long $l3, $l4, $l5;
+
+        <org.apache.commons.math.util.FastMath: double TWO_POWER_52> = 4.503599627370496E15;
+
+        <org.apache.commons.math.util.FastMath: long MASK_30BITS> = -1073741824L;
+
+        <org.apache.commons.math.util.FastMath: long HEX_40000000> = 1073741824L;
+
+        <org.apache.commons.math.util.FastMath: double LN_2_B> = 1.1730463525082348E-7;
+
+        <org.apache.commons.math.util.FastMath: double LN_2_A> = 0.6931470632553101;
+
+        <org.apache.commons.math.util.FastMath: double E> = 2.718281828459045;
+
+        <org.apache.commons.math.util.FastMath: double PI> = 3.141592653589793;
+
+        $r2 = newarray (double)[1500];
+
+        <org.apache.commons.math.util.FastMath: double[] EXP_INT_TABLE_A> = $r2;
+
+        $r3 = newarray (double)[1500];
+
+        <org.apache.commons.math.util.FastMath: double[] EXP_INT_TABLE_B> = $r3;
+
+        $r4 = newarray (double)[1025];
+
+        <org.apache.commons.math.util.FastMath: double[] EXP_FRAC_TABLE_A> = $r4;
+
+        $r5 = newarray (double)[1025];
+
+        <org.apache.commons.math.util.FastMath: double[] EXP_FRAC_TABLE_B> = $r5;
+
+        $r6 = newarray (double)[20];
+
+        <org.apache.commons.math.util.FastMath: double[] FACT> = $r6;
+
+        $r7 = newarray (double[])[1024];
+
+        <org.apache.commons.math.util.FastMath: double[][] LN_MANT> = $r7;
+
+        $r8 = newarray (double[])[16];
+
+        $r9 = newarray (double)[2];
+
+        $r9[0] = 2.0;
+
+        $r9[1] = 0.0;
+
+        $r8[0] = $r9;
+
+        $r10 = newarray (double)[2];
+
+        $r10[0] = 0.6666666269302368;
+
+        $r10[1] = 3.9736429850260626E-8;
+
+        $r8[1] = $r10;
+
+        $r11 = newarray (double)[2];
+
+        $r11[0] = 0.3999999761581421;
+
+        $r11[1] = 2.3841857910019882E-8;
+
+        $r8[2] = $r11;
+
+        $r12 = newarray (double)[2];
+
+        $r12[0] = 0.2857142686843872;
+
+        $r12[1] = 1.7029898543501842E-8;
+
+        $r8[3] = $r12;
+
+        $r13 = newarray (double)[2];
+
+        $r13[0] = 0.2222222089767456;
+
+        $r13[1] = 1.3245471311735498E-8;
+
+        $r8[4] = $r13;
+
+        $r14 = newarray (double)[2];
+
+        $r14[0] = 0.1818181574344635;
+
+        $r14[1] = 2.4384203044354907E-8;
+
+        $r8[5] = $r14;
+
+        $r15 = newarray (double)[2];
+
+        $r15[0] = 0.1538461446762085;
+
+        $r15[1] = 9.140260083262505E-9;
+
+        $r8[6] = $r15;
+
+        $r16 = newarray (double)[2];
+
+        $r16[0] = 0.13333332538604736;
+
+        $r16[1] = 9.220590270857665E-9;
+
+        $r8[7] = $r16;
+
+        $r17 = newarray (double)[2];
+
+        $r17[0] = 0.11764700710773468;
+
+        $r17[1] = 1.2393345855018391E-8;
+
+        $r8[8] = $r17;
+
+        $r18 = newarray (double)[2];
+
+        $r18[0] = 0.10526403784751892;
+
+        $r18[1] = 8.251545029714408E-9;
+
+        $r8[9] = $r18;
+
+        $r19 = newarray (double)[2];
+
+        $r19[0] = 0.0952233225107193;
+
+        $r19[1] = 1.2675934823758863E-8;
+
+        $r8[10] = $r19;
+
+        $r20 = newarray (double)[2];
+
+        $r20[0] = 0.08713622391223907;
+
+        $r20[1] = 1.1430250008909141E-8;
+
+        $r8[11] = $r20;
+
+        $r21 = newarray (double)[2];
+
+        $r21[0] = 0.07842259109020233;
+
+        $r21[1] = 2.404307984052299E-9;
+
+        $r8[12] = $r21;
+
+        $r22 = newarray (double)[2];
+
+        $r22[0] = 0.08371849358081818;
+
+        $r22[1] = 1.176342548272881E-8;
+
+        $r8[13] = $r22;
+
+        $r23 = newarray (double)[2];
+
+        $r23[0] = 0.030589580535888672;
+
+        $r23[1] = 1.2958646899018938E-9;
+
+        $r8[14] = $r23;
+
+        $r24 = newarray (double)[2];
+
+        $r24[0] = 0.14982303977012634;
+
+        $r24[1] = 1.225743062930824E-8;
+
+        $r8[15] = $r24;
+
+        <org.apache.commons.math.util.FastMath: double[][] LN_SPLIT_COEF> = $r8;
+
+        $r25 = newarray (double[])[9];
+
+        $r26 = newarray (double)[2];
+
+        $r26[0] = 1.0;
+
+        $r26[1] = 5.669184079525E-24;
+
+        $r25[0] = $r26;
+
+        $r27 = newarray (double)[2];
+
+        $r27[0] = -0.25;
+
+        $r27[1] = -0.25;
+
+        $r25[1] = $r27;
+
+        $r28 = newarray (double)[2];
+
+        $r28[0] = 0.3333333134651184;
+
+        $r28[1] = 1.986821492305628E-8;
+
+        $r25[2] = $r28;
+
+        $r29 = newarray (double)[2];
+
+        $r29[0] = -0.25;
+
+        $r29[1] = -6.663542893624021E-14;
+
+        $r25[3] = $r29;
+
+        $r30 = newarray (double)[2];
+
+        $r30[0] = 0.19999998807907104;
+
+        $r30[1] = 1.1921056801463227E-8;
+
+        $r25[4] = $r30;
+
+        $r31 = newarray (double)[2];
+
+        $r31[0] = -0.1666666567325592;
+
+        $r31[1] = -7.800414592973399E-9;
+
+        $r25[5] = $r31;
+
+        $r32 = newarray (double)[2];
+
+        $r32[0] = 0.1428571343421936;
+
+        $r32[1] = 5.650007086920087E-9;
+
+        $r25[6] = $r32;
+
+        $r33 = newarray (double)[2];
+
+        $r33[0] = -0.12502530217170715;
+
+        $r33[1] = -7.44321345601866E-11;
+
+        $r25[7] = $r33;
+
+        $r34 = newarray (double)[2];
+
+        $r34[0] = 0.11113807559013367;
+
+        $r34[1] = 9.219544613762692E-9;
+
+        $r25[8] = $r34;
+
+        <org.apache.commons.math.util.FastMath: double[][] LN_QUICK_COEF> = $r25;
+
+        $r35 = newarray (double[])[6];
+
+        $r36 = newarray (double)[2];
+
+        $r36[0] = 1.0;
+
+        $r36[1] = -6.032174644509064E-23;
+
+        $r35[0] = $r36;
+
+        $r37 = newarray (double)[2];
+
+        $r37[0] = -0.25;
+
+        $r37[1] = -0.25;
+
+        $r35[1] = $r37;
+
+        $r38 = newarray (double)[2];
+
+        $r38[0] = 0.3333333134651184;
+
+        $r38[1] = 1.9868161777724352E-8;
+
+        $r35[2] = $r38;
+
+        $r39 = newarray (double)[2];
+
+        $r39[0] = -0.2499999701976776;
+
+        $r39[1] = -2.957007209750105E-8;
+
+        $r35[3] = $r39;
+
+        $r40 = newarray (double)[2];
+
+        $r40[0] = 0.19999954104423523;
+
+        $r40[1] = 1.5830993332061267E-10;
+
+        $r35[4] = $r40;
+
+        $r41 = newarray (double)[2];
+
+        $r41[0] = -0.16624879837036133;
+
+        $r41[1] = -2.6033824355191673E-8;
+
+        $r35[5] = $r41;
+
+        <org.apache.commons.math.util.FastMath: double[][] LN_HI_PREC_COEF> = $r35;
+
+        $r42 = newarray (double)[14];
+
+        <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_A> = $r42;
+
+        $r43 = newarray (double)[14];
+
+        <org.apache.commons.math.util.FastMath: double[] SINE_TABLE_B> = $r43;
+
+        $r44 = newarray (double)[14];
+
+        <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_A> = $r44;
+
+        $r45 = newarray (double)[14];
+
+        <org.apache.commons.math.util.FastMath: double[] COSINE_TABLE_B> = $r45;
+
+        $r46 = newarray (double)[14];
+
+        <org.apache.commons.math.util.FastMath: double[] TANGENT_TABLE_A> = $r46;
+
+        $r47 = newarray (double)[14];
+
+        <org.apache.commons.math.util.FastMath: double[] TANGENT_TABLE_B> = $r47;
+
+        $r48 = newarray (long)[18];
+
+        $r48[0] = 2935890503282001226L;
+
+        $r48[1] = 9154082963658192752L;
+
+        $r48[2] = 3952090531849364496L;
+
+        $r48[3] = 9193070505571053912L;
+
+        $r48[4] = 7910884519577875640L;
+
+        $r48[5] = 113236205062349959L;
+
+        $r48[6] = 4577762542105553359L;
+
+        $r48[7] = -5034868814120038111L;
+
+        $r48[8] = 4208363204685324176L;
+
+        $r48[9] = 5648769086999809661L;
+
+        $r48[10] = 2819561105158720014L;
+
+        $r48[11] = -4035746434778044925L;
+
+        $r48[12] = -302932621132653753L;
+
+        $r48[13] = -2644281811660520851L;
+
+        $r48[14] = -3183605296591799669L;
+
+        $r48[15] = 6722166367014452318L;
+
+        $r48[16] = -3512299194304650054L;
+
+        $r48[17] = -7278142539171889152L;
+
+        <org.apache.commons.math.util.FastMath: long[] RECIP_2PI> = $r48;
+
+        $r49 = newarray (long)[2];
+
+        $r49[0] = -3958705157555305932L;
+
+        $r49[1] = -4267615245585081135L;
+
+        <org.apache.commons.math.util.FastMath: long[] PI_O_4_BITS> = $r49;
+
+        $r50 = newarray (double)[14];
+
+        $r50[0] = 0.0;
+
+        $r50[1] = 0.125;
+
+        $r50[2] = 0.25;
+
+        $r50[3] = 0.375;
+
+        $r50[4] = 0.5;
+
+        $r50[5] = 0.625;
+
+        $r50[6] = 0.75;
+
+        $r50[7] = 0.875;
+
+        $r50[8] = 1.0;
+
+        $r50[9] = 1.125;
+
+        $r50[10] = 1.25;
+
+        $r50[11] = 1.375;
+
+        $r50[12] = 1.5;
+
+        $r50[13] = 1.625;
+
+        <org.apache.commons.math.util.FastMath: double[] EIGHTHS> = $r50;
+
+        $r51 = newarray (double)[5];
+
+        $r51[0] = 0.6299605249474366;
+
+        $r51[1] = 0.7937005259840998;
+
+        $r51[2] = 1.0;
+
+        $r51[3] = 1.2599210498948732;
+
+        $r51[4] = 1.5874010519681994;
+
+        <org.apache.commons.math.util.FastMath: double[] CBRTTWO> = $r51;
+
+        $r52 = <org.apache.commons.math.util.FastMath: double[] FACT>;
+
+        $r52[0] = 1.0;
+
+        i11 = 1;
+
+     label1:
+        $r53 = <org.apache.commons.math.util.FastMath: double[] FACT>;
+
+        $i0 = lengthof $r53;
+
+        if i11 >= $i0 goto label2;
+
+        $r65 = <org.apache.commons.math.util.FastMath: double[] FACT>;
+
+        $r64 = <org.apache.commons.math.util.FastMath: double[] FACT>;
+
+        $i10 = i11 - 1;
+
+        $d12 = $r64[$i10];
+
+        $d11 = (double) i11;
+
+        $d13 = $d12 * $d11;
+
+        $r65[i11] = $d13;
+
+        i11 = i11 + 1;
+
+        goto label1;
+
+     label2:
+        r0 = newarray (double)[2];
+
+        r1 = newarray (double)[2];
+
+        i12 = 0;
+
+     label3:
+        if i12 >= 750 goto label5;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: double expint(int,double[])>(i12, r0);
+
+        $r60 = <org.apache.commons.math.util.FastMath: double[] EXP_INT_TABLE_A>;
+
+        $i6 = i12 + 750;
+
+        $d7 = r0[0];
+
+        $r60[$i6] = $d7;
+
+        $r61 = <org.apache.commons.math.util.FastMath: double[] EXP_INT_TABLE_B>;
+
+        $i7 = i12 + 750;
+
+        $d8 = r0[1];
+
+        $r61[$i7] = $d8;
+
+        if i12 == 0 goto label4;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: void splitReciprocal(double[],double[])>(r0, r1);
+
+        $r62 = <org.apache.commons.math.util.FastMath: double[] EXP_INT_TABLE_A>;
+
+        $i8 = 750 - i12;
+
+        $d9 = r1[0];
+
+        $r62[$i8] = $d9;
+
+        $r63 = <org.apache.commons.math.util.FastMath: double[] EXP_INT_TABLE_B>;
+
+        $i9 = 750 - i12;
+
+        $d10 = r1[1];
+
+        $r63[$i9] = $d10;
+
+     label4:
+        i12 = i12 + 1;
+
+        goto label3;
+
+     label5:
+        i13 = 0;
+
+     label6:
+        $r54 = <org.apache.commons.math.util.FastMath: double[] EXP_FRAC_TABLE_A>;
+
+        $i1 = lengthof $r54;
+
+        if i13 >= $i1 goto label7;
+
+        $d1 = (double) i13;
+
+        $d2 = $d1 / 1024.0;
+
+        staticinvoke <org.apache.commons.math.util.FastMath: double slowexp(double,double[])>($d2, r0);
+
+        $r58 = <org.apache.commons.math.util.FastMath: double[] EXP_FRAC_TABLE_A>;
+
+        $d4 = r0[0];
+
+        $r58[i13] = $d4;
+
+        $r59 = <org.apache.commons.math.util.FastMath: double[] EXP_FRAC_TABLE_B>;
+
+        $d5 = r0[1];
+
+        $r59[i13] = $d5;
+
+        i13 = i13 + 1;
+
+        goto label6;
+
+     label7:
+        i14 = 0;
+
+     label8:
+        $r55 = <org.apache.commons.math.util.FastMath: double[][] LN_MANT>;
+
+        $i2 = lengthof $r55;
+
+        if i14 >= $i2 goto label9;
+
+        $l3 = (long) i14;
+
+        $l4 = $l3 << 42;
+
+        $l5 = $l4 | 4607182418800017408L;
+
+        d0 = staticinvoke <java.lang.Double: double longBitsToDouble(long)>($l5);
+
+        $r56 = <org.apache.commons.math.util.FastMath: double[][] LN_MANT>;
+
+        $r57 = staticinvoke <org.apache.commons.math.util.FastMath: double[] slowLog(double)>(d0);
+
+        $r56[i14] = $r57;
+
+        i14 = i14 + 1;
+
+        goto label8;
+
+     label9:
+        staticinvoke <org.apache.commons.math.util.FastMath: void buildSinCosTables()>();
+
+        return;
+    }
+}

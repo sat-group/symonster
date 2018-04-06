@@ -1,0 +1,245 @@
+class com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator extends com.opengamma.analytics.math.interpolation.Interpolator1D
+{
+    private static final long serialVersionUID;
+    private final com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator;
+    private final int _n;
+    private final boolean _oddN;
+    private final int _pointsBelow;
+
+    public void <init>(com.opengamma.analytics.math.interpolation.Interpolator1D, int)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator r0;
+        com.opengamma.analytics.math.interpolation.Interpolator1D r1;
+        int i0, $i2, $i3, $i4;
+        boolean $z0, $z1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator;
+
+        r1 := @parameter0: com.opengamma.analytics.math.interpolation.Interpolator1D;
+
+        i0 := @parameter1: int;
+
+        specialinvoke r0.<com.opengamma.analytics.math.interpolation.Interpolator1D: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "interpolator");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: int notNegativeOrZero(int,java.lang.String)>(i0, "number of points");
+
+        r0.<com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator> = r1;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator: int _n> = i0;
+
+        $i2 = i0 % 2;
+
+        if $i2 != 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        r0.<com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator: boolean _oddN> = $z1;
+
+        $z0 = r0.<com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator: boolean _oddN>;
+
+        if $z0 == 0 goto label3;
+
+        $i4 = i0 / 2;
+
+        goto label4;
+
+     label3:
+        $i3 = i0 / 2;
+
+        $i4 = $i3 - 1;
+
+     label4:
+        r0.<com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator: int _pointsBelow> = $i4;
+
+        return;
+    }
+
+    public java.lang.Double interpolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle, java.lang.Double)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle r1, r4;
+        java.lang.Double r2, $r8;
+        int i0, i1, $i2, $i3, $i4, $i5, i6, i7, i8;
+        double[] r3, $r5, $r6, r10;
+        com.opengamma.analytics.math.interpolation.Interpolator1D $r7;
+        java.lang.IllegalArgumentException $r9;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator;
+
+        r1 := @parameter0: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle;
+
+        r2 := @parameter1: java.lang.Double;
+
+        i0 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: int getLowerBoundIndex(java.lang.Double)>(r2);
+
+        if i0 >= 0 goto label1;
+
+        $r9 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r9.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Cannot extrapolate");
+
+        throw $r9;
+
+     label1:
+        $i2 = r0.<com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator: int _pointsBelow>;
+
+        i6 = i0 - $i2;
+
+        $i3 = r0.<com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator: int _n>;
+
+        i7 = i6 + $i3;
+
+        if i6 >= 0 goto label2;
+
+        i7 = i7 - i6;
+
+        i6 = 0;
+
+     label2:
+        i1 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: int size()>();
+
+        if i7 < i1 goto label3;
+
+        i8 = i1 - i7;
+
+        i7 = i7 - i8;
+
+        i6 = i6 - i8;
+
+     label3:
+        $r5 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: double[] getKeys()>();
+
+        $i4 = i7 + 1;
+
+        r10 = staticinvoke <java.util.Arrays: double[] copyOfRange(double[],int,int)>($r5, i6, $i4);
+
+        $r6 = interfaceinvoke r1.<com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle: double[] getValues()>();
+
+        $i5 = i7 + 1;
+
+        r3 = staticinvoke <java.util.Arrays: double[] copyOfRange(double[],int,int)>($r6, i6, $i5);
+
+        r4 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle getDataBundleFromSortedArrays(double[],double[])>(r10, r3);
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.math.interpolation.Interpolator1D: java.lang.Double interpolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r4, r2);
+
+        return $r8;
+    }
+
+    public double[] getNodeSensitivitiesForValue(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle, java.lang.Double)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator r0;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle r1;
+        java.lang.Double r2;
+        java.lang.UnsupportedOperationException $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator;
+
+        r1 := @parameter0: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle;
+
+        r2 := @parameter1: java.lang.Double;
+
+        $r3 = new java.lang.UnsupportedOperationException;
+
+        specialinvoke $r3.<java.lang.UnsupportedOperationException: void <init>()>();
+
+        throw $r3;
+    }
+
+    public com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle getDataBundle(double[], double[])
+    {
+        com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator r0;
+        double[] r1, r2;
+        int $i0, $i1;
+        com.opengamma.analytics.math.interpolation.Interpolator1D $r3;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r4;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        $i1 = lengthof r1;
+
+        $i0 = r0.<com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator: int _n>;
+
+        if $i1 < $i0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "insufficient number of points");
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $r4 = virtualinvoke $r3.<com.opengamma.analytics.math.interpolation.Interpolator1D: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle getDataBundle(double[],double[])>(r1, r2);
+
+        return $r4;
+    }
+
+    public com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle getDataBundleFromSortedArrays(double[], double[])
+    {
+        com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator r0;
+        double[] r1, r2;
+        com.opengamma.analytics.math.interpolation.Interpolator1D $r3;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $r4 = virtualinvoke $r3.<com.opengamma.analytics.math.interpolation.Interpolator1D: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle getDataBundleFromSortedArrays(double[],double[])>(r1, r2);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Double interpolate(java.lang.Object, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator r0;
+        java.lang.Object r1, r2;
+        java.lang.Double $r3, $r5;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator;
+
+        r1 := @parameter0: java.lang.Object;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r4 = (com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle) r1;
+
+        $r3 = (java.lang.Double) r2;
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator: java.lang.Double interpolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>($r4, $r3);
+
+        return $r5;
+    }
+
+    public static void <clinit>()
+    {
+        <com.opengamma.analytics.financial.model.volatility.local.NearestNPointsInterpolator: long serialVersionUID> = 1L;
+
+        return;
+    }
+}

@@ -1,0 +1,342 @@
+public class com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator extends com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter
+{
+    private static final com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator CFEC;
+    private static final com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCurveSensitivityCalculator CFECSC;
+    private static final com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator INSTANCE;
+
+    public static com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator getInstance()
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator $r0;
+
+        $r0 = <com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator: com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator INSTANCE>;
+
+        return $r0;
+    }
+
+    void <init>()
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator r0;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivative visitSwaptionPhysicalFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor, com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r2;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed r4;
+        double[][] r5, r6;
+        double[] $r8, $r17, $r20;
+        double $d0, $d1, $d2;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon $r9, $r13;
+        com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator $r10;
+        java.lang.Object $r11, $r15;
+        int $i0, $i1, $i2, i3;
+        java.util.ArrayList $r12;
+        com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCurveSensitivityCalculator $r14;
+        com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivative $r16;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r18, $r21;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r19, $r22;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface;
+
+        $r8 = newarray (double)[1];
+
+        $d0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getTimeToExpiry()>();
+
+        $r8[0] = $d0;
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        $r10 = <com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator CFEC>;
+
+        $r11 = virtualinvoke $r9.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r10, r2);
+
+        r4 = (com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed) $r11;
+
+        $i0 = virtualinvoke r4.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        r5 = newmultiarray (double)[1][$i0];
+
+        $i1 = virtualinvoke r4.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        r6 = newmultiarray (double)[1][$i1];
+
+        i3 = 0;
+
+     label1:
+        $i2 = virtualinvoke r4.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        if i3 >= $i2 goto label2;
+
+        $r17 = r5[0];
+
+        $r18 = virtualinvoke r4.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i3);
+
+        $r19 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r18;
+
+        $d1 = virtualinvoke $r19.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getPaymentTime()>();
+
+        $r17[i3] = $d1;
+
+        $r20 = r6[0];
+
+        $r21 = virtualinvoke r4.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i3);
+
+        $r22 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r21;
+
+        $d2 = virtualinvoke $r22.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        $r20[i3] = $d2;
+
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label2:
+        $r12 = new java.util.ArrayList;
+
+        specialinvoke $r12.<java.util.ArrayList: void <init>()>();
+
+        $r13 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        $r14 = <com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCurveSensitivityCalculator CFECSC>;
+
+        $r15 = virtualinvoke $r13.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r14, r2);
+
+        virtualinvoke $r12.<java.util.ArrayList: boolean add(java.lang.Object)>($r15);
+
+        $r16 = new com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivative;
+
+        specialinvoke $r16.<com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivative: void <init>(double[],double[][],double[][],java.util.List)>($r8, r5, r6, $r12);
+
+        return $r16;
+    }
+
+    public com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivative visitAnnuityCouponIborRatchet(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet, com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r2;
+        int i0, $i1, $i2, $i3, i4, i5, $i6, i7;
+        double[] r3, $r19, $r20, $r21, $r24;
+        double[][] r4, r5;
+        java.util.ArrayList $r6;
+        com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivative $r7;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r8, $r12, $r17, $r22, $r25;
+        com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCurveSensitivityCalculator $r9;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon $r10, $r14;
+        java.lang.Object $r11, $r15;
+        com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator $r13;
+        boolean[] $r16;
+        boolean $z1;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFloating $r18;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r23, $r26;
+        double $d0, $d1, $d2;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed r28;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface;
+
+        i0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: int getNumberOfPayments()>();
+
+        r3 = newarray (double)[i0];
+
+        r4 = newarray (double[])[i0];
+
+        r5 = newarray (double[])[i0];
+
+        i4 = 0;
+
+     label1:
+        if i4 >= i0 goto label6;
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i4);
+
+        $r14 = (com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon) $r12;
+
+        $r13 = <com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator CFEC>;
+
+        $r15 = virtualinvoke $r14.<com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r13, r2);
+
+        r28 = (com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed) $r15;
+
+        $i3 = i4;
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: boolean[] isFixed()>();
+
+        $z1 = $r16[i4];
+
+        if $z1 == 0 goto label2;
+
+        $d2 = 0.0;
+
+        goto label3;
+
+     label2:
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i4);
+
+        $r18 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFloating) $r17;
+
+        $d2 = virtualinvoke $r18.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFloating: double getFixingTime()>();
+
+     label3:
+        r3[$i3] = $d2;
+
+        $i1 = virtualinvoke r28.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        $r19 = newarray (double)[$i1];
+
+        r4[i4] = $r19;
+
+        $i2 = virtualinvoke r28.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        $r20 = newarray (double)[$i2];
+
+        r5[i4] = $r20;
+
+        i5 = 0;
+
+     label4:
+        $i6 = virtualinvoke r28.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        if i5 >= $i6 goto label5;
+
+        $r21 = r4[i4];
+
+        $r22 = virtualinvoke r28.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i5);
+
+        $r23 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r22;
+
+        $d0 = virtualinvoke $r23.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getPaymentTime()>();
+
+        $r21[i5] = $d0;
+
+        $r24 = r5[i4];
+
+        $r25 = virtualinvoke r28.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i5);
+
+        $r26 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r25;
+
+        $d1 = virtualinvoke $r26.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        $r24[i5] = $d1;
+
+        i5 = i5 + 1;
+
+        goto label4;
+
+     label5:
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label6:
+        $r6 = new java.util.ArrayList;
+
+        specialinvoke $r6.<java.util.ArrayList: void <init>()>();
+
+        i7 = 0;
+
+     label7:
+        if i7 >= i0 goto label8;
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i7);
+
+        $r10 = (com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon) $r8;
+
+        $r9 = <com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCurveSensitivityCalculator CFECSC>;
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r9, r2);
+
+        virtualinvoke $r6.<java.util.ArrayList: boolean add(java.lang.Object)>($r11);
+
+        i7 = i7 + 1;
+
+        goto label7;
+
+     label8:
+        $r7 = new com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivative;
+
+        specialinvoke $r7.<com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivative: void <init>(double[],double[][],double[][],java.util.List)>(r3, r4, r5, $r6);
+
+        return $r7;
+    }
+
+    public volatile java.lang.Object visitSwaptionPhysicalFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r3;
+        com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivative $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator: com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivative visitSwaptionPhysicalFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitAnnuityCouponIborRatchet(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r3;
+        com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivative $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator: com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivative visitAnnuityCouponIborRatchet(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator $r0;
+        com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCurveSensitivityCalculator $r1;
+        com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator $r2;
+
+        $r0 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator CFEC> = $r0;
+
+        $r1 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCurveSensitivityCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCurveSensitivityCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCurveSensitivityCalculator CFECSC> = $r1;
+
+        $r2 = new com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator;
+
+        specialinvoke $r2.<com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator: void <init>()>();
+
+        <com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator: com.opengamma.analytics.financial.montecarlo.provider.DecisionScheduleDerivativeCalculator INSTANCE> = $r2;
+
+        return;
+    }
+}

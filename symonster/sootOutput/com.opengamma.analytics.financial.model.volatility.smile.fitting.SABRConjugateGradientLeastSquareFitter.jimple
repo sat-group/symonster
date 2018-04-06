@@ -1,0 +1,256 @@
+public class com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter extends com.opengamma.analytics.financial.model.volatility.smile.fitting.LeastSquareSmileFitter
+{
+    private static final int N_PARAMETERS;
+    private static final com.opengamma.analytics.math.minimization.ParameterLimitsTransform[] TRANSFORMS;
+    private final com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider _formula;
+
+    public void <init>(com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter r0;
+        com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.LeastSquareSmileFitter: void <init>()>();
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "SABR formula");
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter: com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider _formula> = r1;
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResultsWithTransform getFitResult(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption[], com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData[], double[], java.util.BitSet)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption[] r1;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData[] r2;
+        double[] r3;
+        java.util.BitSet r4;
+        java.lang.UnsupportedOperationException $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption[];
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData[];
+
+        r3 := @parameter2: double[];
+
+        r4 := @parameter3: java.util.BitSet;
+
+        $r5 = new java.lang.UnsupportedOperationException;
+
+        specialinvoke $r5.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>("Cannot calculate SABR parameters using conjugate gradient method without error estimates for the black volatilities");
+
+        throw $r5;
+    }
+
+    public com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResultsWithTransform getFitResult(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption[], com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData[], double[], double[], java.util.BitSet)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption[] r1;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData[] r2;
+        double[] r3, r4;
+        java.util.BitSet r5;
+        int i0, i1;
+        double d0, d1, d2, $d3, $d4;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r9, r10, r11, $r15, $r20;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r12;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r13, $r27, $r32;
+        com.opengamma.analytics.math.minimization.UncoupledParameterTransforms $r14;
+        com.opengamma.analytics.math.minimization.ParameterLimitsTransform[] $r16;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter$1 $r17;
+        com.opengamma.analytics.math.minimization.BrentMinimizer1D $r18;
+        com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer $r19;
+        java.lang.Object $r21;
+        java.lang.Double $r22;
+        com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResultsWithTransform $r23;
+        com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResults $r24;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D $r25;
+        double[][] $r26;
+        boolean $z0;
+        java.lang.StringBuilder $r28, $r29, $r30, $r31, $r33;
+        java.lang.String $r34;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption[];
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData[];
+
+        r3 := @parameter2: double[];
+
+        r4 := @parameter3: double[];
+
+        r5 := @parameter4: java.util.BitSet;
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter: void testData(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption[],com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData[],double[],double[],java.util.BitSet,int)>(r1, r2, r3, r4, r5, 4);
+
+        i0 = lengthof r1;
+
+        $r12 = r2[0];
+
+        d0 = virtualinvoke $r12.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: double getForward()>();
+
+        $r13 = r1[0];
+
+        d1 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        i1 = 1;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $r27 = r1[i1];
+
+        $d3 = virtualinvoke $r27.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        $z0 = staticinvoke <com.opengamma.util.CompareUtils: boolean closeEquals(double,double)>($d3, d1);
+
+        $r28 = new java.lang.StringBuilder;
+
+        specialinvoke $r28.<java.lang.StringBuilder: void <init>()>();
+
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("All options must have the same maturity ");
+
+        $r30 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d1);
+
+        $r31 = virtualinvoke $r30.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("; have one with maturity ");
+
+        $r32 = r1[i1];
+
+        $d4 = virtualinvoke $r32.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        $r33 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d4);
+
+        $r34 = virtualinvoke $r33.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, $r34);
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        $r14 = new com.opengamma.analytics.math.minimization.UncoupledParameterTransforms;
+
+        $r15 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r15.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r4);
+
+        $r16 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter: com.opengamma.analytics.math.minimization.ParameterLimitsTransform[] TRANSFORMS>;
+
+        specialinvoke $r14.<com.opengamma.analytics.math.minimization.UncoupledParameterTransforms: void <init>(com.opengamma.analytics.math.matrix.DoubleMatrix1D,com.opengamma.analytics.math.minimization.ParameterLimitsTransform[],java.util.BitSet)>($r15, $r16, r5);
+
+        $r17 = new com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter$1;
+
+        specialinvoke $r17.<com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter$1: void <init>(com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter,com.opengamma.analytics.math.minimization.UncoupledParameterTransforms,int,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData[],com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption[],double,double[])>(r0, $r14, i0, r2, r1, d0, r3);
+
+        $r18 = new com.opengamma.analytics.math.minimization.BrentMinimizer1D;
+
+        specialinvoke $r18.<com.opengamma.analytics.math.minimization.BrentMinimizer1D: void <init>()>();
+
+        $r19 = new com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer;
+
+        specialinvoke $r19.<com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer: void <init>(com.opengamma.analytics.math.minimization.ScalarMinimizer,double,int)>($r18, 1.0E-6, 10000);
+
+        $r20 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r20.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r4);
+
+        r9 = virtualinvoke $r14.<com.opengamma.analytics.math.minimization.UncoupledParameterTransforms: com.opengamma.analytics.math.matrix.DoubleMatrix1D transform(com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r20);
+
+        r10 = virtualinvoke $r19.<com.opengamma.analytics.math.minimization.ConjugateDirectionVectorMinimizer: com.opengamma.analytics.math.matrix.DoubleMatrix1D minimize(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r17, r9);
+
+        $r21 = virtualinvoke $r17.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r10);
+
+        $r22 = (java.lang.Double) $r21;
+
+        d2 = virtualinvoke $r22.<java.lang.Double: double doubleValue()>();
+
+        r11 = virtualinvoke $r14.<com.opengamma.analytics.math.minimization.UncoupledParameterTransforms: com.opengamma.analytics.math.matrix.DoubleMatrix1D inverseTransform(com.opengamma.analytics.math.matrix.DoubleMatrix1D)>(r10);
+
+        $r23 = new com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResultsWithTransform;
+
+        $r24 = new com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResults;
+
+        $r25 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        $r26 = newmultiarray (double)[4][4];
+
+        specialinvoke $r25.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>($r26);
+
+        specialinvoke $r24.<com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResults: void <init>(double,com.opengamma.analytics.math.matrix.DoubleMatrix1D,com.opengamma.analytics.math.matrix.DoubleMatrix2D)>(d2, r11, $r25);
+
+        specialinvoke $r23.<com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResultsWithTransform: void <init>(com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResults,com.opengamma.analytics.math.minimization.NonLinearParameterTransforms)>($r24, $r14);
+
+        return $r23;
+    }
+
+    static com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider access$000(com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter r0;
+        com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider $r1;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter: com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider _formula>;
+
+        return $r1;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.math.minimization.ParameterLimitsTransform[] $r0, $r3, $r5, $r8, $r10;
+        com.opengamma.analytics.math.minimization.SingleRangeLimitTransform $r1, $r6;
+        com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType $r2, $r7;
+        com.opengamma.analytics.math.minimization.DoubleRangeLimitTransform $r4, $r9;
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter: int N_PARAMETERS> = 4;
+
+        $r0 = newarray (com.opengamma.analytics.math.minimization.ParameterLimitsTransform)[4];
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter: com.opengamma.analytics.math.minimization.ParameterLimitsTransform[] TRANSFORMS> = $r0;
+
+        $r3 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter: com.opengamma.analytics.math.minimization.ParameterLimitsTransform[] TRANSFORMS>;
+
+        $r1 = new com.opengamma.analytics.math.minimization.SingleRangeLimitTransform;
+
+        $r2 = <com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType: com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType GREATER_THAN>;
+
+        specialinvoke $r1.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: void <init>(double,com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType)>(0.0, $r2);
+
+        $r3[0] = $r1;
+
+        $r5 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter: com.opengamma.analytics.math.minimization.ParameterLimitsTransform[] TRANSFORMS>;
+
+        $r4 = new com.opengamma.analytics.math.minimization.DoubleRangeLimitTransform;
+
+        specialinvoke $r4.<com.opengamma.analytics.math.minimization.DoubleRangeLimitTransform: void <init>(double,double)>(0.0, 2.0);
+
+        $r5[1] = $r4;
+
+        $r8 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter: com.opengamma.analytics.math.minimization.ParameterLimitsTransform[] TRANSFORMS>;
+
+        $r6 = new com.opengamma.analytics.math.minimization.SingleRangeLimitTransform;
+
+        $r7 = <com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType: com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType GREATER_THAN>;
+
+        specialinvoke $r6.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: void <init>(double,com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType)>(0.0, $r7);
+
+        $r8[2] = $r6;
+
+        $r10 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRConjugateGradientLeastSquareFitter: com.opengamma.analytics.math.minimization.ParameterLimitsTransform[] TRANSFORMS>;
+
+        $r9 = new com.opengamma.analytics.math.minimization.DoubleRangeLimitTransform;
+
+        specialinvoke $r9.<com.opengamma.analytics.math.minimization.DoubleRangeLimitTransform: void <init>(double,double)>(-1.0, 1.0);
+
+        $r10[3] = $r9;
+
+        return;
+    }
+}

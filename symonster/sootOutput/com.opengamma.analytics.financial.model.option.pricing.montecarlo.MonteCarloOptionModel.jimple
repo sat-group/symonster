@@ -1,0 +1,204 @@
+public abstract class com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel extends java.lang.Object implements com.opengamma.analytics.financial.model.option.pricing.OptionModel
+{
+    private static final org.slf4j.Logger s_logger;
+    private final int _n;
+    private final int _steps;
+    private final com.opengamma.analytics.financial.model.stochastic.StochasticProcess _process;
+    private final com.opengamma.analytics.math.random.RandomNumberGenerator _generator;
+
+    public void <init>(int, int, com.opengamma.analytics.financial.model.stochastic.StochasticProcess, com.opengamma.analytics.math.random.RandomNumberGenerator)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel r0;
+        int i0, i1;
+        com.opengamma.analytics.financial.model.stochastic.StochasticProcess r1;
+        com.opengamma.analytics.math.random.RandomNumberGenerator r2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        r1 := @parameter2: com.opengamma.analytics.financial.model.stochastic.StochasticProcess;
+
+        r2 := @parameter3: com.opengamma.analytics.math.random.RandomNumberGenerator;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: int notNegativeOrZero(int,java.lang.String)>(i0, "n");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: int notNegativeOrZero(int,java.lang.String)>(i1, "steps");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "process");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "generator");
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel: int _n> = i0;
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel: int _steps> = i1;
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel: com.opengamma.analytics.financial.model.stochastic.StochasticProcess _process> = r1;
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel: com.opengamma.analytics.math.random.RandomNumberGenerator _generator> = r2;
+
+        return;
+    }
+
+    public com.opengamma.analytics.financial.greeks.GreekResultCollection getGreeks(com.opengamma.analytics.financial.model.option.definition.OptionDefinition, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle, java.util.Set)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel r0;
+        com.opengamma.analytics.financial.model.option.definition.OptionDefinition r1;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r2;
+        java.util.Set r3;
+        com.opengamma.analytics.math.function.Function1D r5;
+        com.opengamma.analytics.financial.greeks.Greek $r6, $r9;
+        boolean $z0;
+        java.lang.IllegalArgumentException $r7;
+        int $i0;
+        com.opengamma.analytics.financial.greeks.GreekResultCollection $r8;
+        java.lang.Object $r10;
+        java.lang.Double $r11;
+        org.slf4j.Logger $r12;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.definition.OptionDefinition;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        r3 := @parameter2: java.util.Set;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "definition");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "data");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r3, "required greeks");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notEmpty(java.util.Collection,java.lang.String)>(r3, "required greeks");
+
+        $r6 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek FAIR_PRICE>;
+
+        $z0 = interfaceinvoke r3.<java.util.Set: boolean contains(java.lang.Object)>($r6);
+
+        if $z0 == 0 goto label1;
+
+        $i0 = interfaceinvoke r3.<java.util.Set: int size()>();
+
+        if $i0 <= 1 goto label2;
+
+        $r12 = <com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r12.<org.slf4j.Logger: void warn(java.lang.String)>("Can only produce fair price");
+
+        goto label2;
+
+     label1:
+        $r7 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r7.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Can only produce fair price");
+
+        throw $r7;
+
+     label2:
+        $r8 = new com.opengamma.analytics.financial.greeks.GreekResultCollection;
+
+        specialinvoke $r8.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void <init>()>();
+
+        r5 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel: com.opengamma.analytics.math.function.Function1D getPricingFunction(com.opengamma.analytics.financial.model.option.definition.OptionDefinition)>(r1);
+
+        $r9 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek FAIR_PRICE>;
+
+        $r10 = virtualinvoke r5.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r2);
+
+        $r11 = (java.lang.Double) $r10;
+
+        virtualinvoke $r8.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r9, $r11);
+
+        return $r8;
+    }
+
+    public abstract com.opengamma.analytics.math.function.Function1D getPricingFunction(com.opengamma.analytics.financial.model.option.definition.OptionDefinition);
+
+    protected int getN()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel r0;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel;
+
+        $i0 = r0.<com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel: int _n>;
+
+        return $i0;
+    }
+
+    protected int getSteps()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel r0;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel;
+
+        $i0 = r0.<com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel: int _steps>;
+
+        return $i0;
+    }
+
+    protected com.opengamma.analytics.financial.model.stochastic.StochasticProcess getProcess()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel r0;
+        com.opengamma.analytics.financial.model.stochastic.StochasticProcess $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel: com.opengamma.analytics.financial.model.stochastic.StochasticProcess _process>;
+
+        return $r1;
+    }
+
+    protected com.opengamma.analytics.math.random.RandomNumberGenerator getGenerator()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel r0;
+        com.opengamma.analytics.math.random.RandomNumberGenerator $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel: com.opengamma.analytics.math.random.RandomNumberGenerator _generator>;
+
+        return $r1;
+    }
+
+    public volatile com.opengamma.analytics.financial.greeks.GreekResultCollection getGreeks(com.opengamma.analytics.financial.model.option.definition.OptionDefinition, java.lang.Object, java.util.Set)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel r0;
+        com.opengamma.analytics.financial.model.option.definition.OptionDefinition r1;
+        java.lang.Object r2;
+        java.util.Set r3;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle $r4;
+        com.opengamma.analytics.financial.greeks.GreekResultCollection $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.definition.OptionDefinition;
+
+        r2 := @parameter1: java.lang.Object;
+
+        r3 := @parameter2: java.util.Set;
+
+        $r4 = (com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle) r2;
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel: com.opengamma.analytics.financial.greeks.GreekResultCollection getGreeks(com.opengamma.analytics.financial.model.option.definition.OptionDefinition,com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle,java.util.Set)>(r1, $r4, r3);
+
+        return $r5;
+    }
+
+    static void <clinit>()
+    {
+        org.slf4j.Logger $r0;
+
+        $r0 = staticinvoke <org.slf4j.LoggerFactory: org.slf4j.Logger getLogger(java.lang.Class)>(class "com/opengamma/analytics/financial/model/option/pricing/montecarlo/MonteCarloOptionModel");
+
+        <com.opengamma.analytics.financial.model.option.pricing.montecarlo.MonteCarloOptionModel: org.slf4j.Logger s_logger> = $r0;
+
+        return;
+    }
+}

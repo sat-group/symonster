@@ -1,0 +1,2575 @@
+public class com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel extends java.lang.Object
+{
+    private static final com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution BIVARIATE_NORMAL;
+    private static final com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL;
+    private static final double EPS;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public double price(double, double, double, double, double, double[], double[])
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, d18;
+        double[] r1, r2;
+        int i0, $i5, i7, i8, i9;
+        byte $b1, $b2, $b3, $b4, $b6;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        r1 := @parameter5: double[];
+
+        r2 := @parameter6: double[];
+
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 <= 0 goto label01;
+
+        $z3 = 1;
+
+        goto label02;
+
+     label01:
+        $z3 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "spot is not positive");
+
+        $b2 = d1 cmpl 0.0;
+
+        if $b2 <= 0 goto label03;
+
+        $z4 = 1;
+
+        goto label04;
+
+     label03:
+        $z4 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z4, "strike is not positive");
+
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z0, "interestRate is NaN");
+
+        $b3 = d3 cmpl 0.0;
+
+        if $b3 <= 0 goto label05;
+
+        $z5 = 1;
+
+        goto label06;
+
+     label05:
+        $z5 = 0;
+
+     label06:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "timeToExpiry is not positive");
+
+        $b4 = d4 cmpl -0.0;
+
+        if $b4 < 0 goto label07;
+
+        $z6 = 1;
+
+        goto label08;
+
+     label07:
+        $z6 = 0;
+
+     label08:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z6, "volatility is negative");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "dividends");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "dividendTimes");
+
+        i0 = lengthof r1;
+
+        $i5 = lengthof r2;
+
+        if i0 != $i5 goto label09;
+
+        $z7 = 1;
+
+        goto label10;
+
+     label09:
+        $z7 = 0;
+
+     label10:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z7, "dividends and dividendTimes should be the same length");
+
+        i7 = 0;
+
+     label11:
+        if i7 >= i0 goto label12;
+
+        $d16 = r1[i7];
+
+        $z1 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d16);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "dividends contains infinity or NaN");
+
+        $d17 = r2[i7];
+
+        $z2 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d17);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "dividendTimes contains infinity or NaN");
+
+        i7 = i7 + 1;
+
+        goto label11;
+
+     label12:
+        $d5 = r2[0];
+
+        $b6 = $d5 cmpl d3;
+
+        if $b6 <= 0 goto label13;
+
+        $d15 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double price(double,double,double,double,double,double,boolean)>(d0, d1, d3, d4, d2, d2, 1);
+
+        return $d15;
+
+     label13:
+        i8 = staticinvoke <com.opengamma.analytics.math.FunctionUtils: int getLowerBoundIndex(double[],double)>(r2, d3);
+
+        d18 = d0;
+
+        i9 = 0;
+
+     label14:
+        if i9 >= i8 goto label15;
+
+        $d12 = r1[i9];
+
+        $d10 = neg d2;
+
+        $d9 = r2[i9];
+
+        $d11 = $d10 * $d9;
+
+        $d13 = staticinvoke <java.lang.Math: double exp(double)>($d11);
+
+        $d14 = $d12 * $d13;
+
+        d18 = d18 - $d14;
+
+        i9 = i9 + 1;
+
+        goto label14;
+
+     label15:
+        $d7 = r1[i8];
+
+        $d6 = r2[i8];
+
+        $d8 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double price(double,double,double,double,double,double,double)>(d18, d1, d2, d3, d4, $d7, $d6);
+
+        return $d8;
+    }
+
+    public double[] getPriceAdjoint(double, double, double, double, double, double[], double[])
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, d39, d40, d41;
+        double[] r1, r2, r3, r4;
+        int i0, i1, $i6, i8, i9;
+        byte $b2, $b3, $b4, $b5, $b7;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        r1 := @parameter5: double[];
+
+        r2 := @parameter6: double[];
+
+        $b2 = d0 cmpl 0.0;
+
+        if $b2 <= 0 goto label01;
+
+        $z3 = 1;
+
+        goto label02;
+
+     label01:
+        $z3 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "spot is not positive");
+
+        $b3 = d1 cmpl 0.0;
+
+        if $b3 <= 0 goto label03;
+
+        $z4 = 1;
+
+        goto label04;
+
+     label03:
+        $z4 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z4, "strike is not positive");
+
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z0, "interestRate is NaN");
+
+        $b4 = d3 cmpl 0.0;
+
+        if $b4 <= 0 goto label05;
+
+        $z5 = 1;
+
+        goto label06;
+
+     label05:
+        $z5 = 0;
+
+     label06:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "timeToExpiry is not positive");
+
+        $b5 = d4 cmpl -0.0;
+
+        if $b5 < 0 goto label07;
+
+        $z6 = 1;
+
+        goto label08;
+
+     label07:
+        $z6 = 0;
+
+     label08:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z6, "volatility is negative");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "dividends");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "dividendTimes");
+
+        i0 = lengthof r1;
+
+        $i6 = lengthof r2;
+
+        if i0 != $i6 goto label09;
+
+        $z7 = 1;
+
+        goto label10;
+
+     label09:
+        $z7 = 0;
+
+     label10:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z7, "dividends and dividendTimes should be the same length");
+
+        i8 = 0;
+
+     label11:
+        if i8 >= i0 goto label12;
+
+        $d37 = r1[i8];
+
+        $z1 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d37);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "dividends contains infinity or NaN");
+
+        $d38 = r2[i8];
+
+        $z2 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d38);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "dividendTimes contains infinity or NaN");
+
+        i8 = i8 + 1;
+
+        goto label11;
+
+     label12:
+        $d6 = r2[0];
+
+        $b7 = $d6 cmpl d3;
+
+        if $b7 <= 0 goto label13;
+
+        r3 = newarray (double)[8];
+
+        $d29 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double price(double,double,double,double,double,double,boolean)>(d0, d1, d3, d4, d2, d2, 1);
+
+        r3[0] = $d29;
+
+        $d30 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double delta(double,double,double,double,double,double,boolean)>(d0, d1, d3, d4, d2, d2, 1);
+
+        r3[1] = $d30;
+
+        $d31 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double dualDelta(double,double,double,double,double,double,boolean)>(d0, d1, d3, d4, d2, d2, 1);
+
+        r3[2] = $d31;
+
+        $d32 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double rho(double,double,double,double,double,double,boolean)>(d0, d1, d3, d4, d2, d2, 1);
+
+        r3[3] = $d32;
+
+        $d33 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double theta(double,double,double,double,double,double,boolean)>(d0, d1, d3, d4, d2, d2, 1);
+
+        $d34 = neg $d33;
+
+        r3[4] = $d34;
+
+        r3[5] = 0.0;
+
+        $d35 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double vega(double,double,double,double,double,double)>(d0, d1, d3, d4, d2, d2);
+
+        r3[6] = $d35;
+
+        $d36 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double gamma(double,double,double,double,double,double)>(d0, d1, d3, d4, d2, d2);
+
+        r3[7] = $d36;
+
+        return r3;
+
+     label13:
+        i1 = staticinvoke <com.opengamma.analytics.math.FunctionUtils: int getLowerBoundIndex(double[],double)>(r2, d3);
+
+        d39 = d0;
+
+        d40 = 0.0;
+
+        d41 = 0.0;
+
+        i9 = 0;
+
+     label14:
+        if i9 >= i1 goto label15;
+
+        $d19 = neg d2;
+
+        $d18 = r2[i9];
+
+        $d20 = $d19 * $d18;
+
+        d5 = staticinvoke <java.lang.Math: double exp(double)>($d20);
+
+        $d21 = r1[i9];
+
+        $d22 = $d21 * d5;
+
+        d39 = d39 - $d22;
+
+        $d24 = r1[i9];
+
+        $d23 = r2[i9];
+
+        $d25 = $d24 * $d23;
+
+        $d26 = $d25 * d5;
+
+        d40 = d40 + $d26;
+
+        $d27 = r1[i9];
+
+        $d28 = $d27 * d5;
+
+        d41 = d41 + $d28;
+
+        i9 = i9 + 1;
+
+        goto label14;
+
+     label15:
+        $d8 = r1[i1];
+
+        $d7 = r2[i1];
+
+        r4 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double[] getPriceAdjoint(double,double,double,double,double,double,double)>(d39, d1, d2, d3, d4, $d8, $d7);
+
+        $d11 = r4[3];
+
+        $d9 = r4[1];
+
+        $d10 = $d9 * d40;
+
+        $d12 = $d11 + $d10;
+
+        r4[3] = $d12;
+
+        $d16 = r4[5];
+
+        $d13 = r4[1];
+
+        $d14 = $d13 * d2;
+
+        $d15 = $d14 * d41;
+
+        $d17 = $d16 + $d15;
+
+        r4[5] = $d17;
+
+        return r4;
+    }
+
+    public double impliedVolatility(double, double, double, double, double, double[], double[])
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, d20, d21, d22;
+        double[] r1, r2;
+        int i0, $i1, i3, i4, i5;
+        byte $b2;
+        com.opengamma.analytics.financial.model.volatility.GenericImpliedVolatiltySolver $r5;
+        boolean $z0, $z1, $z2;
+        com.opengamma.analytics.math.function.Function1D r6;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        r1 := @parameter5: double[];
+
+        r2 := @parameter6: double[];
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "dividends");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "dividendTimes");
+
+        i0 = lengthof r1;
+
+        $i1 = lengthof r2;
+
+        if i0 != $i1 goto label1;
+
+        $z2 = 1;
+
+        goto label2;
+
+     label1:
+        $z2 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "dividends and dividendTimes should be the same length");
+
+        i3 = 0;
+
+     label3:
+        if i3 >= i0 goto label4;
+
+        $d18 = r1[i3];
+
+        $z0 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d18);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "dividends contains infinity or NaN");
+
+        $d19 = r2[i3];
+
+        $z1 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d19);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "dividendTimes contains infinity or NaN");
+
+        i3 = i3 + 1;
+
+        goto label3;
+
+     label4:
+        $d6 = r2[0];
+
+        $b2 = $d6 cmpl d4;
+
+        if $b2 <= 0 goto label5;
+
+        $d16 = d3 * d4;
+
+        d20 = staticinvoke <java.lang.Math: double exp(double)>($d16);
+
+        d5 = d1 * d20;
+
+        d21 = d0 * d20;
+
+        $d17 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double impliedVolatility(double,double,double,double,boolean)>(d21, d5, d2, d4, 1);
+
+        return $d17;
+
+     label5:
+        i4 = staticinvoke <com.opengamma.analytics.math.FunctionUtils: int getLowerBoundIndex(double[],double)>(r2, d4);
+
+        d22 = d1;
+
+        i5 = 0;
+
+     label6:
+        if i5 >= i4 goto label7;
+
+        $d13 = r1[i5];
+
+        $d11 = neg d3;
+
+        $d10 = r2[i5];
+
+        $d12 = $d11 * $d10;
+
+        $d14 = staticinvoke <java.lang.Math: double exp(double)>($d12);
+
+        $d15 = $d13 * $d14;
+
+        d22 = d22 - $d15;
+
+        i5 = i5 + 1;
+
+        goto label6;
+
+     label7:
+        $d8 = r1[i4];
+
+        $d7 = r2[i4];
+
+        r6 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.function.Function1D getPriceAndVegaFunction(double,double,double,double,double,double)>(d22, d2, d3, d4, $d8, $d7);
+
+        $r5 = new com.opengamma.analytics.financial.model.volatility.GenericImpliedVolatiltySolver;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.model.volatility.GenericImpliedVolatiltySolver: void <init>(com.opengamma.analytics.math.function.Function1D)>(r6);
+
+        $d9 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.volatility.GenericImpliedVolatiltySolver: double impliedVolatility(double,double)>(d0, 0.15);
+
+        return $d9;
+    }
+
+    public double price(double, double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, d15, d16, d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, d59;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r1;
+        java.lang.Double $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        d6 := @parameter6: double;
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 <= 0 goto label01;
+
+        $z1 = 1;
+
+        goto label02;
+
+     label01:
+        $z1 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "spot is not positive");
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 <= 0 goto label03;
+
+        $z2 = 1;
+
+        goto label04;
+
+     label03:
+        $z2 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "strike is not positive");
+
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z0, "interestRate is NaN");
+
+        $b2 = d3 cmpl 0.0;
+
+        if $b2 <= 0 goto label05;
+
+        $z3 = 1;
+
+        goto label06;
+
+     label05:
+        $z3 = 0;
+
+     label06:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "timeToExpiry is not positive");
+
+        $b3 = d4 cmpl -0.0;
+
+        if $b3 < 0 goto label07;
+
+        $z4 = 1;
+
+        goto label08;
+
+     label07:
+        $z4 = 0;
+
+     label08:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z4, "volatility is negative");
+
+        $b4 = d5 cmpl 0.0;
+
+        if $b4 < 0 goto label09;
+
+        $b9 = d5 cmpg d0;
+
+        if $b9 >= 0 goto label09;
+
+        $z5 = 1;
+
+        goto label10;
+
+     label09:
+        $z5 = 0;
+
+     label10:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "0. <= dividendAmount < spot should be true");
+
+        $b10 = d6 cmpl 0.0;
+
+        if $b10 < 0 goto label11;
+
+        $b8 = d6 cmpg d3;
+
+        if $b8 >= 0 goto label11;
+
+        $z6 = 1;
+
+        goto label12;
+
+     label11:
+        $z6 = 0;
+
+     label12:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z6, "0. <= dividendTime < timeToExpiry should be true");
+
+        $d52 = d3 - d6;
+
+        $d53 = d2 * $d52;
+
+        d7 = staticinvoke <java.lang.Math: double exp(double)>($d53);
+
+        $d54 = neg d2;
+
+        $d55 = $d54 * d6;
+
+        $d56 = staticinvoke <java.lang.Math: double exp(double)>($d55);
+
+        d8 = d5 * $d56;
+
+        d9 = d0 - d8;
+
+        $b11 = d5 cmpg 1.0E-12;
+
+        if $b11 < 0 goto label13;
+
+        $d19 = 1.0 / d7;
+
+        $d20 = 1.0 - $d19;
+
+        $d21 = $d20 * d1;
+
+        $d22 = $d21 + 1.0E-12;
+
+        $b5 = d5 cmpg $d22;
+
+        if $b5 >= 0 goto label14;
+
+     label13:
+        $d18 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double price(double,double,double,double,double,double,boolean)>(d9, d1, d3, d4, d2, d2, 1);
+
+        return $d18;
+
+     label14:
+        $d23 = neg d2;
+
+        $d24 = $d23 * d3;
+
+        d10 = staticinvoke <java.lang.Math: double exp(double)>($d24);
+
+        d11 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double sStarFinder(double,double,double,double,double,double,double)>(d0, d1, d2, d3, d4, d5, d6);
+
+        $b6 = d6 cmpg 1.0E-12;
+
+        if $b6 >= 0 goto label17;
+
+        $b7 = d9 cmpl d11;
+
+        if $b7 < 0 goto label15;
+
+        $d57 = d0 - d1;
+
+        goto label16;
+
+     label15:
+        $d57 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double price(double,double,double,double,double,double,boolean)>(d9, d1, d3, d4, d2, d2, 1);
+
+     label16:
+        return $d57;
+
+     label17:
+        $d25 = d6 / d3;
+
+        $d26 = staticinvoke <java.lang.Math: double sqrt(double)>($d25);
+
+        d59 = neg $d26;
+
+        $d27 = staticinvoke <java.lang.Math: double sqrt(double)>(d6);
+
+        d12 = d4 * $d27;
+
+        $d28 = staticinvoke <java.lang.Math: double sqrt(double)>(d3);
+
+        d13 = d4 * $d28;
+
+        $d29 = d0 - d8;
+
+        $d30 = $d29 / d11;
+
+        $d31 = staticinvoke <java.lang.Math: double log(double)>($d30);
+
+        $d32 = d2 * d6;
+
+        $d33 = $d31 + $d32;
+
+        $d35 = $d33 / d12;
+
+        $d34 = 0.5 * d12;
+
+        d14 = $d35 + $d34;
+
+        d15 = d14 - d12;
+
+        $d36 = d0 - d8;
+
+        $d37 = $d36 / d1;
+
+        $d38 = staticinvoke <java.lang.Math: double log(double)>($d37);
+
+        $d39 = d2 * d3;
+
+        $d40 = $d38 + $d39;
+
+        $d42 = $d40 / d13;
+
+        $d41 = 0.5 * d13;
+
+        d16 = $d42 + $d41;
+
+        d17 = d16 - d13;
+
+        $d43 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double getNormalAndBinormal(double,double,double,double)>(d14, d16, d59, 1.0);
+
+        $d44 = d9 * $d43;
+
+        $d45 = d1 * d10;
+
+        $d46 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double getNormalAndBinormal(double,double,double,double)>(d15, d17, d59, d7);
+
+        $d47 = $d45 * $d46;
+
+        $d48 = $d44 - $d47;
+
+        $r1 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r2 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d15);
+
+        $d49 = interfaceinvoke $r1.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r2);
+
+        $d50 = d8 * $d49;
+
+        $d51 = $d48 + $d50;
+
+        return $d51;
+    }
+
+    public double[] getPriceAdjoint(double, double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, $d80, $d81, $d82, $d83, $d84, $d85, $d86, $d87, $d88, $d89, $d90, $d91, $d92, $d93, $d94, $d95, $d96, $d97, $d98, $d99, $d100, $d101, $d102, $d103, $d104, $d105, $d106, $d107, $d108, $d109, $d110, $d111, $d112, $d113, $d114, $d115, $d116, $d117, $d118, $d119, $d120, $d121, $d122, $d123, $d124, $d125, $d126, $d127, $d128, $d129, $d130, $d131, $d132, $d133, $d134, $d135, $d136, $d137, $d138, $d139, $d140, $d141, $d142, $d143, $d144, $d145, $d146, $d147, $d148, $d149, $d150, $d151, $d152, $d153, $d154, $d155;
+        double[] r1, r2, r7, r8, r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r28;
+        double[][] r3, r4;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        d6 := @parameter6: double;
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 <= 0 goto label01;
+
+        $z1 = 1;
+
+        goto label02;
+
+     label01:
+        $z1 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "spot is not positive");
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 <= 0 goto label03;
+
+        $z2 = 1;
+
+        goto label04;
+
+     label03:
+        $z2 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "strike is not positive");
+
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z0, "interestRate is NaN");
+
+        $b2 = d3 cmpl 0.0;
+
+        if $b2 <= 0 goto label05;
+
+        $z3 = 1;
+
+        goto label06;
+
+     label05:
+        $z3 = 0;
+
+     label06:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "timeToExpiry is not positive");
+
+        $b3 = d4 cmpl -0.0;
+
+        if $b3 < 0 goto label07;
+
+        $z4 = 1;
+
+        goto label08;
+
+     label07:
+        $z4 = 0;
+
+     label08:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z4, "volatility is negative");
+
+        $b4 = d5 cmpl 0.0;
+
+        if $b4 < 0 goto label09;
+
+        $b9 = d5 cmpg d0;
+
+        if $b9 >= 0 goto label09;
+
+        $z5 = 1;
+
+        goto label10;
+
+     label09:
+        $z5 = 0;
+
+     label10:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "0. <= dividendAmount < spot should be true");
+
+        $b10 = d6 cmpl 0.0;
+
+        if $b10 < 0 goto label11;
+
+        $b8 = d6 cmpg d3;
+
+        if $b8 >= 0 goto label11;
+
+        $z6 = 1;
+
+        goto label12;
+
+     label11:
+        $z6 = 0;
+
+     label12:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z6, "0. <= dividendTime < timeToExpiry should be true");
+
+        $d151 = d3 - d6;
+
+        $d152 = d2 * $d151;
+
+        d7 = staticinvoke <java.lang.Math: double exp(double)>($d152);
+
+        $d153 = neg d2;
+
+        $d154 = $d153 * d6;
+
+        $d155 = staticinvoke <java.lang.Math: double exp(double)>($d154);
+
+        d8 = d5 * $d155;
+
+        d9 = d0 - d8;
+
+        r1 = newarray (double)[8];
+
+        $b11 = d5 cmpg 1.0E-12;
+
+        if $b11 < 0 goto label13;
+
+        $d13 = 1.0 / d7;
+
+        $d14 = 1.0 - $d13;
+
+        $d15 = $d14 * d1;
+
+        $d16 = $d15 + 1.0E-12;
+
+        $b5 = d5 cmpg $d16;
+
+        if $b5 >= 0 goto label14;
+
+     label13:
+        $r10 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double[] bsPriceAdjoint(double,double,double,double,double,double,double)>(d9, d1, d3, d4, d2, d8, d6);
+
+        return $r10;
+
+     label14:
+        $d17 = neg d2;
+
+        $d18 = $d17 * d3;
+
+        d10 = staticinvoke <java.lang.Math: double exp(double)>($d18);
+
+        r2 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double[] getSStarAdjoint(double,double,double,double,double,double,double)>(d0, d1, d2, d3, d4, d5, d6);
+
+        $b6 = d6 cmpg 1.0E-12;
+
+        if $b6 >= 0 goto label16;
+
+        $d148 = r2[0];
+
+        $b7 = d9 cmpl $d148;
+
+        if $b7 <= 0 goto label15;
+
+        $d149 = d0 - d1;
+
+        r1[0] = $d149;
+
+        r1[1] = 1.0;
+
+        r1[2] = -1.0;
+
+        r1[3] = 0.0;
+
+        r1[4] = 0.0;
+
+        $d150 = d2 * d1;
+
+        r1[5] = $d150;
+
+        r1[6] = 0.0;
+
+        r1[7] = 0.0;
+
+        return r1;
+
+     label15:
+        $r28 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double[] bsPriceAdjoint(double,double,double,double,double,double,double)>(d9, d1, d3, d4, d2, d8, d6);
+
+        return $r28;
+
+     label16:
+        d11 = d1 * d10;
+
+        $d19 = d6 / d3;
+
+        $d20 = staticinvoke <java.lang.Math: double sqrt(double)>($d19);
+
+        d12 = neg $d20;
+
+        r3 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double[][] getD1Adjoint(double,double,double,double,double,double[])>(d2, d4, d6, d8, d9, r2);
+
+        r4 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double[][] getD2Adjoint(double,double,double,double,double,double,double)>(d1, d2, d3, d4, d6, d8, d9);
+
+        $r11 = newarray (double)[8];
+
+        $r11[0] = d7;
+
+        $r11[1] = 0.0;
+
+        $r11[2] = 0.0;
+
+        $d21 = d3 - d6;
+
+        $d22 = d7 * $d21;
+
+        $r11[3] = $d22;
+
+        $d23 = d7 * d2;
+
+        $r11[4] = $d23;
+
+        $d24 = neg d7;
+
+        $d25 = $d24 * d2;
+
+        $r11[5] = $d25;
+
+        $r11[6] = 0.0;
+
+        $r11[7] = 0.0;
+
+        $r12 = newarray (double)[8];
+
+        $r12[0] = d12;
+
+        $r12[1] = 0.0;
+
+        $r12[2] = 0.0;
+
+        $r12[3] = 0.0;
+
+        $d26 = -0.5 * d12;
+
+        $d27 = $d26 / d3;
+
+        $r12[4] = $d27;
+
+        $d28 = 0.5 * d12;
+
+        $d29 = $d28 / d6;
+
+        $r12[5] = $d29;
+
+        $r12[6] = 0.0;
+
+        $r12[7] = 0.0;
+
+        $r15 = r3[0];
+
+        $r14 = r4[0];
+
+        $r13 = newarray (double)[8];
+
+        $r13[0] = 1.0;
+
+        $r13[1] = 0.0;
+
+        $r13[2] = 0.0;
+
+        $r13[3] = 0.0;
+
+        $r13[4] = 0.0;
+
+        $r13[5] = 0.0;
+
+        $r13[6] = 0.0;
+
+        $r13[7] = 0.0;
+
+        r7 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double[] getCdfAdjoint(double[],double[],double[],double[])>($r15, $r14, $r12, $r13);
+
+        $r17 = r3[1];
+
+        $r16 = r4[1];
+
+        r8 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double[] getCdfAdjoint(double[],double[],double[],double[])>($r17, $r16, $r12, $r11);
+
+        $r18 = r3[1];
+
+        $d30 = $r18[0];
+
+        r9 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double[] getNormalCdfAdjoint(double)>($d30);
+
+        $d31 = r7[0];
+
+        $d34 = d9 * $d31;
+
+        $d32 = r8[0];
+
+        $d33 = d11 * $d32;
+
+        $d37 = $d34 - $d33;
+
+        $d35 = r9[0];
+
+        $d36 = d8 * $d35;
+
+        $d38 = $d37 + $d36;
+
+        r1[0] = $d38;
+
+        $d41 = r7[0];
+
+        $d39 = r7[1];
+
+        $d40 = d9 * $d39;
+
+        $d44 = $d41 + $d40;
+
+        $d42 = r8[1];
+
+        $d43 = d11 * $d42;
+
+        $d49 = $d44 - $d43;
+
+        $d45 = r9[1];
+
+        $d47 = d8 * $d45;
+
+        $r19 = r3[1];
+
+        $d46 = $r19[1];
+
+        $d48 = $d47 * $d46;
+
+        $d50 = $d49 + $d48;
+
+        r1[1] = $d50;
+
+        $d51 = r7[2];
+
+        $d54 = d9 * $d51;
+
+        $d52 = r8[0];
+
+        $d53 = d10 * $d52;
+
+        $d57 = $d54 - $d53;
+
+        $d55 = r8[2];
+
+        $d56 = d11 * $d55;
+
+        $d62 = $d57 - $d56;
+
+        $d58 = r9[1];
+
+        $d60 = d8 * $d58;
+
+        $r20 = r3[1];
+
+        $d59 = $r20[2];
+
+        $d61 = $d60 * $d59;
+
+        $d63 = $d62 + $d61;
+
+        r1[2] = $d63;
+
+        $d65 = d6 * d8;
+
+        $d64 = r7[0];
+
+        $d68 = $d65 * $d64;
+
+        $d66 = r7[3];
+
+        $d67 = d9 * $d66;
+
+        $d72 = $d68 + $d67;
+
+        $d70 = d3 * d11;
+
+        $d69 = r8[0];
+
+        $d71 = $d70 * $d69;
+
+        $d75 = $d72 + $d71;
+
+        $d73 = r8[3];
+
+        $d74 = d11 * $d73;
+
+        $d79 = $d75 - $d74;
+
+        $d77 = d6 * d8;
+
+        $d76 = r9[0];
+
+        $d78 = $d77 * $d76;
+
+        $d84 = $d79 - $d78;
+
+        $d80 = r9[1];
+
+        $d82 = d8 * $d80;
+
+        $r21 = r3[1];
+
+        $d81 = $r21[3];
+
+        $d83 = $d82 * $d81;
+
+        $d85 = $d84 + $d83;
+
+        r1[3] = $d85;
+
+        $d86 = r7[4];
+
+        $d90 = d9 * $d86;
+
+        $d88 = d2 * d11;
+
+        $d87 = r8[0];
+
+        $d89 = $d88 * $d87;
+
+        $d93 = $d90 + $d89;
+
+        $d91 = r8[4];
+
+        $d92 = d11 * $d91;
+
+        $d98 = $d93 - $d92;
+
+        $d94 = r9[1];
+
+        $d96 = d8 * $d94;
+
+        $r22 = r3[1];
+
+        $d95 = $r22[4];
+
+        $d97 = $d96 * $d95;
+
+        $d99 = $d98 + $d97;
+
+        r1[4] = $d99;
+
+        $d100 = r7[5];
+
+        $d104 = d9 * $d100;
+
+        $d102 = d2 * d8;
+
+        $d101 = r7[0];
+
+        $d103 = $d102 * $d101;
+
+        $d107 = $d104 + $d103;
+
+        $d105 = r8[5];
+
+        $d106 = d11 * $d105;
+
+        $d111 = $d107 - $d106;
+
+        $d109 = d2 * d8;
+
+        $d108 = r9[0];
+
+        $d110 = $d109 * $d108;
+
+        $d116 = $d111 - $d110;
+
+        $d112 = r9[1];
+
+        $d114 = d8 * $d112;
+
+        $r23 = r3[1];
+
+        $d113 = $r23[5];
+
+        $d115 = $d114 * $d113;
+
+        $d117 = $d116 + $d115;
+
+        r1[5] = $d117;
+
+        $d118 = r7[6];
+
+        $d121 = d9 * $d118;
+
+        $d119 = r8[6];
+
+        $d120 = d11 * $d119;
+
+        $d126 = $d121 - $d120;
+
+        $d122 = r9[1];
+
+        $d124 = d8 * $d122;
+
+        $r24 = r3[1];
+
+        $d123 = $r24[6];
+
+        $d125 = $d124 * $d123;
+
+        $d127 = $d126 + $d125;
+
+        r1[6] = $d127;
+
+        $d128 = r7[1];
+
+        $d131 = 2.0 * $d128;
+
+        $d129 = r7[7];
+
+        $d130 = d9 * $d129;
+
+        $d134 = $d131 + $d130;
+
+        $d132 = r8[7];
+
+        $d133 = d11 * $d132;
+
+        $d139 = $d134 - $d133;
+
+        $d135 = r9[1];
+
+        $d137 = d8 * $d135;
+
+        $r25 = r3[1];
+
+        $d136 = $r25[7];
+
+        $d138 = $d137 * $d136;
+
+        $d146 = $d139 + $d138;
+
+        $d140 = r9[2];
+
+        $d142 = d8 * $d140;
+
+        $r26 = r3[1];
+
+        $d141 = $r26[1];
+
+        $d144 = $d142 * $d141;
+
+        $r27 = r3[1];
+
+        $d143 = $r27[1];
+
+        $d145 = $d144 * $d143;
+
+        $d147 = $d146 + $d145;
+
+        r1[7] = $d147;
+
+        return r1;
+    }
+
+    public double impliedVolatility(double, double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+        double d0, d1, d2, d3, d4, d5, d6, $d7;
+        com.opengamma.analytics.math.function.Function1D r1;
+        com.opengamma.analytics.financial.model.volatility.GenericImpliedVolatiltySolver $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        d6 := @parameter6: double;
+
+        r1 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.function.Function1D getPriceAndVegaFunction(double,double,double,double,double,double)>(d1, d2, d3, d4, d5, d6);
+
+        $r3 = new com.opengamma.analytics.financial.model.volatility.GenericImpliedVolatiltySolver;
+
+        specialinvoke $r3.<com.opengamma.analytics.financial.model.volatility.GenericImpliedVolatiltySolver: void <init>(com.opengamma.analytics.math.function.Function1D)>(r1);
+
+        $d7 = virtualinvoke $r3.<com.opengamma.analytics.financial.model.volatility.GenericImpliedVolatiltySolver: double impliedVolatility(double,double)>(d0, 0.15);
+
+        return $d7;
+    }
+
+    private double[] bsPriceAdjoint(double, double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+        double d0, d1, d2, d3, d4, d5, d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21;
+        double[] r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        d6 := @parameter6: double;
+
+        r1 = newarray (double)[8];
+
+        $d7 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double price(double,double,double,double,double,double,boolean)>(d0, d1, d2, d3, d4, d4, 1);
+
+        r1[0] = $d7;
+
+        $d8 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double delta(double,double,double,double,double,double,boolean)>(d0, d1, d2, d3, d4, d4, 1);
+
+        r1[1] = $d8;
+
+        $d9 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double dualDelta(double,double,double,double,double,double,boolean)>(d0, d1, d2, d3, d4, d4, 1);
+
+        r1[2] = $d9;
+
+        $d10 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double rho(double,double,double,double,double,double,boolean)>(d0, d1, d2, d3, d4, d4, 1);
+
+        $d11 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double delta(double,double,double,double,double,double,boolean)>(d0, d1, d2, d3, d4, d4, 1);
+
+        $d12 = $d11 * d5;
+
+        $d13 = $d12 * d6;
+
+        $d14 = $d10 + $d13;
+
+        r1[3] = $d14;
+
+        $d15 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double theta(double,double,double,double,double,double,boolean)>(d0, d1, d2, d3, d4, d4, 1);
+
+        $d16 = neg $d15;
+
+        r1[4] = $d16;
+
+        $d17 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double delta(double,double,double,double,double,double,boolean)>(d0, d1, d2, d3, d4, d4, 1);
+
+        $d18 = $d17 * d5;
+
+        $d19 = $d18 * d4;
+
+        r1[5] = $d19;
+
+        $d20 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double vega(double,double,double,double,double,double)>(d0, d1, d2, d3, d4, d4);
+
+        r1[6] = $d20;
+
+        $d21 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double gamma(double,double,double,double,double,double)>(d0, d1, d2, d3, d4, d4);
+
+        r1[7] = $d21;
+
+        return r1;
+    }
+
+    private double[] getCdfAdjoint(double[], double[], double[], double[])
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+        double[] r1, r2, r3, r4, r5, r6, r7;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70;
+        int i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[];
+
+        r4 := @parameter3: double[];
+
+        r5 = newarray (double)[8];
+
+        $d0 = r1[0];
+
+        r6 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double[] getNormalCdfAdjoint(double)>($d0);
+
+        $d4 = r2[0];
+
+        $d1 = r1[0];
+
+        $d3 = neg $d1;
+
+        $d2 = r3[0];
+
+        r7 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double[] getBivariateNormalCdfAdjoint(double,double,double)>($d4, $d3, $d2);
+
+        $d6 = r4[0];
+
+        $d5 = r6[0];
+
+        $d8 = $d6 * $d5;
+
+        $d7 = r7[0];
+
+        $d9 = $d8 + $d7;
+
+        r5[0] = $d9;
+
+        i0 = 1;
+
+     label1:
+        if i0 >= 7 goto label2;
+
+        $d51 = r4[i0];
+
+        $d50 = r6[0];
+
+        $d57 = $d51 * $d50;
+
+        $d53 = r4[0];
+
+        $d52 = r6[1];
+
+        $d55 = $d53 * $d52;
+
+        $d54 = r1[i0];
+
+        $d56 = $d55 * $d54;
+
+        $d61 = $d57 + $d56;
+
+        $d59 = r7[1];
+
+        $d58 = r2[i0];
+
+        $d60 = $d59 * $d58;
+
+        $d65 = $d61 + $d60;
+
+        $d63 = r7[2];
+
+        $d62 = r1[i0];
+
+        $d64 = $d63 * $d62;
+
+        $d69 = $d65 - $d64;
+
+        $d67 = r7[3];
+
+        $d66 = r3[i0];
+
+        $d68 = $d67 * $d66;
+
+        $d70 = $d69 + $d68;
+
+        r5[i0] = $d70;
+
+        i0 = i0 + 1;
+
+        goto label1;
+
+     label2:
+        $d11 = r4[0];
+
+        $d10 = r6[1];
+
+        $d13 = $d11 * $d10;
+
+        $d12 = r1[7];
+
+        $d21 = $d13 * $d12;
+
+        $d15 = r4[0];
+
+        $d14 = r6[2];
+
+        $d17 = $d15 * $d14;
+
+        $d16 = r1[1];
+
+        $d19 = $d17 * $d16;
+
+        $d18 = r1[1];
+
+        $d20 = $d19 * $d18;
+
+        $d25 = $d21 + $d20;
+
+        $d23 = r7[1];
+
+        $d22 = r2[7];
+
+        $d24 = $d23 * $d22;
+
+        $d29 = $d25 + $d24;
+
+        $d27 = r7[2];
+
+        $d26 = r1[7];
+
+        $d28 = $d27 * $d26;
+
+        $d35 = $d29 - $d28;
+
+        $d31 = r7[4];
+
+        $d30 = r2[1];
+
+        $d33 = $d31 * $d30;
+
+        $d32 = r2[1];
+
+        $d34 = $d33 * $d32;
+
+        $d41 = $d35 + $d34;
+
+        $d37 = r7[5];
+
+        $d36 = r1[1];
+
+        $d39 = $d37 * $d36;
+
+        $d38 = r1[1];
+
+        $d40 = $d39 * $d38;
+
+        $d48 = $d41 + $d40;
+
+        $d42 = r7[6];
+
+        $d44 = 2.0 * $d42;
+
+        $d43 = r1[1];
+
+        $d46 = $d44 * $d43;
+
+        $d45 = r2[1];
+
+        $d47 = $d46 * $d45;
+
+        $d49 = $d48 - $d47;
+
+        r5[7] = $d49;
+
+        return r5;
+    }
+
+    private double[] getNormalCdfAdjoint(double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+        double d0, $d1, $d2, $d3, $d4, $d5;
+        double[] r1;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r2, $r4, $r6;
+        java.lang.Double $r3, $r5, $r7;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        d0 := @parameter0: double;
+
+        r1 = newarray (double)[3];
+
+        $r2 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $d1 = interfaceinvoke $r2.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r3);
+
+        r1[0] = $d1;
+
+        $r4 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $d2 = interfaceinvoke $r4.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r5);
+
+        r1[1] = $d2;
+
+        $r6 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $d3 = interfaceinvoke $r6.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r7);
+
+        $d4 = neg $d3;
+
+        $d5 = $d4 * d0;
+
+        r1[2] = $d5;
+
+        return r1;
+    }
+
+    private double[] getBivariateNormalCdfAdjoint(double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60;
+        double[] r1, $r2, $r12;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r3, $r4, $r6, $r8, $r10, $r13, $r14, $r16, $r18, $r20, $r22, $r24, $r26, $r28, $r30, $r32;
+        java.lang.Double $r5, $r7, $r9, $r11, $r15, $r17, $r19, $r21, $r23, $r25, $r27, $r29, $r31, $r33;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        r1 = newarray (double)[7];
+
+        $d4 = d2 * d2;
+
+        $d5 = 1.0 - $d4;
+
+        d3 = staticinvoke <java.lang.Math: double sqrt(double)>($d5);
+
+        $r3 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution BIVARIATE_NORMAL>;
+
+        $r2 = newarray (double)[3];
+
+        $r2[0] = d0;
+
+        $r2[1] = d1;
+
+        $r2[2] = d2;
+
+        $d6 = interfaceinvoke $r3.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r2);
+
+        r1[0] = $d6;
+
+        $r4 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $d7 = interfaceinvoke $r4.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r5);
+
+        $r6 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d8 = d2 * d0;
+
+        $d9 = d1 - $d8;
+
+        $d10 = $d9 / d3;
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        $d11 = interfaceinvoke $r6.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r7);
+
+        $d12 = $d7 * $d11;
+
+        r1[1] = $d12;
+
+        $r8 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $d13 = interfaceinvoke $r8.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r9);
+
+        $r10 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d14 = d2 * d1;
+
+        $d15 = d0 - $d14;
+
+        $d16 = $d15 / d3;
+
+        $r11 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d16);
+
+        $d17 = interfaceinvoke $r10.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r11);
+
+        $d18 = $d13 * $d17;
+
+        r1[2] = $d18;
+
+        $r13 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution BIVARIATE_NORMAL>;
+
+        $r12 = newarray (double)[3];
+
+        $r12[0] = d0;
+
+        $r12[1] = d1;
+
+        $r12[2] = d2;
+
+        $d19 = interfaceinvoke $r13.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r12);
+
+        r1[3] = $d19;
+
+        $d20 = neg d0;
+
+        $r14 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $d21 = interfaceinvoke $r14.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r15);
+
+        $d25 = $d20 * $d21;
+
+        $r16 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d22 = d2 * d0;
+
+        $d23 = d1 - $d22;
+
+        $d24 = $d23 / d3;
+
+        $r17 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d24);
+
+        $d26 = interfaceinvoke $r16.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r17);
+
+        $d27 = $d25 * $d26;
+
+        $d28 = d2 / d3;
+
+        $r18 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $d29 = interfaceinvoke $r18.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r19);
+
+        $d33 = $d28 * $d29;
+
+        $r20 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d30 = d2 * d0;
+
+        $d31 = d1 - $d30;
+
+        $d32 = $d31 / d3;
+
+        $r21 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d32);
+
+        $d34 = interfaceinvoke $r20.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r21);
+
+        $d35 = $d33 * $d34;
+
+        $d36 = $d27 - $d35;
+
+        r1[4] = $d36;
+
+        $d37 = neg d1;
+
+        $r22 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r23 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $d38 = interfaceinvoke $r22.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r23);
+
+        $d42 = $d37 * $d38;
+
+        $r24 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d39 = d2 * d1;
+
+        $d40 = d0 - $d39;
+
+        $d41 = $d40 / d3;
+
+        $r25 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d41);
+
+        $d43 = interfaceinvoke $r24.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r25);
+
+        $d44 = $d42 * $d43;
+
+        $d45 = d2 / d3;
+
+        $r26 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r27 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $d46 = interfaceinvoke $r26.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r27);
+
+        $d50 = $d45 * $d46;
+
+        $r28 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d47 = d2 * d1;
+
+        $d48 = d0 - $d47;
+
+        $d49 = $d48 / d3;
+
+        $r29 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d49);
+
+        $d51 = interfaceinvoke $r28.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r29);
+
+        $d52 = $d50 * $d51;
+
+        $d53 = $d44 - $d52;
+
+        r1[5] = $d53;
+
+        $r30 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r31 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $d54 = interfaceinvoke $r30.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r31);
+
+        $r32 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d55 = d2 * d0;
+
+        $d56 = d1 - $d55;
+
+        $d57 = $d56 / d3;
+
+        $r33 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d57);
+
+        $d58 = interfaceinvoke $r32.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getPDF(java.lang.Object)>($r33);
+
+        $d59 = $d54 * $d58;
+
+        $d60 = $d59 / d3;
+
+        r1[6] = $d60;
+
+        return r1;
+    }
+
+    private double[][] getD1Adjoint(double, double, double, double, double, double[])
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, d15, d16, d17, d18, d19, d20, d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72;
+        double[] r1, $r3, $r4;
+        double[][] r2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        r1 := @parameter5: double[];
+
+        r2 = newmultiarray (double)[2][8];
+
+        d5 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d6 = d1 * d5;
+
+        $d22 = r1[0];
+
+        $d23 = d4 / $d22;
+
+        $d24 = staticinvoke <java.lang.Math: double log(double)>($d23);
+
+        d7 = $d24 / d6;
+
+        $d25 = d0 * d5;
+
+        d8 = $d25 / d1;
+
+        d9 = d7 + d8;
+
+        $d26 = 0.5 * d6;
+
+        d10 = d9 + $d26;
+
+        $d27 = 0.5 * d6;
+
+        d11 = d9 - $d27;
+
+        $d28 = 1.0 / d6;
+
+        d12 = $d28 / d4;
+
+        $d29 = r1[2];
+
+        $d30 = neg $d29;
+
+        $d32 = $d30 / d6;
+
+        $d31 = r1[0];
+
+        d13 = $d32 / $d31;
+
+        $d33 = d5 * d3;
+
+        $d34 = $d33 / d1;
+
+        $d39 = $d34 / d4;
+
+        $d36 = r1[3];
+
+        $d35 = r1[0];
+
+        $d37 = $d36 / $d35;
+
+        $d38 = $d37 / d6;
+
+        $d41 = $d39 - $d38;
+
+        $d40 = d5 / d1;
+
+        d14 = $d41 + $d40;
+
+        $d42 = r1[4];
+
+        $d44 = neg $d42;
+
+        $d43 = r1[0];
+
+        $d45 = $d44 / $d43;
+
+        d15 = $d45 / d6;
+
+        $d46 = d0 * d3;
+
+        $d47 = $d46 / d6;
+
+        $d52 = $d47 / d4;
+
+        $d49 = r1[5];
+
+        $d48 = r1[0];
+
+        $d50 = $d49 / $d48;
+
+        $d51 = $d50 / d6;
+
+        $d55 = $d52 - $d51;
+
+        $d53 = 0.5 * d7;
+
+        $d54 = $d53 / d2;
+
+        $d61 = $d55 - $d54;
+
+        $d56 = 0.5 * d1;
+
+        $d57 = $d56 * d1;
+
+        $d58 = d0 + $d57;
+
+        $d59 = 0.5 * $d58;
+
+        $d60 = $d59 / d6;
+
+        d16 = $d61 + $d60;
+
+        $d62 = 0.5 * d1;
+
+        $d63 = $d62 / d5;
+
+        d17 = d16 - $d63;
+
+        $d64 = neg d9;
+
+        $d69 = $d64 / d1;
+
+        $d66 = r1[6];
+
+        $d65 = r1[0];
+
+        $d67 = $d66 / $d65;
+
+        $d68 = $d67 / d6;
+
+        d18 = $d69 - $d68;
+
+        $d70 = 0.5 * d5;
+
+        d19 = d18 + $d70;
+
+        $d71 = 0.5 * d5;
+
+        d20 = d18 - $d71;
+
+        $d72 = neg d12;
+
+        d21 = $d72 / d4;
+
+        $r3 = newarray (double)[8];
+
+        $r3[0] = d10;
+
+        $r3[1] = d12;
+
+        $r3[2] = d13;
+
+        $r3[3] = d14;
+
+        $r3[4] = d15;
+
+        $r3[5] = d16;
+
+        $r3[6] = d19;
+
+        $r3[7] = d21;
+
+        r2[0] = $r3;
+
+        $r4 = newarray (double)[8];
+
+        $r4[0] = d11;
+
+        $r4[1] = d12;
+
+        $r4[2] = d13;
+
+        $r4[3] = d14;
+
+        $r4[4] = d15;
+
+        $r4[5] = d17;
+
+        $r4[6] = d20;
+
+        $r4[7] = d21;
+
+        r2[1] = $r4;
+
+        return r2;
+    }
+
+    private double[][] getD2Adjoint(double, double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, d15, d16, d17, d18, d19, d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47;
+        double[][] r1;
+        double[] $r2, $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        d6 := @parameter6: double;
+
+        r1 = newmultiarray (double)[2][8];
+
+        d7 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d8 = d3 * d7;
+
+        $d21 = d6 / d0;
+
+        $d22 = staticinvoke <java.lang.Math: double log(double)>($d21);
+
+        $d23 = d1 * d2;
+
+        $d24 = $d22 + $d23;
+
+        d9 = $d24 / d8;
+
+        $d25 = 0.5 * d8;
+
+        d10 = d9 + $d25;
+
+        $d26 = 0.5 * d8;
+
+        d11 = d9 - $d26;
+
+        $d27 = 1.0 / d8;
+
+        d12 = $d27 / d6;
+
+        $d28 = -1.0 / d8;
+
+        d13 = $d28 / d0;
+
+        $d29 = d4 * d5;
+
+        $d30 = $d29 / d8;
+
+        $d32 = $d30 / d6;
+
+        $d31 = d7 / d3;
+
+        d14 = $d32 + $d31;
+
+        $d33 = -0.5 * d9;
+
+        $d39 = $d33 / d2;
+
+        $d34 = 0.5 * d3;
+
+        $d35 = $d34 * d3;
+
+        $d36 = d1 + $d35;
+
+        $d37 = 0.5 * $d36;
+
+        $d38 = $d37 / d8;
+
+        d15 = $d39 + $d38;
+
+        $d40 = 0.5 * d3;
+
+        $d41 = $d40 / d7;
+
+        d16 = d15 - $d41;
+
+        $d42 = d1 * d5;
+
+        $d43 = $d42 / d8;
+
+        d17 = $d43 / d6;
+
+        $d44 = neg d9;
+
+        $d46 = $d44 / d3;
+
+        $d45 = 0.5 * d7;
+
+        d18 = $d46 + $d45;
+
+        d19 = d18 - d7;
+
+        $d47 = neg d12;
+
+        d20 = $d47 / d6;
+
+        $r2 = newarray (double)[8];
+
+        $r2[0] = d10;
+
+        $r2[1] = d12;
+
+        $r2[2] = d13;
+
+        $r2[3] = d14;
+
+        $r2[4] = d15;
+
+        $r2[5] = d17;
+
+        $r2[6] = d18;
+
+        $r2[7] = d20;
+
+        r1[0] = $r2;
+
+        $r3 = newarray (double)[8];
+
+        $r3[0] = d11;
+
+        $r3[1] = d12;
+
+        $r3[2] = d13;
+
+        $r3[3] = d14;
+
+        $r3[4] = d16;
+
+        $r3[5] = d17;
+
+        $r3[6] = d19;
+
+        $r3[7] = d20;
+
+        r1[1] = $r3;
+
+        return r1;
+    }
+
+    private double[] getSStarAdjoint(double, double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        d6 := @parameter6: double;
+
+        d7 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double sStarFinder(double,double,double,double,double,double,double)>(d0, d1, d2, d3, d4, d5, d6);
+
+        $d13 = d3 - d6;
+
+        $d14 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double delta(double,double,double,double,double,double,boolean)>(d7, d1, $d13, d4, d2, d2, 1);
+
+        d8 = 1.0 - $d14;
+
+        $d15 = d3 - d6;
+
+        $d16 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double dualDelta(double,double,double,double,double,double,boolean)>(d7, d1, $d15, d4, d2, d2, 1);
+
+        $d17 = 1.0 + $d16;
+
+        d9 = $d17 / d8;
+
+        $d18 = d3 - d6;
+
+        $d19 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double rho(double,double,double,double,double,double,boolean)>(d7, d1, $d18, d4, d2, d2, 1);
+
+        d10 = $d19 / d8;
+
+        $d20 = d3 - d6;
+
+        $d21 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double theta(double,double,double,double,double,double,boolean)>(d7, d1, $d20, d4, d2, d2, 1);
+
+        d11 = $d21 / d8;
+
+        $d22 = d3 - d6;
+
+        $d23 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackScholesFormulaRepository: double vega(double,double,double,double,double,double)>(d7, d1, $d22, d4, d2, d2);
+
+        d12 = $d23 / d8;
+
+        $r1 = newarray (double)[8];
+
+        $r1[0] = d7;
+
+        $r1[1] = 0.0;
+
+        $r1[2] = d9;
+
+        $r1[3] = d10;
+
+        $d24 = neg d11;
+
+        $r1[4] = $d24;
+
+        $r1[5] = d11;
+
+        $r1[6] = d12;
+
+        $r1[7] = 0.0;
+
+        return $r1;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getPriceAndVegaFunction(double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+        double d0, d1, d2, d3, d4, d5;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel$1 $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        $r1 = new com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel$1;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel$1: void <init>(com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel,double,double,double,double,double,double)>(r0, d0, d1, d2, d3, d4, d5);
+
+        return $r1;
+    }
+
+    private double sStarFinder(double, double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, $d8, $d9, $d10;
+        com.opengamma.analytics.math.function.Function1D r1;
+        com.opengamma.analytics.math.rootfinding.BisectionSingleRootFinder $r3;
+        java.lang.Double $r4, $r5, $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        d6 := @parameter6: double;
+
+        r1 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.function.Function1D getPriceBsFunction(double,double,double,double,double,double)>(d1, d2, d3, d4, d5, d6);
+
+        $r3 = new com.opengamma.analytics.math.rootfinding.BisectionSingleRootFinder;
+
+        specialinvoke $r3.<com.opengamma.analytics.math.rootfinding.BisectionSingleRootFinder: void <init>(double)>(1.0E-12);
+
+        $d8 = 1.05 * d5;
+
+        $d9 = d1 - $d8;
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d9);
+
+        $d10 = 100.0 * d0;
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        $r6 = virtualinvoke $r3.<com.opengamma.analytics.math.rootfinding.BisectionSingleRootFinder: java.lang.Double getRoot(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>(r1, $r4, $r5);
+
+        d7 = virtualinvoke $r6.<java.lang.Double: double doubleValue()>();
+
+        return d7;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getPriceBsFunction(double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+        double d0, d1, d2, d3, d4, d5;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel$2 $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        d5 := @parameter5: double;
+
+        $r1 = new com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel$2;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel$2: void <init>(com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel,double,double,double,double,double,double)>(r0, d0, d2, d5, d3, d1, d4);
+
+        return $r1;
+    }
+
+    private double getNormalAndBinormal(double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel r0;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r1, $r4;
+        java.lang.Double $r2;
+        double[] $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $r1 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $r2 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $d4 = interfaceinvoke $r1.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r2);
+
+        $d6 = d3 * $d4;
+
+        $r4 = <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution BIVARIATE_NORMAL>;
+
+        $r3 = newarray (double)[3];
+
+        $r3[0] = d1;
+
+        $d5 = neg d0;
+
+        $r3[1] = $d5;
+
+        $r3[2] = d2;
+
+        $d7 = interfaceinvoke $r4.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r3);
+
+        $d8 = $d6 + $d7;
+
+        return $d8;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution $r0;
+        com.opengamma.analytics.math.statistics.distribution.NormalDistribution $r1;
+
+        <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double EPS> = 1.0E-12;
+
+        $r0 = new com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution;
+
+        specialinvoke $r0.<com.opengamma.analytics.math.statistics.distribution.BivariateNormalDistribution: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution BIVARIATE_NORMAL> = $r0;
+
+        $r1 = new com.opengamma.analytics.math.statistics.distribution.NormalDistribution;
+
+        specialinvoke $r1.<com.opengamma.analytics.math.statistics.distribution.NormalDistribution: void <init>(double,double)>(0.0, 1.0);
+
+        <com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL> = $r1;
+
+        return;
+    }
+}

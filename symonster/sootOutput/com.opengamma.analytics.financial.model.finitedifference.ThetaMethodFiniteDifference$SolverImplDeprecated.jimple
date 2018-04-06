@@ -1,0 +1,1633 @@
+class com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated extends java.lang.Object
+{
+    private final com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients _coefficients;
+    private final double[] _initialCondition;
+    private final com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D _grid;
+    private final com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition _lowerBoundary;
+    private final com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition _upperBoundary;
+    private final com.opengamma.analytics.math.surface.Surface _freeBoundary;
+    private double[] _f;
+    private double[][] _full;
+    private final double[] _q;
+    private final double[][] _m;
+    private final double[] _rho;
+    private final double[] _a;
+    private final double[] _b;
+    private final double[] _c;
+    private double _t1;
+    private double _t2;
+    final com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference this$0;
+
+    public void <init>(com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference, com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients, double[], com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition, com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition, com.opengamma.analytics.math.surface.Surface, com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference r1;
+        com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients r2;
+        double[] r3, $r10, $r11, $r13, $r14, $r15, $r16;
+        com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition r4, r5;
+        com.opengamma.analytics.math.surface.Surface r6;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r7, $r8, $r9;
+        int i0, i1, $i2, $i3, $i4, $i5;
+        boolean $z0;
+        double[][] $r12, $r17;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients;
+
+        r3 := @parameter2: double[];
+
+        r4 := @parameter3: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition;
+
+        r5 := @parameter4: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition;
+
+        r6 := @parameter5: com.opengamma.analytics.math.surface.Surface;
+
+        r7 := @parameter6: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference this$0> = r1;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients _coefficients> = r2;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _initialCondition> = r3;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition _lowerBoundary> = r4;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition _upperBoundary> = r5;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.math.surface.Surface _freeBoundary> = r6;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D _grid> = r7;
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D _grid>;
+
+        i0 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getNumTimeNodes()>();
+
+        $r9 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D _grid>;
+
+        i1 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getNumSpaceNodes()>();
+
+        $r10 = newarray (double)[i1];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _f> = $r10;
+
+        $z0 = staticinvoke <com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: boolean access$000(com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference)>(r1);
+
+        if $z0 == 0 goto label1;
+
+        $r17 = newmultiarray (double)[i0][i1];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[][] _full> = $r17;
+
+     label1:
+        $r11 = newarray (double)[i1];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _q> = $r11;
+
+        $r12 = newmultiarray (double)[i1][i1];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[][] _m> = $r12;
+
+        $i2 = i1 - 2;
+
+        $r13 = newarray (double)[$i2];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _rho> = $r13;
+
+        $i3 = i1 - 2;
+
+        $r14 = newarray (double)[$i3];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _a> = $r14;
+
+        $i4 = i1 - 2;
+
+        $r15 = newarray (double)[$i4];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _b> = $r15;
+
+        $i5 = i1 - 2;
+
+        $r16 = newarray (double)[$i5];
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _c> = $r16;
+
+        return;
+    }
+
+    public com.opengamma.analytics.financial.model.finitedifference.PDEResults1D solve()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r1, $r4, $r7, $r9;
+        int $i0, $i1, i2;
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference $r2, $r10;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.finitedifference.PDETerminalResults1D $r3;
+        double[] $r5, $r11, $r12, $r14;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D $r6;
+        double[][] $r8, $r13;
+        double $d0, $d1;
+        com.opengamma.analytics.financial.model.finitedifference.PDEResults1D r15;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void initialise()>();
+
+        i2 = 1;
+
+     label1:
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $i0 = virtualinvoke $r1.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getNumTimeNodes()>();
+
+        if i2 >= $i0 goto label3;
+
+        $r9 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $d0 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double getTimeNode(int)>(i2);
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setT2(double)>($d0);
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void updateRHSVector()>();
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void updateRHSBoundary()>();
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void updateCoefficents()>();
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void updateLHSMatrix()>();
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void updateLHSBoundary()>();
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void solveMatrixSystem()>();
+
+        $r10 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference this$0>;
+
+        $z1 = staticinvoke <com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: boolean access$000(com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference)>($r10);
+
+        if $z1 == 0 goto label2;
+
+        $r13 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[][] _full>;
+
+        $r12 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _f>;
+
+        $r11 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _f>;
+
+        $i1 = lengthof $r11;
+
+        $r14 = staticinvoke <java.util.Arrays: double[] copyOf(double[],int)>($r12, $i1);
+
+        $r13[i2] = $r14;
+
+     label2:
+        $d1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getT2()>();
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setT1(double)>($d1);
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label3:
+        $r2 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference this$0>;
+
+        $z0 = staticinvoke <com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: boolean access$000(com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference)>($r2);
+
+        if $z0 == 0 goto label4;
+
+        $r6 = new com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D;
+
+        $r7 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[][] _full>;
+
+        specialinvoke $r6.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: void <init>(com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D,double[][])>($r7, $r8);
+
+        r15 = $r6;
+
+        goto label5;
+
+     label4:
+        $r3 = new com.opengamma.analytics.financial.model.finitedifference.PDETerminalResults1D;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _f>;
+
+        specialinvoke $r3.<com.opengamma.analytics.financial.model.finitedifference.PDETerminalResults1D: void <init>(com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D,double[])>($r4, $r5);
+
+        r15 = $r3;
+
+     label5:
+        return r15;
+    }
+
+    void initialise()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r1, $r3, $r6, $r10, $r13;
+        double[] $r2, $r4, $r11;
+        int $i0, $i1, $i2, i3, $i4, $i5;
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference $r5;
+        boolean $z0;
+        com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients $r7, $r8, $r9;
+        double[][] $r12;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        d0 = virtualinvoke $r1.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double getTimeNode(int)>(0);
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setT1(double)>(d0);
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _initialCondition>;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $i0 = virtualinvoke $r3.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getNumSpaceNodes()>();
+
+        $r4 = staticinvoke <java.util.Arrays: double[] copyOf(double[],int)>($r2, $i0);
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _f> = $r4;
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference this$0>;
+
+        $z0 = staticinvoke <com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: boolean access$000(com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference)>($r5);
+
+        if $z0 == 0 goto label1;
+
+        $r12 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[][] _full>;
+
+        $r11 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _initialCondition>;
+
+        $r12[0] = $r11;
+
+     label1:
+        i3 = 0;
+
+     label2:
+        $r13 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $i4 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getNumSpaceNodes()>();
+
+        $i5 = $i4 - 2;
+
+        if i3 >= $i5 goto label3;
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $i1 = i3 + 1;
+
+        d1 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double getSpaceNode(int)>($i1);
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients _coefficients>;
+
+        $d2 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients: double getA(double,double)>(d0, d1);
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setA(int,double)>(i3, $d2);
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients _coefficients>;
+
+        $d3 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients: double getB(double,double)>(d0, d1);
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setB(int,double)>(i3, $d3);
+
+        $r9 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients _coefficients>;
+
+        $d4 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients: double getC(double,double)>(d0, d1);
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setC(int,double)>(i3, $d4);
+
+        $r10 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $d5 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getA(int)>(i3);
+
+        $d6 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getB(int)>(i3);
+
+        $i2 = i3 + 1;
+
+        $d7 = specialinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getFittingParameter(com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D,double,double,int)>($r10, $d5, $d6, $i2);
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setRho(int,double)>(i3, $d7);
+
+        i3 = i3 + 1;
+
+        goto label2;
+
+     label3:
+        return;
+    }
+
+    void updateRHSVector()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, d44, d45, d46, d47;
+        double[] r1, r2, $r7, $r9, $r11;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r3, $r4, $r5;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, i11;
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference $r6, $r8, $r10;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        $d1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getT2()>();
+
+        $d2 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getT1()>();
+
+        d0 = $d1 - $d2;
+
+        i11 = 1;
+
+     label1:
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $i0 = virtualinvoke $r3.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getNumSpaceNodes()>();
+
+        $i1 = $i0 - 1;
+
+        if i11 >= $i1 goto label2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        r1 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] getFirstDerivativeCoefficients(int)>(i11);
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        r2 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] getSecondDerivativeCoefficients(int)>(i11);
+
+        d44 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getF(int)>(i11);
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference this$0>;
+
+        $d3 = staticinvoke <com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: double access$100(com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference)>($r6);
+
+        $d4 = 1.0 - $d3;
+
+        $d5 = $d4 * d0;
+
+        $d6 = r2[0];
+
+        $i2 = i11 - 1;
+
+        $d7 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getRho(int)>($i2);
+
+        $d8 = $d6 * $d7;
+
+        $d9 = r1[0];
+
+        $i3 = i11 - 1;
+
+        $d10 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getB(int)>($i3);
+
+        $d11 = $d9 * $d10;
+
+        $d12 = $d8 + $d11;
+
+        $d14 = $d5 * $d12;
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _f>;
+
+        $i4 = i11 - 1;
+
+        $d13 = $r7[$i4];
+
+        $d15 = $d14 * $d13;
+
+        d45 = d44 - $d15;
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference this$0>;
+
+        $d16 = staticinvoke <com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: double access$100(com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference)>($r8);
+
+        $d17 = 1.0 - $d16;
+
+        $d18 = $d17 * d0;
+
+        $d19 = r2[1];
+
+        $i5 = i11 - 1;
+
+        $d20 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getRho(int)>($i5);
+
+        $d21 = $d19 * $d20;
+
+        $d22 = r1[1];
+
+        $i6 = i11 - 1;
+
+        $d23 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getB(int)>($i6);
+
+        $d24 = $d22 * $d23;
+
+        $d25 = $d21 + $d24;
+
+        $i7 = i11 - 1;
+
+        $d26 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getC(int)>($i7);
+
+        $d27 = $d25 + $d26;
+
+        $d29 = $d18 * $d27;
+
+        $r9 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _f>;
+
+        $d28 = $r9[i11];
+
+        $d30 = $d29 * $d28;
+
+        d46 = d45 - $d30;
+
+        $r10 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference this$0>;
+
+        $d31 = staticinvoke <com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: double access$100(com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference)>($r10);
+
+        $d32 = 1.0 - $d31;
+
+        $d33 = $d32 * d0;
+
+        $d34 = r2[2];
+
+        $i8 = i11 - 1;
+
+        $d35 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getRho(int)>($i8);
+
+        $d36 = $d34 * $d35;
+
+        $d37 = r1[2];
+
+        $i9 = i11 - 1;
+
+        $d38 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getB(int)>($i9);
+
+        $d39 = $d37 * $d38;
+
+        $d40 = $d36 + $d39;
+
+        $d42 = $d33 * $d40;
+
+        $r11 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _f>;
+
+        $i10 = i11 + 1;
+
+        $d41 = $r11[$i10];
+
+        $d43 = $d42 * $d41;
+
+        d47 = d46 - $d43;
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setQ(int,double)>(i11, d47);
+
+        i11 = i11 + 1;
+
+        goto label1;
+
+     label2:
+        return;
+    }
+
+    void updateRHSBoundary()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition $r1, $r4, $r6, $r10;
+        com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients $r2, $r5, $r7, $r11;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r3, $r8, $r9, $r12;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, d14, d15;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, i7, i8;
+        double[] r13, r14;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition _lowerBoundary>;
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients _coefficients>;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $d0 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getT1()>();
+
+        r13 = interfaceinvoke $r1.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition: double[] getRightMatrixCondition(com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients,com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D,double)>($r2, $r3, $d0);
+
+        d14 = 0.0;
+
+        i7 = 0;
+
+     label1:
+        $i0 = lengthof r13;
+
+        if i7 >= $i0 goto label2;
+
+        $d11 = r13[i7];
+
+        $d12 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getF(int)>(i7);
+
+        $d13 = $d11 * $d12;
+
+        d14 = d14 + $d13;
+
+        i7 = i7 + 1;
+
+        goto label1;
+
+     label2:
+        $r4 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition _lowerBoundary>;
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients _coefficients>;
+
+        $d1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getT2()>();
+
+        $d2 = interfaceinvoke $r4.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition: double getConstant(com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients,double)>($r5, $d1);
+
+        $d3 = d14 + $d2;
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setQ(int,double)>(0, $d3);
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition _upperBoundary>;
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients _coefficients>;
+
+        $r8 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $d4 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getT1()>();
+
+        r14 = interfaceinvoke $r6.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition: double[] getRightMatrixCondition(com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients,com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D,double)>($r7, $r8, $d4);
+
+        d15 = 0.0;
+
+        i8 = 0;
+
+     label3:
+        $i1 = lengthof r14;
+
+        if i8 >= $i1 goto label4;
+
+        $d8 = r14[i8];
+
+        $r12 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $i4 = virtualinvoke $r12.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getNumSpaceNodes()>();
+
+        $i5 = $i4 - 1;
+
+        $i6 = $i5 - i8;
+
+        $d9 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getF(int)>($i6);
+
+        $d10 = $d8 * $d9;
+
+        d15 = d15 + $d10;
+
+        i8 = i8 + 1;
+
+        goto label3;
+
+     label4:
+        $r9 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $i2 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getNumSpaceNodes()>();
+
+        $i3 = $i2 - 1;
+
+        $r10 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition _upperBoundary>;
+
+        $r11 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients _coefficients>;
+
+        $d5 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getT2()>();
+
+        $d6 = interfaceinvoke $r10.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition: double getConstant(com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients,double)>($r11, $d5);
+
+        $d7 = d15 + $d6;
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setQ(int,double)>($i3, $d7);
+
+        return;
+    }
+
+    void updateLHSMatrix()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35;
+        double[] r1, r2;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r3, $r4, $r5;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, i11;
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference $r6, $r7, $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        $d1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getT2()>();
+
+        $d2 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getT1()>();
+
+        d0 = $d1 - $d2;
+
+        i11 = 1;
+
+     label1:
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $i0 = virtualinvoke $r3.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getNumSpaceNodes()>();
+
+        $i1 = $i0 - 1;
+
+        if i11 >= $i1 goto label2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        r1 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] getFirstDerivativeCoefficients(int)>(i11);
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        r2 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] getSecondDerivativeCoefficients(int)>(i11);
+
+        $i2 = i11 - 1;
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference this$0>;
+
+        $d3 = staticinvoke <com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: double access$100(com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference)>($r6);
+
+        $d4 = $d3 * d0;
+
+        $d5 = r2[0];
+
+        $i3 = i11 - 1;
+
+        $d6 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getRho(int)>($i3);
+
+        $d7 = $d5 * $d6;
+
+        $d8 = r1[0];
+
+        $i4 = i11 - 1;
+
+        $d9 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getB(int)>($i4);
+
+        $d10 = $d8 * $d9;
+
+        $d11 = $d7 + $d10;
+
+        $d12 = $d4 * $d11;
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setM(int,int,double)>(i11, $i2, $d12);
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference this$0>;
+
+        $d13 = staticinvoke <com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: double access$100(com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference)>($r7);
+
+        $d14 = $d13 * d0;
+
+        $d15 = r2[1];
+
+        $i5 = i11 - 1;
+
+        $d16 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getRho(int)>($i5);
+
+        $d17 = $d15 * $d16;
+
+        $d18 = r1[1];
+
+        $i6 = i11 - 1;
+
+        $d19 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getB(int)>($i6);
+
+        $d20 = $d18 * $d19;
+
+        $d21 = $d17 + $d20;
+
+        $i7 = i11 - 1;
+
+        $d22 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getC(int)>($i7);
+
+        $d23 = $d21 + $d22;
+
+        $d24 = $d14 * $d23;
+
+        $d25 = 1.0 + $d24;
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setM(int,int,double)>(i11, i11, $d25);
+
+        $i8 = i11 + 1;
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference this$0>;
+
+        $d26 = staticinvoke <com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: double access$100(com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference)>($r8);
+
+        $d27 = $d26 * d0;
+
+        $d28 = r2[2];
+
+        $i9 = i11 - 1;
+
+        $d29 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getRho(int)>($i9);
+
+        $d30 = $d28 * $d29;
+
+        $d31 = r1[2];
+
+        $i10 = i11 - 1;
+
+        $d32 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getB(int)>($i10);
+
+        $d33 = $d31 * $d32;
+
+        $d34 = $d30 + $d33;
+
+        $d35 = $d27 * $d34;
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setM(int,int,double)>(i11, $i8, $d35);
+
+        i11 = i11 + 1;
+
+        goto label1;
+
+     label2:
+        return;
+    }
+
+    void updateLHSBoundary()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition $r1, $r4;
+        com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients $r2, $r5;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r3, $r6, $r7, $r8;
+        double $d0, $d1, $d2, $d3;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, i8, i9;
+        double[] r9, r10;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition _lowerBoundary>;
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients _coefficients>;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $d0 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getT2()>();
+
+        r9 = interfaceinvoke $r1.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition: double[] getLeftMatrixCondition(com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients,com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D,double)>($r2, $r3, $d0);
+
+        i8 = 0;
+
+     label1:
+        $i0 = lengthof r9;
+
+        if i8 >= $i0 goto label2;
+
+        $d3 = r9[i8];
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setM(int,int,double)>(0, i8, $d3);
+
+        i8 = i8 + 1;
+
+        goto label1;
+
+     label2:
+        $r4 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition _upperBoundary>;
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients _coefficients>;
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $d1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getT2()>();
+
+        r10 = interfaceinvoke $r4.<com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition: double[] getLeftMatrixCondition(com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients,com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D,double)>($r5, $r6, $d1);
+
+        i9 = 0;
+
+     label3:
+        $i1 = lengthof r10;
+
+        if i9 >= $i1 goto label4;
+
+        $r7 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $i2 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getNumSpaceNodes()>();
+
+        $i3 = $i2 - 1;
+
+        $r8 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $i4 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getNumSpaceNodes()>();
+
+        $i5 = lengthof r10;
+
+        $i6 = $i4 - $i5;
+
+        $i7 = $i6 + i9;
+
+        $d2 = r10[i9];
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setM(int,int,double)>($i3, $i7, $d2);
+
+        i9 = i9 + 1;
+
+        goto label3;
+
+     label4:
+        return;
+    }
+
+    void updateCoefficents()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r1, $r2, $r6;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, i8;
+        com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients $r3, $r4, $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        i8 = 1;
+
+     label1:
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $i0 = virtualinvoke $r1.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getNumSpaceNodes()>();
+
+        $i1 = $i0 - 1;
+
+        if i8 >= $i1 goto label2;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        d0 = virtualinvoke $r2.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double getSpaceNode(int)>(i8);
+
+        $i2 = i8 - 1;
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients _coefficients>;
+
+        $d1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getT2()>();
+
+        $d2 = virtualinvoke $r3.<com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients: double getA(double,double)>($d1, d0);
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setA(int,double)>($i2, $d2);
+
+        $i3 = i8 - 1;
+
+        $r4 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients _coefficients>;
+
+        $d3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getT2()>();
+
+        $d4 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients: double getB(double,double)>($d3, d0);
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setB(int,double)>($i3, $d4);
+
+        $i4 = i8 - 1;
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients _coefficients>;
+
+        $d5 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getT2()>();
+
+        $d6 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients: double getC(double,double)>($d5, d0);
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setC(int,double)>($i4, $d6);
+
+        $i5 = i8 - 1;
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $i6 = i8 - 1;
+
+        $d7 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getA(int)>($i6);
+
+        $i7 = i8 - 1;
+
+        $d8 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getB(int)>($i7);
+
+        $d9 = specialinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getFittingParameter(com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D,double,double,int)>($r6, $d7, $d8, i8);
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setRho(int,double)>($i5, $d9);
+
+        i8 = i8 + 1;
+
+        goto label1;
+
+     label2:
+        return;
+    }
+
+    private void solveMatrixSystem()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void solveByLU()>();
+
+        return;
+    }
+
+    private void solveByLU()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        com.opengamma.analytics.math.linearalgebra.DecompositionResult r2;
+        double[] r3, $r8, $r9;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D $r4;
+        double[][] $r5;
+        com.opengamma.analytics.math.linearalgebra.Decomposition $r6;
+        java.lang.Object $r7;
+        int $i0, i1;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        $r4 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        $r5 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[][] _m>;
+
+        specialinvoke $r4.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>($r5);
+
+        $r6 = staticinvoke <com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: com.opengamma.analytics.math.linearalgebra.Decomposition access$200()>();
+
+        $r7 = virtualinvoke $r6.<com.opengamma.analytics.math.linearalgebra.Decomposition: java.lang.Object evaluate(java.lang.Object)>($r4);
+
+        r2 = (com.opengamma.analytics.math.linearalgebra.DecompositionResult) $r7;
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _q>;
+
+        r3 = interfaceinvoke r2.<com.opengamma.analytics.math.linearalgebra.DecompositionResult: double[] solve(double[])>($r8);
+
+        i1 = 0;
+
+     label1:
+        $i0 = lengthof r3;
+
+        if i1 >= $i0 goto label2;
+
+        $r9 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _f>;
+
+        $d0 = r3[i1];
+
+        $r9[i1] = $d0;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return;
+    }
+
+    private int solveBySOR(double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, d21, d22, d23, d24;
+        byte $b0;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r1, $r2, $r6;
+        int $i1, $i2, i3, i4, i5;
+        com.opengamma.analytics.math.surface.Surface $r3, $r4;
+        java.lang.Double $r5, $r7, $r9;
+        java.lang.Object $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        d0 := @parameter0: double;
+
+        i3 = 0;
+
+        d21 = 1.0;
+
+        d22 = #Infinity;
+
+     label1:
+        $d1 = d21 + 1.0E-10;
+
+        $d2 = d22 / $d1;
+
+        $b0 = $d2 cmpl 1.0E-18;
+
+        if $b0 <= 0 goto label7;
+
+        d22 = 0.0;
+
+        d21 = 0.0;
+
+        i4 = 0;
+
+     label2:
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $i1 = virtualinvoke $r1.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getNumSpaceNodes()>();
+
+        if i4 >= $i1 goto label6;
+
+        d23 = 0.0;
+
+        i5 = 0;
+
+     label3:
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $i2 = virtualinvoke $r2.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: int getNumSpaceNodes()>();
+
+        if i5 >= $i2 goto label4;
+
+        $d18 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getM(int,int)>(i4, i5);
+
+        $d19 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getF(int)>(i5);
+
+        $d20 = $d18 * $d19;
+
+        d23 = d23 + $d20;
+
+        i5 = i5 + 1;
+
+        goto label3;
+
+     label4:
+        $d3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getM(int,int)>(i4, i4);
+
+        $d4 = d0 / $d3;
+
+        $d5 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getQ(int)>(i4);
+
+        $d6 = $d5 - d23;
+
+        d24 = $d4 * $d6;
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.math.surface.Surface _freeBoundary>;
+
+        if $r3 == null goto label5;
+
+        $r4 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.math.surface.Surface _freeBoundary>;
+
+        $d13 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getT2()>();
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d13);
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        $d14 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double getSpaceNode(int)>(i4);
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d14);
+
+        $r8 = virtualinvoke $r4.<com.opengamma.analytics.math.surface.Surface: java.lang.Object getZValue(java.lang.Object,java.lang.Object)>($r5, $r7);
+
+        $r9 = (java.lang.Double) $r8;
+
+        $d15 = virtualinvoke $r9.<java.lang.Double: double doubleValue()>();
+
+        $d16 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getF(int)>(i4);
+
+        $d17 = $d15 - $d16;
+
+        d24 = staticinvoke <java.lang.Math: double max(double,double)>(d24, $d17);
+
+     label5:
+        $d7 = d24 * d24;
+
+        d22 = d22 + $d7;
+
+        $d8 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getF(int)>(i4);
+
+        $d9 = $d8 + d24;
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: void setF(int,double)>(i4, $d9);
+
+        $d10 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getF(int)>(i4);
+
+        $d11 = virtualinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double getF(int)>(i4);
+
+        $d12 = $d10 * $d11;
+
+        d21 = d21 + $d12;
+
+        i4 = i4 + 1;
+
+        goto label2;
+
+     label6:
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label7:
+        return i3;
+    }
+
+    private double getFittingParameter(com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D, double, double, int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r1;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, d49, d50;
+        int i0, $i2;
+        double[] r2, r3;
+        byte $b1, $b3, $b4, $b5, $b6, $b7, $b8, $b9;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        i0 := @parameter3: int;
+
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 != 0 goto label01;
+
+        $b9 = d1 cmpl 0.0;
+
+        if $b9 != 0 goto label01;
+
+        return 0.0;
+
+     label01:
+        r2 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] getFirstDerivativeCoefficients(int)>(i0);
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] getSecondDerivativeCoefficients(int)>(i0);
+
+        $i2 = i0 - 1;
+
+        $d5 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double getSpaceStep(int)>($i2);
+
+        d2 = d1 * $d5;
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double getSpaceStep(int)>(i0);
+
+        d3 = d1 * $d6;
+
+        $d7 = staticinvoke <java.lang.Math: double abs(double)>(d2);
+
+        $d8 = staticinvoke <java.lang.Math: double abs(double)>(d0);
+
+        $d9 = 10.0 * $d8;
+
+        $b3 = $d7 cmpl $d9;
+
+        if $b3 > 0 goto label02;
+
+        $d19 = staticinvoke <java.lang.Math: double abs(double)>(d3);
+
+        $d20 = staticinvoke <java.lang.Math: double abs(double)>(d0);
+
+        $d21 = 10.0 * $d20;
+
+        $b6 = $d19 cmpl $d21;
+
+        if $b6 <= 0 goto label07;
+
+     label02:
+        $b4 = d0 cmpl 0.0;
+
+        if $b4 <= 0 goto label03;
+
+        $d47 = -1.0;
+
+        goto label04;
+
+     label03:
+        $d47 = 1.0;
+
+     label04:
+        $b5 = d1 cmpl 0.0;
+
+        if $b5 <= 0 goto label05;
+
+        $d16 = $d47 * d1;
+
+        $d15 = r2[0];
+
+        $d18 = $d16 * $d15;
+
+        $d17 = r3[0];
+
+        d49 = $d18 / $d17;
+
+        goto label06;
+
+     label05:
+        $d10 = neg $d47;
+
+        $d12 = $d10 * d1;
+
+        $d11 = r2[2];
+
+        $d14 = $d12 * $d11;
+
+        $d13 = r3[2];
+
+        d49 = $d14 / $d13;
+
+     label06:
+        goto label10;
+
+     label07:
+        $d22 = staticinvoke <java.lang.Math: double abs(double)>(d0);
+
+        $d23 = staticinvoke <java.lang.Math: double abs(double)>(d2);
+
+        $d24 = 10.0 * $d23;
+
+        $b7 = $d22 cmpl $d24;
+
+        if $b7 > 0 goto label08;
+
+        $d25 = staticinvoke <java.lang.Math: double abs(double)>(d0);
+
+        $d26 = staticinvoke <java.lang.Math: double abs(double)>(d3);
+
+        $d27 = 10.0 * $d26;
+
+        $b8 = $d25 cmpl $d27;
+
+        if $b8 <= 0 goto label09;
+
+     label08:
+        d49 = d0;
+
+        goto label10;
+
+     label09:
+        $d28 = d2 / d0;
+
+        d50 = staticinvoke <java.lang.Math: double exp(double)>($d28);
+
+        $d29 = neg d3;
+
+        $d30 = $d29 / d0;
+
+        d4 = staticinvoke <java.lang.Math: double exp(double)>($d30);
+
+        $d38 = neg d1;
+
+        $d31 = r2[0];
+
+        $d33 = $d31 * d50;
+
+        $d32 = r2[1];
+
+        $d36 = $d33 + $d32;
+
+        $d34 = r2[2];
+
+        $d35 = $d34 * d4;
+
+        $d37 = $d36 + $d35;
+
+        $d46 = $d38 * $d37;
+
+        $d39 = r3[0];
+
+        $d41 = $d39 * d50;
+
+        $d40 = r3[1];
+
+        $d44 = $d41 + $d40;
+
+        $d42 = r3[2];
+
+        $d43 = $d42 * d4;
+
+        $d45 = $d44 + $d43;
+
+        d49 = $d46 / $d45;
+
+     label10:
+        return d49;
+    }
+
+    public com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D _grid>;
+
+        return $r1;
+    }
+
+    public void setT1(double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        double d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        d0 := @parameter0: double;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double _t1> = d0;
+
+        return;
+    }
+
+    public double getT1()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double _t1>;
+
+        return $d0;
+    }
+
+    public void setT2(double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        double d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        d0 := @parameter0: double;
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double _t2> = d0;
+
+        return;
+    }
+
+    public double getT2()
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double _t2>;
+
+        return $d0;
+    }
+
+    public double getQ(int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        int i0;
+        double[] $r1;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _q>;
+
+        $d0 = $r1[i0];
+
+        return $d0;
+    }
+
+    public void setQ(int, double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        int i0;
+        double d0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        i0 := @parameter0: int;
+
+        d0 := @parameter1: double;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _q>;
+
+        $r1[i0] = d0;
+
+        return;
+    }
+
+    public double getM(int, int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        int i0, i1;
+        double[][] $r1;
+        double[] $r2;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[][] _m>;
+
+        $r2 = $r1[i0];
+
+        $d0 = $r2[i1];
+
+        return $d0;
+    }
+
+    public void setM(int, int, double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        int i0, i1;
+        double d0;
+        double[][] $r1;
+        double[] $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        i0 := @parameter0: int;
+
+        i1 := @parameter1: int;
+
+        d0 := @parameter2: double;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[][] _m>;
+
+        $r2 = $r1[i0];
+
+        $r2[i1] = d0;
+
+        return;
+    }
+
+    public double getF(int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        int i0;
+        double[] $r1;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _f>;
+
+        $d0 = $r1[i0];
+
+        return $d0;
+    }
+
+    public void setF(int, double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        int i0;
+        double d0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        i0 := @parameter0: int;
+
+        d0 := @parameter1: double;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _f>;
+
+        $r1[i0] = d0;
+
+        return;
+    }
+
+    public double getRho(int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        int i0;
+        double[] $r1;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _rho>;
+
+        $d0 = $r1[i0];
+
+        return $d0;
+    }
+
+    public void setRho(int, double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        int i0;
+        double d0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        i0 := @parameter0: int;
+
+        d0 := @parameter1: double;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _rho>;
+
+        $r1[i0] = d0;
+
+        return;
+    }
+
+    public double getA(int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        int i0;
+        double[] $r1;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _a>;
+
+        $d0 = $r1[i0];
+
+        return $d0;
+    }
+
+    public void setA(int, double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        int i0;
+        double d0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        i0 := @parameter0: int;
+
+        d0 := @parameter1: double;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _a>;
+
+        $r1[i0] = d0;
+
+        return;
+    }
+
+    public double getB(int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        int i0;
+        double[] $r1;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _b>;
+
+        $d0 = $r1[i0];
+
+        return $d0;
+    }
+
+    public void setB(int, double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        int i0;
+        double d0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        i0 := @parameter0: int;
+
+        d0 := @parameter1: double;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _b>;
+
+        $r1[i0] = d0;
+
+        return;
+    }
+
+    public double getC(int)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        int i0;
+        double[] $r1;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _c>;
+
+        $d0 = $r1[i0];
+
+        return $d0;
+    }
+
+    public void setC(int, double)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated r0;
+        int i0;
+        double d0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated;
+
+        i0 := @parameter0: int;
+
+        d0 := @parameter1: double;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference$SolverImplDeprecated: double[] _c>;
+
+        $r1[i0] = d0;
+
+        return;
+    }
+}

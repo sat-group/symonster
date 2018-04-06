@@ -1,0 +1,723 @@
+public class com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder extends java.lang.Object
+{
+    private static final com.opengamma.analytics.math.minimization.ParameterLimitsTransform ALPHA_TRANSFORM;
+    private static final com.opengamma.analytics.math.minimization.ParameterLimitsTransform RHO_TRANSFORM;
+    private static final com.opengamma.analytics.math.minimization.ParameterLimitsTransform NU_TRANSFORM;
+    private static final com.opengamma.analytics.math.minimization.NonLinearParameterTransforms TRANSFORM;
+    private static final double DEFAULT_BETA;
+    private static final com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.WeightingFunction DEFAULT_WEIGHTING_FUNCTION;
+    private static final org.slf4j.Logger s_logger;
+    private static final com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider MODEL;
+    private final com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.WeightingFunction _weightingFunction;
+    private final double _defaultBeta;
+    private final boolean _globalBetaSearch;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder r0;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.WeightingFunction $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: double _defaultBeta> = 0.9;
+
+        $r1 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.WeightingFunction DEFAULT_WEIGHTING_FUNCTION>;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.WeightingFunction _weightingFunction> = $r1;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: boolean _globalBetaSearch> = 1;
+
+        return;
+    }
+
+    public void <init>(double, com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.WeightingFunction)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder r0;
+        double d0;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.WeightingFunction r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.WeightingFunction;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "weighting function");
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: double _defaultBeta> = d0;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.WeightingFunction _weightingFunction> = r1;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: boolean _globalBetaSearch> = 0;
+
+        return;
+    }
+
+    public final com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData[] getFittedfModelParameters(double, double[], double, double[])
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder r0;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, d28, d29, d30, $d31, d33, d34;
+        double[] r1, r2, r3, r7, r13, $r22, $r25, $r34, $r37, $r45, r57, r58, r59, r60;
+        int i0, $i1, $i2, $i4, $i6, $i7, $i8, i11, $i12, i13;
+        com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResultsWithTransform r6;
+        com.opengamma.analytics.math.function.Function1D r9, r10, $r29, $r30;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r12, $r21, $r23, $r24, $r32, $r36, $r44, r51;
+        java.lang.Object[] $r16, $r18;
+        java.lang.Integer $r17, $r19, $r20;
+        byte $b3, $b5, $b9, $b10;
+        com.opengamma.analytics.math.rootfinding.newton.BroydenVectorRootFinder $r26;
+        com.opengamma.analytics.math.minimization.NonLinearTransformFunction $r27;
+        com.opengamma.analytics.math.minimization.NonLinearParameterTransforms $r28, $r31;
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData $r33, $r35;
+        java.lang.StringBuilder $r38, $r40, $r41, $r42, $r46, $r48, $r49;
+        org.slf4j.Logger $r39, $r47;
+        java.lang.String $r43, $r50;
+        boolean $z0, $z1, $z2, $z3;
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData[] r52;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRModelFitter $r53;
+        com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider $r54;
+        java.util.BitSet $r55;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        d1 := @parameter2: double;
+
+        r2 := @parameter3: double[];
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "strikes");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "implied volatilities");
+
+        i0 = lengthof r1;
+
+        if i0 <= 2 goto label01;
+
+        $z2 = 1;
+
+        goto label02;
+
+     label01:
+        $z2 = 0;
+
+     label02:
+        $r16 = newarray (java.lang.Object)[1];
+
+        $r17 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        $r16[0] = $r17;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z2, "cannot fit less than three points; have {}", $r16);
+
+        $i1 = lengthof r2;
+
+        if $i1 != i0 goto label03;
+
+        $z3 = 1;
+
+        goto label04;
+
+     label03:
+        $z3 = 0;
+
+     label04:
+        $r18 = newarray (java.lang.Object)[2];
+
+        $i2 = lengthof r2;
+
+        $r19 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i2);
+
+        $r18[0] = $r19;
+
+        $r20 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        $r18[1] = $r20;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z3, "#strikes != # vols; have {} and {}", $r18);
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: void validateStrikes(double[])>(r1);
+
+        d28 = 0.0;
+
+        d29 = 0.0;
+
+        i11 = 0;
+
+     label05:
+        if i11 >= i0 goto label06;
+
+        d2 = r2[i11];
+
+        d28 = d28 + d2;
+
+        $d27 = d2 * d2;
+
+        d29 = d29 + $d27;
+
+        i11 = i11 + 1;
+
+        goto label05;
+
+     label06:
+        $d5 = d28 * d28;
+
+        $d4 = (double) i0;
+
+        $d6 = $d5 / $d4;
+
+        d30 = d29 - $d6;
+
+        $b3 = d30 cmpg 0.0;
+
+        if $b3 > 0 goto label07;
+
+        $d31 = 0.0;
+
+        goto label08;
+
+     label07:
+        $d7 = staticinvoke <java.lang.Math: double sqrt(double)>(d30);
+
+        $i4 = i0 - 1;
+
+        $d8 = (double) $i4;
+
+        $d31 = $d7 / $d8;
+
+     label08:
+        $d9 = (double) i0;
+
+        d33 = d28 / $d9;
+
+        $d10 = $d31 / d33;
+
+        $b5 = $d10 cmpg 0.01;
+
+        if $b5 >= 0 goto label09;
+
+        $r44 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        $r45 = newarray (double)[4];
+
+        $r45[0] = d33;
+
+        $r45[1] = 1.0;
+
+        $r45[2] = 0.0;
+
+        $r45[3] = 0.0;
+
+        specialinvoke $r44.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>($r45);
+
+        r51 = $r44;
+
+        $z1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: boolean _globalBetaSearch>;
+
+        if $z1 != 0 goto label10;
+
+        $d25 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: double _defaultBeta>;
+
+        $b10 = $d25 cmpl 1.0;
+
+        if $b10 == 0 goto label10;
+
+        $r47 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: org.slf4j.Logger s_logger>;
+
+        $r46 = new java.lang.StringBuilder;
+
+        specialinvoke $r46.<java.lang.StringBuilder: void <init>()>();
+
+        $d26 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: double _defaultBeta>;
+
+        $r48 = virtualinvoke $r46.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d26);
+
+        $r49 = virtualinvoke $r48.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" so ignored");
+
+        $r50 = virtualinvoke $r49.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        interfaceinvoke $r47.<org.slf4j.Logger: void warn(java.lang.String,java.lang.Object)>("Smile almost flat. Cannot use beta = ", $r50);
+
+        goto label10;
+
+     label09:
+        $d11 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: double _defaultBeta>;
+
+        $d12 = 1.0 - $d11;
+
+        $d13 = staticinvoke <java.lang.Math: double pow(double,double)>(d0, $d12);
+
+        d34 = d33 * $d13;
+
+        $r21 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        $r22 = newarray (double)[4];
+
+        $r22[0] = d34;
+
+        $d14 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: double _defaultBeta>;
+
+        $r22[1] = $d14;
+
+        $r22[2] = 0.0;
+
+        $r22[3] = 0.3;
+
+        specialinvoke $r21.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>($r22);
+
+        r51 = $r21;
+
+     label10:
+        $i12 = i0 - 2;
+
+        r52 = newarray (com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData)[$i12];
+
+        r3 = newarray (double)[i0];
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>(r3, 1.0E-4);
+
+        $r53 = new com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRModelFitter;
+
+        $r54 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider MODEL>;
+
+        specialinvoke $r53.<com.opengamma.analytics.financial.model.volatility.smile.fitting.SABRModelFitter: void <init>(double,double[],double,double[],double[],com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider)>(d0, r1, d1, r2, r3, $r54);
+
+        $r55 = new java.util.BitSet;
+
+        specialinvoke $r55.<java.util.BitSet: void <init>()>();
+
+        if i0 == 3 goto label11;
+
+        $z0 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: boolean _globalBetaSearch>;
+
+        if $z0 != 0 goto label12;
+
+     label11:
+        virtualinvoke $r55.<java.util.BitSet: void set(int)>(1);
+
+     label12:
+        r6 = virtualinvoke $r53.<com.opengamma.analytics.financial.model.volatility.smile.fitting.SmileModelFitter: com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResultsWithTransform solve(com.opengamma.analytics.math.matrix.DoubleMatrix1D,java.util.BitSet)>(r51, $r55);
+
+        if i0 != 3 goto label14;
+
+        $d21 = virtualinvoke r6.<com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResultsWithTransform: double getChiSq()>();
+
+        $d22 = (double) i0;
+
+        $d23 = $d21 / $d22;
+
+        $b9 = $d23 cmpl 1.0;
+
+        if $b9 <= 0 goto label13;
+
+        $r39 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: org.slf4j.Logger s_logger>;
+
+        $r38 = new java.lang.StringBuilder;
+
+        specialinvoke $r38.<java.lang.StringBuilder: void <init>()>();
+
+        $r40 = virtualinvoke $r38.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+
+        $r41 = virtualinvoke $r40.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" points is ");
+
+        $d24 = virtualinvoke r6.<com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResultsWithTransform: double getChiSq()>();
+
+        $r42 = virtualinvoke $r41.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d24);
+
+        $r43 = virtualinvoke $r42.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        interfaceinvoke $r39.<org.slf4j.Logger: void warn(java.lang.String,java.lang.Object)>("chi^2 on SABR fit to ", $r43);
+
+     label13:
+        $r35 = new com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData;
+
+        $r36 = virtualinvoke r6.<com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResultsWithTransform: com.opengamma.analytics.math.matrix.DoubleMatrix1D getModelParameters()>();
+
+        $r37 = virtualinvoke $r36.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        specialinvoke $r35.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData: void <init>(double[])>($r37);
+
+        r52[0] = $r35;
+
+        goto label16;
+
+     label14:
+        $r23 = virtualinvoke r6.<com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResultsWithTransform: com.opengamma.analytics.math.matrix.DoubleMatrix1D getModelParameters()>();
+
+        r7 = virtualinvoke $r23.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        d3 = r7[1];
+
+        $r24 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        $r25 = newarray (double)[3];
+
+        $d15 = r7[0];
+
+        $r25[0] = $d15;
+
+        $d16 = r7[2];
+
+        $r25[1] = $d16;
+
+        $d17 = r7[3];
+
+        $r25[2] = $d17;
+
+        specialinvoke $r24.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>($r25);
+
+        $r26 = new com.opengamma.analytics.math.rootfinding.newton.BroydenVectorRootFinder;
+
+        specialinvoke $r26.<com.opengamma.analytics.math.rootfinding.newton.BroydenVectorRootFinder: void <init>()>();
+
+        r57 = newarray (double)[3];
+
+        r58 = newarray (double)[3];
+
+        i13 = 0;
+
+     label15:
+        $i6 = i0 - 2;
+
+        if i13 >= $i6 goto label16;
+
+        $i7 = i13 + 3;
+
+        r59 = staticinvoke <java.util.Arrays: double[] copyOfRange(double[],int,int)>(r1, i13, $i7);
+
+        $i8 = i13 + 3;
+
+        r60 = staticinvoke <java.util.Arrays: double[] copyOfRange(double[],int,int)>(r2, i13, $i8);
+
+        r9 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.math.function.Function1D getVolDiffFunc(double,double[],double,double[])>(d0, r59, d1, r60);
+
+        r10 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.math.function.Function1D getVolJacFunc(double,double[],double,double)>(d0, r59, d1, d3);
+
+        $r27 = new com.opengamma.analytics.math.minimization.NonLinearTransformFunction;
+
+        $r28 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.math.minimization.NonLinearParameterTransforms TRANSFORM>;
+
+        specialinvoke $r27.<com.opengamma.analytics.math.minimization.NonLinearTransformFunction: void <init>(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.minimization.NonLinearParameterTransforms)>(r9, r10, $r28);
+
+        $r29 = virtualinvoke $r27.<com.opengamma.analytics.math.minimization.NonLinearTransformFunction: com.opengamma.analytics.math.function.Function1D getFittingFunction()>();
+
+        $r30 = virtualinvoke $r27.<com.opengamma.analytics.math.minimization.NonLinearTransformFunction: com.opengamma.analytics.math.function.Function1D getFittingJacobian()>();
+
+        r12 = virtualinvoke $r26.<com.opengamma.analytics.math.rootfinding.newton.BroydenVectorRootFinder: com.opengamma.analytics.math.matrix.DoubleMatrix1D getRoot(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r29, $r30, $r24);
+
+        $r31 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.math.minimization.NonLinearParameterTransforms TRANSFORM>;
+
+        $r32 = interfaceinvoke $r31.<com.opengamma.analytics.math.minimization.NonLinearParameterTransforms: com.opengamma.analytics.math.matrix.DoubleMatrix1D inverseTransform(com.opengamma.analytics.math.matrix.DoubleMatrix1D)>(r12);
+
+        r13 = virtualinvoke $r32.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        $r33 = new com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData;
+
+        $r34 = newarray (double)[4];
+
+        $d18 = r13[0];
+
+        $r34[0] = $d18;
+
+        $r34[1] = d3;
+
+        $d19 = r13[1];
+
+        $r34[2] = $d19;
+
+        $d20 = r13[2];
+
+        $r34[3] = $d20;
+
+        specialinvoke $r33.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData: void <init>(double[])>($r34);
+
+        r52[i13] = $r33;
+
+        i13 = i13 + 1;
+
+        goto label15;
+
+     label16:
+        return r52;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getVolDiffFunc(double, double[], double, double[])
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder r0;
+        double d0, d1;
+        double[] r1, r2;
+        com.opengamma.analytics.math.function.Function1D r3;
+        int i0;
+        com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider $r4;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder$1 $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        d1 := @parameter2: double;
+
+        r2 := @parameter3: double[];
+
+        $r4 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider MODEL>;
+
+        r3 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider: com.opengamma.analytics.math.function.Function1D getVolatilityFunction(double,double[],double)>(d0, r1, d1);
+
+        i0 = lengthof r1;
+
+        $r5 = new com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder$1;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder$1: void <init>(com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder,com.opengamma.analytics.math.function.Function1D,int,double[])>(r0, r3, i0, r2);
+
+        return $r5;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getVolJacFunc(double, double[], double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder r0;
+        double d0, d1, d2;
+        double[] r1;
+        com.opengamma.analytics.math.function.Function1D r2;
+        com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider $r3;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder$2 $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        d1 := @parameter2: double;
+
+        d2 := @parameter3: double;
+
+        $r3 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider MODEL>;
+
+        r2 = virtualinvoke $r3.<com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider: com.opengamma.analytics.math.function.Function1D getModelAdjointFunction(double,double[],double)>(d0, r1, d1);
+
+        $r4 = new com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder$2;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder$2: void <init>(com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder,double,com.opengamma.analytics.math.function.Function1D)>(r0, d2, r2);
+
+        return $r4;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getVolatilityFunction(double, double[], double, double[])
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder r0;
+        double d0, d1;
+        double[] r1, r2;
+        int i0;
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData[] r3;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder$3 $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        d1 := @parameter2: double;
+
+        r2 := @parameter3: double[];
+
+        i0 = lengthof r1;
+
+        r3 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData[] getFittedfModelParameters(double,double[],double,double[])>(d0, r1, d1, r2);
+
+        $r4 = new com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder$3;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder$3: void <init>(com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder,double,double,double[],com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData[],int)>(r0, d1, d0, r1, r3, i0);
+
+        return $r4;
+    }
+
+    private void validateStrikes(double[])
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder r0;
+        double[] r1;
+        int i0, $i1, $i3, $i4, i5;
+        double $d0, $d1, $d2, $d3;
+        byte $b2;
+        java.lang.Object[] $r2;
+        java.lang.Double $r3, $r5;
+        java.lang.Integer $r4, $r6;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder;
+
+        r1 := @parameter0: double[];
+
+        i0 = lengthof r1;
+
+        i5 = 1;
+
+     label1:
+        if i5 >= i0 goto label4;
+
+        $d1 = r1[i5];
+
+        $i1 = i5 - 1;
+
+        $d0 = r1[$i1];
+
+        $b2 = $d1 cmpl $d0;
+
+        if $b2 <= 0 goto label2;
+
+        $z0 = 1;
+
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        $r2 = newarray (java.lang.Object)[4];
+
+        $i3 = i5 - 1;
+
+        $d2 = r1[$i3];
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d2);
+
+        $r2[0] = $r3;
+
+        $i4 = i5 - 1;
+
+        $r4 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i4);
+
+        $r2[1] = $r4;
+
+        $d3 = r1[i5];
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        $r2[2] = $r5;
+
+        $r6 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i5);
+
+        $r2[3] = $r6;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z0, "strikes must be in ascending order; have {} (element {}) and {} (element {})", $r2);
+
+        i5 = i5 + 1;
+
+        goto label1;
+
+     label4:
+        return;
+    }
+
+    static com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider access$000()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider $r0;
+
+        $r0 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider MODEL>;
+
+        return $r0;
+    }
+
+    static com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.WeightingFunction access$100(com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder r0;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.WeightingFunction $r1;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.WeightingFunction _weightingFunction>;
+
+        return $r1;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.math.minimization.SingleRangeLimitTransform $r0, $r3;
+        com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType $r1, $r4;
+        com.opengamma.analytics.math.minimization.DoubleRangeLimitTransform $r2;
+        com.opengamma.analytics.math.minimization.UncoupledParameterTransforms $r5;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r6;
+        com.opengamma.analytics.math.minimization.ParameterLimitsTransform[] $r7;
+        com.opengamma.analytics.math.minimization.ParameterLimitsTransform $r8, $r9, $r10;
+        java.util.BitSet $r11;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SineWeightingFunction $r12;
+        org.slf4j.Logger $r13;
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRHaganVolatilityFunction $r14;
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: double DEFAULT_BETA> = 0.9;
+
+        $r0 = new com.opengamma.analytics.math.minimization.SingleRangeLimitTransform;
+
+        $r1 = <com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType: com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType GREATER_THAN>;
+
+        specialinvoke $r0.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: void <init>(double,com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType)>(0.0, $r1);
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.math.minimization.ParameterLimitsTransform ALPHA_TRANSFORM> = $r0;
+
+        $r2 = new com.opengamma.analytics.math.minimization.DoubleRangeLimitTransform;
+
+        specialinvoke $r2.<com.opengamma.analytics.math.minimization.DoubleRangeLimitTransform: void <init>(double,double)>(-1.0, 1.0);
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.math.minimization.ParameterLimitsTransform RHO_TRANSFORM> = $r2;
+
+        $r3 = new com.opengamma.analytics.math.minimization.SingleRangeLimitTransform;
+
+        $r4 = <com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType: com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType GREATER_THAN>;
+
+        specialinvoke $r3.<com.opengamma.analytics.math.minimization.SingleRangeLimitTransform: void <init>(double,com.opengamma.analytics.math.minimization.ParameterLimitsTransform$LimitType)>(0.0, $r4);
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.math.minimization.ParameterLimitsTransform NU_TRANSFORM> = $r3;
+
+        $r5 = new com.opengamma.analytics.math.minimization.UncoupledParameterTransforms;
+
+        $r6 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r6.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(int,double)>(3, 0.0);
+
+        $r7 = newarray (com.opengamma.analytics.math.minimization.ParameterLimitsTransform)[3];
+
+        $r8 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.math.minimization.ParameterLimitsTransform ALPHA_TRANSFORM>;
+
+        $r7[0] = $r8;
+
+        $r9 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.math.minimization.ParameterLimitsTransform RHO_TRANSFORM>;
+
+        $r7[1] = $r9;
+
+        $r10 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.math.minimization.ParameterLimitsTransform NU_TRANSFORM>;
+
+        $r7[2] = $r10;
+
+        $r11 = new java.util.BitSet;
+
+        specialinvoke $r11.<java.util.BitSet: void <init>()>();
+
+        specialinvoke $r5.<com.opengamma.analytics.math.minimization.UncoupledParameterTransforms: void <init>(com.opengamma.analytics.math.matrix.DoubleMatrix1D,com.opengamma.analytics.math.minimization.ParameterLimitsTransform[],java.util.BitSet)>($r6, $r7, $r11);
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.math.minimization.NonLinearParameterTransforms TRANSFORM> = $r5;
+
+        $r12 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.WeightingFunctionFactory: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SineWeightingFunction SINE_WEIGHTING_FUNCTION>;
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.WeightingFunction DEFAULT_WEIGHTING_FUNCTION> = $r12;
+
+        $r13 = staticinvoke <org.slf4j.LoggerFactory: org.slf4j.Logger getLogger(java.lang.Class)>(class "com/opengamma/analytics/financial/model/volatility/smile/fitting/sabr/PiecewiseSABRFitterRootFinder");
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: org.slf4j.Logger s_logger> = $r13;
+
+        $r14 = new com.opengamma.analytics.financial.model.volatility.smile.function.SABRHaganVolatilityFunction;
+
+        specialinvoke $r14.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRHaganVolatilityFunction: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.PiecewiseSABRFitterRootFinder: com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider MODEL> = $r14;
+
+        return;
+    }
+}

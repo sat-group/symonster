@@ -1,0 +1,263 @@
+public class com.opengamma.analytics.math.interpolation.BasisFunctionAggregation extends com.opengamma.analytics.math.function.Function1D
+{
+    private final java.util.List _f;
+    private final double[] _w;
+
+    public void <init>(java.util.List, double[])
+    {
+        com.opengamma.analytics.math.interpolation.BasisFunctionAggregation r0;
+        java.util.List r1;
+        double[] r2, $r4;
+        int $i0, $i1;
+        java.lang.Object $r3;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.BasisFunctionAggregation;
+
+        r1 := @parameter0: java.util.List;
+
+        r2 := @parameter1: double[];
+
+        specialinvoke r0.<com.opengamma.analytics.math.function.Function1D: void <init>()>();
+
+        staticinvoke <org.apache.commons.lang.Validate: void notEmpty(java.util.Collection,java.lang.String)>(r1, "no functions");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "no weights");
+
+        $i0 = interfaceinvoke r1.<java.util.List: int size()>();
+
+        $i1 = lengthof r2;
+
+        if $i0 != $i1 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean)>($z0);
+
+        r0.<com.opengamma.analytics.math.interpolation.BasisFunctionAggregation: java.util.List _f> = r1;
+
+        $r3 = virtualinvoke r2.<java.lang.Object: java.lang.Object clone()>();
+
+        $r4 = (double[]) $r3;
+
+        r0.<com.opengamma.analytics.math.interpolation.BasisFunctionAggregation: double[] _w> = $r4;
+
+        return;
+    }
+
+    public java.lang.Double evaluate(java.lang.Object)
+    {
+        com.opengamma.analytics.math.interpolation.BasisFunctionAggregation r0;
+        java.lang.Object r1, $r6, $r8;
+        int i0, i2;
+        double d0, $d1, $d2, d3;
+        double[] $r3, $r10;
+        java.lang.Double $r4, $r9;
+        java.util.List $r5;
+        com.opengamma.analytics.math.function.Function1D $r7;
+        byte $b1;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.BasisFunctionAggregation;
+
+        r1 := @parameter0: java.lang.Object;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "x");
+
+        d3 = 0.0;
+
+        $r3 = r0.<com.opengamma.analytics.math.interpolation.BasisFunctionAggregation: double[] _w>;
+
+        i0 = lengthof $r3;
+
+        i2 = 0;
+
+     label1:
+        if i2 >= i0 goto label3;
+
+        $r5 = r0.<com.opengamma.analytics.math.interpolation.BasisFunctionAggregation: java.util.List _f>;
+
+        $r6 = interfaceinvoke $r5.<java.util.List: java.lang.Object get(int)>(i2);
+
+        $r7 = (com.opengamma.analytics.math.function.Function1D) $r6;
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r1);
+
+        $r9 = (java.lang.Double) $r8;
+
+        d0 = virtualinvoke $r9.<java.lang.Double: double doubleValue()>();
+
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 == 0 goto label2;
+
+        $r10 = r0.<com.opengamma.analytics.math.interpolation.BasisFunctionAggregation: double[] _w>;
+
+        $d1 = $r10[i2];
+
+        $d2 = $d1 * d0;
+
+        d3 = d3 + $d2;
+
+     label2:
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label3:
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        return $r4;
+    }
+
+    public com.opengamma.analytics.math.matrix.DoubleMatrix1D weightSensitivity(java.lang.Object)
+    {
+        com.opengamma.analytics.math.interpolation.BasisFunctionAggregation r0;
+        java.lang.Object r1, $r8, $r10;
+        int i0, i1;
+        double[] r3, $r5;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r6;
+        java.util.List $r7;
+        com.opengamma.analytics.math.function.Function1D $r9;
+        java.lang.Double $r11;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.BasisFunctionAggregation;
+
+        r1 := @parameter0: java.lang.Object;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "x");
+
+        $r5 = r0.<com.opengamma.analytics.math.interpolation.BasisFunctionAggregation: double[] _w>;
+
+        i0 = lengthof $r5;
+
+        $r6 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r6.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(int)>(i0);
+
+        r3 = virtualinvoke $r6.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $r7 = r0.<com.opengamma.analytics.math.interpolation.BasisFunctionAggregation: java.util.List _f>;
+
+        $r8 = interfaceinvoke $r7.<java.util.List: java.lang.Object get(int)>(i1);
+
+        $r9 = (com.opengamma.analytics.math.function.Function1D) $r8;
+
+        $r10 = virtualinvoke $r9.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r1);
+
+        $r11 = (java.lang.Double) $r10;
+
+        $d0 = virtualinvoke $r11.<java.lang.Double: double doubleValue()>();
+
+        r3[i1] = $d0;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return $r6;
+    }
+
+    public com.opengamma.util.tuple.Pair valueAndWeightSensitivity(java.lang.Object)
+    {
+        com.opengamma.analytics.math.interpolation.BasisFunctionAggregation r0;
+        java.lang.Object r1, $r10, $r12;
+        int i0, i2;
+        double[] r3, $r5, $r14;
+        double d0, $d1, $d2, d3;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r6;
+        java.lang.Double $r7, $r13;
+        com.opengamma.util.tuple.ObjectsPair $r8;
+        java.util.List $r9;
+        com.opengamma.analytics.math.function.Function1D $r11;
+        byte $b1;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.BasisFunctionAggregation;
+
+        r1 := @parameter0: java.lang.Object;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "x");
+
+        $r5 = r0.<com.opengamma.analytics.math.interpolation.BasisFunctionAggregation: double[] _w>;
+
+        i0 = lengthof $r5;
+
+        d3 = 0.0;
+
+        $r6 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r6.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(int)>(i0);
+
+        r3 = virtualinvoke $r6.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        i2 = 0;
+
+     label1:
+        if i2 >= i0 goto label3;
+
+        $r9 = r0.<com.opengamma.analytics.math.interpolation.BasisFunctionAggregation: java.util.List _f>;
+
+        $r10 = interfaceinvoke $r9.<java.util.List: java.lang.Object get(int)>(i2);
+
+        $r11 = (com.opengamma.analytics.math.function.Function1D) $r10;
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>(r1);
+
+        $r13 = (java.lang.Double) $r12;
+
+        d0 = virtualinvoke $r13.<java.lang.Double: double doubleValue()>();
+
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 == 0 goto label2;
+
+        $r14 = r0.<com.opengamma.analytics.math.interpolation.BasisFunctionAggregation: double[] _w>;
+
+        $d1 = $r14[i2];
+
+        $d2 = $d1 * d0;
+
+        d3 = d3 + $d2;
+
+        r3[i2] = d0;
+
+     label2:
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label3:
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r8 = staticinvoke <com.opengamma.util.tuple.ObjectsPair: com.opengamma.util.tuple.ObjectsPair of(java.lang.Object,java.lang.Object)>($r7, $r6);
+
+        return $r8;
+    }
+
+    public volatile java.lang.Object evaluate(java.lang.Object)
+    {
+        com.opengamma.analytics.math.interpolation.BasisFunctionAggregation r0;
+        java.lang.Object r1;
+        java.lang.Double $r2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.BasisFunctionAggregation;
+
+        r1 := @parameter0: java.lang.Object;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.BasisFunctionAggregation: java.lang.Double evaluate(java.lang.Object)>(r1);
+
+        return $r2;
+    }
+}

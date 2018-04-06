@@ -1,0 +1,583 @@
+public class com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication extends java.lang.Object
+{
+    private static final com.opengamma.analytics.math.integration.Integrator1D INTEGRATOR;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication r0;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public double[] expectedVariance(double, com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve, com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends, double, com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface)
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication r0;
+        double d0, d1, d2, d3, d4, d5, d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, d20, d21, d22, $d23, d24, $d25, $d26;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve r1;
+        com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends r2;
+        com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface r3;
+        int i0, i2;
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle $r5;
+        java.lang.Double $r6;
+        com.opengamma.analytics.math.function.Function1D $r7, $r8, $r9;
+        byte $b1;
+        double[] $r10;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve;
+
+        r2 := @parameter2: com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends;
+
+        d1 := @parameter3: double;
+
+        r3 := @parameter4: com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface;
+
+        $r5 = new com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle: void <init>(double,com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve,com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends)>(d0, r1, r2);
+
+        d2 = virtualinvoke $r5.<com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle: double getF(double)>(d1);
+
+        $d7 = staticinvoke <java.lang.Math: double log(double)>(d0);
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getInterestRate(java.lang.Object)>($r6);
+
+        $d9 = $d8 * d1;
+
+        d3 = $d7 + $d9;
+
+        $r7 = specialinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: com.opengamma.analytics.math.function.Function1D getLogPayoffIntegrand(double,com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface,com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle)>(d1, r3, $r5);
+
+        $d10 = specialinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: double integrate(com.opengamma.analytics.math.function.Function1D)>($r7);
+
+        $d11 = staticinvoke <java.lang.Math: double log(double)>(d2);
+
+        d4 = $d10 + $d11;
+
+        d20 = 0.0;
+
+        d21 = 0.0;
+
+        i2 = 0;
+
+        i0 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: int getNumberOfDividends()>();
+
+     label1:
+        if i0 <= 0 goto label2;
+
+        if i2 >= i0 goto label2;
+
+        $d12 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getTau(int)>(i2);
+
+        $b1 = $d12 cmpg d1;
+
+        if $b1 > 0 goto label2;
+
+        $d13 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getTau(int)>(i2);
+
+        d22 = virtualinvoke $r5.<com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle: double getF(double)>($d13);
+
+        $r8 = specialinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: com.opengamma.analytics.math.function.Function1D getCorrectedDividendAdjustmentIntegrand(int,com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface,com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle,com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends)>(i2, r3, $r5, r2);
+
+        $d14 = specialinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: double integrate(com.opengamma.analytics.math.function.Function1D)>($r8);
+
+        $d15 = specialinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: double getCorrectedDividendAdjustment(double,int,com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends)>(d22, i2, r2);
+
+        $d16 = $d14 + $d15;
+
+        d20 = d20 + $d16;
+
+        $r9 = specialinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: com.opengamma.analytics.math.function.Function1D getUncorrectedDividendAdjustmentIntegrand(int,com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface,com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle,com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends)>(i2, r3, $r5, r2);
+
+        $d17 = specialinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: double integrate(com.opengamma.analytics.math.function.Function1D)>($r9);
+
+        $d18 = specialinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: double getUncorrectedDividendAdjustment(double,int,com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends)>(d22, i2, r2);
+
+        $d19 = $d17 + $d18;
+
+        d21 = d21 + $d19;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        $d23 = d4 - d3;
+
+        d24 = -2.0 * $d23;
+
+        $d25 = 2.0 * d20;
+
+        d5 = d24 + $d25;
+
+        $d26 = 2.0 * d21;
+
+        d6 = d24 + $d26;
+
+        $r10 = newarray (double)[2];
+
+        $r10[0] = d5;
+
+        $r10[1] = d6;
+
+        return $r10;
+    }
+
+    public double[] expectedVariance(double, com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve, com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends, double, com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceStrike)
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication r0;
+        double d0, d1, d2, d3, d4, d5, d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, d20, d21, d22, $d23, d24, $d25, $d26;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve r1;
+        com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends r2;
+        com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceStrike r3;
+        com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness r5;
+        int i0, i2;
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle $r6;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve $r7;
+        com.opengamma.analytics.math.function.Function1D $r8, $r10, $r11, $r12;
+        java.lang.Double $r9;
+        byte $b1;
+        double[] $r13;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve;
+
+        r2 := @parameter2: com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends;
+
+        d1 := @parameter3: double;
+
+        r3 := @parameter4: com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceStrike;
+
+        $r6 = new com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle;
+
+        specialinvoke $r6.<com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle: void <init>(double,com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve,com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends)>(d0, r1, r2);
+
+        $r7 = new com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve;
+
+        $r8 = virtualinvoke $r6.<com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle: com.opengamma.analytics.math.function.Function1D getF()>();
+
+        specialinvoke $r7.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: void <init>(com.opengamma.analytics.math.function.Function1D)>($r8);
+
+        r5 = staticinvoke <com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceConverter: com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness toMoneynessSurface(com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceStrike,com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve)>(r3, $r7);
+
+        d2 = virtualinvoke $r6.<com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle: double getF(double)>(d1);
+
+        $d7 = staticinvoke <java.lang.Math: double log(double)>(d0);
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getInterestRate(java.lang.Object)>($r9);
+
+        $d9 = $d8 * d1;
+
+        d3 = $d7 + $d9;
+
+        $r10 = specialinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: com.opengamma.analytics.math.function.Function1D getLogPayoffIntegrand(double,com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness)>(d1, r5);
+
+        $d10 = specialinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: double integrate(com.opengamma.analytics.math.function.Function1D)>($r10);
+
+        $d11 = staticinvoke <java.lang.Math: double log(double)>(d2);
+
+        d4 = $d10 + $d11;
+
+        d20 = 0.0;
+
+        d21 = 0.0;
+
+        i2 = 0;
+
+        i0 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: int getNumberOfDividends()>();
+
+     label1:
+        if i0 <= 0 goto label2;
+
+        if i2 >= i0 goto label2;
+
+        $d12 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getTau(int)>(i2);
+
+        $b1 = $d12 cmpg d1;
+
+        if $b1 > 0 goto label2;
+
+        $d13 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getTau(int)>(i2);
+
+        d22 = virtualinvoke $r6.<com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle: double getF(double)>($d13);
+
+        $r11 = specialinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: com.opengamma.analytics.math.function.Function1D getCorrectedDividendAdjustmentIntegrand(int,com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness,com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends)>(i2, r5, r2);
+
+        $d14 = specialinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: double integrate(com.opengamma.analytics.math.function.Function1D)>($r11);
+
+        $d15 = specialinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: double getCorrectedDividendAdjustment(double,int,com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends)>(d22, i2, r2);
+
+        $d16 = $d14 + $d15;
+
+        d20 = d20 + $d16;
+
+        $r12 = specialinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: com.opengamma.analytics.math.function.Function1D getUncorrectedDividendAdjustmentIntegrand(int,com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness,com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends)>(i2, r5, r2);
+
+        $d17 = specialinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: double integrate(com.opengamma.analytics.math.function.Function1D)>($r12);
+
+        $d18 = specialinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: double getUncorrectedDividendAdjustment(double,int,com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends)>(d22, i2, r2);
+
+        $d19 = $d17 + $d18;
+
+        d21 = d21 + $d19;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        $d23 = d4 - d3;
+
+        d24 = -2.0 * $d23;
+
+        $d25 = 2.0 * d20;
+
+        d5 = d24 + $d25;
+
+        $d26 = 2.0 * d21;
+
+        d6 = d24 + $d26;
+
+        $r13 = newarray (double)[2];
+
+        $r13[0] = d5;
+
+        $r13[1] = d6;
+
+        return $r13;
+    }
+
+    private double integrate(com.opengamma.analytics.math.function.Function1D)
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication r0;
+        com.opengamma.analytics.math.function.Function1D r1;
+        double d0, d1, $d2;
+        com.opengamma.analytics.math.integration.Integrator1D $r2, $r7;
+        java.lang.Double $r3, $r4, $r6, $r8, $r9, $r11;
+        java.lang.Object $r5, $r10;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication;
+
+        r1 := @parameter0: com.opengamma.analytics.math.function.Function1D;
+
+        $r2 = <com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: com.opengamma.analytics.math.integration.Integrator1D INTEGRATOR>;
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(1.0);
+
+        $r5 = virtualinvoke $r2.<com.opengamma.analytics.math.integration.Integrator1D: java.lang.Object integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Object,java.lang.Object)>(r1, $r3, $r4);
+
+        $r6 = (java.lang.Double) $r5;
+
+        d0 = virtualinvoke $r6.<java.lang.Double: double doubleValue()>();
+
+        $r7 = <com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: com.opengamma.analytics.math.integration.Integrator1D INTEGRATOR>;
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(1.0);
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(50.0);
+
+        $r10 = virtualinvoke $r7.<com.opengamma.analytics.math.integration.Integrator1D: java.lang.Object integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Object,java.lang.Object)>(r1, $r8, $r9);
+
+        $r11 = (java.lang.Double) $r10;
+
+        d1 = virtualinvoke $r11.<java.lang.Double: double doubleValue()>();
+
+        $d2 = d0 + d1;
+
+        return $d2;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getLogPayoffIntegrand(double, com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface, com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle)
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication r0;
+        double d0, d1, d2;
+        com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface r1;
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle r2;
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$1 $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface;
+
+        r2 := @parameter2: com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle;
+
+        d1 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle: double getF(double)>(d0);
+
+        d2 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle: double getD(double)>(d0);
+
+        $r4 = new com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$1;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$1: void <init>(com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication,com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface,double,double,double)>(r0, r1, d0, d1, d2);
+
+        return $r4;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getLogPayoffIntegrand(double, com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness)
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication r0;
+        double d0;
+        com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness r1;
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$2 $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness;
+
+        $r3 = new com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$2;
+
+        specialinvoke $r3.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$2: void <init>(com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication,com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness,double)>(r0, r1, d0);
+
+        return $r3;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getCorrectedDividendAdjustmentIntegrand(int, com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface, com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle, com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends)
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication r0;
+        int i0;
+        com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface r1;
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle r2;
+        com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends r3;
+        double d0, d1, d2, d3, d4, $d5;
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$3 $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication;
+
+        i0 := @parameter0: int;
+
+        r1 := @parameter1: com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface;
+
+        r2 := @parameter2: com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle;
+
+        r3 := @parameter3: com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends;
+
+        d0 = virtualinvoke r3.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getTau(int)>(i0);
+
+        d1 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle: double getF(double)>(d0);
+
+        d2 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle: double getD(double)>(d0);
+
+        d3 = virtualinvoke r3.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getAlpha(int)>(i0);
+
+        $d5 = d1 - d2;
+
+        d4 = staticinvoke <com.opengamma.analytics.math.FunctionUtils: double square(double)>($d5);
+
+        $r5 = new com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$3;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$3: void <init>(com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication,com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface,double,double,double,double,double)>(r0, r1, d0, d1, d2, d4, d3);
+
+        return $r5;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getCorrectedDividendAdjustmentIntegrand(int, com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness, com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends)
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication r0;
+        int i0;
+        com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness r1;
+        com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends r2;
+        double d0, d1, d2;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve $r4;
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$4 $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication;
+
+        i0 := @parameter0: int;
+
+        r1 := @parameter1: com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness;
+
+        r2 := @parameter2: com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends;
+
+        d0 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getTau(int)>(i0);
+
+        d1 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getAlpha(int)>(i0);
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        d2 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: double getForward(double)>(d0);
+
+        $r5 = new com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$4;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$4: void <init>(com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication,com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness,double,double,double)>(r0, r1, d0, d1, d2);
+
+        return $r5;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getUncorrectedDividendAdjustmentIntegrand(int, com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface, com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle, com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends)
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication r0;
+        int i0;
+        com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface r1;
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle r2;
+        com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends r3;
+        double d0, d1, d2, d3, d4, d5, $d6;
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$5 $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication;
+
+        i0 := @parameter0: int;
+
+        r1 := @parameter1: com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface;
+
+        r2 := @parameter2: com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle;
+
+        r3 := @parameter3: com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends;
+
+        d0 = virtualinvoke r3.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getTau(int)>(i0);
+
+        d1 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle: double getF(double)>(d0);
+
+        d2 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.EquityDividendsCurvesBundle: double getD(double)>(d0);
+
+        d3 = virtualinvoke r3.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getAlpha(int)>(i0);
+
+        d4 = virtualinvoke r3.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getBeta(int)>(i0);
+
+        $d6 = d1 - d2;
+
+        d5 = staticinvoke <com.opengamma.analytics.math.FunctionUtils: double square(double)>($d6);
+
+        $r5 = new com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$5;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$5: void <init>(com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication,com.opengamma.analytics.financial.model.volatility.surface.PureImpliedVolatilitySurface,double,double,double,double,double,double)>(r0, r1, d0, d1, d2, d3, d4, d5);
+
+        return $r5;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getUncorrectedDividendAdjustmentIntegrand(int, com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness, com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends)
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication r0;
+        int i0;
+        com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness r1;
+        com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends r2;
+        double d0, d1, d2, d3;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve $r4;
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$6 $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication;
+
+        i0 := @parameter0: int;
+
+        r1 := @parameter1: com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness;
+
+        r2 := @parameter2: com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends;
+
+        d0 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getTau(int)>(i0);
+
+        d1 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getAlpha(int)>(i0);
+
+        d2 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getBeta(int)>(i0);
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        d3 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: double getForward(double)>(d0);
+
+        $r5 = new com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$6;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication$6: void <init>(com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication,com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneyness,double,double,double,double)>(r0, r1, d0, d3, d1, d2);
+
+        return $r5;
+    }
+
+    private double getCorrectedDividendAdjustment(double, int, com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends)
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication r0;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7;
+        int i0;
+        com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends r1;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication;
+
+        d0 := @parameter0: double;
+
+        i0 := @parameter1: int;
+
+        r1 := @parameter2: com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends;
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getAlpha(int)>(i0);
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getBeta(int)>(i0);
+
+        $d3 = 1.0 - d2;
+
+        $d5 = d0 * $d3;
+
+        $d4 = d0 + d1;
+
+        $d6 = $d5 / $d4;
+
+        $d7 = staticinvoke <java.lang.Math: double log(double)>($d6);
+
+        return $d7;
+    }
+
+    private double getUncorrectedDividendAdjustment(double, int, com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends)
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication r0;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10;
+        int i0;
+        com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends r1;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication;
+
+        d0 := @parameter0: double;
+
+        i0 := @parameter1: int;
+
+        r1 := @parameter2: com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends;
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getAlpha(int)>(i0);
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double getBeta(int)>(i0);
+
+        $d4 = 1.0 - d2;
+
+        $d6 = d0 * $d4;
+
+        $d5 = d0 + d1;
+
+        $d7 = $d6 / $d5;
+
+        d3 = staticinvoke <java.lang.Math: double log(double)>($d7);
+
+        $d8 = 0.5 * d3;
+
+        $d9 = $d8 * d3;
+
+        $d10 = d3 + $d9;
+
+        return $d10;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D $r0;
+
+        $r0 = new com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        specialinvoke $r0.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: void <init>()>();
+
+        <com.opengamma.analytics.financial.equity.variance.pricing.EquityVarianceSwapStaticReplication: com.opengamma.analytics.math.integration.Integrator1D INTEGRATOR> = $r0;
+
+        return;
+    }
+}

@@ -1,0 +1,1386 @@
+public final class com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod extends java.lang.Object
+{
+    private static final com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod INSTANCE;
+    private static final com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator PVDC;
+    private static final com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator PVCSDC;
+
+    public static com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod getInstance()
+    {
+        com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod $r0;
+
+        $r0 = <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod INSTANCE>;
+
+        return $r0;
+    }
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod r0;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap, com.opengamma.analytics.financial.equity.EquityTrsDataBundle)
+    {
+        com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod r0;
+        com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap r1;
+        com.opengamma.analytics.financial.equity.EquityTrsDataBundle r2;
+        com.opengamma.util.money.MultipleCurrencyAmount r3, r4, $r43, $r44, r51, r57, $r62, $r63, r70, r76, $r86, $r87, $r88, r89, r90;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18;
+        byte $b0;
+        com.opengamma.analytics.financial.equity.Equity $r7, $r9;
+        com.opengamma.util.money.Currency $r8, $r28, $r30, $r41, $r45, $r47, $r60, $r64, $r66, $r84;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity $r10, $r11, $r13, $r15, $r17, $r19, $r21, $r23, $r25, $r31, $r34, $r48, $r52, $r67, $r71, $r77;
+        int $i1;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r12, $r14, $r16, $r18, $r20, $r22, $r24, $r26, $r32, $r35, $r49, $r53, $r68, $r72, $r78;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8;
+        org.apache.commons.lang.NotImplementedException $r27;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r29, $r37, $r39, $r46, $r55, $r58, $r65, $r74, $r80, $r82;
+        java.lang.Double $r33, $r50, $r69;
+        com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator $r36, $r54, $r73, $r79;
+        java.lang.Object $r38, $r56, $r75, $r81;
+        com.opengamma.analytics.financial.forex.method.FXMatrix $r40, $r59, $r83;
+        com.opengamma.util.money.CurrencyAmount $r42, $r61, $r85;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.equity.EquityTrsDataBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "equity TRS");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "multi-curve provider with equity price");
+
+        $d0 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: double getDividendPercentage()>();
+
+        $b0 = $d0 cmpl 1.0;
+
+        if $b0 != 0 goto label1;
+
+        $z8 = 1;
+
+        goto label2;
+
+     label1:
+        $z8 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z8, "equity TRS dividend ration should be 1.0");
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.equity.Equity getEquity()>();
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.financial.equity.Equity: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d1 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: double getSpotEquity()>();
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.equity.Equity getEquity()>();
+
+        $d2 = virtualinvoke $r9.<com.opengamma.analytics.financial.equity.Equity: double getNumberOfShares()>();
+
+        $d3 = $d1 * $d2;
+
+        r3 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r8, $d3);
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $i1 = virtualinvoke $r10.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: int getNumberOfPayments()>();
+
+        if $i1 == 1 goto label3;
+
+        $r11 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z0 = $r12 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor;
+
+        if $z0 != 0 goto label3;
+
+        $r13 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r14 = virtualinvoke $r13.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z1 = $r14 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread;
+
+        if $z1 != 0 goto label3;
+
+        $r15 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r16 = virtualinvoke $r15.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z2 = $r16 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON;
+
+        if $z2 != 0 goto label3;
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r18 = virtualinvoke $r17.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z3 = $r18 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONSpread;
+
+        if $z3 == 0 goto label4;
+
+     label3:
+        $r45 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: double getNotionalAmount()>();
+
+        $d10 = neg $d9;
+
+        $r46 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r47 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r48 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r49 = virtualinvoke $r48.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $d11 = virtualinvoke $r49.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: double getPaymentTime()>();
+
+        $r50 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d11);
+
+        $d12 = interfaceinvoke $r46.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r47, $r50);
+
+        $d13 = $d10 * $d12;
+
+        r51 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r45, $d13);
+
+        $r52 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r53 = virtualinvoke $r52.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $r54 = <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator PVDC>;
+
+        $r55 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r56 = virtualinvoke $r53.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r54, $r55);
+
+        r57 = (com.opengamma.util.money.MultipleCurrencyAmount) $r56;
+
+        $r58 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r59 = interfaceinvoke $r58.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r60 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r61 = virtualinvoke $r59.<com.opengamma.analytics.financial.forex.method.FXMatrix: com.opengamma.util.money.CurrencyAmount convert(com.opengamma.util.money.MultipleCurrencyAmount,com.opengamma.util.money.Currency)>(r3, $r60);
+
+        $r62 = virtualinvoke r51.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.CurrencyAmount)>($r61);
+
+        $r63 = virtualinvoke $r62.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.MultipleCurrencyAmount)>(r57);
+
+        return $r63;
+
+     label4:
+        $r19 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r20 = virtualinvoke $r19.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $z4 = $r20 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        if $z4 != 0 goto label5;
+
+        $r21 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r22 = virtualinvoke $r21.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $z5 = $r22 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON;
+
+        if $z5 != 0 goto label5;
+
+        $r23 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r24 = virtualinvoke $r23.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $z6 = $r24 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONSpread;
+
+        if $z6 == 0 goto label6;
+
+     label5:
+        $r64 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: double getNotionalAmount()>();
+
+        $d15 = neg $d14;
+
+        $r65 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r66 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r67 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r68 = virtualinvoke $r67.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $d16 = virtualinvoke $r68.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: double getPaymentTime()>();
+
+        $r69 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d16);
+
+        $d17 = interfaceinvoke $r65.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r66, $r69);
+
+        $d18 = $d15 * $d17;
+
+        r70 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r64, $d18);
+
+        $r71 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r72 = virtualinvoke $r71.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $r73 = <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator PVDC>;
+
+        $r74 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r75 = virtualinvoke $r72.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r73, $r74);
+
+        r76 = (com.opengamma.util.money.MultipleCurrencyAmount) $r75;
+
+        $r77 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r78 = virtualinvoke $r77.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $r79 = <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator PVDC>;
+
+        $r80 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r81 = virtualinvoke $r78.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r79, $r80);
+
+        r4 = (com.opengamma.util.money.MultipleCurrencyAmount) $r81;
+
+        $r82 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r83 = interfaceinvoke $r82.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r84 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r85 = virtualinvoke $r83.<com.opengamma.analytics.financial.forex.method.FXMatrix: com.opengamma.util.money.CurrencyAmount convert(com.opengamma.util.money.MultipleCurrencyAmount,com.opengamma.util.money.Currency)>(r3, $r84);
+
+        $r86 = virtualinvoke r70.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.CurrencyAmount)>($r85);
+
+        $r87 = virtualinvoke $r86.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.MultipleCurrencyAmount)>(r76);
+
+        $r88 = virtualinvoke $r87.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.MultipleCurrencyAmount)>(r4);
+
+        return $r88;
+
+     label6:
+        $r25 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r26 = virtualinvoke $r25.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z7 = $r26 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        if $z7 == 0 goto label7;
+
+        $r28 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $d4 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: double getNotionalAmount()>();
+
+        $d5 = neg $d4;
+
+        $r29 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r30 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r31 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r32 = virtualinvoke $r31.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $d6 = virtualinvoke $r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: double getPaymentTime()>();
+
+        $r33 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d6);
+
+        $d7 = interfaceinvoke $r29.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r30, $r33);
+
+        $d8 = $d5 * $d7;
+
+        r89 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r28, $d8);
+
+        $r34 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r35 = virtualinvoke $r34.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $r36 = <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator PVDC>;
+
+        $r37 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r38 = virtualinvoke $r35.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r36, $r37);
+
+        r90 = (com.opengamma.util.money.MultipleCurrencyAmount) $r38;
+
+        $r39 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r40 = interfaceinvoke $r39.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r41 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r42 = virtualinvoke $r40.<com.opengamma.analytics.financial.forex.method.FXMatrix: com.opengamma.util.money.CurrencyAmount convert(com.opengamma.util.money.MultipleCurrencyAmount,com.opengamma.util.money.Currency)>(r3, $r41);
+
+        $r43 = virtualinvoke r89.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.CurrencyAmount)>($r42);
+
+        $r44 = virtualinvoke $r43.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.MultipleCurrencyAmount)>(r90);
+
+        return $r44;
+
+     label7:
+        $r27 = new org.apache.commons.lang.NotImplementedException;
+
+        specialinvoke $r27.<org.apache.commons.lang.NotImplementedException: void <init>(java.lang.String)>("Pricing of equity TRS not implemented for those types of coupons");
+
+        throw $r27;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount presentValueAssetLeg(com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap, com.opengamma.analytics.financial.equity.EquityTrsDataBundle)
+    {
+        com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod r0;
+        com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap r1;
+        com.opengamma.analytics.financial.equity.EquityTrsDataBundle r2;
+        com.opengamma.util.money.MultipleCurrencyAmount r3, $r37, r44, $r49, r56, $r61, r62;
+        com.opengamma.analytics.financial.equity.Equity $r6, $r8;
+        com.opengamma.util.money.Currency $r7, $r27, $r29, $r35, $r38, $r40, $r47, $r50, $r52, $r59;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity $r9, $r10, $r12, $r14, $r16, $r18, $r20, $r22, $r24, $r30, $r41, $r53;
+        int $i0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r11, $r13, $r15, $r17, $r19, $r21, $r23, $r25, $r31, $r42, $r54;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        org.apache.commons.lang.NotImplementedException $r26;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r28, $r33, $r39, $r45, $r51, $r57;
+        java.lang.Double $r32, $r43, $r55;
+        com.opengamma.analytics.financial.forex.method.FXMatrix $r34, $r46, $r58;
+        com.opengamma.util.money.CurrencyAmount $r36, $r48, $r60;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.equity.EquityTrsDataBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "equity TRS");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "multi-curve provider with equity price");
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.equity.Equity getEquity()>();
+
+        $r7 = virtualinvoke $r6.<com.opengamma.analytics.financial.equity.Equity: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d0 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: double getSpotEquity()>();
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.equity.Equity getEquity()>();
+
+        $d1 = virtualinvoke $r8.<com.opengamma.analytics.financial.equity.Equity: double getNumberOfShares()>();
+
+        $d2 = $d0 * $d1;
+
+        r3 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r7, $d2);
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $i0 = virtualinvoke $r9.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: int getNumberOfPayments()>();
+
+        if $i0 == 1 goto label1;
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z0 = $r11 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor;
+
+        if $z0 != 0 goto label1;
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r13 = virtualinvoke $r12.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z1 = $r13 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread;
+
+        if $z1 != 0 goto label1;
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r15 = virtualinvoke $r14.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z2 = $r15 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON;
+
+        if $z2 != 0 goto label1;
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r17 = virtualinvoke $r16.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z3 = $r17 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONSpread;
+
+        if $z3 == 0 goto label2;
+
+     label1:
+        $r38 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: double getNotionalAmount()>();
+
+        $d9 = neg $d8;
+
+        $r39 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r40 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r41 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r42 = virtualinvoke $r41.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $d10 = virtualinvoke $r42.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: double getPaymentTime()>();
+
+        $r43 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        $d11 = interfaceinvoke $r39.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r40, $r43);
+
+        $d12 = $d9 * $d11;
+
+        r44 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r38, $d12);
+
+        $r45 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r46 = interfaceinvoke $r45.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r47 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r48 = virtualinvoke $r46.<com.opengamma.analytics.financial.forex.method.FXMatrix: com.opengamma.util.money.CurrencyAmount convert(com.opengamma.util.money.MultipleCurrencyAmount,com.opengamma.util.money.Currency)>(r3, $r47);
+
+        $r49 = virtualinvoke r44.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.CurrencyAmount)>($r48);
+
+        return $r49;
+
+     label2:
+        $r18 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r19 = virtualinvoke $r18.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $z4 = $r19 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        if $z4 != 0 goto label3;
+
+        $r20 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r21 = virtualinvoke $r20.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $z5 = $r21 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON;
+
+        if $z5 != 0 goto label3;
+
+        $r22 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r23 = virtualinvoke $r22.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $z6 = $r23 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONSpread;
+
+        if $z6 == 0 goto label4;
+
+     label3:
+        $r50 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $d13 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: double getNotionalAmount()>();
+
+        $d14 = neg $d13;
+
+        $r51 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r52 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r53 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r54 = virtualinvoke $r53.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $d15 = virtualinvoke $r54.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: double getPaymentTime()>();
+
+        $r55 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d15);
+
+        $d16 = interfaceinvoke $r51.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r52, $r55);
+
+        $d17 = $d14 * $d16;
+
+        r56 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r50, $d17);
+
+        $r57 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r58 = interfaceinvoke $r57.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r59 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r60 = virtualinvoke $r58.<com.opengamma.analytics.financial.forex.method.FXMatrix: com.opengamma.util.money.CurrencyAmount convert(com.opengamma.util.money.MultipleCurrencyAmount,com.opengamma.util.money.Currency)>(r3, $r59);
+
+        $r61 = virtualinvoke r56.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.CurrencyAmount)>($r60);
+
+        return $r61;
+
+     label4:
+        $r24 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r25 = virtualinvoke $r24.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z7 = $r25 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        if $z7 == 0 goto label5;
+
+        $r27 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $d3 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: double getNotionalAmount()>();
+
+        $d4 = neg $d3;
+
+        $r28 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r29 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r30 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r31 = virtualinvoke $r30.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $d5 = virtualinvoke $r31.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: double getPaymentTime()>();
+
+        $r32 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d5);
+
+        $d6 = interfaceinvoke $r28.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r29, $r32);
+
+        $d7 = $d4 * $d6;
+
+        r62 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r27, $d7);
+
+        $r33 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r34 = interfaceinvoke $r33.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r35 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r36 = virtualinvoke $r34.<com.opengamma.analytics.financial.forex.method.FXMatrix: com.opengamma.util.money.CurrencyAmount convert(com.opengamma.util.money.MultipleCurrencyAmount,com.opengamma.util.money.Currency)>(r3, $r35);
+
+        $r37 = virtualinvoke r62.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.CurrencyAmount)>($r36);
+
+        return $r37;
+
+     label5:
+        $r26 = new org.apache.commons.lang.NotImplementedException;
+
+        specialinvoke $r26.<org.apache.commons.lang.NotImplementedException: void <init>(java.lang.String)>("Pricing of equity TRS not implemented for those types of coupons");
+
+        throw $r26;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount presentValueFundingLeg(com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap, com.opengamma.analytics.financial.equity.EquityTrsDataBundle)
+    {
+        com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod r0;
+        com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap r1;
+        com.opengamma.analytics.financial.equity.EquityTrsDataBundle r2;
+        com.opengamma.util.money.MultipleCurrencyAmount r3, r4, $r30, $r36, $r47;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity $r7, $r8, $r10, $r12, $r14, $r16, $r18, $r20, $r22, $r25, $r31, $r37, $r42;
+        int $i0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r9, $r11, $r13, $r15, $r17, $r19, $r21, $r23, $r26, $r32, $r38, $r43;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        org.apache.commons.lang.NotImplementedException $r24;
+        com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator $r27, $r33, $r39, $r44;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r28, $r34, $r40, $r45;
+        java.lang.Object $r29, $r35, $r41, $r46;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.equity.EquityTrsDataBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "equity TRS");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "multi-curve provider with equity price");
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $i0 = virtualinvoke $r7.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: int getNumberOfPayments()>();
+
+        if $i0 == 1 goto label1;
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r9 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z0 = $r9 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor;
+
+        if $z0 != 0 goto label1;
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z1 = $r11 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread;
+
+        if $z1 != 0 goto label1;
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r13 = virtualinvoke $r12.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z2 = $r13 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON;
+
+        if $z2 != 0 goto label1;
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r15 = virtualinvoke $r14.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z3 = $r15 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONSpread;
+
+        if $z3 == 0 goto label2;
+
+     label1:
+        $r31 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r32 = virtualinvoke $r31.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $r33 = <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator PVDC>;
+
+        $r34 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r35 = virtualinvoke $r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r33, $r34);
+
+        $r36 = (com.opengamma.util.money.MultipleCurrencyAmount) $r35;
+
+        return $r36;
+
+     label2:
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r17 = virtualinvoke $r16.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $z4 = $r17 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        if $z4 != 0 goto label3;
+
+        $r18 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r19 = virtualinvoke $r18.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $z5 = $r19 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON;
+
+        if $z5 != 0 goto label3;
+
+        $r20 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r21 = virtualinvoke $r20.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $z6 = $r21 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONSpread;
+
+        if $z6 == 0 goto label4;
+
+     label3:
+        $r37 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r38 = virtualinvoke $r37.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $r39 = <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator PVDC>;
+
+        $r40 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r41 = virtualinvoke $r38.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r39, $r40);
+
+        r3 = (com.opengamma.util.money.MultipleCurrencyAmount) $r41;
+
+        $r42 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r43 = virtualinvoke $r42.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $r44 = <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator PVDC>;
+
+        $r45 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r46 = virtualinvoke $r43.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r44, $r45);
+
+        r4 = (com.opengamma.util.money.MultipleCurrencyAmount) $r46;
+
+        $r47 = virtualinvoke r3.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.MultipleCurrencyAmount)>(r4);
+
+        return $r47;
+
+     label4:
+        $r22 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r23 = virtualinvoke $r22.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z7 = $r23 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        if $z7 == 0 goto label5;
+
+        $r25 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r26 = virtualinvoke $r25.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $r27 = <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator PVDC>;
+
+        $r28 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r29 = virtualinvoke $r26.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r27, $r28);
+
+        $r30 = (com.opengamma.util.money.MultipleCurrencyAmount) $r29;
+
+        return $r30;
+
+     label5:
+        $r24 = new org.apache.commons.lang.NotImplementedException;
+
+        specialinvoke $r24.<org.apache.commons.lang.NotImplementedException: void <init>(java.lang.String)>("Pricing of equity TRS not implemented for those types of coupons");
+
+        throw $r24;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount currencyExposure(com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap, com.opengamma.analytics.financial.equity.EquityTrsDataBundle)
+    {
+        com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod r0;
+        com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap r1;
+        com.opengamma.analytics.financial.equity.EquityTrsDataBundle r2;
+        com.opengamma.util.money.MultipleCurrencyAmount r3, r4, $r39, $r40, r47, r53, $r54, $r55, r62, r68, $r74, $r75, $r76, r77, r78;
+        com.opengamma.analytics.financial.equity.Equity $r7, $r9;
+        com.opengamma.util.money.Currency $r8, $r28, $r30, $r41, $r43, $r56, $r58;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity $r10, $r11, $r13, $r15, $r17, $r19, $r21, $r23, $r25, $r31, $r34, $r44, $r48, $r59, $r63, $r69;
+        int $i0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r12, $r14, $r16, $r18, $r20, $r22, $r24, $r26, $r32, $r35, $r45, $r49, $r60, $r64, $r70;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        org.apache.commons.lang.NotImplementedException $r27;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r29, $r37, $r42, $r51, $r57, $r66, $r72;
+        java.lang.Double $r33, $r46, $r61;
+        com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator $r36, $r50, $r65, $r71;
+        java.lang.Object $r38, $r52, $r67, $r73;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.equity.EquityTrsDataBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "equity TRS");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "multi-curve provider with equity price");
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.equity.Equity getEquity()>();
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.financial.equity.Equity: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d0 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: double getSpotEquity()>();
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.equity.Equity getEquity()>();
+
+        $d1 = virtualinvoke $r9.<com.opengamma.analytics.financial.equity.Equity: double getNumberOfShares()>();
+
+        $d2 = $d0 * $d1;
+
+        r3 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r8, $d2);
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $i0 = virtualinvoke $r10.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: int getNumberOfPayments()>();
+
+        if $i0 == 1 goto label1;
+
+        $r11 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z0 = $r12 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor;
+
+        if $z0 != 0 goto label1;
+
+        $r13 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r14 = virtualinvoke $r13.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z1 = $r14 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread;
+
+        if $z1 != 0 goto label1;
+
+        $r15 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r16 = virtualinvoke $r15.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z2 = $r16 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON;
+
+        if $z2 != 0 goto label1;
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r18 = virtualinvoke $r17.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z3 = $r18 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONSpread;
+
+        if $z3 == 0 goto label2;
+
+     label1:
+        $r41 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: double getNotionalAmount()>();
+
+        $d9 = neg $d8;
+
+        $r42 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r43 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r44 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r45 = virtualinvoke $r44.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $d10 = virtualinvoke $r45.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: double getPaymentTime()>();
+
+        $r46 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        $d11 = interfaceinvoke $r42.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r43, $r46);
+
+        $d12 = $d9 * $d11;
+
+        r47 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r41, $d12);
+
+        $r48 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r49 = virtualinvoke $r48.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $r50 = <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator PVDC>;
+
+        $r51 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r52 = virtualinvoke $r49.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r50, $r51);
+
+        r53 = (com.opengamma.util.money.MultipleCurrencyAmount) $r52;
+
+        $r54 = virtualinvoke r47.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.MultipleCurrencyAmount)>(r3);
+
+        $r55 = virtualinvoke $r54.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.MultipleCurrencyAmount)>(r53);
+
+        return $r55;
+
+     label2:
+        $r19 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r20 = virtualinvoke $r19.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $z4 = $r20 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        if $z4 != 0 goto label3;
+
+        $r21 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r22 = virtualinvoke $r21.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $z5 = $r22 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON;
+
+        if $z5 != 0 goto label3;
+
+        $r23 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r24 = virtualinvoke $r23.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $z6 = $r24 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONSpread;
+
+        if $z6 == 0 goto label4;
+
+     label3:
+        $r56 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $d13 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: double getNotionalAmount()>();
+
+        $d14 = neg $d13;
+
+        $r57 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r58 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r59 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r60 = virtualinvoke $r59.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $d15 = virtualinvoke $r60.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: double getPaymentTime()>();
+
+        $r61 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d15);
+
+        $d16 = interfaceinvoke $r57.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r58, $r61);
+
+        $d17 = $d14 * $d16;
+
+        r62 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r56, $d17);
+
+        $r63 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r64 = virtualinvoke $r63.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $r65 = <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator PVDC>;
+
+        $r66 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r67 = virtualinvoke $r64.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r65, $r66);
+
+        r68 = (com.opengamma.util.money.MultipleCurrencyAmount) $r67;
+
+        $r69 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r70 = virtualinvoke $r69.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $r71 = <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator PVDC>;
+
+        $r72 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r73 = virtualinvoke $r70.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r71, $r72);
+
+        r4 = (com.opengamma.util.money.MultipleCurrencyAmount) $r73;
+
+        $r74 = virtualinvoke r62.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.MultipleCurrencyAmount)>(r3);
+
+        $r75 = virtualinvoke $r74.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.MultipleCurrencyAmount)>(r68);
+
+        $r76 = virtualinvoke $r75.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.MultipleCurrencyAmount)>(r4);
+
+        return $r76;
+
+     label4:
+        $r25 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r26 = virtualinvoke $r25.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z7 = $r26 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        if $z7 == 0 goto label5;
+
+        $r28 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $d3 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: double getNotionalAmount()>();
+
+        $d4 = neg $d3;
+
+        $r29 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r30 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r31 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r32 = virtualinvoke $r31.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $d5 = virtualinvoke $r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: double getPaymentTime()>();
+
+        $r33 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d5);
+
+        $d6 = interfaceinvoke $r29.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r30, $r33);
+
+        $d7 = $d4 * $d6;
+
+        r77 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r28, $d7);
+
+        $r34 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r35 = virtualinvoke $r34.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $r36 = <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator PVDC>;
+
+        $r37 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r38 = virtualinvoke $r35.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r36, $r37);
+
+        r78 = (com.opengamma.util.money.MultipleCurrencyAmount) $r38;
+
+        $r39 = virtualinvoke r77.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.MultipleCurrencyAmount)>(r3);
+
+        $r40 = virtualinvoke $r39.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.MultipleCurrencyAmount)>(r78);
+
+        return $r40;
+
+     label5:
+        $r27 = new org.apache.commons.lang.NotImplementedException;
+
+        specialinvoke $r27.<org.apache.commons.lang.NotImplementedException: void <init>(java.lang.String)>("Pricing of equity TRS not implemented for those types of coupons");
+
+        throw $r27;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount assetExposure(com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap, com.opengamma.analytics.financial.equity.EquityTrsDataBundle)
+    {
+        com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod r0;
+        com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap r1;
+        com.opengamma.analytics.financial.equity.EquityTrsDataBundle r2;
+        com.opengamma.util.money.MultipleCurrencyAmount r3;
+        double $d0, $d1, $d2, $d3;
+        byte $b0;
+        com.opengamma.analytics.financial.equity.Equity $r6, $r8;
+        com.opengamma.util.money.Currency $r7;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.equity.EquityTrsDataBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "equity TRS");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "multi-curve provider with equity price");
+
+        $d0 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: double getDividendPercentage()>();
+
+        $b0 = $d0 cmpl 1.0;
+
+        if $b0 != 0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "equity TRS dividend ration should be 1.0");
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.equity.Equity getEquity()>();
+
+        $r7 = virtualinvoke $r6.<com.opengamma.analytics.financial.equity.Equity: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d1 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: double getSpotEquity()>();
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.equity.Equity getEquity()>();
+
+        $d2 = virtualinvoke $r8.<com.opengamma.analytics.financial.equity.Equity: double getNumberOfShares()>();
+
+        $d3 = $d1 * $d2;
+
+        r3 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r7, $d3);
+
+        return r3;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity presentValueCurveSensitivity(com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap, com.opengamma.analytics.financial.equity.EquityTrsDataBundle)
+    {
+        com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod r0;
+        com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap r1;
+        com.opengamma.analytics.financial.equity.EquityTrsDataBundle r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r3, $r31, $r42, $r49, $r63, $r71, $r85, $r91;
+        com.opengamma.util.money.Currency r4, $r32, $r50, $r72;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity r5, $r37, $r44, $r56, r59, r65, $r66, $r78, r81, r87, $r93, $r94, r99, r100;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity $r8, $r10, $r12, $r14, $r16, $r18, $r21, $r23, $r25, $r28, $r39, $r45, $r60, $r67, $r82, $r88;
+        int $i0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r11, $r13, $r15, $r17, $r19, $r22, $r24, $r26, $r29, $r40, $r46, $r61, $r68, $r83, $r89;
+        boolean $z1, $z2, $z3, $z4, $z5, $z7, $z8, $z9;
+        org.apache.commons.lang.NotImplementedException $r27;
+        java.util.HashMap $r30, $r47, $r69;
+        double $d0, $d1, $d2, $d3, d4, $d5, $d6, $d7, $d8, d9, $d10, $d11, $d12, $d13, d14;
+        java.lang.Double $r33, $r51, $r73;
+        java.util.ArrayList $r34, $r53, $r75;
+        java.lang.String $r35, $r55, $r77;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity $r38, $r58, $r80;
+        com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator $r41, $r62, $r84, $r90;
+        java.lang.Object $r43, $r64, $r86, $r92;
+        com.opengamma.util.tuple.DoublesPair r52, r74, r96;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.equity.EquityTrsDataBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "equity TRS");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "multi-curve provider with equity price");
+
+        r3 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        r4 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $i0 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: int getNumberOfPayments()>();
+
+        if $i0 == 1 goto label1;
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z1 = $r11 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor;
+
+        if $z1 != 0 goto label1;
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r13 = virtualinvoke $r12.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z2 = $r13 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread;
+
+        if $z2 != 0 goto label1;
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r15 = virtualinvoke $r14.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z3 = $r15 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON;
+
+        if $z3 != 0 goto label1;
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r17 = virtualinvoke $r16.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z4 = $r17 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONSpread;
+
+        if $z4 == 0 goto label2;
+
+     label1:
+        $r45 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r46 = virtualinvoke $r45.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        d4 = virtualinvoke $r46.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: double getPaymentTime()>();
+
+        $r47 = new java.util.HashMap;
+
+        specialinvoke $r47.<java.util.HashMap: void <init>()>();
+
+        $d5 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: double getNotionalAmount()>();
+
+        $d6 = d4 * $d5;
+
+        $r49 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r50 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r51 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d4);
+
+        $d7 = interfaceinvoke $r49.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r50, $r51);
+
+        $d8 = $d6 * $d7;
+
+        r52 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>(d4, $d8);
+
+        $r53 = new java.util.ArrayList;
+
+        specialinvoke $r53.<java.util.ArrayList: void <init>()>();
+
+        interfaceinvoke $r53.<java.util.List: boolean add(java.lang.Object)>(r52);
+
+        $r55 = interfaceinvoke r3.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: java.lang.String getName(com.opengamma.util.money.Currency)>(r4);
+
+        interfaceinvoke $r47.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r55, $r53);
+
+        $r56 = new com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity;
+
+        specialinvoke $r56.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: void <init>()>();
+
+        $r58 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity ofYieldDiscounting(java.util.Map)>($r47);
+
+        r59 = virtualinvoke $r56.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity plus(com.opengamma.util.money.Currency,com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>(r4, $r58);
+
+        $r60 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r61 = virtualinvoke $r60.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $r62 = <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator PVCSDC>;
+
+        $r63 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r64 = virtualinvoke $r61.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r62, $r63);
+
+        r65 = (com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity) $r64;
+
+        $r66 = virtualinvoke r59.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity plus(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity)>(r65);
+
+        return $r66;
+
+     label2:
+        $r18 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r19 = virtualinvoke $r18.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $z5 = $r19 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        if $z5 != 0 goto label3;
+
+        $r21 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r22 = virtualinvoke $r21.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $z7 = $r22 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON;
+
+        if $z7 != 0 goto label3;
+
+        $r23 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r24 = virtualinvoke $r23.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $z8 = $r24 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONSpread;
+
+        if $z8 == 0 goto label4;
+
+     label3:
+        $r67 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r68 = virtualinvoke $r67.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        d9 = virtualinvoke $r68.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: double getPaymentTime()>();
+
+        $r69 = new java.util.HashMap;
+
+        specialinvoke $r69.<java.util.HashMap: void <init>()>();
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: double getNotionalAmount()>();
+
+        $d11 = d9 * $d10;
+
+        $r71 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r72 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r73 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d9);
+
+        $d12 = interfaceinvoke $r71.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r72, $r73);
+
+        $d13 = $d11 * $d12;
+
+        r74 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>(d9, $d13);
+
+        $r75 = new java.util.ArrayList;
+
+        specialinvoke $r75.<java.util.ArrayList: void <init>()>();
+
+        interfaceinvoke $r75.<java.util.List: boolean add(java.lang.Object)>(r74);
+
+        $r77 = interfaceinvoke r3.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: java.lang.String getName(com.opengamma.util.money.Currency)>(r4);
+
+        interfaceinvoke $r69.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r77, $r75);
+
+        $r78 = new com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity;
+
+        specialinvoke $r78.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: void <init>()>();
+
+        $r80 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity ofYieldDiscounting(java.util.Map)>($r69);
+
+        r81 = virtualinvoke $r78.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity plus(com.opengamma.util.money.Currency,com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>(r4, $r80);
+
+        $r82 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r83 = virtualinvoke $r82.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $r84 = <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator PVCSDC>;
+
+        $r85 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r86 = virtualinvoke $r83.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r84, $r85);
+
+        r87 = (com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity) $r86;
+
+        $r88 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r89 = virtualinvoke $r88.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(1);
+
+        $r90 = <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator PVCSDC>;
+
+        $r91 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r92 = virtualinvoke $r89.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r90, $r91);
+
+        r5 = (com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity) $r92;
+
+        $r93 = virtualinvoke r81.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity plus(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity)>(r87);
+
+        $r94 = virtualinvoke $r93.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity plus(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity)>(r5);
+
+        return $r94;
+
+     label4:
+        $r25 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r26 = virtualinvoke $r25.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z9 = $r26 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        if $z9 == 0 goto label5;
+
+        $r28 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r29 = virtualinvoke $r28.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        d14 = virtualinvoke $r29.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: double getPaymentTime()>();
+
+        $r30 = new java.util.HashMap;
+
+        specialinvoke $r30.<java.util.HashMap: void <init>()>();
+
+        $d0 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: double getNotionalAmount()>();
+
+        $d1 = d14 * $d0;
+
+        $r31 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r32 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.util.money.Currency getNotionalCurrency()>();
+
+        $r33 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d14);
+
+        $d2 = interfaceinvoke $r31.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r32, $r33);
+
+        $d3 = $d1 * $d2;
+
+        r96 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>(d14, $d3);
+
+        $r34 = new java.util.ArrayList;
+
+        specialinvoke $r34.<java.util.ArrayList: void <init>()>();
+
+        interfaceinvoke $r34.<java.util.List: boolean add(java.lang.Object)>(r96);
+
+        $r35 = interfaceinvoke r3.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: java.lang.String getName(com.opengamma.util.money.Currency)>(r4);
+
+        interfaceinvoke $r30.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r35, $r34);
+
+        $r37 = new com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity;
+
+        specialinvoke $r37.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: void <init>()>();
+
+        $r38 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity ofYieldDiscounting(java.util.Map)>($r30);
+
+        r99 = virtualinvoke $r37.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity plus(com.opengamma.util.money.Currency,com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>(r4, $r38);
+
+        $r39 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.trs.definition.EquityTotalReturnSwap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFundingLeg()>();
+
+        $r40 = virtualinvoke $r39.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $r41 = <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator PVCSDC>;
+
+        $r42 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.EquityTrsDataBundle: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getCurves()>();
+
+        $r43 = virtualinvoke $r40.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r41, $r42);
+
+        r100 = (com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity) $r43;
+
+        $r44 = virtualinvoke r99.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity plus(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity)>(r100);
+
+        return $r44;
+
+     label5:
+        $r27 = new org.apache.commons.lang.NotImplementedException;
+
+        specialinvoke $r27.<org.apache.commons.lang.NotImplementedException: void <init>(java.lang.String)>("Pricing of equity TRS not implemented for those types of coupons");
+
+        throw $r27;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod $r0;
+        com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator $r1;
+        com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator $r2;
+
+        $r0 = new com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: void <init>()>();
+
+        <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod INSTANCE> = $r0;
+
+        $r1 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator PVDC> = $r1;
+
+        $r2 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.equity.trs.method.EquityTotalReturnSwapDiscountingMethod: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator PVCSDC> = $r2;
+
+        return;
+    }
+}

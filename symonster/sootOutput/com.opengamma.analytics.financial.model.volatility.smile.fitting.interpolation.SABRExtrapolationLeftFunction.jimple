@@ -1,0 +1,847 @@
+public class com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction extends com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftRightFunction
+{
+    private final double _forward;
+    private final com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData _sabrData;
+    private final double _cutOffStrike;
+    private final double _mu;
+    private final double[] _parameter;
+    private double _volatilityK;
+    private final double[] _priceK;
+    private final double _timeToExpiry;
+    private static final com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION;
+    private static final double SMALL_EXPIRY;
+    private static final double SMALL_PARAMETER;
+
+    public void <init>(double, com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData, double, double, double, com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction r0;
+        double d0, d1, d2, d3;
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData r1;
+        com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider r2;
+        double[] $r3, $r4, $r5;
+        byte $b0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData;
+
+        d1 := @parameter2: double;
+
+        d2 := @parameter3: double;
+
+        d3 := @parameter4: double;
+
+        r2 := @parameter5: com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftRightFunction: void <init>(com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider)>(r2);
+
+        $r3 = newarray (double)[3];
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _priceK> = $r3;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "SABR data");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "volatilityFunction");
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _forward> = d0;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData _sabrData> = r1;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _cutOffStrike> = d1;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _timeToExpiry> = d2;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _mu> = d3;
+
+        $b0 = d2 cmpl 1.0E-6;
+
+        if $b0 <= 0 goto label1;
+
+        $r5 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] computesFittingParameters()>();
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _parameter> = $r5;
+
+        goto label2;
+
+     label1:
+        $r4 = newarray (double)[3];
+
+        $r4[0] = -10000.0;
+
+        $r4[1] = 0.0;
+
+        $r4[2] = 0.0;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _parameter> = $r4;
+
+     label2:
+        return;
+    }
+
+    public double price(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r1;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, d8, d9;
+        com.opengamma.analytics.math.function.Function1D r2, r4;
+        byte $b0, $b1;
+        boolean $z0;
+        com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider $r6;
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData $r7;
+        java.lang.Object $r8, $r12;
+        java.lang.Double $r9, $r13;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r10;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r11;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "option");
+
+        d0 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        $d1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _cutOffStrike>;
+
+        $b0 = d0 cmpl $d1;
+
+        if $b0 < 0 goto label2;
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider getVolatilityFunction()>();
+
+        $d5 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _forward>;
+
+        r2 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider: com.opengamma.analytics.math.function.Function1D getVolatilityFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,double)>(r1, $d5);
+
+        $r7 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData _sabrData>;
+
+        $r8 = virtualinvoke r2.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r7);
+
+        $r9 = (java.lang.Double) $r8;
+
+        d8 = virtualinvoke $r9.<java.lang.Double: double doubleValue()>();
+
+        $b1 = d8 cmpg 0.0;
+
+        if $b1 >= 0 goto label1;
+
+        d8 = 0.0;
+
+     label1:
+        $r10 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        $d6 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _forward>;
+
+        specialinvoke $r10.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>($d6, 1.0, d8);
+
+        $r11 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        r4 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: com.opengamma.analytics.math.function.Function1D getPriceFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)>(r1);
+
+        $r12 = virtualinvoke r4.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r10);
+
+        $r13 = (java.lang.Double) $r12;
+
+        d9 = virtualinvoke $r13.<java.lang.Double: double doubleValue()>();
+
+        goto label3;
+
+     label2:
+        d9 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double extrapolation(double)>(d0);
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: boolean isCall()>();
+
+        if $z0 == 0 goto label3;
+
+        $d2 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _forward>;
+
+        $d3 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        $d4 = $d2 - $d3;
+
+        d9 = d9 + $d4;
+
+     label3:
+        return d9;
+    }
+
+    public com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData getSabrData()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction r0;
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData _sabrData>;
+
+        return $r1;
+    }
+
+    public double getCutOffStrike()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _cutOffStrike>;
+
+        return $d0;
+    }
+
+    public double getMu()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _mu>;
+
+        return $d0;
+    }
+
+    public double getTimeToExpiry()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _timeToExpiry>;
+
+        return $d0;
+    }
+
+    public double[] getParameter()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction r0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _parameter>;
+
+        return $r1;
+    }
+
+    private double[] computesFittingParameters()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction r0;
+        double[] r1, r3, r5, r10, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r28, $r34, $r35, $r36;
+        double[][] r4, r6;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r11;
+        double $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74;
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData $r12;
+        byte $b0, $b1, $b2, $b3;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r13;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r14;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction$CFunction $r27;
+        com.opengamma.analytics.math.rootfinding.BracketRoot $r29;
+        com.opengamma.analytics.math.rootfinding.RidderSingleRootFinder $r30;
+        java.lang.Double $r31, $r32, $r33;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction;
+
+        r1 = newarray (double)[3];
+
+        $r11 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d3 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _cutOffStrike>;
+
+        $d2 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _timeToExpiry>;
+
+        specialinvoke $r11.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>($d3, $d2, 0);
+
+        r3 = newarray (double)[6];
+
+        r4 = newmultiarray (double)[2][2];
+
+        $d4 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _forward>;
+
+        $r12 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData _sabrData>;
+
+        $d5 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double getVolatilityAdjoint2(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,double,com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData,double[],double[][])>($r11, $d4, $r12, r3, r4);
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _volatilityK> = $d5;
+
+        r5 = newarray (double)[3];
+
+        r6 = newmultiarray (double)[3][3];
+
+        $d6 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _volatilityK>;
+
+        $b0 = $d6 cmpg 0.0;
+
+        if $b0 >= 0 goto label1;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _volatilityK> = 0.0;
+
+        goto label2;
+
+     label1:
+        $r13 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        $d8 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _forward>;
+
+        $d7 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _volatilityK>;
+
+        specialinvoke $r13.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>($d8, 1.0, $d7);
+
+        $r15 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _priceK>;
+
+        $r14 = <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        $d9 = virtualinvoke $r14.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: double getPriceAdjoint2(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData,double[],double[][])>($r11, $r13, r5, r6);
+
+        $r15[0] = $d9;
+
+     label2:
+        $d13 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _forward>;
+
+        $d12 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _cutOffStrike>;
+
+        $d11 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _timeToExpiry>;
+
+        $d10 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _volatilityK>;
+
+        d41 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double volga(double,double,double,double)>($d13, $d12, $d11, $d10);
+
+        $r16 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _priceK>;
+
+        $d17 = r5[2];
+
+        $d15 = r5[1];
+
+        $d14 = r3[1];
+
+        $d16 = $d15 * $d14;
+
+        $d18 = $d17 + $d16;
+
+        $r16[1] = $d18;
+
+        $r21 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _priceK>;
+
+        $r17 = r6[2];
+
+        $d22 = $r17[2];
+
+        $r18 = r6[1];
+
+        $d20 = $r18[2];
+
+        $d19 = r3[1];
+
+        $d21 = $d20 * $d19;
+
+        $d29 = $d22 + $d21;
+
+        $r19 = r6[2];
+
+        $d25 = $r19[1];
+
+        $d23 = r3[1];
+
+        $d24 = d41 * $d23;
+
+        $d27 = $d25 + $d24;
+
+        $d26 = r3[1];
+
+        $d28 = $d27 * $d26;
+
+        $d33 = $d29 + $d28;
+
+        $d31 = r5[1];
+
+        $r20 = r4[1];
+
+        $d30 = $r20[1];
+
+        $d32 = $d31 * $d30;
+
+        $d34 = $d33 + $d32;
+
+        $r21[2] = $d34;
+
+        $r22 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _priceK>;
+
+        $d35 = $r22[0];
+
+        $d36 = staticinvoke <java.lang.Math: double abs(double)>($d35);
+
+        $b1 = $d36 cmpg 1.0E-15;
+
+        if $b1 >= 0 goto label3;
+
+        $r23 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _priceK>;
+
+        $d37 = $r23[1];
+
+        $d38 = staticinvoke <java.lang.Math: double abs(double)>($d37);
+
+        $b2 = $d38 cmpg 1.0E-15;
+
+        if $b2 >= 0 goto label3;
+
+        $r24 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _priceK>;
+
+        $d39 = $r24[2];
+
+        $d40 = staticinvoke <java.lang.Math: double abs(double)>($d39);
+
+        $b3 = $d40 cmpg 1.0E-15;
+
+        if $b3 >= 0 goto label3;
+
+        $r25 = newarray (double)[3];
+
+        $r25[0] = -100.0;
+
+        $r25[1] = 0.0;
+
+        $r25[2] = 0.0;
+
+        return $r25;
+
+     label3:
+        $r27 = new com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction$CFunction;
+
+        $r28 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _priceK>;
+
+        $d42 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _cutOffStrike>;
+
+        $d43 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _mu>;
+
+        specialinvoke $r27.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction$CFunction: void <init>(double[],double,double)>($r28, $d42, $d43);
+
+        $r29 = new com.opengamma.analytics.math.rootfinding.BracketRoot;
+
+        specialinvoke $r29.<com.opengamma.analytics.math.rootfinding.BracketRoot: void <init>()>();
+
+        $r30 = new com.opengamma.analytics.math.rootfinding.RidderSingleRootFinder;
+
+        specialinvoke $r30.<com.opengamma.analytics.math.rootfinding.RidderSingleRootFinder: void <init>(double)>(1.0E-5);
+
+        r10 = virtualinvoke $r29.<com.opengamma.analytics.math.rootfinding.BracketRoot: double[] getBracketedPoints(com.opengamma.analytics.math.function.Function1D,double,double)>($r27, -1.0, 1.0);
+
+        $d44 = r10[0];
+
+        $r31 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d44);
+
+        $d45 = r10[1];
+
+        $r32 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d45);
+
+        $r33 = virtualinvoke $r30.<com.opengamma.analytics.math.rootfinding.RidderSingleRootFinder: java.lang.Double getRoot(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r27, $r31, $r32);
+
+        $d46 = virtualinvoke $r33.<java.lang.Double: double doubleValue()>();
+
+        r1[2] = $d46;
+
+        $d47 = r1[2];
+
+        $d48 = -2.0 * $d47;
+
+        $d49 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _cutOffStrike>;
+
+        $d50 = $d48 * $d49;
+
+        $r34 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _priceK>;
+
+        $d51 = $r34[1];
+
+        $r35 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _priceK>;
+
+        $d52 = $r35[0];
+
+        $d53 = $d51 / $d52;
+
+        $d54 = $d50 + $d53;
+
+        $d55 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _mu>;
+
+        $d56 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _cutOffStrike>;
+
+        $d57 = $d55 / $d56;
+
+        $d58 = $d54 - $d57;
+
+        r1[1] = $d58;
+
+        $r36 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _priceK>;
+
+        $d59 = $r36[0];
+
+        $d60 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _cutOffStrike>;
+
+        $d61 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _mu>;
+
+        $d62 = staticinvoke <java.lang.Math: double pow(double,double)>($d60, $d61);
+
+        $d63 = $d59 / $d62;
+
+        $d64 = staticinvoke <java.lang.Math: double log(double)>($d63);
+
+        $d65 = r1[1];
+
+        $d66 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _cutOffStrike>;
+
+        $d67 = $d65 * $d66;
+
+        $d68 = $d64 - $d67;
+
+        $d69 = r1[2];
+
+        $d70 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _cutOffStrike>;
+
+        $d71 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _cutOffStrike>;
+
+        $d72 = $d70 * $d71;
+
+        $d73 = $d69 * $d72;
+
+        $d74 = $d68 - $d73;
+
+        r1[0] = $d74;
+
+        return r1;
+    }
+
+    private double extrapolation(double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction r0;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12;
+        double[] $r1, $r2, $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction;
+
+        d0 := @parameter0: double;
+
+        $d1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _mu>;
+
+        $d2 = staticinvoke <java.lang.Math: double pow(double,double)>(d0, $d1);
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _parameter>;
+
+        $d5 = $r1[0];
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _parameter>;
+
+        $d3 = $r2[1];
+
+        $d4 = $d3 * d0;
+
+        $d9 = $d5 + $d4;
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _parameter>;
+
+        $d7 = $r3[2];
+
+        $d6 = d0 * d0;
+
+        $d8 = $d7 * $d6;
+
+        $d10 = $d9 + $d8;
+
+        $d11 = staticinvoke <java.lang.Math: double exp(double)>($d10);
+
+        $d12 = $d2 * $d11;
+
+        return $d12;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction r0;
+        double $d0, $d1, $d2, $d3, $d4;
+        long $l1, $l2, $l5, $l6, $l9, $l10, $l18, $l19, $l22, $l23, l27, l29, l31, l37, l39;
+        int $i3, $i4, $i7, $i8, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i20, $i21, $i24, $i25, i28, i30, i32, i33, i34, $i35, i36, i38, i40;
+        double[] $r1, $r2;
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData $r3, $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _cutOffStrike>;
+
+        l27 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $i4 = 31 * 1;
+
+        $l1 = l27 >>> 32;
+
+        $l2 = l27 ^ $l1;
+
+        $i3 = (int) $l2;
+
+        i28 = $i4 + $i3;
+
+        $d1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _forward>;
+
+        l29 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d1);
+
+        $i8 = 31 * i28;
+
+        $l5 = l29 >>> 32;
+
+        $l6 = l29 ^ $l5;
+
+        $i7 = (int) $l6;
+
+        i30 = $i8 + $i7;
+
+        $d2 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _mu>;
+
+        l31 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d2);
+
+        $i12 = 31 * i30;
+
+        $l9 = l31 >>> 32;
+
+        $l10 = l31 ^ $l9;
+
+        $i11 = (int) $l10;
+
+        i32 = $i12 + $i11;
+
+        $i13 = 31 * i32;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _parameter>;
+
+        $i14 = staticinvoke <java.util.Arrays: int hashCode(double[])>($r1);
+
+        i33 = $i13 + $i14;
+
+        $i15 = 31 * i33;
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _priceK>;
+
+        $i16 = staticinvoke <java.util.Arrays: int hashCode(double[])>($r2);
+
+        i34 = $i15 + $i16;
+
+        $i17 = 31 * i34;
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData _sabrData>;
+
+        if $r3 != null goto label1;
+
+        $i35 = 0;
+
+        goto label2;
+
+     label1:
+        $r4 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData _sabrData>;
+
+        $i35 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData: int hashCode()>();
+
+     label2:
+        i36 = $i17 + $i35;
+
+        $d3 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _timeToExpiry>;
+
+        l37 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d3);
+
+        $i21 = 31 * i36;
+
+        $l18 = l37 >>> 32;
+
+        $l19 = l37 ^ $l18;
+
+        $i20 = (int) $l19;
+
+        i38 = $i21 + $i20;
+
+        $d4 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _volatilityK>;
+
+        l39 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d4);
+
+        $i25 = 31 * i38;
+
+        $l22 = l39 >>> 32;
+
+        $l23 = l39 ^ $l22;
+
+        $i24 = (int) $l23;
+
+        i40 = $i25 + $i24;
+
+        return i40;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction r0, r2;
+        java.lang.Object r1;
+        boolean $z0, $z1, $z2, $z3;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9;
+        long $l0, $l1, $l3, $l4, $l6, $l7, $l9, $l10, $l12, $l13;
+        byte $b2, $b5, $b8, $b11, $b14;
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData $r3, $r4, $r5, $r10;
+        double[] $r6, $r7, $r8, $r9;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label01;
+
+        return 1;
+
+     label01:
+        if r1 != null goto label02;
+
+        return 0;
+
+     label02:
+        $z0 = r1 instanceof com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction;
+
+        if $z0 != 0 goto label03;
+
+        return 0;
+
+     label03:
+        r2 = (com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction) r1;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _cutOffStrike>;
+
+        $l0 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $d1 = r2.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _cutOffStrike>;
+
+        $l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d1);
+
+        $b2 = $l0 cmp $l1;
+
+        if $b2 == 0 goto label04;
+
+        return 0;
+
+     label04:
+        $d2 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _forward>;
+
+        $l3 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d2);
+
+        $d3 = r2.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _forward>;
+
+        $l4 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d3);
+
+        $b5 = $l3 cmp $l4;
+
+        if $b5 == 0 goto label05;
+
+        return 0;
+
+     label05:
+        $d4 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _mu>;
+
+        $l6 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d4);
+
+        $d5 = r2.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _mu>;
+
+        $l7 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d5);
+
+        $b8 = $l6 cmp $l7;
+
+        if $b8 == 0 goto label06;
+
+        return 0;
+
+     label06:
+        $d6 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _timeToExpiry>;
+
+        $l9 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d6);
+
+        $d7 = r2.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _timeToExpiry>;
+
+        $l10 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d7);
+
+        $b11 = $l9 cmp $l10;
+
+        if $b11 == 0 goto label07;
+
+        return 0;
+
+     label07:
+        $r3 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData _sabrData>;
+
+        if $r3 != null goto label08;
+
+        $r10 = r2.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData _sabrData>;
+
+        if $r10 == null goto label09;
+
+        return 0;
+
+     label08:
+        $r5 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData _sabrData>;
+
+        $r4 = r2.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData _sabrData>;
+
+        $z1 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRFormulaData: boolean equals(java.lang.Object)>($r4);
+
+        if $z1 != 0 goto label09;
+
+        return 0;
+
+     label09:
+        $d8 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _volatilityK>;
+
+        $l12 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d8);
+
+        $d9 = r2.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double _volatilityK>;
+
+        $l13 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d9);
+
+        $b14 = $l12 cmp $l13;
+
+        if $b14 == 0 goto label10;
+
+        return 0;
+
+     label10:
+        $r7 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _priceK>;
+
+        $r6 = r2.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _priceK>;
+
+        $z2 = staticinvoke <java.util.Arrays: boolean equals(double[],double[])>($r7, $r6);
+
+        if $z2 != 0 goto label11;
+
+        return 0;
+
+     label11:
+        $r9 = r0.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _parameter>;
+
+        $r8 = r2.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double[] _parameter>;
+
+        $z3 = staticinvoke <java.util.Arrays: boolean equals(double[],double[])>($r9, $r8);
+
+        if $z3 != 0 goto label12;
+
+        return 0;
+
+     label12:
+        return 1;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r0;
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double SMALL_PARAMETER> = -10000.0;
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: double SMALL_EXPIRY> = 1.0E-6;
+
+        $r0 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SABRExtrapolationLeftFunction: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION> = $r0;
+
+        return;
+    }
+}

@@ -1,0 +1,837 @@
+public class com.opengamma.analytics.financial.varianceswap.VarianceSwap extends java.lang.Object implements com.opengamma.analytics.financial.interestrate.InstrumentDerivative
+{
+    private final double _timeToObsStart;
+    private final double _timeToObsEnd;
+    private final double _timeToSettlement;
+    private final double _varStrike;
+    private final double _varNotional;
+    private final com.opengamma.util.money.Currency _currency;
+    private final double _annualizationFactor;
+    private final int _nObsExpected;
+    private final int _nObsDisrupted;
+    private final double[] _observations;
+    private final double[] _observationWeights;
+
+    public void <init>(double, double, double, double, double, com.opengamma.util.money.Currency, double, int, int, double[], double[])
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0;
+        double d0, d1, d2, d3, d4, d5;
+        com.opengamma.util.money.Currency r1;
+        int i0, i1, i2, i3, $i7, $i8, $i9, $i10;
+        double[] r2, r3, $r11, $r13, $r14, $r15, $r16;
+        byte $b4, $b5, $b6;
+        java.lang.Object[] $r7, $r17;
+        java.lang.Integer $r8, $r9, $r18, $r19;
+        java.lang.Object $r10, $r12;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 := @parameter4: double;
+
+        r1 := @parameter5: com.opengamma.util.money.Currency;
+
+        d5 := @parameter6: double;
+
+        i0 := @parameter7: int;
+
+        i1 := @parameter8: int;
+
+        r2 := @parameter9: double[];
+
+        r3 := @parameter10: double[];
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $b4 = d3 cmpl 0.0;
+
+        if $b4 < 0 goto label01;
+
+        $z0 = 1;
+
+        goto label02;
+
+     label01:
+        $z0 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Require varStrike >= 0");
+
+        $b5 = d4 cmpl 0.0;
+
+        if $b5 <= 0 goto label03;
+
+        $z1 = 1;
+
+        goto label04;
+
+     label03:
+        $z1 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "Require varNotional > 0");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "currency");
+
+        $b6 = d5 cmpl 0.0;
+
+        if $b6 <= 0 goto label05;
+
+        $z2 = 1;
+
+        goto label06;
+
+     label05:
+        $z2 = 0;
+
+     label06:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "Require annualizationFactor > 0");
+
+        if i0 <= 0 goto label07;
+
+        $z3 = 1;
+
+        goto label08;
+
+     label07:
+        $z3 = 0;
+
+     label08:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "Encountered a VarianceSwap with 0 expected observations");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "observations");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "observationWeights");
+
+        $i7 = lengthof r2;
+
+        if i0 < $i7 goto label09;
+
+        $z4 = 1;
+
+        goto label10;
+
+     label09:
+        $z4 = 0;
+
+     label10:
+        $r7 = newarray (java.lang.Object)[2];
+
+        $i8 = lengthof r2;
+
+        $r8 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i8);
+
+        $r7[0] = $r8;
+
+        $r9 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        $r7[1] = $r9;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z4, "Number of observations ({}) great than expected ({})", $r7);
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToObsStart> = d0;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToObsEnd> = d1;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToSettlement> = d2;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _varStrike> = d3;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _varNotional> = d4;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: com.opengamma.util.money.Currency _currency> = r1;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _annualizationFactor> = d5;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: int _nObsExpected> = i0;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: int _nObsDisrupted> = i1;
+
+        $r10 = virtualinvoke r2.<java.lang.Object: java.lang.Object clone()>();
+
+        $r11 = (double[]) $r10;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observations> = $r11;
+
+        $r12 = virtualinvoke r3.<java.lang.Object: java.lang.Object clone()>();
+
+        $r13 = (double[]) $r12;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observationWeights> = $r13;
+
+        $r14 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observationWeights>;
+
+        $i9 = lengthof $r14;
+
+        if $i9 <= 1 goto label13;
+
+        $r15 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observationWeights>;
+
+        i2 = lengthof $r15;
+
+        $r16 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observations>;
+
+        i3 = lengthof $r16;
+
+        $i10 = i2 + 1;
+
+        if $i10 != i3 goto label11;
+
+        $z5 = 1;
+
+        goto label12;
+
+     label11:
+        $z5 = 0;
+
+     label12:
+        $r17 = newarray (java.lang.Object)[2];
+
+        $r18 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i2);
+
+        $r17[0] = $r18;
+
+        $r19 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i3);
+
+        $r17[1] = $r19;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z5, "If provided, observationWeights must be of length one less than observations, as they weight returns log(obs[i]/obs[i-1]). Found {} weights and {} observations.", $r17);
+
+     label13:
+        return;
+    }
+
+    public void <init>(com.opengamma.analytics.financial.varianceswap.VarianceSwap)
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0, r1;
+        double $d0, $d1, $d2, $d3, $d4, $d5;
+        com.opengamma.util.money.Currency $r3;
+        int $i0, $i1, $i2, $i3;
+        double[] $r4, $r5, $r6, $r7, $r8, $r9;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "variance swap to copy");
+
+        $d0 = r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToObsStart>;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToObsStart> = $d0;
+
+        $d1 = r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToObsEnd>;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToObsEnd> = $d1;
+
+        $d2 = r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToSettlement>;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToSettlement> = $d2;
+
+        $d3 = r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _varStrike>;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _varStrike> = $d3;
+
+        $d4 = r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _varNotional>;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _varNotional> = $d4;
+
+        $r3 = r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: com.opengamma.util.money.Currency _currency>;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: com.opengamma.util.money.Currency _currency> = $r3;
+
+        $d5 = r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _annualizationFactor>;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _annualizationFactor> = $d5;
+
+        $i0 = r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: int _nObsExpected>;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: int _nObsExpected> = $i0;
+
+        $i1 = r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: int _nObsDisrupted>;
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: int _nObsDisrupted> = $i1;
+
+        $r5 = r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observations>;
+
+        $r4 = r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observations>;
+
+        $i2 = lengthof $r4;
+
+        $r6 = staticinvoke <java.util.Arrays: double[] copyOf(double[],int)>($r5, $i2);
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observations> = $r6;
+
+        $r8 = r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observationWeights>;
+
+        $r7 = r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observationWeights>;
+
+        $i3 = lengthof $r7;
+
+        $r9 = staticinvoke <java.util.Arrays: double[] copyOf(double[],int)>($r8, $i3);
+
+        r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observationWeights> = $r9;
+
+        return;
+    }
+
+    public double getTimeToObsStart()
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        $d0 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToObsStart>;
+
+        return $d0;
+    }
+
+    public double getTimeToObsEnd()
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        $d0 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToObsEnd>;
+
+        return $d0;
+    }
+
+    public double getTimeToSettlement()
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        $d0 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToSettlement>;
+
+        return $d0;
+    }
+
+    public int getObsExpected()
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        $i0 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: int _nObsExpected>;
+
+        return $i0;
+    }
+
+    public int getObsDisrupted()
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        $i0 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: int _nObsDisrupted>;
+
+        return $i0;
+    }
+
+    public com.opengamma.util.money.Currency getCurrency()
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0;
+        com.opengamma.util.money.Currency $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        $r1 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: com.opengamma.util.money.Currency _currency>;
+
+        return $r1;
+    }
+
+    public double getVarStrike()
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        $d0 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _varStrike>;
+
+        return $d0;
+    }
+
+    public double getVarNotional()
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        $d0 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _varNotional>;
+
+        return $d0;
+    }
+
+    public double getVolStrike()
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0;
+        double $d0, $d1;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        $d0 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _varStrike>;
+
+        $d1 = staticinvoke <java.lang.Math: double sqrt(double)>($d0);
+
+        return $d1;
+    }
+
+    public double getVolNotional()
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0;
+        double $d0, $d1, $d2, $d3, $d4;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        $d0 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _varNotional>;
+
+        $d2 = $d0 * 2.0;
+
+        $d1 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _varStrike>;
+
+        $d3 = staticinvoke <java.lang.Math: double sqrt(double)>($d1);
+
+        $d4 = $d2 * $d3;
+
+        return $d4;
+    }
+
+    public double getAnnualizationFactor()
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        $d0 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _annualizationFactor>;
+
+        return $d0;
+    }
+
+    public double[] getObservations()
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        $r1 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observations>;
+
+        return $r1;
+    }
+
+    public final double[] getObservationWeights()
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        $r1 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observationWeights>;
+
+        return $r1;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0;
+        double $d0, $d1, $d2, $d3, $d4, $d5;
+        long $l1, $l2, $l12, $l13, $l16, $l17, $l20, $l21, $l24, $l25, $l28, $l29, l33, l43, l45, l47, l49, l51;
+        int $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i14, $i15, $i18, $i19, $i22, $i23, $i26, $i27, $i30, $i31, i34, $i35, i36, i37, i38, $i39, i40, $i41, i42, i44, i46, i48, i50, i52;
+        com.opengamma.util.money.Currency $r1, $r2;
+        double[] $r3, $r4, $r5, $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        $d0 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _annualizationFactor>;
+
+        l33 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $i4 = 31 * 1;
+
+        $l1 = l33 >>> 32;
+
+        $l2 = l33 ^ $l1;
+
+        $i3 = (int) $l2;
+
+        i34 = $i4 + $i3;
+
+        $i5 = 31 * i34;
+
+        $r1 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: com.opengamma.util.money.Currency _currency>;
+
+        if $r1 != null goto label1;
+
+        $i35 = 0;
+
+        goto label2;
+
+     label1:
+        $r2 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: com.opengamma.util.money.Currency _currency>;
+
+        $i35 = virtualinvoke $r2.<com.opengamma.util.money.Currency: int hashCode()>();
+
+     label2:
+        i36 = $i5 + $i35;
+
+        $i7 = 31 * i36;
+
+        $i6 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: int _nObsDisrupted>;
+
+        i37 = $i7 + $i6;
+
+        $i9 = 31 * i37;
+
+        $i8 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: int _nObsExpected>;
+
+        i38 = $i9 + $i8;
+
+        $i10 = 31 * i38;
+
+        $r3 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observations>;
+
+        if $r3 != null goto label3;
+
+        $i39 = 0;
+
+        goto label4;
+
+     label3:
+        $r4 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observations>;
+
+        $i39 = staticinvoke <java.util.Arrays: int hashCode(double[])>($r4);
+
+     label4:
+        i40 = $i10 + $i39;
+
+        $i11 = 31 * i40;
+
+        $r5 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observationWeights>;
+
+        if $r5 != null goto label5;
+
+        $i41 = 0;
+
+        goto label6;
+
+     label5:
+        $r6 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observations>;
+
+        $i41 = staticinvoke <java.util.Arrays: int hashCode(double[])>($r6);
+
+     label6:
+        i42 = $i11 + $i41;
+
+        $d1 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToObsEnd>;
+
+        l43 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d1);
+
+        $i15 = 31 * i42;
+
+        $l12 = l43 >>> 32;
+
+        $l13 = l43 ^ $l12;
+
+        $i14 = (int) $l13;
+
+        i44 = $i15 + $i14;
+
+        $d2 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToObsStart>;
+
+        l45 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d2);
+
+        $i19 = 31 * i44;
+
+        $l16 = l45 >>> 32;
+
+        $l17 = l45 ^ $l16;
+
+        $i18 = (int) $l17;
+
+        i46 = $i19 + $i18;
+
+        $d3 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToSettlement>;
+
+        l47 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d3);
+
+        $i23 = 31 * i46;
+
+        $l20 = l47 >>> 32;
+
+        $l21 = l47 ^ $l20;
+
+        $i22 = (int) $l21;
+
+        i48 = $i23 + $i22;
+
+        $d4 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _varNotional>;
+
+        l49 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d4);
+
+        $i27 = 31 * i48;
+
+        $l24 = l49 >>> 32;
+
+        $l25 = l49 ^ $l24;
+
+        $i26 = (int) $l25;
+
+        i50 = $i27 + $i26;
+
+        $d5 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _varStrike>;
+
+        l51 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d5);
+
+        $i31 = 31 * i50;
+
+        $l28 = l51 >>> 32;
+
+        $l29 = l51 ^ $l28;
+
+        $i30 = (int) $l29;
+
+        i52 = $i31 + $i30;
+
+        return i52;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0, r2;
+        java.lang.Object r1;
+        boolean $z0, $z1, $z2, $z3;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11;
+        long $l0, $l1, $l7, $l8, $l10, $l11, $l13, $l14, $l16, $l17, $l19, $l20;
+        byte $b2, $b9, $b12, $b15, $b18, $b21;
+        com.opengamma.util.money.Currency $r3, $r4, $r5, $r10;
+        int $i3, $i4, $i5, $i6;
+        double[] $r6, $r7, $r8, $r9;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label01;
+
+        return 1;
+
+     label01:
+        $z0 = r1 instanceof com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        if $z0 != 0 goto label02;
+
+        return 0;
+
+     label02:
+        r2 = (com.opengamma.analytics.financial.varianceswap.VarianceSwap) r1;
+
+        $d0 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _annualizationFactor>;
+
+        $l0 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $d1 = r2.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _annualizationFactor>;
+
+        $l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d1);
+
+        $b2 = $l0 cmp $l1;
+
+        if $b2 == 0 goto label03;
+
+        return 0;
+
+     label03:
+        $r3 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: com.opengamma.util.money.Currency _currency>;
+
+        if $r3 != null goto label04;
+
+        $r10 = r2.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: com.opengamma.util.money.Currency _currency>;
+
+        if $r10 == null goto label05;
+
+        return 0;
+
+     label04:
+        $r5 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: com.opengamma.util.money.Currency _currency>;
+
+        $r4 = r2.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: com.opengamma.util.money.Currency _currency>;
+
+        $z1 = virtualinvoke $r5.<com.opengamma.util.money.Currency: boolean equals(java.lang.Object)>($r4);
+
+        if $z1 != 0 goto label05;
+
+        return 0;
+
+     label05:
+        $i4 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: int _nObsDisrupted>;
+
+        $i3 = r2.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: int _nObsDisrupted>;
+
+        if $i4 == $i3 goto label06;
+
+        return 0;
+
+     label06:
+        $i6 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: int _nObsExpected>;
+
+        $i5 = r2.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: int _nObsExpected>;
+
+        if $i6 == $i5 goto label07;
+
+        return 0;
+
+     label07:
+        $r7 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observationWeights>;
+
+        $r6 = r2.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observationWeights>;
+
+        $z2 = staticinvoke <java.util.Arrays: boolean equals(double[],double[])>($r7, $r6);
+
+        if $z2 != 0 goto label08;
+
+        return 0;
+
+     label08:
+        $r9 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observations>;
+
+        $r8 = r2.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] _observations>;
+
+        $z3 = staticinvoke <java.util.Arrays: boolean equals(double[],double[])>($r9, $r8);
+
+        if $z3 != 0 goto label09;
+
+        return 0;
+
+     label09:
+        $d2 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToObsEnd>;
+
+        $l7 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d2);
+
+        $d3 = r2.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToObsEnd>;
+
+        $l8 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d3);
+
+        $b9 = $l7 cmp $l8;
+
+        if $b9 == 0 goto label10;
+
+        return 0;
+
+     label10:
+        $d4 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToObsStart>;
+
+        $l10 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d4);
+
+        $d5 = r2.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToObsStart>;
+
+        $l11 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d5);
+
+        $b12 = $l10 cmp $l11;
+
+        if $b12 == 0 goto label11;
+
+        return 0;
+
+     label11:
+        $d6 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToSettlement>;
+
+        $l13 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d6);
+
+        $d7 = r2.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _timeToSettlement>;
+
+        $l14 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d7);
+
+        $b15 = $l13 cmp $l14;
+
+        if $b15 == 0 goto label12;
+
+        return 0;
+
+     label12:
+        $d8 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _varNotional>;
+
+        $l16 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d8);
+
+        $d9 = r2.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _varNotional>;
+
+        $l17 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d9);
+
+        $b18 = $l16 cmp $l17;
+
+        if $b18 == 0 goto label13;
+
+        return 0;
+
+     label13:
+        $d10 = r0.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _varStrike>;
+
+        $l19 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d10);
+
+        $d11 = r2.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double _varStrike>;
+
+        $l20 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d11);
+
+        $b21 = $l19 cmp $l20;
+
+        if $b21 == 0 goto label14;
+
+        return 0;
+
+     label14:
+        return 1;
+    }
+
+    public java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor r1;
+        java.lang.Object r2, $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        r2 := @parameter1: java.lang.Object;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "visitor");
+
+        $r4 = interfaceinvoke r1.<com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor: java.lang.Object visitVarianceSwap(com.opengamma.analytics.financial.varianceswap.VarianceSwap,java.lang.Object)>(r0, r2);
+
+        return $r4;
+    }
+
+    public java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)
+    {
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor r1;
+        java.lang.Object $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "visitor");
+
+        $r3 = interfaceinvoke r1.<com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor: java.lang.Object visitVarianceSwap(com.opengamma.analytics.financial.varianceswap.VarianceSwap)>(r0);
+
+        return $r3;
+    }
+}

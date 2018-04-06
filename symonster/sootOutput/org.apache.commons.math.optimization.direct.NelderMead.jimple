@@ -1,0 +1,407 @@
+public class org.apache.commons.math.optimization.direct.NelderMead extends org.apache.commons.math.optimization.direct.DirectSearchOptimizer
+{
+    private final double rho;
+    private final double khi;
+    private final double gamma;
+    private final double sigma;
+
+    public void <init>()
+    {
+        org.apache.commons.math.optimization.direct.NelderMead r0;
+
+        r0 := @this: org.apache.commons.math.optimization.direct.NelderMead;
+
+        specialinvoke r0.<org.apache.commons.math.optimization.direct.DirectSearchOptimizer: void <init>()>();
+
+        r0.<org.apache.commons.math.optimization.direct.NelderMead: double rho> = 1.0;
+
+        r0.<org.apache.commons.math.optimization.direct.NelderMead: double khi> = 2.0;
+
+        r0.<org.apache.commons.math.optimization.direct.NelderMead: double gamma> = 0.5;
+
+        r0.<org.apache.commons.math.optimization.direct.NelderMead: double sigma> = 0.5;
+
+        return;
+    }
+
+    public void <init>(double, double, double, double)
+    {
+        org.apache.commons.math.optimization.direct.NelderMead r0;
+        double d0, d1, d2, d3;
+
+        r0 := @this: org.apache.commons.math.optimization.direct.NelderMead;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        specialinvoke r0.<org.apache.commons.math.optimization.direct.DirectSearchOptimizer: void <init>()>();
+
+        r0.<org.apache.commons.math.optimization.direct.NelderMead: double rho> = d0;
+
+        r0.<org.apache.commons.math.optimization.direct.NelderMead: double khi> = d1;
+
+        r0.<org.apache.commons.math.optimization.direct.NelderMead: double gamma> = d2;
+
+        r0.<org.apache.commons.math.optimization.direct.NelderMead: double sigma> = d3;
+
+        return;
+    }
+
+    protected void iterateSimplex(java.util.Comparator) throws org.apache.commons.math.FunctionEvaluationException, org.apache.commons.math.optimization.OptimizationException
+    {
+        org.apache.commons.math.optimization.direct.NelderMead r0;
+        java.util.Comparator r1;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, i10, i11, i12, i13, i14, i15, i16, i17, $i18, i19;
+        org.apache.commons.math.optimization.RealPointValuePair r2, r3, r4, $r13, $r14, $r16, $r18, $r19, $r21, $r22, $r24;
+        double[] r5, r6, r7, r8, r25, r27, r29, r31, r33;
+        org.apache.commons.math.optimization.RealPointValuePair[] $r9, $r10, $r11, $r12, $r15, $r17, $r20, $r23, $r34;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, d45;
+
+        r0 := @this: org.apache.commons.math.optimization.direct.NelderMead;
+
+        r1 := @parameter0: java.util.Comparator;
+
+        virtualinvoke r0.<org.apache.commons.math.optimization.direct.NelderMead: void incrementIterationsCounter()>();
+
+        $r9 = r0.<org.apache.commons.math.optimization.direct.NelderMead: org.apache.commons.math.optimization.RealPointValuePair[] simplex>;
+
+        $i1 = lengthof $r9;
+
+        i0 = $i1 - 1;
+
+        $r10 = r0.<org.apache.commons.math.optimization.direct.NelderMead: org.apache.commons.math.optimization.RealPointValuePair[] simplex>;
+
+        r2 = $r10[0];
+
+        $r11 = r0.<org.apache.commons.math.optimization.direct.NelderMead: org.apache.commons.math.optimization.RealPointValuePair[] simplex>;
+
+        $i2 = i0 - 1;
+
+        r3 = $r11[$i2];
+
+        $r12 = r0.<org.apache.commons.math.optimization.direct.NelderMead: org.apache.commons.math.optimization.RealPointValuePair[] simplex>;
+
+        r4 = $r12[i0];
+
+        r5 = virtualinvoke r4.<org.apache.commons.math.optimization.RealPointValuePair: double[] getPointRef()>();
+
+        r6 = newarray (double)[i0];
+
+        i10 = 0;
+
+     label01:
+        if i10 >= i0 goto label04;
+
+        $r23 = r0.<org.apache.commons.math.optimization.direct.NelderMead: org.apache.commons.math.optimization.RealPointValuePair[] simplex>;
+
+        $r24 = $r23[i10];
+
+        r7 = virtualinvoke $r24.<org.apache.commons.math.optimization.RealPointValuePair: double[] getPointRef()>();
+
+        i11 = 0;
+
+     label02:
+        if i11 >= i0 goto label03;
+
+        $d43 = r6[i11];
+
+        $d42 = r7[i11];
+
+        $d44 = $d43 + $d42;
+
+        r6[i11] = $d44;
+
+        i11 = i11 + 1;
+
+        goto label02;
+
+     label03:
+        i10 = i10 + 1;
+
+        goto label01;
+
+     label04:
+        $d0 = (double) i0;
+
+        d45 = 1.0 / $d0;
+
+        i12 = 0;
+
+     label05:
+        if i12 >= i0 goto label06;
+
+        $d40 = r6[i12];
+
+        $d41 = $d40 * d45;
+
+        r6[i12] = $d41;
+
+        i12 = i12 + 1;
+
+        goto label05;
+
+     label06:
+        r25 = newarray (double)[i0];
+
+        i13 = 0;
+
+     label07:
+        if i13 >= i0 goto label08;
+
+        $d38 = r6[i13];
+
+        $d36 = r0.<org.apache.commons.math.optimization.direct.NelderMead: double rho>;
+
+        $d34 = r6[i13];
+
+        $d33 = r5[i13];
+
+        $d35 = $d34 - $d33;
+
+        $d37 = $d36 * $d35;
+
+        $d39 = $d38 + $d37;
+
+        r25[i13] = $d39;
+
+        i13 = i13 + 1;
+
+        goto label07;
+
+     label08:
+        $r13 = new org.apache.commons.math.optimization.RealPointValuePair;
+
+        $d1 = virtualinvoke r0.<org.apache.commons.math.optimization.direct.NelderMead: double evaluate(double[])>(r25);
+
+        specialinvoke $r13.<org.apache.commons.math.optimization.RealPointValuePair: void <init>(double[],double,boolean)>(r25, $d1, 0);
+
+        $i3 = interfaceinvoke r1.<java.util.Comparator: int compare(java.lang.Object,java.lang.Object)>(r2, $r13);
+
+        if $i3 > 0 goto label09;
+
+        $i9 = interfaceinvoke r1.<java.util.Comparator: int compare(java.lang.Object,java.lang.Object)>($r13, r3);
+
+        if $i9 >= 0 goto label09;
+
+        virtualinvoke r0.<org.apache.commons.math.optimization.direct.NelderMead: void replaceWorstPoint(org.apache.commons.math.optimization.RealPointValuePair,java.util.Comparator)>($r13, r1);
+
+        goto label26;
+
+     label09:
+        $i4 = interfaceinvoke r1.<java.util.Comparator: int compare(java.lang.Object,java.lang.Object)>($r13, r2);
+
+        if $i4 >= 0 goto label14;
+
+        r27 = newarray (double)[i0];
+
+        i14 = 0;
+
+     label10:
+        if i14 >= i0 goto label11;
+
+        $d31 = r6[i14];
+
+        $d29 = r0.<org.apache.commons.math.optimization.direct.NelderMead: double khi>;
+
+        $d27 = r25[i14];
+
+        $d26 = r6[i14];
+
+        $d28 = $d27 - $d26;
+
+        $d30 = $d29 * $d28;
+
+        $d32 = $d31 + $d30;
+
+        r27[i14] = $d32;
+
+        i14 = i14 + 1;
+
+        goto label10;
+
+     label11:
+        $r22 = new org.apache.commons.math.optimization.RealPointValuePair;
+
+        $d25 = virtualinvoke r0.<org.apache.commons.math.optimization.direct.NelderMead: double evaluate(double[])>(r27);
+
+        specialinvoke $r22.<org.apache.commons.math.optimization.RealPointValuePair: void <init>(double[],double,boolean)>(r27, $d25, 0);
+
+        $i8 = interfaceinvoke r1.<java.util.Comparator: int compare(java.lang.Object,java.lang.Object)>($r22, $r13);
+
+        if $i8 >= 0 goto label12;
+
+        virtualinvoke r0.<org.apache.commons.math.optimization.direct.NelderMead: void replaceWorstPoint(org.apache.commons.math.optimization.RealPointValuePair,java.util.Comparator)>($r22, r1);
+
+        goto label13;
+
+     label12:
+        virtualinvoke r0.<org.apache.commons.math.optimization.direct.NelderMead: void replaceWorstPoint(org.apache.commons.math.optimization.RealPointValuePair,java.util.Comparator)>($r13, r1);
+
+     label13:
+        goto label26;
+
+     label14:
+        $i5 = interfaceinvoke r1.<java.util.Comparator: int compare(java.lang.Object,java.lang.Object)>($r13, r4);
+
+        if $i5 >= 0 goto label18;
+
+        r29 = newarray (double)[i0];
+
+        i15 = 0;
+
+     label15:
+        if i15 >= i0 goto label16;
+
+        $d23 = r6[i15];
+
+        $d21 = r0.<org.apache.commons.math.optimization.direct.NelderMead: double gamma>;
+
+        $d19 = r25[i15];
+
+        $d18 = r6[i15];
+
+        $d20 = $d19 - $d18;
+
+        $d22 = $d21 * $d20;
+
+        $d24 = $d23 + $d22;
+
+        r29[i15] = $d24;
+
+        i15 = i15 + 1;
+
+        goto label15;
+
+     label16:
+        $r21 = new org.apache.commons.math.optimization.RealPointValuePair;
+
+        $d17 = virtualinvoke r0.<org.apache.commons.math.optimization.direct.NelderMead: double evaluate(double[])>(r29);
+
+        specialinvoke $r21.<org.apache.commons.math.optimization.RealPointValuePair: void <init>(double[],double,boolean)>(r29, $d17, 0);
+
+        $i7 = interfaceinvoke r1.<java.util.Comparator: int compare(java.lang.Object,java.lang.Object)>($r21, $r13);
+
+        if $i7 > 0 goto label17;
+
+        virtualinvoke r0.<org.apache.commons.math.optimization.direct.NelderMead: void replaceWorstPoint(org.apache.commons.math.optimization.RealPointValuePair,java.util.Comparator)>($r21, r1);
+
+        return;
+
+     label17:
+        goto label21;
+
+     label18:
+        r31 = newarray (double)[i0];
+
+        i16 = 0;
+
+     label19:
+        if i16 >= i0 goto label20;
+
+        $d15 = r6[i16];
+
+        $d13 = r0.<org.apache.commons.math.optimization.direct.NelderMead: double gamma>;
+
+        $d11 = r6[i16];
+
+        $d10 = r5[i16];
+
+        $d12 = $d11 - $d10;
+
+        $d14 = $d13 * $d12;
+
+        $d16 = $d15 - $d14;
+
+        r31[i16] = $d16;
+
+        i16 = i16 + 1;
+
+        goto label19;
+
+     label20:
+        $r14 = new org.apache.commons.math.optimization.RealPointValuePair;
+
+        $d2 = virtualinvoke r0.<org.apache.commons.math.optimization.direct.NelderMead: double evaluate(double[])>(r31);
+
+        specialinvoke $r14.<org.apache.commons.math.optimization.RealPointValuePair: void <init>(double[],double,boolean)>(r31, $d2, 0);
+
+        $i6 = interfaceinvoke r1.<java.util.Comparator: int compare(java.lang.Object,java.lang.Object)>($r14, r4);
+
+        if $i6 >= 0 goto label21;
+
+        virtualinvoke r0.<org.apache.commons.math.optimization.direct.NelderMead: void replaceWorstPoint(org.apache.commons.math.optimization.RealPointValuePair,java.util.Comparator)>($r14, r1);
+
+        return;
+
+     label21:
+        $r15 = r0.<org.apache.commons.math.optimization.direct.NelderMead: org.apache.commons.math.optimization.RealPointValuePair[] simplex>;
+
+        $r16 = $r15[0];
+
+        r33 = virtualinvoke $r16.<org.apache.commons.math.optimization.RealPointValuePair: double[] getPointRef()>();
+
+        i17 = 1;
+
+     label22:
+        $r34 = r0.<org.apache.commons.math.optimization.direct.NelderMead: org.apache.commons.math.optimization.RealPointValuePair[] simplex>;
+
+        $i18 = lengthof $r34;
+
+        if i17 >= $i18 goto label25;
+
+        $r17 = r0.<org.apache.commons.math.optimization.direct.NelderMead: org.apache.commons.math.optimization.RealPointValuePair[] simplex>;
+
+        $r18 = $r17[i17];
+
+        r8 = virtualinvoke $r18.<org.apache.commons.math.optimization.RealPointValuePair: double[] getPoint()>();
+
+        i19 = 0;
+
+     label23:
+        if i19 >= i0 goto label24;
+
+        $d8 = r33[i19];
+
+        $d6 = r0.<org.apache.commons.math.optimization.direct.NelderMead: double sigma>;
+
+        $d4 = r8[i19];
+
+        $d3 = r33[i19];
+
+        $d5 = $d4 - $d3;
+
+        $d7 = $d6 * $d5;
+
+        $d9 = $d8 + $d7;
+
+        r8[i19] = $d9;
+
+        i19 = i19 + 1;
+
+        goto label23;
+
+     label24:
+        $r20 = r0.<org.apache.commons.math.optimization.direct.NelderMead: org.apache.commons.math.optimization.RealPointValuePair[] simplex>;
+
+        $r19 = new org.apache.commons.math.optimization.RealPointValuePair;
+
+        specialinvoke $r19.<org.apache.commons.math.optimization.RealPointValuePair: void <init>(double[],double,boolean)>(r8, #NaN, 0);
+
+        $r20[i17] = $r19;
+
+        i17 = i17 + 1;
+
+        goto label22;
+
+     label25:
+        virtualinvoke r0.<org.apache.commons.math.optimization.direct.NelderMead: void evaluateSimplex(java.util.Comparator)>(r1);
+
+     label26:
+        return;
+    }
+}

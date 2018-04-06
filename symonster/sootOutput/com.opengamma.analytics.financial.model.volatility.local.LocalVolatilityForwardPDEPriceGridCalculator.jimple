@@ -1,0 +1,217 @@
+public class com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator extends java.lang.Object implements com.opengamma.analytics.financial.model.volatility.local.PDELocalVolatilityCalculator
+{
+    private final com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDECalculator _pdeCalculator;
+    private final com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator;
+
+    public void <init>(com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDECalculator, com.opengamma.analytics.math.interpolation.Interpolator1D)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator r0;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDECalculator r1;
+        com.opengamma.analytics.math.interpolation.Interpolator1D r2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDECalculator;
+
+        r2 := @parameter1: com.opengamma.analytics.math.interpolation.Interpolator1D;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDECalculator _pdeCalculator> = r1;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator> = r2;
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle getResult(com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness, com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve, com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption, com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator r0;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness r1;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve r2;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r3;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve r4;
+        com.opengamma.analytics.financial.model.finitedifference.PDETerminalResults1D r5;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D r6;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, d8;
+        boolean z0;
+        double[] r7, r8, $r15, $r16;
+        int i0, i1;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDECalculator $r11;
+        it.unimi.dsi.fastutil.doubles.DoubleArrayList $r12, $r13;
+        com.opengamma.analytics.math.interpolation.Interpolator1D $r14;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r17;
+        java.lang.Exception $r18;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        r4 := @parameter3: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve;
+
+        $r11 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDECalculator _pdeCalculator>;
+
+        r5 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDECalculator: com.opengamma.analytics.financial.model.finitedifference.PDETerminalResults1D runPDESolver(com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)>(r1, r3);
+
+        r6 = virtualinvoke r5.<com.opengamma.analytics.financial.model.finitedifference.PDETerminalResults1D: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        d0 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        z0 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: boolean isCall()>();
+
+        d1 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        d2 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: double getForward(double)>(d0);
+
+        r7 = virtualinvoke r6.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] getSpaceNodes()>();
+
+        r8 = virtualinvoke r5.<com.opengamma.analytics.financial.model.finitedifference.PDETerminalResults1D: double[] getTerminalResults()>();
+
+        i0 = lengthof r8;
+
+        $r12 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r12.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r13 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r13.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label6;
+
+     label2:
+        $d4 = r8[i1];
+
+        $d3 = r7[i1];
+
+        d8 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double impliedVolatility(double,double,double,double,boolean)>($d4, 1.0, $d3, d0, z0);
+
+        $d5 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double price(double,double,double,double,boolean)>(d2, d1, d0, d8, z0);
+
+        virtualinvoke $r13.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>($d5);
+
+        $d6 = r7[i1];
+
+        $d7 = d2 * $d6;
+
+        virtualinvoke $r12.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>($d7);
+
+     label3:
+        goto label5;
+
+     label4:
+        $r18 := @caughtexception;
+
+     label5:
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label6:
+        $r14 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        $r15 = virtualinvoke $r12.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        $r16 = virtualinvoke $r13.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        $r17 = virtualinvoke $r14.<com.opengamma.analytics.math.interpolation.Interpolator1D: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle getDataBundleFromSortedArrays(double[],double[])>($r15, $r16);
+
+        return $r17;
+
+        catch java.lang.Exception from label2 to label3 with label4;
+    }
+
+    public com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle getResult(com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike, com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve, com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption, com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator r0;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike r1;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve r2;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r3;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve r4;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness $r5;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        r4 := @parameter3: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve;
+
+        $r5 = staticinvoke <com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceConverter: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness toMoneynessSurface(com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike,com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve)>(r1, r2);
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle getResult(com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness,com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)>($r5, r2, r3, r4);
+
+        return $r6;
+    }
+
+    public com.opengamma.analytics.math.interpolation.Interpolator1D getInterpolator()
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator r0;
+        com.opengamma.analytics.math.interpolation.Interpolator1D $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator: com.opengamma.analytics.math.interpolation.Interpolator1D _interpolator>;
+
+        return $r1;
+    }
+
+    public volatile java.lang.Object getResult(com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike, com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve, com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption, com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator r0;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike r1;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve r2;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r3;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve r4;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        r4 := @parameter3: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve;
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle getResult(com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike,com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)>(r1, r2, r3, r4);
+
+        return $r5;
+    }
+
+    public volatile java.lang.Object getResult(com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness, com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve, com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption, com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator r0;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness r1;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve r2;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r3;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve r4;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        r4 := @parameter3: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve;
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEPriceGridCalculator: com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle getResult(com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness,com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)>(r1, r2, r3, r4);
+
+        return $r5;
+    }
+}

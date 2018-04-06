@@ -1,0 +1,990 @@
+public class com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod extends java.lang.Object
+{
+    private static final org.slf4j.Logger LOGGER;
+    private static final int MINIMUM_STEP;
+    private static final int MAX_COUNT;
+    private static final double ABS_TOL;
+    private static final double REL_TOL;
+    private static final double REL_ERROR;
+    private static final com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D INTEGRATOR;
+    private final com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.InterpolatedSmileFunction _smileFunction;
+
+    public void <init>(com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.InterpolatedSmileFunction)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod r0;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.InterpolatedSmileFunction r1;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.InterpolatedSmileFunction;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "smileFunction");
+
+        r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.InterpolatedSmileFunction _smileFunction> = r1;
+
+        return;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor, com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor r1, $r8;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r2;
+        com.opengamma.util.money.Currency r3, $r9, $r14, $r21;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, d47, d48, d49, d50, d51, $d52, d53, d54, d55, d56;
+        com.opengamma.analytics.financial.instrument.index.IborIndex $r10, $r11;
+        boolean $z0, $z1, $z2;
+        java.lang.Double $r12, $r13, $r15, $r18, $r19, $r20, $r24, $r25, $r27, $r28, $r29, $r30, $r31, $r33, $r34, $r35, $r36, $r37;
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod$InArrearsIntegrant $r16;
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D $r17, $r26, $r32;
+        com.opengamma.util.money.MultipleCurrencyAmount $r22;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.InterpolatedSmileFunction $r23;
+        org.slf4j.Logger $r38;
+        java.lang.Exception $r39;
+        com.opengamma.analytics.math.MathException $r40;
+        int i0;
+        byte $b1;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "The cap/floor shoud not be null");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "curves");
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r8 = new com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor;
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentYearFraction()>();
+
+        $d7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getNotional()>();
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingTime()>();
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.analytics.financial.instrument.index.IborIndex getIndex()>();
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        $d12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: boolean isCap()>();
+
+        specialinvoke $r8.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: void <init>(com.opengamma.util.money.Currency,double,double,double,double,com.opengamma.analytics.financial.instrument.index.IborIndex,double,double,double,double,boolean)>($r9, $d5, $d6, $d7, $d8, $r10, $d9, $d10, $d11, $d12, $z0);
+
+        $r11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.analytics.financial.instrument.index.IborIndex getIndex()>();
+
+        $d13 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d15 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        d0 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getSimplyCompoundForwardRate(com.opengamma.analytics.financial.instrument.index.IborIndex,double,double,double)>($r11, $d13, $d14, $d15);
+
+        $d16 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        $d17 = $d16 * d0;
+
+        $d18 = 1.0 + $d17;
+
+        $d19 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d19);
+
+        $d20 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r12);
+
+        $d21 = $d18 * $d20;
+
+        $d22 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $r13 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d22);
+
+        $d23 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r13);
+
+        d1 = $d21 / $d23;
+
+        $r14 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d24 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentTime()>();
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d24);
+
+        d2 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r14, $r15);
+
+        $d25 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        $d26 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $d27 = $d25 * $d26;
+
+        $d28 = 1.0 + $d27;
+
+        $d29 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $d30 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingTime()>();
+
+        $z1 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: boolean isCap()>();
+
+        $d31 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getNotional()>();
+
+        $d32 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentYearFraction()>();
+
+        $d33 = specialinvoke r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: double presentValueStandard(double,double,double,boolean,double,double,double)>(d0, $d29, $d30, $z1, d2, $d31, $d32);
+
+        d3 = $d28 * $d33;
+
+        $r16 = new com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod$InArrearsIntegrant;
+
+        specialinvoke $r16.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod$InArrearsIntegrant: void <init>(com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod,com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>(r0, $r8, r2);
+
+     label1:
+        $z2 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: boolean isCap()>();
+
+        if $z2 == 0 goto label4;
+
+        $r23 = r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.InterpolatedSmileFunction _smileFunction>;
+
+        $r24 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r25 = virtualinvoke $r23.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.InterpolatedSmileFunction: java.lang.Double getVolatility(java.lang.Double)>($r24);
+
+        d47 = virtualinvoke $r25.<java.lang.Double: double doubleValue()>();
+
+        $d38 = 6.0 * d47;
+
+        $d39 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingTime()>();
+
+        $d40 = staticinvoke <java.lang.Math: double sqrt(double)>($d39);
+
+        $d41 = $d38 * $d40;
+
+        $d42 = staticinvoke <java.lang.Math: double exp(double)>($d41);
+
+        d48 = d0 * $d42;
+
+        d4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $r26 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D INTEGRATOR>;
+
+        $r27 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d4);
+
+        $r28 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d48);
+
+        $r29 = virtualinvoke $r26.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r16, $r27, $r28);
+
+        d49 = virtualinvoke $r29.<java.lang.Double: double doubleValue()>();
+
+        $r30 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d48);
+
+        $r31 = virtualinvoke $r16.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod$InArrearsIntegrant: java.lang.Double evaluate(java.lang.Double)>($r30);
+
+        $d43 = virtualinvoke $r31.<java.lang.Double: double doubleValue()>();
+
+        d50 = $d43 * d48;
+
+        d51 = d50 / d49;
+
+        i0 = 0;
+
+     label2:
+        $d52 = staticinvoke <java.lang.Math: double abs(double)>(d51);
+
+        $b1 = $d52 cmpl 1.0E-9;
+
+        if $b1 <= 0 goto label3;
+
+        if i0 >= 10 goto label3;
+
+        $r32 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D INTEGRATOR>;
+
+        $r33 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d48);
+
+        $d44 = 2.0 * d48;
+
+        $r34 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d44);
+
+        $r35 = virtualinvoke $r32.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r16, $r33, $r34);
+
+        $d45 = virtualinvoke $r35.<java.lang.Double: double doubleValue()>();
+
+        d49 = d49 + $d45;
+
+        d48 = d48 * 2.0;
+
+        $r36 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d48);
+
+        $r37 = virtualinvoke $r16.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod$InArrearsIntegrant: java.lang.Double evaluate(java.lang.Double)>($r36);
+
+        $d46 = virtualinvoke $r37.<java.lang.Double: double doubleValue()>();
+
+        d53 = $d46 * d48;
+
+        d51 = d53 / d49;
+
+        i0 = i0 + 1;
+
+        if i0 != 10 goto label2;
+
+        $r38 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: org.slf4j.Logger LOGGER>;
+
+        interfaceinvoke $r38.<org.slf4j.Logger: void info(java.lang.String)>("Maximum iteration count, 10, has been reached. Relative error is greater than 1.0E-9");
+
+        goto label2;
+
+     label3:
+        goto label5;
+
+     label4:
+        d54 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $r17 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D INTEGRATOR>;
+
+        $d34 = 1.0E-10 * d54;
+
+        $r18 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d34);
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d54);
+
+        $r20 = virtualinvoke $r17.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r16, $r18, $r19);
+
+        d49 = virtualinvoke $r20.<java.lang.Double: double doubleValue()>();
+
+     label5:
+        goto label7;
+
+     label6:
+        $r39 := @caughtexception;
+
+        $r40 = new com.opengamma.analytics.math.MathException;
+
+        specialinvoke $r40.<com.opengamma.analytics.math.MathException: void <init>(java.lang.Throwable)>($r39);
+
+        throw $r40;
+
+     label7:
+        $d35 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        $d36 = 2.0 * $d35;
+
+        d55 = d49 * $d36;
+
+        $d37 = d3 + d55;
+
+        d56 = $d37 / d1;
+
+        $r21 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r22 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r21, d56);
+
+        return $r22;
+
+        catch java.lang.Exception from label1 to label5 with label6;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity presentValueCurveSensitivity(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor, com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor r1, $r11;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r2;
+        com.opengamma.util.money.Currency r3, $r12, $r17, $r35, $r49;
+        double d0, d1, d2, d3, d4, d5, d6, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, $d80, $d81, $d82, $d83, $d84, $d85, $d86, $d87, $d88, $d89, $d90, $d91, $d92, $d93, $d94, $d95, $d96, $d97, $d98, $d99, $d100, $d101, $d102, $d103, $d104, $d105, $d106, $d107, $d108, $d109, $d110, d111, d112, d113, d114, d115, d116, $d117, d118, d119, d120, d121, d122, d123, d124, d126, d127, d128, d129;
+        com.opengamma.analytics.financial.instrument.index.IborIndex $r13, $r14, $r46;
+        boolean $z0, $z1, $z2, $z3, $z7;
+        java.lang.Double $r15, $r16, $r18, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r41, $r42, $r43, $r53, $r54, $r55, $r57, $r58, $r60, $r61, $r62, $r63, $r64, $r66, $r67, $r68, $r69, $r70;
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod$InArrearsIntegrant $r19;
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D $r20, $r40, $r52, $r59, $r65;
+        java.util.ArrayList $r30, $r38;
+        com.opengamma.util.tuple.DoublesPair $r31, $r32, $r33;
+        java.util.HashMap $r34, $r45;
+        java.lang.String $r36, $r47;
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod$InArrearsDeltaIntegrant $r39;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.SimplyCompoundedForwardSensitivity $r44;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity $r50;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity $r51;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.InterpolatedSmileFunction $r56;
+        org.slf4j.Logger $r71;
+        java.lang.Exception $r72, $r74;
+        com.opengamma.analytics.math.MathException $r73, $r75;
+        int i0;
+        byte $b1;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "The cap/floor shoud not be null");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "curves");
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r11 = new com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor;
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentYearFraction()>();
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getNotional()>();
+
+        $d11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingTime()>();
+
+        $r13 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.analytics.financial.instrument.index.IborIndex getIndex()>();
+
+        $d12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $d13 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        $d15 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: boolean isCap()>();
+
+        specialinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: void <init>(com.opengamma.util.money.Currency,double,double,double,double,com.opengamma.analytics.financial.instrument.index.IborIndex,double,double,double,double,boolean)>($r12, $d8, $d9, $d10, $d11, $r13, $d12, $d13, $d14, $d15, $z0);
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.analytics.financial.instrument.index.IborIndex getIndex()>();
+
+        $d16 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $d17 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d18 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        d0 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getSimplyCompoundForwardRate(com.opengamma.analytics.financial.instrument.index.IborIndex,double,double,double)>($r14, $d16, $d17, $d18);
+
+        $d19 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        $d20 = $d19 * d0;
+
+        $d21 = 1.0 + $d20;
+
+        $d22 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d22);
+
+        $d23 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r15);
+
+        $d24 = $d21 * $d23;
+
+        $d25 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $r16 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d25);
+
+        $d26 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r16);
+
+        d1 = $d24 / $d26;
+
+        $r17 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d27 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentTime()>();
+
+        $r18 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d27);
+
+        d2 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r17, $r18);
+
+        $d28 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        $d29 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $d30 = $d28 * $d29;
+
+        $d31 = 1.0 + $d30;
+
+        $d32 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $d33 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingTime()>();
+
+        $z1 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: boolean isCap()>();
+
+        $d34 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getNotional()>();
+
+        $d35 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentYearFraction()>();
+
+        $d36 = specialinvoke r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: double presentValueStandard(double,double,double,boolean,double,double,double)>(d0, $d32, $d33, $z1, d2, $d34, $d35);
+
+        d3 = $d31 * $d36;
+
+        $d37 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        $d38 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $d39 = $d37 * $d38;
+
+        $d40 = 1.0 + $d39;
+
+        $d41 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $d42 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingTime()>();
+
+        $z2 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: boolean isCap()>();
+
+        $d43 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getNotional()>();
+
+        $d44 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentYearFraction()>();
+
+        $d45 = specialinvoke r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: double presentValueDeltaStandard(double,double,double,boolean,double,double,double)>(d0, $d41, $d42, $z2, d2, $d43, $d44);
+
+        d4 = $d40 * $d45;
+
+        $r19 = new com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod$InArrearsIntegrant;
+
+        specialinvoke $r19.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod$InArrearsIntegrant: void <init>(com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod,com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>(r0, $r11, r2);
+
+        d111 = 0.0;
+
+     label01:
+        $z3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: boolean isCap()>();
+
+        if $z3 == 0 goto label04;
+
+        $r56 = r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.InterpolatedSmileFunction _smileFunction>;
+
+        $r57 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r58 = virtualinvoke $r56.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.InterpolatedSmileFunction: java.lang.Double getVolatility(java.lang.Double)>($r57);
+
+        d112 = virtualinvoke $r58.<java.lang.Double: double doubleValue()>();
+
+        $d102 = 6.0 * d112;
+
+        $d103 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingTime()>();
+
+        $d104 = staticinvoke <java.lang.Math: double sqrt(double)>($d103);
+
+        $d105 = $d102 * $d104;
+
+        $d106 = staticinvoke <java.lang.Math: double exp(double)>($d105);
+
+        d111 = d0 * $d106;
+
+        d113 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $r59 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D INTEGRATOR>;
+
+        $r60 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d113);
+
+        $r61 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d111);
+
+        $r62 = virtualinvoke $r59.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r19, $r60, $r61);
+
+        d114 = virtualinvoke $r62.<java.lang.Double: double doubleValue()>();
+
+        $r63 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d111);
+
+        $r64 = virtualinvoke $r19.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod$InArrearsIntegrant: java.lang.Double evaluate(java.lang.Double)>($r63);
+
+        $d107 = virtualinvoke $r64.<java.lang.Double: double doubleValue()>();
+
+        d115 = $d107 * d111;
+
+        d116 = d115 / d114;
+
+        i0 = 0;
+
+     label02:
+        $d117 = staticinvoke <java.lang.Math: double abs(double)>(d116);
+
+        $b1 = $d117 cmpl 1.0E-9;
+
+        if $b1 <= 0 goto label03;
+
+        if i0 >= 10 goto label03;
+
+        $r65 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D INTEGRATOR>;
+
+        $r66 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d111);
+
+        $d108 = 2.0 * d111;
+
+        $r67 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d108);
+
+        $r68 = virtualinvoke $r65.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r19, $r66, $r67);
+
+        $d109 = virtualinvoke $r68.<java.lang.Double: double doubleValue()>();
+
+        d114 = d114 + $d109;
+
+        d111 = d111 * 2.0;
+
+        $r69 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d111);
+
+        $r70 = virtualinvoke $r19.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod$InArrearsIntegrant: java.lang.Double evaluate(java.lang.Double)>($r69);
+
+        $d110 = virtualinvoke $r70.<java.lang.Double: double doubleValue()>();
+
+        d118 = $d110 * d111;
+
+        d116 = d118 / d114;
+
+        i0 = i0 + 1;
+
+        if i0 != 10 goto label02;
+
+        $r71 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: org.slf4j.Logger LOGGER>;
+
+        interfaceinvoke $r71.<org.slf4j.Logger: void info(java.lang.String)>("Maximum iteration count, 10, has been reached. Relative error is greater than 1.0E-9");
+
+        goto label02;
+
+     label03:
+        goto label05;
+
+     label04:
+        d119 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $r20 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D INTEGRATOR>;
+
+        $d46 = 1.0E-10 * d119;
+
+        $r21 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d46);
+
+        $r22 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d119);
+
+        $r23 = virtualinvoke $r20.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r19, $r21, $r22);
+
+        d114 = virtualinvoke $r23.<java.lang.Double: double doubleValue()>();
+
+     label05:
+        goto label07;
+
+     label06:
+        $r74 := @caughtexception;
+
+        $r75 = new com.opengamma.analytics.math.MathException;
+
+        specialinvoke $r75.<com.opengamma.analytics.math.MathException: void <init>(java.lang.Throwable)>($r74);
+
+        throw $r75;
+
+     label07:
+        $d47 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        $d48 = 2.0 * $d47;
+
+        d120 = d114 * $d48;
+
+        $d49 = d3 + d120;
+
+        d121 = $d49 / d1;
+
+        $d50 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        $d51 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $r24 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d51);
+
+        $d52 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r24);
+
+        $d53 = $d50 * $d52;
+
+        $d54 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $r25 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d54);
+
+        $d55 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r25);
+
+        d122 = $d53 / $d55;
+
+        $d56 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        $d57 = $d56 * d0;
+
+        $d58 = 1.0 + $d57;
+
+        $d59 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $r26 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d59);
+
+        $d60 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r26);
+
+        $d61 = $d58 * $d60;
+
+        $d62 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $d63 = $d61 * $d62;
+
+        $d64 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $r27 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d64);
+
+        $d65 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r27);
+
+        d123 = $d63 / $d65;
+
+        $d66 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        $d67 = $d66 * d0;
+
+        $d68 = 1.0 + $d67;
+
+        $d69 = neg $d68;
+
+        $d70 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $r28 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d70);
+
+        $d71 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r28);
+
+        $d72 = $d69 * $d71;
+
+        $d73 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d74 = $d72 * $d73;
+
+        $d75 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $r29 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d75);
+
+        $d76 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r29);
+
+        d124 = $d74 / $d76;
+
+        $r30 = new java.util.ArrayList;
+
+        specialinvoke $r30.<java.util.ArrayList: void <init>()>();
+
+        $d77 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentTime()>();
+
+        $d78 = neg $d77;
+
+        d5 = $d78 * d3;
+
+        $d79 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentTime()>();
+
+        $d80 = neg $d79;
+
+        d6 = $d80 * d120;
+
+        $d81 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getPaymentTime()>();
+
+        $d82 = d5 + d6;
+
+        $d83 = $d82 / d1;
+
+        $r31 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d81, $d83);
+
+        interfaceinvoke $r30.<java.util.List: boolean add(java.lang.Object)>($r31);
+
+        $d84 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $d85 = neg d121;
+
+        $d86 = $d85 * d123;
+
+        $d87 = $d86 / d1;
+
+        $r32 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d84, $d87);
+
+        interfaceinvoke $r30.<java.util.List: boolean add(java.lang.Object)>($r32);
+
+        $d88 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d89 = neg d121;
+
+        $d90 = $d89 * d124;
+
+        $d91 = $d90 / d1;
+
+        $r33 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d88, $d91);
+
+        interfaceinvoke $r30.<java.util.List: boolean add(java.lang.Object)>($r33);
+
+        $r34 = new java.util.HashMap;
+
+        specialinvoke $r34.<java.util.HashMap: void <init>()>();
+
+        $r35 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r36 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: java.lang.String getName(com.opengamma.util.money.Currency)>($r35);
+
+        interfaceinvoke $r34.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r36, $r30);
+
+        $r38 = new java.util.ArrayList;
+
+        specialinvoke $r38.<java.util.ArrayList: void <init>()>();
+
+        $r39 = new com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod$InArrearsDeltaIntegrant;
+
+        specialinvoke $r39.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod$InArrearsDeltaIntegrant: void <init>(com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod,com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>(r0, $r11, r2);
+
+     label08:
+        $z7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: boolean isCap()>();
+
+        if $z7 == 0 goto label09;
+
+        d126 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $r52 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D INTEGRATOR>;
+
+        $r53 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d126);
+
+        $r54 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d111);
+
+        $r55 = virtualinvoke $r52.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r39, $r53, $r54);
+
+        d127 = virtualinvoke $r55.<java.lang.Double: double doubleValue()>();
+
+        goto label10;
+
+     label09:
+        d128 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getStrike()>();
+
+        $r40 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D INTEGRATOR>;
+
+        $d92 = 1.0E-10 * d128;
+
+        $r41 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d92);
+
+        $r42 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d128);
+
+        $r43 = virtualinvoke $r40.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r39, $r41, $r42);
+
+        d127 = virtualinvoke $r43.<java.lang.Double: double doubleValue()>();
+
+     label10:
+        goto label12;
+
+     label11:
+        $r72 := @caughtexception;
+
+        $r73 = new com.opengamma.analytics.math.MathException;
+
+        specialinvoke $r73.<com.opengamma.analytics.math.MathException: void <init>(java.lang.Throwable)>($r72);
+
+        throw $r73;
+
+     label12:
+        $d93 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        $d94 = 2.0 * $d93;
+
+        d129 = d127 * $d94;
+
+        $r44 = new com.opengamma.analytics.financial.provider.sensitivity.multicurve.SimplyCompoundedForwardSensitivity;
+
+        $d95 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodStartTime()>();
+
+        $d96 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingPeriodEndTime()>();
+
+        $d97 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingAccrualFactor()>();
+
+        $d99 = d4 + d129;
+
+        $d98 = d121 * d122;
+
+        $d100 = $d99 - $d98;
+
+        $d101 = $d100 / d1;
+
+        specialinvoke $r44.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.SimplyCompoundedForwardSensitivity: void <init>(double,double,double,double)>($d95, $d96, $d97, $d101);
+
+        interfaceinvoke $r38.<java.util.List: boolean add(java.lang.Object)>($r44);
+
+        $r45 = new java.util.HashMap;
+
+        specialinvoke $r45.<java.util.HashMap: void <init>()>();
+
+        $r46 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.analytics.financial.instrument.index.IborIndex getIndex()>();
+
+        $r47 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: java.lang.String getName(com.opengamma.analytics.financial.instrument.index.IborIndex)>($r46);
+
+        interfaceinvoke $r45.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r47, $r38);
+
+        $r49 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r50 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity of(java.util.Map,java.util.Map)>($r34, $r45);
+
+        $r51 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity of(com.opengamma.util.money.Currency,com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>($r49, $r50);
+
+        return $r51;
+
+        catch java.lang.Exception from label01 to label05 with label06;
+        catch java.lang.Exception from label08 to label10 with label11;
+    }
+
+    private double presentValueStandard(double, double, double, boolean, double, double, double)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, $d8, $d9, $d10;
+        boolean z0;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.InterpolatedSmileFunction $r1;
+        java.lang.Double $r2, $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        z0 := @parameter3: boolean;
+
+        d3 := @parameter4: double;
+
+        d4 := @parameter5: double;
+
+        d5 := @parameter6: double;
+
+        $r1 = r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.InterpolatedSmileFunction _smileFunction>;
+
+        $r2 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r3 = virtualinvoke $r1.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.InterpolatedSmileFunction: java.lang.Double getVolatility(java.lang.Double)>($r2);
+
+        d6 = virtualinvoke $r3.<java.lang.Double: double doubleValue()>();
+
+        $d8 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double price(double,double,double,double,boolean)>(d0, d1, d2, d6, z0);
+
+        $d9 = $d8 * d3;
+
+        $d10 = $d9 * d4;
+
+        d7 = $d10 * d5;
+
+        return d7;
+    }
+
+    private double presentValueDeltaStandard(double, double, double, boolean, double, double, double)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, $d8, $d9, $d10;
+        boolean z0;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.InterpolatedSmileFunction $r1;
+        java.lang.Double $r2, $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        z0 := @parameter3: boolean;
+
+        d3 := @parameter4: double;
+
+        d4 := @parameter5: double;
+
+        d5 := @parameter6: double;
+
+        $r1 = r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.InterpolatedSmileFunction _smileFunction>;
+
+        $r2 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r3 = virtualinvoke $r1.<com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.InterpolatedSmileFunction: java.lang.Double getVolatility(java.lang.Double)>($r2);
+
+        d6 = virtualinvoke $r3.<java.lang.Double: double doubleValue()>();
+
+        $d8 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double delta(double,double,double,double,boolean)>(d0, d1, d2, d6, z0);
+
+        $d9 = $d8 * d3;
+
+        $d10 = $d9 * d4;
+
+        d7 = $d10 * d5;
+
+        return d7;
+    }
+
+    static double access$000(com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod, double, double, double, boolean, double, double, double)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod r0;
+        double d0, d1, d2, d3, d4, d5, $d6;
+        boolean z0;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        d2 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        d3 := @parameter5: double;
+
+        d4 := @parameter6: double;
+
+        d5 := @parameter7: double;
+
+        $d6 = specialinvoke r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: double presentValueStandard(double,double,double,boolean,double,double,double)>(d0, d1, d2, z0, d3, d4, d5);
+
+        return $d6;
+    }
+
+    static double access$100(com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod, double, double, double, boolean, double, double, double)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod r0;
+        double d0, d1, d2, d3, d4, d5, $d6;
+        boolean z0;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        d2 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        d3 := @parameter5: double;
+
+        d4 := @parameter6: double;
+
+        d5 := @parameter7: double;
+
+        $d6 = specialinvoke r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: double presentValueDeltaStandard(double,double,double,boolean,double,double,double)>(d0, d1, d2, z0, d3, d4, d5);
+
+        return $d6;
+    }
+
+    static void <clinit>()
+    {
+        org.slf4j.Logger $r0;
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D $r1;
+
+        <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: double REL_ERROR> = 1.0E-9;
+
+        <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: double REL_TOL> = 1.0E-10;
+
+        <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: double ABS_TOL> = 1.0;
+
+        <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: int MAX_COUNT> = 10;
+
+        <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: int MINIMUM_STEP> = 6;
+
+        $r0 = staticinvoke <org.slf4j.LoggerFactory: org.slf4j.Logger getLogger(java.lang.Class)>(class "com/opengamma/analytics/financial/interestrate/payments/provider/CapFloorIborInArrearsSmileModelCapGenericReplicationMethod");
+
+        <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: org.slf4j.Logger LOGGER> = $r0;
+
+        $r1 = new com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        specialinvoke $r1.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: void <init>(double,double,int)>(1.0, 1.0E-10, 6);
+
+        <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorIborInArrearsSmileModelCapGenericReplicationMethod: com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D INTEGRATOR> = $r1;
+
+        return;
+    }
+}

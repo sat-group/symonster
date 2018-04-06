@@ -1,0 +1,335 @@
+public final class com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod extends java.lang.Object
+{
+    private static final com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod INSTANCE;
+    private static final com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel MODEL;
+    private static final com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator CFEC;
+    private static final int NB_INTEGRATION;
+
+    public static com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod getInstance()
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod $r0;
+
+        $r0 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod INSTANCE>;
+
+        return $r0;
+    }
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod r0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS, com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface r2;
+        com.opengamma.util.money.Currency r3, $r30;
+        com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters r4;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r5;
+        double d0, d1, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, d33, $d34, d36;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon r6, $r18;
+        int i0, $i1, $i2, $i3, $i4, i5, i6;
+        double[] r7, r8, r9, r10, r11, r12;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed $r19, $r45, $r48, $r52, $r55;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity $r20;
+        com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator $r21;
+        java.lang.Object $r22;
+        com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel $r23, $r36, $r44;
+        java.lang.Double $r24, $r27, $r28, $r29, $r41, $r51;
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod$CMSIntegrant $r25;
+        boolean $z0;
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D $r26;
+        com.opengamma.util.money.MultipleCurrencyAmount $r31;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r37, $r39, $r42, $r46, $r49, $r53, $r56;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r38, $r40, $r43;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed $r47, $r50, $r54, $r57;
+        java.lang.Exception $r58;
+        com.opengamma.analytics.math.MathException $r59;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed r60;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "CMS");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Hull-White provider");
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: com.opengamma.util.money.Currency getCurrency()>();
+
+        r4 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface: com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters getHullWhiteParameters()>();
+
+        r5 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteOneFactorProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        d0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getFixingTime()>();
+
+        r6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        $r18 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        $r19 = virtualinvoke $r18.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        i0 = virtualinvoke $r19.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: int getNumberOfPayments()>();
+
+        r7 = newarray (double)[i0];
+
+        r8 = newarray (double)[i0];
+
+        r9 = newarray (double)[i0];
+
+        i5 = 0;
+
+     label01:
+        if i5 >= i0 goto label02;
+
+        $r44 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel MODEL>;
+
+        $r45 = virtualinvoke r6.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $r46 = virtualinvoke $r45.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i5);
+
+        $r47 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed) $r46;
+
+        $d24 = virtualinvoke $r47.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: double getPaymentTime()>();
+
+        $d25 = virtualinvoke $r44.<com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel: double alpha(com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters,double,double,double,double)>(r4, 0.0, d0, d0, $d24);
+
+        r7[i5] = $d25;
+
+        $r48 = virtualinvoke r6.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $r49 = virtualinvoke $r48.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i5);
+
+        $r50 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed) $r49;
+
+        $d26 = virtualinvoke $r50.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: double getPaymentTime()>();
+
+        $r51 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d26);
+
+        $d27 = interfaceinvoke r5.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r51);
+
+        r8[i5] = $d27;
+
+        $d28 = r8[i5];
+
+        $r52 = virtualinvoke r6.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $r53 = virtualinvoke $r52.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i5);
+
+        $r54 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed) $r53;
+
+        $d29 = virtualinvoke $r54.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: double getPaymentYearFraction()>();
+
+        $d30 = $d28 * $d29;
+
+        $r55 = virtualinvoke r6.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $r56 = virtualinvoke $r55.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i5);
+
+        $r57 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed) $r56;
+
+        $d31 = virtualinvoke $r57.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: double getNotional()>();
+
+        $d32 = $d30 * $d31;
+
+        r9[i5] = $d32;
+
+        i5 = i5 + 1;
+
+        goto label01;
+
+     label02:
+        $r20 = virtualinvoke r6.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getSecondLeg()>();
+
+        $r21 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator CFEC>;
+
+        $r22 = virtualinvoke $r20.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r21, r5);
+
+        r60 = (com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed) $r22;
+
+        $i1 = virtualinvoke r60.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        r10 = newarray (double)[$i1];
+
+        $i2 = virtualinvoke r60.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        r11 = newarray (double)[$i2];
+
+        $i3 = virtualinvoke r60.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        r12 = newarray (double)[$i3];
+
+        i6 = 0;
+
+     label03:
+        $i4 = virtualinvoke r60.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        if i6 >= $i4 goto label04;
+
+        $r36 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel MODEL>;
+
+        $r37 = virtualinvoke r60.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i6);
+
+        $r38 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r37;
+
+        $d17 = virtualinvoke $r38.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getPaymentTime()>();
+
+        $d18 = virtualinvoke $r36.<com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel: double alpha(com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters,double,double,double,double)>(r4, 0.0, d0, d0, $d17);
+
+        r10[i6] = $d18;
+
+        $r39 = virtualinvoke r60.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i6);
+
+        $r40 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r39;
+
+        $d19 = virtualinvoke $r40.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getPaymentTime()>();
+
+        $r41 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d19);
+
+        $d20 = interfaceinvoke r5.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r41);
+
+        r11[i6] = $d20;
+
+        $d21 = r11[i6];
+
+        $r42 = virtualinvoke r60.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i6);
+
+        $r43 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r42;
+
+        $d22 = virtualinvoke $r43.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        $d23 = $d21 * $d22;
+
+        r12[i6] = $d23;
+
+        i6 = i6 + 1;
+
+        goto label03;
+
+     label04:
+        $r23 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel MODEL>;
+
+        $d5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getPaymentTime()>();
+
+        d33 = virtualinvoke $r23.<com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel: double alpha(com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters,double,double,double,double)>(r4, 0.0, d0, d0, $d5);
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getPaymentTime()>();
+
+        $r24 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d6);
+
+        d1 = interfaceinvoke r5.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>(r3, $r24);
+
+        $r25 = new com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod$CMSIntegrant;
+
+        $d7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getStrike()>();
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: boolean isCap()>();
+
+        if $z0 == 0 goto label05;
+
+        $d34 = 1.0;
+
+        goto label06;
+
+     label05:
+        $d34 = -1.0;
+
+     label06:
+        specialinvoke $r25.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod$CMSIntegrant: void <init>(double[],double[],double[],double[],double,double,double)>(r9, r7, r12, r10, d33, $d7, $d34);
+
+        $r26 = new com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        specialinvoke $r26.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: void <init>(double,double,int)>(1.0E-8, 1.0E-9, 100);
+
+     label07:
+        $d8 = staticinvoke <java.lang.Math: double sqrt(double)>(6.283185307179586);
+
+        $d9 = 1.0 / $d8;
+
+        $r27 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(-10.0);
+
+        $r28 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(10.0);
+
+        $r29 = virtualinvoke $r26.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r25, $r27, $r28);
+
+        $d10 = virtualinvoke $r29.<java.lang.Double: double doubleValue()>();
+
+        $d11 = $d9 * $d10;
+
+        $d12 = $d11 * d1;
+
+        $d13 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getNotional()>();
+
+        $d14 = $d12 * $d13;
+
+        $d15 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: double getPaymentYearFraction()>();
+
+        d36 = $d14 * $d15;
+
+     label08:
+        goto label10;
+
+     label09:
+        $r58 := @caughtexception;
+
+        $r59 = new com.opengamma.analytics.math.MathException;
+
+        specialinvoke $r59.<com.opengamma.analytics.math.MathException: void <init>(java.lang.Throwable)>($r58);
+
+        throw $r59;
+
+     label10:
+        $r30 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorCMS: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r31 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r30, d36);
+
+        return $r31;
+
+        catch java.lang.Exception from label07 to label08 with label09;
+    }
+
+    static com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel access$000()
+    {
+        com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel $r0;
+
+        $r0 = <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel MODEL>;
+
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod $r0;
+        com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel $r1;
+        com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator $r2;
+
+        <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod: int NB_INTEGRATION> = 100;
+
+        $r0 = new com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod INSTANCE> = $r0;
+
+        $r1 = new com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel MODEL> = $r1;
+
+        $r2 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.payments.provider.CapFloorCMSHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator CFEC> = $r2;
+
+        return;
+    }
+}

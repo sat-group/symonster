@@ -1,0 +1,338 @@
+public class com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve extends com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve
+{
+    private final com.opengamma.analytics.math.curve.DoublesCurve _curve;
+
+    public void <init>(java.lang.String, com.opengamma.analytics.math.curve.DoublesCurve)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve r0;
+        java.lang.String r1;
+        com.opengamma.analytics.math.curve.DoublesCurve r2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        r1 := @parameter0: java.lang.String;
+
+        r2 := @parameter1: com.opengamma.analytics.math.curve.DoublesCurve;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: void <init>(java.lang.String)>(r1);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Curve");
+
+        r0.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve> = r2;
+
+        return;
+    }
+
+    public static com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve 'from'(com.opengamma.analytics.math.curve.DoublesCurve)
+    {
+        com.opengamma.analytics.math.curve.DoublesCurve r0;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve $r2;
+        java.lang.String $r3;
+
+        r0 := @parameter0: com.opengamma.analytics.math.curve.DoublesCurve;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r0, "Curve");
+
+        $r2 = new com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.math.curve.DoublesCurve: java.lang.String getName()>();
+
+        specialinvoke $r2.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: void <init>(java.lang.String,com.opengamma.analytics.math.curve.DoublesCurve)>($r3, r0);
+
+        return $r2;
+    }
+
+    public static com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve fromDiscountFactorInterpolated(double[], double[], com.opengamma.analytics.math.interpolation.Interpolator1D, java.lang.String)
+    {
+        double[] r0, r1, r4;
+        com.opengamma.analytics.math.interpolation.Interpolator1D r2;
+        java.lang.String r3;
+        int i0, $i1, i2;
+        com.opengamma.analytics.math.curve.InterpolatedDoublesCurve $r5;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve $r6;
+        double $d0, $d1, $d2, $d3, $d4;
+        boolean $z0;
+
+        r0 := @parameter0: double[];
+
+        r1 := @parameter1: double[];
+
+        r2 := @parameter2: com.opengamma.analytics.math.interpolation.Interpolator1D;
+
+        r3 := @parameter3: java.lang.String;
+
+        i0 = lengthof r1;
+
+        $i1 = lengthof r0;
+
+        if $i1 != i0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Yields array of incorrect length");
+
+        r4 = newarray (double)[i0];
+
+        i2 = 0;
+
+     label3:
+        if i2 >= i0 goto label4;
+
+        $d0 = r1[i2];
+
+        $d1 = staticinvoke <java.lang.Math: double log(double)>($d0);
+
+        $d3 = neg $d1;
+
+        $d2 = r0[i2];
+
+        $d4 = $d3 / $d2;
+
+        r4[i2] = $d4;
+
+        i2 = i2 + 1;
+
+        goto label3;
+
+     label4:
+        $r5 = new com.opengamma.analytics.math.curve.InterpolatedDoublesCurve;
+
+        specialinvoke $r5.<com.opengamma.analytics.math.curve.InterpolatedDoublesCurve: void <init>(double[],double[],com.opengamma.analytics.math.interpolation.Interpolator1D,boolean)>(r0, r4, r2, 0);
+
+        $r6 = new com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        specialinvoke $r6.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: void <init>(java.lang.String,com.opengamma.analytics.math.curve.DoublesCurve)>(r3, $r5);
+
+        return $r6;
+    }
+
+    public double getInterestRate(java.lang.Double)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve r0;
+        java.lang.Double r1, $r4;
+        com.opengamma.analytics.math.curve.DoublesCurve $r2;
+        java.lang.Object $r3;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        r1 := @parameter0: java.lang.Double;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.math.curve.DoublesCurve getCurve()>();
+
+        $r3 = virtualinvoke $r2.<com.opengamma.analytics.math.curve.DoublesCurve: java.lang.Object getYValue(java.lang.Comparable)>(r1);
+
+        $r4 = (java.lang.Double) $r3;
+
+        $d0 = virtualinvoke $r4.<java.lang.Double: double doubleValue()>();
+
+        return $d0;
+    }
+
+    public double getForwardRate(double)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve r0;
+        double d0, $d1, $d2, $d3, $d4;
+        com.opengamma.analytics.math.curve.DoublesCurve r1;
+        java.lang.Double $r2, $r4;
+        java.lang.Object $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        d0 := @parameter0: double;
+
+        r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.math.curve.DoublesCurve getCurve()>();
+
+        $r2 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.math.curve.DoublesCurve: java.lang.Object getYValue(java.lang.Comparable)>($r2);
+
+        $r4 = (java.lang.Double) $r3;
+
+        $d1 = virtualinvoke $r4.<java.lang.Double: double doubleValue()>();
+
+        $d2 = virtualinvoke r1.<com.opengamma.analytics.math.curve.DoublesCurve: double getDyDx(double)>(d0);
+
+        $d3 = d0 * $d2;
+
+        $d4 = $d1 + $d3;
+
+        return $d4;
+    }
+
+    public double[] getInterestRateParameterSensitivity(double)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve r0;
+        double d0;
+        com.opengamma.analytics.math.curve.DoublesCurve $r1;
+        java.lang.Double $r2;
+        java.lang.Double[] $r3;
+        double[] $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        d0 := @parameter0: double;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve>;
+
+        $r2 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r3 = virtualinvoke $r1.<com.opengamma.analytics.math.curve.DoublesCurve: java.lang.Double[] getYValueParameterSensitivity(java.lang.Double)>($r2);
+
+        $r4 = staticinvoke <org.apache.commons.lang.ArrayUtils: double[] toPrimitive(java.lang.Double[])>($r3);
+
+        return $r4;
+    }
+
+    public int getNumberOfParameters()
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve r0;
+        com.opengamma.analytics.math.curve.DoublesCurve $r1;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve>;
+
+        $i0 = virtualinvoke $r1.<com.opengamma.analytics.math.curve.DoublesCurve: int size()>();
+
+        return $i0;
+    }
+
+    public java.util.List getUnderlyingCurvesNames()
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve r0;
+        java.util.ArrayList $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        $r1 = new java.util.ArrayList;
+
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+
+        return $r1;
+    }
+
+    public com.opengamma.analytics.math.curve.DoublesCurve getCurve()
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve r0;
+        com.opengamma.analytics.math.curve.DoublesCurve $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve>;
+
+        return $r1;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve r0;
+        com.opengamma.analytics.math.curve.DoublesCurve $r1;
+        int $i1, $i2, i4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        $i1 = 31 * 1;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve>;
+
+        $i2 = virtualinvoke $r1.<com.opengamma.analytics.math.curve.DoublesCurve: int hashCode()>();
+
+        i4 = $i1 + $i2;
+
+        return i4;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve r0, r2;
+        java.lang.Object r1;
+        java.lang.Class $r3, $r4;
+        com.opengamma.analytics.math.curve.DoublesCurve $r5, $r6;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        if r1 != null goto label2;
+
+        return 0;
+
+     label2:
+        $r3 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r4 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+
+        if $r3 == $r4 goto label3;
+
+        return 0;
+
+     label3:
+        r2 = (com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve) r1;
+
+        $r6 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve>;
+
+        $r5 = r2.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve>;
+
+        $z0 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r6, $r5);
+
+        return $z0;
+    }
+
+    public java.lang.String toString()
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve r0;
+        java.lang.StringBuilder $r1, $r2, $r4, $r5;
+        com.opengamma.analytics.math.curve.DoublesCurve $r3;
+        java.lang.String $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        $r1 = new java.lang.StringBuilder;
+
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+
+        $r2 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("YieldCurve [_curve=");
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.math.curve.DoublesCurve _curve>;
+
+        $r4 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r3);
+
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        return $r6;
+    }
+
+    public volatile double getInterestRate(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve r0;
+        java.lang.Object r1;
+        java.lang.Double $r2;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        r1 := @parameter0: java.lang.Object;
+
+        $r2 = (java.lang.Double) r1;
+
+        $d0 = virtualinvoke r0.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: double getInterestRate(java.lang.Double)>($r2);
+
+        return $d0;
+    }
+}

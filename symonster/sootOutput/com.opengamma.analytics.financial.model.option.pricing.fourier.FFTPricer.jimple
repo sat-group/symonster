@@ -1,0 +1,1035 @@
+public class com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer extends java.lang.Object
+{
+    private static final com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL;
+    private static final com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator LIMIT_CALCULATOR;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public double[][] price(double, double, double, boolean, com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent, double, double, int, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, d62, d63;
+        boolean z0, $z1, $z2, $z3, $z4;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent r1;
+        int i0, i1, i2, i3, i4, i5, $i11;
+        com.opengamma.analytics.math.function.Function1D r3;
+        byte $b6, $b7, $b8, $b9, $b10, $b12, $b13, $b14;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r4;
+        java.lang.Double $r5;
+        double[][] $r6;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanCallFourierTransform $r7;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        z0 := @parameter3: boolean;
+
+        r1 := @parameter4: com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent;
+
+        d3 := @parameter5: double;
+
+        d4 := @parameter6: double;
+
+        i0 := @parameter7: int;
+
+        d5 := @parameter8: double;
+
+        d6 := @parameter9: double;
+
+        d7 := @parameter10: double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "characteristic exponent");
+
+        $b6 = d7 cmpl 0.0;
+
+        if $b6 <= 0 goto label01;
+
+        $z1 = 1;
+
+        goto label02;
+
+     label01:
+        $z1 = 0;
+
+     label02:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "need tol > 0");
+
+        $b7 = d6 cmpl 0.0;
+
+        if $b7 == 0 goto label03;
+
+        $b12 = d6 cmpl -1.0;
+
+        if $b12 == 0 goto label03;
+
+        $z2 = 1;
+
+        goto label04;
+
+     label03:
+        $z2 = 0;
+
+     label04:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z2, "alpha cannot be -1 or 0");
+
+        $b13 = d4 cmpl d3;
+
+        if $b13 < 0 goto label05;
+
+        $z3 = 1;
+
+        goto label06;
+
+     label05:
+        $z3 = 0;
+
+     label06:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z3, "need highestStrike >= lowestStrike");
+
+        $b8 = d5 cmpl 0.0;
+
+        if $b8 <= 0 goto label07;
+
+        $z4 = 1;
+
+        goto label08;
+
+     label07:
+        $z4 = 0;
+
+     label08:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z4, "need limitSigma > 0");
+
+        $d13 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d8 = d5 * $d13;
+
+        $r4 = <com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d14 = d8 / 2.0;
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d14);
+
+        d9 = interfaceinvoke $r4.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r5);
+
+        $b9 = d6 cmpl 0.0;
+
+        if $b9 <= 0 goto label09;
+
+        $d57 = 2.0 * d9;
+
+        $d58 = $d57 - 1.0;
+
+        $d59 = $d58 * d7;
+
+        $d60 = staticinvoke <java.lang.Math: double log(double)>($d59);
+
+        $d61 = neg $d60;
+
+        d62 = $d61 / d6;
+
+        goto label11;
+
+     label09:
+        $b10 = d6 cmpg -1.0;
+
+        if $b10 >= 0 goto label10;
+
+        $d52 = 2.0 * d9;
+
+        $d53 = $d52 - 1.0;
+
+        $d54 = $d53 * d7;
+
+        $d55 = staticinvoke <java.lang.Math: double log(double)>($d54);
+
+        $d56 = 1.0 + d6;
+
+        d62 = $d55 / $d56;
+
+        goto label11;
+
+     label10:
+        $d15 = 1.0 - d9;
+
+        $d16 = 2.0 * $d15;
+
+        $d17 = $d16 * d7;
+
+        $d18 = staticinvoke <java.lang.Math: double log(double)>($d17);
+
+        $d22 = neg $d18;
+
+        $d21 = -1.0 / d6;
+
+        $d19 = 1.0 + d6;
+
+        $d20 = 1.0 / $d19;
+
+        $d23 = staticinvoke <java.lang.Math: double max(double,double)>($d21, $d20);
+
+        d62 = $d22 * $d23;
+
+     label11:
+        $r7 = new com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanCallFourierTransform;
+
+        specialinvoke $r7.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanCallFourierTransform: void <init>(com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent)>(r1);
+
+        r3 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanCallFourierTransform: com.opengamma.analytics.math.function.Function1D getFunction(double)>(d2);
+
+        $r8 = <com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer: com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator LIMIT_CALCULATOR>;
+
+        d10 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator: double solve(com.opengamma.analytics.math.function.Function1D,double,double)>(r3, d6, d7);
+
+        $b14 = d4 cmpl d3;
+
+        if $b14 != 0 goto label12;
+
+        d63 = 3.141592653589793 / d10;
+
+        goto label13;
+
+     label12:
+        $d24 = d4 / d3;
+
+        $d25 = staticinvoke <java.lang.Math: double log(double)>($d24);
+
+        $i11 = i0 - 1;
+
+        $d26 = (double) $i11;
+
+        $d28 = $d25 / $d26;
+
+        $d27 = 3.141592653589793 / d10;
+
+        d63 = staticinvoke <java.lang.Math: double min(double,double)>($d28, $d27);
+
+     label13:
+        d11 = staticinvoke <java.lang.Math: double log(double)>(2.0);
+
+        $d29 = d62 / d63;
+
+        $d30 = staticinvoke <java.lang.Math: double log(double)>($d29);
+
+        $d31 = $d30 / d11;
+
+        $d32 = staticinvoke <java.lang.Math: double ceil(double)>($d31);
+
+        i1 = (int) $d32;
+
+        $d33 = (double) i1;
+
+        $d34 = staticinvoke <java.lang.Math: double pow(double,double)>(2.0, $d33);
+
+        i2 = (int) $d34;
+
+        $d35 = (double) i2;
+
+        $d36 = 6.283185307179586 / $d35;
+
+        d12 = $d36 / d63;
+
+        $d38 = d10 * d63;
+
+        $d37 = (double) i2;
+
+        $d39 = $d38 * $d37;
+
+        $d40 = $d39 / 2.0;
+
+        $d41 = $d40 / 3.141592653589793;
+
+        i3 = (int) $d41;
+
+        $d42 = d0 / d3;
+
+        $d43 = staticinvoke <java.lang.Math: double log(double)>($d42);
+
+        $d44 = $d43 / d63;
+
+        $d45 = staticinvoke <java.lang.Math: double ceil(double)>($d44);
+
+        $d46 = staticinvoke <java.lang.Math: double max(double,double)>(0.0, $d45);
+
+        i4 = (int) $d46;
+
+        $d47 = d4 / d0;
+
+        $d48 = staticinvoke <java.lang.Math: double log(double)>($d47);
+
+        $d49 = $d48 / d63;
+
+        $d50 = staticinvoke <java.lang.Math: double ceil(double)>($d49);
+
+        $d51 = staticinvoke <java.lang.Math: double max(double,double)>(0.0, $d50);
+
+        i5 = (int) $d51;
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer: double[][] price(double,double,double,boolean,com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent,int,int,double,double,int,int)>(d0, d1, d2, z0, r1, i4, i5, d6, d12, i2, i3);
+
+        return $r6;
+    }
+
+    public double[][] price(double, double, double, boolean, com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent, int, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer r0;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48;
+        boolean z0, $z1, $z2, $z3, $z4, $z5;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent r1;
+        int i0, i1, i2, i3, $i9, $i12, i13, i14;
+        com.opengamma.analytics.math.function.Function1D r2;
+        byte $b4, $b5, $b6, $b7, $b8, $b10, $b11;
+        com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution $r3;
+        java.lang.Double $r4;
+        double[][] $r5;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanCallFourierTransform $r6;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator $r7;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        z0 := @parameter3: boolean;
+
+        r1 := @parameter4: com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent;
+
+        i0 := @parameter5: int;
+
+        d3 := @parameter6: double;
+
+        d4 := @parameter7: double;
+
+        d5 := @parameter8: double;
+
+        d6 := @parameter9: double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "characteristicExponent");
+
+        $b4 = d6 cmpl 0.0;
+
+        if $b4 <= 0 goto label01;
+
+        $z1 = 1;
+
+        goto label02;
+
+     label01:
+        $z1 = 0;
+
+     label02:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "need tol > 0");
+
+        if i0 <= 0 goto label03;
+
+        $z2 = 1;
+
+        goto label04;
+
+     label03:
+        $z2 = 0;
+
+     label04:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z2, "need number of strikes > 0");
+
+        $b5 = d3 cmpl 0.0;
+
+        if $b5 <= 0 goto label05;
+
+        $z3 = 1;
+
+        goto label06;
+
+     label05:
+        $z3 = 0;
+
+     label06:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z3, "need max delta moneyness > 0");
+
+        $b6 = d5 cmpl 0.0;
+
+        if $b6 == 0 goto label07;
+
+        $b10 = d5 cmpl -1.0;
+
+        if $b10 == 0 goto label07;
+
+        $z4 = 1;
+
+        goto label08;
+
+     label07:
+        $z4 = 0;
+
+     label08:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z4, "alpha cannot be -1 or 0");
+
+        $b11 = d4 cmpl 0.0;
+
+        if $b11 <= 0 goto label09;
+
+        $z5 = 1;
+
+        goto label10;
+
+     label09:
+        $z5 = 0;
+
+     label10:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z5, "need limitSigma > 0");
+
+        $d13 = staticinvoke <java.lang.Math: double sqrt(double)>(d2);
+
+        d7 = d4 * $d13;
+
+        $r3 = <com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL>;
+
+        $d14 = d7 / 2.0;
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d14);
+
+        d8 = interfaceinvoke $r3.<com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution: double getCDF(java.lang.Object)>($r4);
+
+        $b7 = d5 cmpl 0.0;
+
+        if $b7 <= 0 goto label11;
+
+        $d29 = 2.0 * d8;
+
+        $d30 = $d29 - 1.0;
+
+        $d31 = $d30 * d6;
+
+        $d32 = staticinvoke <java.lang.Math: double log(double)>($d31);
+
+        $d33 = neg $d32;
+
+        d34 = $d33 / d5;
+
+        goto label13;
+
+     label11:
+        $b8 = d5 cmpg -1.0;
+
+        if $b8 >= 0 goto label12;
+
+        $d24 = 2.0 * d8;
+
+        $d25 = $d24 - 1.0;
+
+        $d26 = $d25 * d6;
+
+        $d27 = staticinvoke <java.lang.Math: double log(double)>($d26);
+
+        $d28 = 1.0 + d5;
+
+        d34 = $d27 / $d28;
+
+        goto label13;
+
+     label12:
+        $d15 = 1.0 - d8;
+
+        $d16 = 2.0 * $d15;
+
+        $d17 = $d16 * d6;
+
+        $d18 = staticinvoke <java.lang.Math: double log(double)>($d17);
+
+        $d22 = neg $d18;
+
+        $d21 = -1.0 / d5;
+
+        $d19 = 1.0 + d5;
+
+        $d20 = 1.0 / $d19;
+
+        $d23 = staticinvoke <java.lang.Math: double max(double,double)>($d21, $d20);
+
+        d34 = $d22 * $d23;
+
+     label13:
+        $r6 = new com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanCallFourierTransform;
+
+        specialinvoke $r6.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanCallFourierTransform: void <init>(com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent)>(r1);
+
+        r2 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanCallFourierTransform: com.opengamma.analytics.math.function.Function1D getFunction(double)>(d2);
+
+        $r7 = <com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer: com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator LIMIT_CALCULATOR>;
+
+        d9 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator: double solve(com.opengamma.analytics.math.function.Function1D,double,double)>(r2, d5, d6);
+
+        $d35 = 3.141592653589793 / d9;
+
+        d10 = staticinvoke <java.lang.Math: double min(double,double)>(d3, $d35);
+
+        d11 = staticinvoke <java.lang.Math: double log(double)>(2.0);
+
+        $d36 = d34 / d10;
+
+        $d37 = staticinvoke <java.lang.Math: double log(double)>($d36);
+
+        $d38 = $d37 / d11;
+
+        $d39 = staticinvoke <java.lang.Math: double ceil(double)>($d38);
+
+        i1 = (int) $d39;
+
+        $d40 = (double) i1;
+
+        $d41 = staticinvoke <java.lang.Math: double pow(double,double)>(2.0, $d40);
+
+        i2 = (int) $d41;
+
+        $d42 = (double) i2;
+
+        $d43 = 6.283185307179586 / $d42;
+
+        d12 = $d43 / d10;
+
+        $d44 = d9 * d10;
+
+        $d45 = (double) i2;
+
+        $d46 = $d44 * $d45;
+
+        $d47 = $d46 / 2.0;
+
+        $d48 = $d47 / 3.141592653589793;
+
+        i3 = (int) $d48;
+
+        $i12 = i0 % 2;
+
+        if $i12 == 0 goto label14;
+
+        $i9 = i0 - 1;
+
+        i13 = $i9 / 2;
+
+        i14 = i13;
+
+        goto label15;
+
+     label14:
+        i13 = i0 / 2;
+
+        i14 = i13 - 1;
+
+     label15:
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer: double[][] price(double,double,double,boolean,com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent,int,int,double,double,int,int)>(d0, d1, d2, z0, r1, i13, i14, d5, d12, i2, i3);
+
+        return $r5;
+    }
+
+    public double[][] price(double, double, double, boolean, com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent, int, int, double, double, int, int)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer r0;
+        double d0, d1, d2, d3, d4, d5, d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, d22, d23;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent r1;
+        int i0, i1, i2, i3, i5, i6, i7, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i24, i25, i26;
+        com.opengamma.analytics.math.function.Function1D r2;
+        com.opengamma.analytics.math.number.ComplexNumber[] r3, r4;
+        double[][] r5;
+        byte $b8, $b22, $b23;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanCallFourierTransform $r6;
+        double[] $r7, $r9, $r10, $r12;
+        com.opengamma.analytics.math.number.ComplexNumber $r8, $r11;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        z0 := @parameter3: boolean;
+
+        r1 := @parameter4: com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent;
+
+        i0 := @parameter5: int;
+
+        i1 := @parameter6: int;
+
+        d3 := @parameter7: double;
+
+        d4 := @parameter8: double;
+
+        i2 := @parameter9: int;
+
+        i3 := @parameter10: int;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "characteristic exponent");
+
+        if i0 < 0 goto label01;
+
+        $z1 = 1;
+
+        goto label02;
+
+     label01:
+        $z1 = 0;
+
+     label02:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z1, "nStrikesBelowATM >= 0");
+
+        if i1 < 0 goto label03;
+
+        $z2 = 1;
+
+        goto label04;
+
+     label03:
+        $z2 = 0;
+
+     label04:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z2, "nStrikesAboveATM >= 0");
+
+        $b8 = d3 cmpl 0.0;
+
+        if $b8 == 0 goto label05;
+
+        $b22 = d3 cmpl -1.0;
+
+        if $b22 == 0 goto label05;
+
+        $z3 = 1;
+
+        goto label06;
+
+     label05:
+        $z3 = 0;
+
+     label06:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z3, "alpha cannot be -1 or 0");
+
+        $b23 = d4 cmpl 0.0;
+
+        if $b23 <= 0 goto label07;
+
+        $z4 = 1;
+
+        goto label08;
+
+     label07:
+        $z4 = 0;
+
+     label08:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z4, "need delta > 0");
+
+        if i3 <= 0 goto label09;
+
+        $z5 = 1;
+
+        goto label10;
+
+     label09:
+        $z5 = 0;
+
+     label10:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z5, "need m > 0");
+
+        $i9 = 2 * i3;
+
+        $i10 = $i9 - 1;
+
+        if i2 < $i10 goto label11;
+
+        $z6 = 1;
+
+        goto label12;
+
+     label11:
+        $z6 = 0;
+
+     label12:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z6, "need n > 2m-1");
+
+        $r6 = new com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanCallFourierTransform;
+
+        specialinvoke $r6.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanCallFourierTransform: void <init>(com.opengamma.analytics.financial.model.option.pricing.fourier.MartingaleCharacteristicExponent)>(r1);
+
+        r2 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.option.pricing.fourier.EuropeanCallFourierTransform: com.opengamma.analytics.math.function.Function1D getFunction(double)>(d2);
+
+        $i11 = i2 % 2;
+
+        if $i11 != 0 goto label13;
+
+        $i24 = i2 / 2;
+
+        goto label14;
+
+     label13:
+        $i12 = i2 + 1;
+
+        $i24 = $i12 / 2;
+
+     label14:
+        $i13 = $i24 - 1;
+
+        $i14 = neg $i13;
+
+        $d7 = (double) $i14;
+
+        d5 = $d7 * d4;
+
+        r3 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer: com.opengamma.analytics.math.number.ComplexNumber[] getPaddedArray(double,double,int,int,com.opengamma.analytics.math.function.Function1D,int)>(d3, d4, i2, i3, r2, $i24);
+
+        r4 = staticinvoke <com.opengamma.analytics.math.fft.JTransformsWrapper: com.opengamma.analytics.math.number.ComplexNumber[] transform1DComplex(com.opengamma.analytics.math.number.ComplexNumber[])>(r3);
+
+        i5 = staticinvoke <java.lang.Math: int min(int,int)>($i24, i0);
+
+        $i15 = i2 - $i24;
+
+        i6 = staticinvoke <java.lang.Math: int min(int,int)>($i15, i1);
+
+        $i16 = 1 + i5;
+
+        i7 = $i16 + i6;
+
+        r5 = newmultiarray (double)[i7][2];
+
+        $d9 = 6.283185307179586 / d4;
+
+        $d8 = (double) i2;
+
+        d6 = $d9 / $d8;
+
+        i25 = 0;
+
+     label15:
+        if i25 >= i5 goto label16;
+
+        $i19 = i25 - i5;
+
+        $d16 = (double) $i19;
+
+        d22 = $d16 * d6;
+
+        $r10 = r5[i25];
+
+        $d17 = staticinvoke <java.lang.Math: double exp(double)>(d22);
+
+        $d18 = d0 * $d17;
+
+        $r10[0] = $d18;
+
+        $r12 = r5[i25];
+
+        $d19 = d1 * d0;
+
+        $i20 = i25 + i2;
+
+        $i21 = $i20 - i5;
+
+        $r11 = r4[$i21];
+
+        $d20 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer: double getReducedPrice(com.opengamma.analytics.math.number.ComplexNumber,double,double,double,double,boolean)>($r11, d3, d4, d22, d5, z0);
+
+        $d21 = $d19 * $d20;
+
+        $r12[1] = $d21;
+
+        i25 = i25 + 1;
+
+        goto label15;
+
+     label16:
+        i26 = i5;
+
+     label17:
+        if i26 >= i7 goto label18;
+
+        $i17 = i26 - i5;
+
+        $d10 = (double) $i17;
+
+        d23 = $d10 * d6;
+
+        $r7 = r5[i26];
+
+        $d11 = staticinvoke <java.lang.Math: double exp(double)>(d23);
+
+        $d12 = d0 * $d11;
+
+        $r7[0] = $d12;
+
+        $r9 = r5[i26];
+
+        $d13 = d1 * d0;
+
+        $i18 = i26 - i5;
+
+        $r8 = r4[$i18];
+
+        $d14 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer: double getReducedPrice(com.opengamma.analytics.math.number.ComplexNumber,double,double,double,double,boolean)>($r8, d3, d4, d23, d5, z0);
+
+        $d15 = $d13 * $d14;
+
+        $r9[1] = $d15;
+
+        i26 = i26 + 1;
+
+        goto label17;
+
+     label18:
+        return r5;
+    }
+
+    private com.opengamma.analytics.math.number.ComplexNumber[] getPaddedArray(double, double, int, int, com.opengamma.analytics.math.function.Function1D, int)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer r0;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7;
+        int i0, i1, i2, i3, i4, i5, $i6, $i7, $i8, $i9, i10, i11, i12;
+        com.opengamma.analytics.math.function.Function1D r1;
+        com.opengamma.analytics.math.number.ComplexNumber[] r2;
+        com.opengamma.analytics.math.number.ComplexNumber r3, $r4, $r6, $r7, $r9, $r10, $r11;
+        java.lang.Object $r5, $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        i0 := @parameter2: int;
+
+        i1 := @parameter3: int;
+
+        r1 := @parameter4: com.opengamma.analytics.math.function.Function1D;
+
+        i2 := @parameter5: int;
+
+        r2 = newarray (com.opengamma.analytics.math.number.ComplexNumber)[i0];
+
+        i3 = i2 - i1;
+
+        $i6 = i0 - i2;
+
+        $i7 = $i6 + 1;
+
+        i4 = $i7 - i1;
+
+        i10 = 0;
+
+     label1:
+        if i10 >= i3 goto label2;
+
+        $r11 = <com.opengamma.analytics.math.number.ComplexNumber: com.opengamma.analytics.math.number.ComplexNumber ZERO>;
+
+        r2[i10] = $r11;
+
+        i10 = i10 + 1;
+
+        goto label1;
+
+     label2:
+        i11 = i0 - i4;
+
+     label3:
+        if i11 >= i0 goto label4;
+
+        $r10 = <com.opengamma.analytics.math.number.ComplexNumber: com.opengamma.analytics.math.number.ComplexNumber ZERO>;
+
+        r2[i11] = $r10;
+
+        i11 = i11 + 1;
+
+        goto label3;
+
+     label4:
+        $r4 = new com.opengamma.analytics.math.number.ComplexNumber;
+
+        $d2 = 1.0 + d0;
+
+        $d3 = neg $d2;
+
+        specialinvoke $r4.<com.opengamma.analytics.math.number.ComplexNumber: void <init>(double,double)>(0.0, $d3);
+
+        i5 = i2 - 1;
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r4);
+
+        $r6 = (com.opengamma.analytics.math.number.ComplexNumber) $r5;
+
+        r2[i5] = $r6;
+
+        i12 = 1;
+
+     label5:
+        if i12 >= i1 goto label6;
+
+        $r7 = new com.opengamma.analytics.math.number.ComplexNumber;
+
+        $d4 = (double) i12;
+
+        $d7 = $d4 * d1;
+
+        $d5 = 1.0 + d0;
+
+        $d6 = neg $d5;
+
+        specialinvoke $r7.<com.opengamma.analytics.math.number.ComplexNumber: void <init>(double,double)>($d7, $d6);
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r7);
+
+        r3 = (com.opengamma.analytics.math.number.ComplexNumber) $r8;
+
+        $i8 = i5 + i12;
+
+        r2[$i8] = r3;
+
+        $i9 = i5 - i12;
+
+        $r9 = staticinvoke <com.opengamma.analytics.math.ComplexMathUtils: com.opengamma.analytics.math.number.ComplexNumber conjugate(com.opengamma.analytics.math.number.ComplexNumber)>(r3);
+
+        r2[$i9] = $r9;
+
+        i12 = i12 + 1;
+
+        goto label5;
+
+     label6:
+        return r2;
+    }
+
+    private double getReducedPrice(com.opengamma.analytics.math.number.ComplexNumber, double, double, double, double, boolean)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer r0;
+        com.opengamma.analytics.math.number.ComplexNumber r1, r2, $r3, $r4;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20;
+        boolean z0;
+        byte $b0, $b1, $b2, $b3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer;
+
+        r1 := @parameter0: com.opengamma.analytics.math.number.ComplexNumber;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        d2 := @parameter3: double;
+
+        d3 := @parameter4: double;
+
+        z0 := @parameter5: boolean;
+
+        $r3 = new com.opengamma.analytics.math.number.ComplexNumber;
+
+        $d5 = neg d0;
+
+        $d8 = $d5 * d2;
+
+        $d6 = neg d2;
+
+        $d7 = $d6 * d3;
+
+        specialinvoke $r3.<com.opengamma.analytics.math.number.ComplexNumber: void <init>(double,double)>($d8, $d7);
+
+        $r4 = staticinvoke <com.opengamma.analytics.math.ComplexMathUtils: com.opengamma.analytics.math.number.ComplexNumber exp(com.opengamma.analytics.math.number.ComplexNumber)>($r3);
+
+        r2 = staticinvoke <com.opengamma.analytics.math.ComplexMathUtils: com.opengamma.analytics.math.number.ComplexNumber multiply(com.opengamma.analytics.math.number.ComplexNumber,com.opengamma.analytics.math.number.ComplexNumber)>($r4, r1);
+
+        $d9 = virtualinvoke r2.<com.opengamma.analytics.math.number.ComplexNumber: double getReal()>();
+
+        $d10 = d1 * $d9;
+
+        $d11 = $d10 / 2.0;
+
+        d4 = $d11 / 3.141592653589793;
+
+        if z0 == 0 goto label3;
+
+        $b2 = d0 cmpl 0.0;
+
+        if $b2 <= 0 goto label1;
+
+        return d4;
+
+     label1:
+        $b3 = d0 cmpg -1.0;
+
+        if $b3 >= 0 goto label2;
+
+        $d18 = d4 + 1.0;
+
+        $d19 = staticinvoke <java.lang.Math: double exp(double)>(d2);
+
+        $d20 = $d18 - $d19;
+
+        return $d20;
+
+     label2:
+        $d17 = d4 + 1.0;
+
+        return $d17;
+
+     label3:
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 <= 0 goto label4;
+
+        $d14 = d4 - 1.0;
+
+        $d15 = staticinvoke <java.lang.Math: double exp(double)>(d2);
+
+        $d16 = $d14 + $d15;
+
+        return $d16;
+
+     label4:
+        $b1 = d0 cmpg -1.0;
+
+        if $b1 >= 0 goto label5;
+
+        return d4;
+
+     label5:
+        $d12 = staticinvoke <java.lang.Math: double exp(double)>(d2);
+
+        $d13 = d4 + $d12;
+
+        return $d13;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.math.statistics.distribution.NormalDistribution $r0;
+        com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator $r1;
+
+        $r0 = new com.opengamma.analytics.math.statistics.distribution.NormalDistribution;
+
+        specialinvoke $r0.<com.opengamma.analytics.math.statistics.distribution.NormalDistribution: void <init>(double,double)>(0.0, 1.0);
+
+        <com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer: com.opengamma.analytics.math.statistics.distribution.ProbabilityDistribution NORMAL> = $r0;
+
+        $r1 = new com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.option.pricing.fourier.FFTPricer: com.opengamma.analytics.financial.model.option.pricing.fourier.IntegralLimitCalculator LIMIT_CALCULATOR> = $r1;
+
+        return;
+    }
+}

@@ -1,14 +1,9 @@
 package edu.cmu.ui;
-import edu.cmu.codeformer.CodeFormer;
 import edu.cmu.compilation.Test;
-import edu.cmu.equivprogram.DependencyMap;
 import edu.cmu.parser.*;
 import edu.cmu.petrinet.BuildNetNoVoid;
-import edu.cmu.petrinet.BuildNetWithoutClone;
-import edu.cmu.petrinet.BuildNet;
 import edu.cmu.reachability.*;
 import edu.cmu.utils.TimerUtils;
-import org.sat4j.specs.TimeoutException;
 import uniol.apt.adt.pn.PetriNet;
 
 import java.io.BufferedReader;

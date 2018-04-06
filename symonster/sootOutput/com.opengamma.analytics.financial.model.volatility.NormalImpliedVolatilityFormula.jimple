@@ -1,0 +1,281 @@
+public class com.opengamma.analytics.financial.model.volatility.NormalImpliedVolatilityFormula extends java.lang.Object
+{
+    private static final com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalPriceFunction NORMAL_PRICE_FUNCTION;
+    private static final int MAX_ITERATIONS;
+    private static final double EPS;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.model.volatility.NormalImpliedVolatilityFormula r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.NormalImpliedVolatilityFormula;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public double getImpliedVolatility(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalFunctionData, com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.NormalImpliedVolatilityFormula r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalFunctionData r1, $r15, $r17;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r2;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d23, d24, d25, d26, d27, d28, d29, $d30, d31, d32, d33, d34;
+        boolean z0, $z1, $z2;
+        double[] r3, r7;
+        byte $b0, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b11;
+        java.lang.StringBuilder $r8, $r9, $r10, $r11, $r12, $r13;
+        java.lang.String $r14;
+        long $l1, $l2;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalPriceFunction $r16, $r18;
+        com.opengamma.analytics.math.rootfinding.BracketRoot $r19;
+        com.opengamma.analytics.math.rootfinding.BisectionSingleRootFinder $r20;
+        com.opengamma.analytics.financial.model.volatility.NormalImpliedVolatilityFormula$1 $r21;
+        java.lang.Double $r22, $r23, $r24;
+        int i10, $i12;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.NormalImpliedVolatilityFormula;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalFunctionData;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        d0 := @parameter2: double;
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalFunctionData: double getNumeraire()>();
+
+        z0 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: boolean isCall()>();
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalFunctionData: double getForward()>();
+
+        d3 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        if z0 == 0 goto label01;
+
+        $b9 = 1;
+
+        goto label02;
+
+     label01:
+        $b9 = -1;
+
+     label02:
+        $d7 = (double) $b9;
+
+        $d6 = d2 - d3;
+
+        $d8 = $d7 * $d6;
+
+        $d9 = staticinvoke <java.lang.Math: double max(double,double)>(0.0, $d8);
+
+        d4 = d1 * $d9;
+
+        $b0 = d0 cmpl d4;
+
+        if $b0 > 0 goto label03;
+
+        $z1 = staticinvoke <com.opengamma.util.CompareUtils: boolean closeEquals(double,double,double)>(d0, d4, 1.0E-6);
+
+        if $z1 == 0 goto label04;
+
+     label03:
+        $z2 = 1;
+
+        goto label05;
+
+     label04:
+        $z2 = 0;
+
+     label05:
+        $r8 = new java.lang.StringBuilder;
+
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>()>();
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("option price (");
+
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d0);
+
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(") less than intrinsic value (");
+
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d4);
+
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(")");
+
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z2, $r14);
+
+        $l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d0);
+
+        $l2 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d4);
+
+        $b3 = $l1 cmp $l2;
+
+        if $b3 != 0 goto label06;
+
+        return 0.0;
+
+     label06:
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalFunctionData: double getNormalVolatility()>();
+
+        $d11 = staticinvoke <java.lang.Math: double abs(double)>($d10);
+
+        $b4 = $d11 cmpg 1.0E-10;
+
+        if $b4 >= 0 goto label07;
+
+        $d23 = 0.3 * d2;
+
+        goto label08;
+
+     label07:
+        $d23 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalFunctionData: double getNormalVolatility()>();
+
+     label08:
+        d24 = $d23;
+
+        $r15 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalFunctionData;
+
+        specialinvoke $r15.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalFunctionData: void <init>(double,double,double)>(d2, d1, $d23);
+
+        d5 = 0.5 * d2;
+
+        r3 = newarray (double)[3];
+
+        $r16 = <com.opengamma.analytics.financial.model.volatility.NormalImpliedVolatilityFormula: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalPriceFunction NORMAL_PRICE_FUNCTION>;
+
+        d25 = virtualinvoke $r16.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalPriceFunction: double getPriceAdjoint(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalFunctionData,double[])>(r2, $r15, r3);
+
+        d26 = r3[1];
+
+        $d12 = d25 - d0;
+
+        d27 = $d12 / d26;
+
+        d28 = staticinvoke <java.lang.Math: double signum(double)>(d27);
+
+        $d13 = staticinvoke <java.lang.Math: double abs(double)>(d27);
+
+        $d14 = staticinvoke <java.lang.Math: double min(double,double)>(d5, $d13);
+
+        d29 = d28 * $d14;
+
+        $b5 = d29 cmpl 0.0;
+
+        if $b5 <= 0 goto label09;
+
+        $b8 = d29 cmpl $d23;
+
+        if $b8 <= 0 goto label09;
+
+        d29 = $d23;
+
+     label09:
+        i10 = 0;
+
+     label10:
+        $d30 = staticinvoke <java.lang.Math: double abs(double)>(d29);
+
+        $b11 = $d30 cmpl 1.0E-15;
+
+        if $b11 <= 0 goto label12;
+
+        d24 = d24 - d29;
+
+        $r17 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalFunctionData;
+
+        specialinvoke $r17.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalFunctionData: void <init>(double,double,double)>(d2, d1, d24);
+
+        $r18 = <com.opengamma.analytics.financial.model.volatility.NormalImpliedVolatilityFormula: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalPriceFunction NORMAL_PRICE_FUNCTION>;
+
+        d31 = virtualinvoke $r18.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalPriceFunction: double getPriceAdjoint(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalFunctionData,double[])>(r2, $r17, r3);
+
+        d32 = r3[1];
+
+        $d15 = d31 - d0;
+
+        d33 = $d15 / d32;
+
+        d34 = staticinvoke <java.lang.Math: double signum(double)>(d33);
+
+        $d16 = staticinvoke <java.lang.Math: double abs(double)>(d33);
+
+        $d17 = staticinvoke <java.lang.Math: double min(double,double)>(d5, $d16);
+
+        d29 = d34 * $d17;
+
+        $b6 = d29 cmpl 0.0;
+
+        if $b6 <= 0 goto label11;
+
+        $b7 = d29 cmpl d24;
+
+        if $b7 <= 0 goto label11;
+
+        d29 = d24;
+
+     label11:
+        $i12 = i10;
+
+        i10 = i10 + 1;
+
+        if $i12 <= 100 goto label10;
+
+        $r19 = new com.opengamma.analytics.math.rootfinding.BracketRoot;
+
+        specialinvoke $r19.<com.opengamma.analytics.math.rootfinding.BracketRoot: void <init>()>();
+
+        $r20 = new com.opengamma.analytics.math.rootfinding.BisectionSingleRootFinder;
+
+        specialinvoke $r20.<com.opengamma.analytics.math.rootfinding.BisectionSingleRootFinder: void <init>(double)>(1.0E-15);
+
+        $r21 = new com.opengamma.analytics.financial.model.volatility.NormalImpliedVolatilityFormula$1;
+
+        specialinvoke $r21.<com.opengamma.analytics.financial.model.volatility.NormalImpliedVolatilityFormula$1: void <init>(com.opengamma.analytics.financial.model.volatility.NormalImpliedVolatilityFormula,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalFunctionData,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,double)>(r0, r1, r2, d0);
+
+        r7 = virtualinvoke $r19.<com.opengamma.analytics.math.rootfinding.BracketRoot: double[] getBracketedPoints(com.opengamma.analytics.math.function.Function1D,double,double)>($r21, 0.0, 10.0);
+
+        $d18 = r7[0];
+
+        $r22 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d18);
+
+        $d19 = r7[1];
+
+        $r23 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d19);
+
+        $r24 = virtualinvoke $r20.<com.opengamma.analytics.math.rootfinding.BisectionSingleRootFinder: java.lang.Double getRoot(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r21, $r22, $r23);
+
+        $d20 = virtualinvoke $r24.<java.lang.Double: double doubleValue()>();
+
+        return $d20;
+
+     label12:
+        return d24;
+    }
+
+    static com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalPriceFunction access$000()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalPriceFunction $r0;
+
+        $r0 = <com.opengamma.analytics.financial.model.volatility.NormalImpliedVolatilityFormula: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalPriceFunction NORMAL_PRICE_FUNCTION>;
+
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalPriceFunction $r0;
+
+        <com.opengamma.analytics.financial.model.volatility.NormalImpliedVolatilityFormula: double EPS> = 1.0E-15;
+
+        <com.opengamma.analytics.financial.model.volatility.NormalImpliedVolatilityFormula: int MAX_ITERATIONS> = 100;
+
+        $r0 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalPriceFunction;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalPriceFunction: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.volatility.NormalImpliedVolatilityFormula: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.NormalPriceFunction NORMAL_PRICE_FUNCTION> = $r0;
+
+        return;
+    }
+}

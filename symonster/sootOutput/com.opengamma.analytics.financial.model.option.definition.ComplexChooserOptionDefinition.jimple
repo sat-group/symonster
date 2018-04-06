@@ -1,0 +1,531 @@
+public class com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition extends com.opengamma.analytics.financial.model.option.definition.OptionDefinition
+{
+    private final com.opengamma.analytics.financial.model.option.definition.OptionPayoffFunction _payoffFunction;
+    private final com.opengamma.analytics.financial.model.option.definition.OptionExerciseFunction _exerciseFunction;
+    private final double _callStrike;
+    private final double _putStrike;
+    private final com.opengamma.util.time.Expiry _callExpiry;
+    private final com.opengamma.util.time.Expiry _putExpiry;
+    private final com.opengamma.analytics.financial.model.option.definition.OptionDefinition _callDefinition;
+    private final com.opengamma.analytics.financial.model.option.definition.OptionDefinition _putDefinition;
+    private static final com.opengamma.analytics.financial.model.option.pricing.analytic.AnalyticOptionModel BSM;
+    private static final java.util.Set GREEKS;
+
+    public void <init>(com.opengamma.util.time.Expiry, double, com.opengamma.util.time.Expiry, double, com.opengamma.util.time.Expiry)
+    {
+        com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition r0;
+        com.opengamma.util.time.Expiry r1, r2, r3;
+        double d0, d1;
+        com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition$1 $r4;
+        com.opengamma.analytics.financial.model.option.definition.EuropeanExerciseFunction $r5;
+        org.threeten.bp.ZonedDateTime $r6, $r7, $r8, $r9;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.option.definition.EuropeanVanillaOptionDefinition $r10, $r11;
+        java.lang.IllegalArgumentException $r12, $r13;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition;
+
+        r1 := @parameter0: com.opengamma.util.time.Expiry;
+
+        d0 := @parameter1: double;
+
+        r2 := @parameter2: com.opengamma.util.time.Expiry;
+
+        d1 := @parameter3: double;
+
+        r3 := @parameter4: com.opengamma.util.time.Expiry;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.option.definition.OptionDefinition: void <init>(java.lang.Double,com.opengamma.util.time.Expiry,java.lang.Boolean)>(null, r1, null);
+
+        $r4 = new com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition$1;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition$1: void <init>(com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition)>(r0);
+
+        r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.analytics.financial.model.option.definition.OptionPayoffFunction _payoffFunction> = $r4;
+
+        $r5 = new com.opengamma.analytics.financial.model.option.definition.EuropeanExerciseFunction;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.model.option.definition.EuropeanExerciseFunction: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.analytics.financial.model.option.definition.OptionExerciseFunction _exerciseFunction> = $r5;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object)>(r2);
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object)>(r3);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: double notNegative(double,java.lang.String)>(d0, "call strike");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: double notNegative(double,java.lang.String)>(d1, "put strike");
+
+        $r6 = virtualinvoke r2.<com.opengamma.util.time.Expiry: org.threeten.bp.ZonedDateTime getExpiry()>();
+
+        $r7 = virtualinvoke r1.<com.opengamma.util.time.Expiry: org.threeten.bp.ZonedDateTime getExpiry()>();
+
+        $z0 = virtualinvoke $r6.<org.threeten.bp.ZonedDateTime: boolean isBefore(org.threeten.bp.chrono.ChronoZonedDateTime)>($r7);
+
+        if $z0 == 0 goto label1;
+
+        $r13 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r13.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Call expiry must be after the choose date");
+
+        throw $r13;
+
+     label1:
+        $r8 = virtualinvoke r3.<com.opengamma.util.time.Expiry: org.threeten.bp.ZonedDateTime getExpiry()>();
+
+        $r9 = virtualinvoke r1.<com.opengamma.util.time.Expiry: org.threeten.bp.ZonedDateTime getExpiry()>();
+
+        $z1 = virtualinvoke $r8.<org.threeten.bp.ZonedDateTime: boolean isBefore(org.threeten.bp.chrono.ChronoZonedDateTime)>($r9);
+
+        if $z1 == 0 goto label2;
+
+        $r12 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r12.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Put expiry must be after the choose date");
+
+        throw $r12;
+
+     label2:
+        r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: double _callStrike> = d0;
+
+        r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: double _putStrike> = d1;
+
+        r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry _callExpiry> = r2;
+
+        r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry _putExpiry> = r3;
+
+        $r10 = new com.opengamma.analytics.financial.model.option.definition.EuropeanVanillaOptionDefinition;
+
+        specialinvoke $r10.<com.opengamma.analytics.financial.model.option.definition.EuropeanVanillaOptionDefinition: void <init>(double,com.opengamma.util.time.Expiry,boolean)>(d0, r2, 1);
+
+        r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _callDefinition> = $r10;
+
+        $r11 = new com.opengamma.analytics.financial.model.option.definition.EuropeanVanillaOptionDefinition;
+
+        specialinvoke $r11.<com.opengamma.analytics.financial.model.option.definition.EuropeanVanillaOptionDefinition: void <init>(double,com.opengamma.util.time.Expiry,boolean)>(d1, r3, 0);
+
+        r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _putDefinition> = $r11;
+
+        return;
+    }
+
+    public double getCallStrike()
+    {
+        com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: double _callStrike>;
+
+        return $d0;
+    }
+
+    public double getPutStrike()
+    {
+        com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: double _putStrike>;
+
+        return $d0;
+    }
+
+    public com.opengamma.util.time.Expiry getCallExpiry()
+    {
+        com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition r0;
+        com.opengamma.util.time.Expiry $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry _callExpiry>;
+
+        return $r1;
+    }
+
+    public com.opengamma.util.time.Expiry getPutExpiry()
+    {
+        com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition r0;
+        com.opengamma.util.time.Expiry $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry _putExpiry>;
+
+        return $r1;
+    }
+
+    public double getTimeToCallExpiry(org.threeten.bp.ZonedDateTime)
+    {
+        com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition r0;
+        org.threeten.bp.ZonedDateTime r1, $r3, $r5;
+        com.opengamma.util.time.Expiry $r2, $r4, $r11;
+        boolean $z0;
+        double $d0;
+        java.lang.IllegalArgumentException $r6;
+        java.lang.StringBuilder $r7, $r8, $r9, $r10, $r12;
+        java.lang.String $r13;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition;
+
+        r1 := @parameter0: org.threeten.bp.ZonedDateTime;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry getCallExpiry()>();
+
+        $r3 = virtualinvoke $r2.<com.opengamma.util.time.Expiry: org.threeten.bp.ZonedDateTime getExpiry()>();
+
+        $z0 = virtualinvoke r1.<org.threeten.bp.ZonedDateTime: boolean isAfter(org.threeten.bp.chrono.ChronoZonedDateTime)>($r3);
+
+        if $z0 == 0 goto label1;
+
+        $r6 = new java.lang.IllegalArgumentException;
+
+        $r7 = new java.lang.StringBuilder;
+
+        specialinvoke $r7.<java.lang.StringBuilder: void <init>()>();
+
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Date ");
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r1);
+
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" is after call expiry ");
+
+        $r11 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry getCallExpiry()>();
+
+        $r12 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r11);
+
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r6.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r13);
+
+        throw $r6;
+
+     label1:
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry getCallExpiry()>();
+
+        $r5 = virtualinvoke $r4.<com.opengamma.util.time.Expiry: org.threeten.bp.ZonedDateTime getExpiry()>();
+
+        $d0 = staticinvoke <com.opengamma.util.time.DateUtils: double getDifferenceInYears(org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime)>(r1, $r5);
+
+        return $d0;
+    }
+
+    public double getTimeToPutExpiry(org.threeten.bp.ZonedDateTime)
+    {
+        com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition r0;
+        org.threeten.bp.ZonedDateTime r1, $r3, $r5;
+        com.opengamma.util.time.Expiry $r2, $r4, $r11;
+        boolean $z0;
+        double $d0;
+        java.lang.IllegalArgumentException $r6;
+        java.lang.StringBuilder $r7, $r8, $r9, $r10, $r12;
+        java.lang.String $r13;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition;
+
+        r1 := @parameter0: org.threeten.bp.ZonedDateTime;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry getPutExpiry()>();
+
+        $r3 = virtualinvoke $r2.<com.opengamma.util.time.Expiry: org.threeten.bp.ZonedDateTime getExpiry()>();
+
+        $z0 = virtualinvoke r1.<org.threeten.bp.ZonedDateTime: boolean isAfter(org.threeten.bp.chrono.ChronoZonedDateTime)>($r3);
+
+        if $z0 == 0 goto label1;
+
+        $r6 = new java.lang.IllegalArgumentException;
+
+        $r7 = new java.lang.StringBuilder;
+
+        specialinvoke $r7.<java.lang.StringBuilder: void <init>()>();
+
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Date ");
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r1);
+
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" is after put expiry ");
+
+        $r11 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry getPutExpiry()>();
+
+        $r12 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r11);
+
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r6.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r13);
+
+        throw $r6;
+
+     label1:
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry getPutExpiry()>();
+
+        $r5 = virtualinvoke $r4.<com.opengamma.util.time.Expiry: org.threeten.bp.ZonedDateTime getExpiry()>();
+
+        $d0 = staticinvoke <com.opengamma.util.time.DateUtils: double getDifferenceInYears(org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime)>(r1, $r5);
+
+        return $d0;
+    }
+
+    public com.opengamma.analytics.financial.model.option.definition.OptionDefinition getCallDefinition()
+    {
+        com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition r0;
+        com.opengamma.analytics.financial.model.option.definition.OptionDefinition $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _callDefinition>;
+
+        return $r1;
+    }
+
+    public com.opengamma.analytics.financial.model.option.definition.OptionDefinition getPutDefinition()
+    {
+        com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition r0;
+        com.opengamma.analytics.financial.model.option.definition.OptionDefinition $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.analytics.financial.model.option.definition.OptionDefinition _putDefinition>;
+
+        return $r1;
+    }
+
+    public com.opengamma.analytics.financial.model.option.definition.OptionExerciseFunction getExerciseFunction()
+    {
+        com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition r0;
+        com.opengamma.analytics.financial.model.option.definition.OptionExerciseFunction $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.analytics.financial.model.option.definition.OptionExerciseFunction _exerciseFunction>;
+
+        return $r1;
+    }
+
+    public com.opengamma.analytics.financial.model.option.definition.OptionPayoffFunction getPayoffFunction()
+    {
+        com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition r0;
+        com.opengamma.analytics.financial.model.option.definition.OptionPayoffFunction $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.analytics.financial.model.option.definition.OptionPayoffFunction _payoffFunction>;
+
+        return $r1;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition r0;
+        com.opengamma.util.time.Expiry $r1, $r2, $r3, $r4;
+        int $i1, $i4, $i5, $i6, $i9, $i10, i11, $i12, i13, i15, $i16, i17, i19;
+        double $d0, $d1;
+        long $l2, $l3, $l7, $l8, l14, l18;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition;
+
+        i11 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.definition.OptionDefinition: int hashCode()>();
+
+        $i1 = 31 * i11;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry _callExpiry>;
+
+        if $r1 != null goto label1;
+
+        $i12 = 0;
+
+        goto label2;
+
+     label1:
+        $r2 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry _callExpiry>;
+
+        $i12 = virtualinvoke $r2.<com.opengamma.util.time.Expiry: int hashCode()>();
+
+     label2:
+        i13 = $i1 + $i12;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: double _callStrike>;
+
+        l14 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $i5 = 31 * i13;
+
+        $l2 = l14 >>> 32;
+
+        $l3 = l14 ^ $l2;
+
+        $i4 = (int) $l3;
+
+        i15 = $i5 + $i4;
+
+        $i6 = 31 * i15;
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry _putExpiry>;
+
+        if $r3 != null goto label3;
+
+        $i16 = 0;
+
+        goto label4;
+
+     label3:
+        $r4 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry _putExpiry>;
+
+        $i16 = virtualinvoke $r4.<com.opengamma.util.time.Expiry: int hashCode()>();
+
+     label4:
+        i17 = $i6 + $i16;
+
+        $d1 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: double _putStrike>;
+
+        l18 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d1);
+
+        $i10 = 31 * i17;
+
+        $l7 = l18 >>> 32;
+
+        $l8 = l18 ^ $l7;
+
+        $i9 = (int) $l8;
+
+        i19 = $i10 + $i9;
+
+        return i19;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition r0, r2;
+        java.lang.Object r1;
+        boolean $z0, $z1, $z2, $z3;
+        java.lang.Class $r3, $r4;
+        double $d0, $d1, $d2, $d3;
+        long $l0, $l1, $l3, $l4;
+        byte $b2, $b5;
+        com.opengamma.util.time.Expiry $r5, $r6, $r7, $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        $z0 = specialinvoke r0.<com.opengamma.analytics.financial.model.option.definition.OptionDefinition: boolean equals(java.lang.Object)>(r1);
+
+        if $z0 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        $r3 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r4 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+
+        if $r3 == $r4 goto label3;
+
+        return 0;
+
+     label3:
+        r2 = (com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition) r1;
+
+        $d0 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: double _callStrike>;
+
+        $l0 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $d1 = r2.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: double _callStrike>;
+
+        $l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d1);
+
+        $b2 = $l0 cmp $l1;
+
+        if $b2 == 0 goto label4;
+
+        return 0;
+
+     label4:
+        $d2 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: double _putStrike>;
+
+        $l3 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d2);
+
+        $d3 = r2.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: double _putStrike>;
+
+        $l4 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d3);
+
+        $b5 = $l3 cmp $l4;
+
+        if $b5 == 0 goto label5;
+
+        return 0;
+
+     label5:
+        $r6 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry _callExpiry>;
+
+        $r5 = r2.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry _callExpiry>;
+
+        $z1 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r6, $r5);
+
+        if $z1 == 0 goto label6;
+
+        $r8 = r0.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry _putExpiry>;
+
+        $r7 = r2.<com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.util.time.Expiry _putExpiry>;
+
+        $z2 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r8, $r7);
+
+        if $z2 == 0 goto label6;
+
+        $z3 = 1;
+
+        goto label7;
+
+     label6:
+        $z3 = 0;
+
+     label7:
+        return $z3;
+    }
+
+    static java.util.Set access$000()
+    {
+        java.util.Set $r0;
+
+        $r0 = <com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: java.util.Set GREEKS>;
+
+        return $r0;
+    }
+
+    static com.opengamma.analytics.financial.model.option.pricing.analytic.AnalyticOptionModel access$100()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.AnalyticOptionModel $r0;
+
+        $r0 = <com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.analytics.financial.model.option.pricing.analytic.AnalyticOptionModel BSM>;
+
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.analytic.BlackScholesMertonModel $r0;
+        com.opengamma.analytics.financial.greeks.Greek $r1;
+        java.util.Set $r2;
+
+        $r0 = new com.opengamma.analytics.financial.model.option.pricing.analytic.BlackScholesMertonModel;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.model.option.pricing.analytic.BlackScholesMertonModel: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: com.opengamma.analytics.financial.model.option.pricing.analytic.AnalyticOptionModel BSM> = $r0;
+
+        $r1 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek FAIR_PRICE>;
+
+        $r2 = staticinvoke <java.util.Collections: java.util.Set singleton(java.lang.Object)>($r1);
+
+        <com.opengamma.analytics.financial.model.option.definition.ComplexChooserOptionDefinition: java.util.Set GREEKS> = $r2;
+
+        return;
+    }
+}

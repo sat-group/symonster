@@ -1,0 +1,451 @@
+public class com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet extends com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity
+{
+    private final boolean[] _isFixed;
+
+    public void <init>(com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon[])
+    {
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon[] r1;
+        int $i0, i1, $i2;
+        boolean[] $r2, $r5, $r8;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon $r3, $r4, $r6, $r7, $r9, $r10;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon[];
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: void <init>(com.opengamma.analytics.financial.interestrate.payments.derivative.Payment[])>(r1);
+
+        $i0 = lengthof r1;
+
+        $r2 = newarray (boolean)[$i0];
+
+        r0.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: boolean[] _isFixed> = $r2;
+
+        $r3 = r1[0];
+
+        $z0 = $r3 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        if $z0 != 0 goto label1;
+
+        $r10 = r1[0];
+
+        $z5 = $r10 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing;
+
+        if $z5 == 0 goto label2;
+
+     label1:
+        $z6 = 1;
+
+        goto label3;
+
+     label2:
+        $z6 = 0;
+
+     label3:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z6, "First coupon should be CouponFixed or a CouponIborGearing");
+
+        $r5 = r0.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: boolean[] _isFixed>;
+
+        $r4 = r1[0];
+
+        $z1 = $r4 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        $r5[0] = $z1;
+
+        i1 = 1;
+
+     label4:
+        $i2 = lengthof r1;
+
+        if i1 >= $i2 goto label8;
+
+        $r6 = r1[i1];
+
+        $z2 = $r6 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        if $z2 != 0 goto label5;
+
+        $r9 = r1[i1];
+
+        $z4 = $r9 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet;
+
+        if $z4 == 0 goto label6;
+
+     label5:
+        $z7 = 1;
+
+        goto label7;
+
+     label6:
+        $z7 = 0;
+
+     label7:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z7, "Next coupons should be CouponFixed or CouponIborRatchet");
+
+        $r8 = r0.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: boolean[] _isFixed>;
+
+        $r7 = r1[i1];
+
+        $z3 = $r7 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        $r8[i1] = $z3;
+
+        i1 = i1 + 1;
+
+        goto label4;
+
+     label8:
+        return;
+    }
+
+    public boolean[] isFixed()
+    {
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet r0;
+        boolean[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet;
+
+        $r1 = r0.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: boolean[] _isFixed>;
+
+        return $r1;
+    }
+
+    public com.opengamma.analytics.financial.interestrate.InstrumentDerivative[] calibrationBasket(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet$RatchetIborCalibrationType, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet$RatchetIborCalibrationType r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r4;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, i7;
+        double[] r5, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, d39, d40;
+        java.util.ArrayList $r6;
+        int[] $r7;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative[] $r8, $r10;
+        java.lang.Object[] $r9;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r11, $r12, $r13, $r15, $r16;
+        boolean $z0, $z1;
+        java.lang.Double $r14, $r17;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor $r27;
+        com.opengamma.util.money.Currency $r28;
+        java.lang.String $r29, $r31;
+        com.opengamma.analytics.financial.instrument.index.IborIndex $r30;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet r32;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed r33;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing r34;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet$RatchetIborCalibrationType;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $r6 = new java.util.ArrayList;
+
+        specialinvoke $r6.<java.util.ArrayList: void <init>()>();
+
+        r4 = staticinvoke <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.ParRateCalculator getInstance()>();
+
+        $r7 = <com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet$1: int[] $SwitchMap$com$opengamma$analytics$financial$interestrate$annuity$derivative$AnnuityCouponIborRatchet$RatchetIborCalibrationType>;
+
+        $i1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet$RatchetIborCalibrationType: int ordinal()>();
+
+        $i2 = $r7[$i1];
+
+        lookupswitch($i2)
+        {
+            case 1: goto label1;
+            default: goto label7;
+        };
+
+     label1:
+        i0 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: int getNumberOfPayments()>();
+
+        r5 = newarray (double)[i0];
+
+        i7 = 0;
+
+     label2:
+        if i7 >= i0 goto label6;
+
+        $r11 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i7);
+
+        $z0 = $r11 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet;
+
+        if $z0 == 0 goto label3;
+
+        $r16 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i7);
+
+        r32 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet) $r16;
+
+        $r17 = virtualinvoke r4.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitCouponIborSpread(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r32, r2);
+
+        d39 = virtualinvoke $r17.<java.lang.Double: double doubleValue()>();
+
+        $r18 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getMainCoefficients()>();
+
+        $d9 = $r18[0];
+
+        $i4 = i7 - 1;
+
+        $d8 = r5[$i4];
+
+        $d10 = $d9 * $d8;
+
+        $r19 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getMainCoefficients()>();
+
+        $d11 = $r19[1];
+
+        $d12 = $d11 * d39;
+
+        $d13 = $d10 + $d12;
+
+        $r20 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getMainCoefficients()>();
+
+        $d14 = $r20[2];
+
+        d0 = $d13 + $d14;
+
+        $r21 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getFloorCoefficients()>();
+
+        $d16 = $r21[0];
+
+        $i5 = i7 - 1;
+
+        $d15 = r5[$i5];
+
+        $d17 = $d16 * $d15;
+
+        $r22 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getFloorCoefficients()>();
+
+        $d18 = $r22[1];
+
+        $d19 = $d18 * d39;
+
+        $d20 = $d17 + $d19;
+
+        $r23 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getFloorCoefficients()>();
+
+        $d21 = $r23[2];
+
+        d1 = $d20 + $d21;
+
+        $r24 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getCapCoefficients()>();
+
+        $d23 = $r24[0];
+
+        $i6 = i7 - 1;
+
+        $d22 = r5[$i6];
+
+        $d24 = $d23 * $d22;
+
+        $r25 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getCapCoefficients()>();
+
+        $d25 = $r25[1];
+
+        $d26 = $d25 * d39;
+
+        $d27 = $d24 + $d26;
+
+        $r26 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double[] getCapCoefficients()>();
+
+        $d28 = $r26[2];
+
+        d2 = $d27 + $d28;
+
+        $d29 = staticinvoke <java.lang.Math: double max(double,double)>(d1, d0);
+
+        $d30 = staticinvoke <java.lang.Math: double min(double,double)>($d29, d2);
+
+        r5[i7] = $d30;
+
+        $r27 = new com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor;
+
+        $r28 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d31 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double getPaymentTime()>();
+
+        $r29 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: java.lang.String getFundingCurveName()>();
+
+        $d32 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double getPaymentYearFraction()>();
+
+        $d33 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double getNotional()>();
+
+        $d34 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double getFixingTime()>();
+
+        $r30 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: com.opengamma.analytics.financial.instrument.index.IborIndex getIndex()>();
+
+        $d35 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double getFixingPeriodStartTime()>();
+
+        $d36 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double getFixingPeriodEndTime()>();
+
+        $d37 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: double getFixingAccrualFactor()>();
+
+        $r31 = virtualinvoke r32.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet: java.lang.String getForwardCurveName()>();
+
+        $d38 = r5[i7];
+
+        specialinvoke $r27.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: void <init>(com.opengamma.util.money.Currency,double,java.lang.String,double,double,double,com.opengamma.analytics.financial.instrument.index.IborIndex,double,double,double,java.lang.String,double,boolean)>($r28, $d31, $r29, $d32, $d33, $d34, $r30, $d35, $d36, $d37, $r31, $d38, 1);
+
+        virtualinvoke $r6.<java.util.ArrayList: boolean add(java.lang.Object)>($r27);
+
+        goto label5;
+
+     label3:
+        $r12 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i7);
+
+        $z1 = $r12 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        if $z1 == 0 goto label4;
+
+        $r15 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i7);
+
+        r33 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed) $r15;
+
+        $d7 = virtualinvoke r33.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: double getFixedRate()>();
+
+        r5[i7] = $d7;
+
+        goto label5;
+
+     label4:
+        $r13 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i7);
+
+        r34 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing) $r13;
+
+        $r14 = virtualinvoke r4.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitCouponIborGearing(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r34, r2);
+
+        d40 = virtualinvoke $r14.<java.lang.Double: double doubleValue()>();
+
+        $d3 = virtualinvoke r34.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing: double getFactor()>();
+
+        $d4 = $d3 * d40;
+
+        $d5 = virtualinvoke r34.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing: double getSpread()>();
+
+        $d6 = $d4 + $d5;
+
+        r5[i7] = $d6;
+
+     label5:
+        i7 = i7 + 1;
+
+        goto label2;
+
+     label6:
+        goto label7;
+
+     label7:
+        $i3 = virtualinvoke $r6.<java.util.ArrayList: int size()>();
+
+        $r8 = newarray (com.opengamma.analytics.financial.interestrate.InstrumentDerivative)[$i3];
+
+        $r9 = virtualinvoke $r6.<java.util.ArrayList: java.lang.Object[] toArray(java.lang.Object[])>($r8);
+
+        $r10 = (com.opengamma.analytics.financial.interestrate.InstrumentDerivative[]) $r9;
+
+        return $r10;
+    }
+
+    public java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor r1;
+        java.lang.Object r2, $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = interfaceinvoke r1.<com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor: java.lang.Object visitAnnuityCouponIborRatchet(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet,java.lang.Object)>(r0, r2);
+
+        return $r3;
+    }
+
+    public java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)
+    {
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor r1;
+        java.lang.Object $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        $r2 = interfaceinvoke r1.<com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor: java.lang.Object visitAnnuityCouponIborRatchet(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet)>(r0);
+
+        return $r2;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet r0;
+        boolean[] $r1;
+        int $i1, $i2, i3, i4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet;
+
+        i3 = specialinvoke r0.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: int hashCode()>();
+
+        $i1 = 31 * i3;
+
+        $r1 = r0.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: boolean[] _isFixed>;
+
+        $i2 = staticinvoke <java.util.Arrays: int hashCode(boolean[])>($r1);
+
+        i4 = $i1 + $i2;
+
+        return i4;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet r0, r2;
+        java.lang.Object r1;
+        boolean $z0, $z1, $z2;
+        boolean[] $r3, $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        $z0 = specialinvoke r0.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: boolean equals(java.lang.Object)>(r1);
+
+        if $z0 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        $z1 = r1 instanceof com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet;
+
+        if $z1 != 0 goto label3;
+
+        return 0;
+
+     label3:
+        r2 = (com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet) r1;
+
+        $r4 = r0.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: boolean[] _isFixed>;
+
+        $r3 = r2.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: boolean[] _isFixed>;
+
+        $z2 = staticinvoke <java.util.Arrays: boolean equals(boolean[],boolean[])>($r4, $r3);
+
+        if $z2 != 0 goto label4;
+
+        return 0;
+
+     label4:
+        return 1;
+    }
+}

@@ -1,0 +1,495 @@
+public final class com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod extends java.lang.Object
+{
+    private static final com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod INSTANCE;
+    private static final com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION;
+    private static final com.opengamma.analytics.financial.interestrate.inflation.provider.InflationMarketModelConvexityAdjustmentForCapFloor CONVEXITY_ADJUSTMENT_FUNCTION;
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod r0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public static com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod getInstance()
+    {
+        com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod $r0;
+
+        $r0 = <com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod: com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod INSTANCE>;
+
+        return $r0;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount netAmount(com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation, com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod r0;
+        com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation r1;
+        com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface r2;
+        double d0, d1, d2, d3, d4, d5, d6, d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28;
+        com.opengamma.analytics.math.function.Function1D r5;
+        double[] $r8, $r12, $r16, $r20;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r9;
+        int $i0;
+        boolean $z0;
+        com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface $r10, $r14;
+        com.opengamma.analytics.financial.instrument.index.IndexPrice $r11, $r15;
+        java.lang.Double $r13, $r17, $r24;
+        com.opengamma.analytics.financial.interestrate.inflation.provider.InflationMarketModelConvexityAdjustmentForCapFloor $r18;
+        com.opengamma.analytics.financial.model.option.parameters.BlackSmileCapInflationZeroCouponParameters $r19;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r21;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r22;
+        java.lang.Object $r23;
+        com.opengamma.util.money.Currency $r25;
+        com.opengamma.util.money.MultipleCurrencyAmount $r26;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "The cap/floor shoud not be null");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Black provider");
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double[] getReferenceEndTime()>();
+
+        $d8 = $r8[1];
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getLastKnownFixingTime()>();
+
+        d0 = $d8 - $d9;
+
+        $r9 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getStrike()>();
+
+        $d11 = 1.0 + $d10;
+
+        $i0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: int getMaturity()>();
+
+        $d12 = (double) $i0;
+
+        $d13 = staticinvoke <java.lang.Math: double pow(double,double)>($d11, $d12);
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: boolean isCap()>();
+
+        specialinvoke $r9.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>($d13, d0, $z0);
+
+        $r10 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface: com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface getInflationProvider()>();
+
+        $r11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: com.opengamma.analytics.financial.instrument.index.IndexPrice getPriceIndex()>();
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double[] getReferenceEndTime()>();
+
+        $d14 = $r12[0];
+
+        $r13 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d14);
+
+        d1 = interfaceinvoke $r10.<com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface: double getPriceIndex(com.opengamma.analytics.financial.instrument.index.IndexPrice,java.lang.Double)>($r11, $r13);
+
+        $r14 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface: com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface getInflationProvider()>();
+
+        $r15 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: com.opengamma.analytics.financial.instrument.index.IndexPrice getPriceIndex()>();
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double[] getReferenceEndTime()>();
+
+        $d15 = $r16[1];
+
+        $r17 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d15);
+
+        d2 = interfaceinvoke $r14.<com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface: double getPriceIndex(com.opengamma.analytics.financial.instrument.index.IndexPrice,java.lang.Double)>($r15, $r17);
+
+        $d16 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getWeight()>();
+
+        $d17 = $d16 * d1;
+
+        $d18 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getWeight()>();
+
+        $d19 = 1.0 - $d18;
+
+        $d20 = $d19 * d2;
+
+        d3 = $d17 + $d20;
+
+        $r18 = <com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod: com.opengamma.analytics.financial.interestrate.inflation.provider.InflationMarketModelConvexityAdjustmentForCapFloor CONVEXITY_ADJUSTMENT_FUNCTION>;
+
+        d4 = virtualinvoke $r18.<com.opengamma.analytics.financial.interestrate.inflation.provider.InflationMarketModelConvexityAdjustmentForCapFloor: double getZeroCouponConvexityAdjustment(com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation,com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface)>(r1, r2);
+
+        $d21 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getIndexStartValue()>();
+
+        $d22 = d3 / $d21;
+
+        d5 = $d22 * d4;
+
+        $r19 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface: com.opengamma.analytics.financial.model.option.parameters.BlackSmileCapInflationZeroCouponParameters getBlackParameters()>();
+
+        $r20 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double[] getReferenceEndTime()>();
+
+        $d23 = $r20[1];
+
+        $d24 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getStrike()>();
+
+        d6 = virtualinvoke $r19.<com.opengamma.analytics.financial.model.option.parameters.BlackSmileCapInflationZeroCouponParameters: double getVolatility(double,double)>($d23, $d24);
+
+        $r21 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r21.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d5, 1.0, d6);
+
+        $r22 = <com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        r5 = virtualinvoke $r22.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: com.opengamma.analytics.math.function.Function1D getPriceFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)>($r9);
+
+        $r23 = virtualinvoke r5.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r21);
+
+        $r24 = (java.lang.Double) $r23;
+
+        $d25 = virtualinvoke $r24.<java.lang.Double: double doubleValue()>();
+
+        $d26 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getNotional()>();
+
+        $d27 = $d25 * $d26;
+
+        $d28 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getPaymentYearFraction()>();
+
+        d7 = $d27 * $d28;
+
+        $r25 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r26 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r25, d7);
+
+        return $r26;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation, com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod r0;
+        com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation r1;
+        com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface r2;
+        com.opengamma.util.money.MultipleCurrencyAmount r3, $r7;
+        double d0, $d1;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r4;
+        com.opengamma.util.money.Currency $r5;
+        java.lang.Double $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface;
+
+        r3 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod: com.opengamma.util.money.MultipleCurrencyAmount netAmount(com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation,com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface)>(r1, r2);
+
+        $r4 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getPaymentTime()>();
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d1);
+
+        d0 = interfaceinvoke $r4.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r5, $r6);
+
+        $r7 = virtualinvoke r3.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount multipliedBy(double)>(d0);
+
+        return $r7;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.InstrumentDerivative, com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative r1;
+        com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface r2;
+        boolean $z0;
+        com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation $r3;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivative;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface;
+
+        $z0 = r1 instanceof com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Inflation Zero Coupon  Cap/floor");
+
+        $r3 = (com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation) r1;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod: com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation,com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface)>($r3, r2);
+
+        return $r4;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.inflation.MultipleCurrencyInflationSensitivity presentValueCurveSensitivity(com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation, com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod r0;
+        com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation r1;
+        com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface r2;
+        com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface r3, $r16, $r20;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46;
+        com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity r7, $r47, r50, r51, r52, r53;
+        double[] r9, $r14, $r18, $r22, $r30, $r32, $r38;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r15;
+        int $i0;
+        boolean $z0;
+        com.opengamma.analytics.financial.instrument.index.IndexPrice $r17, $r21, $r34;
+        java.lang.Double $r19, $r23, $r27;
+        com.opengamma.analytics.financial.interestrate.inflation.provider.InflationMarketModelConvexityAdjustmentForCapFloor $r24;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r25;
+        com.opengamma.util.money.Currency $r26, $r44, $r48;
+        java.util.HashMap $r28, $r43;
+        java.util.ArrayList $r29, $r41;
+        com.opengamma.util.tuple.DoublesPair $r31, $r33, $r42;
+        java.lang.String $r35, $r45;
+        com.opengamma.analytics.financial.model.option.parameters.BlackSmileCapInflationZeroCouponParameters $r37;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r39;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r40;
+        com.opengamma.analytics.financial.provider.sensitivity.inflation.MultipleCurrencyInflationSensitivity $r49;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "The cap/floor shoud not be null");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Black provider");
+
+        r3 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface: com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface getInflationProvider()>();
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double[] getReferenceEndTime()>();
+
+        $d9 = $r14[0];
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getLastKnownFixingTime()>();
+
+        d0 = $d9 - $d10;
+
+        $r15 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getStrike()>();
+
+        $d12 = 1.0 + $d11;
+
+        $i0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: int getMaturity()>();
+
+        $d13 = (double) $i0;
+
+        $d14 = staticinvoke <java.lang.Math: double pow(double,double)>($d12, $d13);
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: boolean isCap()>();
+
+        specialinvoke $r15.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>($d14, d0, $z0);
+
+        $r16 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface: com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface getInflationProvider()>();
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: com.opengamma.analytics.financial.instrument.index.IndexPrice getPriceIndex()>();
+
+        $r18 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double[] getReferenceEndTime()>();
+
+        $d15 = $r18[0];
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d15);
+
+        d1 = interfaceinvoke $r16.<com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface: double getPriceIndex(com.opengamma.analytics.financial.instrument.index.IndexPrice,java.lang.Double)>($r17, $r19);
+
+        $r20 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface: com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface getInflationProvider()>();
+
+        $r21 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: com.opengamma.analytics.financial.instrument.index.IndexPrice getPriceIndex()>();
+
+        $r22 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double[] getReferenceEndTime()>();
+
+        $d16 = $r22[1];
+
+        $r23 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d16);
+
+        d2 = interfaceinvoke $r20.<com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface: double getPriceIndex(com.opengamma.analytics.financial.instrument.index.IndexPrice,java.lang.Double)>($r21, $r23);
+
+        $d17 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getWeight()>();
+
+        $d18 = $d17 * d1;
+
+        $d19 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getWeight()>();
+
+        $d20 = 1.0 - $d19;
+
+        $d21 = $d20 * d2;
+
+        d3 = $d18 + $d21;
+
+        $r24 = <com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod: com.opengamma.analytics.financial.interestrate.inflation.provider.InflationMarketModelConvexityAdjustmentForCapFloor CONVEXITY_ADJUSTMENT_FUNCTION>;
+
+        d4 = virtualinvoke $r24.<com.opengamma.analytics.financial.interestrate.inflation.provider.InflationMarketModelConvexityAdjustmentForCapFloor: double getZeroCouponConvexityAdjustment(com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation,com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface)>(r1, r2);
+
+        $d22 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getIndexStartValue()>();
+
+        $d23 = d3 / $d22;
+
+        d5 = $d23 * d4;
+
+        $r25 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r26 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d24 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getPaymentTime()>();
+
+        $r27 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d24);
+
+        d6 = interfaceinvoke $r25.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r26, $r27);
+
+        $r28 = new java.util.HashMap;
+
+        specialinvoke $r28.<java.util.HashMap: void <init>()>();
+
+        $r29 = new java.util.ArrayList;
+
+        specialinvoke $r29.<java.util.ArrayList: void <init>()>();
+
+        $r30 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double[] getReferenceEndTime()>();
+
+        $d25 = $r30[0];
+
+        $d26 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getWeight()>();
+
+        $d27 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getIndexStartValue()>();
+
+        $d28 = $d26 / $d27;
+
+        $d29 = $d28 * d4;
+
+        $r31 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d25, $d29);
+
+        interfaceinvoke $r29.<java.util.List: boolean add(java.lang.Object)>($r31);
+
+        $r32 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double[] getReferenceEndTime()>();
+
+        $d30 = $r32[1];
+
+        $d31 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getWeight()>();
+
+        $d32 = 1.0 - $d31;
+
+        $d33 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getIndexStartValue()>();
+
+        $d34 = $d32 / $d33;
+
+        $d35 = $d34 * d4;
+
+        $r33 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d30, $d35);
+
+        interfaceinvoke $r29.<java.util.List: boolean add(java.lang.Object)>($r33);
+
+        $r34 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: com.opengamma.analytics.financial.instrument.index.IndexPrice getPriceIndex()>();
+
+        $r35 = interfaceinvoke r3.<com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface: java.lang.String getName(com.opengamma.analytics.financial.instrument.index.IndexPrice)>($r34);
+
+        interfaceinvoke $r28.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r35, $r29);
+
+        r7 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity ofPriceIndex(java.util.Map)>($r28);
+
+        $d36 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getPaymentTime()>();
+
+        $d37 = neg $d36;
+
+        d7 = $d37 * d6;
+
+        $r37 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.BlackSmileCapInflationZeroCouponWithConvexityProviderInterface: com.opengamma.analytics.financial.model.option.parameters.BlackSmileCapInflationZeroCouponParameters getBlackParameters()>();
+
+        $r38 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double[] getReferenceEndTime()>();
+
+        $d38 = $r38[1];
+
+        $d39 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getStrike()>();
+
+        d8 = virtualinvoke $r37.<com.opengamma.analytics.financial.model.option.parameters.BlackSmileCapInflationZeroCouponParameters: double getVolatility(double,double)>($d38, $d39);
+
+        $r39 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r39.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d5, 1.0, d8);
+
+        $r40 = <com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        r9 = virtualinvoke $r40.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: double[] getPriceAdjoint(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData)>($r15, $r39);
+
+        $r41 = new java.util.ArrayList;
+
+        specialinvoke $r41.<java.util.ArrayList: void <init>()>();
+
+        $d40 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getPaymentTime()>();
+
+        $r42 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d40, d7);
+
+        interfaceinvoke $r41.<java.util.List: boolean add(java.lang.Object)>($r42);
+
+        $r43 = new java.util.HashMap;
+
+        specialinvoke $r43.<java.util.HashMap: void <init>()>();
+
+        $r44 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r45 = interfaceinvoke r3.<com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface: java.lang.String getName(com.opengamma.util.money.Currency)>($r44);
+
+        interfaceinvoke $r43.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r45, $r41);
+
+        r50 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity ofYieldDiscounting(java.util.Map)>($r43);
+
+        $d41 = r9[0];
+
+        r51 = virtualinvoke r50.<com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity multipliedBy(double)>($d41);
+
+        $d42 = r9[1];
+
+        $d43 = d6 * $d42;
+
+        $r47 = virtualinvoke r7.<com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity multipliedBy(double)>($d43);
+
+        r52 = virtualinvoke r51.<com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity plus(com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity)>($r47);
+
+        $d44 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getNotional()>();
+
+        $d45 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: double getPaymentYearFraction()>();
+
+        $d46 = $d44 * $d45;
+
+        r53 = virtualinvoke r52.<com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity multipliedBy(double)>($d46);
+
+        $r48 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CapFloorInflationZeroCouponInterpolation: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r49 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.inflation.MultipleCurrencyInflationSensitivity: com.opengamma.analytics.financial.provider.sensitivity.inflation.MultipleCurrencyInflationSensitivity of(com.opengamma.util.money.Currency,com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity)>($r48, r53);
+
+        return $r49;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod $r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r1;
+        com.opengamma.analytics.financial.interestrate.inflation.provider.InflationMarketModelConvexityAdjustmentForCapFloor $r2;
+
+        $r0 = new com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod: com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod INSTANCE> = $r0;
+
+        $r1 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION> = $r1;
+
+        $r2 = new com.opengamma.analytics.financial.interestrate.inflation.provider.InflationMarketModelConvexityAdjustmentForCapFloor;
+
+        specialinvoke $r2.<com.opengamma.analytics.financial.interestrate.inflation.provider.InflationMarketModelConvexityAdjustmentForCapFloor: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.inflation.provider.CapFloorInflationZeroCouponInterpolationConvexityAdjustmentMethod: com.opengamma.analytics.financial.interestrate.inflation.provider.InflationMarketModelConvexityAdjustmentForCapFloor CONVEXITY_ADJUSTMENT_FUNCTION> = $r2;
+
+        return;
+    }
+}

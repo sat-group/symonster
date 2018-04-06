@@ -1,0 +1,275 @@
+public class com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator extends com.opengamma.analytics.financial.covariance.HistoricalVolatilityCalculator
+{
+    private static final org.slf4j.Logger s_logger;
+    private final com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator _returnCalculator;
+    private final double _lambda;
+    private final double _lambdaM1;
+
+    public void <init>(double, com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator)
+    {
+        com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator r0;
+        double d0;
+        com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator r1;
+        com.opengamma.util.CalculationMode $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator;
+
+        $r2 = staticinvoke <com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: com.opengamma.util.CalculationMode getDefaultCalculationMode()>();
+
+        specialinvoke r0.<com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: void <init>(double,com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator,com.opengamma.util.CalculationMode)>(d0, r1, $r2);
+
+        return;
+    }
+
+    public void <init>(double, com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator, com.opengamma.util.CalculationMode)
+    {
+        com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator r0;
+        double d0, $d2;
+        com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator r1;
+        com.opengamma.util.CalculationMode r2;
+        byte $b0;
+        org.slf4j.Logger $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator;
+
+        r2 := @parameter2: com.opengamma.util.CalculationMode;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.covariance.HistoricalVolatilityCalculator: void <init>(com.opengamma.util.CalculationMode)>(r2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "return calculator");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "calculation mode");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: double notNegative(double,java.lang.String)>(d0, "lambda");
+
+        $b0 = d0 cmpl 1.0;
+
+        if $b0 <= 0 goto label1;
+
+        $r5 = <com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: org.slf4j.Logger s_logger>;
+
+        interfaceinvoke $r5.<org.slf4j.Logger: void warn(java.lang.String)>("Weight for EWMA series is greater than one: this is probably not what was intended");
+
+     label1:
+        r0.<com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: double _lambda> = d0;
+
+        $d2 = 1.0 - d0;
+
+        r0.<com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: double _lambdaM1> = $d2;
+
+        r0.<com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator _returnCalculator> = r1;
+
+        return;
+    }
+
+    public transient java.lang.Double evaluate(com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries[])
+    {
+        com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator r0;
+        com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries[] r1;
+        com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries r2;
+        java.util.Iterator r3;
+        com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator $r4;
+        java.lang.Object $r5, $r8;
+        java.lang.Double $r6, $r7, $r9;
+        boolean $z0;
+        double $d0, $d1, $d2, $d3, $d4, $d5, d6, d7, d8;
+
+        r0 := @this: com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator;
+
+        r1 := @parameter0: com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries[];
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: void testTimeSeries(com.opengamma.timeseries.DoubleTimeSeries[],int)>(r1, 3);
+
+        $r4 = r0.<com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator _returnCalculator>;
+
+        r2 = virtualinvoke $r4.<com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator: com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries evaluate(com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries[])>(r1);
+
+        r3 = interfaceinvoke r2.<com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries: java.util.Iterator valuesIterator()>();
+
+        $r5 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+
+        $r6 = (java.lang.Double) $r5;
+
+        d6 = virtualinvoke $r6.<java.lang.Double: double doubleValue()>();
+
+        d7 = d6 * d6;
+
+     label1:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label2;
+
+        $r8 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+
+        $r9 = (java.lang.Double) $r8;
+
+        d8 = virtualinvoke $r9.<java.lang.Double: double doubleValue()>();
+
+        $d1 = r0.<com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: double _lambda>;
+
+        $d5 = $d1 * d7;
+
+        $d2 = r0.<com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: double _lambdaM1>;
+
+        $d3 = $d2 * d8;
+
+        $d4 = $d3 * d8;
+
+        d7 = $d5 + $d4;
+
+        goto label1;
+
+     label2:
+        $d0 = staticinvoke <java.lang.Math: double sqrt(double)>(d7);
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        return $r7;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator r0;
+        long l1, $l2, $l3;
+        double $d0;
+        int $i4, $i5, $i6, i7, i8, $i9, i10;
+        com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator $r1, $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator;
+
+        i7 = specialinvoke r0.<com.opengamma.analytics.financial.covariance.HistoricalVolatilityCalculator: int hashCode()>();
+
+        $d0 = r0.<com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: double _lambda>;
+
+        l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $i5 = 31 * i7;
+
+        $l2 = l1 >>> 32;
+
+        $l3 = l1 ^ $l2;
+
+        $i4 = (int) $l3;
+
+        i8 = $i5 + $i4;
+
+        $i6 = 31 * i8;
+
+        $r1 = r0.<com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator _returnCalculator>;
+
+        if $r1 != null goto label1;
+
+        $i9 = 0;
+
+        goto label2;
+
+     label1:
+        $r2 = r0.<com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator _returnCalculator>;
+
+        $i9 = virtualinvoke $r2.<com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator: int hashCode()>();
+
+     label2:
+        i10 = $i6 + $i9;
+
+        return i10;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator r0, r2;
+        java.lang.Object r1;
+        boolean $z0, $z1;
+        java.lang.Class $r3, $r4;
+        double $d0, $d1;
+        long $l0, $l1;
+        byte $b2;
+        com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator $r5, $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        $z0 = specialinvoke r0.<com.opengamma.analytics.financial.covariance.HistoricalVolatilityCalculator: boolean equals(java.lang.Object)>(r1);
+
+        if $z0 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        $r3 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r4 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+
+        if $r3 == $r4 goto label3;
+
+        return 0;
+
+     label3:
+        r2 = (com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator) r1;
+
+        $d0 = r0.<com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: double _lambda>;
+
+        $l0 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $d1 = r2.<com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: double _lambda>;
+
+        $l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d1);
+
+        $b2 = $l0 cmp $l1;
+
+        if $b2 == 0 goto label4;
+
+        return 0;
+
+     label4:
+        $r6 = r0.<com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator _returnCalculator>;
+
+        $r5 = r2.<com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: com.opengamma.analytics.financial.timeseries.returns.TimeSeriesReturnCalculator _returnCalculator>;
+
+        $z1 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r6, $r5);
+
+        return $z1;
+    }
+
+    public volatile java.lang.Object evaluate(java.lang.Object[])
+    {
+        com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator r0;
+        java.lang.Object[] r1;
+        com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries[] $r2;
+        java.lang.Double $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator;
+
+        r1 := @parameter0: java.lang.Object[];
+
+        $r2 = (com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries[]) r1;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: java.lang.Double evaluate(com.opengamma.timeseries.date.localdate.LocalDateDoubleTimeSeries[])>($r2);
+
+        return $r3;
+    }
+
+    static void <clinit>()
+    {
+        org.slf4j.Logger $r0;
+
+        $r0 = staticinvoke <org.slf4j.LoggerFactory: org.slf4j.Logger getLogger(java.lang.Class)>(class "com/opengamma/analytics/financial/covariance/ExponentialWeightedMovingAverageHistoricalVolatilityCalculator");
+
+        <com.opengamma.analytics.financial.covariance.ExponentialWeightedMovingAverageHistoricalVolatilityCalculator: org.slf4j.Logger s_logger> = $r0;
+
+        return;
+    }
+}

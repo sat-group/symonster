@@ -1,0 +1,1988 @@
+public class com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 extends java.lang.Object
+{
+    private static final com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D INTERPOLATOR_1D;
+    private final double _theta;
+    private final int _timeSteps;
+    private final int _spaceSteps;
+    private final double _timeGridBunching;
+    private final double _spaceGridBunching;
+    private final com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurfaceInterpolator _surfaceFitter;
+    private final com.opengamma.analytics.financial.model.volatility.local.DupireLocalVolatilityCalculator _localVolatilityCalculator;
+    private final double _maxAbsProxyDelta;
+
+    public void <init>(double, int, int, double, double, com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurfaceInterpolator, com.opengamma.analytics.financial.model.volatility.local.DupireLocalVolatilityCalculator, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        double d0, d1, d2, d3;
+        int i0, i1;
+        com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurfaceInterpolator r1;
+        com.opengamma.analytics.financial.model.volatility.local.DupireLocalVolatilityCalculator r2;
+        byte $b2, $b3, $b4, $b5;
+        java.lang.Object[] $r3, $r5, $r7, $r11, $r13;
+        java.lang.Integer $r4, $r6;
+        java.lang.Double $r8, $r12, $r14;
+        boolean $z0, $z1, $z2, $z3, $z4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        d0 := @parameter0: double;
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        d1 := @parameter3: double;
+
+        d2 := @parameter4: double;
+
+        r1 := @parameter5: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurfaceInterpolator;
+
+        r2 := @parameter6: com.opengamma.analytics.financial.model.volatility.local.DupireLocalVolatilityCalculator;
+
+        d3 := @parameter7: double;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $b2 = d0 cmpl 0.0;
+
+        if $b2 < 0 goto label01;
+
+        $b5 = d0 cmpg 1.0;
+
+        if $b5 > 0 goto label01;
+
+        $z0 = 1;
+
+        goto label02;
+
+     label01:
+        $z0 = 0;
+
+     label02:
+        $r13 = newarray (java.lang.Object)[1];
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r13[0] = $r14;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z0, "Theta must be >= 0 and <= 1; have {}", $r13);
+
+        if i0 <= 0 goto label03;
+
+        $z1 = 1;
+
+        goto label04;
+
+     label03:
+        $z1 = 0;
+
+     label04:
+        $r3 = newarray (java.lang.Object)[1];
+
+        $r4 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        $r3[0] = $r4;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z1, "Number of time steps must be greater than 0; have {}", $r3);
+
+        if i1 <= 0 goto label05;
+
+        $z2 = 1;
+
+        goto label06;
+
+     label05:
+        $z2 = 0;
+
+     label06:
+        $r5 = newarray (java.lang.Object)[1];
+
+        $r6 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i1);
+
+        $r5[0] = $r6;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z2, "Number of space steps must be greater than 0; have {}", $r5);
+
+        $b3 = d2 cmpl 0.0;
+
+        if $b3 <= 0 goto label07;
+
+        $z3 = 1;
+
+        goto label08;
+
+     label07:
+        $z3 = 0;
+
+     label08:
+        $r7 = newarray (java.lang.Object)[1];
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r7[0] = $r8;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z3, "Space grid bunching must be greater than 0; have {}", $r7);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "surface fitter");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "local volatility calculator");
+
+        $b4 = d3 cmpl 0.0;
+
+        if $b4 <= 0 goto label09;
+
+        $z4 = 1;
+
+        goto label10;
+
+     label09:
+        $z4 = 0;
+
+     label10:
+        $r11 = newarray (java.lang.Object)[1];
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r11[0] = $r12;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z4, "max abs proxy-delta  must be greater than 0; have {}", $r11);
+
+        r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _theta> = d0;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _timeSteps> = i0;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _spaceSteps> = i1;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _timeGridBunching> = d1;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _spaceGridBunching> = d2;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurfaceInterpolator _surfaceFitter> = r1;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.model.volatility.local.DupireLocalVolatilityCalculator _localVolatilityCalculator> = r2;
+
+        r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _maxAbsProxyDelta> = d3;
+
+        return;
+    }
+
+    public com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D solve(com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle, com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle r1;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface r2;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve r3;
+        double[] r4;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D $r7;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "data");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "local volatility surface");
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        r4 = virtualinvoke r1.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle: double[] getExpiries()>();
+
+        $r7 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D runPDESolver(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface,double[],boolean)>(r3, r2, r4, 1);
+
+        return $r7;
+    }
+
+    public com.opengamma.analytics.financial.greeks.PDEResultCollection getGridGreeks(com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle, com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface, com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle r1;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface r2;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r3;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve r4;
+        boolean $z1, $z2;
+        java.lang.IllegalArgumentException $r8;
+        java.lang.StringBuilder $r9, $r10, $r12;
+        java.lang.Class $r11;
+        java.lang.String $r13;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness $r14;
+        com.opengamma.analytics.financial.greeks.PDEResultCollection $r15;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike r16;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "data");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "option");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "local volatility surface");
+
+        r4 = virtualinvoke r1.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        $z1 = r2 instanceof com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike;
+
+        if $z1 == 0 goto label1;
+
+        r16 = (com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike) r2;
+
+        goto label3;
+
+     label1:
+        $z2 = r2 instanceof com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness;
+
+        if $z2 == 0 goto label2;
+
+        $r14 = (com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness) r2;
+
+        r16 = staticinvoke <com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceConverter: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike toStrikeSurface(com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness)>($r14);
+
+        goto label3;
+
+     label2:
+        $r8 = new java.lang.IllegalArgumentException;
+
+        $r9 = new java.lang.StringBuilder;
+
+        specialinvoke $r9.<java.lang.StringBuilder: void <init>()>();
+
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Cannot handle surface of type ");
+
+        $r11 = virtualinvoke r2.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r12 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r11);
+
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r8.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r13);
+
+        throw $r8;
+
+     label3:
+        $r15 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.greeks.PDEResultCollection gridGreeks(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike,boolean,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)>(r4, r16, 1, r3);
+
+        return $r15;
+    }
+
+    public com.opengamma.analytics.financial.greeks.BucketedGreekResultCollection getBucketedVega(com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle, com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface, com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle r1;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface r2;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r3;
+        boolean $z0, $z1;
+        java.lang.IllegalArgumentException $r7;
+        java.lang.StringBuilder $r8, $r9, $r11;
+        java.lang.Class $r10;
+        java.lang.String $r12;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness $r13;
+        com.opengamma.analytics.financial.greeks.BucketedGreekResultCollection $r14;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike r15;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "data");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "option");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "local volatility surface");
+
+        $z0 = r2 instanceof com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike;
+
+        if $z0 == 0 goto label1;
+
+        r15 = (com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike) r2;
+
+        goto label3;
+
+     label1:
+        $z1 = r2 instanceof com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness;
+
+        if $z1 == 0 goto label2;
+
+        $r13 = (com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness) r2;
+
+        r15 = staticinvoke <com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceConverter: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike toStrikeSurface(com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness)>($r13);
+
+        goto label3;
+
+     label2:
+        $r7 = new java.lang.IllegalArgumentException;
+
+        $r8 = new java.lang.StringBuilder;
+
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>()>();
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Cannot handle surface of type ");
+
+        $r10 = virtualinvoke r2.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r11 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r10);
+
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r7.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r12);
+
+        throw $r7;
+
+     label3:
+        $r14 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.greeks.BucketedGreekResultCollection bucketedVega(com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike,com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)>(r15, r1, r3);
+
+        return $r14;
+    }
+
+    private com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D runPDESolver(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve, com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface, double[], boolean)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve r1;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface r2;
+        double[] r3;
+        boolean z0;
+        int i0, $i1, $i2, $i3;
+        double d0, $d1, $d2, $d3, $d4;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D r4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface;
+
+        r3 := @parameter2: double[];
+
+        z0 := @parameter3: boolean;
+
+        i0 = lengthof r3;
+
+        $i1 = i0 - 1;
+
+        d0 = r3[$i1];
+
+        $d4 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _theta>;
+
+        $d3 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _maxAbsProxyDelta>;
+
+        $i3 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _timeSteps>;
+
+        $i2 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _spaceSteps>;
+
+        $d2 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _timeGridBunching>;
+
+        $d1 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _spaceGridBunching>;
+
+        r4 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D runForwardPDESolver(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface,boolean,double,double,double,int,int,double,double,double)>(r1, r2, z0, $d4, d0, $d3, $i3, $i2, $d2, $d1, 1.0);
+
+        return r4;
+    }
+
+    private com.opengamma.analytics.financial.greeks.PDEResultCollection gridGreeks(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve, com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike, boolean, com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve r1, $r42, $r43, $r44, $r45, $r46, $r47;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike r2, $r36, $r39;
+        boolean z0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r3;
+        double d0, d1, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, d15, d16, d17, d18, d19, d20, d21, d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, d79;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D r6, r7, r8, r9, r10, r11, r12, r13, r14;
+        double[] r15, r16, $r70, $r72, $r74, $r76, $r78, $r80, $r82, $r84, $r86, $r88, $r90, $r92, $r94, $r96, $r98, $r100, $r102, $r104, $r106;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, i23, i24;
+        com.opengamma.analytics.math.surface.Surface $r37, $r38, $r40, $r41;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r48, $r49;
+        it.unimi.dsi.fastutil.doubles.DoubleArrayList $r50, $r51, $r52, $r53, $r54, $r55, $r56, $r57, $r58, $r59, $r60, $r61, $r62, $r63, $r64, $r65, $r66, $r67, $r68;
+        com.opengamma.analytics.financial.greeks.PDEResultCollection $r69;
+        com.opengamma.analytics.financial.greeks.Greek $r71, $r73, $r75, $r77, $r79, $r81, $r83, $r85, $r87, $r89, $r91, $r93, $r95, $r97, $r99, $r101, $r103, $r105;
+        java.lang.Exception $r107;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike;
+
+        z0 := @parameter2: boolean;
+
+        r3 := @parameter3: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        d0 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: double getForward(double)>(d0);
+
+        $r36 = new com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike;
+
+        $r37 = virtualinvoke r2.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike: com.opengamma.analytics.math.surface.Surface getSurface()>();
+
+        $r38 = staticinvoke <com.opengamma.analytics.math.surface.SurfaceShiftFunctionFactory: com.opengamma.analytics.math.surface.Surface getShiftedSurface(com.opengamma.analytics.math.surface.Surface,double,boolean)>($r37, 1.0E-4, 1);
+
+        specialinvoke $r36.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike: void <init>(com.opengamma.analytics.math.surface.Surface)>($r38);
+
+        $r39 = new com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike;
+
+        $r40 = virtualinvoke r2.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike: com.opengamma.analytics.math.surface.Surface getSurface()>();
+
+        $r41 = staticinvoke <com.opengamma.analytics.math.surface.SurfaceShiftFunctionFactory: com.opengamma.analytics.math.surface.Surface getShiftedSurface(com.opengamma.analytics.math.surface.Surface,double,boolean)>($r40, -1.0E-4, 1);
+
+        specialinvoke $r39.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike: void <init>(com.opengamma.analytics.math.surface.Surface)>($r41);
+
+        $d26 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _theta>;
+
+        $d25 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _maxAbsProxyDelta>;
+
+        $i3 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _timeSteps>;
+
+        $i2 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _spaceSteps>;
+
+        $d24 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _timeGridBunching>;
+
+        $d23 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _spaceGridBunching>;
+
+        r6 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D runForwardPDESolver(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface,boolean,double,double,double,int,int,double,double,double)>(r1, r2, z0, $d26, d0, $d25, $i3, $i2, $d24, $d23, 1.0);
+
+        $r42 = virtualinvoke r1.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve withFractionalShift(double)>(0.05);
+
+        $d30 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _theta>;
+
+        $d29 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _maxAbsProxyDelta>;
+
+        $i5 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _timeSteps>;
+
+        $i4 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _spaceSteps>;
+
+        $d28 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _timeGridBunching>;
+
+        $d27 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _spaceGridBunching>;
+
+        r7 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D runForwardPDESolver(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface,boolean,double,double,double,int,int,double,double,double)>($r42, r2, z0, $d30, d0, $d29, $i5, $i4, $d28, $d27, 1.0);
+
+        $r43 = virtualinvoke r1.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve withFractionalShift(double)>(-0.05);
+
+        $d34 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _theta>;
+
+        $d33 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _maxAbsProxyDelta>;
+
+        $i7 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _timeSteps>;
+
+        $i6 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _spaceSteps>;
+
+        $d32 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _timeGridBunching>;
+
+        $d31 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _spaceGridBunching>;
+
+        r8 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D runForwardPDESolver(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface,boolean,double,double,double,int,int,double,double,double)>($r43, r2, z0, $d34, d0, $d33, $i7, $i6, $d32, $d31, 1.0);
+
+        $d38 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _theta>;
+
+        $d37 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _maxAbsProxyDelta>;
+
+        $i9 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _timeSteps>;
+
+        $i8 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _spaceSteps>;
+
+        $d36 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _timeGridBunching>;
+
+        $d35 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _spaceGridBunching>;
+
+        r9 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D runForwardPDESolver(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface,boolean,double,double,double,int,int,double,double,double)>(r1, $r36, z0, $d38, d0, $d37, $i9, $i8, $d36, $d35, 1.0);
+
+        $d42 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _theta>;
+
+        $d41 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _maxAbsProxyDelta>;
+
+        $i11 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _timeSteps>;
+
+        $i10 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _spaceSteps>;
+
+        $d40 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _timeGridBunching>;
+
+        $d39 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _spaceGridBunching>;
+
+        r10 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D runForwardPDESolver(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface,boolean,double,double,double,int,int,double,double,double)>(r1, $r39, z0, $d42, d0, $d41, $i11, $i10, $d40, $d39, 1.0);
+
+        $r44 = virtualinvoke r1.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve withFractionalShift(double)>(0.05);
+
+        $d46 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _theta>;
+
+        $d45 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _maxAbsProxyDelta>;
+
+        $i13 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _timeSteps>;
+
+        $i12 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _spaceSteps>;
+
+        $d44 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _timeGridBunching>;
+
+        $d43 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _spaceGridBunching>;
+
+        r11 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D runForwardPDESolver(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface,boolean,double,double,double,int,int,double,double,double)>($r44, $r36, z0, $d46, d0, $d45, $i13, $i12, $d44, $d43, 1.0);
+
+        $r45 = virtualinvoke r1.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve withFractionalShift(double)>(0.05);
+
+        $d50 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _theta>;
+
+        $d49 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _maxAbsProxyDelta>;
+
+        $i15 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _timeSteps>;
+
+        $i14 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _spaceSteps>;
+
+        $d48 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _timeGridBunching>;
+
+        $d47 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _spaceGridBunching>;
+
+        r12 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D runForwardPDESolver(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface,boolean,double,double,double,int,int,double,double,double)>($r45, $r39, z0, $d50, d0, $d49, $i15, $i14, $d48, $d47, 1.0);
+
+        $r46 = virtualinvoke r1.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve withFractionalShift(double)>(-0.05);
+
+        $d54 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _theta>;
+
+        $d53 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _maxAbsProxyDelta>;
+
+        $i17 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _timeSteps>;
+
+        $i16 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _spaceSteps>;
+
+        $d52 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _timeGridBunching>;
+
+        $d51 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _spaceGridBunching>;
+
+        r13 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D runForwardPDESolver(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface,boolean,double,double,double,int,int,double,double,double)>($r46, $r36, z0, $d54, d0, $d53, $i17, $i16, $d52, $d51, 1.0);
+
+        $r47 = virtualinvoke r1.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve withFractionalShift(double)>(-0.05);
+
+        $d58 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _theta>;
+
+        $d57 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _maxAbsProxyDelta>;
+
+        $i19 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _timeSteps>;
+
+        $i18 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _spaceSteps>;
+
+        $d56 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _timeGridBunching>;
+
+        $d55 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _spaceGridBunching>;
+
+        r14 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D runForwardPDESolver(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface,boolean,double,double,double,int,int,double,double,double)>($r47, $r39, z0, $d58, d0, $d57, $i19, $i18, $d56, $d55, 1.0);
+
+        $r48 = virtualinvoke r6.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        r15 = virtualinvoke $r48.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] getTimeNodes()>();
+
+        $r49 = virtualinvoke r6.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        r16 = virtualinvoke $r49.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] getSpaceNodes()>();
+
+        i0 = virtualinvoke r6.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: int getNumberSpaceNodes()>();
+
+        $r50 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r50.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r51 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r51.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r52 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r52.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r53 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r53.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r54 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r54.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r55 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r55.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r56 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r56.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r57 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r57.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r58 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r58.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r59 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r59.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r60 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r60.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r61 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r61.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r62 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r62.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r63 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r63.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r64 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r64.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r65 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r65.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r66 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r66.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r67 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r67.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        $r68 = new it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+        specialinvoke $r68.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: void <init>()>();
+
+        i23 = 0;
+
+     label1:
+        $i20 = i0 - 1;
+
+        if i23 >= $i20 goto label7;
+
+        d4 = virtualinvoke r6.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getSpaceValue(int)>(i23);
+
+        d5 = d4 * d1;
+
+        d6 = virtualinvoke r6.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int)>(i23);
+
+     label2:
+        d79 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getBSImpliedVol(double,double,double,boolean)>(d6, d4, d0, z0);
+
+     label3:
+        goto label5;
+
+     label4:
+        $r107 := @caughtexception;
+
+        goto label6;
+
+     label5:
+        i24 = staticinvoke <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SurfaceArrayUtils: int getLowerBoundIndex(double[],double)>(r15, d0);
+
+        i1 = staticinvoke <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SurfaceArrayUtils: int getLowerBoundIndex(double[],double)>(r16, d4);
+
+        $d59 = virtualinvoke r6.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int,int)>(i1, i24);
+
+        d7 = d1 * $d59;
+
+        $i21 = i1 + 1;
+
+        $d60 = virtualinvoke r6.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int,int)>($i21, i24);
+
+        d8 = d1 * $d60;
+
+        d9 = virtualinvoke r6.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getSpaceValue(int)>(i1);
+
+        $i22 = i1 + 1;
+
+        d10 = virtualinvoke r6.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getSpaceValue(int)>($i22);
+
+        $d61 = d10 - d4;
+
+        $d64 = $d61 * d7;
+
+        $d62 = d4 - d9;
+
+        $d63 = $d62 * d8;
+
+        $d66 = $d64 + $d63;
+
+        $d65 = d10 - d9;
+
+        d11 = $d66 / $d65;
+
+        d12 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double price(double,double,double,double,boolean)>(d1, d5, d0, d79, z0);
+
+        virtualinvoke $r50.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>(d5);
+
+        virtualinvoke $r51.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>(d79);
+
+        virtualinvoke $r52.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>(d11);
+
+        virtualinvoke $r53.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>(d12);
+
+        $d67 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getBSDelta(double,double,double,double,boolean)>(d1, d5, d0, d79, z0);
+
+        virtualinvoke $r55.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>($d67);
+
+        $d68 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getBSDualDelta(double,double,double,double,boolean)>(d1, d5, d0, d79, z0);
+
+        virtualinvoke $r56.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>($d68);
+
+        $d69 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getBSGamma(double,double,double,double)>(d1, d5, d0, d79);
+
+        virtualinvoke $r57.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>($d69);
+
+        $d70 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getBSDualGamma(double,double,double,double)>(d1, d5, d0, d79);
+
+        virtualinvoke $r58.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>($d70);
+
+        $d71 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getBSVega(double,double,double,double)>(d1, d5, d0, d79);
+
+        virtualinvoke $r59.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>($d71);
+
+        $d72 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getBSVanna(double,double,double,double)>(d1, d5, d0, d79);
+
+        virtualinvoke $r60.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>($d72);
+
+        $d73 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getBSVomma(double,double,double,double)>(d1, d5, d0, d79);
+
+        virtualinvoke $r61.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>($d73);
+
+        virtualinvoke $r54.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>(3.141592653589793);
+
+        d13 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getModelDualDelta(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D,int)>(r6, i23);
+
+        virtualinvoke $r63.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>(d13);
+
+        d14 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getFixedSurfaceDelta(double,double,double)>(d6, d4, d13);
+
+        d15 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getSurfaceDelta(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D,com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D,double,double,int)>(r7, r8, d1, 0.05, i23);
+
+        d16 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getModelDelta(double,double,double)>(d14, d1, d15);
+
+        virtualinvoke $r62.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>(d16);
+
+        d17 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getModelDualGamma(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D,int,double)>(r6, i23, d1);
+
+        virtualinvoke $r65.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>(d17);
+
+        d18 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getFixedSurfaceGamma(double,double)>(d4, d17);
+
+        d19 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getDSurfaceDMoneyness(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D,com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D,double,double,int)>(r7, r8, d1, 0.05, i23);
+
+        d20 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getSurfaceGamma(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D,com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D,com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D,double,double,int)>(r7, r8, r6, d1, 0.05, i23);
+
+        $d74 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getModelGamma(double,double,double,double,double)>(d18, d15, d4, d19, d20);
+
+        virtualinvoke $r64.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>($d74);
+
+        $d75 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getModelVega(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D,com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D,double,int)>(r9, r10, 1.0E-4, i23);
+
+        virtualinvoke $r66.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>($d75);
+
+        d21 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getXVanna(double,com.opengamma.analytics.financial.model.finitedifference.PDEResults1D,com.opengamma.analytics.financial.model.finitedifference.PDEResults1D,int,double)>(1.0E-4, r9, r10, i23, d4);
+
+        d22 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getSurfaceVanna(com.opengamma.analytics.financial.model.finitedifference.PDEResults1D,com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D,com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D,com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D,double,double,int)>(r11, r12, r13, r14, 1.0E-4, 0.05, i23);
+
+        $d76 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getModelVanna(double,double)>(d21, d22);
+
+        virtualinvoke $r67.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>($d76);
+
+        $d77 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double getModelVomma(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D,com.opengamma.analytics.financial.model.finitedifference.PDEResults1D,com.opengamma.analytics.financial.model.finitedifference.PDEResults1D,double,int)>(r6, r9, r10, 1.0E-4, i23);
+
+        virtualinvoke $r68.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: boolean add(double)>($d77);
+
+     label6:
+        i23 = i23 + 1;
+
+        goto label1;
+
+     label7:
+        $r69 = new com.opengamma.analytics.financial.greeks.PDEResultCollection;
+
+        $r70 = virtualinvoke $r50.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        specialinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void <init>(double[])>($r70);
+
+        $r71 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_PRICE>;
+
+        $r72 = virtualinvoke $r52.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r71, $r72);
+
+        $r73 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_BLACK_PRICE>;
+
+        $r74 = virtualinvoke $r53.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r73, $r74);
+
+        $r75 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_IMPLIED_VOL>;
+
+        $r76 = virtualinvoke $r51.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r75, $r76);
+
+        $r77 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_BLACK_DELTA>;
+
+        $r78 = virtualinvoke $r55.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r77, $r78);
+
+        $r79 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_BLACK_DUAL_DELTA>;
+
+        $r80 = virtualinvoke $r56.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r79, $r80);
+
+        $r81 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_BLACK_GAMMA>;
+
+        $r82 = virtualinvoke $r57.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r81, $r82);
+
+        $r83 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_BLACK_DUAL_GAMMA>;
+
+        $r84 = virtualinvoke $r58.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r83, $r84);
+
+        $r85 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_BLACK_VEGA>;
+
+        $r86 = virtualinvoke $r59.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r85, $r86);
+
+        $r87 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_BLACK_VANNA>;
+
+        $r88 = virtualinvoke $r60.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r87, $r88);
+
+        $r89 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_BLACK_VOMMA>;
+
+        $r90 = virtualinvoke $r61.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r89, $r90);
+
+        $r91 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_DELTA>;
+
+        $r92 = virtualinvoke $r62.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r91, $r92);
+
+        $r93 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_DUAL_DELTA>;
+
+        $r94 = virtualinvoke $r63.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r93, $r94);
+
+        $r95 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_GAMMA>;
+
+        $r96 = virtualinvoke $r64.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r95, $r96);
+
+        $r97 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_DUAL_GAMMA>;
+
+        $r98 = virtualinvoke $r65.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r97, $r98);
+
+        $r99 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_VEGA>;
+
+        $r100 = virtualinvoke $r66.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r99, $r100);
+
+        $r101 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_VANNA>;
+
+        $r102 = virtualinvoke $r67.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r101, $r102);
+
+        $r103 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_VOMMA>;
+
+        $r104 = virtualinvoke $r68.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r103, $r104);
+
+        $r105 = <com.opengamma.analytics.financial.greeks.PDEResultCollection: com.opengamma.analytics.financial.greeks.Greek GRID_DOMESTIC_PV_QUOTE>;
+
+        $r106 = virtualinvoke $r54.<it.unimi.dsi.fastutil.doubles.DoubleArrayList: double[] toDoubleArray()>();
+
+        virtualinvoke $r69.<com.opengamma.analytics.financial.greeks.PDEResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[])>($r105, $r106);
+
+        return $r69;
+
+        catch java.lang.Exception from label2 to label3 with label4;
+    }
+
+    private double getBSImpliedVol(double, double, double, boolean)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        double d0, d1, d2, $d3;
+        boolean z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        z0 := @parameter3: boolean;
+
+        $d3 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double impliedVolatility(double,double,double,double,boolean)>(d0, 1.0, d1, d2, z0);
+
+        return $d3;
+    }
+
+    private double getBSDelta(double, double, double, double, boolean)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        double d0, d1, d2, d3, $d4;
+        boolean z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        $d4 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double delta(double,double,double,double,boolean)>(d0, d1, d2, d3, z0);
+
+        return $d4;
+    }
+
+    private double getBSDualDelta(double, double, double, double, boolean)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        double d0, d1, d2, d3, $d4;
+        boolean z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        $d4 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double dualDelta(double,double,double,double,boolean)>(d0, d1, d2, d3, z0);
+
+        return $d4;
+    }
+
+    private double getBSGamma(double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        double d0, d1, d2, d3, $d4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $d4 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double gamma(double,double,double,double)>(d0, d1, d2, d3);
+
+        return $d4;
+    }
+
+    private double getBSDualGamma(double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        double d0, d1, d2, d3, $d4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $d4 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double dualGamma(double,double,double,double)>(d0, d1, d2, d3);
+
+        return $d4;
+    }
+
+    private double getBSVega(double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        double d0, d1, d2, d3, $d4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $d4 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double vega(double,double,double,double)>(d0, d1, d2, d3);
+
+        return $d4;
+    }
+
+    private double getBSVanna(double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        double d0, d1, d2, d3, $d4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $d4 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double vanna(double,double,double,double)>(d0, d1, d2, d3);
+
+        return $d4;
+    }
+
+    private double getBSVomma(double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        double d0, d1, d2, d3, $d4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        $d4 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double vomma(double,double,double,double)>(d0, d1, d2, d3);
+
+        return $d4;
+    }
+
+    private double getFixedSurfaceDelta(double, double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        double d0, d1, d2, $d3, $d4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        $d3 = d1 * d2;
+
+        $d4 = d0 - $d3;
+
+        return $d4;
+    }
+
+    private double getSurfaceDelta(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D, com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D, double, double, int)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D r1, r2;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7;
+        int i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D;
+
+        d0 := @parameter2: double;
+
+        d1 := @parameter3: double;
+
+        i0 := @parameter4: int;
+
+        $d2 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int)>(i0);
+
+        $d3 = virtualinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int)>(i0);
+
+        $d4 = $d2 - $d3;
+
+        $d5 = $d4 / 2.0;
+
+        $d6 = $d5 / d0;
+
+        $d7 = $d6 / d1;
+
+        return $d7;
+    }
+
+    private double getModelDelta(double, double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        double d0, d1, d2, $d3, $d4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        $d3 = d1 * d2;
+
+        $d4 = d0 + $d3;
+
+        return $d4;
+    }
+
+    private double getModelDualDelta(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D, int)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D r1;
+        int i0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D;
+
+        i0 := @parameter1: int;
+
+        $d0 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFirstSpatialDerivative(int)>(i0);
+
+        return $d0;
+    }
+
+    private double getFixedSurfaceGamma(double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        double d0, d1, $d2, $d3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $d2 = d0 * d0;
+
+        $d3 = $d2 * d1;
+
+        return $d3;
+    }
+
+    private double getDSurfaceDMoneyness(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D, com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D, double, double, int)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D r1, r2;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7;
+        int i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D;
+
+        d0 := @parameter2: double;
+
+        d1 := @parameter3: double;
+
+        i0 := @parameter4: int;
+
+        $d2 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFirstSpatialDerivative(int)>(i0);
+
+        $d3 = virtualinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFirstSpatialDerivative(int)>(i0);
+
+        $d4 = $d2 - $d3;
+
+        $d5 = $d4 / 2.0;
+
+        $d6 = $d5 / d0;
+
+        $d7 = $d6 / d1;
+
+        return $d7;
+    }
+
+    private double getSurfaceGamma(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D, com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D, com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D, double, double, int)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D r1, r2, r3;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10;
+        int i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D;
+
+        d0 := @parameter3: double;
+
+        d1 := @parameter4: double;
+
+        i0 := @parameter5: int;
+
+        $d2 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int)>(i0);
+
+        $d3 = virtualinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int)>(i0);
+
+        $d4 = $d2 + $d3;
+
+        $d5 = virtualinvoke r3.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int)>(i0);
+
+        $d6 = 2.0 * $d5;
+
+        $d7 = $d4 - $d6;
+
+        $d8 = $d7 / d0;
+
+        $d9 = $d8 / d1;
+
+        $d10 = $d9 / d1;
+
+        return $d10;
+    }
+
+    private double getModelGamma(double, double, double, double, double)
+    {
+        double $d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        d1 := @parameter0: double;
+
+        d2 := @parameter1: double;
+
+        d3 := @parameter2: double;
+
+        d4 := @parameter3: double;
+
+        d5 := @parameter4: double;
+
+        $d6 = 2.0 * d2;
+
+        $d9 = d1 + $d6;
+
+        $d7 = 2.0 * d3;
+
+        $d8 = $d7 * d4;
+
+        $d10 = $d9 - $d8;
+
+        $d0 = $d10 + d5;
+
+        return $d0;
+    }
+
+    private double getModelDualGamma(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D, int, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D r1;
+        int i0;
+        double d0, $d1, $d2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D;
+
+        i0 := @parameter1: int;
+
+        d0 := @parameter2: double;
+
+        $d1 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getSecondSpatialDerivative(int)>(i0);
+
+        $d2 = $d1 / d0;
+
+        return $d2;
+    }
+
+    private double getModelVega(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D, com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D, double, int)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D r1, r2;
+        double d0, $d1, $d2, $d3, $d4, $d5;
+        int i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D;
+
+        d0 := @parameter2: double;
+
+        i0 := @parameter3: int;
+
+        $d1 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int)>(i0);
+
+        $d2 = virtualinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int)>(i0);
+
+        $d3 = $d1 - $d2;
+
+        $d4 = $d3 / 2.0;
+
+        $d5 = $d4 / d0;
+
+        return $d5;
+    }
+
+    private double getXVanna(double, com.opengamma.analytics.financial.model.finitedifference.PDEResults1D, com.opengamma.analytics.financial.model.finitedifference.PDEResults1D, int, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11;
+        com.opengamma.analytics.financial.model.finitedifference.PDEResults1D r1, r2;
+        int i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: com.opengamma.analytics.financial.model.finitedifference.PDEResults1D;
+
+        r2 := @parameter2: com.opengamma.analytics.financial.model.finitedifference.PDEResults1D;
+
+        i0 := @parameter3: int;
+
+        d1 := @parameter4: double;
+
+        $d2 = interfaceinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.PDEResults1D: double getFunctionValue(int)>(i0);
+
+        $d3 = interfaceinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.PDEResults1D: double getFunctionValue(int)>(i0);
+
+        $d4 = $d2 - $d3;
+
+        $d5 = interfaceinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.PDEResults1D: double getFirstSpatialDerivative(int)>(i0);
+
+        $d6 = interfaceinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.PDEResults1D: double getFirstSpatialDerivative(int)>(i0);
+
+        $d7 = $d5 - $d6;
+
+        $d8 = d1 * $d7;
+
+        $d9 = $d4 - $d8;
+
+        $d10 = $d9 / 2.0;
+
+        $d11 = $d10 / d0;
+
+        return $d11;
+    }
+
+    private double getSurfaceVanna(com.opengamma.analytics.financial.model.finitedifference.PDEResults1D, com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D, com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D, com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D, double, double, int)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        com.opengamma.analytics.financial.model.finitedifference.PDEResults1D r1;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D r2, r3, r4;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11;
+        int i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.finitedifference.PDEResults1D;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D;
+
+        r4 := @parameter3: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D;
+
+        d0 := @parameter4: double;
+
+        d1 := @parameter5: double;
+
+        i0 := @parameter6: int;
+
+        $d2 = interfaceinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.PDEResults1D: double getFunctionValue(int)>(i0);
+
+        $d3 = virtualinvoke r4.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int)>(i0);
+
+        $d4 = $d2 + $d3;
+
+        $d5 = virtualinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int)>(i0);
+
+        $d6 = $d4 - $d5;
+
+        $d7 = virtualinvoke r3.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int)>(i0);
+
+        $d8 = $d6 - $d7;
+
+        $d9 = $d8 / 4.0;
+
+        $d10 = $d9 / d1;
+
+        $d11 = $d10 / d0;
+
+        return $d11;
+    }
+
+    private double getModelVanna(double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        double d0, d1, $d2;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $d2 = d0 + d1;
+
+        return $d2;
+    }
+
+    private double getModelVomma(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D, com.opengamma.analytics.financial.model.finitedifference.PDEResults1D, com.opengamma.analytics.financial.model.finitedifference.PDEResults1D, double, int)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D r1;
+        com.opengamma.analytics.financial.model.finitedifference.PDEResults1D r2, r3;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8;
+        int i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.finitedifference.PDEResults1D;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.finitedifference.PDEResults1D;
+
+        d0 := @parameter3: double;
+
+        i0 := @parameter4: int;
+
+        $d1 = interfaceinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.PDEResults1D: double getFunctionValue(int)>(i0);
+
+        $d2 = interfaceinvoke r3.<com.opengamma.analytics.financial.model.finitedifference.PDEResults1D: double getFunctionValue(int)>(i0);
+
+        $d3 = $d1 + $d2;
+
+        $d4 = virtualinvoke r1.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int)>(i0);
+
+        $d5 = 2.0 * $d4;
+
+        $d6 = $d3 - $d5;
+
+        $d7 = $d6 / d0;
+
+        $d8 = $d7 / d0;
+
+        return $d8;
+    }
+
+    private com.opengamma.analytics.financial.greeks.BucketedGreekResultCollection bucketedVega(com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike, com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle, com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike r1, r34;
+        com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle r2, r12;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r3;
+        double[] r4, r8, r9, r10, $r23, $r24, $r32;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve r5;
+        double[][] r6, r11;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, i12, i13, i14, i15, i16;
+        double d0, d1, d2, d3, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, d25;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D r7, r15;
+        com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneynessFcnBackedByGrid r13;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface r14;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r16;
+        com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D $r17, $r18, $r28, $r29;
+        java.lang.Double $r19, $r20, $r30, $r31;
+        com.opengamma.analytics.financial.greeks.BucketedGreekResultCollection $r21;
+        com.opengamma.analytics.financial.greeks.Greek $r22;
+        com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurfaceInterpolator $r25;
+        com.opengamma.analytics.financial.model.volatility.local.DupireLocalVolatilityCalculator $r26;
+        boolean $z1, $z2, $z3;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness $r27;
+        com.opengamma.analytics.math.interpolation.data.Interpolator1DDoubleQuadraticDataBundle r33, r35;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        r4 = virtualinvoke r2.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle: double[] getExpiries()>();
+
+        r5 = virtualinvoke r2.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        r6 = virtualinvoke r2.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle: double[][] getStrikes()>();
+
+        i0 = lengthof r4;
+
+        $d5 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        d0 = virtualinvoke r5.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: double getForward(double)>($d5);
+
+        d1 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        $d6 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        d2 = $d6 / d0;
+
+        $d10 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _theta>;
+
+        $d9 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _maxAbsProxyDelta>;
+
+        $i3 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _timeSteps>;
+
+        $i2 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _spaceSteps>;
+
+        $d8 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _timeGridBunching>;
+
+        $d7 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _spaceGridBunching>;
+
+        r7 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D runForwardPDESolver(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface,boolean,double,double,double,int,int,double,double,double)>(r5, r1, 1, $d10, d1, $d9, $i3, $i2, $d8, $d7, 1.0);
+
+        $r16 = virtualinvoke r7.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        r8 = virtualinvoke $r16.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: double[] getSpaceNodes()>();
+
+        i12 = staticinvoke <com.opengamma.analytics.financial.model.volatility.smile.fitting.interpolation.SurfaceArrayUtils: int getLowerBoundIndex(double[],double)>(r8, d2);
+
+        if i12 < 1 goto label01;
+
+        i12 = i12 + -1;
+
+     label01:
+        $i4 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _spaceSteps>;
+
+        $i5 = $i4 - 1;
+
+        if i12 < $i5 goto label02;
+
+        i12 = i12 + -1;
+
+        $i10 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _spaceSteps>;
+
+        $i11 = $i10 - 1;
+
+        if i12 < $i11 goto label02;
+
+        i12 = i12 + -1;
+
+     label02:
+        r9 = newarray (double)[4];
+
+        r10 = newarray (double)[4];
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r8, i12, r10, 0, 4);
+
+        i13 = 0;
+
+     label03:
+        if i13 >= 4 goto label04;
+
+        $i9 = i12 + i13;
+
+        $d21 = virtualinvoke r7.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int)>($i9);
+
+        $d22 = r10[i13];
+
+        $d23 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        $z3 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: boolean isCall()>();
+
+        $d24 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double impliedVolatility(double,double,double,double,boolean)>($d21, 1.0, $d22, $d23, $z3);
+
+        r9[i13] = $d24;
+
+        i13 = i13 + 1;
+
+        goto label03;
+
+     label04:
+        $r17 = <com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D INTERPOLATOR_1D>;
+
+        r33 = virtualinvoke $r17.<com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D: com.opengamma.analytics.math.interpolation.data.Interpolator1DDoubleQuadraticDataBundle getDataBundle(double[],double[])>(r10, r9);
+
+        $r18 = <com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D INTERPOLATOR_1D>;
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r20 = virtualinvoke $r18.<com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D: java.lang.Double interpolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r33, $r19);
+
+        d3 = virtualinvoke $r20.<java.lang.Double: double doubleValue()>();
+
+        r11 = newarray (double[])[i0];
+
+        i14 = 0;
+
+     label05:
+        if i14 >= i0 goto label12;
+
+        $r23 = r6[i14];
+
+        i1 = lengthof $r23;
+
+        $r24 = newarray (double)[i1];
+
+        r11[i14] = $r24;
+
+        i15 = 0;
+
+     label06:
+        if i15 >= i1 goto label11;
+
+        r12 = virtualinvoke r2.<com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle: com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle withBumpedPoint(int,int,double)>(i14, i15, 1.0E-4);
+
+        $r25 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurfaceInterpolator _surfaceFitter>;
+
+        r13 = virtualinvoke $r25.<com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurfaceInterpolator: com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceMoneynessFcnBackedByGrid getVolatilitySurface(com.opengamma.analytics.financial.model.volatility.smile.fitting.sabr.SmileSurfaceDataBundle)>(r12);
+
+        $r26 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.model.volatility.local.DupireLocalVolatilityCalculator _localVolatilityCalculator>;
+
+        r14 = virtualinvoke $r26.<com.opengamma.analytics.financial.model.volatility.local.DupireLocalVolatilityCalculator: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface getLocalVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface,com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve)>(r13, r5);
+
+        $z1 = r14 instanceof com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike;
+
+        if $z1 == 0 goto label07;
+
+        r34 = (com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike) r14;
+
+        goto label08;
+
+     label07:
+        $r27 = (com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness) r14;
+
+        r34 = staticinvoke <com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceConverter: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike toStrikeSurface(com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness)>($r27);
+
+     label08:
+        $d14 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _theta>;
+
+        $d13 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _maxAbsProxyDelta>;
+
+        $i7 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _timeSteps>;
+
+        $i6 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: int _spaceSteps>;
+
+        $d12 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _timeGridBunching>;
+
+        $d11 = r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: double _spaceGridBunching>;
+
+        r15 = specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D runForwardPDESolver(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface,boolean,double,double,double,int,int,double,double,double)>(r5, r34, 1, $d14, d1, $d13, $i7, $i6, $d12, $d11, 1.0);
+
+        i16 = 0;
+
+     label09:
+        if i16 >= 4 goto label10;
+
+        $i8 = i12 + i16;
+
+        $d17 = virtualinvoke r15.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int)>($i8);
+
+        $d18 = r10[i16];
+
+        $d19 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        $z2 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: boolean isCall()>();
+
+        $d20 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double impliedVolatility(double,double,double,double,boolean)>($d17, 1.0, $d18, $d19, $z2);
+
+        r9[i16] = $d20;
+
+        i16 = i16 + 1;
+
+        goto label09;
+
+     label10:
+        $r28 = <com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D INTERPOLATOR_1D>;
+
+        r35 = virtualinvoke $r28.<com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D: com.opengamma.analytics.math.interpolation.data.Interpolator1DDoubleQuadraticDataBundle getDataBundle(double[],double[])>(r10, r9);
+
+        $r29 = <com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D INTERPOLATOR_1D>;
+
+        $r30 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r31 = virtualinvoke $r29.<com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D: java.lang.Double interpolate(com.opengamma.analytics.math.interpolation.data.Interpolator1DDataBundle,java.lang.Double)>(r35, $r30);
+
+        d25 = virtualinvoke $r31.<java.lang.Double: double doubleValue()>();
+
+        $r32 = r11[i14];
+
+        $d15 = d25 - d3;
+
+        $d16 = $d15 / 1.0E-4;
+
+        $r32[i15] = $d16;
+
+        i15 = i15 + 1;
+
+        goto label06;
+
+     label11:
+        i14 = i14 + 1;
+
+        goto label05;
+
+     label12:
+        $r21 = new com.opengamma.analytics.financial.greeks.BucketedGreekResultCollection;
+
+        specialinvoke $r21.<com.opengamma.analytics.financial.greeks.BucketedGreekResultCollection: void <init>(double[],double[][])>(r4, r6);
+
+        $r22 = <com.opengamma.analytics.financial.greeks.BucketedGreekResultCollection: com.opengamma.analytics.financial.greeks.Greek BUCKETED_VEGA>;
+
+        virtualinvoke $r21.<com.opengamma.analytics.financial.greeks.BucketedGreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,double[][])>($r22, r11);
+
+        return $r21;
+    }
+
+    private com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D runForwardPDESolver(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve, com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface, boolean, double, double, double, int, int, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1 r0;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve r1;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface r2;
+        boolean z0, $z1, $z2, $z3, $z4;
+        double d0, d1, d2, d3, d4, d5, d6, d7, $d8, $d9, $d10, $d11;
+        int i0, i1;
+        com.opengamma.analytics.math.function.Function1D r8;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D r9;
+        com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider $r10;
+        java.lang.IllegalArgumentException $r11;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness $r12;
+        com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference $r13;
+        byte $b2, $b3;
+        java.lang.Object[] $r14, $r17;
+        java.lang.Double $r15, $r16, $r18, $r19;
+        com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition $r20, $r28, $r29, r32;
+        com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition $r21;
+        com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing $r22;
+        com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing $r23;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r24;
+        com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider $r25;
+        com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle $r26;
+        com.opengamma.analytics.financial.model.finitedifference.PDEResults1D $r27;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike $r30;
+        com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients r31;
+        com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition r33;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurface;
+
+        z0 := @parameter2: boolean;
+
+        d0 := @parameter3: double;
+
+        d1 := @parameter4: double;
+
+        d2 := @parameter5: double;
+
+        i0 := @parameter6: int;
+
+        i1 := @parameter7: int;
+
+        d3 := @parameter8: double;
+
+        d4 := @parameter9: double;
+
+        d5 := @parameter10: double;
+
+        $r10 = new com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider;
+
+        specialinvoke $r10.<com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider: void <init>()>();
+
+        $z1 = r2 instanceof com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike;
+
+        if $z1 == 0 goto label1;
+
+        $r30 = (com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike) r2;
+
+        r31 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients getForwardLocalVol(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike)>(r1, $r30);
+
+        goto label3;
+
+     label1:
+        $z2 = r2 instanceof com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness;
+
+        if $z2 == 0 goto label2;
+
+        $r12 = (com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness) r2;
+
+        r31 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.finitedifference.applications.PDE1DCoefficientsProvider: com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDE1DStandardCoefficients getForwardLocalVol(com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceMoneyness)>($r12);
+
+        goto label3;
+
+     label2:
+        $r11 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r11.<java.lang.IllegalArgumentException: void <init>()>();
+
+        throw $r11;
+
+     label3:
+        $r13 = new com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference;
+
+        specialinvoke $r13.<com.opengamma.analytics.financial.model.finitedifference.ThetaMethodFiniteDifference: void <init>(double,boolean)>(d0, 1);
+
+        $d8 = neg d2;
+
+        $d9 = staticinvoke <java.lang.Math: double sqrt(double)>(d1);
+
+        $d10 = $d8 * $d9;
+
+        d6 = staticinvoke <java.lang.Math: double exp(double)>($d10);
+
+        d7 = 1.0 / d6;
+
+        $b2 = d6 cmpg d5;
+
+        if $b2 >= 0 goto label4;
+
+        $z3 = 1;
+
+        goto label5;
+
+     label4:
+        $z3 = 0;
+
+     label5:
+        $r14 = newarray (java.lang.Object)[2];
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d6);
+
+        $r14[0] = $r15;
+
+        $r16 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d5);
+
+        $r14[1] = $r16;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z3, "min moneyness of {} greater than centreMoneyness of {}. Increase maxAbsProxydelta", $r14);
+
+        $b3 = d7 cmpl d5;
+
+        if $b3 <= 0 goto label6;
+
+        $z4 = 1;
+
+        goto label7;
+
+     label6:
+        $z4 = 0;
+
+     label7:
+        $r17 = newarray (java.lang.Object)[2];
+
+        $r18 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d7);
+
+        $r17[0] = $r18;
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d5);
+
+        $r17[1] = $r19;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z4, "max moneyness of {} less than centreMoneyness of {}. Increase maxAbsProxydelta", $r17);
+
+        if z0 == 0 goto label8;
+
+        $r28 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        $d11 = 1.0 - d6;
+
+        specialinvoke $r28.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(double,double)>($d11, d6);
+
+        r32 = $r28;
+
+        $r29 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r29.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(double,double)>(0.0, d7);
+
+        r33 = $r29;
+
+        goto label9;
+
+     label8:
+        $r20 = new com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition;
+
+        specialinvoke $r20.<com.opengamma.analytics.financial.model.finitedifference.DirichletBoundaryCondition: void <init>(double,double)>(0.0, d6);
+
+        r32 = $r20;
+
+        $r21 = new com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition;
+
+        specialinvoke $r21.<com.opengamma.analytics.financial.model.finitedifference.NeumannBoundaryCondition: void <init>(double,double,boolean)>(1.0, d7, 0);
+
+        r33 = $r21;
+
+     label9:
+        $r22 = new com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing;
+
+        specialinvoke $r22.<com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing: void <init>(double,double,int,double)>(0.0, d1, i0, d3);
+
+        $r23 = new com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing;
+
+        specialinvoke $r23.<com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing: void <init>(double,double,double,int,double)>(d6, d7, d5, i1, d4);
+
+        $r24 = new com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        specialinvoke $r24.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: void <init>(com.opengamma.analytics.financial.model.finitedifference.MeshingFunction,com.opengamma.analytics.financial.model.finitedifference.MeshingFunction)>($r22, $r23);
+
+        $r25 = new com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider;
+
+        specialinvoke $r25.<com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider: void <init>()>();
+
+        r8 = virtualinvoke $r25.<com.opengamma.analytics.financial.model.finitedifference.applications.InitialConditionsProvider: com.opengamma.analytics.math.function.Function1D getForwardCallPut(boolean)>(z0);
+
+        $r26 = new com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle;
+
+        specialinvoke $r26.<com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle: void <init>(com.opengamma.analytics.financial.model.finitedifference.PDE1DCoefficients,com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition,com.opengamma.analytics.financial.model.finitedifference.BoundaryCondition,com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D)>(r31, r8, r32, r33, $r24);
+
+        $r27 = interfaceinvoke $r13.<com.opengamma.analytics.financial.model.finitedifference.ConvectionDiffusionPDESolver: com.opengamma.analytics.financial.model.finitedifference.PDEResults1D solve(com.opengamma.analytics.financial.model.finitedifference.PDE1DDataBundle)>($r26);
+
+        r9 = (com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D) $r27;
+
+        return r9;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D $r0;
+
+        $r0 = new com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D;
+
+        specialinvoke $r0.<com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.volatility.local.LocalVolatilityForwardPDEGreekCalculator1: com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D INTERPOLATOR_1D> = $r0;
+
+        return;
+    }
+}

@@ -1,0 +1,668 @@
+class com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl extends java.lang.Object
+{
+    private double[][] _protLegElmtPV;
+    private double[][] _premLegElmtPV;
+    private com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve _creditCurve;
+    final com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0;
+
+    private void <init>(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl r0;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator r1;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator;
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0> = r1;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve calibrate(double[], double[])
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl r0;
+        double[] r1, r2, r3, $r14, $r60, $r62;
+        com.opengamma.analytics.math.function.Function1D r4, r5;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator $r6, $r8, $r10, $r11, $r13, $r15, $r17, $r59, $r61;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i9, i12, i13;
+        double[][] $r7, $r9;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve $r12, $r16, $r23, $r24, $r31, $r32;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, d27, $d28, d29, d30, $d31, d32, d33;
+        int[] $r18;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurveBuilder$ArbitrageHandling $r19;
+        com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder $r20, $r25, $r33;
+        java.lang.Double $r21, $r22, $r26, $r27, $r28, $r30, $r34, $r35, $r36, $r38;
+        java.lang.Object $r29, $r37;
+        byte $b8, $b10, $b11;
+        java.lang.StringBuilder $r39, $r40, $r41, $r42, $r43, $r44, $r45, $r46, $r52, $r53, $r54, $r55, $r56;
+        java.lang.String $r47, $r51, $r57;
+        java.lang.IllegalArgumentException $r50;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        $r6 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $i0 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: int access$100(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r6);
+
+        $r7 = newmultiarray (double)[$i0][2];
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: double[][] _protLegElmtPV> = $r7;
+
+        $r8 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $i1 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: int access$200(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r8);
+
+        $r9 = newmultiarray (double)[$i1][2];
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: double[][] _premLegElmtPV> = $r9;
+
+        $r10 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $i2 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: int access$100(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r10);
+
+        r3 = newarray (double)[$i2];
+
+        i12 = 0;
+
+     label01:
+        $r11 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $i3 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: int access$100(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r11);
+
+        if i12 >= $i3 goto label02;
+
+        $d20 = r1[i12];
+
+        $d21 = r2[i12];
+
+        $r59 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $r60 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: double[] access$300(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r59);
+
+        $d22 = $r60[i12];
+
+        $d23 = $d21 / $d22;
+
+        $d24 = $d20 + $d23;
+
+        $r61 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $r62 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: double[] access$400(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r61);
+
+        $d25 = $r62[i12];
+
+        $d26 = $d24 / $d25;
+
+        r3[i12] = $d26;
+
+        i12 = i12 + 1;
+
+        goto label01;
+
+     label02:
+        $r12 = new com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve;
+
+        $r13 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $r14 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: double[] access$300(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r13);
+
+        specialinvoke $r12.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve: void <init>(double[],double[])>($r14, r3);
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve _creditCurve> = $r12;
+
+        i13 = 0;
+
+     label03:
+        $r15 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $i4 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: int access$100(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r15);
+
+        if i13 >= $i4 goto label16;
+
+        $d1 = r1[i13];
+
+        $d0 = r2[i13];
+
+        r4 = specialinvoke r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.math.function.Function1D getPointFunction(int,double,double)>(i13, $d1, $d0);
+
+        $d2 = r1[i13];
+
+        r5 = specialinvoke r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.math.function.Function1D getPointDerivative(int,double)>(i13, $d2);
+
+        $r18 = <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$1: int[] $SwitchMap$com$opengamma$analytics$financial$credit$isdastandardmodel$ISDACompliantCreditCurveBuilder$ArbitrageHandling>;
+
+        $r17 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $r19 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurveBuilder$ArbitrageHandling access$500(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r17);
+
+        $i5 = virtualinvoke $r19.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurveBuilder$ArbitrageHandling: int ordinal()>();
+
+        $i6 = $r18[$i5];
+
+        tableswitch($i6)
+        {
+            case 1: goto label04;
+            case 2: goto label05;
+            case 3: goto label11;
+            default: goto label15;
+        };
+
+     label04:
+        $r20 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder access$600()>();
+
+        $d3 = r3[i13];
+
+        $r21 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        $r22 = virtualinvoke $r20.<com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder: java.lang.Double getRoot(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.function.Function1D,java.lang.Double)>(r4, r5, $r21);
+
+        d27 = virtualinvoke $r22.<java.lang.Double: double doubleValue()>();
+
+        specialinvoke r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: void updateAll(double,int)>(d27, i13);
+
+        goto label15;
+
+     label05:
+        if i13 != 0 goto label06;
+
+        $d28 = 0.0;
+
+        goto label07;
+
+     label06:
+        $r31 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve _creditCurve>;
+
+        $i9 = i13 - 1;
+
+        $d10 = virtualinvoke $r31.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve: double getRTAtIndex(int)>($i9);
+
+        $r32 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve _creditCurve>;
+
+        $d11 = virtualinvoke $r32.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve: double getTimeAtIndex(int)>(i13);
+
+        $d28 = $d10 / $d11;
+
+     label07:
+        d29 = $d28;
+
+        if i13 <= 0 goto label10;
+
+        $r36 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d28);
+
+        $r37 = virtualinvoke r4.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r36);
+
+        $r38 = (java.lang.Double) $r37;
+
+        $d15 = virtualinvoke $r38.<java.lang.Double: double doubleValue()>();
+
+        $b10 = $d15 cmpl 0.0;
+
+        if $b10 <= 0 goto label10;
+
+        $r39 = new java.lang.StringBuilder;
+
+        specialinvoke $r39.<java.lang.StringBuilder: void <init>()>();
+
+        $d16 = r2[i13];
+
+        $b11 = $d16 cmpl 0.0;
+
+        if $b11 != 0 goto label08;
+
+        $r52 = new java.lang.StringBuilder;
+
+        specialinvoke $r52.<java.lang.StringBuilder: void <init>()>();
+
+        $r53 = virtualinvoke $r52.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("The par spread of ");
+
+        $d19 = r1[i13];
+
+        $r54 = virtualinvoke $r53.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d19);
+
+        $r55 = virtualinvoke $r54.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" at index ");
+
+        $r56 = virtualinvoke $r55.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i13);
+
+        $r57 = virtualinvoke $r56.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        virtualinvoke $r39.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r57);
+
+        goto label09;
+
+     label08:
+        $r40 = new java.lang.StringBuilder;
+
+        specialinvoke $r40.<java.lang.StringBuilder: void <init>()>();
+
+        $r41 = virtualinvoke $r40.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("The premium of ");
+
+        $d17 = r1[i13];
+
+        $r42 = virtualinvoke $r41.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d17);
+
+        $r43 = virtualinvoke $r42.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("and points up-front of ");
+
+        $d18 = r2[i13];
+
+        $r44 = virtualinvoke $r43.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>($d18);
+
+        $r45 = virtualinvoke $r44.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" at index ");
+
+        $r46 = virtualinvoke $r45.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i13);
+
+        $r47 = virtualinvoke $r46.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        virtualinvoke $r39.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r47);
+
+     label09:
+        virtualinvoke $r39.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" is an arbitrage; cannot fit a curve with positive forward hazard rate. ");
+
+        $r50 = new java.lang.IllegalArgumentException;
+
+        $r51 = virtualinvoke $r39.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r50.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r51);
+
+        throw $r50;
+
+     label10:
+        $d12 = r3[i13];
+
+        $d13 = staticinvoke <java.lang.Math: double max(double,double)>(d29, $d12);
+
+        r3[i13] = $d13;
+
+        $r33 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder access$600()>();
+
+        $d14 = r3[i13];
+
+        $r34 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d14);
+
+        $r35 = virtualinvoke $r33.<com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder: java.lang.Double getRoot(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.function.Function1D,java.lang.Double)>(r4, r5, $r34);
+
+        d30 = virtualinvoke $r35.<java.lang.Double: double doubleValue()>();
+
+        specialinvoke r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: void updateAll(double,int)>(d30, i13);
+
+        goto label15;
+
+     label11:
+        if i13 != 0 goto label12;
+
+        $d31 = 0.0;
+
+        goto label13;
+
+     label12:
+        $r23 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve _creditCurve>;
+
+        $i7 = i13 - 1;
+
+        $d4 = virtualinvoke $r23.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve: double getRTAtIndex(int)>($i7);
+
+        $r24 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve _creditCurve>;
+
+        $d5 = virtualinvoke $r24.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve: double getTimeAtIndex(int)>(i13);
+
+        $d31 = $d4 / $d5;
+
+     label13:
+        d32 = $d31;
+
+        if i13 <= 0 goto label14;
+
+        $r28 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d31);
+
+        $r29 = virtualinvoke r4.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r28);
+
+        $r30 = (java.lang.Double) $r29;
+
+        $d9 = virtualinvoke $r30.<java.lang.Double: double doubleValue()>();
+
+        $b8 = $d9 cmpl 0.0;
+
+        if $b8 <= 0 goto label14;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: void updateAll(double,int)>($d31, i13);
+
+        goto label15;
+
+     label14:
+        $d6 = r3[i13];
+
+        $d7 = staticinvoke <java.lang.Math: double max(double,double)>(d32, $d6);
+
+        r3[i13] = $d7;
+
+        $r25 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder access$600()>();
+
+        $d8 = r3[i13];
+
+        $r26 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d8);
+
+        $r27 = virtualinvoke $r25.<com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder: java.lang.Double getRoot(com.opengamma.analytics.math.function.Function1D,com.opengamma.analytics.math.function.Function1D,java.lang.Double)>(r4, r5, $r26);
+
+        d33 = virtualinvoke $r27.<java.lang.Double: double doubleValue()>();
+
+        specialinvoke r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: void updateAll(double,int)>(d33, i13);
+
+        goto label15;
+
+     label15:
+        i13 = i13 + 1;
+
+        goto label03;
+
+     label16:
+        $r16 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve _creditCurve>;
+
+        return $r16;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getPointFunction(int, double, double)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl r0;
+        int i0, i1;
+        double d0, d1, d2, d3, $d4, $d5;
+        int[] r1;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator $r2, $r4, $r6;
+        int[][] $r3;
+        double[] $r5, $r7;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl$1 $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl;
+
+        i0 := @parameter0: int;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        $r2 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $r3 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: int[][] access$700(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r2);
+
+        r1 = $r3[i0];
+
+        i1 = lengthof r1;
+
+        $r4 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $r5 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: double[] access$800(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r4);
+
+        $d4 = $r5[i0];
+
+        $d5 = d0 * $d4;
+
+        d2 = d1 - $d5;
+
+        $r6 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $r7 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: double[] access$400(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r6);
+
+        d3 = $r7[i0];
+
+        $r8 = new com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl$1;
+
+        specialinvoke $r8.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl$1: void <init>(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl,int,int,int[],double,double,double)>(r0, i0, i1, r1, d3, d0, d2);
+
+        return $r8;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getPointDerivative(int, double)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl r0;
+        int i0, i1;
+        double d0, d1;
+        int[] r1;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator $r2, $r4;
+        int[][] $r3;
+        double[] $r5;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl$2 $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl;
+
+        i0 := @parameter0: int;
+
+        d0 := @parameter1: double;
+
+        $r2 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $r3 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: int[][] access$1300(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r2);
+
+        r1 = $r3[i0];
+
+        i1 = lengthof r1;
+
+        $r4 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $r5 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: double[] access$400(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r4);
+
+        d1 = $r5[i0];
+
+        $r6 = new com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl$2;
+
+        specialinvoke $r6.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl$2: void <init>(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl,int,int,int[],double,double)>(r0, i0, i1, r1, d1, d0);
+
+        return $r6;
+    }
+
+    private void update(double, int)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl r0;
+        double d0;
+        int i0, i1, i2, i3;
+        int[] r1;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve $r2, $r6, $r14;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator $r3, $r9, $r11;
+        double[][] $r4, $r12;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.ProtectionLegElement[] $r5;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.ProtectionLegElement $r7;
+        double[] $r8, $r16;
+        int[][] $r10;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CouponOnlyElement[] $r13;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CouponOnlyElement $r15;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl;
+
+        d0 := @parameter0: double;
+
+        i0 := @parameter1: int;
+
+        $r2 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve _creditCurve>;
+
+        virtualinvoke $r2.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve: void setRate(double,int)>(d0, i0);
+
+        $r4 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: double[][] _protLegElmtPV>;
+
+        $r3 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $r5 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.ProtectionLegElement[] access$1400(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r3);
+
+        $r7 = $r5[i0];
+
+        $r6 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve _creditCurve>;
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.ProtectionLegElement: double[] pvAndSense(com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve)>($r6);
+
+        $r4[i0] = $r8;
+
+        $r9 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $r10 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: int[][] access$1300(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r9);
+
+        r1 = $r10[i0];
+
+        i1 = lengthof r1;
+
+        i3 = 0;
+
+     label1:
+        if i3 >= i1 goto label2;
+
+        i2 = r1[i3];
+
+        $r12 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: double[][] _premLegElmtPV>;
+
+        $r11 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $r13 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CouponOnlyElement[] access$1500(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r11);
+
+        $r15 = $r13[i2];
+
+        $r14 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve _creditCurve>;
+
+        $r16 = virtualinvoke $r15.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CouponOnlyElement: double[] pvAndSense(com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve)>($r14);
+
+        $r12[i2] = $r16;
+
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label2:
+        return;
+    }
+
+    private void updateAll(double, int)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl r0;
+        double d0;
+        int i0, i1, i2, i3;
+        int[] r1;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve $r2, $r6, $r14;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator $r3, $r9, $r11;
+        double[][] $r4, $r12;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.ProtectionLegElement[] $r5;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.ProtectionLegElement $r7;
+        double[] $r8, $r16;
+        int[][] $r10;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CouponOnlyElement[] $r13;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CouponOnlyElement $r15;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl;
+
+        d0 := @parameter0: double;
+
+        i0 := @parameter1: int;
+
+        $r2 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve _creditCurve>;
+
+        virtualinvoke $r2.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve: void setRate(double,int)>(d0, i0);
+
+        $r4 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: double[][] _protLegElmtPV>;
+
+        $r3 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $r5 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.ProtectionLegElement[] access$1400(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r3);
+
+        $r7 = $r5[i0];
+
+        $r6 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve _creditCurve>;
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.ProtectionLegElement: double[] pvAndSense(com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve)>($r6);
+
+        $r4[i0] = $r8;
+
+        $r9 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $r10 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: int[][] access$1600(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r9);
+
+        r1 = $r10[i0];
+
+        i1 = lengthof r1;
+
+        i3 = 0;
+
+     label1:
+        if i3 >= i1 goto label2;
+
+        i2 = r1[i3];
+
+        $r12 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: double[][] _premLegElmtPV>;
+
+        $r11 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator this$0>;
+
+        $r13 = staticinvoke <com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CouponOnlyElement[] access$1500(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>($r11);
+
+        $r15 = $r13[i2];
+
+        $r14 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve _creditCurve>;
+
+        $r16 = virtualinvoke $r15.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CouponOnlyElement: double[] pvAndSense(com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantCreditCurve)>($r14);
+
+        $r12[i2] = $r16;
+
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label2:
+        return;
+    }
+
+    void <init>(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator, com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$1)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl r0;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator r1;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$1 r2;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$1;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: void <init>(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator)>(r1);
+
+        return;
+    }
+
+    static void access$900(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl, double, int)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl r0;
+        double d0;
+        int i0;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl;
+
+        d0 := @parameter1: double;
+
+        i0 := @parameter2: int;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: void update(double,int)>(d0, i0);
+
+        return;
+    }
+
+    static double[][] access$1000(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl r0;
+        double[][] $r1;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl;
+
+        $r1 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: double[][] _protLegElmtPV>;
+
+        return $r1;
+    }
+
+    static double[][] access$1100(com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl r0;
+        double[][] $r1;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl;
+
+        $r1 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.fastcalibration.CreditCurveCalibrator$CalibrationImpl: double[][] _premLegElmtPV>;
+
+        return $r1;
+    }
+}

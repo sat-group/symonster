@@ -1,0 +1,796 @@
+public abstract class org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression extends java.lang.Object implements org.apache.commons.math.stat.regression.MultipleLinearRegression
+{
+    protected org.apache.commons.math.linear.RealMatrix X;
+    protected org.apache.commons.math.linear.RealVector Y;
+    private boolean noIntercept;
+
+    public void <init>()
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: boolean noIntercept> = 0;
+
+        return;
+    }
+
+    public boolean isNoIntercept()
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        $z0 = r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: boolean noIntercept>;
+
+        return $z0;
+    }
+
+    public void setNoIntercept(boolean)
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+        boolean z0;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        z0 := @parameter0: boolean;
+
+        r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: boolean noIntercept> = z0;
+
+        return;
+    }
+
+    public void newSampleData(double[], int, int)
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+        double[] r1, r2, $r6, $r7;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, i10, i11, i13;
+        double[][] r3;
+        boolean $z0, $z1, $z2;
+        org.apache.commons.math.linear.Array2DRowRealMatrix $r4;
+        org.apache.commons.math.linear.ArrayRealVector $r5;
+        double $d0, $d1;
+        java.lang.Object[] $r8, $r11, $r17;
+        org.apache.commons.math.exception.util.LocalizedFormats $r9, $r12, $r18;
+        java.lang.IllegalArgumentException $r10, $r16, $r19;
+        java.lang.Integer $r13, $r14, $r15;
+        byte $b12;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        r1 := @parameter0: double[];
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        if r1 != null goto label01;
+
+        $r18 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats NULL_NOT_ALLOWED>;
+
+        $r17 = newarray (java.lang.Object)[0];
+
+        $r19 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r18, $r17);
+
+        throw $r19;
+
+     label01:
+        $i5 = lengthof r1;
+
+        $i3 = i1 + 1;
+
+        $i4 = i0 * $i3;
+
+        if $i5 == $i4 goto label02;
+
+        $r12 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats INVALID_REGRESSION_ARRAY>;
+
+        $r11 = newarray (java.lang.Object)[3];
+
+        $i8 = lengthof r1;
+
+        $r13 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i8);
+
+        $r11[0] = $r13;
+
+        $r14 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        $r11[1] = $r14;
+
+        $r15 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i1);
+
+        $r11[2] = $r15;
+
+        $r16 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r12, $r11);
+
+        throw $r16;
+
+     label02:
+        if i0 > i1 goto label03;
+
+        $r9 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats NOT_ENOUGH_DATA_FOR_NUMBER_OF_PREDICTORS>;
+
+        $r8 = newarray (java.lang.Object)[0];
+
+        $r10 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r9, $r8);
+
+        throw $r10;
+
+     label03:
+        r2 = newarray (double)[i0];
+
+        $z0 = r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: boolean noIntercept>;
+
+        if $z0 == 0 goto label04;
+
+        $i9 = i1;
+
+        goto label05;
+
+     label04:
+        $i9 = i1 + 1;
+
+     label05:
+        i2 = $i9;
+
+        r3 = newmultiarray (double)[i0][$i9];
+
+        i10 = 0;
+
+        i11 = 0;
+
+     label06:
+        if i11 >= i0 goto label12;
+
+        $i6 = i10;
+
+        i10 = i10 + 1;
+
+        $d0 = r1[$i6];
+
+        r2[i11] = $d0;
+
+        $z1 = r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: boolean noIntercept>;
+
+        if $z1 != 0 goto label07;
+
+        $r7 = r3[i11];
+
+        $r7[0] = 1.0;
+
+     label07:
+        $z2 = r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: boolean noIntercept>;
+
+        if $z2 == 0 goto label08;
+
+        $b12 = 0;
+
+        goto label09;
+
+     label08:
+        $b12 = 1;
+
+     label09:
+        i13 = $b12;
+
+     label10:
+        if i13 >= i2 goto label11;
+
+        $r6 = r3[i11];
+
+        $i7 = i10;
+
+        i10 = i10 + 1;
+
+        $d1 = r1[$i7];
+
+        $r6[i13] = $d1;
+
+        i13 = i13 + 1;
+
+        goto label10;
+
+     label11:
+        i11 = i11 + 1;
+
+        goto label06;
+
+     label12:
+        $r4 = new org.apache.commons.math.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r4.<org.apache.commons.math.linear.Array2DRowRealMatrix: void <init>(double[][])>(r3);
+
+        r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix X> = $r4;
+
+        $r5 = new org.apache.commons.math.linear.ArrayRealVector;
+
+        specialinvoke $r5.<org.apache.commons.math.linear.ArrayRealVector: void <init>(double[])>(r2);
+
+        r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: org.apache.commons.math.linear.RealVector Y> = $r5;
+
+        return;
+    }
+
+    protected void newYSampleData(double[])
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+        double[] r1;
+        int $i0;
+        org.apache.commons.math.linear.ArrayRealVector $r2;
+        java.lang.Object[] $r3, $r6;
+        org.apache.commons.math.exception.util.LocalizedFormats $r4, $r7;
+        java.lang.IllegalArgumentException $r5, $r8;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        r1 := @parameter0: double[];
+
+        if r1 != null goto label1;
+
+        $r7 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats NULL_NOT_ALLOWED>;
+
+        $r6 = newarray (java.lang.Object)[0];
+
+        $r8 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r7, $r6);
+
+        throw $r8;
+
+     label1:
+        $i0 = lengthof r1;
+
+        if $i0 != 0 goto label2;
+
+        $r4 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats NO_DATA>;
+
+        $r3 = newarray (java.lang.Object)[0];
+
+        $r5 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r4, $r3);
+
+        throw $r5;
+
+     label2:
+        $r2 = new org.apache.commons.math.linear.ArrayRealVector;
+
+        specialinvoke $r2.<org.apache.commons.math.linear.ArrayRealVector: void <init>(double[])>(r1);
+
+        r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: org.apache.commons.math.linear.RealVector Y> = $r2;
+
+        return;
+    }
+
+    protected void newXSampleData(double[][])
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+        double[][] r1, r2;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, i7;
+        boolean $z0;
+        double[] $r3, $r5, $r6, $r7, $r8, $r10;
+        org.apache.commons.math.linear.Array2DRowRealMatrix $r4, $r15;
+        java.lang.Object[] $r9, $r16, $r19;
+        org.apache.commons.math.exception.util.LocalizedFormats $r11, $r17, $r20;
+        java.lang.Integer $r12, $r13;
+        java.lang.IllegalArgumentException $r14, $r18, $r21;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        r1 := @parameter0: double[][];
+
+        if r1 != null goto label1;
+
+        $r20 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats NULL_NOT_ALLOWED>;
+
+        $r19 = newarray (java.lang.Object)[0];
+
+        $r21 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r20, $r19);
+
+        throw $r21;
+
+     label1:
+        $i1 = lengthof r1;
+
+        if $i1 != 0 goto label2;
+
+        $r17 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats NO_DATA>;
+
+        $r16 = newarray (java.lang.Object)[0];
+
+        $r18 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r17, $r16);
+
+        throw $r18;
+
+     label2:
+        $z0 = r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: boolean noIntercept>;
+
+        if $z0 == 0 goto label3;
+
+        $r15 = new org.apache.commons.math.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r15.<org.apache.commons.math.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r1, 1);
+
+        r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix X> = $r15;
+
+        goto label7;
+
+     label3:
+        $r3 = r1[0];
+
+        i0 = lengthof $r3;
+
+        $i3 = lengthof r1;
+
+        $i2 = i0 + 1;
+
+        r2 = newmultiarray (double)[$i3][$i2];
+
+        i7 = 0;
+
+     label4:
+        $i4 = lengthof r1;
+
+        if i7 >= $i4 goto label6;
+
+        $r5 = r1[i7];
+
+        $i5 = lengthof $r5;
+
+        if $i5 == i0 goto label5;
+
+        $r11 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats DIFFERENT_ROWS_LENGTHS>;
+
+        $r9 = newarray (java.lang.Object)[2];
+
+        $r10 = r1[i7];
+
+        $i6 = lengthof $r10;
+
+        $r12 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i6);
+
+        $r9[0] = $r12;
+
+        $r13 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        $r9[1] = $r13;
+
+        $r14 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r11, $r9);
+
+        throw $r14;
+
+     label5:
+        $r6 = r2[i7];
+
+        $r6[0] = 1.0;
+
+        $r8 = r1[i7];
+
+        $r7 = r2[i7];
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r8, 0, $r7, 1, i0);
+
+        i7 = i7 + 1;
+
+        goto label4;
+
+     label6:
+        $r4 = new org.apache.commons.math.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r4.<org.apache.commons.math.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r2, 0);
+
+        r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix X> = $r4;
+
+     label7:
+        return;
+    }
+
+    protected void validateSampleData(double[][], double[])
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+        double[][] r1;
+        double[] r2, $r8, $r12;
+        java.lang.Object[] $r3, $r9, $r15;
+        org.apache.commons.math.exception.util.LocalizedFormats $r4, $r10, $r16;
+        java.lang.Integer $r5, $r6, $r11, $r13;
+        java.lang.IllegalArgumentException $r7, $r14, $r17;
+        int $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        r1 := @parameter0: double[][];
+
+        r2 := @parameter1: double[];
+
+        if r1 == null goto label1;
+
+        if r2 == null goto label1;
+
+        $i3 = lengthof r1;
+
+        $i2 = lengthof r2;
+
+        if $i3 == $i2 goto label6;
+
+     label1:
+        $r4 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats DIMENSIONS_MISMATCH_SIMPLE>;
+
+        $r3 = newarray (java.lang.Object)[2];
+
+        if r1 != null goto label2;
+
+        $i10 = 0;
+
+        goto label3;
+
+     label2:
+        $i10 = lengthof r1;
+
+     label3:
+        $r5 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i10);
+
+        $r3[0] = $r5;
+
+        if r2 != null goto label4;
+
+        $i11 = 0;
+
+        goto label5;
+
+     label4:
+        $i11 = lengthof r2;
+
+     label5:
+        $r6 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i11);
+
+        $r3[1] = $r6;
+
+        $r7 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r4, $r3);
+
+        throw $r7;
+
+     label6:
+        $i4 = lengthof r1;
+
+        if $i4 != 0 goto label7;
+
+        $r16 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats NO_DATA>;
+
+        $r15 = newarray (java.lang.Object)[0];
+
+        $r17 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r16, $r15);
+
+        throw $r17;
+
+     label7:
+        $r8 = r1[0];
+
+        $i5 = lengthof $r8;
+
+        $i7 = $i5 + 1;
+
+        $i6 = lengthof r1;
+
+        if $i7 <= $i6 goto label8;
+
+        $r10 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats NOT_ENOUGH_DATA_FOR_NUMBER_OF_PREDICTORS>;
+
+        $r9 = newarray (java.lang.Object)[2];
+
+        $i8 = lengthof r1;
+
+        $r11 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i8);
+
+        $r9[0] = $r11;
+
+        $r12 = r1[0];
+
+        $i9 = lengthof $r12;
+
+        $r13 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i9);
+
+        $r9[1] = $r13;
+
+        $r14 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r10, $r9);
+
+        throw $r14;
+
+     label8:
+        return;
+    }
+
+    protected void validateCovarianceData(double[][], double[][])
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+        double[][] r1, r2;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8;
+        double[] $r3, $r7;
+        java.lang.Object[] $r4, $r10;
+        org.apache.commons.math.exception.util.LocalizedFormats $r5, $r11;
+        java.lang.Integer $r6, $r8, $r12, $r13;
+        java.lang.IllegalArgumentException $r9, $r14;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        r1 := @parameter0: double[][];
+
+        r2 := @parameter1: double[][];
+
+        $i1 = lengthof r1;
+
+        $i0 = lengthof r2;
+
+        if $i1 == $i0 goto label1;
+
+        $r11 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats DIMENSIONS_MISMATCH_SIMPLE>;
+
+        $r10 = newarray (java.lang.Object)[2];
+
+        $i7 = lengthof r1;
+
+        $r12 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i7);
+
+        $r10[0] = $r12;
+
+        $i8 = lengthof r2;
+
+        $r13 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i8);
+
+        $r10[1] = $r13;
+
+        $r14 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r11, $r10);
+
+        throw $r14;
+
+     label1:
+        $i2 = lengthof r2;
+
+        if $i2 <= 0 goto label2;
+
+        $i4 = lengthof r2;
+
+        $r3 = r2[0];
+
+        $i3 = lengthof $r3;
+
+        if $i4 == $i3 goto label2;
+
+        $r5 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats NON_SQUARE_MATRIX>;
+
+        $r4 = newarray (java.lang.Object)[2];
+
+        $i5 = lengthof r2;
+
+        $r6 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i5);
+
+        $r4[0] = $r6;
+
+        $r7 = r2[0];
+
+        $i6 = lengthof $r7;
+
+        $r8 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i6);
+
+        $r4[1] = $r8;
+
+        $r9 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r5, $r4);
+
+        throw $r9;
+
+     label2:
+        return;
+    }
+
+    public double[] estimateRegressionParameters()
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+        org.apache.commons.math.linear.RealVector r1;
+        double[] $r2;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        r1 = virtualinvoke r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: org.apache.commons.math.linear.RealVector calculateBeta()>();
+
+        $r2 = interfaceinvoke r1.<org.apache.commons.math.linear.RealVector: double[] getData()>();
+
+        return $r2;
+    }
+
+    public double[] estimateResiduals()
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+        org.apache.commons.math.linear.RealVector r1, r2, $r4, $r5;
+        org.apache.commons.math.linear.RealMatrix $r3;
+        double[] $r6;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        r1 = virtualinvoke r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: org.apache.commons.math.linear.RealVector calculateBeta()>();
+
+        $r4 = r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: org.apache.commons.math.linear.RealVector Y>;
+
+        $r3 = r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix X>;
+
+        $r5 = interfaceinvoke $r3.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealVector operate(org.apache.commons.math.linear.RealVector)>(r1);
+
+        r2 = interfaceinvoke $r4.<org.apache.commons.math.linear.RealVector: org.apache.commons.math.linear.RealVector subtract(org.apache.commons.math.linear.RealVector)>($r5);
+
+        $r6 = interfaceinvoke r2.<org.apache.commons.math.linear.RealVector: double[] getData()>();
+
+        return $r6;
+    }
+
+    public double[][] estimateRegressionParametersVariance()
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+        org.apache.commons.math.linear.RealMatrix $r1;
+        double[][] $r2;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        $r1 = virtualinvoke r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix calculateBetaVariance()>();
+
+        $r2 = interfaceinvoke $r1.<org.apache.commons.math.linear.RealMatrix: double[][] getData()>();
+
+        return $r2;
+    }
+
+    public double[] estimateRegressionParametersStandardErrors()
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+        double[][] r1;
+        double d0, $d1, $d2, $d3;
+        int i0, i1;
+        double[] r2, $r3, $r4;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        r1 = virtualinvoke r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: double[][] estimateRegressionParametersVariance()>();
+
+        d0 = virtualinvoke r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: double calculateErrorVariance()>();
+
+        $r3 = r1[0];
+
+        i0 = lengthof $r3;
+
+        r2 = newarray (double)[i0];
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $r4 = r1[i1];
+
+        $d1 = $r4[i1];
+
+        $d2 = d0 * $d1;
+
+        $d3 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>($d2);
+
+        r2[i1] = $d3;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return r2;
+    }
+
+    public double estimateRegressandVariance()
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        $d0 = virtualinvoke r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: double calculateYVariance()>();
+
+        return $d0;
+    }
+
+    public double estimateErrorVariance()
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        $d0 = virtualinvoke r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: double calculateErrorVariance()>();
+
+        return $d0;
+    }
+
+    public double estimateRegressionStandardError()
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+        double $d0, $d1;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        $d0 = virtualinvoke r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: double estimateErrorVariance()>();
+
+        $d1 = staticinvoke <java.lang.Math: double sqrt(double)>($d0);
+
+        return $d1;
+    }
+
+    protected abstract org.apache.commons.math.linear.RealVector calculateBeta();
+
+    protected abstract org.apache.commons.math.linear.RealMatrix calculateBetaVariance();
+
+    protected double calculateYVariance()
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+        org.apache.commons.math.stat.descriptive.moment.Variance $r1;
+        org.apache.commons.math.linear.RealVector $r2;
+        double[] $r3;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        $r1 = new org.apache.commons.math.stat.descriptive.moment.Variance;
+
+        specialinvoke $r1.<org.apache.commons.math.stat.descriptive.moment.Variance: void <init>()>();
+
+        $r2 = r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: org.apache.commons.math.linear.RealVector Y>;
+
+        $r3 = interfaceinvoke $r2.<org.apache.commons.math.linear.RealVector: double[] getData()>();
+
+        $d0 = virtualinvoke $r1.<org.apache.commons.math.stat.descriptive.moment.Variance: double evaluate(double[])>($r3);
+
+        return $d0;
+    }
+
+    protected double calculateErrorVariance()
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+        org.apache.commons.math.linear.RealVector r1;
+        double $d0, $d1, $d2;
+        org.apache.commons.math.linear.RealMatrix $r2, $r3;
+        int $i0, $i1, $i2;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        r1 = virtualinvoke r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: org.apache.commons.math.linear.RealVector calculateResiduals()>();
+
+        $d0 = interfaceinvoke r1.<org.apache.commons.math.linear.RealVector: double dotProduct(org.apache.commons.math.linear.RealVector)>(r1);
+
+        $r2 = r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix X>;
+
+        $i0 = interfaceinvoke $r2.<org.apache.commons.math.linear.RealMatrix: int getRowDimension()>();
+
+        $r3 = r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix X>;
+
+        $i1 = interfaceinvoke $r3.<org.apache.commons.math.linear.RealMatrix: int getColumnDimension()>();
+
+        $i2 = $i0 - $i1;
+
+        $d1 = (double) $i2;
+
+        $d2 = $d0 / $d1;
+
+        return $d2;
+    }
+
+    protected org.apache.commons.math.linear.RealVector calculateResiduals()
+    {
+        org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression r0;
+        org.apache.commons.math.linear.RealVector r1, $r3, $r4, $r5;
+        org.apache.commons.math.linear.RealMatrix $r2;
+
+        r0 := @this: org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression;
+
+        r1 = virtualinvoke r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: org.apache.commons.math.linear.RealVector calculateBeta()>();
+
+        $r3 = r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: org.apache.commons.math.linear.RealVector Y>;
+
+        $r2 = r0.<org.apache.commons.math.stat.regression.AbstractMultipleLinearRegression: org.apache.commons.math.linear.RealMatrix X>;
+
+        $r4 = interfaceinvoke $r2.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealVector operate(org.apache.commons.math.linear.RealVector)>(r1);
+
+        $r5 = interfaceinvoke $r3.<org.apache.commons.math.linear.RealVector: org.apache.commons.math.linear.RealVector subtract(org.apache.commons.math.linear.RealVector)>($r4);
+
+        return $r5;
+    }
+}

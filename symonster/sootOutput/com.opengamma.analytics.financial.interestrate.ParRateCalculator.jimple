@@ -1,0 +1,969 @@
+public final class com.opengamma.analytics.financial.interestrate.ParRateCalculator extends com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter
+{
+    private static final com.opengamma.analytics.financial.interestrate.ParRateCalculator INSTANCE;
+    private static final com.opengamma.analytics.financial.interestrate.PresentValueCalculator PVC;
+    private static final com.opengamma.analytics.financial.interestrate.payments.method.CouponONDiscountingMethod METHOD_OIS;
+    private static final com.opengamma.analytics.financial.interestrate.payments.method.CouponIborDiscountingMethod METHOD_IBOR;
+    private static final com.opengamma.analytics.financial.interestrate.cash.method.DepositZeroDiscountingMethod METHOD_DEPOSIT_ZERO;
+    private static final com.opengamma.analytics.financial.interestrate.fra.method.ForwardRateAgreementDiscountingBundleMethod METHOD_FRA;
+    private static final com.opengamma.analytics.financial.interestrate.swap.method.SwapFixedCouponDiscountingMethod METHOD_SWAP;
+    private static final com.opengamma.analytics.financial.interestrate.future.method.InterestRateFutureTransactionDiscountingMethod METHOD_IRFUT_TRANSACTION;
+    private static final com.opengamma.analytics.financial.interestrate.future.method.InterestRateFutureSecurityDiscountingMethod METHOD_IRFUT_SECURITY;
+
+    public static com.opengamma.analytics.financial.interestrate.ParRateCalculator getInstance()
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator $r0;
+
+        $r0 = <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.ParRateCalculator INSTANCE>;
+
+        return $r0;
+    }
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter: void <init>()>();
+
+        return;
+    }
+
+    public java.lang.Double visitCash(com.opengamma.analytics.financial.interestrate.cash.derivative.Cash, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.cash.derivative.Cash r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve r3;
+        double d0, d1, d2, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15;
+        java.lang.String $r4;
+        byte $b0;
+        java.lang.Double $r5, $r6, $r7, $r8;
+        boolean $z0;
+        java.lang.IllegalArgumentException $r9;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.cash.derivative.Cash;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.Cash: java.lang.String getYieldCurveName()>();
+
+        r3 = virtualinvoke r2.<com.opengamma.analytics.financial.interestrate.YieldCurveBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r4);
+
+        d0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.Cash: double getStartTime()>();
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.Cash: double getEndTime()>();
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.Cash: double getAccrualFactor()>();
+
+        $b0 = d2 cmpl 0.0;
+
+        if $b0 != 0 goto label2;
+
+        $z0 = staticinvoke <com.opengamma.util.CompareUtils: boolean closeEquals(double,double,double)>(d0, d1, 1.0E-16);
+
+        if $z0 != 0 goto label1;
+
+        $r9 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r9.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Year fraction is zero, but payment time greater than trade time");
+
+        throw $r9;
+
+     label1:
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        d4 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getInterestRate(java.lang.Object)>($r6);
+
+        $d11 = d0 + 1.0E-8;
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d11);
+
+        d5 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getInterestRate(java.lang.Object)>($r7);
+
+        $d12 = d5 - d4;
+
+        $d13 = d0 * $d12;
+
+        $d14 = $d13 / 1.0E-8;
+
+        $d15 = d4 + $d14;
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d15);
+
+        return $r8;
+
+     label2:
+        $d6 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>(d0);
+
+        $d7 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>(d1);
+
+        $d8 = $d6 / $d7;
+
+        $d9 = $d8 - 1.0;
+
+        $d10 = $d9 / d2;
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        return $r5;
+    }
+
+    public java.lang.Double visitDepositZero(com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        com.opengamma.analytics.financial.interestrate.cash.method.DepositZeroDiscountingMethod $r3;
+        double $d0;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $r3 = <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.cash.method.DepositZeroDiscountingMethod METHOD_DEPOSIT_ZERO>;
+
+        $d0 = virtualinvoke $r3.<com.opengamma.analytics.financial.interestrate.cash.method.DepositZeroDiscountingMethod: double parRate(com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, r2);
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        return $r4;
+    }
+
+    public java.lang.Double visitForwardRateAgreement(com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        com.opengamma.analytics.financial.interestrate.fra.method.ForwardRateAgreementDiscountingBundleMethod $r3;
+        double $d0;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $r3 = <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.fra.method.ForwardRateAgreementDiscountingBundleMethod METHOD_FRA>;
+
+        $d0 = virtualinvoke $r3.<com.opengamma.analytics.financial.interestrate.fra.method.ForwardRateAgreementDiscountingBundleMethod: double parRate(com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, r2);
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        return $r4;
+    }
+
+    public java.lang.Double visitCouponIbor(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        com.opengamma.analytics.financial.interestrate.payments.method.CouponIborDiscountingMethod $r3;
+        double $d0;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $r3 = <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.payments.method.CouponIborDiscountingMethod METHOD_IBOR>;
+
+        $d0 = virtualinvoke $r3.<com.opengamma.analytics.financial.interestrate.payments.method.CouponIborDiscountingMethod: double parRate(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, r2);
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        return $r4;
+    }
+
+    public java.lang.Double visitCouponIborSpread(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve r3;
+        java.lang.String $r4;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7;
+        java.lang.Double $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread: java.lang.String getForwardCurveName()>();
+
+        r3 = virtualinvoke r2.<com.opengamma.analytics.financial.interestrate.YieldCurveBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r4);
+
+        $d0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread: double getFixingPeriodStartTime()>();
+
+        $d1 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d0);
+
+        $d2 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread: double getFixingPeriodEndTime()>();
+
+        $d3 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d2);
+
+        $d4 = $d1 / $d3;
+
+        $d5 = $d4 - 1.0;
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread: double getFixingAccrualFactor()>();
+
+        $d7 = $d5 / $d6;
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d7);
+
+        return $r5;
+    }
+
+    public java.lang.Double visitCouponIborGearing(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve r3;
+        java.lang.String $r4;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7;
+        java.lang.Double $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing: java.lang.String getForwardCurveName()>();
+
+        r3 = virtualinvoke r2.<com.opengamma.analytics.financial.interestrate.YieldCurveBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r4);
+
+        $d0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing: double getFixingPeriodStartTime()>();
+
+        $d1 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d0);
+
+        $d2 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing: double getFixingPeriodEndTime()>();
+
+        $d3 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d2);
+
+        $d4 = $d1 / $d3;
+
+        $d5 = $d4 - 1.0;
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing: double getFixingAccrualFactor()>();
+
+        $d7 = $d5 / $d6;
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d7);
+
+        return $r5;
+    }
+
+    public java.lang.Double visitCouponOIS(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        com.opengamma.analytics.financial.interestrate.payments.method.CouponONDiscountingMethod $r3;
+        double $d0;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $r3 = <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.payments.method.CouponONDiscountingMethod METHOD_OIS>;
+
+        $d0 = virtualinvoke $r3.<com.opengamma.analytics.financial.interestrate.payments.method.CouponONDiscountingMethod: double parRate(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, r2);
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        return $r4;
+    }
+
+    public java.lang.Double visitCapFloorIbor(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread toCoupon()>();
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitCouponIborSpread(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>($r3, r2);
+
+        return $r4;
+    }
+
+    public java.lang.Double visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        double d0, d1, $d2, $d3;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity $r3;
+        com.opengamma.analytics.financial.interestrate.PresentValueCalculator $r4, $r9;
+        java.lang.Object $r5, $r10;
+        java.lang.Double $r6, $r11, $r12;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed $r7, $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getSecondLeg()>();
+
+        $r4 = <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.PresentValueCalculator PVC>;
+
+        $r5 = virtualinvoke $r3.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r4, r2);
+
+        $r6 = (java.lang.Double) $r5;
+
+        d0 = virtualinvoke $r6.<java.lang.Double: double doubleValue()>();
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed getFixedLeg()>();
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed withUnitCoupon()>();
+
+        $r9 = <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.PresentValueCalculator PVC>;
+
+        $r10 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r9, r2);
+
+        $r11 = (java.lang.Double) $r10;
+
+        d1 = virtualinvoke $r11.<java.lang.Double: double doubleValue()>();
+
+        $d2 = neg d0;
+
+        $d3 = $d2 / d1;
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        return $r12;
+    }
+
+    public java.lang.Double visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon, com.opengamma.financial.convention.daycount.DayCount, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon r1;
+        com.opengamma.financial.convention.daycount.DayCount r2;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r3;
+        double d0;
+        com.opengamma.analytics.financial.interestrate.swap.method.SwapFixedCouponDiscountingMethod $r4;
+        java.lang.Double $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon;
+
+        r2 := @parameter1: com.opengamma.financial.convention.daycount.DayCount;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $r4 = <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.swap.method.SwapFixedCouponDiscountingMethod METHOD_SWAP>;
+
+        d0 = virtualinvoke $r4.<com.opengamma.analytics.financial.interestrate.swap.method.SwapFixedCouponDiscountingMethod: double presentValueBasisPoint(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.financial.convention.daycount.DayCount,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, r2, r3);
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,double,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, d0, r3);
+
+        return $r5;
+    }
+
+    public java.lang.Double visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon, com.opengamma.financial.convention.daycount.DayCount, com.opengamma.analytics.financial.interestrate.YieldCurveBundle, com.opengamma.financial.convention.calendar.Calendar)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon r1;
+        com.opengamma.financial.convention.daycount.DayCount r2;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r3;
+        com.opengamma.financial.convention.calendar.Calendar r4;
+        double d0;
+        com.opengamma.analytics.financial.interestrate.swap.method.SwapFixedCouponDiscountingMethod $r5;
+        java.lang.Double $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon;
+
+        r2 := @parameter1: com.opengamma.financial.convention.daycount.DayCount;
+
+        r3 := @parameter2: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        r4 := @parameter3: com.opengamma.financial.convention.calendar.Calendar;
+
+        $r5 = <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.swap.method.SwapFixedCouponDiscountingMethod METHOD_SWAP>;
+
+        d0 = virtualinvoke $r5.<com.opengamma.analytics.financial.interestrate.swap.method.SwapFixedCouponDiscountingMethod: double presentValueBasisPoint(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.financial.convention.daycount.DayCount,com.opengamma.financial.convention.calendar.Calendar,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, r2, r4, r3);
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,double,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, d0, r3);
+
+        return $r6;
+    }
+
+    public java.lang.Double visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon, double, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon r1;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity $r3, $r7;
+        com.opengamma.analytics.financial.interestrate.PresentValueCalculator $r4;
+        java.lang.Object $r5;
+        java.lang.Double $r6, $r10;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r8;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon $r9;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon;
+
+        d0 := @parameter1: double;
+
+        r2 := @parameter2: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getSecondLeg()>();
+
+        $r4 = <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.PresentValueCalculator PVC>;
+
+        $r5 = virtualinvoke $r3.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r4, r2);
+
+        $r6 = (java.lang.Double) $r5;
+
+        $d2 = virtualinvoke $r6.<java.lang.Double: double doubleValue()>();
+
+        $d3 = neg $d2;
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getSecondLeg()>();
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $r9 = (com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon) $r8;
+
+        $d4 = virtualinvoke $r9.<com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon: double getNotional()>();
+
+        $d5 = staticinvoke <java.lang.Math: double signum(double)>($d4);
+
+        d1 = $d3 * $d5;
+
+        $d6 = neg d1;
+
+        $d7 = $d6 / d0;
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d7);
+
+        return $r10;
+    }
+
+    public java.lang.Double visitInterestRateFutureTransaction(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureTransaction, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureTransaction r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        com.opengamma.analytics.financial.interestrate.future.method.InterestRateFutureTransactionDiscountingMethod $r3;
+        double $d0;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureTransaction;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $r3 = <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.future.method.InterestRateFutureTransactionDiscountingMethod METHOD_IRFUT_TRANSACTION>;
+
+        $d0 = virtualinvoke $r3.<com.opengamma.analytics.financial.interestrate.future.method.InterestRateFutureTransactionDiscountingMethod: double parRate(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureTransaction,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, r2);
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        return $r4;
+    }
+
+    public java.lang.Double visitInterestRateFutureSecurity(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        com.opengamma.analytics.financial.interestrate.future.method.InterestRateFutureSecurityDiscountingMethod $r3;
+        double $d0;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $r3 = <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.future.method.InterestRateFutureSecurityDiscountingMethod METHOD_IRFUT_SECURITY>;
+
+        $d0 = virtualinvoke $r3.<com.opengamma.analytics.financial.interestrate.future.method.InterestRateFutureSecurityDiscountingMethod: double parRate(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, r2);
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        return $r4;
+    }
+
+    public java.lang.Double visitForexForward(com.opengamma.analytics.financial.interestrate.payments.ForexForward, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.ForexForward r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve r3, r4;
+        double d0, $d1, $d2, $d3, $d4, $d5;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r5, $r7;
+        java.lang.String $r6, $r8;
+        java.lang.Double $r9;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.ForexForward;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.ForexForward: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $r6 = virtualinvoke $r5.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        r3 = virtualinvoke r2.<com.opengamma.analytics.financial.interestrate.YieldCurveBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r6);
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.ForexForward: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency2()>();
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: java.lang.String getFundingCurveName()>();
+
+        r4 = virtualinvoke r2.<com.opengamma.analytics.financial.interestrate.YieldCurveBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r8);
+
+        d0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.ForexForward: double getPaymentTime()>();
+
+        $d1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.ForexForward: double getSpotForexRate()>();
+
+        $d2 = virtualinvoke r4.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>(d0);
+
+        $d3 = $d1 * $d2;
+
+        $d4 = virtualinvoke r3.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>(d0);
+
+        $d5 = $d3 / $d4;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d5);
+
+        return $r9;
+    }
+
+    public java.lang.Double visitBondFixedSecurity(com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity r3, $r5, $r9;
+        int i0, i1;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed[] r4;
+        double d0, d1, $d2, $d3;
+        com.opengamma.analytics.financial.interestrate.PresentValueCalculator $r6, $r10;
+        java.lang.Object $r7, $r11;
+        java.lang.Double $r8, $r12, $r13;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r14;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed $r15, $r16;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getCoupon()>();
+
+        i0 = virtualinvoke r3.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: int getNumberOfPayments()>();
+
+        r4 = newarray (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed)[i0];
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $r14 = virtualinvoke r3.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i1);
+
+        $r15 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed) $r14;
+
+        $r16 = virtualinvoke $r15.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed withUnitCoupon()>();
+
+        r4[i1] = $r16;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        $r5 = new com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: void <init>(com.opengamma.analytics.financial.interestrate.payments.derivative.Payment[])>(r4);
+
+        $r6 = <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.PresentValueCalculator PVC>;
+
+        $r7 = virtualinvoke $r5.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r6, r2);
+
+        $r8 = (java.lang.Double) $r7;
+
+        d0 = virtualinvoke $r8.<java.lang.Double: double doubleValue()>();
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getNominal()>();
+
+        $r10 = <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.PresentValueCalculator PVC>;
+
+        $r11 = virtualinvoke $r9.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r10, r2);
+
+        $r12 = (java.lang.Double) $r11;
+
+        d1 = virtualinvoke $r12.<java.lang.Double: double doubleValue()>();
+
+        $d2 = 1.0 - d1;
+
+        $d3 = $d2 / d0;
+
+        $r13 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        return $r13;
+    }
+
+    public volatile java.lang.Object visitForexForward(com.opengamma.analytics.financial.interestrate.payments.ForexForward, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.ForexForward r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.ForexForward;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.interestrate.YieldCurveBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitForexForward(com.opengamma.analytics.financial.interestrate.payments.ForexForward,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitDepositZero(com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.interestrate.YieldCurveBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitDepositZero(com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitInterestRateFutureSecurity(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.interestrate.YieldCurveBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitInterestRateFutureSecurity(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitInterestRateFutureTransaction(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureTransaction, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureTransaction r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureTransaction;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.interestrate.YieldCurveBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitInterestRateFutureTransaction(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureTransaction,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitCouponOIS(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.interestrate.YieldCurveBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitCouponOIS(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitCouponIborGearing(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.interestrate.YieldCurveBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitCouponIborGearing(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitCouponIborSpread(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.interestrate.YieldCurveBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitCouponIborSpread(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitCouponIbor(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.interestrate.YieldCurveBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitCouponIbor(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitCash(com.opengamma.analytics.financial.interestrate.cash.derivative.Cash, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.cash.derivative.Cash r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.cash.derivative.Cash;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.interestrate.YieldCurveBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitCash(com.opengamma.analytics.financial.interestrate.cash.derivative.Cash,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.interestrate.YieldCurveBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitForwardRateAgreement(com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.interestrate.YieldCurveBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitForwardRateAgreement(com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitCapFloorIbor(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.interestrate.YieldCurveBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitCapFloorIbor(com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitBondFixedSecurity(com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator r0;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.interestrate.YieldCurveBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitBondFixedSecurity(com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator $r0;
+        com.opengamma.analytics.financial.interestrate.PresentValueCalculator $r1;
+        com.opengamma.analytics.financial.interestrate.payments.method.CouponONDiscountingMethod $r2;
+        com.opengamma.analytics.financial.interestrate.payments.method.CouponIborDiscountingMethod $r3;
+        com.opengamma.analytics.financial.interestrate.cash.method.DepositZeroDiscountingMethod $r4;
+        com.opengamma.analytics.financial.interestrate.fra.method.ForwardRateAgreementDiscountingBundleMethod $r5;
+        com.opengamma.analytics.financial.interestrate.swap.method.SwapFixedCouponDiscountingMethod $r6;
+        com.opengamma.analytics.financial.interestrate.future.method.InterestRateFutureTransactionDiscountingMethod $r7;
+        com.opengamma.analytics.financial.interestrate.future.method.InterestRateFutureSecurityDiscountingMethod $r8;
+
+        $r0 = new com.opengamma.analytics.financial.interestrate.ParRateCalculator;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.ParRateCalculator INSTANCE> = $r0;
+
+        $r1 = staticinvoke <com.opengamma.analytics.financial.interestrate.PresentValueCalculator: com.opengamma.analytics.financial.interestrate.PresentValueCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.PresentValueCalculator PVC> = $r1;
+
+        $r2 = staticinvoke <com.opengamma.analytics.financial.interestrate.payments.method.CouponONDiscountingMethod: com.opengamma.analytics.financial.interestrate.payments.method.CouponONDiscountingMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.payments.method.CouponONDiscountingMethod METHOD_OIS> = $r2;
+
+        $r3 = staticinvoke <com.opengamma.analytics.financial.interestrate.payments.method.CouponIborDiscountingMethod: com.opengamma.analytics.financial.interestrate.payments.method.CouponIborDiscountingMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.payments.method.CouponIborDiscountingMethod METHOD_IBOR> = $r3;
+
+        $r4 = staticinvoke <com.opengamma.analytics.financial.interestrate.cash.method.DepositZeroDiscountingMethod: com.opengamma.analytics.financial.interestrate.cash.method.DepositZeroDiscountingMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.cash.method.DepositZeroDiscountingMethod METHOD_DEPOSIT_ZERO> = $r4;
+
+        $r5 = staticinvoke <com.opengamma.analytics.financial.interestrate.fra.method.ForwardRateAgreementDiscountingBundleMethod: com.opengamma.analytics.financial.interestrate.fra.method.ForwardRateAgreementDiscountingBundleMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.fra.method.ForwardRateAgreementDiscountingBundleMethod METHOD_FRA> = $r5;
+
+        $r6 = staticinvoke <com.opengamma.analytics.financial.interestrate.swap.method.SwapFixedCouponDiscountingMethod: com.opengamma.analytics.financial.interestrate.swap.method.SwapFixedCouponDiscountingMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.swap.method.SwapFixedCouponDiscountingMethod METHOD_SWAP> = $r6;
+
+        $r7 = staticinvoke <com.opengamma.analytics.financial.interestrate.future.method.InterestRateFutureTransactionDiscountingMethod: com.opengamma.analytics.financial.interestrate.future.method.InterestRateFutureTransactionDiscountingMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.future.method.InterestRateFutureTransactionDiscountingMethod METHOD_IRFUT_TRANSACTION> = $r7;
+
+        $r8 = staticinvoke <com.opengamma.analytics.financial.interestrate.future.method.InterestRateFutureSecurityDiscountingMethod: com.opengamma.analytics.financial.interestrate.future.method.InterestRateFutureSecurityDiscountingMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.future.method.InterestRateFutureSecurityDiscountingMethod METHOD_IRFUT_SECURITY> = $r8;
+
+        return;
+    }
+}

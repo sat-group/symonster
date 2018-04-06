@@ -1,0 +1,206 @@
+public class com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction extends com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider
+{
+    private static final org.slf4j.Logger s_logger;
+    private static final double CUTOFF_MONEYNESS;
+    private static final double EPS;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.VolatilityFunctionProvider: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getVolatilityFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption, double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption r1;
+        double d0, d1, d2, d3, d4;
+        byte $b0;
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction$1 $r3;
+        java.lang.StringBuilder $r4, $r6, $r7, $r8, $r9, $r10, $r11;
+        org.slf4j.Logger $r5;
+        java.lang.String $r12;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        d0 := @parameter1: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "option");
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getStrike()>();
+
+        d2 = d0 * 1.0E-6;
+
+        $b0 = d1 cmpg d2;
+
+        if $b0 >= 0 goto label1;
+
+        $r5 = <com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction: org.slf4j.Logger s_logger>;
+
+        $r4 = new java.lang.StringBuilder;
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>()>();
+
+        $r6 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Given strike of ");
+
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d1);
+
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" is less than cutoff at ");
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d2);
+
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", therefore the strike is taken as ");
+
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d2);
+
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        interfaceinvoke $r5.<org.slf4j.Logger: void info(java.lang.String)>($r12);
+
+        d4 = d2;
+
+        goto label2;
+
+     label1:
+        d4 = d1;
+
+     label2:
+        d3 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: double getTimeToExpiry()>();
+
+        $r3 = new com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction$1;
+
+        specialinvoke $r3.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction$1: void <init>(com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction,double,double,double)>(r0, d0, d4, d3);
+
+        return $r3;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getVolatilityFunction(double, double[], double)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction r0;
+        double d0, d1, $d2;
+        double[] r1;
+        int i0, i1;
+        java.util.ArrayList $r3;
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction$2 $r4;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r5;
+        com.opengamma.analytics.math.function.Function1D $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        d1 := @parameter2: double;
+
+        i0 = lengthof r1;
+
+        $r3 = new java.util.ArrayList;
+
+        specialinvoke $r3.<java.util.ArrayList: void <init>(int)>(i0);
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $r5 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d2 = r1[i1];
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>($d2, d1, 1);
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction: com.opengamma.analytics.math.function.Function1D getVolatilityFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,double)>($r5, d0);
+
+        interfaceinvoke $r3.<java.util.List: boolean add(java.lang.Object)>($r6);
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        $r4 = new com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction$2;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction$2: void <init>(com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction,int,java.util.List)>(r0, i0, $r3);
+
+        return $r4;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction r0;
+        java.lang.String $r1;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction;
+
+        $r1 = virtualinvoke r0.<com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction: java.lang.String toString()>();
+
+        $i0 = virtualinvoke $r1.<java.lang.String: int hashCode()>();
+
+        return $i0;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction r0;
+        java.lang.Object r1;
+        java.lang.Class $r2, $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r1 != null goto label1;
+
+        return 0;
+
+     label1:
+        if r0 != r1 goto label2;
+
+        return 1;
+
+     label2:
+        $r2 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r3 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+
+        if $r2 == $r3 goto label3;
+
+        return 0;
+
+     label3:
+        return 1;
+    }
+
+    public java.lang.String toString()
+    {
+        com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction;
+
+        return "SABR (Berestycki)";
+    }
+
+    static void <clinit>()
+    {
+        org.slf4j.Logger $r0;
+
+        <com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction: double EPS> = 1.0E-15;
+
+        <com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction: double CUTOFF_MONEYNESS> = 1.0E-6;
+
+        $r0 = staticinvoke <org.slf4j.LoggerFactory: org.slf4j.Logger getLogger(java.lang.Class)>(class "com/opengamma/analytics/financial/model/volatility/smile/function/SABRBerestyckiVolatilityFunction");
+
+        <com.opengamma.analytics.financial.model.volatility.smile.function.SABRBerestyckiVolatilityFunction: org.slf4j.Logger s_logger> = $r0;
+
+        return;
+    }
+}

@@ -1,0 +1,392 @@
+public final class com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod extends java.lang.Object
+{
+    private static final com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod INSTANCE;
+    private static final com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel MODEL;
+    private static final com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator CFEC;
+    private static final int NB_INTEGRATION;
+    private static final org.apache.commons.math.stat.descriptive.rank.Min MIN_FUNCTION;
+
+    public static com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod getInstance()
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod $r0;
+
+        $r0 = <com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod INSTANCE>;
+
+        return $r0;
+    }
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod r0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public double price(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity, com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteIssuerProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteIssuerProviderInterface r2;
+        com.opengamma.util.money.Currency r3;
+        com.opengamma.analytics.financial.legalentity.LegalEntity r4;
+        double d0, d1, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, d26;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, i14, i15, i16;
+        int[] r5;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed[] r6;
+        double[][] r7, r8, r68, r69;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] $r13, $r15, $r52, $r60;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity $r14, $r53, $r61;
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod$FuturesIntegrant $r16;
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D $r17;
+        java.lang.Double $r18, $r19, $r20, $r43;
+        double[] $r21, $r22, $r23, $r24, $r26, $r32, $r38, $r44, $r45, $r47, $r50, $r51;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed $r25, $r29, $r35, $r40, $r46, $r57, $r58, $r62, $r64;
+        com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel $r27, $r33;
+        com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters $r28, $r34;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r30, $r36, $r41, $r48;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r31, $r37, $r42, $r49, $r59;
+        com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface $r39;
+        com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator $r54;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r55;
+        java.lang.Object $r56;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment[] $r63;
+        java.lang.Exception $r65;
+        java.lang.RuntimeException $r66;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed[] r67;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteIssuerProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Futures");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Hull-White/Issuer provider");
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r13 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasketAtDeliveryDate()>();
+
+        $r14 = $r13[0];
+
+        r4 = virtualinvoke $r14.<com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity: com.opengamma.analytics.financial.legalentity.LegalEntity getIssuerEntity()>();
+
+        d0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity: double getNoticeLastTime()>();
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity: double getDeliveryLastTime()>();
+
+        $r15 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasketAtDeliveryDate()>();
+
+        i0 = lengthof $r15;
+
+        r5 = newarray (int)[i0];
+
+        r6 = newarray (com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed)[i0];
+
+        i14 = 0;
+
+     label01:
+        if i14 >= i0 goto label02;
+
+        $r52 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasketAtDeliveryDate()>();
+
+        $r53 = $r52[i14];
+
+        $r54 = <com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator CFEC>;
+
+        $r55 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteIssuerProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r56 = virtualinvoke $r53.<com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r54, $r55);
+
+        $r57 = (com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed) $r56;
+
+        r6[i14] = $r57;
+
+        $r58 = r6[i14];
+
+        $i10 = virtualinvoke $r58.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        r5[i14] = $i10;
+
+        $i11 = r5[i14];
+
+        $i12 = $i11 + 1;
+
+        r67 = newarray (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed)[$i12];
+
+        $r59 = new com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed;
+
+        $r60 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasketAtDeliveryDate()>();
+
+        $r61 = $r60[i14];
+
+        $d22 = virtualinvoke $r61.<com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity: double getAccruedInterest()>();
+
+        $d23 = neg $d22;
+
+        specialinvoke $r59.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: void <init>(com.opengamma.util.money.Currency,double,double)>(r3, d1, $d23);
+
+        r67[0] = $r59;
+
+        $r62 = r6[i14];
+
+        $r63 = virtualinvoke $r62.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment[] getPayments()>();
+
+        $i13 = r5[i14];
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r63, 0, r67, 1, $i13);
+
+        $r64 = new com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed;
+
+        specialinvoke $r64.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: void <init>(com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed[])>(r67);
+
+        r6[i14] = $r64;
+
+        i14 = i14 + 1;
+
+        goto label01;
+
+     label02:
+        r68 = newarray (double[])[i0];
+
+        r69 = newarray (double[])[i0];
+
+        r7 = newarray (double[])[i0];
+
+        r8 = newarray (double[])[i0];
+
+        i15 = 0;
+
+     label03:
+        if i15 >= i0 goto label06;
+
+        $i1 = r5[i15];
+
+        $i2 = $i1 + 1;
+
+        $r21 = newarray (double)[$i2];
+
+        r68[i15] = $r21;
+
+        $i3 = r5[i15];
+
+        $i4 = $i3 + 1;
+
+        $r22 = newarray (double)[$i4];
+
+        r69[i15] = $r22;
+
+        $i5 = r5[i15];
+
+        $i6 = $i5 + 1;
+
+        $r23 = newarray (double)[$i6];
+
+        r7[i15] = $r23;
+
+        $i7 = r5[i15];
+
+        $i8 = $i7 + 1;
+
+        $r24 = newarray (double)[$i8];
+
+        r8[i15] = $r24;
+
+        i16 = 0;
+
+     label04:
+        $r25 = r6[i15];
+
+        $i9 = virtualinvoke $r25.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        if i16 >= $i9 goto label05;
+
+        $r26 = r68[i15];
+
+        $r27 = <com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel MODEL>;
+
+        $r28 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteIssuerProviderInterface: com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters getHullWhiteParameters()>();
+
+        $r29 = r6[i15];
+
+        $r30 = virtualinvoke $r29.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i16);
+
+        $r31 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r30;
+
+        $d7 = virtualinvoke $r31.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getPaymentTime()>();
+
+        $d8 = virtualinvoke $r27.<com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel: double alpha(com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters,double,double,double,double)>($r28, 0.0, d0, d1, $d7);
+
+        $r26[i16] = $d8;
+
+        $r32 = r69[i15];
+
+        $r33 = <com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel MODEL>;
+
+        $r34 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteIssuerProviderInterface: com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters getHullWhiteParameters()>();
+
+        $r35 = r6[i15];
+
+        $r36 = virtualinvoke $r35.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i16);
+
+        $r37 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r36;
+
+        $d9 = virtualinvoke $r37.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getPaymentTime()>();
+
+        $d10 = virtualinvoke $r33.<com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel: double futuresConvexityFactor(com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters,double,double,double)>($r34, d0, $d9, d1);
+
+        $r32[i16] = $d10;
+
+        $r38 = r7[i15];
+
+        $r39 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.HullWhiteIssuerProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface getIssuerProvider()>();
+
+        $r40 = r6[i15];
+
+        $r41 = virtualinvoke $r40.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i16);
+
+        $r42 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r41;
+
+        $d11 = virtualinvoke $r42.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getPaymentTime()>();
+
+        $r43 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d11);
+
+        $d12 = interfaceinvoke $r39.<com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface: double getDiscountFactor(com.opengamma.analytics.financial.legalentity.LegalEntity,java.lang.Double)>(r4, $r43);
+
+        $r38[i16] = $d12;
+
+        $r47 = r8[i15];
+
+        $r44 = r7[i15];
+
+        $d14 = $r44[i16];
+
+        $r45 = r7[i15];
+
+        $d13 = $r45[0];
+
+        $d15 = $d14 / $d13;
+
+        $r46 = r6[i15];
+
+        $r48 = virtualinvoke $r46.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i16);
+
+        $r49 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r48;
+
+        $d16 = virtualinvoke $r49.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        $d18 = $d15 * $d16;
+
+        $r50 = r69[i15];
+
+        $d17 = $r50[i16];
+
+        $d19 = $d18 * $d17;
+
+        $r51 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity: double[] getConversionFactor()>();
+
+        $d20 = $r51[i15];
+
+        $d21 = $d19 / $d20;
+
+        $r47[i16] = $d21;
+
+        i16 = i16 + 1;
+
+        goto label04;
+
+     label05:
+        i15 = i15 + 1;
+
+        goto label03;
+
+     label06:
+        $r16 = new com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod$FuturesIntegrant;
+
+        specialinvoke $r16.<com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod$FuturesIntegrant: void <init>(double[][],double[][])>(r8, r68);
+
+        $r17 = new com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        specialinvoke $r17.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: void <init>(double,double,int)>(0.01, 1.0E-6, 15);
+
+     label07:
+        $d4 = staticinvoke <java.lang.Math: double sqrt(double)>(6.283185307179586);
+
+        $d5 = 1.0 / $d4;
+
+        $r18 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(-10.0);
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(10.0);
+
+        $r20 = virtualinvoke $r17.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r16, $r18, $r19);
+
+        $d6 = virtualinvoke $r20.<java.lang.Double: double doubleValue()>();
+
+        d26 = $d5 * $d6;
+
+     label08:
+        goto label10;
+
+     label09:
+        $r65 := @caughtexception;
+
+        $r66 = new java.lang.RuntimeException;
+
+        specialinvoke $r66.<java.lang.RuntimeException: void <init>(java.lang.Throwable)>($r65);
+
+        throw $r66;
+
+     label10:
+        return d26;
+
+        catch java.lang.Exception from label07 to label08 with label09;
+    }
+
+    static org.apache.commons.math.stat.descriptive.rank.Min access$000()
+    {
+        org.apache.commons.math.stat.descriptive.rank.Min $r0;
+
+        $r0 = <com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod: org.apache.commons.math.stat.descriptive.rank.Min MIN_FUNCTION>;
+
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod $r0;
+        com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel $r1;
+        com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator $r2;
+        org.apache.commons.math.stat.descriptive.rank.Min $r3;
+
+        <com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod: int NB_INTEGRATION> = 15;
+
+        $r0 = new com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod INSTANCE> = $r0;
+
+        $r1 = new com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel MODEL> = $r1;
+
+        $r2 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.provider.calculator.discounting.CashFlowEquivalentCalculator CFEC> = $r2;
+
+        $r3 = new org.apache.commons.math.stat.descriptive.rank.Min;
+
+        specialinvoke $r3.<org.apache.commons.math.stat.descriptive.rank.Min: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.future.provider.BondFuturesSecurityHullWhiteNumericalIntegrationMethod: org.apache.commons.math.stat.descriptive.rank.Min MIN_FUNCTION> = $r3;
+
+        return;
+    }
+}

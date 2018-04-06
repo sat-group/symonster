@@ -1,0 +1,597 @@
+public class com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityUnderlyingParameterCalculator extends com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityParameterAbstractCalculator
+{
+
+    public void <init>(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)
+    {
+        com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityUnderlyingParameterCalculator r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor r1;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityUnderlyingParameterCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityParameterAbstractCalculator: void <init>(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)>(r1);
+
+        return;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity pointToParameterSensitivity(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity, com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface, java.util.Set)
+    {
+        com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityUnderlyingParameterCalculator r0;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface r2;
+        java.util.Set r3, r4, r98;
+        java.lang.String[] r5, $r13;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, i21, i22, i23, i24, i25, i26, i27, i28, i29, i30, i31, i32, i33, i34, i35, i36, i37, i38, i39, i40;
+        int[] r7, $r25, $r26, $r27, $r31, $r61, $r67, r80, r86;
+        double[] r8, $r24, $r29, $r32, $r34, $r36, $r37, $r43, $r54, r103;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r12, $r59, $r64, $r70, $r74;
+        java.lang.Object[] $r14, $r17;
+        boolean $z0, $z1, $z3, $z5;
+        java.util.LinkedHashMap $r15;
+        com.opengamma.util.money.Currency[] $r16, r99;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity $r18, r105;
+        com.opengamma.util.money.Currency $r19, $r39, $r41;
+        java.lang.String $r20, $r45, $r46, $r49, $r50, $r55, $r60, $r65, $r71, $r75, $r77, r83, r91, r96;
+        com.opengamma.util.tuple.Pair $r21;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r22;
+        double[][] $r23, $r28, $r30, $r33, $r35, $r38, $r44, $r53;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity $r40, $r42;
+        java.lang.Object $r47, $r51, $r56, $r62, $r63, $r68, $r69, $r72, $r73;
+        java.util.List $r48, $r52, r81, r88, r94;
+        java.lang.Integer $r57, $r76, $r78, r84, r92, r97;
+        it.unimi.dsi.fastutil.ints.IntArrayList $r58, $r66;
+        java.util.Iterator r82, r90, r95;
+        int[][] r85, r87;
+        double[][][] r100, r104;
+        java.util.Map r101, r102;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityUnderlyingParameterCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface;
+
+        r3 := @parameter2: java.util.Set;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "sensitivity");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "multicurves parameter");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "curves set");
+
+        $r12 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        r4 = interfaceinvoke $r12.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: java.util.Set getAllNames()>();
+
+        $r13 = newarray (java.lang.String)[0];
+
+        $r14 = interfaceinvoke r4.<java.util.Set: java.lang.Object[] toArray(java.lang.Object[])>($r13);
+
+        r5 = (java.lang.String[]) $r14;
+
+        $z0 = interfaceinvoke r4.<java.util.Set: boolean containsAll(java.util.Collection)>(r3);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "curve in the names set not in the multi-curve provider");
+
+        i0 = interfaceinvoke r4.<java.util.Set: int size()>();
+
+        $r15 = new java.util.LinkedHashMap;
+
+        specialinvoke $r15.<java.util.LinkedHashMap: void <init>()>();
+
+        i21 = 0;
+
+     label01:
+        if i21 >= i0 goto label02;
+
+        $r77 = r5[i21];
+
+        $r78 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i21);
+
+        virtualinvoke $r15.<java.util.LinkedHashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>($r77, $r78);
+
+        i21 = i21 + 1;
+
+        goto label01;
+
+     label02:
+        r80 = newarray (int)[i0];
+
+        r7 = newarray (int)[i0];
+
+        i22 = 0;
+
+     label03:
+        if i22 >= i0 goto label04;
+
+        $r74 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r75 = r5[i22];
+
+        $r76 = interfaceinvoke $r74.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: java.lang.Integer getNumberOfParameters(java.lang.String)>($r75);
+
+        $i19 = virtualinvoke $r76.<java.lang.Integer: int intValue()>();
+
+        r7[i22] = $i19;
+
+        $i20 = r7[i22];
+
+        r80[i22] = $i20;
+
+        i22 = i22 + 1;
+
+        goto label03;
+
+     label04:
+        i23 = 0;
+
+     label05:
+        if i23 >= i0 goto label09;
+
+        $r70 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r71 = r5[i23];
+
+        r81 = interfaceinvoke $r70.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: java.util.List getUnderlyingCurvesNames(java.lang.String)>($r71);
+
+        r82 = interfaceinvoke r81.<java.util.List: java.util.Iterator iterator()>();
+
+     label06:
+        $z5 = interfaceinvoke r82.<java.util.Iterator: boolean hasNext()>();
+
+        if $z5 == 0 goto label08;
+
+        $r72 = interfaceinvoke r82.<java.util.Iterator: java.lang.Object next()>();
+
+        r83 = (java.lang.String) $r72;
+
+        $r73 = virtualinvoke $r15.<java.util.LinkedHashMap: java.lang.Object get(java.lang.Object)>(r83);
+
+        r84 = (java.lang.Integer) $r73;
+
+        if r84 == null goto label07;
+
+        $i15 = r80[i23];
+
+        $i16 = virtualinvoke r84.<java.lang.Integer: int intValue()>();
+
+        $i17 = r80[$i16];
+
+        $i18 = $i15 - $i17;
+
+        r80[i23] = $i18;
+
+     label07:
+        goto label06;
+
+     label08:
+        i23 = i23 + 1;
+
+        goto label05;
+
+     label09:
+        r85 = newarray (int[])[i0];
+
+        r86 = newarray (int)[i0];
+
+        r87 = newarray (int[])[i0];
+
+        i24 = 0;
+
+     label10:
+        if i24 >= i0 goto label14;
+
+        $r64 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r65 = r5[i24];
+
+        r88 = interfaceinvoke $r64.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: java.util.List getUnderlyingCurvesNames(java.lang.String)>($r65);
+
+        $r66 = new it.unimi.dsi.fastutil.ints.IntArrayList;
+
+        specialinvoke $r66.<it.unimi.dsi.fastutil.ints.IntArrayList: void <init>()>();
+
+        r90 = interfaceinvoke r88.<java.util.List: java.util.Iterator iterator()>();
+
+     label11:
+        $z3 = interfaceinvoke r90.<java.util.Iterator: boolean hasNext()>();
+
+        if $z3 == 0 goto label13;
+
+        $r68 = interfaceinvoke r90.<java.util.Iterator: java.lang.Object next()>();
+
+        r91 = (java.lang.String) $r68;
+
+        $r69 = virtualinvoke $r15.<java.util.LinkedHashMap: java.lang.Object get(java.lang.Object)>(r91);
+
+        r92 = (java.lang.Integer) $r69;
+
+        if r92 == null goto label12;
+
+        virtualinvoke $r66.<it.unimi.dsi.fastutil.ints.IntArrayList: boolean add(java.lang.Integer)>(r92);
+
+     label12:
+        goto label11;
+
+     label13:
+        $r67 = virtualinvoke $r66.<it.unimi.dsi.fastutil.ints.IntArrayList: int[] toIntArray()>();
+
+        r85[i24] = $r67;
+
+        i24 = i24 + 1;
+
+        goto label10;
+
+     label14:
+        i25 = 0;
+
+     label15:
+        if i25 >= i0 goto label19;
+
+        i26 = 0;
+
+        $r55 = r5[i25];
+
+        $r56 = virtualinvoke $r15.<java.util.LinkedHashMap: java.lang.Object get(java.lang.Object)>($r55);
+
+        $r57 = (java.lang.Integer) $r56;
+
+        i27 = virtualinvoke $r57.<java.lang.Integer: int intValue()>();
+
+        $r58 = new it.unimi.dsi.fastutil.ints.IntArrayList;
+
+        specialinvoke $r58.<it.unimi.dsi.fastutil.ints.IntArrayList: void <init>()>();
+
+        $r59 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r60 = r5[i25];
+
+        r94 = interfaceinvoke $r59.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: java.util.List getUnderlyingCurvesNames(java.lang.String)>($r60);
+
+        r95 = interfaceinvoke r94.<java.util.List: java.util.Iterator iterator()>();
+
+     label16:
+        $z1 = interfaceinvoke r95.<java.util.Iterator: boolean hasNext()>();
+
+        if $z1 == 0 goto label18;
+
+        $r62 = interfaceinvoke r95.<java.util.Iterator: java.lang.Object next()>();
+
+        r96 = (java.lang.String) $r62;
+
+        $r63 = virtualinvoke $r15.<java.util.LinkedHashMap: java.lang.Object get(java.lang.Object)>(r96);
+
+        r97 = (java.lang.Integer) $r63;
+
+        if r97 == null goto label17;
+
+        virtualinvoke $r58.<it.unimi.dsi.fastutil.ints.IntArrayList: boolean add(int)>(i26);
+
+        $i13 = virtualinvoke r97.<java.lang.Integer: int intValue()>();
+
+        $i14 = r80[$i13];
+
+        i26 = i26 + $i14;
+
+     label17:
+        goto label16;
+
+     label18:
+        r86[i27] = i26;
+
+        $r61 = virtualinvoke $r58.<it.unimi.dsi.fastutil.ints.IntArrayList: int[] toIntArray()>();
+
+        r87[i27] = $r61;
+
+        i25 = i25 + 1;
+
+        goto label15;
+
+     label19:
+        r98 = virtualinvoke r1.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: java.util.Set getCurrencies()>();
+
+        $r16 = newarray (com.opengamma.util.money.Currency)[0];
+
+        $r17 = interfaceinvoke r98.<java.util.Set: java.lang.Object[] toArray(java.lang.Object[])>($r16);
+
+        r99 = (com.opengamma.util.money.Currency[]) $r17;
+
+        i28 = interfaceinvoke r98.<java.util.Set: int size()>();
+
+        r100 = newmultiarray (double)[i28][i0][];
+
+        i29 = 0;
+
+     label20:
+        if i29 >= i28 goto label25;
+
+        $r39 = r99[i29];
+
+        $r40 = virtualinvoke r1.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity getSensitivity(com.opengamma.util.money.Currency)>($r39);
+
+        r101 = virtualinvoke $r40.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: java.util.Map getYieldDiscountingSensitivities()>();
+
+        $r41 = r99[i29];
+
+        $r42 = virtualinvoke r1.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity getSensitivity(com.opengamma.util.money.Currency)>($r41);
+
+        r102 = virtualinvoke $r42.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: java.util.Map getForwardSensitivities()>();
+
+        i30 = 0;
+
+     label21:
+        if i30 >= i0 goto label24;
+
+        $r44 = r100[i29];
+
+        $i11 = r7[i30];
+
+        $r43 = newarray (double)[$i11];
+
+        $r44[i30] = $r43;
+
+        $r46 = r5[i30];
+
+        $r45 = r5[i30];
+
+        $r47 = interfaceinvoke r101.<java.util.Map: java.lang.Object get(java.lang.Object)>($r45);
+
+        $r48 = (java.util.List) $r47;
+
+        r103 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface: double[] parameterSensitivity(java.lang.String,java.util.List)>($r46, $r48);
+
+        $r50 = r5[i30];
+
+        $r49 = r5[i30];
+
+        $r51 = interfaceinvoke r102.<java.util.Map: java.lang.Object get(java.lang.Object)>($r49);
+
+        $r52 = (java.util.List) $r51;
+
+        r8 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface: double[] parameterForwardSensitivity(java.lang.String,java.util.List)>($r50, $r52);
+
+        i31 = 0;
+
+     label22:
+        $i12 = r7[i30];
+
+        if i31 >= $i12 goto label23;
+
+        $r53 = r100[i29];
+
+        $r54 = $r53[i30];
+
+        $d7 = r103[i31];
+
+        $d6 = r8[i31];
+
+        $d8 = $d7 + $d6;
+
+        $r54[i31] = $d8;
+
+        i31 = i31 + 1;
+
+        goto label22;
+
+     label23:
+        i30 = i30 + 1;
+
+        goto label21;
+
+     label24:
+        i29 = i29 + 1;
+
+        goto label20;
+
+     label25:
+        r104 = newmultiarray (double)[i28][i0][];
+
+        i32 = 0;
+
+     label26:
+        if i32 >= i28 goto label29;
+
+        i33 = 0;
+
+     label27:
+        if i33 >= i0 goto label28;
+
+        $r38 = r104[i32];
+
+        $i10 = r80[i33];
+
+        $r37 = newarray (double)[$i10];
+
+        $r38[i33] = $r37;
+
+        i33 = i33 + 1;
+
+        goto label27;
+
+     label28:
+        i32 = i32 + 1;
+
+        goto label26;
+
+     label29:
+        i34 = 0;
+
+     label30:
+        if i34 >= i28 goto label39;
+
+        i35 = 0;
+
+     label31:
+        if i35 >= i0 goto label38;
+
+        i36 = 0;
+
+     label32:
+        $i1 = r80[i35];
+
+        if i36 >= $i1 goto label33;
+
+        $r33 = r104[i34];
+
+        $r34 = $r33[i35];
+
+        $d4 = $r34[i36];
+
+        $r35 = r100[i34];
+
+        $r36 = $r35[i35];
+
+        $i8 = r86[i35];
+
+        $i9 = $i8 + i36;
+
+        $d3 = $r36[$i9];
+
+        $d5 = $d4 + $d3;
+
+        $r34[i36] = $d5;
+
+        i36 = i36 + 1;
+
+        goto label32;
+
+     label33:
+        i37 = 0;
+
+     label34:
+        $r25 = r87[i35];
+
+        $i2 = lengthof $r25;
+
+        if i37 >= $i2 goto label37;
+
+        i38 = 0;
+
+     label35:
+        $r26 = r85[i35];
+
+        $i3 = $r26[i37];
+
+        $i4 = r80[$i3];
+
+        if i38 >= $i4 goto label36;
+
+        $r28 = r104[i34];
+
+        $r27 = r85[i35];
+
+        $i5 = $r27[i37];
+
+        $r29 = $r28[$i5];
+
+        $d1 = $r29[i38];
+
+        $r30 = r100[i34];
+
+        $r32 = $r30[i35];
+
+        $r31 = r87[i35];
+
+        $i6 = $r31[i37];
+
+        $i7 = $i6 + i38;
+
+        $d0 = $r32[$i7];
+
+        $d2 = $d1 + $d0;
+
+        $r29[i38] = $d2;
+
+        i38 = i38 + 1;
+
+        goto label35;
+
+     label36:
+        i37 = i37 + 1;
+
+        goto label34;
+
+     label37:
+        i35 = i35 + 1;
+
+        goto label31;
+
+     label38:
+        i34 = i34 + 1;
+
+        goto label30;
+
+     label39:
+        $r18 = new com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity;
+
+        specialinvoke $r18.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity: void <init>()>();
+
+        r105 = $r18;
+
+        i39 = 0;
+
+     label40:
+        if i39 >= i28 goto label43;
+
+        i40 = 0;
+
+     label41:
+        if i40 >= i0 goto label42;
+
+        $r20 = r5[i40];
+
+        $r19 = r99[i39];
+
+        $r21 = staticinvoke <com.opengamma.util.tuple.Pairs: com.opengamma.util.tuple.Pair of(java.lang.Object,java.lang.Object)>($r20, $r19);
+
+        $r22 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        $r23 = r104[i39];
+
+        $r24 = $r23[i40];
+
+        specialinvoke $r22.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>($r24);
+
+        r105 = virtualinvoke r105.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity plus(com.opengamma.util.tuple.Pair,com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r21, $r22);
+
+        i40 = i40 + 1;
+
+        goto label41;
+
+     label42:
+        i39 = i39 + 1;
+
+        goto label40;
+
+     label43:
+        return r105;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity pointToParameterSensitivity(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity, com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)
+    {
+        com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityUnderlyingParameterCalculator r0;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r4;
+        java.util.Set $r5;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityUnderlyingParameterCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "multicurves parameter");
+
+        $r4 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r5 = interfaceinvoke $r4.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: java.util.Set getAllCurveNames()>();
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.sensitivity.parameter.ParameterSensitivityUnderlyingParameterCalculator: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity pointToParameterSensitivity(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface,java.util.Set)>(r1, r2, $r5);
+
+        return $r6;
+    }
+}

@@ -1,0 +1,371 @@
+public abstract class org.apache.commons.math.ode.MultistepIntegrator extends org.apache.commons.math.ode.nonstiff.AdaptiveStepsizeIntegrator
+{
+    protected double[] scaled;
+    protected org.apache.commons.math.linear.Array2DRowRealMatrix nordsieck;
+    private org.apache.commons.math.ode.FirstOrderIntegrator starter;
+    private final int nSteps;
+    private double exp;
+    private double safety;
+    private double minReduction;
+    private double maxGrowth;
+
+    protected void <init>(java.lang.String, int, int, double, double, double, double)
+    {
+        org.apache.commons.math.ode.MultistepIntegrator r0;
+        java.lang.String r1;
+        int i0, i1;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8;
+        org.apache.commons.math.ode.nonstiff.DormandPrince853Integrator $r2;
+        java.lang.Object[] $r3;
+        org.apache.commons.math.exception.util.LocalizedFormats $r4;
+        java.lang.IllegalArgumentException $r5;
+
+        r0 := @this: org.apache.commons.math.ode.MultistepIntegrator;
+
+        r1 := @parameter0: java.lang.String;
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        d0 := @parameter3: double;
+
+        d1 := @parameter4: double;
+
+        d2 := @parameter5: double;
+
+        d3 := @parameter6: double;
+
+        specialinvoke r0.<org.apache.commons.math.ode.nonstiff.AdaptiveStepsizeIntegrator: void <init>(java.lang.String,double,double,double,double)>(r1, d0, d1, d2, d3);
+
+        if i0 > 0 goto label1;
+
+        $r4 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats INTEGRATION_METHOD_NEEDS_AT_LEAST_ONE_PREVIOUS_POINT>;
+
+        $r3 = newarray (java.lang.Object)[1];
+
+        $r3[0] = r1;
+
+        $r5 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r4, $r3);
+
+        throw $r5;
+
+     label1:
+        $r2 = new org.apache.commons.math.ode.nonstiff.DormandPrince853Integrator;
+
+        specialinvoke $r2.<org.apache.commons.math.ode.nonstiff.DormandPrince853Integrator: void <init>(double,double,double,double)>(d0, d1, d2, d3);
+
+        r0.<org.apache.commons.math.ode.MultistepIntegrator: org.apache.commons.math.ode.FirstOrderIntegrator starter> = $r2;
+
+        r0.<org.apache.commons.math.ode.MultistepIntegrator: int nSteps> = i0;
+
+        $d4 = (double) i1;
+
+        $d5 = -1.0 / $d4;
+
+        r0.<org.apache.commons.math.ode.MultistepIntegrator: double exp> = $d5;
+
+        virtualinvoke r0.<org.apache.commons.math.ode.MultistepIntegrator: void setSafety(double)>(0.9);
+
+        virtualinvoke r0.<org.apache.commons.math.ode.MultistepIntegrator: void setMinReduction(double)>(0.2);
+
+        $d6 = r0.<org.apache.commons.math.ode.MultistepIntegrator: double exp>;
+
+        $d7 = neg $d6;
+
+        $d8 = staticinvoke <org.apache.commons.math.util.FastMath: double pow(double,double)>(2.0, $d7);
+
+        virtualinvoke r0.<org.apache.commons.math.ode.MultistepIntegrator: void setMaxGrowth(double)>($d8);
+
+        return;
+    }
+
+    protected void <init>(java.lang.String, int, int, double, double, double[], double[])
+    {
+        org.apache.commons.math.ode.MultistepIntegrator r0;
+        java.lang.String r1;
+        int i0, i1;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6;
+        double[] r2, r3;
+        org.apache.commons.math.ode.nonstiff.DormandPrince853Integrator $r4;
+
+        r0 := @this: org.apache.commons.math.ode.MultistepIntegrator;
+
+        r1 := @parameter0: java.lang.String;
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        d0 := @parameter3: double;
+
+        d1 := @parameter4: double;
+
+        r2 := @parameter5: double[];
+
+        r3 := @parameter6: double[];
+
+        specialinvoke r0.<org.apache.commons.math.ode.nonstiff.AdaptiveStepsizeIntegrator: void <init>(java.lang.String,double,double,double[],double[])>(r1, d0, d1, r2, r3);
+
+        $r4 = new org.apache.commons.math.ode.nonstiff.DormandPrince853Integrator;
+
+        specialinvoke $r4.<org.apache.commons.math.ode.nonstiff.DormandPrince853Integrator: void <init>(double,double,double[],double[])>(d0, d1, r2, r3);
+
+        r0.<org.apache.commons.math.ode.MultistepIntegrator: org.apache.commons.math.ode.FirstOrderIntegrator starter> = $r4;
+
+        r0.<org.apache.commons.math.ode.MultistepIntegrator: int nSteps> = i0;
+
+        $d2 = (double) i1;
+
+        $d3 = -1.0 / $d2;
+
+        r0.<org.apache.commons.math.ode.MultistepIntegrator: double exp> = $d3;
+
+        virtualinvoke r0.<org.apache.commons.math.ode.MultistepIntegrator: void setSafety(double)>(0.9);
+
+        virtualinvoke r0.<org.apache.commons.math.ode.MultistepIntegrator: void setMinReduction(double)>(0.2);
+
+        $d4 = r0.<org.apache.commons.math.ode.MultistepIntegrator: double exp>;
+
+        $d5 = neg $d4;
+
+        $d6 = staticinvoke <org.apache.commons.math.util.FastMath: double pow(double,double)>(2.0, $d5);
+
+        virtualinvoke r0.<org.apache.commons.math.ode.MultistepIntegrator: void setMaxGrowth(double)>($d6);
+
+        return;
+    }
+
+    public org.apache.commons.math.ode.ODEIntegrator getStarterIntegrator()
+    {
+        org.apache.commons.math.ode.MultistepIntegrator r0;
+        org.apache.commons.math.ode.FirstOrderIntegrator $r1;
+
+        r0 := @this: org.apache.commons.math.ode.MultistepIntegrator;
+
+        $r1 = r0.<org.apache.commons.math.ode.MultistepIntegrator: org.apache.commons.math.ode.FirstOrderIntegrator starter>;
+
+        return $r1;
+    }
+
+    public void setStarterIntegrator(org.apache.commons.math.ode.FirstOrderIntegrator)
+    {
+        org.apache.commons.math.ode.MultistepIntegrator r0;
+        org.apache.commons.math.ode.FirstOrderIntegrator r1;
+
+        r0 := @this: org.apache.commons.math.ode.MultistepIntegrator;
+
+        r1 := @parameter0: org.apache.commons.math.ode.FirstOrderIntegrator;
+
+        r0.<org.apache.commons.math.ode.MultistepIntegrator: org.apache.commons.math.ode.FirstOrderIntegrator starter> = r1;
+
+        return;
+    }
+
+    protected void start(double, double[], double) throws org.apache.commons.math.ode.DerivativeException, org.apache.commons.math.ode.IntegratorException
+    {
+        org.apache.commons.math.ode.MultistepIntegrator r0;
+        double d0, d1;
+        double[] r1, $r9;
+        org.apache.commons.math.ode.FirstOrderIntegrator $r3, $r4, $r6, $r8, $r10;
+        org.apache.commons.math.ode.MultistepIntegrator$NordsieckInitializer $r5;
+        int $i0, $i1, $i2;
+        org.apache.commons.math.ode.MultistepIntegrator$CountingDifferentialEquations $r7;
+        org.apache.commons.math.ode.DerivativeException $r11;
+        boolean $z0;
+
+        r0 := @this: org.apache.commons.math.ode.MultistepIntegrator;
+
+        d0 := @parameter0: double;
+
+        r1 := @parameter1: double[];
+
+        d1 := @parameter2: double;
+
+        $r3 = r0.<org.apache.commons.math.ode.MultistepIntegrator: org.apache.commons.math.ode.FirstOrderIntegrator starter>;
+
+        interfaceinvoke $r3.<org.apache.commons.math.ode.FirstOrderIntegrator: void clearEventHandlers()>();
+
+        $r4 = r0.<org.apache.commons.math.ode.MultistepIntegrator: org.apache.commons.math.ode.FirstOrderIntegrator starter>;
+
+        interfaceinvoke $r4.<org.apache.commons.math.ode.FirstOrderIntegrator: void clearStepHandlers()>();
+
+        $r6 = r0.<org.apache.commons.math.ode.MultistepIntegrator: org.apache.commons.math.ode.FirstOrderIntegrator starter>;
+
+        $r5 = new org.apache.commons.math.ode.MultistepIntegrator$NordsieckInitializer;
+
+        $i0 = lengthof r1;
+
+        specialinvoke $r5.<org.apache.commons.math.ode.MultistepIntegrator$NordsieckInitializer: void <init>(org.apache.commons.math.ode.MultistepIntegrator,int)>(r0, $i0);
+
+        interfaceinvoke $r6.<org.apache.commons.math.ode.FirstOrderIntegrator: void addStepHandler(org.apache.commons.math.ode.sampling.StepHandler)>($r5);
+
+     label1:
+        $r8 = r0.<org.apache.commons.math.ode.MultistepIntegrator: org.apache.commons.math.ode.FirstOrderIntegrator starter>;
+
+        $r7 = new org.apache.commons.math.ode.MultistepIntegrator$CountingDifferentialEquations;
+
+        $i1 = lengthof r1;
+
+        specialinvoke $r7.<org.apache.commons.math.ode.MultistepIntegrator$CountingDifferentialEquations: void <init>(org.apache.commons.math.ode.MultistepIntegrator,int)>(r0, $i1);
+
+        $i2 = lengthof r1;
+
+        $r9 = newarray (double)[$i2];
+
+        interfaceinvoke $r8.<org.apache.commons.math.ode.FirstOrderIntegrator: double integrate(org.apache.commons.math.ode.FirstOrderDifferentialEquations,double,double[],double,double[])>($r7, d0, r1, d1, $r9);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r11 := @caughtexception;
+
+        $z0 = $r11 instanceof org.apache.commons.math.ode.MultistepIntegrator$InitializationCompletedMarkerException;
+
+        if $z0 != 0 goto label4;
+
+        throw $r11;
+
+     label4:
+        $r10 = r0.<org.apache.commons.math.ode.MultistepIntegrator: org.apache.commons.math.ode.FirstOrderIntegrator starter>;
+
+        interfaceinvoke $r10.<org.apache.commons.math.ode.FirstOrderIntegrator: void clearStepHandlers()>();
+
+        return;
+
+        catch org.apache.commons.math.ode.DerivativeException from label1 to label2 with label3;
+    }
+
+    protected abstract org.apache.commons.math.linear.Array2DRowRealMatrix initializeHighOrderDerivatives(double[], double[][]);
+
+    public double getMinReduction()
+    {
+        org.apache.commons.math.ode.MultistepIntegrator r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.ode.MultistepIntegrator;
+
+        $d0 = r0.<org.apache.commons.math.ode.MultistepIntegrator: double minReduction>;
+
+        return $d0;
+    }
+
+    public void setMinReduction(double)
+    {
+        org.apache.commons.math.ode.MultistepIntegrator r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math.ode.MultistepIntegrator;
+
+        d0 := @parameter0: double;
+
+        r0.<org.apache.commons.math.ode.MultistepIntegrator: double minReduction> = d0;
+
+        return;
+    }
+
+    public double getMaxGrowth()
+    {
+        org.apache.commons.math.ode.MultistepIntegrator r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.ode.MultistepIntegrator;
+
+        $d0 = r0.<org.apache.commons.math.ode.MultistepIntegrator: double maxGrowth>;
+
+        return $d0;
+    }
+
+    public void setMaxGrowth(double)
+    {
+        org.apache.commons.math.ode.MultistepIntegrator r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math.ode.MultistepIntegrator;
+
+        d0 := @parameter0: double;
+
+        r0.<org.apache.commons.math.ode.MultistepIntegrator: double maxGrowth> = d0;
+
+        return;
+    }
+
+    public double getSafety()
+    {
+        org.apache.commons.math.ode.MultistepIntegrator r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.ode.MultistepIntegrator;
+
+        $d0 = r0.<org.apache.commons.math.ode.MultistepIntegrator: double safety>;
+
+        return $d0;
+    }
+
+    public void setSafety(double)
+    {
+        org.apache.commons.math.ode.MultistepIntegrator r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math.ode.MultistepIntegrator;
+
+        d0 := @parameter0: double;
+
+        r0.<org.apache.commons.math.ode.MultistepIntegrator: double safety> = d0;
+
+        return;
+    }
+
+    protected double computeStepGrowShrinkFactor(double)
+    {
+        org.apache.commons.math.ode.MultistepIntegrator r0;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8;
+
+        r0 := @this: org.apache.commons.math.ode.MultistepIntegrator;
+
+        d0 := @parameter0: double;
+
+        $d2 = r0.<org.apache.commons.math.ode.MultistepIntegrator: double maxGrowth>;
+
+        $d3 = r0.<org.apache.commons.math.ode.MultistepIntegrator: double minReduction>;
+
+        $d4 = r0.<org.apache.commons.math.ode.MultistepIntegrator: double safety>;
+
+        $d1 = r0.<org.apache.commons.math.ode.MultistepIntegrator: double exp>;
+
+        $d5 = staticinvoke <org.apache.commons.math.util.FastMath: double pow(double,double)>(d0, $d1);
+
+        $d6 = $d4 * $d5;
+
+        $d7 = staticinvoke <org.apache.commons.math.util.FastMath: double max(double,double)>($d3, $d6);
+
+        $d8 = staticinvoke <org.apache.commons.math.util.FastMath: double min(double,double)>($d2, $d7);
+
+        return $d8;
+    }
+
+    static int access$000(org.apache.commons.math.ode.MultistepIntegrator)
+    {
+        org.apache.commons.math.ode.MultistepIntegrator r0;
+        int $i0;
+
+        r0 := @parameter0: org.apache.commons.math.ode.MultistepIntegrator;
+
+        $i0 = r0.<org.apache.commons.math.ode.MultistepIntegrator: int nSteps>;
+
+        return $i0;
+    }
+
+    static int access$100(org.apache.commons.math.ode.MultistepIntegrator)
+    {
+        org.apache.commons.math.ode.MultistepIntegrator r0;
+        int $i0;
+
+        r0 := @parameter0: org.apache.commons.math.ode.MultistepIntegrator;
+
+        $i0 = r0.<org.apache.commons.math.ode.MultistepIntegrator: int mainSetDimension>;
+
+        return $i0;
+    }
+}

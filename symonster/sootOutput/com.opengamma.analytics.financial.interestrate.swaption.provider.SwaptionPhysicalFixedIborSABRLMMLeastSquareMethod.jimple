@@ -1,0 +1,1624 @@
+public class com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod extends java.lang.Object
+{
+    private static final com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator PVSSC;
+    private static final com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueCurveSensitivitySABRSwaptionCalculator PVCSSSC;
+    private static final com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSensitivitySABRSwaptionCalculator PVSSSSC;
+    private static final com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod METHOD_SWAPTION_LMM;
+    private static final com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborBasketMethod METHOD_BASKET;
+    private static final com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra ALGEBRA;
+    private final double[] _strikeMoneyness;
+    private final com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters _parametersInit;
+
+    public void <init>(double[], com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters)
+    {
+        com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod r0;
+        double[] r1;
+        com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters r2;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: double[] _strikeMoneyness> = r1;
+
+        r0.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters _parametersInit> = r2;
+
+        return;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor, com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface r2;
+        com.opengamma.util.money.Currency r3;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r4;
+        int i0;
+        com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters r5, $r14;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor[] r8;
+        com.opengamma.util.money.MultipleCurrencyAmount r10;
+        double[] $r13, $r17;
+        com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationObjective $r15;
+        com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationEngine $r16;
+        com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborBasketMethod $r18;
+        com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator $r19;
+        com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProvider $r20;
+        com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod $r21;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Swaption");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "SABR swaption provider");
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        r4 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r13 = r0.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: double[] _strikeMoneyness>;
+
+        i0 = lengthof $r13;
+
+        $r14 = r0.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters _parametersInit>;
+
+        r5 = virtualinvoke $r14.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters copy()>();
+
+        $r15 = new com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationObjective;
+
+        specialinvoke $r15.<com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationObjective: void <init>(com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters,com.opengamma.util.money.Currency)>(r5, r3);
+
+        $r16 = new com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationEngine;
+
+        specialinvoke $r16.<com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationEngine: void <init>(com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationObjective,int)>($r15, i0);
+
+        $r18 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborBasketMethod METHOD_BASKET>;
+
+        $r17 = r0.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: double[] _strikeMoneyness>;
+
+        r8 = virtualinvoke $r18.<com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborBasketMethod: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor[] calibrationBasketFixedLegPeriod(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,double[])>(r1, $r17);
+
+        $r19 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator PVSSC>;
+
+        virtualinvoke $r16.<com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationEngine: void addInstrument(com.opengamma.analytics.financial.interestrate.InstrumentDerivative[],com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)>(r8, $r19);
+
+        virtualinvoke $r16.<com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationEngine: void calibrate(com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>(r2);
+
+        $r20 = new com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProvider;
+
+        specialinvoke $r20.<com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProvider: void <init>(com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface,com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters,com.opengamma.util.money.Currency)>(r4, r5, r3);
+
+        $r21 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod METHOD_SWAPTION_LMM>;
+
+        r10 = virtualinvoke $r21.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod: com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProviderInterface)>(r1, $r20);
+
+        return r10;
+    }
+
+    public com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle presentValueSABRSensitivity(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor, com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor r1, $r47, $r48, $r56, $r91, $r94;
+        com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface r2;
+        com.opengamma.util.money.Currency r3;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r4;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, $i25, $i26, $i27, $i28, $i29, $i30, $i31, $i32, $i33, $i34, $i35, $i36, $i37, $i38, $i39, $i40, $i41, i42, i43, i44, i45, i46, i47, i48, i49, i50, i51, i52, i53, i54, i55, i56, i57, i58, i59;
+        com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters r5, $r22;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor[] r8;
+        java.util.List r10;
+        double[] r11, r13, r16, $r21, $r25, $r49, $r50, $r51, $r52, $r53, $r54, $r62, $r68, $r74, $r84, $r86, $r88, $r89, $r90, $r93, $r101, $r103;
+        double[][] r12, $r45, $r85, $r87, $r96, $r102, r104, r106, r107, r111, r112;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D r15, $r31, $r32, $r36, $r43, r115;
+        com.opengamma.util.tuple.DoublesPair r18, $r65, $r71, $r77;
+        com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationObjective $r23;
+        com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationEngine $r24;
+        com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborBasketMethod $r26;
+        com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator $r27;
+        com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProvider $r28;
+        com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod $r29, $r30, $r92, $r95;
+        com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra $r33, $r34, $r35, $r40, $r41, $r42;
+        com.opengamma.analytics.math.matrix.Matrix $r37, $r38, $r44;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r39;
+        com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle $r46, r108;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37;
+        com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSensitivitySABRSwaptionCalculator $r55;
+        java.lang.Object $r57, $r66, $r72, $r78, $r80, $r82, $r97, $r99;
+        com.opengamma.analytics.util.amount.SurfaceValue $r58, $r63, $r69, $r75;
+        java.util.HashMap $r59, $r64, $r70, $r76;
+        com.opengamma.util.tuple.DoublesPair[] $r60, r110;
+        java.lang.Object[] $r61;
+        java.lang.Double $r67, $r73, $r79;
+        java.lang.Integer $r81, $r83, $r98, $r100;
+        double[][][] r105;
+        java.util.Set r109;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Swaption");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "SABR swaption provider");
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        r4 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r21 = r0.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: double[] _strikeMoneyness>;
+
+        i0 = lengthof $r21;
+
+        $r22 = r0.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters _parametersInit>;
+
+        r5 = virtualinvoke $r22.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters copy()>();
+
+        $r23 = new com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationObjective;
+
+        specialinvoke $r23.<com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationObjective: void <init>(com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters,com.opengamma.util.money.Currency)>(r5, r3);
+
+        $r24 = new com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationEngine;
+
+        specialinvoke $r24.<com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationEngine: void <init>(com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationObjective,int)>($r23, i0);
+
+        $r26 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborBasketMethod METHOD_BASKET>;
+
+        $r25 = r0.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: double[] _strikeMoneyness>;
+
+        r8 = virtualinvoke $r26.<com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborBasketMethod: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor[] calibrationBasketFixedLegPeriod(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,double[])>(r1, $r25);
+
+        $r27 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator PVSSC>;
+
+        virtualinvoke $r24.<com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationEngine: void addInstrument(com.opengamma.analytics.financial.interestrate.InstrumentDerivative[],com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)>(r8, $r27);
+
+        virtualinvoke $r24.<com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationEngine: void calibrate(com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>(r2);
+
+        $r28 = new com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProvider;
+
+        specialinvoke $r28.<com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProvider: void <init>(com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface,com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters,com.opengamma.util.money.Currency)>(r4, r5, r3);
+
+        i1 = lengthof r8;
+
+        i2 = i1 / i0;
+
+        i3 = virtualinvoke r5.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: int getNbFactor()>();
+
+        r10 = virtualinvoke $r24.<com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationEngine: java.util.List getInstrumentIndex()>();
+
+        $i4 = 2 * i2;
+
+        r11 = newarray (double)[$i4];
+
+        $r29 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod METHOD_SWAPTION_LMM>;
+
+        r12 = virtualinvoke $r29.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod: double[][] presentValueLMMSensitivity(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProviderInterface)>(r1, $r28);
+
+        $r30 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod METHOD_SWAPTION_LMM>;
+
+        r13 = virtualinvoke $r30.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod: double[] presentValueDDSensitivity(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProviderInterface)>(r1, $r28);
+
+        i42 = 0;
+
+     label01:
+        if i42 >= i2 goto label06;
+
+        $i37 = i42 * i0;
+
+        $r97 = interfaceinvoke r10.<java.util.List: java.lang.Object get(int)>($i37);
+
+        $r98 = (java.lang.Integer) $r97;
+
+        i43 = virtualinvoke $r98.<java.lang.Integer: int intValue()>();
+
+     label02:
+        $i38 = i42 + 1;
+
+        $i39 = $i38 * i0;
+
+        $r99 = interfaceinvoke r10.<java.util.List: java.lang.Object get(int)>($i39);
+
+        $r100 = (java.lang.Integer) $r99;
+
+        $i40 = virtualinvoke $r100.<java.lang.Integer: int intValue()>();
+
+        if i43 >= $i40 goto label05;
+
+        i44 = 0;
+
+     label03:
+        if i44 >= i3 goto label04;
+
+        $d30 = r11[i42];
+
+        $r101 = r12[i43];
+
+        $d31 = $r101[i44];
+
+        $r102 = virtualinvoke r5.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double[][] getVolatility()>();
+
+        $r103 = $r102[i43];
+
+        $d32 = $r103[i44];
+
+        $d33 = $d31 * $d32;
+
+        $d34 = $d30 + $d33;
+
+        r11[i42] = $d34;
+
+        $i41 = i2 + i42;
+
+        $d36 = r11[$i41];
+
+        $d35 = r13[i43];
+
+        $d37 = $d36 + $d35;
+
+        r11[$i41] = $d37;
+
+        i44 = i44 + 1;
+
+        goto label03;
+
+     label04:
+        i43 = i43 + 1;
+
+        goto label02;
+
+     label05:
+        i42 = i42 + 1;
+
+        goto label01;
+
+     label06:
+        $i5 = 2 * i2;
+
+        r104 = newmultiarray (double)[i1][$i5];
+
+        r105 = newarray (double[][])[i1];
+
+        i45 = 0;
+
+     label07:
+        if i45 >= i1 goto label08;
+
+        $r95 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod METHOD_SWAPTION_LMM>;
+
+        $r94 = r8[i45];
+
+        $r96 = virtualinvoke $r95.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod: double[][] presentValueLMMSensitivity(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProviderInterface)>($r94, $r28);
+
+        r105[i45] = $r96;
+
+        i45 = i45 + 1;
+
+        goto label07;
+
+     label08:
+        r106 = newarray (double[])[i1];
+
+        i46 = 0;
+
+     label09:
+        if i46 >= i1 goto label10;
+
+        $r92 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod METHOD_SWAPTION_LMM>;
+
+        $r91 = r8[i46];
+
+        $r93 = virtualinvoke $r92.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod: double[] presentValueDDSensitivity(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProviderInterface)>($r91, $r28);
+
+        r106[i46] = $r93;
+
+        i46 = i46 + 1;
+
+        goto label09;
+
+     label10:
+        i47 = 0;
+
+     label11:
+        if i47 >= i1 goto label18;
+
+        i48 = 0;
+
+     label12:
+        if i48 >= i2 goto label17;
+
+        $i32 = i48 * i0;
+
+        $r80 = interfaceinvoke r10.<java.util.List: java.lang.Object get(int)>($i32);
+
+        $r81 = (java.lang.Integer) $r80;
+
+        i49 = virtualinvoke $r81.<java.lang.Integer: int intValue()>();
+
+     label13:
+        $i33 = i48 + 1;
+
+        $i34 = $i33 * i0;
+
+        $r82 = interfaceinvoke r10.<java.util.List: java.lang.Object get(int)>($i34);
+
+        $r83 = (java.lang.Integer) $r82;
+
+        $i35 = virtualinvoke $r83.<java.lang.Integer: int intValue()>();
+
+        if i49 >= $i35 goto label16;
+
+        i50 = 0;
+
+     label14:
+        if i50 >= i3 goto label15;
+
+        $r84 = r104[i47];
+
+        $d22 = $r84[i48];
+
+        $r85 = r105[i47];
+
+        $r86 = $r85[i49];
+
+        $d23 = $r86[i50];
+
+        $r87 = virtualinvoke r5.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double[][] getVolatility()>();
+
+        $r88 = $r87[i49];
+
+        $d24 = $r88[i50];
+
+        $d25 = $d23 * $d24;
+
+        $d26 = $d22 + $d25;
+
+        $r84[i48] = $d26;
+
+        $r89 = r104[i47];
+
+        $i36 = i2 + i48;
+
+        $d28 = $r89[$i36];
+
+        $r90 = r106[i47];
+
+        $d27 = $r90[i49];
+
+        $d29 = $d28 + $d27;
+
+        $r89[$i36] = $d29;
+
+        i50 = i50 + 1;
+
+        goto label14;
+
+     label15:
+        i49 = i49 + 1;
+
+        goto label13;
+
+     label16:
+        i48 = i48 + 1;
+
+        goto label12;
+
+     label17:
+        i47 = i47 + 1;
+
+        goto label11;
+
+     label18:
+        $i6 = 3 * i2;
+
+        r107 = newmultiarray (double)[i1][$i6];
+
+        i51 = 0;
+
+     label19:
+        if i51 >= i2 goto label22;
+
+        i52 = 0;
+
+     label20:
+        if i52 >= i0 goto label21;
+
+        $i20 = i51 * i0;
+
+        $i21 = $i20 + i52;
+
+        $r56 = r8[$i21];
+
+        $r55 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSensitivitySABRSwaptionCalculator PVSSSSC>;
+
+        $r57 = virtualinvoke $r56.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r55, r2);
+
+        r108 = (com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle) $r57;
+
+        $r58 = virtualinvoke r108.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: com.opengamma.analytics.util.amount.SurfaceValue getAlpha()>();
+
+        $r59 = virtualinvoke $r58.<com.opengamma.analytics.util.amount.SurfaceValue: java.util.HashMap getMap()>();
+
+        r109 = virtualinvoke $r59.<java.util.HashMap: java.util.Set keySet()>();
+
+        $i22 = interfaceinvoke r109.<java.util.Set: int size()>();
+
+        $r60 = newarray (com.opengamma.util.tuple.DoublesPair)[$i22];
+
+        $r61 = interfaceinvoke r109.<java.util.Set: java.lang.Object[] toArray(java.lang.Object[])>($r60);
+
+        r110 = (com.opengamma.util.tuple.DoublesPair[]) $r61;
+
+        $i23 = i51 * i0;
+
+        $i24 = $i23 + i52;
+
+        $r62 = r107[$i24];
+
+        $d17 = $r62[i51];
+
+        $r63 = virtualinvoke r108.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: com.opengamma.analytics.util.amount.SurfaceValue getAlpha()>();
+
+        $r64 = virtualinvoke $r63.<com.opengamma.analytics.util.amount.SurfaceValue: java.util.HashMap getMap()>();
+
+        $r65 = r110[0];
+
+        $r66 = virtualinvoke $r64.<java.util.HashMap: java.lang.Object get(java.lang.Object)>($r65);
+
+        $r67 = (java.lang.Double) $r66;
+
+        $d18 = virtualinvoke $r67.<java.lang.Double: double doubleValue()>();
+
+        $d19 = $d17 + $d18;
+
+        $r62[i51] = $d19;
+
+        $i25 = i51 * i0;
+
+        $i26 = $i25 + i52;
+
+        $r68 = r107[$i26];
+
+        $i27 = i2 + i51;
+
+        $r69 = virtualinvoke r108.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: com.opengamma.analytics.util.amount.SurfaceValue getRho()>();
+
+        $r70 = virtualinvoke $r69.<com.opengamma.analytics.util.amount.SurfaceValue: java.util.HashMap getMap()>();
+
+        $r71 = r110[0];
+
+        $r72 = virtualinvoke $r70.<java.util.HashMap: java.lang.Object get(java.lang.Object)>($r71);
+
+        $r73 = (java.lang.Double) $r72;
+
+        $d20 = virtualinvoke $r73.<java.lang.Double: double doubleValue()>();
+
+        $r68[$i27] = $d20;
+
+        $i28 = i51 * i0;
+
+        $i29 = $i28 + i52;
+
+        $r74 = r107[$i29];
+
+        $i30 = 2 * i2;
+
+        $i31 = $i30 + i51;
+
+        $r75 = virtualinvoke r108.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: com.opengamma.analytics.util.amount.SurfaceValue getNu()>();
+
+        $r76 = virtualinvoke $r75.<com.opengamma.analytics.util.amount.SurfaceValue: java.util.HashMap getMap()>();
+
+        $r77 = r110[0];
+
+        $r78 = virtualinvoke $r76.<java.util.HashMap: java.lang.Object get(java.lang.Object)>($r77);
+
+        $r79 = (java.lang.Double) $r78;
+
+        $d21 = virtualinvoke $r79.<java.lang.Double: double doubleValue()>();
+
+        $r74[$i31] = $d21;
+
+        i52 = i52 + 1;
+
+        goto label20;
+
+     label21:
+        i51 = i51 + 1;
+
+        goto label19;
+
+     label22:
+        $i8 = 2 * i2;
+
+        $i7 = 3 * i2;
+
+        r111 = newmultiarray (double)[$i8][$i7];
+
+        i53 = 0;
+
+     label23:
+        $i9 = 2 * i2;
+
+        if i53 >= $i9 goto label28;
+
+        i54 = 0;
+
+     label24:
+        $i19 = 3 * i2;
+
+        if i54 >= $i19 goto label27;
+
+        i55 = 0;
+
+     label25:
+        if i55 >= i1 goto label26;
+
+        $r52 = r111[i53];
+
+        $d15 = $r52[i54];
+
+        $r53 = r104[i55];
+
+        $d11 = $r53[i53];
+
+        $d13 = -2.0 * $d11;
+
+        $r54 = r107[i55];
+
+        $d12 = $r54[i54];
+
+        $d14 = $d13 * $d12;
+
+        $d16 = $d15 + $d14;
+
+        $r52[i54] = $d16;
+
+        i55 = i55 + 1;
+
+        goto label25;
+
+     label26:
+        i54 = i54 + 1;
+
+        goto label24;
+
+     label27:
+        i53 = i53 + 1;
+
+        goto label23;
+
+     label28:
+        $i11 = 2 * i2;
+
+        $i10 = 2 * i2;
+
+        r112 = newmultiarray (double)[$i11][$i10];
+
+        i56 = 0;
+
+     label29:
+        $i12 = 2 * i2;
+
+        if i56 >= $i12 goto label34;
+
+        i57 = 0;
+
+     label30:
+        $i18 = 2 * i2;
+
+        if i57 >= $i18 goto label33;
+
+        i58 = 0;
+
+     label31:
+        if i58 >= i1 goto label32;
+
+        $r49 = r112[i56];
+
+        $d9 = $r49[i57];
+
+        $r50 = r104[i58];
+
+        $d5 = $r50[i56];
+
+        $d7 = 2.0 * $d5;
+
+        $r51 = r104[i58];
+
+        $d6 = $r51[i57];
+
+        $d8 = $d7 * $d6;
+
+        $d10 = $d9 + $d8;
+
+        $r49[i57] = $d10;
+
+        i58 = i58 + 1;
+
+        goto label31;
+
+     label32:
+        i57 = i57 + 1;
+
+        goto label30;
+
+     label33:
+        i56 = i56 + 1;
+
+        goto label29;
+
+     label34:
+        $r31 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r31.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r111);
+
+        $r32 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r32.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r112);
+
+        $r34 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra ALGEBRA>;
+
+        $r35 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra ALGEBRA>;
+
+        $r33 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra ALGEBRA>;
+
+        $r36 = virtualinvoke $r33.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.DoubleMatrix2D getInverse(com.opengamma.analytics.math.matrix.Matrix)>($r32);
+
+        $r37 = virtualinvoke $r35.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>($r36, $r31);
+
+        $r38 = virtualinvoke $r34.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix scale(com.opengamma.analytics.math.matrix.Matrix,double)>($r37, -1.0);
+
+        r115 = (com.opengamma.analytics.math.matrix.DoubleMatrix2D) $r38;
+
+        $r39 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r39.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r11);
+
+        $r41 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra ALGEBRA>;
+
+        $r42 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra ALGEBRA>;
+
+        $r40 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra ALGEBRA>;
+
+        $r43 = virtualinvoke $r40.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.DoubleMatrix2D getTranspose(com.opengamma.analytics.math.matrix.Matrix)>(r115);
+
+        $r44 = virtualinvoke $r42.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>($r43, $r39);
+
+        r15 = virtualinvoke $r41.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.DoubleMatrix2D getTranspose(com.opengamma.analytics.math.matrix.Matrix)>($r44);
+
+        $r45 = virtualinvoke r15.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: double[][] getData()>();
+
+        r16 = $r45[0];
+
+        $r46 = new com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle;
+
+        specialinvoke $r46.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void <init>()>();
+
+        i59 = 0;
+
+     label35:
+        if i59 >= i2 goto label36;
+
+        $i13 = i59 * i0;
+
+        $r47 = r8[$i13];
+
+        $d0 = virtualinvoke $r47.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getTimeToExpiry()>();
+
+        $i14 = i59 * i0;
+
+        $r48 = r8[$i14];
+
+        $d1 = virtualinvoke $r48.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getMaturityTime()>();
+
+        r18 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d0, $d1);
+
+        $d2 = r16[i59];
+
+        virtualinvoke $r46.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void addAlpha(com.opengamma.util.tuple.DoublesPair,double)>(r18, $d2);
+
+        $i15 = i2 + i59;
+
+        $d3 = r16[$i15];
+
+        virtualinvoke $r46.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void addRho(com.opengamma.util.tuple.DoublesPair,double)>(r18, $d3);
+
+        $i16 = 2 * i2;
+
+        $i17 = $i16 + i59;
+
+        $d4 = r16[$i17];
+
+        virtualinvoke $r46.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void addNu(com.opengamma.util.tuple.DoublesPair,double)>(r18, $d4);
+
+        i59 = i59 + 1;
+
+        goto label35;
+
+     label36:
+        return $r46;
+    }
+
+    public com.opengamma.util.tuple.Triple presentValueAndSensitivity(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor, com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor r1, $r70, $r73, $r81, $r82, $r90, $r125, $r128;
+        com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface r2;
+        com.opengamma.util.money.Currency r3;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface r4;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, $i25, $i26, $i27, $i28, $i29, $i30, $i31, $i32, $i33, $i34, $i35, $i36, $i37, $i38, $i39, $i40, $i41, $i42, $i43, $i44, $i45, $i46, $i47, i48, i49, i50, i51, i52, i53, i54, i55, i56, i57, i58, i59, i60, i61, i62, i63, i64, i65, i66, i67, i68, i69, i70, i71;
+        com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters r5, $r24;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor[] r8;
+        com.opengamma.util.money.MultipleCurrencyAmount r10;
+        java.util.List r11;
+        double[] r12, r14, r18, $r23, $r27, $r63, $r83, $r84, $r85, $r86, $r87, $r88, $r96, $r102, $r108, $r118, $r120, $r122, $r123, $r124, $r127, $r135, $r137;
+        double[][] r13, $r47, $r119, $r121, $r130, $r136, r138, r140, r141, r145, r146;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D r15, r17, $r34, $r35, $r45, r149;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity[] r20, r151, r152, r153, r154;
+        com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationObjective $r25;
+        com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationEngine $r26;
+        com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborBasketMethod $r28;
+        com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator $r29;
+        com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProvider $r30;
+        com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod $r31, $r32, $r33, $r49, $r74, $r126, $r129;
+        com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra $r36, $r37, $r38, $r42, $r43, $r44;
+        com.opengamma.analytics.math.matrix.Matrix $r39, $r40, $r46;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r41;
+        com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle $r48, r142;
+        com.opengamma.util.tuple.Triple $r50;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity $r51, $r52, $r53, $r54, $r56, $r57, $r59, $r60, $r61, $r62, $r64, $r65, $r66, $r67, $r68, $r72, $r75, $r76, $r77, $r78, $r79, $r80, r155;
+        int[] $r55;
+        java.lang.Double $r58, $r101, $r107, $r113;
+        com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueCurveSensitivitySABRSwaptionCalculator $r69;
+        java.lang.Object $r71, $r91, $r100, $r106, $r112, $r114, $r116, $r131, $r133;
+        com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSensitivitySABRSwaptionCalculator $r89;
+        com.opengamma.analytics.util.amount.SurfaceValue $r92, $r97, $r103, $r109;
+        java.util.HashMap $r93, $r98, $r104, $r110;
+        com.opengamma.util.tuple.DoublesPair[] $r94, r144;
+        java.lang.Object[] $r95;
+        com.opengamma.util.tuple.DoublesPair $r99, $r105, $r111, r150;
+        java.lang.Integer $r115, $r117, $r132, $r134;
+        double[][][] r139;
+        java.util.Set r143;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Swaption");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "SABR swaption provider");
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        r4 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.SABRSwaptionProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r23 = r0.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: double[] _strikeMoneyness>;
+
+        i0 = lengthof $r23;
+
+        $r24 = r0.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters _parametersInit>;
+
+        r5 = virtualinvoke $r24.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters copy()>();
+
+        $r25 = new com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationObjective;
+
+        specialinvoke $r25.<com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationObjective: void <init>(com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters,com.opengamma.util.money.Currency)>(r5, r3);
+
+        $r26 = new com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationEngine;
+
+        specialinvoke $r26.<com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationEngine: void <init>(com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationObjective,int)>($r25, i0);
+
+        $r28 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborBasketMethod METHOD_BASKET>;
+
+        $r27 = r0.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: double[] _strikeMoneyness>;
+
+        r8 = virtualinvoke $r28.<com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborBasketMethod: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor[] calibrationBasketFixedLegPeriod(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,double[])>(r1, $r27);
+
+        $r29 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator PVSSC>;
+
+        virtualinvoke $r26.<com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationEngine: void addInstrument(com.opengamma.analytics.financial.interestrate.InstrumentDerivative[],com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)>(r8, $r29);
+
+        virtualinvoke $r26.<com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationEngine: void calibrate(com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>(r2);
+
+        $r30 = new com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProvider;
+
+        specialinvoke $r30.<com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProvider: void <init>(com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface,com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters,com.opengamma.util.money.Currency)>(r4, r5, r3);
+
+        $r31 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod METHOD_SWAPTION_LMM>;
+
+        r10 = virtualinvoke $r31.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod: com.opengamma.util.money.MultipleCurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProviderInterface)>(r1, $r30);
+
+        i1 = lengthof r8;
+
+        i2 = i1 / i0;
+
+        i3 = virtualinvoke r5.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: int getNbFactor()>();
+
+        r11 = virtualinvoke $r26.<com.opengamma.analytics.financial.provider.method.SuccessiveLeastSquareLMMDDCalibrationEngine: java.util.List getInstrumentIndex()>();
+
+        $i4 = 2 * i2;
+
+        r12 = newarray (double)[$i4];
+
+        $r32 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod METHOD_SWAPTION_LMM>;
+
+        r13 = virtualinvoke $r32.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod: double[][] presentValueLMMSensitivity(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProviderInterface)>(r1, $r30);
+
+        $r33 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod METHOD_SWAPTION_LMM>;
+
+        r14 = virtualinvoke $r33.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod: double[] presentValueDDSensitivity(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProviderInterface)>(r1, $r30);
+
+        i48 = 0;
+
+     label01:
+        if i48 >= i2 goto label06;
+
+        $i43 = i48 * i0;
+
+        $r131 = interfaceinvoke r11.<java.util.List: java.lang.Object get(int)>($i43);
+
+        $r132 = (java.lang.Integer) $r131;
+
+        i49 = virtualinvoke $r132.<java.lang.Integer: int intValue()>();
+
+     label02:
+        $i44 = i48 + 1;
+
+        $i45 = $i44 * i0;
+
+        $r133 = interfaceinvoke r11.<java.util.List: java.lang.Object get(int)>($i45);
+
+        $r134 = (java.lang.Integer) $r133;
+
+        $i46 = virtualinvoke $r134.<java.lang.Integer: int intValue()>();
+
+        if i49 >= $i46 goto label05;
+
+        i50 = 0;
+
+     label03:
+        if i50 >= i3 goto label04;
+
+        $d35 = r12[i48];
+
+        $r135 = r13[i49];
+
+        $d36 = $r135[i50];
+
+        $r136 = virtualinvoke r5.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double[][] getVolatility()>();
+
+        $r137 = $r136[i49];
+
+        $d37 = $r137[i50];
+
+        $d38 = $d36 * $d37;
+
+        $d39 = $d35 + $d38;
+
+        r12[i48] = $d39;
+
+        $i47 = i2 + i48;
+
+        $d41 = r12[$i47];
+
+        $d40 = r14[i49];
+
+        $d42 = $d41 + $d40;
+
+        r12[$i47] = $d42;
+
+        i50 = i50 + 1;
+
+        goto label03;
+
+     label04:
+        i49 = i49 + 1;
+
+        goto label02;
+
+     label05:
+        i48 = i48 + 1;
+
+        goto label01;
+
+     label06:
+        $i5 = 2 * i2;
+
+        r138 = newmultiarray (double)[i1][$i5];
+
+        r139 = newarray (double[][])[i1];
+
+        i51 = 0;
+
+     label07:
+        if i51 >= i1 goto label08;
+
+        $r129 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod METHOD_SWAPTION_LMM>;
+
+        $r128 = r8[i51];
+
+        $r130 = virtualinvoke $r129.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod: double[][] presentValueLMMSensitivity(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProviderInterface)>($r128, $r30);
+
+        r139[i51] = $r130;
+
+        i51 = i51 + 1;
+
+        goto label07;
+
+     label08:
+        r140 = newarray (double[])[i1];
+
+        i52 = 0;
+
+     label09:
+        if i52 >= i1 goto label10;
+
+        $r126 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod METHOD_SWAPTION_LMM>;
+
+        $r125 = r8[i52];
+
+        $r127 = virtualinvoke $r126.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod: double[] presentValueDDSensitivity(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProviderInterface)>($r125, $r30);
+
+        r140[i52] = $r127;
+
+        i52 = i52 + 1;
+
+        goto label09;
+
+     label10:
+        i53 = 0;
+
+     label11:
+        if i53 >= i1 goto label18;
+
+        i54 = 0;
+
+     label12:
+        if i54 >= i2 goto label17;
+
+        $i38 = i54 * i0;
+
+        $r114 = interfaceinvoke r11.<java.util.List: java.lang.Object get(int)>($i38);
+
+        $r115 = (java.lang.Integer) $r114;
+
+        i55 = virtualinvoke $r115.<java.lang.Integer: int intValue()>();
+
+     label13:
+        $i39 = i54 + 1;
+
+        $i40 = $i39 * i0;
+
+        $r116 = interfaceinvoke r11.<java.util.List: java.lang.Object get(int)>($i40);
+
+        $r117 = (java.lang.Integer) $r116;
+
+        $i41 = virtualinvoke $r117.<java.lang.Integer: int intValue()>();
+
+        if i55 >= $i41 goto label16;
+
+        i56 = 0;
+
+     label14:
+        if i56 >= i3 goto label15;
+
+        $r118 = r138[i53];
+
+        $d27 = $r118[i54];
+
+        $r119 = r139[i53];
+
+        $r120 = $r119[i55];
+
+        $d28 = $r120[i56];
+
+        $r121 = virtualinvoke r5.<com.opengamma.analytics.financial.model.interestrate.definition.LiborMarketModelDisplacedDiffusionParameters: double[][] getVolatility()>();
+
+        $r122 = $r121[i55];
+
+        $d29 = $r122[i56];
+
+        $d30 = $d28 * $d29;
+
+        $d31 = $d27 + $d30;
+
+        $r118[i54] = $d31;
+
+        $r123 = r138[i53];
+
+        $i42 = i2 + i54;
+
+        $d33 = $r123[$i42];
+
+        $r124 = r140[i53];
+
+        $d32 = $r124[i55];
+
+        $d34 = $d33 + $d32;
+
+        $r123[$i42] = $d34;
+
+        i56 = i56 + 1;
+
+        goto label14;
+
+     label15:
+        i55 = i55 + 1;
+
+        goto label13;
+
+     label16:
+        i54 = i54 + 1;
+
+        goto label12;
+
+     label17:
+        i53 = i53 + 1;
+
+        goto label11;
+
+     label18:
+        $i6 = 3 * i2;
+
+        r141 = newmultiarray (double)[i1][$i6];
+
+        i57 = 0;
+
+     label19:
+        if i57 >= i2 goto label22;
+
+        i58 = 0;
+
+     label20:
+        if i58 >= i0 goto label21;
+
+        $i26 = i57 * i0;
+
+        $i27 = $i26 + i58;
+
+        $r90 = r8[$i27];
+
+        $r89 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSensitivitySABRSwaptionCalculator PVSSSSC>;
+
+        $r91 = virtualinvoke $r90.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r89, r2);
+
+        r142 = (com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle) $r91;
+
+        $r92 = virtualinvoke r142.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: com.opengamma.analytics.util.amount.SurfaceValue getAlpha()>();
+
+        $r93 = virtualinvoke $r92.<com.opengamma.analytics.util.amount.SurfaceValue: java.util.HashMap getMap()>();
+
+        r143 = virtualinvoke $r93.<java.util.HashMap: java.util.Set keySet()>();
+
+        $i28 = interfaceinvoke r143.<java.util.Set: int size()>();
+
+        $r94 = newarray (com.opengamma.util.tuple.DoublesPair)[$i28];
+
+        $r95 = interfaceinvoke r143.<java.util.Set: java.lang.Object[] toArray(java.lang.Object[])>($r94);
+
+        r144 = (com.opengamma.util.tuple.DoublesPair[]) $r95;
+
+        $i29 = i57 * i0;
+
+        $i30 = $i29 + i58;
+
+        $r96 = r141[$i30];
+
+        $d22 = $r96[i57];
+
+        $r97 = virtualinvoke r142.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: com.opengamma.analytics.util.amount.SurfaceValue getAlpha()>();
+
+        $r98 = virtualinvoke $r97.<com.opengamma.analytics.util.amount.SurfaceValue: java.util.HashMap getMap()>();
+
+        $r99 = r144[0];
+
+        $r100 = virtualinvoke $r98.<java.util.HashMap: java.lang.Object get(java.lang.Object)>($r99);
+
+        $r101 = (java.lang.Double) $r100;
+
+        $d23 = virtualinvoke $r101.<java.lang.Double: double doubleValue()>();
+
+        $d24 = $d22 + $d23;
+
+        $r96[i57] = $d24;
+
+        $i31 = i57 * i0;
+
+        $i32 = $i31 + i58;
+
+        $r102 = r141[$i32];
+
+        $i33 = i2 + i57;
+
+        $r103 = virtualinvoke r142.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: com.opengamma.analytics.util.amount.SurfaceValue getRho()>();
+
+        $r104 = virtualinvoke $r103.<com.opengamma.analytics.util.amount.SurfaceValue: java.util.HashMap getMap()>();
+
+        $r105 = r144[0];
+
+        $r106 = virtualinvoke $r104.<java.util.HashMap: java.lang.Object get(java.lang.Object)>($r105);
+
+        $r107 = (java.lang.Double) $r106;
+
+        $d25 = virtualinvoke $r107.<java.lang.Double: double doubleValue()>();
+
+        $r102[$i33] = $d25;
+
+        $i34 = i57 * i0;
+
+        $i35 = $i34 + i58;
+
+        $r108 = r141[$i35];
+
+        $i36 = 2 * i2;
+
+        $i37 = $i36 + i57;
+
+        $r109 = virtualinvoke r142.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: com.opengamma.analytics.util.amount.SurfaceValue getNu()>();
+
+        $r110 = virtualinvoke $r109.<com.opengamma.analytics.util.amount.SurfaceValue: java.util.HashMap getMap()>();
+
+        $r111 = r144[0];
+
+        $r112 = virtualinvoke $r110.<java.util.HashMap: java.lang.Object get(java.lang.Object)>($r111);
+
+        $r113 = (java.lang.Double) $r112;
+
+        $d26 = virtualinvoke $r113.<java.lang.Double: double doubleValue()>();
+
+        $r108[$i37] = $d26;
+
+        i58 = i58 + 1;
+
+        goto label20;
+
+     label21:
+        i57 = i57 + 1;
+
+        goto label19;
+
+     label22:
+        $i8 = 2 * i2;
+
+        $i7 = 3 * i2;
+
+        r145 = newmultiarray (double)[$i8][$i7];
+
+        i59 = 0;
+
+     label23:
+        $i9 = 2 * i2;
+
+        if i59 >= $i9 goto label28;
+
+        i60 = 0;
+
+     label24:
+        $i25 = 3 * i2;
+
+        if i60 >= $i25 goto label27;
+
+        i61 = 0;
+
+     label25:
+        if i61 >= i1 goto label26;
+
+        $r86 = r145[i59];
+
+        $d20 = $r86[i60];
+
+        $r87 = r138[i61];
+
+        $d16 = $r87[i59];
+
+        $d18 = -2.0 * $d16;
+
+        $r88 = r141[i61];
+
+        $d17 = $r88[i60];
+
+        $d19 = $d18 * $d17;
+
+        $d21 = $d20 + $d19;
+
+        $r86[i60] = $d21;
+
+        i61 = i61 + 1;
+
+        goto label25;
+
+     label26:
+        i60 = i60 + 1;
+
+        goto label24;
+
+     label27:
+        i59 = i59 + 1;
+
+        goto label23;
+
+     label28:
+        $i11 = 2 * i2;
+
+        $i10 = 2 * i2;
+
+        r146 = newmultiarray (double)[$i11][$i10];
+
+        i62 = 0;
+
+     label29:
+        $i12 = 2 * i2;
+
+        if i62 >= $i12 goto label34;
+
+        i63 = 0;
+
+     label30:
+        $i24 = 2 * i2;
+
+        if i63 >= $i24 goto label33;
+
+        i64 = 0;
+
+     label31:
+        if i64 >= i1 goto label32;
+
+        $r83 = r146[i62];
+
+        $d14 = $r83[i63];
+
+        $r84 = r138[i64];
+
+        $d10 = $r84[i62];
+
+        $d12 = 2.0 * $d10;
+
+        $r85 = r138[i64];
+
+        $d11 = $r85[i63];
+
+        $d13 = $d12 * $d11;
+
+        $d15 = $d14 + $d13;
+
+        $r83[i63] = $d15;
+
+        i64 = i64 + 1;
+
+        goto label31;
+
+     label32:
+        i63 = i63 + 1;
+
+        goto label30;
+
+     label33:
+        i62 = i62 + 1;
+
+        goto label29;
+
+     label34:
+        $r34 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r34.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r145);
+
+        $r35 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r35.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r146);
+
+        $r36 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra ALGEBRA>;
+
+        r149 = virtualinvoke $r36.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.DoubleMatrix2D getInverse(com.opengamma.analytics.math.matrix.Matrix)>($r35);
+
+        $r38 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra ALGEBRA>;
+
+        $r37 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra ALGEBRA>;
+
+        $r39 = virtualinvoke $r37.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r149, $r34);
+
+        $r40 = virtualinvoke $r38.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix scale(com.opengamma.analytics.math.matrix.Matrix,double)>($r39, -1.0);
+
+        r15 = (com.opengamma.analytics.math.matrix.DoubleMatrix2D) $r40;
+
+        $r41 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r41.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r12);
+
+        $r43 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra ALGEBRA>;
+
+        $r44 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra ALGEBRA>;
+
+        $r42 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra ALGEBRA>;
+
+        $r45 = virtualinvoke $r42.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.DoubleMatrix2D getTranspose(com.opengamma.analytics.math.matrix.Matrix)>(r15);
+
+        $r46 = virtualinvoke $r44.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>($r45, $r41);
+
+        r17 = virtualinvoke $r43.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.DoubleMatrix2D getTranspose(com.opengamma.analytics.math.matrix.Matrix)>($r46);
+
+        $r47 = virtualinvoke r17.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: double[][] getData()>();
+
+        r18 = $r47[0];
+
+        $r48 = new com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle;
+
+        specialinvoke $r48.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void <init>()>();
+
+        i65 = 0;
+
+     label35:
+        if i65 >= i2 goto label36;
+
+        $i19 = i65 * i0;
+
+        $r81 = r8[$i19];
+
+        $d5 = virtualinvoke $r81.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getTimeToExpiry()>();
+
+        $i20 = i65 * i0;
+
+        $r82 = r8[$i20];
+
+        $d6 = virtualinvoke $r82.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getMaturityTime()>();
+
+        r150 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d5, $d6);
+
+        $d7 = r18[i65];
+
+        virtualinvoke $r48.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void addAlpha(com.opengamma.util.tuple.DoublesPair,double)>(r150, $d7);
+
+        $i21 = i2 + i65;
+
+        $d8 = r18[$i21];
+
+        virtualinvoke $r48.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void addRho(com.opengamma.util.tuple.DoublesPair,double)>(r150, $d8);
+
+        $i22 = 2 * i2;
+
+        $i23 = $i22 + i65;
+
+        $d9 = r18[$i23];
+
+        virtualinvoke $r48.<com.opengamma.analytics.financial.interestrate.PresentValueSABRSensitivityDataBundle: void addNu(com.opengamma.util.tuple.DoublesPair,double)>(r150, $d9);
+
+        i65 = i65 + 1;
+
+        goto label35;
+
+     label36:
+        r151 = newarray (com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity)[i1];
+
+        r152 = newarray (com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity)[i1];
+
+        r20 = newarray (com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity)[i1];
+
+        i66 = 0;
+
+     label37:
+        if i66 >= i1 goto label38;
+
+        $r70 = r8[i66];
+
+        $r69 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueCurveSensitivitySABRSwaptionCalculator PVCSSSC>;
+
+        $r71 = virtualinvoke $r70.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r69, r2);
+
+        $r72 = (com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity) $r71;
+
+        r151[i66] = $r72;
+
+        $r74 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod METHOD_SWAPTION_LMM>;
+
+        $r73 = r8[i66];
+
+        $r75 = virtualinvoke $r74.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity presentValueCurveSensitivity(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProviderInterface)>($r73, $r30);
+
+        r152[i66] = $r75;
+
+        $r77 = r151[i66];
+
+        $r76 = r152[i66];
+
+        $r78 = virtualinvoke $r76.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity multipliedBy(double)>(-1.0);
+
+        $r79 = virtualinvoke $r77.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity plus(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity)>($r78);
+
+        $r80 = virtualinvoke $r79.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity cleaned()>();
+
+        r20[i66] = $r80;
+
+        i66 = i66 + 1;
+
+        goto label37;
+
+     label38:
+        $i13 = 2 * i2;
+
+        r153 = newarray (com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity)[$i13];
+
+        i67 = 0;
+
+     label39:
+        $i14 = 2 * i2;
+
+        if i67 >= $i14 goto label42;
+
+        $r62 = new com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity;
+
+        specialinvoke $r62.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: void <init>()>();
+
+        r153[i67] = $r62;
+
+        i68 = 0;
+
+     label40:
+        if i68 >= i1 goto label41;
+
+        $r65 = r153[i67];
+
+        $r64 = r20[i68];
+
+        $r63 = r138[i68];
+
+        $d3 = $r63[i67];
+
+        $d4 = -2.0 * $d3;
+
+        $r66 = virtualinvoke $r64.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity multipliedBy(double)>($d4);
+
+        $r67 = virtualinvoke $r65.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity plus(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity)>($r66);
+
+        $r68 = virtualinvoke $r67.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity cleaned()>();
+
+        r153[i67] = $r68;
+
+        i68 = i68 + 1;
+
+        goto label40;
+
+     label41:
+        i67 = i67 + 1;
+
+        goto label39;
+
+     label42:
+        $i15 = 2 * i2;
+
+        r154 = newarray (com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity)[$i15];
+
+        i69 = 0;
+
+     label43:
+        $i16 = 2 * i2;
+
+        if i69 >= $i16 goto label46;
+
+        $r54 = new com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity;
+
+        specialinvoke $r54.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: void <init>()>();
+
+        r154[i69] = $r54;
+
+        i70 = 0;
+
+     label44:
+        $i18 = 2 * i2;
+
+        if i70 >= $i18 goto label45;
+
+        $r56 = r154[i69];
+
+        $r57 = r153[i70];
+
+        $r55 = newarray (int)[2];
+
+        $r55[0] = i69;
+
+        $r55[1] = i70;
+
+        $r58 = virtualinvoke r149.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: java.lang.Double getEntry(int[])>($r55);
+
+        $d1 = virtualinvoke $r58.<java.lang.Double: double doubleValue()>();
+
+        $d2 = neg $d1;
+
+        $r59 = virtualinvoke $r57.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity multipliedBy(double)>($d2);
+
+        $r60 = virtualinvoke $r56.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity plus(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity)>($r59);
+
+        $r61 = virtualinvoke $r60.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity cleaned()>();
+
+        r154[i69] = $r61;
+
+        i70 = i70 + 1;
+
+        goto label44;
+
+     label45:
+        i69 = i69 + 1;
+
+        goto label43;
+
+     label46:
+        $r49 = <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod METHOD_SWAPTION_LMM>;
+
+        r155 = virtualinvoke $r49.<com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity presentValueCurveSensitivity(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,com.opengamma.analytics.financial.provider.description.interestrate.LiborMarketModelDisplacedDiffusionProviderInterface)>(r1, $r30);
+
+        i71 = 0;
+
+     label47:
+        $i17 = 2 * i2;
+
+        if i71 >= $i17 goto label48;
+
+        $r51 = r154[i71];
+
+        $d0 = r12[i71];
+
+        $r52 = virtualinvoke $r51.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity multipliedBy(double)>($d0);
+
+        $r53 = virtualinvoke r155.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity plus(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity)>($r52);
+
+        r155 = virtualinvoke $r53.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity cleaned()>();
+
+        i71 = i71 + 1;
+
+        goto label47;
+
+     label48:
+        $r50 = new com.opengamma.util.tuple.Triple;
+
+        specialinvoke $r50.<com.opengamma.util.tuple.Triple: void <init>(java.lang.Object,java.lang.Object,java.lang.Object)>(r10, $r48, r155);
+
+        return $r50;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator $r0;
+        com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueCurveSensitivitySABRSwaptionCalculator $r1;
+        com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSensitivitySABRSwaptionCalculator $r2;
+        com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod $r3;
+        com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborBasketMethod $r4;
+        com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra $r5;
+
+        $r0 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator: com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSwaptionCalculator PVSSC> = $r0;
+
+        $r1 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueCurveSensitivitySABRSwaptionCalculator: com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueCurveSensitivitySABRSwaptionCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueCurveSensitivitySABRSwaptionCalculator PVCSSSC> = $r1;
+
+        $r2 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSensitivitySABRSwaptionCalculator: com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSensitivitySABRSwaptionCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.provider.calculator.sabrswaption.PresentValueSABRSensitivitySABRSwaptionCalculator PVSSSSC> = $r2;
+
+        $r3 = staticinvoke <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborLMMDDMethod METHOD_SWAPTION_LMM> = $r3;
+
+        $r4 = staticinvoke <com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborBasketMethod: com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborBasketMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborBasketMethod METHOD_BASKET> = $r4;
+
+        $r5 = new com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra;
+
+        specialinvoke $r5.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.swaption.provider.SwaptionPhysicalFixedIborSABRLMMLeastSquareMethod: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra ALGEBRA> = $r5;
+
+        return;
+    }
+}

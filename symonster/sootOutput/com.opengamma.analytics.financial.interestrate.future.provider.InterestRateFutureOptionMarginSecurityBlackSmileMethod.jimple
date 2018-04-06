@@ -1,0 +1,796 @@
+public final class com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod extends com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityGenericMethod
+{
+    private static final com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod INSTANCE;
+    private static final com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION;
+    private static final com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod METHOD_FUTURE;
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod r0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityGenericMethod: void <init>()>();
+
+        return;
+    }
+
+    public static com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod getInstance()
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod $r0;
+
+        $r0 = <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod INSTANCE>;
+
+        return $r0;
+    }
+
+    public double priceFromFuturePrice(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity, com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface, double)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface r2;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r7;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity $r8;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r9;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r10;
+        com.opengamma.analytics.math.function.Function1D $r11;
+        java.lang.Object $r12;
+        java.lang.Double $r13;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface;
+
+        d0 := @parameter2: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Option security");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Black data");
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getStrike()>();
+
+        d1 = 1.0 - $d6;
+
+        $r7 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: boolean isCall()>();
+
+        if $z0 != 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        specialinvoke $r7.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>(d1, $d7, $z1);
+
+        d2 = 1.0 - d0;
+
+        $r8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        $d8 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity: double getTradingLastTime()>();
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        d3 = $d8 - $d9;
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        $d11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getStrike()>();
+
+        d4 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface: double getVolatility(double,double,double,double)>($d10, d3, $d11, d0);
+
+        $r9 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r9.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d2, 1.0, d4);
+
+        $r10 = <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: com.opengamma.analytics.math.function.Function1D getPriceFunction(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption)>($r7);
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r9);
+
+        $r13 = (java.lang.Double) $r12;
+
+        d5 = virtualinvoke $r13.<java.lang.Double: double doubleValue()>();
+
+        return d5;
+    }
+
+    public double price(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity, com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface r2;
+        double d0, $d1;
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod $r5;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity $r6;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r7;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Option security");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Black data");
+
+        $r5 = <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod METHOD_FUTURE>;
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        $r7 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        d0 = virtualinvoke $r5.<com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod: double price(com.opengamma.analytics.financial.interestrate.future.derivative.FuturesSecurity,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>($r6, $r7);
+
+        $d1 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: double priceFromFuturePrice(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity,com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface,double)>(r1, r2, d0);
+
+        return $d1;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity priceCurveSensitivity(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity, com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface r2;
+        double d0, d1, d2, d3, d4, d6, d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14;
+        double[] r5;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity r6, $r19;
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod $r9, $r16;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity $r10, $r13, $r17;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r11, $r18;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r12;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r14;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r15;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Option security");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Black data");
+
+        $r9 = <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod METHOD_FUTURE>;
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        $r11 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        d0 = virtualinvoke $r9.<com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod: double price(com.opengamma.analytics.financial.interestrate.future.derivative.FuturesSecurity,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>($r10, $r11);
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getStrike()>();
+
+        d1 = 1.0 - $d8;
+
+        $r12 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: boolean isCall()>();
+
+        if $z0 != 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        specialinvoke $r12.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>(d1, $d9, $z1);
+
+        d2 = 1.0 - d0;
+
+        $r13 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        $d10 = virtualinvoke $r13.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity: double getTradingLastTime()>();
+
+        $d11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        d3 = $d10 - $d11;
+
+        $d12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        $d13 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getStrike()>();
+
+        d4 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface: double getVolatility(double,double,double,double)>($d12, d3, $d13, d0);
+
+        $r14 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r14.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d2, 1.0, d4);
+
+        $r15 = <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        r5 = virtualinvoke $r15.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: double[] getPriceAdjoint(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData)>($r12, $r14);
+
+        $d14 = r5[1];
+
+        d6 = $d14 * 1.0;
+
+        d7 = neg d6;
+
+        $r16 = <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod METHOD_FUTURE>;
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        $r18 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        r6 = virtualinvoke $r16.<com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity priceCurveSensitivity(com.opengamma.analytics.financial.interestrate.future.derivative.FuturesSecurity,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>($r17, $r18);
+
+        $r19 = virtualinvoke r6.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>(d7);
+
+        return $r19;
+    }
+
+    public com.opengamma.analytics.util.amount.SurfaceValue priceBlackSensitivity(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity, com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface r2;
+        double d0, d1, d2, d3, d4, d5, d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14;
+        double[] r5;
+        com.opengamma.util.tuple.DoublesPair r6;
+        com.opengamma.analytics.util.amount.SurfaceValue r7;
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod $r10;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity $r11, $r14;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r12;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r13;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r15;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r16;
+        java.lang.Double $r17;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Option security");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Black data");
+
+        $r10 = <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod METHOD_FUTURE>;
+
+        $r11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        $r12 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        d0 = virtualinvoke $r10.<com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod: double price(com.opengamma.analytics.financial.interestrate.future.derivative.FuturesSecurity,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>($r11, $r12);
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getStrike()>();
+
+        d2 = 1.0 - d1;
+
+        $r13 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: boolean isCall()>();
+
+        if $z0 != 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        specialinvoke $r13.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>(d2, $d8, $z1);
+
+        d3 = 1.0 - d0;
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        $d9 = virtualinvoke $r14.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity: double getTradingLastTime()>();
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        d4 = $d9 - $d10;
+
+        $d11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        $d12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getStrike()>();
+
+        d5 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface: double getVolatility(double,double,double,double)>($d11, d4, $d12, d0);
+
+        $r15 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r15.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d3, 1.0, d5);
+
+        $r16 = <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        r5 = virtualinvoke $r16.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: double[] getPriceAdjoint(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData)>($r13, $r15);
+
+        $d13 = r5[2];
+
+        d7 = $d13 * 1.0;
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        r6 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d14, d1);
+
+        $r17 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d7);
+
+        r7 = staticinvoke <com.opengamma.analytics.util.amount.SurfaceValue: com.opengamma.analytics.util.amount.SurfaceValue 'from'(com.opengamma.util.tuple.DoublesPair,java.lang.Double)>(r6, $r17);
+
+        return r7;
+    }
+
+    public double priceDelta(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity, com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface r2;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12;
+        double[] r5;
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod $r8;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity $r9, $r11;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r10;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r12;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r13;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Option security");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Black data");
+
+        $r8 = <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod METHOD_FUTURE>;
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        d0 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod: double price(com.opengamma.analytics.financial.interestrate.future.derivative.FuturesSecurity,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>($r9, r2);
+
+        $d5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getStrike()>();
+
+        d1 = 1.0 - $d5;
+
+        $r10 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: boolean isCall()>();
+
+        if $z0 != 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        specialinvoke $r10.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>(d1, $d6, $z1);
+
+        d2 = 1.0 - d0;
+
+        $r11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        $d7 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity: double getTradingLastTime()>();
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        d3 = $d7 - $d8;
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getStrike()>();
+
+        d4 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface: double getVolatility(double,double,double,double)>($d9, d3, $d10, d0);
+
+        $r12 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r12.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d2, 1.0, d4);
+
+        $r13 = <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        r5 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: double[] getPriceAdjoint(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData)>($r10, $r12);
+
+        $d11 = r5[1];
+
+        $d12 = neg $d11;
+
+        return $d12;
+    }
+
+    public double priceGamma(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity, com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface r2;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d12;
+        double[] r5, $r16;
+        double[][] r6;
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod $r9;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity $r10, $r13;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r11;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r12;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r14;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r15;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Option security");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Black data");
+
+        $r9 = <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod METHOD_FUTURE>;
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        $r11 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        d0 = virtualinvoke $r9.<com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod: double price(com.opengamma.analytics.financial.interestrate.future.derivative.FuturesSecurity,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>($r10, $r11);
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getStrike()>();
+
+        d2 = 1.0 - d1;
+
+        $r12 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: boolean isCall()>();
+
+        if $z0 != 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        specialinvoke $r12.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>(d2, $d6, $z1);
+
+        d3 = 1.0 - d0;
+
+        $r13 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        $d7 = virtualinvoke $r13.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity: double getTradingLastTime()>();
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        d4 = $d7 - $d8;
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getStrike()>();
+
+        d5 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface: double getVolatility(double,double,double,double)>($d9, d4, $d10, d0);
+
+        $r14 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r14.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d3, 1.0, d5);
+
+        r5 = newarray (double)[3];
+
+        r6 = newmultiarray (double)[3][3];
+
+        $r15 = <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        virtualinvoke $r15.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: double getPriceAdjoint2(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData,double[],double[][])>($r12, $r14, r5, r6);
+
+        $r16 = r6[0];
+
+        $d12 = $r16[0];
+
+        return $d12;
+    }
+
+    public double priceVega(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity, com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface r2;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11;
+        double[] r5;
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod $r6;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity $r7, $r9;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption $r8;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData $r10;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r11;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface;
+
+        $r6 = <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod METHOD_FUTURE>;
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        d0 = virtualinvoke $r6.<com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod: double price(com.opengamma.analytics.financial.interestrate.future.derivative.FuturesSecurity,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>($r7, r2);
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getStrike()>();
+
+        d2 = 1.0 - d1;
+
+        $r8 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption;
+
+        $d6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: boolean isCall()>();
+
+        if $z0 != 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        specialinvoke $r8.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption: void <init>(double,double,boolean)>(d2, $d6, $z1);
+
+        d3 = 1.0 - d0;
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        $d7 = virtualinvoke $r9.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity: double getTradingLastTime()>();
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        d4 = $d7 - $d8;
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getStrike()>();
+
+        d5 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface: double getVolatility(double,double,double,double)>($d9, d4, $d10, d0);
+
+        $r10 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData;
+
+        specialinvoke $r10.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData: void <init>(double,double,double)>(d3, 1.0, d5);
+
+        $r11 = <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION>;
+
+        r5 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: double[] getPriceAdjoint(com.opengamma.analytics.financial.model.option.pricing.analytic.formula.EuropeanVanillaOption,com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackFunctionData)>($r8, $r10);
+
+        $d11 = r5[2];
+
+        return $d11;
+    }
+
+    public double priceTheta(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity, com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface r2;
+        double d0, d1, d2, d3, d4, d5, d6, $d7, $d8, $d9, $d10, $d11, $d12;
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod $r5;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity $r6, $r7;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r8;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount $r9;
+        com.opengamma.util.money.Currency $r10;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r11;
+        java.lang.Double $r12;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "security");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "black");
+
+        $r5 = <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod METHOD_FUTURE>;
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        d0 = virtualinvoke $r5.<com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod: double price(com.opengamma.analytics.financial.interestrate.future.derivative.FuturesSecurity,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>($r6, r2);
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getStrike()>();
+
+        d2 = 1.0 - d1;
+
+        d3 = 1.0 - d0;
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        $d7 = virtualinvoke $r7.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity: double getTradingLastTime()>();
+
+        $d8 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        d4 = $d7 - $d8;
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getStrike()>();
+
+        d5 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface: double getVolatility(double,double,double,double)>($d9, d4, $d10, d0);
+
+        $r8 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r9 = (com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount) $r8;
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r11 = virtualinvoke $r9.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(com.opengamma.util.money.Currency)>($r10);
+
+        $d11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d11);
+
+        d6 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getInterestRate(java.lang.Object)>($r12);
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: boolean isCall()>();
+
+        $d12 = staticinvoke <com.opengamma.analytics.financial.model.volatility.BlackFormulaRepository: double theta(double,double,double,double,boolean,double)>(d3, d2, d4, d5, $z0, d6);
+
+        return $d12;
+    }
+
+    public double impliedVolatility(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity, com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface r2;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6;
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod $r5;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity $r6, $r7;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Option security");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Black data");
+
+        $r5 = <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod METHOD_FUTURE>;
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        d0 = virtualinvoke $r5.<com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod: double price(com.opengamma.analytics.financial.interestrate.future.derivative.FuturesSecurity,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>($r6, r2);
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        $d2 = virtualinvoke $r7.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity: double getTradingLastTime()>();
+
+        $d3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        d1 = $d2 - $d3;
+
+        $d4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getExpirationTime()>();
+
+        $d5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: double getStrike()>();
+
+        $d6 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface: double getVolatility(double,double,double,double)>($d4, d1, $d5, d0);
+
+        return $d6;
+    }
+
+    public double underlyingFuturesPrice(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity, com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface r2;
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod $r3;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity $r4;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r5;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface;
+
+        $r3 = <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod METHOD_FUTURE>;
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureSecurity getUnderlyingFuture()>();
+
+        $r5 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $d0 = virtualinvoke $r3.<com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod: double price(com.opengamma.analytics.financial.interestrate.future.derivative.FuturesSecurity,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>($r4, $r5);
+
+        return $d0;
+    }
+
+    public volatile com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity priceCurveSensitivity(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity, com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface $r3;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity priceCurveSensitivity(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity,com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile double price(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity, com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface $r3;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface) r2;
+
+        $d0 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: double price(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity,com.opengamma.analytics.financial.provider.description.interestrate.BlackSTIRFuturesProviderInterface)>(r1, $r3);
+
+        return $d0;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod $r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction $r1;
+        com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod $r2;
+
+        $r0 = new com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod INSTANCE> = $r0;
+
+        $r1 = new com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.model.option.pricing.analytic.formula.BlackPriceFunction BLACK_FUNCTION> = $r1;
+
+        $r2 = staticinvoke <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureOptionMarginSecurityBlackSmileMethod: com.opengamma.analytics.financial.interestrate.future.provider.InterestRateFutureSecurityDiscountingMethod METHOD_FUTURE> = $r2;
+
+        return;
+    }
+}

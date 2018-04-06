@@ -1,0 +1,245 @@
+public class com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure extends java.lang.Object implements com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripper
+{
+    private static final com.opengamma.analytics.math.matrix.MatrixAlgebra MA;
+    private static final com.opengamma.analytics.math.function.Function1D POSITIVE;
+    private final com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingCore _imp;
+    private final com.opengamma.analytics.math.matrix.DoubleMatrix2D _penalty;
+    private final int _size;
+
+    public void <init>(com.opengamma.analytics.financial.interestrate.capletstripping.MultiCapFloorPricer, com.opengamma.analytics.financial.model.volatility.surface.BasisSplineVolatilityTermStructureProvider, double)
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure r0;
+        com.opengamma.analytics.financial.interestrate.capletstripping.MultiCapFloorPricer r1;
+        com.opengamma.analytics.financial.model.volatility.surface.BasisSplineVolatilityTermStructureProvider r2;
+        double d0;
+        com.opengamma.analytics.financial.model.volatility.discrete.DiscreteVolatilityFunctionProviderFromVolSurface $r4;
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingCore $r5;
+        int $i0, $i1;
+        com.opengamma.analytics.math.matrix.MatrixAlgebra $r6;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D $r7, $r9;
+        com.opengamma.analytics.math.matrix.Matrix $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.capletstripping.MultiCapFloorPricer;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.volatility.surface.BasisSplineVolatilityTermStructureProvider;
+
+        d0 := @parameter2: double;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $r4 = new com.opengamma.analytics.financial.model.volatility.discrete.DiscreteVolatilityFunctionProviderFromVolSurface;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.model.volatility.discrete.DiscreteVolatilityFunctionProviderFromVolSurface: void <init>(com.opengamma.analytics.financial.model.volatility.surface.VolatilitySurfaceProvider)>(r2);
+
+        $r5 = new com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingCore;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingCore: void <init>(com.opengamma.analytics.financial.interestrate.capletstripping.MultiCapFloorPricer,com.opengamma.analytics.financial.model.volatility.discrete.DiscreteVolatilityFunctionProvider)>(r1, $r4);
+
+        r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingCore _imp> = $r5;
+
+        $i0 = virtualinvoke r2.<com.opengamma.analytics.financial.model.volatility.surface.BasisSplineVolatilityTermStructureProvider: int getNumModelParameters()>();
+
+        r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: int _size> = $i0;
+
+        $r6 = <com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: com.opengamma.analytics.math.matrix.MatrixAlgebra MA>;
+
+        $i1 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: int _size>;
+
+        $r7 = staticinvoke <com.opengamma.analytics.math.interpolation.PenaltyMatrixGenerator: com.opengamma.analytics.math.matrix.DoubleMatrix2D getPenaltyMatrix(int,int)>($i1, 2);
+
+        $r8 = virtualinvoke $r6.<com.opengamma.analytics.math.matrix.MatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix scale(com.opengamma.analytics.math.matrix.Matrix,double)>($r7, d0);
+
+        $r9 = (com.opengamma.analytics.math.matrix.DoubleMatrix2D) $r8;
+
+        r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: com.opengamma.analytics.math.matrix.DoubleMatrix2D _penalty> = $r9;
+
+        return;
+    }
+
+    public com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingResult solve(double[], com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType)
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure r0;
+        double[] r1, r3;
+        com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType r2;
+        int i0, $i1;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r6;
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingResult $r7;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "marketValues");
+
+        i0 = lengthof r1;
+
+        r3 = newarray (double)[i0];
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>(r3, 1.0);
+
+        $r6 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        $i1 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: int _size>;
+
+        specialinvoke $r6.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(int,double)>($i1, 0.4);
+
+        $r7 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingResult solve(double[],com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType,double[],com.opengamma.analytics.math.matrix.DoubleMatrix1D)>(r1, r2, r3, $r6);
+
+        return $r7;
+    }
+
+    public com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingResult solve(double[], com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType, double[])
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure r0;
+        double[] r1, r3;
+        com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType r2;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r5;
+        int $i0;
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingResult $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType;
+
+        r3 := @parameter2: double[];
+
+        $r5 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        $i0 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: int _size>;
+
+        specialinvoke $r5.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(int,double)>($i0, 0.4);
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingResult solve(double[],com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType,double[],com.opengamma.analytics.math.matrix.DoubleMatrix1D)>(r1, r2, r3, $r5);
+
+        return $r6;
+    }
+
+    public com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingResult solve(double[], com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType, com.opengamma.analytics.math.matrix.DoubleMatrix1D)
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure r0;
+        double[] r1, r4;
+        com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType r2;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r3;
+        int i0;
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingResult $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType;
+
+        r3 := @parameter2: com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "marketValues");
+
+        i0 = lengthof r1;
+
+        r4 = newarray (double)[i0];
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>(r4, 1.0);
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingResult solve(double[],com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType,double[],com.opengamma.analytics.math.matrix.DoubleMatrix1D)>(r1, r2, r4, r3);
+
+        return $r6;
+    }
+
+    public com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingResult solve(double[], com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType, double[], com.opengamma.analytics.math.matrix.DoubleMatrix1D)
+    {
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure r0;
+        double[] r1, r3;
+        com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType r2, $r5, $r6;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r4;
+        java.lang.IllegalArgumentException $r7;
+        java.lang.StringBuilder $r8, $r9, $r11;
+        java.lang.String $r10, $r12;
+        com.opengamma.analytics.math.function.Function1D $r13, $r17;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D $r14, $r18;
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingCore $r15, $r19;
+        com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingResult $r16, $r20;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType;
+
+        r3 := @parameter2: double[];
+
+        r4 := @parameter3: com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        $r5 = <com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType: com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType PRICE>;
+
+        if r2 != $r5 goto label1;
+
+        $r19 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingCore _imp>;
+
+        $r18 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: com.opengamma.analytics.math.matrix.DoubleMatrix2D _penalty>;
+
+        $r17 = <com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: com.opengamma.analytics.math.function.Function1D POSITIVE>;
+
+        $r20 = virtualinvoke $r19.<com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingCore: com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingResult solveForCapPrices(double[],double[],com.opengamma.analytics.math.matrix.DoubleMatrix1D,com.opengamma.analytics.math.matrix.DoubleMatrix2D,com.opengamma.analytics.math.function.Function1D)>(r1, r3, r4, $r18, $r17);
+
+        return $r20;
+
+     label1:
+        $r6 = <com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType: com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType VOL>;
+
+        if r2 != $r6 goto label2;
+
+        $r15 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingCore _imp>;
+
+        $r14 = r0.<com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: com.opengamma.analytics.math.matrix.DoubleMatrix2D _penalty>;
+
+        $r13 = <com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: com.opengamma.analytics.math.function.Function1D POSITIVE>;
+
+        $r16 = virtualinvoke $r15.<com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingCore: com.opengamma.analytics.financial.interestrate.capletstripping.CapletStrippingResult solveForCapVols(double[],double[],com.opengamma.analytics.math.matrix.DoubleMatrix1D,com.opengamma.analytics.math.matrix.DoubleMatrix2D,com.opengamma.analytics.math.function.Function1D)>(r1, r3, r4, $r14, $r13);
+
+        return $r16;
+
+     label2:
+        $r7 = new java.lang.IllegalArgumentException;
+
+        $r8 = new java.lang.StringBuilder;
+
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>()>();
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Unknown MarketDataType ");
+
+        $r10 = virtualinvoke r2.<com.opengamma.analytics.financial.interestrate.capletstripping.MarketDataType: java.lang.String toString()>();
+
+        $r11 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r10);
+
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r7.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r12);
+
+        throw $r7;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.math.matrix.OGMatrixAlgebra $r0;
+        com.opengamma.analytics.math.minimization.PositiveOrZero $r1;
+
+        $r0 = new com.opengamma.analytics.math.matrix.OGMatrixAlgebra;
+
+        specialinvoke $r0.<com.opengamma.analytics.math.matrix.OGMatrixAlgebra: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: com.opengamma.analytics.math.matrix.MatrixAlgebra MA> = $r0;
+
+        $r1 = new com.opengamma.analytics.math.minimization.PositiveOrZero;
+
+        specialinvoke $r1.<com.opengamma.analytics.math.minimization.PositiveOrZero: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.capletstripping.CapletStripperPSplineTermStructure: com.opengamma.analytics.math.function.Function1D POSITIVE> = $r1;
+
+        return;
+    }
+}

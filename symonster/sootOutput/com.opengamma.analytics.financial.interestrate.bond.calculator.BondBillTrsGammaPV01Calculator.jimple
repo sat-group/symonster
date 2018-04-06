@@ -1,0 +1,671 @@
+public final class com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator extends com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter
+{
+    private static final com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor INSTANCE;
+    private static final com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor PV01_CALCULATOR;
+    private static final double BP1;
+
+    public static com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor getInstance()
+    {
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor $r0;
+
+        $r0 = <com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor INSTANCE>;
+
+        return $r0;
+    }
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator r0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter: void <init>()>();
+
+        return;
+    }
+
+    public java.lang.Double visitBondTotalReturnSwap(com.opengamma.analytics.financial.interestrate.bond.definition.BondTotalReturnSwap, com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator r0;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondTotalReturnSwap r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface r2, r3;
+        com.opengamma.analytics.util.amount.ReferenceAmount r4, r5;
+        com.opengamma.util.money.Currency r6, r10;
+        java.util.Iterator r7;
+        java.util.Map$Entry r8;
+        com.opengamma.util.tuple.Pair r9, $r24, $r31, $r35;
+        double d0, $d1, $d2, $d3, $d4, $d5, d6;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor $r13, $r15;
+        java.lang.Object $r14, $r16, $r21, $r23, $r25, $r30, $r32, $r34, $r36, $r39, $r41, $r46;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity $r17;
+        java.util.HashMap $r18, $r33, $r38;
+        java.util.Set $r19;
+        boolean $z0, $z1;
+        java.lang.Double $r20, $r40, $r42;
+        java.lang.StringBuilder $r22, $r27, $r28, $r44, $r45, $r47, $r48;
+        java.lang.String $r26, $r29, $r49;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r37;
+        java.lang.IllegalStateException $r43;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.bond.definition.BondTotalReturnSwap;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "bondTrs");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "data");
+
+        r3 = staticinvoke <com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator: com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface getBumpedProvider(com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface)>(r2);
+
+        $r13 = <com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor PV01_CALCULATOR>;
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.bond.definition.BondTotalReturnSwap: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r13, r2);
+
+        r4 = (com.opengamma.analytics.util.amount.ReferenceAmount) $r14;
+
+        $r15 = <com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor PV01_CALCULATOR>;
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.bond.definition.BondTotalReturnSwap: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r15, r3);
+
+        r5 = (com.opengamma.analytics.util.amount.ReferenceAmount) $r16;
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.bond.definition.BondTotalReturnSwap: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity getAsset()>();
+
+        r6 = virtualinvoke $r17.<com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity: com.opengamma.util.money.Currency getCurrency()>();
+
+        d6 = 0.0;
+
+        $r18 = virtualinvoke r4.<com.opengamma.analytics.util.amount.ReferenceAmount: java.util.HashMap getMap()>();
+
+        $r19 = virtualinvoke $r18.<java.util.HashMap: java.util.Set entrySet()>();
+
+        r7 = interfaceinvoke $r19.<java.util.Set: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r7.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label3;
+
+        $r21 = interfaceinvoke r7.<java.util.Iterator: java.lang.Object next()>();
+
+        r8 = (java.util.Map$Entry) $r21;
+
+        $r22 = new java.lang.StringBuilder;
+
+        specialinvoke $r22.<java.lang.StringBuilder: void <init>()>();
+
+        $r23 = interfaceinvoke r8.<java.util.Map$Entry: java.lang.Object getKey()>();
+
+        $r24 = (com.opengamma.util.tuple.Pair) $r23;
+
+        $r25 = virtualinvoke $r24.<com.opengamma.util.tuple.Pair: java.lang.Object getFirst()>();
+
+        $r26 = (java.lang.String) $r25;
+
+        $r27 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r26);
+
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("_WithParallelShift");
+
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        $r30 = interfaceinvoke r8.<java.util.Map$Entry: java.lang.Object getKey()>();
+
+        $r31 = (com.opengamma.util.tuple.Pair) $r30;
+
+        $r32 = virtualinvoke $r31.<com.opengamma.util.tuple.Pair: java.lang.Object getSecond()>();
+
+        r9 = staticinvoke <com.opengamma.util.tuple.Pairs: com.opengamma.util.tuple.Pair of(java.lang.Object,java.lang.Object)>($r29, $r32);
+
+        $r33 = virtualinvoke r5.<com.opengamma.analytics.util.amount.ReferenceAmount: java.util.HashMap getMap()>();
+
+        $z1 = virtualinvoke $r33.<java.util.HashMap: boolean containsKey(java.lang.Object)>(r9);
+
+        if $z1 != 0 goto label2;
+
+        $r43 = new java.lang.IllegalStateException;
+
+        $r44 = new java.lang.StringBuilder;
+
+        specialinvoke $r44.<java.lang.StringBuilder: void <init>()>();
+
+        $r45 = virtualinvoke $r44.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Have bumped PV01 for curve / currency pair ");
+
+        $r46 = interfaceinvoke r8.<java.util.Map$Entry: java.lang.Object getKey()>();
+
+        $r47 = virtualinvoke $r45.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r46);
+
+        $r48 = virtualinvoke $r47.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" but no PV01");
+
+        $r49 = virtualinvoke $r48.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r43.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r49);
+
+        throw $r43;
+
+     label2:
+        $r34 = interfaceinvoke r8.<java.util.Map$Entry: java.lang.Object getKey()>();
+
+        $r35 = (com.opengamma.util.tuple.Pair) $r34;
+
+        $r36 = virtualinvoke $r35.<com.opengamma.util.tuple.Pair: java.lang.Object getSecond()>();
+
+        r10 = (com.opengamma.util.money.Currency) $r36;
+
+        $r37 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        d0 = interfaceinvoke $r37.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getFxRate(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>(r10, r6);
+
+        $r38 = virtualinvoke r5.<com.opengamma.analytics.util.amount.ReferenceAmount: java.util.HashMap getMap()>();
+
+        $r39 = virtualinvoke $r38.<java.util.HashMap: java.lang.Object get(java.lang.Object)>(r9);
+
+        $r40 = (java.lang.Double) $r39;
+
+        $d1 = virtualinvoke $r40.<java.lang.Double: double doubleValue()>();
+
+        $r41 = interfaceinvoke r8.<java.util.Map$Entry: java.lang.Object getValue()>();
+
+        $r42 = (java.lang.Double) $r41;
+
+        $d2 = virtualinvoke $r42.<java.lang.Double: double doubleValue()>();
+
+        $d3 = $d1 - $d2;
+
+        $d4 = d0 * $d3;
+
+        $d5 = $d4 / 1.0E-4;
+
+        d6 = d6 + $d5;
+
+        goto label1;
+
+     label3:
+        $r20 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d6);
+
+        return $r20;
+    }
+
+    public java.lang.Double visitBillTotalReturnSwap(com.opengamma.analytics.financial.interestrate.bond.definition.BillTotalReturnSwap, com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator r0;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BillTotalReturnSwap r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface r2, r3;
+        com.opengamma.analytics.util.amount.ReferenceAmount r4, r5;
+        com.opengamma.util.money.Currency r6, r10;
+        java.util.Iterator r7;
+        java.util.Map$Entry r8;
+        com.opengamma.util.tuple.Pair r9, $r24, $r31, $r35;
+        double d0, $d1, $d2, $d3, $d4, $d5, d6;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor $r13, $r15;
+        java.lang.Object $r14, $r16, $r21, $r23, $r25, $r30, $r32, $r34, $r36, $r39, $r41, $r46;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BillSecurity $r17;
+        java.util.HashMap $r18, $r33, $r38;
+        java.util.Set $r19;
+        boolean $z0, $z1;
+        java.lang.Double $r20, $r40, $r42;
+        java.lang.StringBuilder $r22, $r27, $r28, $r44, $r45, $r47, $r48;
+        java.lang.String $r26, $r29, $r49;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r37;
+        java.lang.IllegalStateException $r43;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.bond.definition.BillTotalReturnSwap;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "billTrs");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "data");
+
+        r3 = staticinvoke <com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator: com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface getBumpedProvider(com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface)>(r2);
+
+        $r13 = <com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor PV01_CALCULATOR>;
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.bond.definition.BillTotalReturnSwap: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r13, r2);
+
+        r4 = (com.opengamma.analytics.util.amount.ReferenceAmount) $r14;
+
+        $r15 = <com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor PV01_CALCULATOR>;
+
+        $r16 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.bond.definition.BillTotalReturnSwap: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r15, r3);
+
+        r5 = (com.opengamma.analytics.util.amount.ReferenceAmount) $r16;
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.bond.definition.BillTotalReturnSwap: com.opengamma.analytics.financial.interestrate.bond.definition.BillSecurity getAsset()>();
+
+        r6 = virtualinvoke $r17.<com.opengamma.analytics.financial.interestrate.bond.definition.BillSecurity: com.opengamma.util.money.Currency getCurrency()>();
+
+        d6 = 0.0;
+
+        $r18 = virtualinvoke r4.<com.opengamma.analytics.util.amount.ReferenceAmount: java.util.HashMap getMap()>();
+
+        $r19 = virtualinvoke $r18.<java.util.HashMap: java.util.Set entrySet()>();
+
+        r7 = interfaceinvoke $r19.<java.util.Set: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r7.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label3;
+
+        $r21 = interfaceinvoke r7.<java.util.Iterator: java.lang.Object next()>();
+
+        r8 = (java.util.Map$Entry) $r21;
+
+        $r22 = new java.lang.StringBuilder;
+
+        specialinvoke $r22.<java.lang.StringBuilder: void <init>()>();
+
+        $r23 = interfaceinvoke r8.<java.util.Map$Entry: java.lang.Object getKey()>();
+
+        $r24 = (com.opengamma.util.tuple.Pair) $r23;
+
+        $r25 = virtualinvoke $r24.<com.opengamma.util.tuple.Pair: java.lang.Object getFirst()>();
+
+        $r26 = (java.lang.String) $r25;
+
+        $r27 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r26);
+
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("_WithParallelShift");
+
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        $r30 = interfaceinvoke r8.<java.util.Map$Entry: java.lang.Object getKey()>();
+
+        $r31 = (com.opengamma.util.tuple.Pair) $r30;
+
+        $r32 = virtualinvoke $r31.<com.opengamma.util.tuple.Pair: java.lang.Object getSecond()>();
+
+        r9 = staticinvoke <com.opengamma.util.tuple.Pairs: com.opengamma.util.tuple.Pair of(java.lang.Object,java.lang.Object)>($r29, $r32);
+
+        $r33 = virtualinvoke r5.<com.opengamma.analytics.util.amount.ReferenceAmount: java.util.HashMap getMap()>();
+
+        $z1 = virtualinvoke $r33.<java.util.HashMap: boolean containsKey(java.lang.Object)>(r9);
+
+        if $z1 != 0 goto label2;
+
+        $r43 = new java.lang.IllegalStateException;
+
+        $r44 = new java.lang.StringBuilder;
+
+        specialinvoke $r44.<java.lang.StringBuilder: void <init>()>();
+
+        $r45 = virtualinvoke $r44.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Have bumped PV01 for curve / currency pair ");
+
+        $r46 = interfaceinvoke r8.<java.util.Map$Entry: java.lang.Object getKey()>();
+
+        $r47 = virtualinvoke $r45.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r46);
+
+        $r48 = virtualinvoke $r47.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" but no PV01");
+
+        $r49 = virtualinvoke $r48.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r43.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r49);
+
+        throw $r43;
+
+     label2:
+        $r34 = interfaceinvoke r8.<java.util.Map$Entry: java.lang.Object getKey()>();
+
+        $r35 = (com.opengamma.util.tuple.Pair) $r34;
+
+        $r36 = virtualinvoke $r35.<com.opengamma.util.tuple.Pair: java.lang.Object getSecond()>();
+
+        r10 = (com.opengamma.util.money.Currency) $r36;
+
+        $r37 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        d0 = interfaceinvoke $r37.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface: double getFxRate(com.opengamma.util.money.Currency,com.opengamma.util.money.Currency)>(r10, r6);
+
+        $r38 = virtualinvoke r5.<com.opengamma.analytics.util.amount.ReferenceAmount: java.util.HashMap getMap()>();
+
+        $r39 = virtualinvoke $r38.<java.util.HashMap: java.lang.Object get(java.lang.Object)>(r9);
+
+        $r40 = (java.lang.Double) $r39;
+
+        $d1 = virtualinvoke $r40.<java.lang.Double: double doubleValue()>();
+
+        $r41 = interfaceinvoke r8.<java.util.Map$Entry: java.lang.Object getValue()>();
+
+        $r42 = (java.lang.Double) $r41;
+
+        $d2 = virtualinvoke $r42.<java.lang.Double: double doubleValue()>();
+
+        $d3 = $d1 - $d2;
+
+        $d4 = d0 * $d3;
+
+        $d5 = $d4 / 1.0E-4;
+
+        d6 = d6 + $d5;
+
+        goto label1;
+
+     label3:
+        $r20 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d6);
+
+        return $r20;
+    }
+
+    private static com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface getBumpedProvider(com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface)
+    {
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface r0;
+        com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderDiscount r1, $r10;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount r2, $r11, $r32, $r42, $r52;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8;
+        java.lang.UnsupportedOperationException $r4;
+        java.lang.StringBuilder $r5, $r6, $r8;
+        java.lang.Class $r7;
+        java.lang.String $r9;
+        com.opengamma.analytics.financial.forex.method.FXMatrix $r12;
+        java.util.Map $r13, $r15, $r17, $r19;
+        java.util.Set $r14, $r16, $r18, $r20;
+        java.lang.Object $r21, $r22, $r23, $r25, $r30, $r31, $r33, $r35, $r40, $r41, $r43, $r45, $r50, $r51, $r53, $r55;
+        com.opengamma.util.tuple.Pair $r24;
+        com.opengamma.analytics.ShiftType $r26, $r36, $r46, $r56;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve $r27, $r28, $r37, $r38, $r47, $r48, $r57, $r58;
+        java.lang.IllegalArgumentException $r29, $r39, $r49, $r59;
+        com.opengamma.analytics.financial.instrument.index.IndexON $r34;
+        com.opengamma.analytics.financial.instrument.index.IborIndex $r44;
+        com.opengamma.util.money.Currency $r54;
+        java.util.Iterator r60, r62, r64, r66;
+        java.util.Map$Entry r61, r63, r65, r67;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface;
+
+        $z0 = r0 instanceof com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderDiscount;
+
+        if $z0 == 0 goto label13;
+
+        r1 = (com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderDiscount) r0;
+
+        r2 = virtualinvoke r1.<com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        $r10 = new com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderDiscount;
+
+        $r11 = new com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount;
+
+        $r12 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        specialinvoke $r11.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: void <init>(com.opengamma.analytics.financial.forex.method.FXMatrix)>($r12);
+
+        specialinvoke $r10.<com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderDiscount: void <init>(com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount)>($r11);
+
+        $r13 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: java.util.Map getDiscountingCurves()>();
+
+        $r14 = interfaceinvoke $r13.<java.util.Map: java.util.Set entrySet()>();
+
+        r60 = interfaceinvoke $r14.<java.util.Set: java.util.Iterator iterator()>();
+
+     label01:
+        $z1 = interfaceinvoke r60.<java.util.Iterator: boolean hasNext()>();
+
+        if $z1 == 0 goto label03;
+
+        $r50 = interfaceinvoke r60.<java.util.Iterator: java.lang.Object next()>();
+
+        r61 = (java.util.Map$Entry) $r50;
+
+        $r51 = interfaceinvoke r61.<java.util.Map$Entry: java.lang.Object getValue()>();
+
+        $z8 = $r51 instanceof com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        if $z8 != 0 goto label02;
+
+        $r59 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r59.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Can only bump YieldCurves");
+
+        throw $r59;
+
+     label02:
+        $r52 = virtualinvoke $r10.<com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        $r53 = interfaceinvoke r61.<java.util.Map$Entry: java.lang.Object getKey()>();
+
+        $r54 = (com.opengamma.util.money.Currency) $r53;
+
+        $r55 = interfaceinvoke r61.<java.util.Map$Entry: java.lang.Object getValue()>();
+
+        $r57 = (com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve) $r55;
+
+        $r56 = <com.opengamma.analytics.ShiftType: com.opengamma.analytics.ShiftType ABSOLUTE>;
+
+        $r58 = staticinvoke <com.opengamma.analytics.financial.model.interestrate.curve.YieldCurveUtils: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve withParallelShift(com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve,double,com.opengamma.analytics.ShiftType)>($r57, 1.0E-4, $r56);
+
+        virtualinvoke $r52.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: void setCurve(com.opengamma.util.money.Currency,com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)>($r54, $r58);
+
+        goto label01;
+
+     label03:
+        $r15 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: java.util.Map getForwardIborCurves()>();
+
+        $r16 = interfaceinvoke $r15.<java.util.Map: java.util.Set entrySet()>();
+
+        r62 = interfaceinvoke $r16.<java.util.Set: java.util.Iterator iterator()>();
+
+     label04:
+        $z2 = interfaceinvoke r62.<java.util.Iterator: boolean hasNext()>();
+
+        if $z2 == 0 goto label06;
+
+        $r40 = interfaceinvoke r62.<java.util.Iterator: java.lang.Object next()>();
+
+        r63 = (java.util.Map$Entry) $r40;
+
+        $r41 = interfaceinvoke r63.<java.util.Map$Entry: java.lang.Object getValue()>();
+
+        $z7 = $r41 instanceof com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        if $z7 != 0 goto label05;
+
+        $r49 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r49.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Can only bump YieldCurves");
+
+        throw $r49;
+
+     label05:
+        $r42 = virtualinvoke $r10.<com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        $r43 = interfaceinvoke r63.<java.util.Map$Entry: java.lang.Object getKey()>();
+
+        $r44 = (com.opengamma.analytics.financial.instrument.index.IborIndex) $r43;
+
+        $r45 = interfaceinvoke r63.<java.util.Map$Entry: java.lang.Object getValue()>();
+
+        $r47 = (com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve) $r45;
+
+        $r46 = <com.opengamma.analytics.ShiftType: com.opengamma.analytics.ShiftType ABSOLUTE>;
+
+        $r48 = staticinvoke <com.opengamma.analytics.financial.model.interestrate.curve.YieldCurveUtils: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve withParallelShift(com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve,double,com.opengamma.analytics.ShiftType)>($r47, 1.0E-4, $r46);
+
+        virtualinvoke $r42.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: void setCurve(com.opengamma.analytics.financial.instrument.index.IborIndex,com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)>($r44, $r48);
+
+        goto label04;
+
+     label06:
+        $r17 = virtualinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: java.util.Map getForwardONCurves()>();
+
+        $r18 = interfaceinvoke $r17.<java.util.Map: java.util.Set entrySet()>();
+
+        r64 = interfaceinvoke $r18.<java.util.Set: java.util.Iterator iterator()>();
+
+     label07:
+        $z3 = interfaceinvoke r64.<java.util.Iterator: boolean hasNext()>();
+
+        if $z3 == 0 goto label09;
+
+        $r30 = interfaceinvoke r64.<java.util.Iterator: java.lang.Object next()>();
+
+        r65 = (java.util.Map$Entry) $r30;
+
+        $r31 = interfaceinvoke r65.<java.util.Map$Entry: java.lang.Object getValue()>();
+
+        $z6 = $r31 instanceof com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        if $z6 != 0 goto label08;
+
+        $r39 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r39.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Can only bump YieldCurves");
+
+        throw $r39;
+
+     label08:
+        $r32 = virtualinvoke $r10.<com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderDiscount: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount getMulticurveProvider()>();
+
+        $r33 = interfaceinvoke r65.<java.util.Map$Entry: java.lang.Object getKey()>();
+
+        $r34 = (com.opengamma.analytics.financial.instrument.index.IndexON) $r33;
+
+        $r35 = interfaceinvoke r65.<java.util.Map$Entry: java.lang.Object getValue()>();
+
+        $r37 = (com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve) $r35;
+
+        $r36 = <com.opengamma.analytics.ShiftType: com.opengamma.analytics.ShiftType ABSOLUTE>;
+
+        $r38 = staticinvoke <com.opengamma.analytics.financial.model.interestrate.curve.YieldCurveUtils: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve withParallelShift(com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve,double,com.opengamma.analytics.ShiftType)>($r37, 1.0E-4, $r36);
+
+        virtualinvoke $r32.<com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderDiscount: void setCurve(com.opengamma.analytics.financial.instrument.index.IndexON,com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)>($r34, $r38);
+
+        goto label07;
+
+     label09:
+        $r19 = virtualinvoke r1.<com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderDiscount: java.util.Map getIssuerCurves()>();
+
+        $r20 = interfaceinvoke $r19.<java.util.Map: java.util.Set entrySet()>();
+
+        r66 = interfaceinvoke $r20.<java.util.Set: java.util.Iterator iterator()>();
+
+     label10:
+        $z4 = interfaceinvoke r66.<java.util.Iterator: boolean hasNext()>();
+
+        if $z4 == 0 goto label12;
+
+        $r21 = interfaceinvoke r66.<java.util.Iterator: java.lang.Object next()>();
+
+        r67 = (java.util.Map$Entry) $r21;
+
+        $r22 = interfaceinvoke r67.<java.util.Map$Entry: java.lang.Object getValue()>();
+
+        $z5 = $r22 instanceof com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve;
+
+        if $z5 != 0 goto label11;
+
+        $r29 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r29.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Can only bump YieldCurves");
+
+        throw $r29;
+
+     label11:
+        $r23 = interfaceinvoke r67.<java.util.Map$Entry: java.lang.Object getKey()>();
+
+        $r24 = (com.opengamma.util.tuple.Pair) $r23;
+
+        $r25 = interfaceinvoke r67.<java.util.Map$Entry: java.lang.Object getValue()>();
+
+        $r27 = (com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve) $r25;
+
+        $r26 = <com.opengamma.analytics.ShiftType: com.opengamma.analytics.ShiftType ABSOLUTE>;
+
+        $r28 = staticinvoke <com.opengamma.analytics.financial.model.interestrate.curve.YieldCurveUtils: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve withParallelShift(com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve,double,com.opengamma.analytics.ShiftType)>($r27, 1.0E-4, $r26);
+
+        virtualinvoke $r10.<com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderDiscount: void setCurve(com.opengamma.util.tuple.Pair,com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)>($r24, $r28);
+
+        goto label10;
+
+     label12:
+        return $r10;
+
+     label13:
+        $r4 = new java.lang.UnsupportedOperationException;
+
+        $r5 = new java.lang.StringBuilder;
+
+        specialinvoke $r5.<java.lang.StringBuilder: void <init>()>();
+
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Cannot bump curves of type ");
+
+        $r7 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r8 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r7);
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r4.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>($r9);
+
+        throw $r4;
+    }
+
+    public volatile java.lang.Object visitBillTotalReturnSwap(com.opengamma.analytics.financial.interestrate.bond.definition.BillTotalReturnSwap, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator r0;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BillTotalReturnSwap r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.bond.definition.BillTotalReturnSwap;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator: java.lang.Double visitBillTotalReturnSwap(com.opengamma.analytics.financial.interestrate.bond.definition.BillTotalReturnSwap,com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitBondTotalReturnSwap(com.opengamma.analytics.financial.interestrate.bond.definition.BondTotalReturnSwap, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator r0;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondTotalReturnSwap r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface $r3;
+        java.lang.Double $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.bond.definition.BondTotalReturnSwap;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator: java.lang.Double visitBondTotalReturnSwap(com.opengamma.analytics.financial.interestrate.bond.definition.BondTotalReturnSwap,com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator $r0;
+        com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator $r1;
+        com.opengamma.analytics.financial.provider.calculator.issuer.PresentValueCurveSensitivityIssuerCalculator $r2;
+
+        <com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator: double BP1> = 1.0E-4;
+
+        $r0 = new com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor INSTANCE> = $r0;
+
+        $r1 = new com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator;
+
+        $r2 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.issuer.PresentValueCurveSensitivityIssuerCalculator: com.opengamma.analytics.financial.provider.calculator.issuer.PresentValueCurveSensitivityIssuerCalculator getInstance()>();
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.provider.calculator.discounting.PV01CurveParametersCalculator: void <init>(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)>($r2);
+
+        <com.opengamma.analytics.financial.interestrate.bond.calculator.BondBillTrsGammaPV01Calculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor PV01_CALCULATOR> = $r1;
+
+        return;
+    }
+}

@@ -1,0 +1,270 @@
+public abstract class org.apache.commons.math.distribution.AbstractContinuousDistribution extends org.apache.commons.math.distribution.AbstractDistribution implements org.apache.commons.math.distribution.ContinuousDistribution, java.io.Serializable
+{
+    private static final long serialVersionUID;
+    protected final org.apache.commons.math.random.RandomDataImpl randomData;
+    private double solverAbsoluteAccuracy;
+
+    protected void <init>()
+    {
+        org.apache.commons.math.distribution.AbstractContinuousDistribution r0;
+        org.apache.commons.math.random.RandomDataImpl $r1;
+
+        r0 := @this: org.apache.commons.math.distribution.AbstractContinuousDistribution;
+
+        specialinvoke r0.<org.apache.commons.math.distribution.AbstractDistribution: void <init>()>();
+
+        $r1 = new org.apache.commons.math.random.RandomDataImpl;
+
+        specialinvoke $r1.<org.apache.commons.math.random.RandomDataImpl: void <init>()>();
+
+        r0.<org.apache.commons.math.distribution.AbstractContinuousDistribution: org.apache.commons.math.random.RandomDataImpl randomData> = $r1;
+
+        r0.<org.apache.commons.math.distribution.AbstractContinuousDistribution: double solverAbsoluteAccuracy> = 1.0E-6;
+
+        return;
+    }
+
+    public double density(double) throws org.apache.commons.math.MathRuntimeException
+    {
+        org.apache.commons.math.distribution.AbstractContinuousDistribution r0;
+        double d0;
+        org.apache.commons.math.MathRuntimeException $r1;
+        java.lang.UnsupportedOperationException $r2;
+        java.lang.Object[] $r3;
+        org.apache.commons.math.exception.util.LocalizedFormats $r4;
+
+        r0 := @this: org.apache.commons.math.distribution.AbstractContinuousDistribution;
+
+        d0 := @parameter0: double;
+
+        $r1 = new org.apache.commons.math.MathRuntimeException;
+
+        $r2 = new java.lang.UnsupportedOperationException;
+
+        specialinvoke $r2.<java.lang.UnsupportedOperationException: void <init>()>();
+
+        $r4 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats NO_DENSITY_FOR_THIS_DISTRIBUTION>;
+
+        $r3 = newarray (java.lang.Object)[0];
+
+        specialinvoke $r1.<org.apache.commons.math.MathRuntimeException: void <init>(java.lang.Throwable,org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r2, $r4, $r3);
+
+        throw $r1;
+    }
+
+    public double inverseCumulativeProbability(double) throws org.apache.commons.math.MathException
+    {
+        org.apache.commons.math.distribution.AbstractContinuousDistribution r0;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, d13;
+        byte $b0, $b1, $b2, $b3;
+        java.lang.Object[] $r2;
+        org.apache.commons.math.exception.util.LocalizedFormats $r3;
+        java.lang.Double $r4, $r5, $r6;
+        java.lang.IllegalArgumentException $r7;
+        org.apache.commons.math.distribution.AbstractContinuousDistribution$1 $r8;
+        org.apache.commons.math.ConvergenceException $r9;
+        org.apache.commons.math.MathException $r10;
+        double[] r11;
+
+        r0 := @this: org.apache.commons.math.distribution.AbstractContinuousDistribution;
+
+        d0 := @parameter0: double;
+
+        $b0 = d0 cmpg 0.0;
+
+        if $b0 < 0 goto label1;
+
+        $b1 = d0 cmpl 1.0;
+
+        if $b1 <= 0 goto label2;
+
+     label1:
+        $r3 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats OUT_OF_RANGE_SIMPLE>;
+
+        $r2 = newarray (java.lang.Object)[3];
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r2[0] = $r4;
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $r2[1] = $r5;
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(1.0);
+
+        $r2[2] = $r6;
+
+        $r7 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r3, $r2);
+
+        throw $r7;
+
+     label2:
+        $r8 = new org.apache.commons.math.distribution.AbstractContinuousDistribution$1;
+
+        specialinvoke $r8.<org.apache.commons.math.distribution.AbstractContinuousDistribution$1: void <init>(org.apache.commons.math.distribution.AbstractContinuousDistribution,double)>(r0, d0);
+
+        d1 = virtualinvoke r0.<org.apache.commons.math.distribution.AbstractContinuousDistribution: double getDomainLowerBound(double)>(d0);
+
+        d2 = virtualinvoke r0.<org.apache.commons.math.distribution.AbstractContinuousDistribution: double getDomainUpperBound(double)>(d0);
+
+     label3:
+        $d3 = virtualinvoke r0.<org.apache.commons.math.distribution.AbstractContinuousDistribution: double getInitialDomain(double)>(d0);
+
+        r11 = staticinvoke <org.apache.commons.math.analysis.solvers.UnivariateRealSolverUtils: double[] bracket(org.apache.commons.math.analysis.UnivariateRealFunction,double,double,double)>($r8, $d3, d1, d2);
+
+     label4:
+        goto label8;
+
+     label5:
+        $r9 := @caughtexception;
+
+        $d7 = interfaceinvoke $r8.<org.apache.commons.math.analysis.UnivariateRealFunction: double value(double)>(d1);
+
+        $d8 = staticinvoke <org.apache.commons.math.util.FastMath: double abs(double)>($d7);
+
+        $d9 = virtualinvoke r0.<org.apache.commons.math.distribution.AbstractContinuousDistribution: double getSolverAbsoluteAccuracy()>();
+
+        $b2 = $d8 cmpg $d9;
+
+        if $b2 >= 0 goto label6;
+
+        return d1;
+
+     label6:
+        $d10 = interfaceinvoke $r8.<org.apache.commons.math.analysis.UnivariateRealFunction: double value(double)>(d2);
+
+        $d11 = staticinvoke <org.apache.commons.math.util.FastMath: double abs(double)>($d10);
+
+        $d12 = virtualinvoke r0.<org.apache.commons.math.distribution.AbstractContinuousDistribution: double getSolverAbsoluteAccuracy()>();
+
+        $b3 = $d11 cmpg $d12;
+
+        if $b3 >= 0 goto label7;
+
+        return d2;
+
+     label7:
+        $r10 = new org.apache.commons.math.MathException;
+
+        specialinvoke $r10.<org.apache.commons.math.MathException: void <init>(java.lang.Throwable)>($r9);
+
+        throw $r10;
+
+     label8:
+        $d4 = r11[0];
+
+        $d5 = r11[1];
+
+        $d6 = virtualinvoke r0.<org.apache.commons.math.distribution.AbstractContinuousDistribution: double getSolverAbsoluteAccuracy()>();
+
+        d13 = staticinvoke <org.apache.commons.math.analysis.solvers.UnivariateRealSolverUtils: double solve(org.apache.commons.math.analysis.UnivariateRealFunction,double,double,double)>($r8, $d4, $d5, $d6);
+
+        return d13;
+
+        catch org.apache.commons.math.ConvergenceException from label3 to label4 with label5;
+    }
+
+    public void reseedRandomGenerator(long)
+    {
+        org.apache.commons.math.distribution.AbstractContinuousDistribution r0;
+        long l0;
+        org.apache.commons.math.random.RandomDataImpl $r1;
+
+        r0 := @this: org.apache.commons.math.distribution.AbstractContinuousDistribution;
+
+        l0 := @parameter0: long;
+
+        $r1 = r0.<org.apache.commons.math.distribution.AbstractContinuousDistribution: org.apache.commons.math.random.RandomDataImpl randomData>;
+
+        virtualinvoke $r1.<org.apache.commons.math.random.RandomDataImpl: void reSeed(long)>(l0);
+
+        return;
+    }
+
+    public double sample() throws org.apache.commons.math.MathException
+    {
+        org.apache.commons.math.distribution.AbstractContinuousDistribution r0;
+        org.apache.commons.math.random.RandomDataImpl $r1;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.distribution.AbstractContinuousDistribution;
+
+        $r1 = r0.<org.apache.commons.math.distribution.AbstractContinuousDistribution: org.apache.commons.math.random.RandomDataImpl randomData>;
+
+        $d0 = virtualinvoke $r1.<org.apache.commons.math.random.RandomDataImpl: double nextInversionDeviate(org.apache.commons.math.distribution.ContinuousDistribution)>(r0);
+
+        return $d0;
+    }
+
+    public double[] sample(int) throws org.apache.commons.math.MathException
+    {
+        org.apache.commons.math.distribution.AbstractContinuousDistribution r0;
+        int i0, i1;
+        double[] r1;
+        double $d0;
+        java.lang.Object[] $r2;
+        org.apache.commons.math.exception.util.LocalizedFormats $r3;
+        java.lang.Integer $r4;
+
+        r0 := @this: org.apache.commons.math.distribution.AbstractContinuousDistribution;
+
+        i0 := @parameter0: int;
+
+        if i0 > 0 goto label1;
+
+        $r3 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats NOT_POSITIVE_SAMPLE_SIZE>;
+
+        $r2 = newarray (java.lang.Object)[1];
+
+        $r4 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        $r2[0] = $r4;
+
+        staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r3, $r2);
+
+     label1:
+        r1 = newarray (double)[i0];
+
+        i1 = 0;
+
+     label2:
+        if i1 >= i0 goto label3;
+
+        $d0 = virtualinvoke r0.<org.apache.commons.math.distribution.AbstractContinuousDistribution: double sample()>();
+
+        r1[i1] = $d0;
+
+        i1 = i1 + 1;
+
+        goto label2;
+
+     label3:
+        return r1;
+    }
+
+    protected abstract double getInitialDomain(double);
+
+    protected abstract double getDomainLowerBound(double);
+
+    protected abstract double getDomainUpperBound(double);
+
+    protected double getSolverAbsoluteAccuracy()
+    {
+        org.apache.commons.math.distribution.AbstractContinuousDistribution r0;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.distribution.AbstractContinuousDistribution;
+
+        $d0 = r0.<org.apache.commons.math.distribution.AbstractContinuousDistribution: double solverAbsoluteAccuracy>;
+
+        return $d0;
+    }
+
+    public static void <clinit>()
+    {
+        <org.apache.commons.math.distribution.AbstractContinuousDistribution: long serialVersionUID> = -38038050983108802L;
+
+        return;
+    }
+}

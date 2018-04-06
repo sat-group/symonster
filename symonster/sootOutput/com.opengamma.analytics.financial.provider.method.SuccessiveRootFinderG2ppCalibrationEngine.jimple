@@ -1,0 +1,309 @@
+public class com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine extends com.opengamma.analytics.financial.provider.method.CalibrationEngineWithCalculators
+{
+    private final java.util.List _calibrationTimes;
+    private final com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves _calibrationObjective;
+
+    public void <init>(com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves)
+    {
+        com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine r0;
+        com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves r1;
+        com.opengamma.analytics.financial.forex.method.FXMatrix $r2;
+        com.opengamma.util.money.Currency $r3;
+        java.util.ArrayList $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves;
+
+        $r2 = virtualinvoke r1.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves: com.opengamma.analytics.financial.forex.method.FXMatrix getFXMatrix()>();
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves: com.opengamma.util.money.Currency getCcy()>();
+
+        specialinvoke r0.<com.opengamma.analytics.financial.provider.method.CalibrationEngineWithCalculators: void <init>(com.opengamma.analytics.financial.forex.method.FXMatrix,com.opengamma.util.money.Currency)>($r2, $r3);
+
+        $r4 = new java.util.ArrayList;
+
+        specialinvoke $r4.<java.util.ArrayList: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: java.util.List _calibrationTimes> = $r4;
+
+        r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves _calibrationObjective> = r1;
+
+        return;
+    }
+
+    public void addInstrument(com.opengamma.analytics.financial.interestrate.InstrumentDerivative, com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)
+    {
+        com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative r1;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor r2;
+        boolean $z0, $z4, $z5, $z8, $z9;
+        java.util.List $r3, $r4, $r5, $r8, $r11;
+        java.lang.Double $r6, $r9, $r12;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor $r7;
+        double $d0, $d1;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor $r10;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivative;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        $z0 = r1 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor;
+
+        if $z0 != 0 goto label1;
+
+        $z8 = r1 instanceof com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        if $z8 == 0 goto label2;
+
+     label1:
+        $z9 = 1;
+
+        goto label3;
+
+     label2:
+        $z9 = 0;
+
+     label3:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z9, "Instrument should be cap or swaption.");
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: java.util.List getBasket()>();
+
+        interfaceinvoke $r3.<java.util.List: boolean add(java.lang.Object)>(r1);
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: java.util.List getMethod()>();
+
+        interfaceinvoke $r4.<java.util.List: boolean add(java.lang.Object)>(r2);
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: java.util.List getCalibrationPrices()>();
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        interfaceinvoke $r5.<java.util.List: boolean add(java.lang.Object)>($r6);
+
+        $z4 = r1 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor;
+
+        if $z4 == 0 goto label4;
+
+        $r11 = r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: java.util.List _calibrationTimes>;
+
+        $r10 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor) r1;
+
+        $d1 = virtualinvoke $r10.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingTime()>();
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d1);
+
+        interfaceinvoke $r11.<java.util.List: boolean add(java.lang.Object)>($r12);
+
+     label4:
+        $z5 = r1 instanceof com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        if $z5 == 0 goto label5;
+
+        $r8 = r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: java.util.List _calibrationTimes>;
+
+        $r7 = (com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor) r1;
+
+        $d0 = virtualinvoke $r7.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getTimeToExpiry()>();
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        interfaceinvoke $r8.<java.util.List: boolean add(java.lang.Object)>($r9);
+
+     label5:
+        return;
+    }
+
+    public void addInstrument(com.opengamma.analytics.financial.interestrate.InstrumentDerivative[], com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)
+    {
+        com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative[] r1;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor r2;
+        int i0, i1;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative r4;
+        boolean $z0;
+        java.util.List $r5, $r6, $r7, $r10;
+        java.lang.Double $r8, $r11;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor $r9;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivative[];
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        i0 = lengthof r1;
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        r4 = r1[i1];
+
+        $z0 = r4 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor;
+
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z0, "Calibration instruments should be cap/floor");
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: java.util.List getBasket()>();
+
+        interfaceinvoke $r5.<java.util.List: boolean add(java.lang.Object)>(r4);
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: java.util.List getMethod()>();
+
+        interfaceinvoke $r6.<java.util.List: boolean add(java.lang.Object)>(r2);
+
+        $r7 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: java.util.List getCalibrationPrices()>();
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        interfaceinvoke $r7.<java.util.List: boolean add(java.lang.Object)>($r8);
+
+        $r10 = r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: java.util.List _calibrationTimes>;
+
+        $r9 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor) r4;
+
+        $d0 = virtualinvoke $r9.<com.opengamma.analytics.financial.interestrate.payments.derivative.CapFloorIbor: double getFixingTime()>();
+
+        $r11 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d0);
+
+        interfaceinvoke $r10.<java.util.List: boolean add(java.lang.Object)>($r11);
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return;
+    }
+
+    public void calibrate(com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)
+    {
+        com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine r0;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface r1;
+        int i0, $i1, i2;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative r4;
+        double[] r5;
+        com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves $r6, $r10, $r11, $r15, $r16, $r20, $r21, $r22, $r23, $r27;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r7;
+        java.util.List $r8, $r13, $r17, $r28;
+        com.opengamma.analytics.math.rootfinding.RidderSingleRootFinder $r9;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7;
+        com.opengamma.analytics.math.rootfinding.BracketRoot $r12;
+        java.lang.Object $r14, $r18, $r30;
+        java.lang.Double $r19, $r24, $r25, $r31;
+        com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationObjective $r29;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface;
+
+        virtualinvoke r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: void computeCalibrationPrice(com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface)>(r1);
+
+        $r6 = r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves _calibrationObjective>;
+
+        $r7 = interfaceinvoke r1.<com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        virtualinvoke $r6.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves: void setMulticurves(com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>($r7);
+
+        $r8 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: java.util.List getBasket()>();
+
+        i0 = interfaceinvoke $r8.<java.util.List: int size()>();
+
+        $r9 = new com.opengamma.analytics.math.rootfinding.RidderSingleRootFinder;
+
+        $r10 = r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves _calibrationObjective>;
+
+        $d0 = virtualinvoke $r10.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves: double getFunctionValueAccuracy()>();
+
+        $r11 = r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves _calibrationObjective>;
+
+        $d1 = virtualinvoke $r11.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves: double getVariableAbsoluteAccuracy()>();
+
+        specialinvoke $r9.<com.opengamma.analytics.math.rootfinding.RidderSingleRootFinder: void <init>(double,double)>($d0, $d1);
+
+        $r12 = new com.opengamma.analytics.math.rootfinding.BracketRoot;
+
+        specialinvoke $r12.<com.opengamma.analytics.math.rootfinding.BracketRoot: void <init>()>();
+
+        i2 = 0;
+
+     label1:
+        if i2 >= i0 goto label3;
+
+        $r13 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: java.util.List getBasket()>();
+
+        $r14 = interfaceinvoke $r13.<java.util.List: java.lang.Object get(int)>(i2);
+
+        r4 = (com.opengamma.analytics.financial.interestrate.InstrumentDerivative) $r14;
+
+        $r15 = r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves _calibrationObjective>;
+
+        virtualinvoke $r15.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves: void setInstrument(com.opengamma.analytics.financial.interestrate.InstrumentDerivative)>(r4);
+
+        $r16 = r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves _calibrationObjective>;
+
+        $r17 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: java.util.List getCalibrationPrices()>();
+
+        $r18 = interfaceinvoke $r17.<java.util.List: java.lang.Object get(int)>(i2);
+
+        $r19 = (java.lang.Double) $r18;
+
+        $d2 = virtualinvoke $r19.<java.lang.Double: double doubleValue()>();
+
+        virtualinvoke $r16.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves: void setPrice(double)>($d2);
+
+        $r21 = r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves _calibrationObjective>;
+
+        $r20 = r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves _calibrationObjective>;
+
+        $d3 = virtualinvoke $r20.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves: double getMinimumParameter()>();
+
+        $r22 = r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves _calibrationObjective>;
+
+        $d4 = virtualinvoke $r22.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves: double getMaximumParameter()>();
+
+        r5 = virtualinvoke $r12.<com.opengamma.analytics.math.rootfinding.BracketRoot: double[] getBracketedPoints(com.opengamma.analytics.math.function.Function1D,double,double)>($r21, $d3, $d4);
+
+        $r23 = r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves _calibrationObjective>;
+
+        $d5 = r5[0];
+
+        $r24 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d5);
+
+        $d6 = r5[1];
+
+        $r25 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d6);
+
+        virtualinvoke $r9.<com.opengamma.analytics.math.rootfinding.RidderSingleRootFinder: java.lang.Double getRoot(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r23, $r24, $r25);
+
+        $i1 = i0 - 1;
+
+        if i2 >= $i1 goto label2;
+
+        $r27 = r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderCalibrationObjectiveWithMultiCurves _calibrationObjective>;
+
+        $r29 = (com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationObjective) $r27;
+
+        $r28 = r0.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationEngine: java.util.List _calibrationTimes>;
+
+        $r30 = interfaceinvoke $r28.<java.util.List: java.lang.Object get(int)>(i2);
+
+        $r31 = (java.lang.Double) $r30;
+
+        $d7 = virtualinvoke $r31.<java.lang.Double: double doubleValue()>();
+
+        virtualinvoke $r29.<com.opengamma.analytics.financial.provider.method.SuccessiveRootFinderG2ppCalibrationObjective: void setNextCalibrationTime(double)>($d7);
+
+     label2:
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label3:
+        return;
+    }
+}

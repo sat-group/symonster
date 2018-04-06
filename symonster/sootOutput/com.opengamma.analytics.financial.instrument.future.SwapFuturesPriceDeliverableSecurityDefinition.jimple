@@ -1,0 +1,415 @@
+public class com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition extends com.opengamma.analytics.financial.instrument.future.FuturesSecurityDefinition
+{
+    private final org.threeten.bp.ZonedDateTime _deliveryDate;
+    private final com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition _underlyingSwap;
+    private final double _notional;
+
+    public void <init>(org.threeten.bp.ZonedDateTime, com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition, double)
+    {
+        com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition r0;
+        org.threeten.bp.ZonedDateTime r1, $r10;
+        com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition r2;
+        double d0, $d1, $d2, $d3;
+        com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponFixedDefinition $r4, $r7;
+        com.opengamma.analytics.financial.instrument.payment.PaymentDefinition $r5, $r8;
+        com.opengamma.analytics.financial.instrument.payment.CouponFixedDefinition $r6, $r9;
+        byte $b0;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition;
+
+        r1 := @parameter0: org.threeten.bp.ZonedDateTime;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition;
+
+        d0 := @parameter2: double;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.instrument.future.FuturesSecurityDefinition: void <init>(org.threeten.bp.ZonedDateTime)>(r1);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Swap");
+
+        $r4 = virtualinvoke r2.<com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition: com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponFixedDefinition getFixedLeg()>();
+
+        $r5 = virtualinvoke $r4.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponFixedDefinition: com.opengamma.analytics.financial.instrument.payment.PaymentDefinition getNthPayment(int)>(0);
+
+        $r6 = (com.opengamma.analytics.financial.instrument.payment.CouponFixedDefinition) $r5;
+
+        $d1 = virtualinvoke $r6.<com.opengamma.analytics.financial.instrument.payment.CouponFixedDefinition: double getNotional()>();
+
+        $d2 = $d1 - 1.0;
+
+        $d3 = staticinvoke <java.lang.Math: double abs(double)>($d2);
+
+        $b0 = $d3 cmpg 1.0E-10;
+
+        if $b0 >= 0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Swap should be receiver of notional 1");
+
+        $r7 = virtualinvoke r2.<com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition: com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponFixedDefinition getFixedLeg()>();
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponFixedDefinition: com.opengamma.analytics.financial.instrument.payment.PaymentDefinition getNthPayment(int)>(0);
+
+        $r9 = (com.opengamma.analytics.financial.instrument.payment.CouponFixedDefinition) $r8;
+
+        $r10 = virtualinvoke $r9.<com.opengamma.analytics.financial.instrument.payment.CouponFixedDefinition: org.threeten.bp.ZonedDateTime getAccrualStartDate()>();
+
+        r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: org.threeten.bp.ZonedDateTime _deliveryDate> = $r10;
+
+        r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition _underlyingSwap> = r2;
+
+        r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: double _notional> = d0;
+
+        return;
+    }
+
+    public static com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition 'from'(org.threeten.bp.ZonedDateTime, com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor, org.threeten.bp.Period, double, double)
+    {
+        org.threeten.bp.ZonedDateTime r0, r3;
+        com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor r1;
+        org.threeten.bp.Period r2;
+        double d0, d1;
+        com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition r4;
+        int $i0, $i1;
+        com.opengamma.financial.convention.calendar.Calendar $r7;
+        com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition $r8;
+
+        r0 := @parameter0: org.threeten.bp.ZonedDateTime;
+
+        r1 := @parameter1: com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor;
+
+        r2 := @parameter2: org.threeten.bp.Period;
+
+        d0 := @parameter3: double;
+
+        d1 := @parameter4: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r0, "Effective date");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Generator");
+
+        $i0 = virtualinvoke r1.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor: int getSpotLag()>();
+
+        $i1 = neg $i0;
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor: com.opengamma.financial.convention.calendar.Calendar getCalendar()>();
+
+        r3 = staticinvoke <com.opengamma.analytics.financial.schedule.ScheduleCalculator: org.threeten.bp.ZonedDateTime getAdjustedDate(org.threeten.bp.ZonedDateTime,int,com.opengamma.financial.convention.calendar.Calendar)>(r0, $i1, $r7);
+
+        r4 = staticinvoke <com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition: com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition 'from'(org.threeten.bp.ZonedDateTime,org.threeten.bp.Period,com.opengamma.analytics.financial.instrument.index.GeneratorSwapFixedIbor,double,double,boolean)>(r0, r2, r1, 1.0, d1, 0);
+
+        $r8 = new com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition;
+
+        specialinvoke $r8.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: void <init>(org.threeten.bp.ZonedDateTime,com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition,double)>(r3, r4, d0);
+
+        return $r8;
+    }
+
+    public org.threeten.bp.ZonedDateTime getDeliveryDate()
+    {
+        com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition r0;
+        org.threeten.bp.ZonedDateTime $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition;
+
+        $r1 = r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: org.threeten.bp.ZonedDateTime _deliveryDate>;
+
+        return $r1;
+    }
+
+    public com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition getUnderlyingSwap()
+    {
+        com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition r0;
+        com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition;
+
+        $r1 = r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition _underlyingSwap>;
+
+        return $r1;
+    }
+
+    public double getNotional()
+    {
+        com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition;
+
+        $d0 = r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: double _notional>;
+
+        return $d0;
+    }
+
+    public com.opengamma.analytics.financial.interestrate.future.derivative.SwapFuturesPriceDeliverableSecurity toDerivative(org.threeten.bp.ZonedDateTime)
+    {
+        com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition r0;
+        org.threeten.bp.ZonedDateTime r1, $r3, $r4;
+        double d0, d1, $d2;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon r2;
+        com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition $r5;
+        com.opengamma.analytics.financial.interestrate.future.derivative.SwapFuturesPriceDeliverableSecurity $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition;
+
+        r1 := @parameter0: org.threeten.bp.ZonedDateTime;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: org.threeten.bp.ZonedDateTime getLastTradingDate()>();
+
+        d0 = staticinvoke <com.opengamma.analytics.util.time.TimeCalculator: double getTimeBetween(org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime)>(r1, $r3);
+
+        $r4 = r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: org.threeten.bp.ZonedDateTime _deliveryDate>;
+
+        d1 = staticinvoke <com.opengamma.analytics.util.time.TimeCalculator: double getTimeBetween(org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime)>(r1, $r4);
+
+        $r5 = r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition _underlyingSwap>;
+
+        r2 = virtualinvoke $r5.<com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon toDerivative(org.threeten.bp.ZonedDateTime)>(r1);
+
+        $r6 = new com.opengamma.analytics.financial.interestrate.future.derivative.SwapFuturesPriceDeliverableSecurity;
+
+        $d2 = r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: double _notional>;
+
+        specialinvoke $r6.<com.opengamma.analytics.financial.interestrate.future.derivative.SwapFuturesPriceDeliverableSecurity: void <init>(double,double,com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,double)>(d0, d1, r2, $d2);
+
+        return $r6;
+    }
+
+    public java.lang.Object accept(com.opengamma.analytics.financial.instrument.InstrumentDefinitionVisitor, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition r0;
+        com.opengamma.analytics.financial.instrument.InstrumentDefinitionVisitor r1;
+        java.lang.Object r2, $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.instrument.InstrumentDefinitionVisitor;
+
+        r2 := @parameter1: java.lang.Object;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "visitor");
+
+        $r4 = interfaceinvoke r1.<com.opengamma.analytics.financial.instrument.InstrumentDefinitionVisitor: java.lang.Object visitDeliverableSwapFuturesSecurityDefinition(com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition,java.lang.Object)>(r0, r2);
+
+        return $r4;
+    }
+
+    public java.lang.Object accept(com.opengamma.analytics.financial.instrument.InstrumentDefinitionVisitor)
+    {
+        com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition r0;
+        com.opengamma.analytics.financial.instrument.InstrumentDefinitionVisitor r1;
+        java.lang.Object $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.instrument.InstrumentDefinitionVisitor;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "visitor");
+
+        $r3 = interfaceinvoke r1.<com.opengamma.analytics.financial.instrument.InstrumentDefinitionVisitor: java.lang.Object visitDeliverableSwapFuturesSecurityDefinition(com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition)>(r0);
+
+        return $r3;
+    }
+
+    public java.lang.String toString()
+    {
+        com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition r0;
+        java.lang.StringBuilder $r1, $r2, $r3, $r7, $r8, $r9, $r10, $r14;
+        com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition $r4, $r11;
+        com.opengamma.analytics.financial.instrument.annuity.AnnuityDefinition $r5, $r12;
+        java.lang.String $r6, $r13, r16, r17;
+
+        r0 := @this: com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition;
+
+        $r1 = new java.lang.StringBuilder;
+
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+
+        $r2 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Swap : \n");
+
+        $r3 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("First leg: \n");
+
+        $r4 = r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition _underlyingSwap>;
+
+        $r5 = virtualinvoke $r4.<com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition: com.opengamma.analytics.financial.instrument.annuity.AnnuityDefinition getFirstLeg()>();
+
+        $r6 = virtualinvoke $r5.<com.opengamma.analytics.financial.instrument.annuity.AnnuityDefinition: java.lang.String toString()>();
+
+        $r7 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+
+        r16 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        $r8 = new java.lang.StringBuilder;
+
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>()>();
+
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r16);
+
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\nSecond leg: \n");
+
+        $r11 = r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition _underlyingSwap>;
+
+        $r12 = virtualinvoke $r11.<com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition: com.opengamma.analytics.financial.instrument.annuity.AnnuityDefinition getSecondLeg()>();
+
+        $r13 = virtualinvoke $r12.<com.opengamma.analytics.financial.instrument.annuity.AnnuityDefinition: java.lang.String toString()>();
+
+        $r14 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r13);
+
+        r17 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        return r17;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition r0;
+        long l1, $l4, $l5;
+        org.threeten.bp.ZonedDateTime $r1;
+        int $i2, $i3, $i6, $i7, $i8, $i9, i10, i11, i12, i13;
+        double $d0;
+        com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition;
+
+        i10 = specialinvoke r0.<com.opengamma.analytics.financial.instrument.future.FuturesSecurityDefinition: int hashCode()>();
+
+        $i2 = 31 * i10;
+
+        $r1 = r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: org.threeten.bp.ZonedDateTime _deliveryDate>;
+
+        $i3 = virtualinvoke $r1.<org.threeten.bp.ZonedDateTime: int hashCode()>();
+
+        i11 = $i2 + $i3;
+
+        $d0 = r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: double _notional>;
+
+        l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $i7 = 31 * i11;
+
+        $l4 = l1 >>> 32;
+
+        $l5 = l1 ^ $l4;
+
+        $i6 = (int) $l5;
+
+        i12 = $i7 + $i6;
+
+        $i8 = 31 * i12;
+
+        $r2 = r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition _underlyingSwap>;
+
+        $i9 = virtualinvoke $r2.<com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition: int hashCode()>();
+
+        i13 = $i8 + $i9;
+
+        return i13;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition r0, r2;
+        java.lang.Object r1;
+        boolean $z0, $z1, $z2;
+        java.lang.Class $r3, $r4;
+        org.threeten.bp.ZonedDateTime $r5, $r6;
+        double $d0, $d1;
+        long $l0, $l1;
+        byte $b2;
+        com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition $r7, $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        $z0 = specialinvoke r0.<com.opengamma.analytics.financial.instrument.future.FuturesSecurityDefinition: boolean equals(java.lang.Object)>(r1);
+
+        if $z0 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        if r1 != null goto label3;
+
+        return 0;
+
+     label3:
+        $r3 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r4 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+
+        if $r3 == $r4 goto label4;
+
+        return 0;
+
+     label4:
+        r2 = (com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition) r1;
+
+        $r6 = r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: org.threeten.bp.ZonedDateTime _deliveryDate>;
+
+        $r5 = r2.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: org.threeten.bp.ZonedDateTime _deliveryDate>;
+
+        $z1 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r6, $r5);
+
+        if $z1 != 0 goto label5;
+
+        return 0;
+
+     label5:
+        $d0 = r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: double _notional>;
+
+        $l0 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d0);
+
+        $d1 = r2.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: double _notional>;
+
+        $l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>($d1);
+
+        $b2 = $l0 cmp $l1;
+
+        if $b2 == 0 goto label6;
+
+        return 0;
+
+     label6:
+        $r8 = r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition _underlyingSwap>;
+
+        $r7 = r2.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: com.opengamma.analytics.financial.instrument.swap.SwapFixedIborDefinition _underlyingSwap>;
+
+        $z2 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r8, $r7);
+
+        if $z2 != 0 goto label7;
+
+        return 0;
+
+     label7:
+        return 1;
+    }
+
+    public volatile com.opengamma.analytics.financial.interestrate.InstrumentDerivative toDerivative(org.threeten.bp.ZonedDateTime)
+    {
+        com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition r0;
+        org.threeten.bp.ZonedDateTime r1;
+        com.opengamma.analytics.financial.interestrate.future.derivative.SwapFuturesPriceDeliverableSecurity $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition;
+
+        r1 := @parameter0: org.threeten.bp.ZonedDateTime;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.future.SwapFuturesPriceDeliverableSecurityDefinition: com.opengamma.analytics.financial.interestrate.future.derivative.SwapFuturesPriceDeliverableSecurity toDerivative(org.threeten.bp.ZonedDateTime)>(r1);
+
+        return $r2;
+    }
+}

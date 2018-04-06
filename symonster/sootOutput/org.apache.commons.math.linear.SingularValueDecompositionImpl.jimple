@@ -1,0 +1,712 @@
+public class org.apache.commons.math.linear.SingularValueDecompositionImpl extends java.lang.Object implements org.apache.commons.math.linear.SingularValueDecomposition
+{
+    private int m;
+    private int n;
+    private org.apache.commons.math.linear.EigenDecomposition eigenDecomposition;
+    private double[] singularValues;
+    private org.apache.commons.math.linear.RealMatrix cachedU;
+    private org.apache.commons.math.linear.RealMatrix cachedUt;
+    private org.apache.commons.math.linear.RealMatrix cachedS;
+    private org.apache.commons.math.linear.RealMatrix cachedV;
+    private org.apache.commons.math.linear.RealMatrix cachedVt;
+
+    public void <init>(org.apache.commons.math.linear.RealMatrix) throws org.apache.commons.math.linear.InvalidMatrixException
+    {
+        org.apache.commons.math.linear.SingularValueDecompositionImpl r0;
+        org.apache.commons.math.linear.RealMatrix r1, $r9, $r13, $r14, $r15, $r16, $r19, $r28, $r32, $r33;
+        double[][] r2, r3, r46;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i14, $i15, $i16, $i17, $i18, $i19, $i20, i21, i22, i23, i24, i25, i26, i27, i28, i29;
+        org.apache.commons.math.linear.EigenDecompositionImpl $r4, $r10, $r23, $r29;
+        org.apache.commons.math.linear.Array2DRowRealMatrix $r5, $r11, $r24, $r30;
+        org.apache.commons.math.linear.EigenDecomposition $r6, $r8, $r12, $r25, $r27, $r31;
+        double[] $r7, $r21, $r22, $r26, $r34, $r35, $r36, $r37, $r38, $r39, $r40, $r41, $r42, $r43, $r44, $r45;
+        org.apache.commons.math.linear.RealVector $r17, $r18, $r20, r47;
+        byte $b13;
+
+        r0 := @this: org.apache.commons.math.linear.SingularValueDecompositionImpl;
+
+        r1 := @parameter0: org.apache.commons.math.linear.RealMatrix;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $i0 = interfaceinvoke r1.<org.apache.commons.math.linear.RealMatrix: int getRowDimension()>();
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int m> = $i0;
+
+        $i1 = interfaceinvoke r1.<org.apache.commons.math.linear.RealMatrix: int getColumnDimension()>();
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int n> = $i1;
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedU> = null;
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedS> = null;
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedV> = null;
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedVt> = null;
+
+        r2 = interfaceinvoke r1.<org.apache.commons.math.linear.RealMatrix: double[][] getData()>();
+
+        $i3 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int n>;
+
+        $i2 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int n>;
+
+        r3 = newmultiarray (double)[$i3][$i2];
+
+        i21 = 0;
+
+     label01:
+        $i4 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int n>;
+
+        if i21 >= $i4 goto label06;
+
+        i22 = i21;
+
+     label02:
+        $i19 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int n>;
+
+        if i22 >= $i19 goto label05;
+
+        $r40 = r3[i21];
+
+        $r40[i22] = 0.0;
+
+        i23 = 0;
+
+     label03:
+        $i20 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int m>;
+
+        if i23 >= $i20 goto label04;
+
+        $r43 = r3[i21];
+
+        $d14 = $r43[i22];
+
+        $r44 = r2[i23];
+
+        $d12 = $r44[i21];
+
+        $r45 = r2[i23];
+
+        $d11 = $r45[i22];
+
+        $d13 = $d12 * $d11;
+
+        $d15 = $d14 + $d13;
+
+        $r43[i22] = $d15;
+
+        i23 = i23 + 1;
+
+        goto label03;
+
+     label04:
+        $r42 = r3[i22];
+
+        $r41 = r3[i21];
+
+        $d10 = $r41[i22];
+
+        $r42[i21] = $d10;
+
+        i22 = i22 + 1;
+
+        goto label02;
+
+     label05:
+        i21 = i21 + 1;
+
+        goto label01;
+
+     label06:
+        $i6 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int m>;
+
+        $i5 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int m>;
+
+        r46 = newmultiarray (double)[$i6][$i5];
+
+        i24 = 0;
+
+     label07:
+        $i7 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int m>;
+
+        if i24 >= $i7 goto label12;
+
+        i25 = i24;
+
+     label08:
+        $i17 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int m>;
+
+        if i25 >= $i17 goto label11;
+
+        $r34 = r46[i24];
+
+        $r34[i25] = 0.0;
+
+        i26 = 0;
+
+     label09:
+        $i18 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int n>;
+
+        if i26 >= $i18 goto label10;
+
+        $r37 = r46[i24];
+
+        $d8 = $r37[i25];
+
+        $r38 = r2[i24];
+
+        $d6 = $r38[i26];
+
+        $r39 = r2[i25];
+
+        $d5 = $r39[i26];
+
+        $d7 = $d6 * $d5;
+
+        $d9 = $d8 + $d7;
+
+        $r37[i25] = $d9;
+
+        i26 = i26 + 1;
+
+        goto label09;
+
+     label10:
+        $r36 = r46[i25];
+
+        $r35 = r46[i24];
+
+        $d4 = $r35[i25];
+
+        $r36[i24] = $d4;
+
+        i25 = i25 + 1;
+
+        goto label08;
+
+     label11:
+        i24 = i24 + 1;
+
+        goto label07;
+
+     label12:
+        $i9 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int m>;
+
+        $i8 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int n>;
+
+        if $i9 < $i8 goto label13;
+
+        i27 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int n>;
+
+        $r23 = new org.apache.commons.math.linear.EigenDecompositionImpl;
+
+        $r24 = new org.apache.commons.math.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r24.<org.apache.commons.math.linear.Array2DRowRealMatrix: void <init>(double[][])>(r3);
+
+        specialinvoke $r23.<org.apache.commons.math.linear.EigenDecompositionImpl: void <init>(org.apache.commons.math.linear.RealMatrix,double)>($r24, 1.0);
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.EigenDecomposition eigenDecomposition> = $r23;
+
+        $r25 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.EigenDecomposition eigenDecomposition>;
+
+        $r26 = interfaceinvoke $r25.<org.apache.commons.math.linear.EigenDecomposition: double[] getRealEigenvalues()>();
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues> = $r26;
+
+        $r27 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.EigenDecomposition eigenDecomposition>;
+
+        $r28 = interfaceinvoke $r27.<org.apache.commons.math.linear.EigenDecomposition: org.apache.commons.math.linear.RealMatrix getV()>();
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedV> = $r28;
+
+        $r29 = new org.apache.commons.math.linear.EigenDecompositionImpl;
+
+        $r30 = new org.apache.commons.math.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r30.<org.apache.commons.math.linear.Array2DRowRealMatrix: void <init>(double[][])>(r46);
+
+        specialinvoke $r29.<org.apache.commons.math.linear.EigenDecompositionImpl: void <init>(org.apache.commons.math.linear.RealMatrix,double)>($r30, 1.0);
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.EigenDecomposition eigenDecomposition> = $r29;
+
+        $r31 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.EigenDecomposition eigenDecomposition>;
+
+        $r32 = interfaceinvoke $r31.<org.apache.commons.math.linear.EigenDecomposition: org.apache.commons.math.linear.RealMatrix getV()>();
+
+        $i14 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int m>;
+
+        $i16 = $i14 - 1;
+
+        $i15 = i27 - 1;
+
+        $r33 = interfaceinvoke $r32.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealMatrix getSubMatrix(int,int,int,int)>(0, $i16, 0, $i15);
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedU> = $r33;
+
+        goto label14;
+
+     label13:
+        i27 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int m>;
+
+        $r4 = new org.apache.commons.math.linear.EigenDecompositionImpl;
+
+        $r5 = new org.apache.commons.math.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r5.<org.apache.commons.math.linear.Array2DRowRealMatrix: void <init>(double[][])>(r46);
+
+        specialinvoke $r4.<org.apache.commons.math.linear.EigenDecompositionImpl: void <init>(org.apache.commons.math.linear.RealMatrix,double)>($r5, 1.0);
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.EigenDecomposition eigenDecomposition> = $r4;
+
+        $r6 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.EigenDecomposition eigenDecomposition>;
+
+        $r7 = interfaceinvoke $r6.<org.apache.commons.math.linear.EigenDecomposition: double[] getRealEigenvalues()>();
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues> = $r7;
+
+        $r8 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.EigenDecomposition eigenDecomposition>;
+
+        $r9 = interfaceinvoke $r8.<org.apache.commons.math.linear.EigenDecomposition: org.apache.commons.math.linear.RealMatrix getV()>();
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedU> = $r9;
+
+        $r10 = new org.apache.commons.math.linear.EigenDecompositionImpl;
+
+        $r11 = new org.apache.commons.math.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r11.<org.apache.commons.math.linear.Array2DRowRealMatrix: void <init>(double[][])>(r3);
+
+        specialinvoke $r10.<org.apache.commons.math.linear.EigenDecompositionImpl: void <init>(org.apache.commons.math.linear.RealMatrix,double)>($r11, 1.0);
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.EigenDecomposition eigenDecomposition> = $r10;
+
+        $r12 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.EigenDecomposition eigenDecomposition>;
+
+        $r13 = interfaceinvoke $r12.<org.apache.commons.math.linear.EigenDecomposition: org.apache.commons.math.linear.RealMatrix getV()>();
+
+        $i10 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int n>;
+
+        $i12 = $i10 - 1;
+
+        $i11 = i27 - 1;
+
+        $r14 = interfaceinvoke $r13.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealMatrix getSubMatrix(int,int,int,int)>(0, $i12, 0, $i11);
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedV> = $r14;
+
+     label14:
+        i28 = 0;
+
+     label15:
+        if i28 >= i27 goto label16;
+
+        $r22 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues>;
+
+        $r21 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues>;
+
+        $d1 = $r21[i28];
+
+        $d2 = staticinvoke <org.apache.commons.math.util.FastMath: double abs(double)>($d1);
+
+        $d3 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>($d2);
+
+        $r22[i28] = $d3;
+
+        i28 = i28 + 1;
+
+        goto label15;
+
+     label16:
+        i29 = 0;
+
+     label17:
+        if i29 >= i27 goto label19;
+
+        $r15 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedU>;
+
+        r47 = interfaceinvoke $r15.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealVector getColumnVector(int)>(i29);
+
+        $r16 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedV>;
+
+        $r17 = interfaceinvoke $r16.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealVector getColumnVector(int)>(i29);
+
+        $r18 = interfaceinvoke r1.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealVector operate(org.apache.commons.math.linear.RealVector)>($r17);
+
+        d0 = interfaceinvoke $r18.<org.apache.commons.math.linear.RealVector: double dotProduct(org.apache.commons.math.linear.RealVector)>(r47);
+
+        $b13 = d0 cmpg 0.0;
+
+        if $b13 >= 0 goto label18;
+
+        $r19 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedU>;
+
+        $r20 = interfaceinvoke r47.<org.apache.commons.math.linear.RealVector: org.apache.commons.math.linear.RealVector mapMultiply(double)>(-1.0);
+
+        interfaceinvoke $r19.<org.apache.commons.math.linear.RealMatrix: void setColumnVector(int,org.apache.commons.math.linear.RealVector)>(i29, $r20);
+
+     label18:
+        i29 = i29 + 1;
+
+        goto label17;
+
+     label19:
+        return;
+    }
+
+    public org.apache.commons.math.linear.RealMatrix getU() throws org.apache.commons.math.linear.InvalidMatrixException
+    {
+        org.apache.commons.math.linear.SingularValueDecompositionImpl r0;
+        org.apache.commons.math.linear.RealMatrix $r1;
+
+        r0 := @this: org.apache.commons.math.linear.SingularValueDecompositionImpl;
+
+        $r1 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedU>;
+
+        return $r1;
+    }
+
+    public org.apache.commons.math.linear.RealMatrix getUT() throws org.apache.commons.math.linear.InvalidMatrixException
+    {
+        org.apache.commons.math.linear.SingularValueDecompositionImpl r0;
+        org.apache.commons.math.linear.RealMatrix $r1, $r2, $r3, $r4;
+
+        r0 := @this: org.apache.commons.math.linear.SingularValueDecompositionImpl;
+
+        $r1 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedUt>;
+
+        if $r1 != null goto label1;
+
+        $r3 = virtualinvoke r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix getU()>();
+
+        $r4 = interfaceinvoke $r3.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealMatrix transpose()>();
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedUt> = $r4;
+
+     label1:
+        $r2 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedUt>;
+
+        return $r2;
+    }
+
+    public org.apache.commons.math.linear.RealMatrix getS() throws org.apache.commons.math.linear.InvalidMatrixException
+    {
+        org.apache.commons.math.linear.SingularValueDecompositionImpl r0;
+        org.apache.commons.math.linear.RealMatrix $r1, $r2, $r4;
+        double[] $r3;
+
+        r0 := @this: org.apache.commons.math.linear.SingularValueDecompositionImpl;
+
+        $r1 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedS>;
+
+        if $r1 != null goto label1;
+
+        $r3 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues>;
+
+        $r4 = staticinvoke <org.apache.commons.math.linear.MatrixUtils: org.apache.commons.math.linear.RealMatrix createRealDiagonalMatrix(double[])>($r3);
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedS> = $r4;
+
+     label1:
+        $r2 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedS>;
+
+        return $r2;
+    }
+
+    public double[] getSingularValues() throws org.apache.commons.math.linear.InvalidMatrixException
+    {
+        org.apache.commons.math.linear.SingularValueDecompositionImpl r0;
+        double[] $r1, $r3;
+        java.lang.Object $r2;
+
+        r0 := @this: org.apache.commons.math.linear.SingularValueDecompositionImpl;
+
+        $r1 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues>;
+
+        $r2 = virtualinvoke $r1.<java.lang.Object: java.lang.Object clone()>();
+
+        $r3 = (double[]) $r2;
+
+        return $r3;
+    }
+
+    public org.apache.commons.math.linear.RealMatrix getV() throws org.apache.commons.math.linear.InvalidMatrixException
+    {
+        org.apache.commons.math.linear.SingularValueDecompositionImpl r0;
+        org.apache.commons.math.linear.RealMatrix $r1;
+
+        r0 := @this: org.apache.commons.math.linear.SingularValueDecompositionImpl;
+
+        $r1 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedV>;
+
+        return $r1;
+    }
+
+    public org.apache.commons.math.linear.RealMatrix getVT() throws org.apache.commons.math.linear.InvalidMatrixException
+    {
+        org.apache.commons.math.linear.SingularValueDecompositionImpl r0;
+        org.apache.commons.math.linear.RealMatrix $r1, $r2, $r3, $r4;
+
+        r0 := @this: org.apache.commons.math.linear.SingularValueDecompositionImpl;
+
+        $r1 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedVt>;
+
+        if $r1 != null goto label1;
+
+        $r3 = virtualinvoke r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix getV()>();
+
+        $r4 = interfaceinvoke $r3.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealMatrix transpose()>();
+
+        r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedVt> = $r4;
+
+     label1:
+        $r2 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix cachedVt>;
+
+        return $r2;
+    }
+
+    public org.apache.commons.math.linear.RealMatrix getCovariance(double)
+    {
+        org.apache.commons.math.linear.SingularValueDecompositionImpl r0;
+        double d0, $d2, $d3;
+        int i0, $i1, $i2, i4;
+        double[][] r1;
+        double[] $r3, $r12, $r15;
+        org.apache.commons.math.linear.RealMatrix $r4, $r7, $r8;
+        org.apache.commons.math.linear.SingularValueDecompositionImpl$1 $r5;
+        org.apache.commons.math.linear.Array2DRowRealMatrix $r6;
+        java.lang.Object[] $r9;
+        org.apache.commons.math.exception.util.LocalizedFormats $r10;
+        java.lang.Double $r11, $r13;
+        java.lang.IllegalArgumentException $r14;
+        byte $b3;
+
+        r0 := @this: org.apache.commons.math.linear.SingularValueDecompositionImpl;
+
+        d0 := @parameter0: double;
+
+        $r3 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues>;
+
+        i0 = lengthof $r3;
+
+        i4 = 0;
+
+     label1:
+        if i4 >= i0 goto label2;
+
+        $r15 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues>;
+
+        $d3 = $r15[i4];
+
+        $b3 = $d3 cmpl d0;
+
+        if $b3 < 0 goto label2;
+
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label2:
+        if i4 != 0 goto label3;
+
+        $r10 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats TOO_LARGE_CUTOFF_SINGULAR_VALUE>;
+
+        $r9 = newarray (java.lang.Object)[2];
+
+        $r11 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r9[0] = $r11;
+
+        $r12 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues>;
+
+        $d2 = $r12[0];
+
+        $r13 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d2);
+
+        $r9[1] = $r13;
+
+        $r14 = staticinvoke <org.apache.commons.math.MathRuntimeException: java.lang.IllegalArgumentException createIllegalArgumentException(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r10, $r9);
+
+        throw $r14;
+
+     label3:
+        r1 = newmultiarray (double)[i4][i0];
+
+        $r4 = virtualinvoke r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix getVT()>();
+
+        $r5 = new org.apache.commons.math.linear.SingularValueDecompositionImpl$1;
+
+        specialinvoke $r5.<org.apache.commons.math.linear.SingularValueDecompositionImpl$1: void <init>(org.apache.commons.math.linear.SingularValueDecompositionImpl,double[][])>(r0, r1);
+
+        $i2 = i4 - 1;
+
+        $i1 = i0 - 1;
+
+        interfaceinvoke $r4.<org.apache.commons.math.linear.RealMatrix: double walkInOptimizedOrder(org.apache.commons.math.linear.RealMatrixPreservingVisitor,int,int,int,int)>($r5, 0, $i2, 0, $i1);
+
+        $r6 = new org.apache.commons.math.linear.Array2DRowRealMatrix;
+
+        specialinvoke $r6.<org.apache.commons.math.linear.Array2DRowRealMatrix: void <init>(double[][],boolean)>(r1, 0);
+
+        $r7 = interfaceinvoke $r6.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealMatrix transpose()>();
+
+        $r8 = interfaceinvoke $r7.<org.apache.commons.math.linear.RealMatrix: org.apache.commons.math.linear.RealMatrix multiply(org.apache.commons.math.linear.RealMatrix)>($r6);
+
+        return $r8;
+    }
+
+    public double getNorm() throws org.apache.commons.math.linear.InvalidMatrixException
+    {
+        org.apache.commons.math.linear.SingularValueDecompositionImpl r0;
+        double[] $r1;
+        double $d0;
+
+        r0 := @this: org.apache.commons.math.linear.SingularValueDecompositionImpl;
+
+        $r1 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues>;
+
+        $d0 = $r1[0];
+
+        return $d0;
+    }
+
+    public double getConditionNumber() throws org.apache.commons.math.linear.InvalidMatrixException
+    {
+        org.apache.commons.math.linear.SingularValueDecompositionImpl r0;
+        double[] $r1, $r2, $r3;
+        int $i0, $i1;
+        double $d0, $d1, $d2;
+
+        r0 := @this: org.apache.commons.math.linear.SingularValueDecompositionImpl;
+
+        $r1 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues>;
+
+        $d1 = $r1[0];
+
+        $r3 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues>;
+
+        $r2 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues>;
+
+        $i0 = lengthof $r2;
+
+        $i1 = $i0 - 1;
+
+        $d0 = $r3[$i1];
+
+        $d2 = $d1 / $d0;
+
+        return $d2;
+    }
+
+    public int getRank() throws java.lang.IllegalStateException
+    {
+        org.apache.commons.math.linear.SingularValueDecompositionImpl r0;
+        double d0, $d1, $d2, $d3, $d4;
+        int $i0, $i1, $i2, $i3, $i5, i6;
+        double[] $r1, $r2, $r3;
+        byte $b4;
+
+        r0 := @this: org.apache.commons.math.linear.SingularValueDecompositionImpl;
+
+        $i1 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int m>;
+
+        $i0 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int n>;
+
+        $i2 = staticinvoke <org.apache.commons.math.util.FastMath: int max(int,int)>($i1, $i0);
+
+        $d2 = (double) $i2;
+
+        $r1 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues>;
+
+        $d1 = $r1[0];
+
+        $d3 = staticinvoke <org.apache.commons.math.util.FastMath: double ulp(double)>($d1);
+
+        d0 = $d2 * $d3;
+
+        $r2 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues>;
+
+        $i3 = lengthof $r2;
+
+        i6 = $i3 - 1;
+
+     label1:
+        if i6 < 0 goto label3;
+
+        $r3 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues>;
+
+        $d4 = $r3[i6];
+
+        $b4 = $d4 cmpl d0;
+
+        if $b4 <= 0 goto label2;
+
+        $i5 = i6 + 1;
+
+        return $i5;
+
+     label2:
+        i6 = i6 + -1;
+
+        goto label1;
+
+     label3:
+        return 0;
+    }
+
+    public org.apache.commons.math.linear.DecompositionSolver getSolver()
+    {
+        org.apache.commons.math.linear.SingularValueDecompositionImpl r0;
+        org.apache.commons.math.linear.SingularValueDecompositionImpl$Solver $r1;
+        double[] $r2;
+        org.apache.commons.math.linear.RealMatrix $r3, $r4;
+        int $i0, $i1, $i2, $i3;
+        boolean $z0;
+
+        r0 := @this: org.apache.commons.math.linear.SingularValueDecompositionImpl;
+
+        $r1 = new org.apache.commons.math.linear.SingularValueDecompositionImpl$Solver;
+
+        $r2 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues>;
+
+        $r3 = virtualinvoke r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix getUT()>();
+
+        $r4 = virtualinvoke r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: org.apache.commons.math.linear.RealMatrix getV()>();
+
+        $i0 = virtualinvoke r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int getRank()>();
+
+        $i2 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int m>;
+
+        $i1 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: int n>;
+
+        $i3 = staticinvoke <java.lang.Math: int max(int,int)>($i2, $i1);
+
+        if $i0 != $i3 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        specialinvoke $r1.<org.apache.commons.math.linear.SingularValueDecompositionImpl$Solver: void <init>(double[],org.apache.commons.math.linear.RealMatrix,org.apache.commons.math.linear.RealMatrix,boolean,org.apache.commons.math.linear.SingularValueDecompositionImpl$1)>($r2, $r3, $r4, $z0, null);
+
+        return $r1;
+    }
+
+    static double[] access$000(org.apache.commons.math.linear.SingularValueDecompositionImpl)
+    {
+        org.apache.commons.math.linear.SingularValueDecompositionImpl r0;
+        double[] $r1;
+
+        r0 := @parameter0: org.apache.commons.math.linear.SingularValueDecompositionImpl;
+
+        $r1 = r0.<org.apache.commons.math.linear.SingularValueDecompositionImpl: double[] singularValues>;
+
+        return $r1;
+    }
+}

@@ -1,0 +1,476 @@
+public class com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic extends java.lang.Object
+{
+    private static final org.apache.log4j.Logger LOG;
+    private static final com.opengamma.financial.convention.daycount.DayCount ACT_365;
+    private final double[] _paymentTimes;
+    private final double[] _paymentAmounts;
+    private final int _nPayments;
+    private final double _recoveryRate;
+    private final double _accuredInterest;
+
+    public void <init>(org.threeten.bp.LocalDate, double, com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule, double, com.opengamma.financial.convention.daycount.DayCount)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic r0;
+        org.threeten.bp.LocalDate r1;
+        double d0, d1;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r2;
+        com.opengamma.financial.convention.daycount.DayCount r3, $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic;
+
+        r1 := @parameter0: org.threeten.bp.LocalDate;
+
+        d0 := @parameter1: double;
+
+        r2 := @parameter2: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        d1 := @parameter3: double;
+
+        r3 := @parameter4: com.opengamma.financial.convention.daycount.DayCount;
+
+        $r4 = <com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: com.opengamma.financial.convention.daycount.DayCount ACT_365>;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: void <init>(org.threeten.bp.LocalDate,double,com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule,double,com.opengamma.financial.convention.daycount.DayCount,com.opengamma.financial.convention.daycount.DayCount)>(r1, d0, r2, d1, r3, $r4);
+
+        return;
+    }
+
+    public void <init>(org.threeten.bp.LocalDate, double, com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule, double, com.opengamma.financial.convention.daycount.DayCount, com.opengamma.financial.convention.daycount.DayCount)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic r0;
+        org.threeten.bp.LocalDate r1, $r11, $r13, $r14, $r16;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule r2, r5;
+        com.opengamma.financial.convention.daycount.DayCount r3, r4;
+        byte $b0, $b1, $b2, $b5;
+        int $i3, $i4, $i6, $i7, $i8, i9, $i10;
+        double[] $r10, $r12, $r15, $r25, $r26;
+        java.lang.StringBuilder $r17, $r19, $r20, $r21;
+        org.apache.log4j.Logger $r18;
+        java.lang.String $r22;
+        boolean $z0, $z1;
+        java.lang.Object[] $r23;
+        java.lang.Double $r24;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic;
+
+        r1 := @parameter0: org.threeten.bp.LocalDate;
+
+        d0 := @parameter1: double;
+
+        r2 := @parameter2: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule;
+
+        d1 := @parameter3: double;
+
+        r3 := @parameter4: com.opengamma.financial.convention.daycount.DayCount;
+
+        r4 := @parameter5: com.opengamma.financial.convention.daycount.DayCount;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "today");
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 < 0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "coupon is negative");
+
+        $b1 = d0 cmpl 1.0;
+
+        if $b1 <= 0 goto label3;
+
+        $r18 = <com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: org.apache.log4j.Logger LOG>;
+
+        $r17 = new java.lang.StringBuilder;
+
+        specialinvoke $r17.<java.lang.StringBuilder: void <init>()>();
+
+        $r19 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("coupon should be given as fraction. Value of ");
+
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d0);
+
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("seems high.");
+
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        virtualinvoke $r18.<org.apache.log4j.Logger: void warn(java.lang.Object)>($r22);
+
+     label3:
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "schedule");
+
+        $b2 = d1 cmpl 0.0;
+
+        if $b2 < 0 goto label4;
+
+        $b5 = d1 cmpg 1.0;
+
+        if $b5 > 0 goto label4;
+
+        $z1 = 1;
+
+        goto label5;
+
+     label4:
+        $z1 = 0;
+
+     label5:
+        $r23 = newarray (java.lang.Object)[1];
+
+        $r24 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r23[0] = $r24;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z1, "recovery rate must be in range 0 - 1. value gives: ", $r23);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "accrualDCC");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r4, "curveDCC");
+
+        r5 = virtualinvoke r2.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule truncateSchedule(org.threeten.bp.LocalDate)>(r1);
+
+        $i6 = virtualinvoke r5.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: int getNumPayments()>();
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: int _nPayments> = $i6;
+
+        $i7 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: int _nPayments>;
+
+        $r25 = newarray (double)[$i7];
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: double[] _paymentTimes> = $r25;
+
+        $i8 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: int _nPayments>;
+
+        $r26 = newarray (double)[$i8];
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: double[] _paymentAmounts> = $r26;
+
+        i9 = 0;
+
+     label6:
+        $i10 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: int _nPayments>;
+
+        if i9 >= $i10 goto label7;
+
+        $r12 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: double[] _paymentAmounts>;
+
+        $r13 = virtualinvoke r2.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate getAccStartDate(int)>(i9);
+
+        $r14 = virtualinvoke r2.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate getAccEndDate(int)>(i9);
+
+        $d6 = interfaceinvoke r3.<com.opengamma.financial.convention.daycount.DayCount: double getDayCountFraction(org.threeten.bp.LocalDate,org.threeten.bp.LocalDate)>($r13, $r14);
+
+        $d7 = d0 * $d6;
+
+        $r12[i9] = $d7;
+
+        $r15 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: double[] _paymentTimes>;
+
+        $r16 = virtualinvoke r2.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate getPaymentDate(int)>(i9);
+
+        $d8 = interfaceinvoke r4.<com.opengamma.financial.convention.daycount.DayCount: double getDayCountFraction(org.threeten.bp.LocalDate,org.threeten.bp.LocalDate)>(r1, $r16);
+
+        $r15[i9] = $d8;
+
+        i9 = i9 + 1;
+
+        goto label6;
+
+     label7:
+        $r10 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: double[] _paymentAmounts>;
+
+        $i3 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: int _nPayments>;
+
+        $i4 = $i3 - 1;
+
+        $d2 = $r10[$i4];
+
+        $d3 = $d2 + 1.0;
+
+        $r10[$i4] = $d3;
+
+        $r11 = virtualinvoke r2.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDAPremiumLegSchedule: org.threeten.bp.LocalDate getAccStartDate(int)>(0);
+
+        $d4 = interfaceinvoke r3.<com.opengamma.financial.convention.daycount.DayCount: double getDayCountFraction(org.threeten.bp.LocalDate,org.threeten.bp.LocalDate)>($r11, r1);
+
+        $d5 = d0 * $d4;
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: double _accuredInterest> = $d5;
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: double _recoveryRate> = d1;
+
+        return;
+    }
+
+    public void <init>(double[], double[], double, double)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic r0;
+        double[] r1, r2, $r11, $r13;
+        double d0, d1, $d2, $d3, $d4, $d5;
+        int $i0, $i1, $i2, $i3, $i4, $i7, i11, $i12;
+        java.lang.Object[] $r5, $r8, $r14;
+        java.lang.Integer $r6, $r7;
+        byte $b5, $b6, $b8, $b9, $b10;
+        java.lang.Double $r9, $r15;
+        java.lang.Object $r10, $r12;
+        boolean $z0, $z1, $z2, $z3, $z4;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        d0 := @parameter2: double;
+
+        d1 := @parameter3: double;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: double[] notEmpty(double[],java.lang.String)>(r1, "paymentTimes");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "paymentAmounts");
+
+        $i0 = lengthof r1;
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: int _nPayments> = $i0;
+
+        $i2 = lengthof r2;
+
+        $i1 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: int _nPayments>;
+
+        if $i2 != $i1 goto label01;
+
+        $z0 = 1;
+
+        goto label02;
+
+     label01:
+        $z0 = 0;
+
+     label02:
+        $r5 = newarray (java.lang.Object)[2];
+
+        $i3 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: int _nPayments>;
+
+        $r6 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i3);
+
+        $r5[0] = $r6;
+
+        $i4 = lengthof r2;
+
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i4);
+
+        $r5[1] = $r7;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z0, "number of payment times ({}) does not match number of payment amounts ({})", $r5);
+
+        $b5 = d0 cmpl 0.0;
+
+        if $b5 < 0 goto label03;
+
+        $b9 = d0 cmpg 1.0;
+
+        if $b9 > 0 goto label03;
+
+        $z1 = 1;
+
+        goto label04;
+
+     label03:
+        $z1 = 0;
+
+     label04:
+        $r14 = newarray (java.lang.Object)[1];
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r14[0] = $r15;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z1, "recovery rate must be in range 0 - 1. value gives: ", $r14);
+
+        $b10 = d1 cmpl 0.0;
+
+        if $b10 < 0 goto label05;
+
+        $z2 = 1;
+
+        goto label06;
+
+     label05:
+        $z2 = 0;
+
+     label06:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "accrued intrest must be give as positive");
+
+        $d2 = r1[0];
+
+        $b6 = $d2 cmpl 0.0;
+
+        if $b6 < 0 goto label07;
+
+        $z3 = 1;
+
+        goto label08;
+
+     label07:
+        $z3 = 0;
+
+     label08:
+        $r8 = newarray (java.lang.Object)[1];
+
+        $d3 = r1[0];
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        $r8[0] = $r9;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z3, "payments times must be positive. first value: ", $r8);
+
+        i11 = 1;
+
+     label09:
+        $i12 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: int _nPayments>;
+
+        if i11 >= $i12 goto label12;
+
+        $d5 = r1[i11];
+
+        $i7 = i11 - 1;
+
+        $d4 = r1[$i7];
+
+        $b8 = $d5 cmpl $d4;
+
+        if $b8 <= 0 goto label10;
+
+        $z4 = 1;
+
+        goto label11;
+
+     label10:
+        $z4 = 0;
+
+     label11:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z4, "payment times must be assending");
+
+        i11 = i11 + 1;
+
+        goto label09;
+
+     label12:
+        $r10 = virtualinvoke r1.<java.lang.Object: java.lang.Object clone()>();
+
+        $r11 = (double[]) $r10;
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: double[] _paymentTimes> = $r11;
+
+        $r12 = virtualinvoke r2.<java.lang.Object: java.lang.Object clone()>();
+
+        $r13 = (double[]) $r12;
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: double[] _paymentAmounts> = $r13;
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: double _recoveryRate> = d0;
+
+        r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: double _accuredInterest> = d1;
+
+        return;
+    }
+
+    public double getAccruedInterest()
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic;
+
+        $d0 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: double _accuredInterest>;
+
+        return $d0;
+    }
+
+    public double getPaymentTime(int)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic r0;
+        int i0;
+        double[] $r1;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: double[] _paymentTimes>;
+
+        $d0 = $r1[i0];
+
+        return $d0;
+    }
+
+    public double getPaymentAmount(int)
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic r0;
+        int i0;
+        double[] $r1;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic;
+
+        i0 := @parameter0: int;
+
+        $r1 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: double[] _paymentAmounts>;
+
+        $d0 = $r1[i0];
+
+        return $d0;
+    }
+
+    public int getnPayments()
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic r0;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic;
+
+        $i0 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: int _nPayments>;
+
+        return $i0;
+    }
+
+    public double getRecoveryRate()
+    {
+        com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic r0;
+        double $d0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic;
+
+        $d0 = r0.<com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: double _recoveryRate>;
+
+        return $d0;
+    }
+
+    static void <clinit>()
+    {
+        org.apache.log4j.Logger $r0;
+        com.opengamma.financial.convention.daycount.DayCount $r1;
+
+        $r0 = staticinvoke <org.apache.log4j.Logger: org.apache.log4j.Logger getLogger(java.lang.Class)>(class "com/opengamma/analytics/financial/credit/isdastandardmodel/BondAnalytic");
+
+        <com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: org.apache.log4j.Logger LOG> = $r0;
+
+        $r1 = <com.opengamma.financial.convention.daycount.DayCounts: com.opengamma.financial.convention.daycount.DayCount ACT_365>;
+
+        <com.opengamma.analytics.financial.credit.isdastandardmodel.BondAnalytic: com.opengamma.financial.convention.daycount.DayCount ACT_365> = $r1;
+
+        return;
+    }
+}

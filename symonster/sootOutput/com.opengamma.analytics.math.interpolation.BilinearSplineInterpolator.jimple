@@ -1,0 +1,541 @@
+public class com.opengamma.analytics.math.interpolation.BilinearSplineInterpolator extends com.opengamma.analytics.math.interpolation.PiecewisePolynomialInterpolator2D
+{
+    private static final double ERROR;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.math.interpolation.BilinearSplineInterpolator r0;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.BilinearSplineInterpolator;
+
+        specialinvoke r0.<com.opengamma.analytics.math.interpolation.PiecewisePolynomialInterpolator2D: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.interpolation.PiecewisePolynomialResult2D interpolate(double[], double[], double[][])
+    {
+        com.opengamma.analytics.math.interpolation.BilinearSplineInterpolator r0;
+        double[] r1, r2, $r8, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r32, $r33, $r34, $r35, $r36;
+        double[][] r3, r4;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i21, $i22, i25, i26, i27, i28, i29, i30, i31, i32, i34, i35, i36, i37;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, d53, d54;
+        com.opengamma.analytics.math.interpolation.PiecewisePolynomialResult2D $r9;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r10, $r11;
+        int[] $r12;
+        byte $b20, $b23, $b24;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D $r28, $r30;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D[] $r29, $r31;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D[][] r37;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.BilinearSplineInterpolator;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[][];
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "x0Values");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "x1Values");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "yValues");
+
+        i0 = lengthof r1;
+
+        i1 = lengthof r2;
+
+        $i2 = lengthof r3;
+
+        if i0 != $i2 goto label01;
+
+        $z8 = 1;
+
+        goto label02;
+
+     label01:
+        $z8 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z8, "x0Values length = yValues number of rows");
+
+        $r8 = r3[0];
+
+        $i3 = lengthof $r8;
+
+        if i1 != $i3 goto label03;
+
+        $z9 = 1;
+
+        goto label04;
+
+     label03:
+        $z9 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z9, "x1Values length = yValues number of columns");
+
+        if i0 <= 1 goto label05;
+
+        $z10 = 1;
+
+        goto label06;
+
+     label05:
+        $z10 = 0;
+
+     label06:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z10, "Data points along x0 direction should be more than 1");
+
+        if i1 <= 1 goto label07;
+
+        $z11 = 1;
+
+        goto label08;
+
+     label07:
+        $z11 = 0;
+
+     label08:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z11, "Data points along x1 direction should be more than 1");
+
+        i25 = 0;
+
+     label09:
+        if i25 >= i0 goto label10;
+
+        $d51 = r1[i25];
+
+        $z6 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d51);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z6, "x0Values containing NaN");
+
+        $d52 = r1[i25];
+
+        $z7 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d52);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z7, "x0Values containing Infinity");
+
+        i25 = i25 + 1;
+
+        goto label09;
+
+     label10:
+        i26 = 0;
+
+     label11:
+        if i26 >= i1 goto label12;
+
+        $d49 = r2[i26];
+
+        $z4 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d49);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z4, "x1Values containing NaN");
+
+        $d50 = r2[i26];
+
+        $z5 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d50);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z5, "x1Values containing Infinity");
+
+        i26 = i26 + 1;
+
+        goto label11;
+
+     label12:
+        i27 = 0;
+
+     label13:
+        if i27 >= i0 goto label16;
+
+        i28 = 0;
+
+     label14:
+        if i28 >= i1 goto label15;
+
+        $r35 = r3[i27];
+
+        $d47 = $r35[i28];
+
+        $z2 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d47);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z2, "yValues containing NaN");
+
+        $r36 = r3[i27];
+
+        $d48 = $r36[i28];
+
+        $z3 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d48);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z3, "yValues containing Infinity");
+
+        i28 = i28 + 1;
+
+        goto label14;
+
+     label15:
+        i27 = i27 + 1;
+
+        goto label13;
+
+     label16:
+        i29 = 0;
+
+     label17:
+        if i29 >= i0 goto label22;
+
+        i30 = i29 + 1;
+
+     label18:
+        if i30 >= i0 goto label21;
+
+        $d46 = r1[i29];
+
+        $d45 = r1[i30];
+
+        $b24 = $d46 cmpl $d45;
+
+        if $b24 != 0 goto label19;
+
+        $z12 = 1;
+
+        goto label20;
+
+     label19:
+        $z12 = 0;
+
+     label20:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z12, "x0Values should be distinct");
+
+        i30 = i30 + 1;
+
+        goto label18;
+
+     label21:
+        i29 = i29 + 1;
+
+        goto label17;
+
+     label22:
+        i31 = 0;
+
+     label23:
+        if i31 >= i1 goto label28;
+
+        i32 = i31 + 1;
+
+     label24:
+        if i32 >= i1 goto label27;
+
+        $d44 = r2[i31];
+
+        $d43 = r2[i32];
+
+        $b23 = $d44 cmpl $d43;
+
+        if $b23 != 0 goto label25;
+
+        $z13 = 1;
+
+        goto label26;
+
+     label25:
+        $z13 = 0;
+
+     label26:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z13, "x1Values should be distinct");
+
+        i32 = i32 + 1;
+
+        goto label24;
+
+     label27:
+        i31 = i31 + 1;
+
+        goto label23;
+
+     label28:
+        $i5 = i0 - 1;
+
+        $i4 = i1 - 1;
+
+        r37 = newmultiarray (com.opengamma.analytics.math.matrix.DoubleMatrix2D)[$i5][$i4];
+
+        i34 = 0;
+
+     label29:
+        $i6 = i0 - 1;
+
+        if i34 >= $i6 goto label38;
+
+        i35 = 0;
+
+     label30:
+        $i7 = i1 - 1;
+
+        if i35 >= $i7 goto label37;
+
+        $i8 = i34 + 1;
+
+        $d3 = r1[$i8];
+
+        $d2 = r1[i34];
+
+        d0 = $d3 - $d2;
+
+        $i9 = i35 + 1;
+
+        $d5 = r2[$i9];
+
+        $d4 = r2[i35];
+
+        d1 = $d5 - $d4;
+
+        d53 = 0.0;
+
+        r4 = newmultiarray (double)[2][2];
+
+        $r14 = r4[1];
+
+        $r13 = r3[i34];
+
+        $d6 = $r13[i35];
+
+        $r14[1] = $d6;
+
+        $r17 = r4[0];
+
+        $r15 = r3[i34];
+
+        $d7 = $r15[i35];
+
+        $d9 = neg $d7;
+
+        $i10 = i34 + 1;
+
+        $r16 = r3[$i10];
+
+        $d8 = $r16[i35];
+
+        $d10 = $d9 + $d8;
+
+        $d11 = $d10 / d0;
+
+        $r17[1] = $d11;
+
+        $r20 = r4[1];
+
+        $r18 = r3[i34];
+
+        $d12 = $r18[i35];
+
+        $d14 = neg $d12;
+
+        $r19 = r3[i34];
+
+        $i11 = i35 + 1;
+
+        $d13 = $r19[$i11];
+
+        $d15 = $d14 + $d13;
+
+        $d16 = $d15 / d1;
+
+        $r20[0] = $d16;
+
+        $r25 = r4[0];
+
+        $r21 = r3[i34];
+
+        $d18 = $r21[i35];
+
+        $i12 = i34 + 1;
+
+        $r22 = r3[$i12];
+
+        $d17 = $r22[i35];
+
+        $d20 = $d18 - $d17;
+
+        $r23 = r3[i34];
+
+        $i13 = i35 + 1;
+
+        $d19 = $r23[$i13];
+
+        $d22 = $d20 - $d19;
+
+        $i14 = i34 + 1;
+
+        $r24 = r3[$i14];
+
+        $i15 = i35 + 1;
+
+        $d21 = $r24[$i15];
+
+        $d23 = $d22 + $d21;
+
+        $d24 = $d23 / d0;
+
+        $d25 = $d24 / d1;
+
+        $r25[0] = $d25;
+
+        i36 = 0;
+
+     label31:
+        if i36 >= 2 goto label34;
+
+        i37 = 0;
+
+     label32:
+        if i37 >= 2 goto label33;
+
+        $r32 = r4[i36];
+
+        $d34 = $r32[i37];
+
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>($d34);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z0, "Too large/small input");
+
+        $r33 = r4[i36];
+
+        $d35 = $r33[i37];
+
+        $z1 = staticinvoke <java.lang.Double: boolean isInfinite(double)>($d35);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z1, "Too large/small input");
+
+        $r34 = r4[i36];
+
+        $d37 = $r34[i37];
+
+        $i21 = 1 - i36;
+
+        $d36 = (double) $i21;
+
+        $d38 = staticinvoke <java.lang.Math: double pow(double,double)>(d0, $d36);
+
+        $d40 = $d37 * $d38;
+
+        $i22 = 1 - i37;
+
+        $d39 = (double) $i22;
+
+        $d41 = staticinvoke <java.lang.Math: double pow(double,double)>(d1, $d39);
+
+        $d42 = $d40 * $d41;
+
+        d53 = d53 + $d42;
+
+        i37 = i37 + 1;
+
+        goto label32;
+
+     label33:
+        i36 = i36 + 1;
+
+        goto label31;
+
+     label34:
+        $d26 = staticinvoke <java.lang.Math: double abs(double)>(d53);
+
+        $i16 = i34 + 1;
+
+        $r26 = r3[$i16];
+
+        $i17 = i35 + 1;
+
+        $d27 = $r26[$i17];
+
+        $d28 = staticinvoke <java.lang.Math: double abs(double)>($d27);
+
+        $d29 = $d26 + $d28;
+
+        d54 = staticinvoke <java.lang.Math: double max(double,double)>($d29, 0.1);
+
+        $i18 = i34 + 1;
+
+        $r27 = r3[$i18];
+
+        $i19 = i35 + 1;
+
+        $d30 = $r27[$i19];
+
+        $d31 = d53 - $d30;
+
+        $d32 = staticinvoke <java.lang.Math: double abs(double)>($d31);
+
+        $d33 = 1.0E-13 * d54;
+
+        $b20 = $d32 cmpg $d33;
+
+        if $b20 >= 0 goto label35;
+
+        $z14 = 1;
+
+        goto label36;
+
+     label35:
+        $z14 = 0;
+
+     label36:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z14, "Input is too large/small or data points are too close");
+
+        $r29 = r37[i34];
+
+        $r28 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r28.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r4);
+
+        $r29[i35] = $r28;
+
+        $r31 = r37[i34];
+
+        $r30 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r30.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r4);
+
+        $r31[i35] = $r30;
+
+        i35 = i35 + 1;
+
+        goto label30;
+
+     label37:
+        i34 = i34 + 1;
+
+        goto label29;
+
+     label38:
+        $r9 = new com.opengamma.analytics.math.interpolation.PiecewisePolynomialResult2D;
+
+        $r10 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r10.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r1);
+
+        $r11 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r11.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r2);
+
+        $r12 = newarray (int)[2];
+
+        $r12[0] = 2;
+
+        $r12[1] = 2;
+
+        specialinvoke $r9.<com.opengamma.analytics.math.interpolation.PiecewisePolynomialResult2D: void <init>(com.opengamma.analytics.math.matrix.DoubleMatrix1D,com.opengamma.analytics.math.matrix.DoubleMatrix1D,com.opengamma.analytics.math.matrix.DoubleMatrix2D[][],int[])>($r10, $r11, r37, $r12);
+
+        return $r9;
+    }
+
+    public static void <clinit>()
+    {
+        <com.opengamma.analytics.math.interpolation.BilinearSplineInterpolator: double ERROR> = 1.0E-13;
+
+        return;
+    }
+}

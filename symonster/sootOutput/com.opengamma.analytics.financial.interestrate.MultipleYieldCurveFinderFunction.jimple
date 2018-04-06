@@ -1,0 +1,141 @@
+public class com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction extends com.opengamma.analytics.math.function.Function1D
+{
+    private final com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _calculator;
+    private final com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle _data;
+    private final com.opengamma.analytics.financial.interestrate.YieldCurveBundleBuildingFunction _curveBuilderFunction;
+
+    public void <init>(com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle, com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)
+    {
+        com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction r0;
+        com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle r1;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor r2;
+        com.opengamma.analytics.financial.interestrate.InterpolatedYieldCurveBuildingFunction $r3;
+        java.util.LinkedHashMap $r4, $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        specialinvoke r0.<com.opengamma.analytics.math.function.Function1D: void <init>()>();
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "data");
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r2, "calculator");
+
+        r0.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _calculator> = r2;
+
+        r0.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction: com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle _data> = r1;
+
+        $r3 = new com.opengamma.analytics.financial.interestrate.InterpolatedYieldCurveBuildingFunction;
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle: java.util.LinkedHashMap getUnknownCurveNodePoints()>();
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle: java.util.LinkedHashMap getUnknownCurveInterpolators()>();
+
+        specialinvoke $r3.<com.opengamma.analytics.financial.interestrate.InterpolatedYieldCurveBuildingFunction: void <init>(java.util.LinkedHashMap,java.util.LinkedHashMap)>($r4, $r5);
+
+        r0.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction: com.opengamma.analytics.financial.interestrate.YieldCurveBundleBuildingFunction _curveBuilderFunction> = $r3;
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.matrix.DoubleMatrix1D evaluate(com.opengamma.analytics.math.matrix.DoubleMatrix1D)
+    {
+        com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction r0;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r1, $r9;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2, r3;
+        double[] r4;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundleBuildingFunction $r5;
+        java.lang.Object $r6, $r13;
+        com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle $r7, $r8, $r10, $r15, $r16;
+        int $i0, i1, $i2;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative $r11;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor $r12;
+        java.lang.Double $r14;
+        double $d0, $d1, $d2;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction;
+
+        r1 := @parameter0: com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        $r5 = r0.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction: com.opengamma.analytics.financial.interestrate.YieldCurveBundleBuildingFunction _curveBuilderFunction>;
+
+        $r6 = virtualinvoke $r5.<com.opengamma.analytics.financial.interestrate.YieldCurveBundleBuildingFunction: java.lang.Object evaluate(java.lang.Object)>(r1);
+
+        r2 = (com.opengamma.analytics.financial.interestrate.YieldCurveBundle) $r6;
+
+        $r7 = r0.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction: com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle _data>;
+
+        r3 = virtualinvoke $r7.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle: com.opengamma.analytics.financial.interestrate.YieldCurveBundle getKnownCurves()>();
+
+        if r3 == null goto label1;
+
+        virtualinvoke r2.<com.opengamma.analytics.financial.interestrate.YieldCurveBundle: void addAll(com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>(r3);
+
+     label1:
+        $r8 = r0.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction: com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle _data>;
+
+        $i0 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle: int getNumInstruments()>();
+
+        r4 = newarray (double)[$i0];
+
+        i1 = 0;
+
+     label2:
+        $r16 = r0.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction: com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle _data>;
+
+        $i2 = virtualinvoke $r16.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle: int getNumInstruments()>();
+
+        if i1 >= $i2 goto label3;
+
+        $r10 = r0.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction: com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle _data>;
+
+        $r11 = virtualinvoke $r10.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle: com.opengamma.analytics.financial.interestrate.InstrumentDerivative getDerivative(int)>(i1);
+
+        $r12 = r0.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _calculator>;
+
+        $r13 = interfaceinvoke $r11.<com.opengamma.analytics.financial.interestrate.InstrumentDerivative: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r12, r2);
+
+        $r14 = (java.lang.Double) $r13;
+
+        $d0 = virtualinvoke $r14.<java.lang.Double: double doubleValue()>();
+
+        $r15 = r0.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction: com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle _data>;
+
+        $d1 = virtualinvoke $r15.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderDataBundle: double getMarketValue(int)>(i1);
+
+        $d2 = $d0 - $d1;
+
+        r4[i1] = $d2;
+
+        i1 = i1 + 1;
+
+        goto label2;
+
+     label3:
+        $r9 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r9.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r4);
+
+        return $r9;
+    }
+
+    public volatile java.lang.Object evaluate(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction r0;
+        java.lang.Object r1;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r2, $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction;
+
+        r1 := @parameter0: java.lang.Object;
+
+        $r2 = (com.opengamma.analytics.math.matrix.DoubleMatrix1D) r1;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.MultipleYieldCurveFinderFunction: com.opengamma.analytics.math.matrix.DoubleMatrix1D evaluate(com.opengamma.analytics.math.matrix.DoubleMatrix1D)>($r2);
+
+        return $r3;
+    }
+}

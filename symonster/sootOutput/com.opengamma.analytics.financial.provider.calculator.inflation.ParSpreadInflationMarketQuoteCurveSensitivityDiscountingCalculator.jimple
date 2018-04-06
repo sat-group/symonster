@@ -1,0 +1,602 @@
+public final class com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator extends com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter
+{
+    private static final com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator INSTANCE;
+    private static final com.opengamma.analytics.financial.provider.calculator.inflation.PresentValueDiscountingInflationCalculator PVIC;
+    private static final com.opengamma.analytics.financial.provider.calculator.inflation.PresentValueCurveSensitivityDiscountingInflationCalculator PVISC;
+    private static final com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator PVSC;
+    private static final com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator PVMC;
+    private static final com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator PVCSMC;
+    private static final com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueMarketQuoteSensitivityDiscountingCalculator PVMQSMC;
+    private static final com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueMarketQuoteSensitivityCurveSensitivityDiscountingCalculator PVMQSCSMC;
+    private static final com.opengamma.analytics.financial.interestrate.cash.provider.CashDiscountingMethod METHOD_DEPOSIT;
+    private static final com.opengamma.analytics.financial.interestrate.cash.provider.DepositIborDiscountingMethod METHOD_DEPOSIT_IBOR;
+    private static final com.opengamma.analytics.financial.interestrate.fra.provider.ForwardRateAgreementDiscountingMethod METHOD_FRA;
+    private static final com.opengamma.analytics.financial.forex.provider.ForexSwapDiscountingMethod METHOD_FOREX_SWAP;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator r0;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter: void <init>()>();
+
+        return;
+    }
+
+    public static com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator getInstance()
+    {
+        com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator $r0;
+
+        $r0 = <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator INSTANCE>;
+
+        return $r0;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity visitSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.Swap, com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface)
+    {
+        com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.Swap r1;
+        com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface r2;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity r3, $r34, $r35, $r36, r68;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, d18, d19;
+        com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity r5, r6, $r37, $r62, $r64;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity $r9, $r10, $r17, $r21, $r38, $r40, $r42, $r46, $r49, $r53, $r56, $r60;
+        int $i0, $i1;
+        com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator $r11;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r12, $r19, $r23, $r29;
+        java.lang.Object $r13, $r20, $r24, $r30, $r44, $r58;
+        com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface $r14, $r26, $r48;
+        com.opengamma.analytics.financial.forex.method.FXMatrix $r15, $r27;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity $r16, r67;
+        com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueMarketQuoteSensitivityCurveSensitivityDiscountingCalculator $r18;
+        com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueMarketQuoteSensitivityDiscountingCalculator $r22;
+        java.lang.Double $r25, $r51;
+        com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator $r28;
+        com.opengamma.util.money.MultipleCurrencyAmount $r31, $r45;
+        com.opengamma.util.money.CurrencyAmount $r32;
+        java.util.HashMap $r33;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r39, $r41, $r54;
+        boolean $z0;
+        com.opengamma.analytics.financial.provider.calculator.inflation.PresentValueDiscountingInflationCalculator $r43;
+        com.opengamma.util.money.Currency $r47, $r50, $r61, r66;
+        double[] $r52;
+        com.opengamma.analytics.financial.interestrate.inflation.derivative.CouponInflation $r55;
+        com.opengamma.analytics.financial.provider.calculator.inflation.PresentValueCurveSensitivityDiscountingInflationCalculator $r57;
+        com.opengamma.analytics.financial.provider.sensitivity.inflation.MultipleCurrencyInflationSensitivity $r59;
+        java.util.Map $r63;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixedCompounding r65;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swap.derivative.Swap;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Market");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Swap");
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.Swap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFirstLeg()>();
+
+        $i0 = virtualinvoke $r9.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: int getNumberOfPayments()>();
+
+        if $i0 != 1 goto label1;
+
+        $r38 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.Swap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFirstLeg()>();
+
+        $r39 = virtualinvoke $r38.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $z0 = $r39 instanceof com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixedCompounding;
+
+        if $z0 == 0 goto label1;
+
+        $r40 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.Swap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFirstLeg()>();
+
+        $r41 = virtualinvoke $r40.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        r65 = (com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixedCompounding) $r41;
+
+        $r42 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.Swap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getSecondLeg()>();
+
+        $r43 = <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.inflation.PresentValueDiscountingInflationCalculator PVIC>;
+
+        $r44 = virtualinvoke $r42.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r43, r2);
+
+        $r45 = (com.opengamma.util.money.MultipleCurrencyAmount) $r44;
+
+        $r46 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.Swap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getSecondLeg()>();
+
+        $r47 = virtualinvoke $r46.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.util.money.Currency getCurrency()>();
+
+        d18 = virtualinvoke $r45.<com.opengamma.util.money.MultipleCurrencyAmount: double getAmount(com.opengamma.util.money.Currency)>($r47);
+
+        $r48 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface: com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface getInflationProvider()>();
+
+        $r49 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.Swap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFirstLeg()>();
+
+        $r50 = virtualinvoke $r49.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d8 = virtualinvoke r65.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixedCompounding: double getPaymentTime()>();
+
+        $r51 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d8);
+
+        d19 = interfaceinvoke $r48.<com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface: double getDiscountFactor(com.opengamma.util.money.Currency,java.lang.Double)>($r50, $r51);
+
+        $r52 = virtualinvoke r65.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixedCompounding: double[] getPaymentAccrualFactors()>();
+
+        $i1 = lengthof $r52;
+
+        d1 = (double) $i1;
+
+        $r53 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.Swap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getSecondLeg()>();
+
+        $r54 = virtualinvoke $r53.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(0);
+
+        $r55 = (com.opengamma.analytics.financial.interestrate.inflation.derivative.CouponInflation) $r54;
+
+        d3 = virtualinvoke $r55.<com.opengamma.analytics.financial.interestrate.inflation.derivative.CouponInflation: double getNotional()>();
+
+        $d14 = 1.0 / d1;
+
+        $d9 = d18 / d19;
+
+        $d10 = $d9 / d3;
+
+        $d13 = $d10 + 1.0;
+
+        $d11 = 1.0 / d1;
+
+        $d12 = $d11 - 1.0;
+
+        $d15 = staticinvoke <java.lang.Math: double pow(double,double)>($d13, $d12);
+
+        d4 = $d14 * $d15;
+
+        $r56 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.Swap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getSecondLeg()>();
+
+        $r57 = <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.inflation.PresentValueCurveSensitivityDiscountingInflationCalculator PVISC>;
+
+        $r58 = virtualinvoke $r56.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r57, r2);
+
+        $r59 = (com.opengamma.analytics.financial.provider.sensitivity.inflation.MultipleCurrencyInflationSensitivity) $r58;
+
+        $r60 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.Swap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getSecondLeg()>();
+
+        $r61 = virtualinvoke $r60.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r62 = virtualinvoke $r59.<com.opengamma.analytics.financial.provider.sensitivity.inflation.MultipleCurrencyInflationSensitivity: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity getSensitivity(com.opengamma.util.money.Currency)>($r61);
+
+        $d16 = 1.0 / d19;
+
+        $d17 = $d16 / d3;
+
+        r5 = virtualinvoke $r62.<com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity multipliedBy(double)>($d17);
+
+        r6 = virtualinvoke r5.<com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity multipliedBy(double)>(d4);
+
+        $r63 = virtualinvoke r6.<com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity: java.util.Map getPriceCurveSensitivities()>();
+
+        $r64 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity ofPriceIndex(java.util.Map)>($r63);
+
+        return $r64;
+
+     label1:
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.Swap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFirstLeg()>();
+
+        r66 = virtualinvoke $r10.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r11 = <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator PVCSMC>;
+
+        $r12 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r13 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.Swap: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r11, $r12);
+
+        r67 = (com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity) $r13;
+
+        $r14 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface: com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface getInflationProvider()>();
+
+        $r15 = interfaceinvoke $r14.<com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r16 = virtualinvoke r67.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity converted(com.opengamma.util.money.Currency,com.opengamma.analytics.financial.forex.method.FXMatrix)>(r66, $r15);
+
+        r3 = virtualinvoke $r16.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity getSensitivity(com.opengamma.util.money.Currency)>(r66);
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.Swap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFirstLeg()>();
+
+        $r18 = <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueMarketQuoteSensitivityCurveSensitivityDiscountingCalculator PVMQSCSMC>;
+
+        $r19 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r20 = virtualinvoke $r17.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r18, $r19);
+
+        r68 = (com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity) $r20;
+
+        $r21 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.Swap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFirstLeg()>();
+
+        $r22 = <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueMarketQuoteSensitivityDiscountingCalculator PVMQSMC>;
+
+        $r23 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r24 = virtualinvoke $r21.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r22, $r23);
+
+        $r25 = (java.lang.Double) $r24;
+
+        d0 = virtualinvoke $r25.<java.lang.Double: double doubleValue()>();
+
+        $r26 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface: com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface getInflationProvider()>();
+
+        $r27 = interfaceinvoke $r26.<com.opengamma.analytics.financial.provider.description.inflation.InflationProviderInterface: com.opengamma.analytics.financial.forex.method.FXMatrix getFxRates()>();
+
+        $r28 = <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator PVMC>;
+
+        $r29 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r30 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.Swap: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r28, $r29);
+
+        $r31 = (com.opengamma.util.money.MultipleCurrencyAmount) $r30;
+
+        $r32 = virtualinvoke $r27.<com.opengamma.analytics.financial.forex.method.FXMatrix: com.opengamma.util.money.CurrencyAmount convert(com.opengamma.util.money.MultipleCurrencyAmount,com.opengamma.util.money.Currency)>($r31, r66);
+
+        d2 = virtualinvoke $r32.<com.opengamma.util.money.CurrencyAmount: double getAmount()>();
+
+        $r33 = new java.util.HashMap;
+
+        specialinvoke $r33.<java.util.HashMap: void <init>()>();
+
+        $d5 = -1.0 / d0;
+
+        $r34 = virtualinvoke r3.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>($d5);
+
+        $d6 = d0 * d0;
+
+        $d7 = d2 / $d6;
+
+        $r35 = virtualinvoke r68.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>($d7);
+
+        $r36 = virtualinvoke $r34.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity plus(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity)>($r35);
+
+        $r37 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity of(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity,java.util.Map)>($r36, $r33);
+
+        return $r37;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon, com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface)
+    {
+        com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon r1;
+        com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface r2;
+        com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity visitSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.Swap,com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface)>(r1, r2);
+
+        return $r3;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity visitCash(com.opengamma.analytics.financial.interestrate.cash.derivative.Cash, com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface)
+    {
+        com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator r0;
+        com.opengamma.analytics.financial.interestrate.cash.derivative.Cash r1;
+        com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface r2;
+        java.util.HashMap $r4;
+        com.opengamma.analytics.financial.interestrate.cash.provider.CashDiscountingMethod $r5;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r6;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity $r7;
+        com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.cash.derivative.Cash;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface;
+
+        $r4 = new java.util.HashMap;
+
+        specialinvoke $r4.<java.util.HashMap: void <init>()>();
+
+        $r5 = <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.interestrate.cash.provider.CashDiscountingMethod METHOD_DEPOSIT>;
+
+        $r6 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r7 = virtualinvoke $r5.<com.opengamma.analytics.financial.interestrate.cash.provider.CashDiscountingMethod: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity parSpreadCurveSensitivity(com.opengamma.analytics.financial.interestrate.cash.derivative.Cash,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>(r1, $r6);
+
+        $r8 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity of(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity,java.util.Map)>($r7, $r4);
+
+        return $r8;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity visitDepositIbor(com.opengamma.analytics.financial.interestrate.cash.derivative.DepositIbor, com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface)
+    {
+        com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator r0;
+        com.opengamma.analytics.financial.interestrate.cash.derivative.DepositIbor r1;
+        com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface r2;
+        java.util.HashMap $r4;
+        com.opengamma.analytics.financial.interestrate.cash.provider.DepositIborDiscountingMethod $r5;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r6;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity $r7;
+        com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.cash.derivative.DepositIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface;
+
+        $r4 = new java.util.HashMap;
+
+        specialinvoke $r4.<java.util.HashMap: void <init>()>();
+
+        $r5 = <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.interestrate.cash.provider.DepositIborDiscountingMethod METHOD_DEPOSIT_IBOR>;
+
+        $r6 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r7 = virtualinvoke $r5.<com.opengamma.analytics.financial.interestrate.cash.provider.DepositIborDiscountingMethod: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity parSpreadCurveSensitivity(com.opengamma.analytics.financial.interestrate.cash.derivative.DepositIbor,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>(r1, $r6);
+
+        $r8 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity of(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity,java.util.Map)>($r7, $r4);
+
+        return $r8;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity visitForwardRateAgreement(com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement, com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface)
+    {
+        com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator r0;
+        com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement r1;
+        com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface r2;
+        java.util.HashMap $r4;
+        com.opengamma.analytics.financial.interestrate.fra.provider.ForwardRateAgreementDiscountingMethod $r5;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r6;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity $r7;
+        com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface;
+
+        $r4 = new java.util.HashMap;
+
+        specialinvoke $r4.<java.util.HashMap: void <init>()>();
+
+        $r5 = <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.interestrate.fra.provider.ForwardRateAgreementDiscountingMethod METHOD_FRA>;
+
+        $r6 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r7 = virtualinvoke $r5.<com.opengamma.analytics.financial.interestrate.fra.provider.ForwardRateAgreementDiscountingMethod: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity parSpreadCurveSensitivity(com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>(r1, $r6);
+
+        $r8 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity of(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity,java.util.Map)>($r7, $r4);
+
+        return $r8;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity visitForexSwap(com.opengamma.analytics.financial.forex.derivative.ForexSwap, com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface)
+    {
+        com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexSwap r1;
+        com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface r2;
+        java.util.HashMap $r4;
+        com.opengamma.analytics.financial.forex.provider.ForexSwapDiscountingMethod $r5;
+        com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface $r6;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity $r7;
+        com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexSwap;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface;
+
+        $r4 = new java.util.HashMap;
+
+        specialinvoke $r4.<java.util.HashMap: void <init>()>();
+
+        $r5 = <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.forex.provider.ForexSwapDiscountingMethod METHOD_FOREX_SWAP>;
+
+        $r6 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface getMulticurveProvider()>();
+
+        $r7 = virtualinvoke $r5.<com.opengamma.analytics.financial.forex.provider.ForexSwapDiscountingMethod: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity parSpreadCurveSensitivity(com.opengamma.analytics.financial.forex.derivative.ForexSwap,com.opengamma.analytics.financial.provider.description.interestrate.MulticurveProviderInterface)>(r1, $r6);
+
+        $r8 = staticinvoke <com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity of(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity,java.util.Map)>($r7, $r4);
+
+        return $r8;
+    }
+
+    public volatile java.lang.Object visitForexSwap(com.opengamma.analytics.financial.forex.derivative.ForexSwap, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexSwap r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface $r3;
+        com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexSwap;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity visitForexSwap(com.opengamma.analytics.financial.forex.derivative.ForexSwap,com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitDepositIbor(com.opengamma.analytics.financial.interestrate.cash.derivative.DepositIbor, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator r0;
+        com.opengamma.analytics.financial.interestrate.cash.derivative.DepositIbor r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface $r3;
+        com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.cash.derivative.DepositIbor;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity visitDepositIbor(com.opengamma.analytics.financial.interestrate.cash.derivative.DepositIbor,com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.Swap, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.Swap r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface $r3;
+        com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swap.derivative.Swap;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity visitSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.Swap,com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitCash(com.opengamma.analytics.financial.interestrate.cash.derivative.Cash, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator r0;
+        com.opengamma.analytics.financial.interestrate.cash.derivative.Cash r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface $r3;
+        com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.cash.derivative.Cash;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity visitCash(com.opengamma.analytics.financial.interestrate.cash.derivative.Cash,com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface $r3;
+        com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon,com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitForwardRateAgreement(com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator r0;
+        com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface $r3;
+        com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.sensitivity.inflation.InflationSensitivity visitForwardRateAgreement(com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement,com.opengamma.analytics.financial.provider.description.inflation.ParameterInflationProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator $r0;
+        com.opengamma.analytics.financial.provider.calculator.inflation.PresentValueDiscountingInflationCalculator $r1;
+        com.opengamma.analytics.financial.provider.calculator.inflation.PresentValueCurveSensitivityDiscountingInflationCalculator $r2;
+        com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator $r3, $r5;
+        com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator $r4;
+        com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueMarketQuoteSensitivityDiscountingCalculator $r6;
+        com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueMarketQuoteSensitivityCurveSensitivityDiscountingCalculator $r7;
+        com.opengamma.analytics.financial.interestrate.cash.provider.CashDiscountingMethod $r8;
+        com.opengamma.analytics.financial.interestrate.cash.provider.DepositIborDiscountingMethod $r9;
+        com.opengamma.analytics.financial.interestrate.fra.provider.ForwardRateAgreementDiscountingMethod $r10;
+        com.opengamma.analytics.financial.forex.provider.ForexSwapDiscountingMethod $r11;
+
+        $r0 = new com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: void <init>()>();
+
+        <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator INSTANCE> = $r0;
+
+        $r1 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.inflation.PresentValueDiscountingInflationCalculator: com.opengamma.analytics.financial.provider.calculator.inflation.PresentValueDiscountingInflationCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.inflation.PresentValueDiscountingInflationCalculator PVIC> = $r1;
+
+        $r2 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.inflation.PresentValueCurveSensitivityDiscountingInflationCalculator: com.opengamma.analytics.financial.provider.calculator.inflation.PresentValueCurveSensitivityDiscountingInflationCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.inflation.PresentValueCurveSensitivityDiscountingInflationCalculator PVISC> = $r2;
+
+        $r3 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator PVSC> = $r3;
+
+        $r4 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueDiscountingCalculator PVMC> = $r4;
+
+        $r5 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueCurveSensitivityDiscountingCalculator PVCSMC> = $r5;
+
+        $r6 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueMarketQuoteSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueMarketQuoteSensitivityDiscountingCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueMarketQuoteSensitivityDiscountingCalculator PVMQSMC> = $r6;
+
+        $r7 = staticinvoke <com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueMarketQuoteSensitivityCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueMarketQuoteSensitivityCurveSensitivityDiscountingCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.provider.calculator.discounting.PresentValueMarketQuoteSensitivityCurveSensitivityDiscountingCalculator PVMQSCSMC> = $r7;
+
+        $r8 = staticinvoke <com.opengamma.analytics.financial.interestrate.cash.provider.CashDiscountingMethod: com.opengamma.analytics.financial.interestrate.cash.provider.CashDiscountingMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.interestrate.cash.provider.CashDiscountingMethod METHOD_DEPOSIT> = $r8;
+
+        $r9 = staticinvoke <com.opengamma.analytics.financial.interestrate.cash.provider.DepositIborDiscountingMethod: com.opengamma.analytics.financial.interestrate.cash.provider.DepositIborDiscountingMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.interestrate.cash.provider.DepositIborDiscountingMethod METHOD_DEPOSIT_IBOR> = $r9;
+
+        $r10 = staticinvoke <com.opengamma.analytics.financial.interestrate.fra.provider.ForwardRateAgreementDiscountingMethod: com.opengamma.analytics.financial.interestrate.fra.provider.ForwardRateAgreementDiscountingMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.interestrate.fra.provider.ForwardRateAgreementDiscountingMethod METHOD_FRA> = $r10;
+
+        $r11 = staticinvoke <com.opengamma.analytics.financial.forex.provider.ForexSwapDiscountingMethod: com.opengamma.analytics.financial.forex.provider.ForexSwapDiscountingMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.provider.calculator.inflation.ParSpreadInflationMarketQuoteCurveSensitivityDiscountingCalculator: com.opengamma.analytics.financial.forex.provider.ForexSwapDiscountingMethod METHOD_FOREX_SWAP> = $r11;
+
+        return;
+    }
+}

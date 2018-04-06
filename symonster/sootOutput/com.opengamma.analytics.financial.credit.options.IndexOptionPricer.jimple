@@ -1,0 +1,981 @@
+public class com.opengamma.analytics.financial.credit.options.IndexOptionPricer extends java.lang.Object
+{
+    private static final com.opengamma.analytics.math.statistics.distribution.NormalDistribution NORMAL;
+    private static final double ONE_OVER_ROOT_PI;
+    private static final com.opengamma.analytics.math.integration.Integrator1D RK;
+    private static final com.opengamma.analytics.math.integration.GaussHermiteQuadratureIntegrator1D GHQ2;
+    private static final com.opengamma.analytics.math.integration.GaussHermiteQuadratureIntegrator1D GHQ7;
+    private static final com.opengamma.analytics.math.rootfinding.BracketRoot BRACKER;
+    private static final com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder ROOTFINDER;
+    private static final com.opengamma.analytics.financial.credit.index.PortfolioSwapAdjustment PORTFOLIO_ADJ;
+    private final com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction _annuityFunc;
+    private final com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction _annuityFuncQuick;
+    private final com.opengamma.analytics.financial.credit.isdastandardmodel.CDSAnalytic _fwdCDS;
+    private final double _expiry;
+    private final com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve _yieldCurve;
+    private final com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve _fwdYieldCurve;
+    private final double _coupon;
+    private final double _df;
+    private final double _minExercisePrice;
+    private final double _maxExercisePrice;
+
+    public void <init>(com.opengamma.analytics.financial.credit.isdastandardmodel.CDSAnalytic, double, com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve, double)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.CDSAnalytic r1;
+        double d0, d1;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve r2;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.credit.isdastandardmodel.CDSAnalytic;
+
+        d0 := @parameter1: double;
+
+        r2 := @parameter2: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve;
+
+        d1 := @parameter3: double;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: void <init>(com.opengamma.analytics.financial.credit.isdastandardmodel.CDSAnalytic,double,com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve,double,boolean)>(r1, d0, r2, d1, 0);
+
+        return;
+    }
+
+    public void <init>(com.opengamma.analytics.financial.credit.isdastandardmodel.CDSAnalytic, double, com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve, double, boolean)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.CDSAnalytic r1;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve r2, $r4, $r6, $r8;
+        boolean z0, $z1;
+        byte $b0;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadISDAFunction $r5;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadApproxFunction $r7;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction $r9, $r13;
+        java.lang.Double $r10, $r12;
+        java.lang.Object $r11;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.credit.isdastandardmodel.CDSAnalytic;
+
+        d0 := @parameter1: double;
+
+        r2 := @parameter2: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve;
+
+        d1 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "fwdCDS");
+
+        $d2 = virtualinvoke r1.<com.opengamma.analytics.financial.credit.isdastandardmodel.CDSAnalytic: double getEffectiveProtectionStart()>();
+
+        $b0 = $d2 cmpl 0.0;
+
+        if $b0 != 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "fwdCDS should be a Forward CDS - set Java docs");
+
+        $r4 = virtualinvoke r2.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve withOffset(double)>(d0);
+
+        r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve _fwdYieldCurve> = $r4;
+
+        $r5 = new com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadISDAFunction;
+
+        $r6 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve _fwdYieldCurve>;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadISDAFunction: void <init>(com.opengamma.analytics.financial.credit.isdastandardmodel.CDSAnalytic,com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve)>(r1, $r6);
+
+        r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction _annuityFunc> = $r5;
+
+        if z0 == 0 goto label3;
+
+        $r13 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction _annuityFunc>;
+
+        r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction _annuityFuncQuick> = $r13;
+
+        goto label4;
+
+     label3:
+        $r7 = new com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadApproxFunction;
+
+        $r8 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve _fwdYieldCurve>;
+
+        specialinvoke $r7.<com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadApproxFunction: void <init>(com.opengamma.analytics.financial.credit.isdastandardmodel.CDSAnalytic,com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve)>(r1, $r8);
+
+        r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction _annuityFuncQuick> = $r7;
+
+     label4:
+        r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.financial.credit.isdastandardmodel.CDSAnalytic _fwdCDS> = r1;
+
+        r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve _yieldCurve> = r2;
+
+        r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _expiry> = d0;
+
+        r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _coupon> = d1;
+
+        $d3 = virtualinvoke r1.<com.opengamma.analytics.financial.credit.isdastandardmodel.CDSAnalytic: double getCashSettleTime()>();
+
+        $d4 = d0 + $d3;
+
+        $d5 = virtualinvoke r2.<com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve: double getDiscountFactor(double)>($d4);
+
+        r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _df> = $d5;
+
+        $d6 = neg d1;
+
+        $r9 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction _annuityFunc>;
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $r11 = virtualinvoke $r9.<com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction: java.lang.Object evaluate(java.lang.Object)>($r10);
+
+        $r12 = (java.lang.Double) $r11;
+
+        $d7 = virtualinvoke $r12.<java.lang.Double: double doubleValue()>();
+
+        $d8 = $d6 * $d7;
+
+        r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _minExercisePrice> = $d8;
+
+        $d9 = virtualinvoke r1.<com.opengamma.analytics.financial.credit.isdastandardmodel.CDSAnalytic: double getLGD()>();
+
+        r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _maxExercisePrice> = $d9;
+
+        return;
+    }
+
+    public double getOptionPremium(double, double, com.opengamma.analytics.financial.credit.options.IndexOptionStrike, boolean)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        double d0, d1, $d2, $d3, $d4, $d5;
+        com.opengamma.analytics.financial.credit.options.IndexOptionStrike r1;
+        boolean z0, $z1, $z2;
+        java.lang.IllegalArgumentException $r3;
+        java.lang.StringBuilder $r4, $r5, $r7;
+        java.lang.Class $r6;
+        java.lang.String $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        r1 := @parameter2: com.opengamma.analytics.financial.credit.options.IndexOptionStrike;
+
+        z0 := @parameter3: boolean;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "strike");
+
+        $z1 = r1 instanceof com.opengamma.analytics.financial.credit.options.SpreadBasedStrike;
+
+        if $z1 == 0 goto label1;
+
+        $d4 = interfaceinvoke r1.<com.opengamma.analytics.financial.credit.options.IndexOptionStrike: double amount()>();
+
+        $d5 = virtualinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double getOptionPriceForSpreadQuotedIndex(double,double,double,boolean)>(d0, d1, $d4, z0);
+
+        return $d5;
+
+     label1:
+        $z2 = r1 instanceof com.opengamma.analytics.financial.credit.options.ExerciseAmount;
+
+        if $z2 == 0 goto label2;
+
+        $d2 = interfaceinvoke r1.<com.opengamma.analytics.financial.credit.options.IndexOptionStrike: double amount()>();
+
+        $d3 = virtualinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double getOptionPriceForPriceQuotedIndex(double,double,double,boolean)>(d0, d1, $d2, z0);
+
+        return $d3;
+
+     label2:
+        $r3 = new java.lang.IllegalArgumentException;
+
+        $r4 = new java.lang.StringBuilder;
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>()>();
+
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("unknow  strike type ");
+
+        $r6 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r7 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r6);
+
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r3.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r8);
+
+        throw $r3;
+    }
+
+    public double getOptionPriceForSpreadQuotedIndex(double, double, double, boolean)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8;
+        boolean z0, $z1;
+        byte $b0;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction $r1;
+        java.lang.Double $r2, $r4;
+        java.lang.Object $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        z0 := @parameter3: boolean;
+
+        $b0 = d2 cmpl 0.0;
+
+        if $b0 < 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "strike cannot be negative");
+
+        d3 = virtualinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double calibrateX0(double,double)>(d0, d1);
+
+        $d5 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _coupon>;
+
+        $d6 = d2 - $d5;
+
+        $r1 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction _annuityFunc>;
+
+        $r2 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r3 = virtualinvoke $r1.<com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction: java.lang.Object evaluate(java.lang.Object)>($r2);
+
+        $r4 = (java.lang.Double) $r3;
+
+        $d7 = virtualinvoke $r4.<java.lang.Double: double doubleValue()>();
+
+        d4 = $d6 * $d7;
+
+        $d8 = specialinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double optionPrice(double,double,double,double,boolean)>(d0, d3, d1, d4, z0);
+
+        return $d8;
+    }
+
+    public double getOptionPriceForPriceQuotedIndex(double, double, double, boolean)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12;
+        boolean z0, $z1, $z2;
+        byte $b0, $b1, $b2, $b3;
+        java.lang.Object[] $r1, $r5;
+        java.lang.Double $r2, $r3, $r4, $r6, $r7, $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        z0 := @parameter3: boolean;
+
+        $d4 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _minExercisePrice>;
+
+        $b0 = d0 cmpl $d4;
+
+        if $b0 < 0 goto label1;
+
+        $d6 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _maxExercisePrice>;
+
+        $b2 = d0 cmpg $d6;
+
+        if $b2 >= 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        $r1 = newarray (java.lang.Object)[3];
+
+        $d7 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _minExercisePrice>;
+
+        $r2 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d7);
+
+        $r1[0] = $r2;
+
+        $d8 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _maxExercisePrice>;
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d8);
+
+        $r1[1] = $r3;
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r1[2] = $r4;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z1, "The defaulted adjusted forward index price must be in the range {} to {} - value of {} is outside this", $r1);
+
+        $d9 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _minExercisePrice>;
+
+        $b3 = d2 cmpl $d9;
+
+        if $b3 < 0 goto label3;
+
+        $d5 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _maxExercisePrice>;
+
+        $b1 = d2 cmpg $d5;
+
+        if $b1 >= 0 goto label3;
+
+        $z2 = 1;
+
+        goto label4;
+
+     label3:
+        $z2 = 0;
+
+     label4:
+        $r5 = newarray (java.lang.Object)[3];
+
+        $d10 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _minExercisePrice>;
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d10);
+
+        $r5[0] = $r6;
+
+        $d11 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _maxExercisePrice>;
+
+        $r7 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d11);
+
+        $r5[1] = $r7;
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r5[2] = $r8;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z2, "The exercise price must be in the range {} to {} - value of {} is outside this", $r5);
+
+        d3 = virtualinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double calibrateX0(double,double)>(d0, d1);
+
+        $d12 = specialinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double optionPrice(double,double,double,double,boolean)>(d0, d3, d1, d2, z0);
+
+        return $d12;
+    }
+
+    private double optionPrice(double, double, double, double, boolean)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9;
+        boolean z0, $z2;
+        byte $b0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        z0 := @parameter4: boolean;
+
+        d4 = specialinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double otmOptionPrice(double,double,double,double)>(d0, d1, d2, d3);
+
+        $b0 = d3 cmpl d0;
+
+        if $b0 < 0 goto label1;
+
+        $z2 = 1;
+
+        goto label2;
+
+     label1:
+        $z2 = 0;
+
+     label2:
+        if z0 != $z2 goto label3;
+
+        return d4;
+
+     label3:
+        $d7 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _df>;
+
+        $d6 = d0 - d3;
+
+        d5 = $d7 * $d6;
+
+        if z0 == 0 goto label4;
+
+        $d9 = d5 + d4;
+
+        return $d9;
+
+     label4:
+        $d8 = d4 - d5;
+
+        return $d8;
+    }
+
+    private double otmOptionPrice(double, double, double, double)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14;
+        com.opengamma.analytics.math.function.Function1D r1;
+        byte $b0;
+        com.opengamma.analytics.math.integration.Integrator1D $r2, $r7;
+        java.lang.Double $r3, $r4, $r6, $r8, $r9, $r11;
+        java.lang.Object $r5, $r10;
+        boolean $z1;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        d3 := @parameter3: double;
+
+        d4 = specialinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double getZStar(double,double,double)>(d1, d2, d3);
+
+        $b0 = d3 cmpl d0;
+
+        if $b0 < 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        r1 = specialinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.function.Function1D getPriceIntegrand(double,double,double,boolean)>(d1, d2, d3, $z1);
+
+        if $z1 == 0 goto label3;
+
+        $d10 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _df>;
+
+        $r7 = <com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.integration.Integrator1D RK>;
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d4);
+
+        $d11 = d4 + 2.0;
+
+        $d12 = staticinvoke <java.lang.Math: double max(double,double)>(8.0, $d11);
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d12);
+
+        $r10 = virtualinvoke $r7.<com.opengamma.analytics.math.integration.Integrator1D: java.lang.Object integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Object,java.lang.Object)>(r1, $r8, $r9);
+
+        $r11 = (java.lang.Double) $r10;
+
+        $d13 = virtualinvoke $r11.<java.lang.Double: double doubleValue()>();
+
+        $d14 = $d10 * $d13;
+
+        return $d14;
+
+     label3:
+        $d6 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _df>;
+
+        $r2 = <com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.integration.Integrator1D RK>;
+
+        $d5 = d4 - 2.0;
+
+        $d7 = staticinvoke <java.lang.Math: double min(double,double)>(-8.0, $d5);
+
+        $r3 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d7);
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d4);
+
+        $r5 = virtualinvoke $r2.<com.opengamma.analytics.math.integration.Integrator1D: java.lang.Object integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Object,java.lang.Object)>(r1, $r3, $r4);
+
+        $r6 = (java.lang.Double) $r5;
+
+        $d8 = virtualinvoke $r6.<java.lang.Double: double doubleValue()>();
+
+        $d9 = $d6 * $d8;
+
+        return $d9;
+    }
+
+    public double impliedVol(double, double, double, boolean)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10;
+        boolean z0, $z2;
+        byte $b0;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        z0 := @parameter3: boolean;
+
+        $b0 = d1 cmpl d0;
+
+        if $b0 < 0 goto label1;
+
+        $z2 = 1;
+
+        goto label2;
+
+     label1:
+        $z2 = 0;
+
+     label2:
+        if $z2 != z0 goto label3;
+
+        $d10 = specialinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double impliedVol(double,double,double)>(d0, d1, d2);
+
+        return $d10;
+
+     label3:
+        $d5 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _df>;
+
+        $d4 = d0 - d1;
+
+        d3 = $d5 * $d4;
+
+        if z0 == 0 goto label4;
+
+        $d8 = d2 - d3;
+
+        $d9 = specialinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double impliedVol(double,double,double)>(d0, d1, $d8);
+
+        return $d9;
+
+     label4:
+        $d6 = d2 + d3;
+
+        $d7 = specialinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double impliedVol(double,double,double)>(d0, d1, $d6);
+
+        return $d7;
+    }
+
+    private double impliedVol(double, double, double)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        double d0, d1, d2, $d3;
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer$1 $r2;
+        com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder $r3;
+        java.lang.Double $r4, $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        $r2 = new com.opengamma.analytics.financial.credit.options.IndexOptionPricer$1;
+
+        specialinvoke $r2.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer$1: void <init>(com.opengamma.analytics.financial.credit.options.IndexOptionPricer,double,double,double)>(r0, d0, d1, d2);
+
+        $r3 = <com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder ROOTFINDER>;
+
+        $r4 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.3);
+
+        $r5 = virtualinvoke $r3.<com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder: java.lang.Double getRoot(com.opengamma.analytics.math.function.Function1D,java.lang.Double)>($r2, $r4);
+
+        $d3 = virtualinvoke $r5.<java.lang.Double: double doubleValue()>();
+
+        return $d3;
+    }
+
+    public double calibrateX0(double, double)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        double d0, d1, d2, $d3, $d4;
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer$2 $r4;
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer$3 $r5;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.MarketQuoteConverter $r6;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve $r7;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.CDSAnalytic $r8;
+        com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder $r9;
+        com.opengamma.analytics.math.function.DoubleFunction1D $r10;
+        java.lang.Double $r11, $r12;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $r4 = new com.opengamma.analytics.financial.credit.options.IndexOptionPricer$2;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer$2: void <init>(com.opengamma.analytics.financial.credit.options.IndexOptionPricer,double,double)>(r0, d1, d0);
+
+        $r5 = new com.opengamma.analytics.financial.credit.options.IndexOptionPricer$3;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer$3: void <init>(com.opengamma.analytics.financial.credit.options.IndexOptionPricer,double,double)>(r0, d1, d0);
+
+        $r6 = new com.opengamma.analytics.financial.credit.isdastandardmodel.MarketQuoteConverter;
+
+        specialinvoke $r6.<com.opengamma.analytics.financial.credit.isdastandardmodel.MarketQuoteConverter: void <init>()>();
+
+        $r8 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.financial.credit.isdastandardmodel.CDSAnalytic _fwdCDS>;
+
+        $d3 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _coupon>;
+
+        $r7 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve _fwdYieldCurve>;
+
+        d2 = virtualinvoke $r6.<com.opengamma.analytics.financial.credit.isdastandardmodel.MarketQuoteConverter: double pufToQuotedSpread(com.opengamma.analytics.financial.credit.isdastandardmodel.CDSAnalytic,double,com.opengamma.analytics.financial.credit.isdastandardmodel.ISDACompliantYieldCurve,double)>($r8, $d3, $r7, d0);
+
+        $r9 = <com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder ROOTFINDER>;
+
+        $r10 = virtualinvoke $r4.<com.opengamma.analytics.math.function.DoubleFunction1D: com.opengamma.analytics.math.function.DoubleFunction1D derivative()>();
+
+        $r11 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r12 = virtualinvoke $r9.<com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder: java.lang.Double getRoot(com.opengamma.analytics.math.function.DoubleFunction1D,com.opengamma.analytics.math.function.DoubleFunction1D,java.lang.Double)>($r5, $r10, $r11);
+
+        $d4 = virtualinvoke $r12.<java.lang.Double: double doubleValue()>();
+
+        return $d4;
+    }
+
+    public com.opengamma.analytics.math.function.Function1D getDefaultAdjForwardForX(double)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        double d0;
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer$4 $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        d0 := @parameter0: double;
+
+        $r1 = new com.opengamma.analytics.financial.credit.options.IndexOptionPricer$4;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer$4: void <init>(com.opengamma.analytics.financial.credit.options.IndexOptionPricer,double)>(r0, d0);
+
+        return $r1;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getGaussHermiteIntegrand(double, double)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        double d0, d1;
+        com.opengamma.analytics.math.function.Function1D r1;
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer$5 $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        r1 = specialinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.function.Function1D getFiForZ(double,double)>(d0, d1);
+
+        $r2 = new com.opengamma.analytics.financial.credit.options.IndexOptionPricer$5;
+
+        specialinvoke $r2.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer$5: void <init>(com.opengamma.analytics.financial.credit.options.IndexOptionPricer,com.opengamma.analytics.math.function.Function1D)>(r0, r1);
+
+        return $r2;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getFiForZ(double, double)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8;
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer$6 $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $d4 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _expiry>;
+
+        $d5 = staticinvoke <java.lang.Math: double sqrt(double)>($d4);
+
+        d2 = d1 * $d5;
+
+        $d7 = d1 * d1;
+
+        $d6 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _expiry>;
+
+        $d8 = $d7 * $d6;
+
+        d3 = $d8 / 2.0;
+
+        $r1 = new com.opengamma.analytics.financial.credit.options.IndexOptionPricer$6;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer$6: void <init>(com.opengamma.analytics.financial.credit.options.IndexOptionPricer,double,double,double)>(r0, d0, d2, d3);
+
+        return $r1;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getPriceIntegrand(double, double, double, boolean)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        double d0, d1, d2;
+        boolean z0;
+        com.opengamma.analytics.math.function.Function1D r1;
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer$7 $r2;
+        byte $b1;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        z0 := @parameter3: boolean;
+
+        if z0 == 0 goto label1;
+
+        $b1 = 1;
+
+        goto label2;
+
+     label1:
+        $b1 = -1;
+
+     label2:
+        r1 = specialinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.function.Function1D getFiForZ(double,double)>(d0, d1);
+
+        $r2 = new com.opengamma.analytics.financial.credit.options.IndexOptionPricer$7;
+
+        specialinvoke $r2.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer$7: void <init>(com.opengamma.analytics.financial.credit.options.IndexOptionPricer,int,com.opengamma.analytics.math.function.Function1D,double)>(r0, $b1, r1, d2);
+
+        return $r2;
+    }
+
+    private double getZStar(double, double, double)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        double d0, d1, d2, $d3;
+        com.opengamma.analytics.math.function.Function1D r1;
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer$8 $r3;
+        com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder $r4;
+        java.lang.Double $r5, $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        d2 := @parameter2: double;
+
+        r1 = specialinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.function.Function1D getFiForZ(double,double)>(d0, d1);
+
+        $r3 = new com.opengamma.analytics.financial.credit.options.IndexOptionPricer$8;
+
+        specialinvoke $r3.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer$8: void <init>(com.opengamma.analytics.financial.credit.options.IndexOptionPricer,com.opengamma.analytics.math.function.Function1D,double)>(r0, r1, d2);
+
+        $r4 = <com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder ROOTFINDER>;
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        $r6 = virtualinvoke $r4.<com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder: java.lang.Double getRoot(com.opengamma.analytics.math.function.Function1D,java.lang.Double)>($r3, $r5);
+
+        $d3 = virtualinvoke $r6.<java.lang.Double: double doubleValue()>();
+
+        return $d3;
+    }
+
+    static double access$000(com.opengamma.analytics.financial.credit.options.IndexOptionPricer, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        double d0, d1, d2, d3, $d4;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        d2 := @parameter3: double;
+
+        d3 := @parameter4: double;
+
+        $d4 = specialinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double otmOptionPrice(double,double,double,double)>(d0, d1, d2, d3);
+
+        return $d4;
+    }
+
+    static com.opengamma.analytics.math.function.Function1D access$100(com.opengamma.analytics.financial.credit.options.IndexOptionPricer, double, double)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        double d0, d1;
+        com.opengamma.analytics.math.function.Function1D $r1;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        $r1 = specialinvoke r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.function.Function1D getGaussHermiteIntegrand(double,double)>(d0, d1);
+
+        return $r1;
+    }
+
+    static com.opengamma.analytics.math.integration.GaussHermiteQuadratureIntegrator1D access$200()
+    {
+        com.opengamma.analytics.math.integration.GaussHermiteQuadratureIntegrator1D $r0;
+
+        $r0 = <com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.integration.GaussHermiteQuadratureIntegrator1D GHQ2>;
+
+        return $r0;
+    }
+
+    static com.opengamma.analytics.math.integration.GaussHermiteQuadratureIntegrator1D access$300()
+    {
+        com.opengamma.analytics.math.integration.GaussHermiteQuadratureIntegrator1D $r0;
+
+        $r0 = <com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.integration.GaussHermiteQuadratureIntegrator1D GHQ7>;
+
+        return $r0;
+    }
+
+    static com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction access$400(com.opengamma.analytics.financial.credit.options.IndexOptionPricer)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction $r1;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        $r1 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction _annuityFunc>;
+
+        return $r1;
+    }
+
+    static double access$500()
+    {
+        double $d0;
+
+        $d0 = <com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double ONE_OVER_ROOT_PI>;
+
+        return $d0;
+    }
+
+    static double access$600(com.opengamma.analytics.financial.credit.options.IndexOptionPricer)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        double $d0;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        $d0 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double _coupon>;
+
+        return $d0;
+    }
+
+    static com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction access$700(com.opengamma.analytics.financial.credit.options.IndexOptionPricer)
+    {
+        com.opengamma.analytics.financial.credit.options.IndexOptionPricer r0;
+        com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction $r1;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.credit.options.IndexOptionPricer;
+
+        $r1 = r0.<com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.financial.credit.isdastandardmodel.AnnuityForSpreadFunction _annuityFuncQuick>;
+
+        return $r1;
+    }
+
+    static com.opengamma.analytics.math.statistics.distribution.NormalDistribution access$800()
+    {
+        com.opengamma.analytics.math.statistics.distribution.NormalDistribution $r0;
+
+        $r0 = <com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.statistics.distribution.NormalDistribution NORMAL>;
+
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.math.statistics.distribution.NormalDistribution $r0;
+        double $d0, $d1;
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D $r1;
+        com.opengamma.analytics.math.integration.GaussHermiteQuadratureIntegrator1D $r2, $r3;
+        com.opengamma.analytics.math.rootfinding.BracketRoot $r4;
+        com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder $r5;
+        com.opengamma.analytics.financial.credit.index.PortfolioSwapAdjustment $r6;
+
+        $r0 = new com.opengamma.analytics.math.statistics.distribution.NormalDistribution;
+
+        specialinvoke $r0.<com.opengamma.analytics.math.statistics.distribution.NormalDistribution: void <init>(double,double)>(0.0, 1.0);
+
+        <com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.statistics.distribution.NormalDistribution NORMAL> = $r0;
+
+        $d0 = staticinvoke <java.lang.Math: double sqrt(double)>(3.141592653589793);
+
+        $d1 = 1.0 / $d0;
+
+        <com.opengamma.analytics.financial.credit.options.IndexOptionPricer: double ONE_OVER_ROOT_PI> = $d1;
+
+        $r1 = new com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        specialinvoke $r1.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: void <init>()>();
+
+        <com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.integration.Integrator1D RK> = $r1;
+
+        $r2 = new com.opengamma.analytics.math.integration.GaussHermiteQuadratureIntegrator1D;
+
+        specialinvoke $r2.<com.opengamma.analytics.math.integration.GaussHermiteQuadratureIntegrator1D: void <init>(int)>(2);
+
+        <com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.integration.GaussHermiteQuadratureIntegrator1D GHQ2> = $r2;
+
+        $r3 = new com.opengamma.analytics.math.integration.GaussHermiteQuadratureIntegrator1D;
+
+        specialinvoke $r3.<com.opengamma.analytics.math.integration.GaussHermiteQuadratureIntegrator1D: void <init>(int)>(7);
+
+        <com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.integration.GaussHermiteQuadratureIntegrator1D GHQ7> = $r3;
+
+        $r4 = new com.opengamma.analytics.math.rootfinding.BracketRoot;
+
+        specialinvoke $r4.<com.opengamma.analytics.math.rootfinding.BracketRoot: void <init>()>();
+
+        <com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.rootfinding.BracketRoot BRACKER> = $r4;
+
+        $r5 = new com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder;
+
+        specialinvoke $r5.<com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder: void <init>(double)>(1.0E-10);
+
+        <com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.math.rootfinding.NewtonRaphsonSingleRootFinder ROOTFINDER> = $r5;
+
+        $r6 = new com.opengamma.analytics.financial.credit.index.PortfolioSwapAdjustment;
+
+        specialinvoke $r6.<com.opengamma.analytics.financial.credit.index.PortfolioSwapAdjustment: void <init>()>();
+
+        <com.opengamma.analytics.financial.credit.options.IndexOptionPricer: com.opengamma.analytics.financial.credit.index.PortfolioSwapAdjustment PORTFOLIO_ADJ> = $r6;
+
+        return;
+    }
+}

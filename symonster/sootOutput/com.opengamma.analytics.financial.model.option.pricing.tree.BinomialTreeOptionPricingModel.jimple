@@ -1,0 +1,3029 @@
+public class com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel extends com.opengamma.analytics.financial.model.option.pricing.tree.TreeOptionPricingModel
+{
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel r0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.model.option.pricing.tree.TreeOptionPricingModel: void <init>()>();
+
+        return;
+    }
+
+    public double getPrice(com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification, com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel r0;
+        com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification r1, r3, $r9;
+        com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D r2;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, $d13, $d14, $d15, $d16, $d17;
+        double[] r4, r11;
+        byte $b0, $b1, $b2, $b3;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11;
+        com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider$CrossBarrierChecker $r7, $r8;
+        com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider r10;
+        int i4, i5;
+        com.opengamma.analytics.financial.model.option.pricing.tree.TrigeorgisLatticeSpecification r12;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D;
+
+        d0 := @parameter2: double;
+
+        d1 := @parameter3: double;
+
+        d2 := @parameter4: double;
+
+        d3 := @parameter5: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "lattice");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "function");
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 <= 0 goto label01;
+
+        $z8 = 1;
+
+        goto label02;
+
+     label01:
+        $z8 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z8, "Spot should be positive");
+
+        $z0 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d0);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Spot should be finite");
+
+        $b1 = d1 cmpl 0.0;
+
+        if $b1 <= 0 goto label03;
+
+        $z9 = 1;
+
+        goto label04;
+
+     label03:
+        $z9 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z9, "volatility should be positive");
+
+        $z1 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d1);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "volatility should be finite");
+
+        $z2 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "interestRate should be finite");
+
+        $z3 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d3);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "dividend should be finite");
+
+        $z4 = r1 instanceof com.opengamma.analytics.financial.model.option.pricing.tree.TimeVaryingLatticeSpecification;
+
+        if $z4 == 0 goto label05;
+
+        r12 = new com.opengamma.analytics.financial.model.option.pricing.tree.TrigeorgisLatticeSpecification;
+
+        $r9 = r12;
+
+        specialinvoke r12.<com.opengamma.analytics.financial.model.option.pricing.tree.TrigeorgisLatticeSpecification: void <init>()>();
+
+        goto label06;
+
+     label05:
+        $r9 = r1;
+
+     label06:
+        r3 = $r9;
+
+        $z5 = r2 instanceof com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider;
+
+        if $z5 == 0 goto label08;
+
+        r10 = (com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider) r2;
+
+        $r7 = virtualinvoke r10.<com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider: com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider$CrossBarrierChecker getChecker()>();
+
+        $z6 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider$CrossBarrierChecker: boolean checkOut(double)>(d0);
+
+        if $z6 != 0 goto label07;
+
+        $r8 = virtualinvoke r10.<com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider: com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider$CrossBarrierChecker getChecker()>();
+
+        $z7 = virtualinvoke $r8.<com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider$CrossBarrierChecker: boolean checkStrikeBehindBarrier()>();
+
+        if $z7 == 0 goto label08;
+
+     label07:
+        return 0.0;
+
+     label08:
+        i4 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: int getNumberOfSteps()>();
+
+        d4 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double getStrike()>();
+
+        d5 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double getTimeToExpiry()>();
+
+        $d13 = (double) i4;
+
+        d6 = d5 / $d13;
+
+        $d14 = neg d2;
+
+        $d15 = $d14 * d6;
+
+        d7 = staticinvoke <java.lang.Math: double exp(double)>($d15);
+
+        $d16 = d2 - d3;
+
+        r4 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification: double[] getParameters(double,double,double,double,double,int,double)>(d0, d4, d5, d1, $d16, i4, d6);
+
+        d8 = r4[0];
+
+        d9 = r4[1];
+
+        d10 = r4[2];
+
+        d11 = r4[3];
+
+        d12 = d8 / d9;
+
+        $b2 = d10 cmpl 0.0;
+
+        if $b2 <= 0 goto label09;
+
+        $z10 = 1;
+
+        goto label10;
+
+     label09:
+        $z10 = 0;
+
+     label10:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z10, "upProbability should be greater than 0.");
+
+        $b3 = d10 cmpg 1.0;
+
+        if $b3 >= 0 goto label11;
+
+        $z11 = 1;
+
+        goto label12;
+
+     label11:
+        $z11 = 0;
+
+     label12:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z11, "upProbability should be smaller than 1.");
+
+        r11 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double[] getPayoffAtExpiry(double,double,double)>(d0, d9, d12);
+
+        i5 = i4 - 1;
+
+     label13:
+        if i5 <= -1 goto label14;
+
+        r11 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double[] getNextOptionValues(double,double,double,double[],double,double,double,double,int)>(d7, d10, d11, r11, d0, 0.0, d9, d12, i5);
+
+        i5 = i5 + -1;
+
+        goto label13;
+
+     label14:
+        $d17 = r11[0];
+
+        return $d17;
+    }
+
+    public double getPrice(com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D, double, double[], double[], double[])
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel r0;
+        com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D r1;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26;
+        double[] r2, r3, r4, r6, r7, r8, r17, r18, r19;
+        int i0, $i2, $i3, $i4, i8, i9, i10;
+        byte $b1, $b5, $b6, $b7;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13;
+        com.opengamma.analytics.financial.model.option.pricing.tree.TimeVaryingLatticeSpecification $r13;
+        com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider$CrossBarrierChecker $r14, $r15;
+        com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider r16;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D;
+
+        d0 := @parameter1: double;
+
+        r2 := @parameter2: double[];
+
+        r3 := @parameter3: double[];
+
+        r4 := @parameter4: double[];
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "function");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "volatility");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "interestRate");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r4, "dividend");
+
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 <= 0 goto label01;
+
+        $z7 = 1;
+
+        goto label02;
+
+     label01:
+        $z7 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z7, "Spot should be positive");
+
+        $z0 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d0);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Spot should be finite");
+
+        $r13 = new com.opengamma.analytics.financial.model.option.pricing.tree.TimeVaryingLatticeSpecification;
+
+        specialinvoke $r13.<com.opengamma.analytics.financial.model.option.pricing.tree.TimeVaryingLatticeSpecification: void <init>()>();
+
+        i0 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: int getNumberOfSteps()>();
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double getTimeToExpiry()>();
+
+        $i2 = lengthof r3;
+
+        if i0 != $i2 goto label03;
+
+        $z8 = 1;
+
+        goto label04;
+
+     label03:
+        $z8 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z8, "Wrong interestRate length");
+
+        $i3 = lengthof r2;
+
+        if i0 != $i3 goto label05;
+
+        $z9 = 1;
+
+        goto label06;
+
+     label05:
+        $z9 = 0;
+
+     label06:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z9, "Wrong volatility length");
+
+        $i4 = lengthof r4;
+
+        if i0 != $i4 goto label07;
+
+        $z10 = 1;
+
+        goto label08;
+
+     label07:
+        $z10 = 0;
+
+     label08:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z10, "Wrong dividend length");
+
+        i8 = 0;
+
+     label09:
+        if i8 >= i0 goto label12;
+
+        $d23 = r2[i8];
+
+        $b7 = $d23 cmpl 0.0;
+
+        if $b7 <= 0 goto label10;
+
+        $z11 = 1;
+
+        goto label11;
+
+     label10:
+        $z11 = 0;
+
+     label11:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z11, "volatility should be positive");
+
+        $d24 = r2[i8];
+
+        $z4 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d24);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z4, "volatility should be finite");
+
+        $d25 = r3[i8];
+
+        $z5 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d25);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "interestRate should be finite");
+
+        $d26 = r4[i8];
+
+        $z6 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d26);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z6, "dividend should be finite");
+
+        i8 = i8 + 1;
+
+        goto label09;
+
+     label12:
+        $z1 = r1 instanceof com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider;
+
+        if $z1 == 0 goto label14;
+
+        r16 = (com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider) r1;
+
+        $r14 = virtualinvoke r16.<com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider: com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider$CrossBarrierChecker getChecker()>();
+
+        $z2 = virtualinvoke $r14.<com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider$CrossBarrierChecker: boolean checkOut(double)>(d0);
+
+        if $z2 != 0 goto label13;
+
+        $r15 = virtualinvoke r16.<com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider: com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider$CrossBarrierChecker getChecker()>();
+
+        $z3 = virtualinvoke $r15.<com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider$CrossBarrierChecker: boolean checkStrikeBehindBarrier()>();
+
+        if $z3 == 0 goto label14;
+
+     label13:
+        return 0.0;
+
+     label14:
+        r17 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.option.pricing.tree.TimeVaryingLatticeSpecification: double[] getShiftedDrift(double[],double[],double[])>(r2, r3, r4);
+
+        d2 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.option.pricing.tree.TimeVaryingLatticeSpecification: double getSpaceStep(double,double[],int,double[])>(d1, r2, i0, r17);
+
+        $d5 = neg d2;
+
+        d3 = staticinvoke <java.lang.Math: double exp(double)>($d5);
+
+        $d6 = 2.0 * d2;
+
+        d4 = staticinvoke <java.lang.Math: double exp(double)>($d6);
+
+        r6 = newarray (double)[i0];
+
+        r7 = newarray (double)[i0];
+
+        r8 = newarray (double)[i0];
+
+        i9 = 0;
+
+     label15:
+        if i9 >= i0 goto label20;
+
+        $d12 = r2[i9];
+
+        $d11 = r17[i9];
+
+        r18 = virtualinvoke $r13.<com.opengamma.analytics.financial.model.option.pricing.tree.TimeVaryingLatticeSpecification: double[] getParameters(double,double,double)>($d12, $d11, d2);
+
+        $d13 = r18[1];
+
+        r6[i9] = $d13;
+
+        $d14 = r18[1];
+
+        $d15 = 1.0 - $d14;
+
+        r7[i9] = $d15;
+
+        $d16 = r3[i9];
+
+        $d18 = neg $d16;
+
+        $d17 = r18[0];
+
+        $d19 = $d18 * $d17;
+
+        $d20 = staticinvoke <java.lang.Math: double exp(double)>($d19);
+
+        r8[i9] = $d20;
+
+        $d21 = r6[i9];
+
+        $b5 = $d21 cmpl 0.0;
+
+        if $b5 <= 0 goto label16;
+
+        $z12 = 1;
+
+        goto label17;
+
+     label16:
+        $z12 = 0;
+
+     label17:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z12, "upProbability should be greater than 0.");
+
+        $d22 = r6[i9];
+
+        $b6 = $d22 cmpg 1.0;
+
+        if $b6 >= 0 goto label18;
+
+        $z13 = 1;
+
+        goto label19;
+
+     label18:
+        $z13 = 0;
+
+     label19:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z13, "upProbability should be smaller than 1.");
+
+        i9 = i9 + 1;
+
+        goto label15;
+
+     label20:
+        r19 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double[] getPayoffAtExpiry(double,double,double)>(d0, d3, d4);
+
+        i10 = i0 - 1;
+
+     label21:
+        if i10 <= -1 goto label22;
+
+        $d10 = r8[i10];
+
+        $d9 = r6[i10];
+
+        $d8 = r7[i10];
+
+        r19 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double[] getNextOptionValues(double,double,double,double[],double,double,double,double,int)>($d10, $d9, $d8, r19, d0, 0.0, d3, d4, i10);
+
+        i10 = i10 + -1;
+
+        goto label21;
+
+     label22:
+        $d7 = r19[0];
+
+        return $d7;
+    }
+
+    public double getPrice(com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification, com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D, double, double, double, com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel r0;
+        com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification r1, r4, $r12;
+        com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D r2;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, d21, d22;
+        com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider r3;
+        double[] r5, r14;
+        int[] r6;
+        int i0, $i5, $i6, $i7, $i8, i9, i10, i11, i12, i13, i14;
+        byte $b1, $b2, $b3, $b4;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13;
+        com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider$CrossBarrierChecker $r10, $r11;
+        com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider r13;
+        com.opengamma.analytics.financial.model.option.pricing.tree.TrigeorgisLatticeSpecification r15;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D;
+
+        d0 := @parameter2: double;
+
+        d1 := @parameter3: double;
+
+        d2 := @parameter4: double;
+
+        r3 := @parameter5: com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "lattice");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "function");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "dividend");
+
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 <= 0 goto label01;
+
+        $z10 = 1;
+
+        goto label02;
+
+     label01:
+        $z10 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z10, "Spot should be positive");
+
+        $z0 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d0);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Spot should be finite");
+
+        $b2 = d1 cmpl 0.0;
+
+        if $b2 <= 0 goto label03;
+
+        $z11 = 1;
+
+        goto label04;
+
+     label03:
+        $z11 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z11, "volatility should be positive");
+
+        $z1 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d1);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "volatility should be finite");
+
+        $z2 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "interestRate should be finite");
+
+        $z3 = r1 instanceof com.opengamma.analytics.financial.model.option.pricing.tree.TimeVaryingLatticeSpecification;
+
+        if $z3 == 0 goto label05;
+
+        r15 = new com.opengamma.analytics.financial.model.option.pricing.tree.TrigeorgisLatticeSpecification;
+
+        $r12 = r15;
+
+        specialinvoke r15.<com.opengamma.analytics.financial.model.option.pricing.tree.TrigeorgisLatticeSpecification: void <init>()>();
+
+        goto label06;
+
+     label05:
+        $r12 = r1;
+
+     label06:
+        r4 = $r12;
+
+        $z4 = r2 instanceof com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider;
+
+        if $z4 == 0 goto label08;
+
+        r13 = (com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider) r2;
+
+        $r10 = virtualinvoke r13.<com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider: com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider$CrossBarrierChecker getChecker()>();
+
+        $z8 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider$CrossBarrierChecker: boolean checkOut(double)>(d0);
+
+        if $z8 != 0 goto label07;
+
+        $r11 = virtualinvoke r13.<com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider: com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider$CrossBarrierChecker getChecker()>();
+
+        $z9 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.option.pricing.tree.BarrierOptionFunctionProvider$CrossBarrierChecker: boolean checkStrikeBehindBarrier()>();
+
+        if $z9 == 0 goto label08;
+
+     label07:
+        return 0.0;
+
+     label08:
+        i9 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: int getNumberOfSteps()>();
+
+        d3 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double getStrike()>();
+
+        d4 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double getTimeToExpiry()>();
+
+        $d12 = (double) i9;
+
+        d5 = d4 / $d12;
+
+        $z5 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: boolean checkTimeSteps(double)>(d5);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "Number of steps is too small");
+
+        $z6 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: boolean checkDividendBeforeExpiry(double)>(d4);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z6, "Dividend is paid after expiry");
+
+        $d13 = neg d2;
+
+        $d14 = $d13 * d5;
+
+        d6 = staticinvoke <java.lang.Math: double exp(double)>($d14);
+
+        r5 = virtualinvoke r4.<com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification: double[] getParameters(double,double,double,double,double,int,double)>(d0, d3, d4, d1, d2, i9, d5);
+
+        d7 = r5[0];
+
+        d8 = r5[1];
+
+        d9 = r5[2];
+
+        d10 = r5[3];
+
+        d11 = d7 / d8;
+
+        $b3 = d9 cmpl 0.0;
+
+        if $b3 <= 0 goto label09;
+
+        $z12 = 1;
+
+        goto label10;
+
+     label09:
+        $z12 = 0;
+
+     label10:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z12, "upProbability should be greater than 0.");
+
+        $b4 = d9 cmpg 1.0;
+
+        if $b4 >= 0 goto label11;
+
+        $z13 = 1;
+
+        goto label12;
+
+     label11:
+        $z13 = 0;
+
+     label12:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z13, "upProbability should be smaller than 1.");
+
+        r6 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: int[] getDividendSteps(double)>(d5);
+
+        d21 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double spotModifier(double,double)>(d0, d2);
+
+        r14 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double[] getPayoffAtExpiry(double,double,double)>(d21, d8, d11);
+
+        i10 = 0;
+
+        i0 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: int getNumberOfDividends()>();
+
+        $z7 = r3 instanceof com.opengamma.analytics.financial.model.option.pricing.tree.ProportionalDividendFunctionProvider;
+
+        if $z7 == 0 goto label18;
+
+        i11 = i9 - 1;
+
+     label13:
+        if i11 <= -1 goto label17;
+
+        $i7 = i0 - 1;
+
+        i12 = $i7 - i10;
+
+     label14:
+        if i12 <= -1 goto label16;
+
+        $i8 = r6[i12];
+
+        if i11 != $i8 goto label15;
+
+        d21 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double dividendCorrections(double,double,double,int)>(d21, 0.0, 0.0, i12);
+
+        i10 = i10 + 1;
+
+     label15:
+        i12 = i12 + -1;
+
+        goto label14;
+
+     label16:
+        r14 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double[] getNextOptionValues(double,double,double,double[],double,double,double,double,int)>(d6, d9, d10, r14, d21, 0.0, d8, d11, i11);
+
+        i11 = i11 + -1;
+
+        goto label13;
+
+     label17:
+        goto label23;
+
+     label18:
+        d22 = 0.0;
+
+        i13 = i9 - 1;
+
+     label19:
+        if i13 <= -1 goto label23;
+
+        $d16 = neg d2;
+
+        $d17 = $d16 * d5;
+
+        $d18 = staticinvoke <java.lang.Math: double exp(double)>($d17);
+
+        d22 = d22 * $d18;
+
+        $i5 = i0 - 1;
+
+        i14 = $i5 - i10;
+
+     label20:
+        if i14 <= -1 goto label22;
+
+        $i6 = r6[i14];
+
+        if i13 != $i6 goto label21;
+
+        $d19 = (double) i13;
+
+        $d20 = d5 * $d19;
+
+        d22 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double dividendCorrections(double,double,double,int)>(d22, d2, $d20, i14);
+
+        i10 = i10 + 1;
+
+     label21:
+        i14 = i14 + -1;
+
+        goto label20;
+
+     label22:
+        r14 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double[] getNextOptionValues(double,double,double,double[],double,double,double,double,int)>(d6, d9, d10, r14, d21, d22, d8, d11, i13);
+
+        i13 = i13 + -1;
+
+        goto label19;
+
+     label23:
+        $d15 = r14[0];
+
+        return $d15;
+    }
+
+    public double getPrice(com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider2D, double, double, double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel r0;
+        com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider2D r1;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, d15, d16, d17, d18, d19, d20, d21, d22, d23, d24, d25, d26, d27, d28, d29, d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67;
+        int i0, i15;
+        byte $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11, $b12, $b13, $b14;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15;
+        double[] $r3;
+        double[][] r4;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider2D;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        d2 := @parameter3: double;
+
+        d3 := @parameter4: double;
+
+        d4 := @parameter5: double;
+
+        d5 := @parameter6: double;
+
+        d6 := @parameter7: double;
+
+        d7 := @parameter8: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "function");
+
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 <= 0 goto label01;
+
+        $z4 = 1;
+
+        goto label02;
+
+     label01:
+        $z4 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z4, "spot1 should be positive");
+
+        $z0 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d0);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "spot1 should be finite");
+
+        $b2 = d1 cmpl 0.0;
+
+        if $b2 <= 0 goto label03;
+
+        $z5 = 1;
+
+        goto label04;
+
+     label03:
+        $z5 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "spot2 should be positive");
+
+        $z1 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d1);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "spot2 should be finite");
+
+        $b3 = d2 cmpl 0.0;
+
+        if $b3 <= 0 goto label05;
+
+        $z6 = 1;
+
+        goto label06;
+
+     label05:
+        $z6 = 0;
+
+     label06:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z6, "volatility1 should be positive");
+
+        $z2 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "volatility1 should be finite");
+
+        $b4 = d3 cmpl 0.0;
+
+        if $b4 <= 0 goto label07;
+
+        $z7 = 1;
+
+        goto label08;
+
+     label07:
+        $z7 = 0;
+
+     label08:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z7, "volatility2 should be positive");
+
+        $z3 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d3);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "volatility2 should be finite");
+
+        $b5 = d4 cmpl -1.0;
+
+        if $b5 < 0 goto label09;
+
+        $b10 = d4 cmpg 1.0;
+
+        if $b10 > 0 goto label09;
+
+        $z8 = 1;
+
+        goto label10;
+
+     label09:
+        $z8 = 0;
+
+     label10:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z8, "correlation should be -1. <= rho <= 1.");
+
+        $z9 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d5);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z9, "interestRate should be finite");
+
+        $z10 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d6);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z10, "dividend1 should be finite");
+
+        $z11 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d7);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z11, "dividend2 should be finite");
+
+        i0 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider2D: int getNumberOfSteps()>();
+
+        d8 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider2D: double getTimeToExpiry()>();
+
+        d9 = d2 * d3;
+
+        d10 = d2 * d2;
+
+        d11 = d3 * d3;
+
+        $d32 = (double) i0;
+
+        d12 = d8 / $d32;
+
+        $d33 = neg d5;
+
+        $d34 = $d33 * d12;
+
+        d13 = staticinvoke <java.lang.Math: double exp(double)>($d34);
+
+        d14 = staticinvoke <java.lang.Math: double sqrt(double)>(d12);
+
+        d15 = d2 * d14;
+
+        d16 = d3 * d14;
+
+        d17 = d15 * d16;
+
+        $d35 = d5 - d6;
+
+        $d36 = 0.5 * d10;
+
+        $d37 = $d35 - $d36;
+
+        $d38 = $d37 * d16;
+
+        d18 = $d38 * d12;
+
+        $d39 = d5 - d7;
+
+        $d40 = 0.5 * d11;
+
+        $d41 = $d39 - $d40;
+
+        $d42 = $d41 * d15;
+
+        d19 = $d42 * d12;
+
+        $d43 = d9 * d4;
+
+        d20 = $d43 * d12;
+
+        $d44 = d17 + d18;
+
+        $d45 = $d44 + d19;
+
+        $d46 = $d45 + d20;
+
+        $d47 = 0.25 * $d46;
+
+        d21 = $d47 / d17;
+
+        $d48 = d17 + d18;
+
+        $d49 = $d48 - d19;
+
+        $d50 = $d49 - d20;
+
+        $d51 = 0.25 * $d50;
+
+        d22 = $d51 / d17;
+
+        $d52 = d17 - d18;
+
+        $d53 = $d52 + d19;
+
+        $d54 = $d53 - d20;
+
+        $d55 = 0.25 * $d54;
+
+        d23 = $d55 / d17;
+
+        $d56 = d17 - d18;
+
+        $d57 = $d56 - d19;
+
+        $d58 = $d57 + d20;
+
+        $d59 = 0.25 * $d58;
+
+        d24 = $d59 / d17;
+
+        $b11 = d21 cmpl 0.0;
+
+        if $b11 <= 0 goto label11;
+
+        $b9 = d21 cmpg 1.0;
+
+        if $b9 >= 0 goto label11;
+
+        $z12 = 1;
+
+        goto label12;
+
+     label11:
+        $z12 = 0;
+
+     label12:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z12, "uuProbability should be 0 < p < 1.");
+
+        $b12 = d22 cmpl 0.0;
+
+        if $b12 <= 0 goto label13;
+
+        $b8 = d22 cmpg 1.0;
+
+        if $b8 >= 0 goto label13;
+
+        $z13 = 1;
+
+        goto label14;
+
+     label13:
+        $z13 = 0;
+
+     label14:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z13, "udProbability should be 0 < p < 1.");
+
+        $b13 = d23 cmpl 0.0;
+
+        if $b13 <= 0 goto label15;
+
+        $b7 = d23 cmpg 1.0;
+
+        if $b7 >= 0 goto label15;
+
+        $z14 = 1;
+
+        goto label16;
+
+     label15:
+        $z14 = 0;
+
+     label16:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z14, "duProbability should be 0 < p < 1.");
+
+        $b14 = d24 cmpl 0.0;
+
+        if $b14 <= 0 goto label17;
+
+        $b6 = d24 cmpg 1.0;
+
+        if $b6 >= 0 goto label17;
+
+        $z15 = 1;
+
+        goto label18;
+
+     label17:
+        $z15 = 0;
+
+     label18:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z15, "ddProbability should be 0 < p < 1.");
+
+        $d60 = neg d15;
+
+        d25 = staticinvoke <java.lang.Math: double exp(double)>($d60);
+
+        $d61 = neg d16;
+
+        d26 = staticinvoke <java.lang.Math: double exp(double)>($d61);
+
+        $d62 = 2.0 * d15;
+
+        d27 = staticinvoke <java.lang.Math: double exp(double)>($d62);
+
+        $d63 = 2.0 * d16;
+
+        d28 = staticinvoke <java.lang.Math: double exp(double)>($d63);
+
+        $d64 = (double) i0;
+
+        $d65 = staticinvoke <java.lang.Math: double pow(double,double)>(d25, $d64);
+
+        d29 = d0 * $d65;
+
+        $d66 = (double) i0;
+
+        $d67 = staticinvoke <java.lang.Math: double pow(double,double)>(d26, $d66);
+
+        d30 = d1 * $d67;
+
+        r4 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider2D: double[][] getPayoffAtExpiry(double,double,double,double)>(d29, d30, d27, d28);
+
+        i15 = i0 - 1;
+
+     label19:
+        if i15 <= -1 goto label20;
+
+        r4 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider2D: double[][] getNextOptionValues(double,double,double,double,double,double[][],double,double,double,double,double,double,int)>(d13, d21, d22, d23, d24, r4, d0, d1, d25, d26, d27, d28, i15);
+
+        i15 = i15 + -1;
+
+        goto label19;
+
+     label20:
+        $r3 = r4[0];
+
+        $d31 = $r3[0];
+
+        return $d31;
+    }
+
+    public com.opengamma.analytics.financial.greeks.GreekResultCollection getGreeks(com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification, com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel r0;
+        com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification r1, r4, $r22;
+        com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D r2;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58;
+        int i0, i5;
+        double[] r5, r6, $r12, $r13, r23;
+        byte $b1, $b2, $b3, $b4;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8;
+        com.opengamma.analytics.financial.greeks.Greek $r14, $r16, $r18, $r20;
+        java.lang.Double $r15, $r17, $r19, $r21;
+        com.opengamma.analytics.financial.greeks.GreekResultCollection r24;
+        com.opengamma.analytics.financial.model.option.pricing.tree.TrigeorgisLatticeSpecification r25;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D;
+
+        d0 := @parameter2: double;
+
+        d1 := @parameter3: double;
+
+        d2 := @parameter4: double;
+
+        d3 := @parameter5: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "lattice");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "function");
+
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 <= 0 goto label01;
+
+        $z5 = 1;
+
+        goto label02;
+
+     label01:
+        $z5 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "Spot should be positive");
+
+        $z0 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d0);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Spot should be finite");
+
+        $b2 = d1 cmpl 0.0;
+
+        if $b2 <= 0 goto label03;
+
+        $z6 = 1;
+
+        goto label04;
+
+     label03:
+        $z6 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z6, "volatility should be positive");
+
+        $z1 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d1);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "volatility should be finite");
+
+        $z2 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "interestRate should be finite");
+
+        $z3 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d3);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "dividend should be finite");
+
+        r24 = new com.opengamma.analytics.financial.greeks.GreekResultCollection;
+
+        specialinvoke r24.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void <init>()>();
+
+        $z4 = r1 instanceof com.opengamma.analytics.financial.model.option.pricing.tree.TimeVaryingLatticeSpecification;
+
+        if $z4 == 0 goto label05;
+
+        r25 = new com.opengamma.analytics.financial.model.option.pricing.tree.TrigeorgisLatticeSpecification;
+
+        $r22 = r25;
+
+        specialinvoke r25.<com.opengamma.analytics.financial.model.option.pricing.tree.TrigeorgisLatticeSpecification: void <init>()>();
+
+        goto label06;
+
+     label05:
+        $r22 = r1;
+
+     label06:
+        r4 = $r22;
+
+        i0 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: int getNumberOfSteps()>();
+
+        d4 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double getStrike()>();
+
+        d5 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double getTimeToExpiry()>();
+
+        $d13 = (double) i0;
+
+        d6 = d5 / $d13;
+
+        $d14 = neg d2;
+
+        $d15 = $d14 * d6;
+
+        d7 = staticinvoke <java.lang.Math: double exp(double)>($d15);
+
+        $d16 = d2 - d3;
+
+        r5 = virtualinvoke $r22.<com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification: double[] getParameters(double,double,double,double,double,int,double)>(d0, d4, d5, d1, $d16, i0, d6);
+
+        d8 = r5[0];
+
+        d9 = r5[1];
+
+        d10 = r5[2];
+
+        d11 = r5[3];
+
+        d12 = d8 / d9;
+
+        $b3 = d10 cmpl 0.0;
+
+        if $b3 <= 0 goto label07;
+
+        $z7 = 1;
+
+        goto label08;
+
+     label07:
+        $z7 = 0;
+
+     label08:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z7, "upProbability should be greater than 0.");
+
+        $b4 = d10 cmpg 1.0;
+
+        if $b4 >= 0 goto label09;
+
+        $z8 = 1;
+
+        goto label10;
+
+     label09:
+        $z8 = 0;
+
+     label10:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z8, "upProbability should be smaller than 1.");
+
+        r23 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double[] getPayoffAtExpiry(double,double,double)>(d0, d9, d12);
+
+        r6 = newarray (double)[4];
+
+        $r12 = newarray (double)[2];
+
+        $d17 = d0 * d9;
+
+        $r12[0] = $d17;
+
+        $d18 = d0 * d8;
+
+        $r12[1] = $d18;
+
+        $r13 = newarray (double)[3];
+
+        $d19 = $r12[0];
+
+        $d20 = $d19 * d9;
+
+        $r13[0] = $d20;
+
+        $d21 = $r12[0];
+
+        $d22 = $d21 * d8;
+
+        $r13[1] = $d22;
+
+        $d23 = $r12[1];
+
+        $d24 = $d23 * d8;
+
+        $r13[2] = $d24;
+
+        i5 = i0 - 1;
+
+     label11:
+        if i5 <= -1 goto label14;
+
+        r23 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double[] getNextOptionValues(double,double,double,double[],double,double,double,double,int)>(d7, d10, d11, r23, d0, 0.0, d9, d12, i5);
+
+        if i5 != 2 goto label12;
+
+        $d39 = r23[2];
+
+        $d38 = r23[1];
+
+        $d43 = $d39 - $d38;
+
+        $d41 = $r13[2];
+
+        $d40 = $r13[1];
+
+        $d42 = $d41 - $d40;
+
+        $d51 = $d43 / $d42;
+
+        $d45 = r23[1];
+
+        $d44 = r23[0];
+
+        $d49 = $d45 - $d44;
+
+        $d47 = $r13[1];
+
+        $d46 = $r13[0];
+
+        $d48 = $d47 - $d46;
+
+        $d50 = $d49 / $d48;
+
+        $d52 = $d51 - $d50;
+
+        $d56 = 2.0 * $d52;
+
+        $d54 = $r13[2];
+
+        $d53 = $r13[0];
+
+        $d55 = $d54 - $d53;
+
+        $d57 = $d56 / $d55;
+
+        r6[2] = $d57;
+
+        $d58 = r23[1];
+
+        r6[3] = $d58;
+
+     label12:
+        if i5 != 1 goto label13;
+
+        $d32 = r23[1];
+
+        $d31 = r23[0];
+
+        $d36 = $d32 - $d31;
+
+        $d34 = $r12[1];
+
+        $d33 = $r12[0];
+
+        $d35 = $d34 - $d33;
+
+        $d37 = $d36 / $d35;
+
+        r6[1] = $d37;
+
+     label13:
+        i5 = i5 + -1;
+
+        goto label11;
+
+     label14:
+        $d25 = r23[0];
+
+        r6[0] = $d25;
+
+        $d26 = virtualinvoke r4.<com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification: double getTheta(double,double,double,double,double,double[])>(d0, d1, d2, d3, d6, r6);
+
+        r6[3] = $d26;
+
+        $r14 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek FAIR_PRICE>;
+
+        $d27 = r6[0];
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d27);
+
+        virtualinvoke r24.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r14, $r15);
+
+        $r16 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek DELTA>;
+
+        $d28 = r6[1];
+
+        $r17 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d28);
+
+        virtualinvoke r24.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r16, $r17);
+
+        $r18 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek GAMMA>;
+
+        $d29 = r6[2];
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d29);
+
+        virtualinvoke r24.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r18, $r19);
+
+        $r20 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek THETA>;
+
+        $d30 = r6[3];
+
+        $r21 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d30);
+
+        virtualinvoke r24.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r20, $r21);
+
+        return r24;
+    }
+
+    public com.opengamma.analytics.financial.greeks.GreekResultCollection getGreeks(com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D, double, double[], double[], double[])
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel r0;
+        com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D r1;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72;
+        double[] r2, r3, r4, r6, r7, r8, r9, r10, $r19, $r20, r30, r31, r32;
+        int i0, $i2, $i3, $i4, i8, i9, i10;
+        byte $b1, $b5, $b6, $b7;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10;
+        com.opengamma.analytics.financial.model.option.pricing.tree.TimeVaryingLatticeSpecification $r17;
+        com.opengamma.analytics.financial.greeks.GreekResultCollection $r18;
+        com.opengamma.analytics.financial.greeks.Greek $r21, $r23, $r25, $r27;
+        java.lang.Double $r22, $r24, $r26, $r28;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D;
+
+        d0 := @parameter1: double;
+
+        r2 := @parameter2: double[];
+
+        r3 := @parameter3: double[];
+
+        r4 := @parameter4: double[];
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "function");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "volatility");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "interestRate");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r4, "dividend");
+
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 <= 0 goto label01;
+
+        $z4 = 1;
+
+        goto label02;
+
+     label01:
+        $z4 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z4, "Spot should be positive");
+
+        $z0 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d0);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Spot should be finite");
+
+        $r17 = new com.opengamma.analytics.financial.model.option.pricing.tree.TimeVaryingLatticeSpecification;
+
+        specialinvoke $r17.<com.opengamma.analytics.financial.model.option.pricing.tree.TimeVaryingLatticeSpecification: void <init>()>();
+
+        i0 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: int getNumberOfSteps()>();
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double getTimeToExpiry()>();
+
+        $i2 = lengthof r3;
+
+        if i0 != $i2 goto label03;
+
+        $z5 = 1;
+
+        goto label04;
+
+     label03:
+        $z5 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "Wrong interestRate length");
+
+        $i3 = lengthof r2;
+
+        if i0 != $i3 goto label05;
+
+        $z6 = 1;
+
+        goto label06;
+
+     label05:
+        $z6 = 0;
+
+     label06:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z6, "Wrong volatility length");
+
+        $i4 = lengthof r4;
+
+        if i0 != $i4 goto label07;
+
+        $z7 = 1;
+
+        goto label08;
+
+     label07:
+        $z7 = 0;
+
+     label08:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z7, "Wrong dividend length");
+
+        i8 = 0;
+
+     label09:
+        if i8 >= i0 goto label12;
+
+        $d69 = r2[i8];
+
+        $b7 = $d69 cmpl 0.0;
+
+        if $b7 <= 0 goto label10;
+
+        $z8 = 1;
+
+        goto label11;
+
+     label10:
+        $z8 = 0;
+
+     label11:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z8, "volatility should be positive");
+
+        $d70 = r2[i8];
+
+        $z1 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d70);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "volatility should be finite");
+
+        $d71 = r3[i8];
+
+        $z2 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d71);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "interestRate should be finite");
+
+        $d72 = r4[i8];
+
+        $z3 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d72);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "dividend should be finite");
+
+        i8 = i8 + 1;
+
+        goto label09;
+
+     label12:
+        $r18 = new com.opengamma.analytics.financial.greeks.GreekResultCollection;
+
+        specialinvoke $r18.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void <init>()>();
+
+        r6 = virtualinvoke $r17.<com.opengamma.analytics.financial.model.option.pricing.tree.TimeVaryingLatticeSpecification: double[] getShiftedDrift(double[],double[],double[])>(r2, r3, r4);
+
+        d2 = virtualinvoke $r17.<com.opengamma.analytics.financial.model.option.pricing.tree.TimeVaryingLatticeSpecification: double getSpaceStep(double,double[],int,double[])>(d1, r2, i0, r6);
+
+        d3 = staticinvoke <java.lang.Math: double exp(double)>(d2);
+
+        $d6 = neg d2;
+
+        d4 = staticinvoke <java.lang.Math: double exp(double)>($d6);
+
+        $d7 = 2.0 * d2;
+
+        d5 = staticinvoke <java.lang.Math: double exp(double)>($d7);
+
+        r7 = newarray (double)[i0];
+
+        r8 = newarray (double)[i0];
+
+        r9 = newarray (double)[i0];
+
+        r10 = newarray (double)[2];
+
+        i9 = 0;
+
+     label13:
+        if i9 >= i0 goto label20;
+
+        $d56 = r2[i9];
+
+        $d55 = r6[i9];
+
+        r30 = virtualinvoke $r17.<com.opengamma.analytics.financial.model.option.pricing.tree.TimeVaryingLatticeSpecification: double[] getParameters(double,double,double)>($d56, $d55, d2);
+
+        $d57 = r30[1];
+
+        r7[i9] = $d57;
+
+        $d58 = r30[1];
+
+        $d59 = 1.0 - $d58;
+
+        r8[i9] = $d59;
+
+        $d60 = r3[i9];
+
+        $d62 = neg $d60;
+
+        $d61 = r30[0];
+
+        $d63 = $d62 * $d61;
+
+        $d64 = staticinvoke <java.lang.Math: double exp(double)>($d63);
+
+        r9[i9] = $d64;
+
+        if i9 != 0 goto label14;
+
+        $d68 = r30[0];
+
+        r10[0] = $d68;
+
+     label14:
+        if i9 != 2 goto label15;
+
+        $d67 = r30[1];
+
+        r10[1] = $d67;
+
+     label15:
+        $d65 = r7[i9];
+
+        $b5 = $d65 cmpl 0.0;
+
+        if $b5 <= 0 goto label16;
+
+        $z9 = 1;
+
+        goto label17;
+
+     label16:
+        $z9 = 0;
+
+     label17:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z9, "upProbability should be greater than 0.");
+
+        $d66 = r7[i9];
+
+        $b6 = $d66 cmpg 1.0;
+
+        if $b6 >= 0 goto label18;
+
+        $z10 = 1;
+
+        goto label19;
+
+     label18:
+        $z10 = 0;
+
+     label19:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z10, "upProbability should be smaller than 1.");
+
+        i9 = i9 + 1;
+
+        goto label13;
+
+     label20:
+        r31 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double[] getPayoffAtExpiry(double,double,double)>(d0, d4, d5);
+
+        r32 = newarray (double)[4];
+
+        $r19 = newarray (double)[2];
+
+        $d8 = d0 * d4;
+
+        $r19[0] = $d8;
+
+        $d9 = d0 * d3;
+
+        $r19[1] = $d9;
+
+        $r20 = newarray (double)[3];
+
+        $d10 = $r19[0];
+
+        $d11 = $d10 * d4;
+
+        $r20[0] = $d11;
+
+        $d12 = $r19[0];
+
+        $d13 = $d12 * d3;
+
+        $r20[1] = $d13;
+
+        $d14 = $r19[1];
+
+        $d15 = $d14 * d3;
+
+        $r20[2] = $d15;
+
+        i10 = i0 - 1;
+
+     label21:
+        if i10 <= -1 goto label24;
+
+        $d26 = r9[i10];
+
+        $d25 = r7[i10];
+
+        $d24 = r8[i10];
+
+        r31 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double[] getNextOptionValues(double,double,double,double[],double,double,double,double,int)>($d26, $d25, $d24, r31, d0, 0.0, d4, d5, i10);
+
+        if i10 != 2 goto label22;
+
+        $d35 = r31[2];
+
+        $d34 = r31[1];
+
+        $d39 = $d35 - $d34;
+
+        $d37 = $r20[2];
+
+        $d36 = $r20[1];
+
+        $d38 = $d37 - $d36;
+
+        $d47 = $d39 / $d38;
+
+        $d41 = r31[1];
+
+        $d40 = r31[0];
+
+        $d45 = $d41 - $d40;
+
+        $d43 = $r20[1];
+
+        $d42 = $r20[0];
+
+        $d44 = $d43 - $d42;
+
+        $d46 = $d45 / $d44;
+
+        $d48 = $d47 - $d46;
+
+        $d52 = 2.0 * $d48;
+
+        $d50 = $r20[2];
+
+        $d49 = $r20[0];
+
+        $d51 = $d50 - $d49;
+
+        $d53 = $d52 / $d51;
+
+        r32[2] = $d53;
+
+        $d54 = r31[1];
+
+        r32[3] = $d54;
+
+     label22:
+        if i10 != 1 goto label23;
+
+        $d28 = r31[1];
+
+        $d27 = r31[0];
+
+        $d32 = $d28 - $d27;
+
+        $d30 = $r19[1];
+
+        $d29 = $r19[0];
+
+        $d31 = $d30 - $d29;
+
+        $d33 = $d32 / $d31;
+
+        r32[1] = $d33;
+
+     label23:
+        i10 = i10 + -1;
+
+        goto label21;
+
+     label24:
+        $d16 = r31[0];
+
+        r32[0] = $d16;
+
+        $d18 = r10[0];
+
+        $d17 = r10[1];
+
+        $d19 = virtualinvoke $r17.<com.opengamma.analytics.financial.model.option.pricing.tree.TimeVaryingLatticeSpecification: double getTheta(double,double,double[])>($d18, $d17, r32);
+
+        r32[3] = $d19;
+
+        $r21 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek FAIR_PRICE>;
+
+        $d20 = r32[0];
+
+        $r22 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d20);
+
+        virtualinvoke $r18.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r21, $r22);
+
+        $r23 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek DELTA>;
+
+        $d21 = r32[1];
+
+        $r24 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d21);
+
+        virtualinvoke $r18.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r23, $r24);
+
+        $r25 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek GAMMA>;
+
+        $d22 = r32[2];
+
+        $r26 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d22);
+
+        virtualinvoke $r18.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r25, $r26);
+
+        $r27 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek THETA>;
+
+        $d23 = r32[3];
+
+        $r28 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d23);
+
+        virtualinvoke $r18.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r27, $r28);
+
+        return $r18;
+    }
+
+    public com.opengamma.analytics.financial.greeks.GreekResultCollection getGreeks(com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification, com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D, double, double, double, com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel r0;
+        com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification r1, r5, $r21;
+        com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D r2;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, $d80, $d81, d82, d83;
+        com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider r3;
+        int i0, i1, $i6, $i7, $i8, $i9, i10, i11, i12, i13, i14;
+        double[] r6, r8, r22, r23, r24, r25, r26;
+        int[] r7;
+        byte $b2, $b3, $b4, $b5;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10;
+        com.opengamma.analytics.financial.greeks.Greek $r13, $r15, $r17, $r19;
+        java.lang.Double $r14, $r16, $r18, $r20;
+        com.opengamma.analytics.financial.greeks.GreekResultCollection r27;
+        com.opengamma.analytics.financial.model.option.pricing.tree.TrigeorgisLatticeSpecification r28;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D;
+
+        d0 := @parameter2: double;
+
+        d1 := @parameter3: double;
+
+        d2 := @parameter4: double;
+
+        r3 := @parameter5: com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "lattice");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "function");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "dividend");
+
+        $b2 = d0 cmpl 0.0;
+
+        if $b2 <= 0 goto label01;
+
+        $z7 = 1;
+
+        goto label02;
+
+     label01:
+        $z7 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z7, "Spot should be positive");
+
+        $z0 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d0);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Spot should be finite");
+
+        $b3 = d1 cmpl 0.0;
+
+        if $b3 <= 0 goto label03;
+
+        $z8 = 1;
+
+        goto label04;
+
+     label03:
+        $z8 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z8, "volatility should be positive");
+
+        $z1 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d1);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "volatility should be finite");
+
+        $z2 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "interestRate should be finite");
+
+        r27 = new com.opengamma.analytics.financial.greeks.GreekResultCollection;
+
+        specialinvoke r27.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void <init>()>();
+
+        $z3 = r1 instanceof com.opengamma.analytics.financial.model.option.pricing.tree.TimeVaryingLatticeSpecification;
+
+        if $z3 == 0 goto label05;
+
+        r28 = new com.opengamma.analytics.financial.model.option.pricing.tree.TrigeorgisLatticeSpecification;
+
+        $r21 = r28;
+
+        specialinvoke r28.<com.opengamma.analytics.financial.model.option.pricing.tree.TrigeorgisLatticeSpecification: void <init>()>();
+
+        goto label06;
+
+     label05:
+        $r21 = r1;
+
+     label06:
+        r5 = $r21;
+
+        i0 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: int getNumberOfSteps()>();
+
+        d3 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double getStrike()>();
+
+        d4 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double getTimeToExpiry()>();
+
+        $d12 = (double) i0;
+
+        d5 = d4 / $d12;
+
+        $z4 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: boolean checkTimeSteps(double)>(d5);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z4, "Number of steps is too small");
+
+        $z5 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: boolean checkDividendBeforeExpiry(double)>(d4);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "Dividend is paid after expiry");
+
+        $d13 = neg d2;
+
+        $d14 = $d13 * d5;
+
+        d6 = staticinvoke <java.lang.Math: double exp(double)>($d14);
+
+        r6 = virtualinvoke $r21.<com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification: double[] getParameters(double,double,double,double,double,int,double)>(d0, d3, d4, d1, d2, i0, d5);
+
+        d7 = r6[0];
+
+        d8 = r6[1];
+
+        d9 = r6[2];
+
+        d10 = r6[3];
+
+        d11 = d7 / d8;
+
+        $b4 = d9 cmpl 0.0;
+
+        if $b4 <= 0 goto label07;
+
+        $z9 = 1;
+
+        goto label08;
+
+     label07:
+        $z9 = 0;
+
+     label08:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z9, "upProbability should be greater than 0.");
+
+        $b5 = d9 cmpg 1.0;
+
+        if $b5 >= 0 goto label09;
+
+        $z10 = 1;
+
+        goto label10;
+
+     label09:
+        $z10 = 0;
+
+     label10:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z10, "upProbability should be smaller than 1.");
+
+        r7 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: int[] getDividendSteps(double)>(d5);
+
+        d82 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double spotModifier(double,double)>(d0, d2);
+
+        r22 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double[] getPayoffAtExpiry(double,double,double)>(d82, d8, d11);
+
+        i10 = 0;
+
+        i1 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: int getNumberOfDividends()>();
+
+        r8 = newarray (double)[4];
+
+        $z6 = r3 instanceof com.opengamma.analytics.financial.model.option.pricing.tree.ProportionalDividendFunctionProvider;
+
+        if $z6 == 0 goto label18;
+
+        i11 = i0 - 1;
+
+     label11:
+        if i11 <= -1 goto label17;
+
+        $i8 = i1 - 1;
+
+        i12 = $i8 - i10;
+
+     label12:
+        if i12 <= -1 goto label14;
+
+        $i9 = r7[i12];
+
+        if i11 != $i9 goto label13;
+
+        d82 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double dividendCorrections(double,double,double,int)>(d82, 0.0, 0.0, i12);
+
+        i10 = i10 + 1;
+
+     label13:
+        i12 = i12 + -1;
+
+        goto label12;
+
+     label14:
+        r22 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double[] getNextOptionValues(double,double,double,double[],double,double,double,double,int)>(d6, d9, d10, r22, d82, 0.0, d8, d11, i11);
+
+        if i11 != 2 goto label15;
+
+        r23 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] getAssetPricesForGamma(double,double,int[],double,double,double)>(d0, d2, r7, d7, d8, 0.0);
+
+        $d62 = r22[2];
+
+        $d61 = r22[1];
+
+        $d66 = $d62 - $d61;
+
+        $d64 = r23[2];
+
+        $d63 = r23[1];
+
+        $d65 = $d64 - $d63;
+
+        $d74 = $d66 / $d65;
+
+        $d68 = r22[1];
+
+        $d67 = r22[0];
+
+        $d72 = $d68 - $d67;
+
+        $d70 = r23[1];
+
+        $d69 = r23[0];
+
+        $d71 = $d70 - $d69;
+
+        $d73 = $d72 / $d71;
+
+        $d75 = $d74 - $d73;
+
+        $d79 = 2.0 * $d75;
+
+        $d77 = r23[2];
+
+        $d76 = r23[0];
+
+        $d78 = $d77 - $d76;
+
+        $d80 = $d79 / $d78;
+
+        r8[2] = $d80;
+
+        $d81 = r22[1];
+
+        r8[3] = $d81;
+
+     label15:
+        if i11 != 1 goto label16;
+
+        r24 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] getAssetPricesForDelta(double,double,int[],double,double,double)>(d0, d2, r7, d7, d8, 0.0);
+
+        $d55 = r22[1];
+
+        $d54 = r22[0];
+
+        $d59 = $d55 - $d54;
+
+        $d57 = r24[1];
+
+        $d56 = r24[0];
+
+        $d58 = $d57 - $d56;
+
+        $d60 = $d59 / $d58;
+
+        r8[1] = $d60;
+
+     label16:
+        i11 = i11 + -1;
+
+        goto label11;
+
+     label17:
+        goto label25;
+
+     label18:
+        d83 = 0.0;
+
+        i13 = i0 - 1;
+
+     label19:
+        if i13 <= -1 goto label25;
+
+        $d21 = neg d2;
+
+        $d22 = $d21 * d5;
+
+        $d23 = staticinvoke <java.lang.Math: double exp(double)>($d22);
+
+        d83 = d83 * $d23;
+
+        $i6 = i1 - 1;
+
+        i14 = $i6 - i10;
+
+     label20:
+        if i14 <= -1 goto label22;
+
+        $i7 = r7[i14];
+
+        if i13 != $i7 goto label21;
+
+        $d52 = (double) i13;
+
+        $d53 = d5 * $d52;
+
+        d83 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double dividendCorrections(double,double,double,int)>(d83, d2, $d53, i14);
+
+        i10 = i10 + 1;
+
+     label21:
+        i14 = i14 + -1;
+
+        goto label20;
+
+     label22:
+        r22 = virtualinvoke r2.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D: double[] getNextOptionValues(double,double,double,double[],double,double,double,double,int)>(d6, d9, d10, r22, d82, d83, d8, d11, i13);
+
+        if i13 != 2 goto label23;
+
+        r25 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] getAssetPricesForGamma(double,double,int[],double,double,double)>(d82, d2, r7, d7, d8, d83);
+
+        $d32 = r22[2];
+
+        $d31 = r22[1];
+
+        $d36 = $d32 - $d31;
+
+        $d34 = r25[2];
+
+        $d33 = r25[1];
+
+        $d35 = $d34 - $d33;
+
+        $d44 = $d36 / $d35;
+
+        $d38 = r22[1];
+
+        $d37 = r22[0];
+
+        $d42 = $d38 - $d37;
+
+        $d40 = r25[1];
+
+        $d39 = r25[0];
+
+        $d41 = $d40 - $d39;
+
+        $d43 = $d42 / $d41;
+
+        $d45 = $d44 - $d43;
+
+        $d49 = 2.0 * $d45;
+
+        $d47 = r25[2];
+
+        $d46 = r25[0];
+
+        $d48 = $d47 - $d46;
+
+        $d50 = $d49 / $d48;
+
+        r8[2] = $d50;
+
+        $d51 = r22[1];
+
+        r8[3] = $d51;
+
+     label23:
+        if i13 != 1 goto label24;
+
+        r26 = virtualinvoke r3.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] getAssetPricesForDelta(double,double,int[],double,double,double)>(d82, d2, r7, d7, d8, d83);
+
+        $d25 = r22[1];
+
+        $d24 = r22[0];
+
+        $d29 = $d25 - $d24;
+
+        $d27 = r26[1];
+
+        $d26 = r26[0];
+
+        $d28 = $d27 - $d26;
+
+        $d30 = $d29 / $d28;
+
+        r8[1] = $d30;
+
+     label24:
+        i13 = i13 + -1;
+
+        goto label19;
+
+     label25:
+        $d15 = r22[0];
+
+        r8[0] = $d15;
+
+        $d16 = virtualinvoke r5.<com.opengamma.analytics.financial.model.option.pricing.tree.LatticeSpecification: double getTheta(double,double,double,double,double,double[])>(d0, d1, d2, 0.0, d5, r8);
+
+        r8[3] = $d16;
+
+        $r13 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek FAIR_PRICE>;
+
+        $d17 = r8[0];
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d17);
+
+        virtualinvoke r27.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r13, $r14);
+
+        $r15 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek DELTA>;
+
+        $d18 = r8[1];
+
+        $r16 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d18);
+
+        virtualinvoke r27.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r15, $r16);
+
+        $r17 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek GAMMA>;
+
+        $d19 = r8[2];
+
+        $r18 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d19);
+
+        virtualinvoke r27.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r17, $r18);
+
+        $r19 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek THETA>;
+
+        $d20 = r8[3];
+
+        $r20 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d20);
+
+        virtualinvoke r27.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r19, $r20);
+
+        return r27;
+    }
+
+    public double[] getGreeks(com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider2D, double, double, double, double, double, double, double, double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel r0;
+        com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider2D r1;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, d15, d16, d17, d18, d19, d20, d21, d22, d23, d24, d25, d26, d27, d28, d29, d30, d31, d32, d33, d34, d35, d36, d37, d38, d39, d40, d41, d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71, $d72, $d73, $d74, $d75, $d76, $d77, $d78, $d79, $d80, $d81, $d82, $d83, $d84, $d85, $d86, $d87, $d88, $d89, $d90, $d91, $d92, $d93, $d94, $d95, $d96, $d97, $d98, $d99, $d100, $d101, $d102, $d103, $d104, $d105, $d106, $d107, $d108, $d109, $d110, $d111, $d112, $d113, $d114, $d115, $d116, $d117, $d118, $d119, $d120, $d121, $d122, $d123, $d124, $d125, $d126, $d127, $d128, $d129, $d130, $d131, $d132, $d133, $d134, $d135, $d136, $d137, $d138, $d139, $d140, $d141, $d142, $d143, $d144, $d145, $d146, $d147, $d148, $d149, $d150, $d151, $d152, $d153, $d154, $d155, $d156, $d157, $d158, $d159, $d160, $d161, $d162, $d163, $d164, $d165, $d166, $d167, $d168, $d169, $d170, $d171, $d172, $d173, $d174, d175, d176, d177, d178, d179, d180, d181, d182, d183, d184, d185, d186;
+        int i0, i15;
+        double[] r2, $r8, $r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r30, $r31, $r32, $r33, $r34, $r35, $r36, $r37, $r38, $r39, $r40, $r41, $r42, $r43, $r44, $r45, $r46;
+        byte $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $b10, $b11, $b12, $b13, $b14;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15;
+        double[][] r47;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider2D;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        d2 := @parameter3: double;
+
+        d3 := @parameter4: double;
+
+        d4 := @parameter5: double;
+
+        d5 := @parameter6: double;
+
+        d6 := @parameter7: double;
+
+        d7 := @parameter8: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "function");
+
+        $b1 = d0 cmpl 0.0;
+
+        if $b1 <= 0 goto label01;
+
+        $z4 = 1;
+
+        goto label02;
+
+     label01:
+        $z4 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z4, "spot1 should be positive");
+
+        $z0 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d0);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "spot1 should be finite");
+
+        $b2 = d1 cmpl 0.0;
+
+        if $b2 <= 0 goto label03;
+
+        $z5 = 1;
+
+        goto label04;
+
+     label03:
+        $z5 = 0;
+
+     label04:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "spot2 should be positive");
+
+        $z1 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d1);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "spot2 should be finite");
+
+        $b3 = d2 cmpl 0.0;
+
+        if $b3 <= 0 goto label05;
+
+        $z6 = 1;
+
+        goto label06;
+
+     label05:
+        $z6 = 0;
+
+     label06:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z6, "volatility1 should be positive");
+
+        $z2 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "volatility1 should be finite");
+
+        $b4 = d3 cmpl 0.0;
+
+        if $b4 <= 0 goto label07;
+
+        $z7 = 1;
+
+        goto label08;
+
+     label07:
+        $z7 = 0;
+
+     label08:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z7, "volatility2 should be positive");
+
+        $z3 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d3);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "volatility2 should be finite");
+
+        $b5 = d4 cmpl -1.0;
+
+        if $b5 < 0 goto label09;
+
+        $b10 = d4 cmpg 1.0;
+
+        if $b10 > 0 goto label09;
+
+        $z8 = 1;
+
+        goto label10;
+
+     label09:
+        $z8 = 0;
+
+     label10:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z8, "correlation should be -1. <= rho <= 1.");
+
+        $z9 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d5);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z9, "interestRate should be finite");
+
+        $z10 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d6);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z10, "dividend1 should be finite");
+
+        $z11 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>(d7);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z11, "dividend2 should be finite");
+
+        i0 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider2D: int getNumberOfSteps()>();
+
+        d8 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider2D: double getTimeToExpiry()>();
+
+        r2 = newarray (double)[7];
+
+        d9 = d2 * d3;
+
+        d10 = d2 * d2;
+
+        d11 = d3 * d3;
+
+        $d127 = (double) i0;
+
+        d12 = d8 / $d127;
+
+        $d128 = neg d5;
+
+        $d129 = $d128 * d12;
+
+        d13 = staticinvoke <java.lang.Math: double exp(double)>($d129);
+
+        d14 = staticinvoke <java.lang.Math: double sqrt(double)>(d12);
+
+        d15 = d2 * d14;
+
+        d16 = d3 * d14;
+
+        d17 = d15 * d16;
+
+        $d130 = d5 - d6;
+
+        $d131 = 0.5 * d10;
+
+        $d132 = $d130 - $d131;
+
+        $d133 = $d132 * d16;
+
+        d18 = $d133 * d12;
+
+        $d134 = d5 - d7;
+
+        $d135 = 0.5 * d11;
+
+        $d136 = $d134 - $d135;
+
+        $d137 = $d136 * d15;
+
+        d19 = $d137 * d12;
+
+        $d138 = d9 * d4;
+
+        d20 = $d138 * d12;
+
+        $d139 = d17 + d18;
+
+        $d140 = $d139 + d19;
+
+        $d141 = $d140 + d20;
+
+        $d142 = 0.25 * $d141;
+
+        d21 = $d142 / d17;
+
+        $d143 = d17 + d18;
+
+        $d144 = $d143 - d19;
+
+        $d145 = $d144 - d20;
+
+        $d146 = 0.25 * $d145;
+
+        d22 = $d146 / d17;
+
+        $d147 = d17 - d18;
+
+        $d148 = $d147 + d19;
+
+        $d149 = $d148 - d20;
+
+        $d150 = 0.25 * $d149;
+
+        d23 = $d150 / d17;
+
+        $d151 = d17 - d18;
+
+        $d152 = $d151 - d19;
+
+        $d153 = $d152 + d20;
+
+        $d154 = 0.25 * $d153;
+
+        d24 = $d154 / d17;
+
+        $b11 = d21 cmpl 0.0;
+
+        if $b11 <= 0 goto label11;
+
+        $b9 = d21 cmpg 1.0;
+
+        if $b9 >= 0 goto label11;
+
+        $z12 = 1;
+
+        goto label12;
+
+     label11:
+        $z12 = 0;
+
+     label12:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z12, "uuProbability should be 0 < p < 1.");
+
+        $b12 = d22 cmpl 0.0;
+
+        if $b12 <= 0 goto label13;
+
+        $b8 = d22 cmpg 1.0;
+
+        if $b8 >= 0 goto label13;
+
+        $z13 = 1;
+
+        goto label14;
+
+     label13:
+        $z13 = 0;
+
+     label14:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z13, "udProbability should be 0 < p < 1.");
+
+        $b13 = d23 cmpl 0.0;
+
+        if $b13 <= 0 goto label15;
+
+        $b7 = d23 cmpg 1.0;
+
+        if $b7 >= 0 goto label15;
+
+        $z14 = 1;
+
+        goto label16;
+
+     label15:
+        $z14 = 0;
+
+     label16:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z14, "duProbability should be 0 < p < 1.");
+
+        $b14 = d24 cmpl 0.0;
+
+        if $b14 <= 0 goto label17;
+
+        $b6 = d24 cmpg 1.0;
+
+        if $b6 >= 0 goto label17;
+
+        $z15 = 1;
+
+        goto label18;
+
+     label17:
+        $z15 = 0;
+
+     label18:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z15, "ddProbability should be 0 < p < 1.");
+
+        $d155 = neg d15;
+
+        d25 = staticinvoke <java.lang.Math: double exp(double)>($d155);
+
+        $d156 = neg d16;
+
+        d26 = staticinvoke <java.lang.Math: double exp(double)>($d156);
+
+        $d157 = 2.0 * d15;
+
+        d27 = staticinvoke <java.lang.Math: double exp(double)>($d157);
+
+        $d158 = 2.0 * d16;
+
+        d28 = staticinvoke <java.lang.Math: double exp(double)>($d158);
+
+        $d159 = (double) i0;
+
+        $d160 = staticinvoke <java.lang.Math: double pow(double,double)>(d25, $d159);
+
+        d29 = d0 * $d160;
+
+        $d161 = (double) i0;
+
+        $d162 = staticinvoke <java.lang.Math: double pow(double,double)>(d26, $d161);
+
+        d30 = d1 * $d162;
+
+        $r43 = newarray (double)[2];
+
+        $d163 = d0 * d25;
+
+        $r43[0] = $d163;
+
+        $d164 = d0 / d25;
+
+        $r43[1] = $d164;
+
+        $r44 = newarray (double)[2];
+
+        $d165 = d1 * d26;
+
+        $r44[0] = $d165;
+
+        $d166 = d1 / d26;
+
+        $r44[1] = $d166;
+
+        $r45 = newarray (double)[3];
+
+        $d167 = $r43[0];
+
+        $d168 = $d167 * d25;
+
+        $r45[0] = $d168;
+
+        $r45[1] = d0;
+
+        $d169 = $r43[1];
+
+        $d170 = $d169 / d25;
+
+        $r45[2] = $d170;
+
+        $r46 = newarray (double)[3];
+
+        $d171 = $r44[0];
+
+        $d172 = $d171 * d26;
+
+        $r46[0] = $d172;
+
+        $r46[1] = d1;
+
+        $d173 = $r44[1];
+
+        $d174 = $d173 / d26;
+
+        $r46[2] = $d174;
+
+        r47 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider2D: double[][] getPayoffAtExpiry(double,double,double,double)>(d29, d30, d27, d28);
+
+        i15 = i0 - 1;
+
+     label19:
+        if i15 <= -1 goto label22;
+
+        r47 = virtualinvoke r1.<com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider2D: double[][] getNextOptionValues(double,double,double,double,double,double[][],double,double,double,double,double,double,int)>(d13, d21, d22, d23, d24, r47, d0, d1, d25, d26, d27, d28, i15);
+
+        if i15 != 2 goto label20;
+
+        $r18 = r47[2];
+
+        $d71 = $r18[2];
+
+        $r19 = r47[1];
+
+        $d70 = $r19[2];
+
+        d175 = $d71 - $d70;
+
+        $r20 = r47[1];
+
+        $d73 = $r20[2];
+
+        $r21 = r47[0];
+
+        $d72 = $r21[2];
+
+        d176 = $d73 - $d72;
+
+        $r22 = r47[2];
+
+        $d75 = $r22[1];
+
+        $r23 = r47[1];
+
+        $d74 = $r23[1];
+
+        d177 = $d75 - $d74;
+
+        $r24 = r47[1];
+
+        $d77 = $r24[1];
+
+        $r25 = r47[0];
+
+        $d76 = $r25[1];
+
+        d178 = $d77 - $d76;
+
+        $r26 = r47[2];
+
+        $d79 = $r26[0];
+
+        $r27 = r47[1];
+
+        $d78 = $r27[0];
+
+        d179 = $d79 - $d78;
+
+        $r28 = r47[1];
+
+        $d81 = $r28[0];
+
+        $r29 = r47[0];
+
+        $d80 = $r29[0];
+
+        d180 = $d81 - $d80;
+
+        $r30 = r47[2];
+
+        $d83 = $r30[2];
+
+        $r31 = r47[2];
+
+        $d82 = $r31[1];
+
+        d31 = $d83 - $d82;
+
+        $r32 = r47[2];
+
+        $d85 = $r32[1];
+
+        $r33 = r47[2];
+
+        $d84 = $r33[0];
+
+        d32 = $d85 - $d84;
+
+        $r34 = r47[1];
+
+        $d87 = $r34[2];
+
+        $r35 = r47[1];
+
+        $d86 = $r35[1];
+
+        d33 = $d87 - $d86;
+
+        $r36 = r47[1];
+
+        $d89 = $r36[1];
+
+        $r37 = r47[1];
+
+        $d88 = $r37[0];
+
+        d34 = $d89 - $d88;
+
+        $r38 = r47[0];
+
+        $d91 = $r38[2];
+
+        $r39 = r47[0];
+
+        $d90 = $r39[1];
+
+        d35 = $d91 - $d90;
+
+        $r40 = r47[0];
+
+        $d93 = $r40[1];
+
+        $r41 = r47[0];
+
+        $d92 = $r41[0];
+
+        d36 = $d93 - $d92;
+
+        $d95 = $r45[2];
+
+        $d94 = $r45[1];
+
+        d37 = $d95 - $d94;
+
+        $d97 = $r45[1];
+
+        $d96 = $r45[0];
+
+        d38 = $d97 - $d96;
+
+        $d99 = $r45[2];
+
+        $d98 = $r45[0];
+
+        d39 = $d99 - $d98;
+
+        $d101 = $r46[2];
+
+        $d100 = $r46[1];
+
+        d40 = $d101 - $d100;
+
+        $d103 = $r46[1];
+
+        $d102 = $r46[0];
+
+        d41 = $d103 - $d102;
+
+        $d105 = $r46[2];
+
+        $d104 = $r46[0];
+
+        d42 = $d105 - $d104;
+
+        $r42 = r47[1];
+
+        $d106 = $r42[1];
+
+        r2[3] = $d106;
+
+        $d107 = d175 + d177;
+
+        $d108 = $d107 + d179;
+
+        $d112 = $d108 / d37;
+
+        $d109 = d176 + d178;
+
+        $d110 = $d109 + d180;
+
+        $d111 = $d110 / d38;
+
+        $d113 = $d112 - $d111;
+
+        $d114 = 2.0 * $d113;
+
+        $d115 = $d114 / d39;
+
+        $d116 = $d115 / 3.0;
+
+        r2[4] = $d116;
+
+        $d117 = d31 + d33;
+
+        $d118 = $d117 + d35;
+
+        $d122 = $d118 / d40;
+
+        $d119 = d32 + d34;
+
+        $d120 = $d119 + d36;
+
+        $d121 = $d120 / d41;
+
+        $d123 = $d122 - $d121;
+
+        $d124 = 2.0 * $d123;
+
+        $d125 = $d124 / d42;
+
+        $d126 = $d125 / 3.0;
+
+        r2[5] = $d126;
+
+     label20:
+        if i15 != 1 goto label21;
+
+        $r10 = r47[1];
+
+        $d50 = $r10[1];
+
+        $r11 = r47[0];
+
+        $d49 = $r11[1];
+
+        d181 = $d50 - $d49;
+
+        $r12 = r47[1];
+
+        $d52 = $r12[0];
+
+        $r13 = r47[0];
+
+        $d51 = $r13[0];
+
+        d182 = $d52 - $d51;
+
+        $r14 = r47[1];
+
+        $d54 = $r14[1];
+
+        $r15 = r47[1];
+
+        $d53 = $r15[0];
+
+        d183 = $d54 - $d53;
+
+        $r16 = r47[0];
+
+        $d56 = $r16[1];
+
+        $r17 = r47[0];
+
+        $d55 = $r17[0];
+
+        d184 = $d56 - $d55;
+
+        $d58 = $r43[1];
+
+        $d57 = $r43[0];
+
+        d185 = $d58 - $d57;
+
+        $d60 = $r44[1];
+
+        $d59 = $r44[0];
+
+        d186 = $d60 - $d59;
+
+        $d61 = d181 + d182;
+
+        $d62 = 0.5 * $d61;
+
+        $d63 = $d62 / d185;
+
+        r2[1] = $d63;
+
+        $d64 = d183 + d184;
+
+        $d65 = 0.5 * $d64;
+
+        $d66 = $d65 / d186;
+
+        r2[2] = $d66;
+
+        $d67 = d181 - d182;
+
+        $d68 = $d67 / d185;
+
+        $d69 = $d68 / d186;
+
+        r2[6] = $d69;
+
+     label21:
+        i15 = i15 + -1;
+
+        goto label19;
+
+     label22:
+        $d44 = r2[3];
+
+        $r8 = r47[0];
+
+        $d43 = $r8[0];
+
+        $d45 = $d44 - $d43;
+
+        $d46 = 0.5 * $d45;
+
+        $d47 = $d46 / d12;
+
+        r2[3] = $d47;
+
+        $r9 = r47[0];
+
+        $d48 = $r9[0];
+
+        r2[0] = $d48;
+
+        return r2;
+    }
+
+    public double getPrice(com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D, com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel r0;
+        com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D r1;
+        com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle r2;
+        java.lang.IllegalArgumentException $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.BinomialTreeOptionPricingModel;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.option.pricing.tree.OptionFunctionProvider1D;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.option.definition.StandardOptionDataBundle;
+
+        $r3 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r3.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Not implemented");
+
+        throw $r3;
+    }
+}

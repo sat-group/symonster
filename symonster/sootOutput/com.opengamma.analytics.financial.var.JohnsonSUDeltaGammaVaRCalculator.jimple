@@ -1,0 +1,652 @@
+public class com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator extends java.lang.Object implements com.opengamma.analytics.financial.var.VaRCalculator
+{
+    private static final com.opengamma.analytics.math.rootfinding.RealSingleRootFinder ROOT_FINDER;
+    private final com.opengamma.analytics.math.function.Function _meanCalculator;
+    private final com.opengamma.analytics.math.function.Function _stdCalculator;
+    private final com.opengamma.analytics.math.function.Function _skewCalculator;
+    private final com.opengamma.analytics.math.function.Function _kurtosisCalculator;
+
+    public void <init>(com.opengamma.analytics.math.function.Function, com.opengamma.analytics.math.function.Function, com.opengamma.analytics.math.function.Function, com.opengamma.analytics.math.function.Function)
+    {
+        com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator r0;
+        com.opengamma.analytics.math.function.Function r1, r2, r3, r4;
+
+        r0 := @this: com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.math.function.Function;
+
+        r2 := @parameter1: com.opengamma.analytics.math.function.Function;
+
+        r3 := @parameter2: com.opengamma.analytics.math.function.Function;
+
+        r4 := @parameter3: com.opengamma.analytics.math.function.Function;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "mean calculator");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "standard deviation calculator");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r3, "skew calculator");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r4, "kurtosis calculator");
+
+        r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _meanCalculator> = r1;
+
+        r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _stdCalculator> = r2;
+
+        r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _skewCalculator> = r3;
+
+        r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _kurtosisCalculator> = r4;
+
+        return;
+    }
+
+    public com.opengamma.analytics.math.function.Function getMeanCalculator()
+    {
+        com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator r0;
+        com.opengamma.analytics.math.function.Function $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator;
+
+        $r1 = r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _meanCalculator>;
+
+        return $r1;
+    }
+
+    public com.opengamma.analytics.math.function.Function getStdCalculator()
+    {
+        com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator r0;
+        com.opengamma.analytics.math.function.Function $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator;
+
+        $r1 = r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _stdCalculator>;
+
+        return $r1;
+    }
+
+    public com.opengamma.analytics.math.function.Function getSkewCalculator()
+    {
+        com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator r0;
+        com.opengamma.analytics.math.function.Function $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator;
+
+        $r1 = r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _skewCalculator>;
+
+        return $r1;
+    }
+
+    public com.opengamma.analytics.math.function.Function getKurtosisCalculator()
+    {
+        com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator r0;
+        com.opengamma.analytics.math.function.Function $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator;
+
+        $r1 = r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _kurtosisCalculator>;
+
+        return $r1;
+    }
+
+    public transient com.opengamma.analytics.financial.var.VaRCalculationResult evaluate(com.opengamma.analytics.financial.var.NormalVaRParameters, java.lang.Object[])
+    {
+        com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator r0;
+        com.opengamma.analytics.financial.var.NormalVaRParameters r1;
+        java.lang.Object[] r2;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, d15, d16, d17, d18, d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, $d62, $d63, $d64, $d65, $d66, $d67, $d68, $d69, $d70, $d71;
+        com.opengamma.analytics.math.function.Function $r5, $r8, $r11, $r14;
+        java.lang.Object $r6, $r9, $r12, $r15;
+        java.lang.Double $r7, $r10, $r13, $r16, $r19, $r20, $r21, $r23, $r26;
+        byte $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9;
+        com.opengamma.analytics.math.rootfinding.RealSingleRootFinder $r17;
+        com.opengamma.analytics.math.function.Function1D $r18;
+        com.opengamma.analytics.financial.var.VaRCalculationResult $r22, $r25;
+        java.lang.IllegalArgumentException $r24, $r27, $r28;
+
+        r0 := @this: com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.var.NormalVaRParameters;
+
+        r2 := @parameter1: java.lang.Object[];
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "parameters");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "data");
+
+        $r5 = r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _kurtosisCalculator>;
+
+        $r6 = interfaceinvoke $r5.<com.opengamma.analytics.math.function.Function: java.lang.Object evaluate(java.lang.Object[])>(r2);
+
+        $r7 = (java.lang.Double) $r6;
+
+        d0 = virtualinvoke $r7.<java.lang.Double: double doubleValue()>();
+
+        $b0 = d0 cmpg 0.0;
+
+        if $b0 >= 0 goto label1;
+
+        $r27 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r27.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Johnson SU distribution cannot be used for data with negative excess kurtosis");
+
+        throw $r27;
+
+     label1:
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.var.NormalVaRParameters: double getTimeScaling()>();
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.var.NormalVaRParameters: double getZ()>();
+
+        $r8 = r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _skewCalculator>;
+
+        $r9 = interfaceinvoke $r8.<com.opengamma.analytics.math.function.Function: java.lang.Object evaluate(java.lang.Object[])>(r2);
+
+        $r10 = (java.lang.Double) $r9;
+
+        d3 = virtualinvoke $r10.<java.lang.Double: double doubleValue()>();
+
+        $r11 = r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _meanCalculator>;
+
+        $r12 = interfaceinvoke $r11.<com.opengamma.analytics.math.function.Function: java.lang.Object evaluate(java.lang.Object[])>(r2);
+
+        $r13 = (java.lang.Double) $r12;
+
+        $d20 = virtualinvoke $r13.<java.lang.Double: double doubleValue()>();
+
+        $d21 = $d20 * d1;
+
+        d4 = $d21 * d1;
+
+        $r14 = r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _stdCalculator>;
+
+        $r15 = interfaceinvoke $r14.<com.opengamma.analytics.math.function.Function: java.lang.Object evaluate(java.lang.Object[])>(r2);
+
+        $r16 = (java.lang.Double) $r15;
+
+        $d22 = virtualinvoke $r16.<java.lang.Double: double doubleValue()>();
+
+        d5 = $d22 * d1;
+
+        $b1 = d3 cmpl 0.0;
+
+        if $b1 != 0 goto label2;
+
+        $b9 = d0 cmpl 0.0;
+
+        if $b9 != 0 goto label2;
+
+        $r25 = new com.opengamma.analytics.financial.var.VaRCalculationResult;
+
+        $d70 = d2 * d5;
+
+        $d71 = $d70 - d4;
+
+        $r26 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d71);
+
+        specialinvoke $r25.<com.opengamma.analytics.financial.var.VaRCalculationResult: void <init>(java.lang.Double,java.lang.Double)>($r26, null);
+
+        return $r25;
+
+     label2:
+        $d23 = d0 + 2.0;
+
+        $d24 = 2.0 * $d23;
+
+        $d25 = staticinvoke <java.lang.Math: double sqrt(double)>($d24);
+
+        $d26 = $d25 - 1.0;
+
+        d6 = staticinvoke <java.lang.Math: double sqrt(double)>($d26);
+
+        $d27 = specialinvoke r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: double getW0(double)>(d3);
+
+        $d28 = d0 + 3.0;
+
+        $d29 = specialinvoke r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: double getW1(double)>($d28);
+
+        d7 = staticinvoke <java.lang.Math: double max(double,double)>($d27, $d29);
+
+        $r17 = <com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.rootfinding.RealSingleRootFinder ROOT_FINDER>;
+
+        $r18 = specialinvoke r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function1D getFunction(double,double)>(d3, d0);
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d7);
+
+        $r20 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d6);
+
+        $r21 = virtualinvoke $r17.<com.opengamma.analytics.math.rootfinding.RealSingleRootFinder: java.lang.Double getRoot(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r18, $r19, $r20);
+
+        d8 = virtualinvoke $r21.<java.lang.Double: double doubleValue()>();
+
+        d9 = d8 * d8;
+
+        $d33 = d0 + 6.0;
+
+        $d30 = 2.0 * d8;
+
+        $d31 = d9 + $d30;
+
+        $d32 = $d31 + 3.0;
+
+        $d34 = $d33 / $d32;
+
+        $d35 = d9 - $d34;
+
+        $d36 = 2.0 * $d35;
+
+        d10 = 4.0 + $d36;
+
+        $b2 = d10 cmpg 0.0;
+
+        if $b2 >= 0 goto label3;
+
+        $r24 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r24.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Tried to find the square root of a negative number");
+
+        throw $r24;
+
+     label3:
+        $d37 = staticinvoke <java.lang.Math: double sqrt(double)>(d10);
+
+        d11 = -2.0 + $d37;
+
+        $b3 = d11 cmpl 0.0;
+
+        if $b3 == 0 goto label6;
+
+        $b4 = d11 cmpg 0.0;
+
+        if $b4 >= 0 goto label4;
+
+        $b8 = d8 cmpl -1.0;
+
+        if $b8 > 0 goto label6;
+
+     label4:
+        $b5 = d11 cmpl 0.0;
+
+        if $b5 <= 0 goto label5;
+
+        $b7 = d8 cmpg -1.0;
+
+        if $b7 < 0 goto label6;
+
+     label5:
+        $d38 = d8 - 1.0;
+
+        $d39 = $d38 - d11;
+
+        $b6 = $d39 cmpg 0.0;
+
+        if $b6 >= 0 goto label7;
+
+     label6:
+        $r28 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r28.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Invalid parameters");
+
+        throw $r28;
+
+     label7:
+        d12 = staticinvoke <java.lang.Math: double signum(double)>(d3);
+
+        $d40 = staticinvoke <java.lang.Math: double log(double)>(d8);
+
+        d13 = staticinvoke <java.lang.Math: double sqrt(double)>($d40);
+
+        $d43 = d8 + 1.0;
+
+        $d41 = d8 - 1.0;
+
+        $d42 = $d41 - d11;
+
+        $d46 = $d43 * $d42;
+
+        $d44 = 2.0 * d8;
+
+        $d45 = $d44 * d11;
+
+        $d47 = $d46 / $d45;
+
+        d14 = staticinvoke <java.lang.Math: double sqrt(double)>($d47);
+
+        $d48 = neg d12;
+
+        $d49 = staticinvoke <com.opengamma.analytics.math.TrigonometricFunctionUtils: double asinh(double)>(d14);
+
+        d15 = $d48 * $d49;
+
+        d16 = 1.0 / d13;
+
+        d17 = d15 / d13;
+
+        $d50 = d8 - 1.0;
+
+        $d54 = d5 / $d50;
+
+        $d52 = 2.0 * d11;
+
+        $d51 = d8 + 1.0;
+
+        $d53 = $d52 / $d51;
+
+        $d55 = staticinvoke <java.lang.Math: double sqrt(double)>($d53);
+
+        d18 = $d54 * $d55;
+
+        $d58 = d12 * d5;
+
+        $d56 = d8 - 1.0;
+
+        $d57 = $d56 - d11;
+
+        $d59 = staticinvoke <java.lang.Math: double sqrt(double)>($d57);
+
+        $d61 = $d58 * $d59;
+
+        $d60 = d8 - 1.0;
+
+        $d62 = $d61 / $d60;
+
+        d19 = d4 - $d62;
+
+        $r22 = new com.opengamma.analytics.financial.var.VaRCalculationResult;
+
+        $d66 = neg d18;
+
+        $d63 = neg d2;
+
+        $d64 = $d63 - d17;
+
+        $d65 = $d64 / d16;
+
+        $d67 = staticinvoke <java.lang.Math: double sinh(double)>($d65);
+
+        $d68 = $d66 * $d67;
+
+        $d69 = $d68 - d19;
+
+        $r23 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d69);
+
+        specialinvoke $r22.<com.opengamma.analytics.financial.var.VaRCalculationResult: void <init>(java.lang.Double,java.lang.Double)>($r23, null);
+
+        return $r22;
+    }
+
+    private double getW0(double)
+    {
+        com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator r0;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13;
+
+        r0 := @this: com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator;
+
+        d0 := @parameter0: double;
+
+        $d3 = d0 * d0;
+
+        d1 = -2.0 - $d3;
+
+        $d4 = neg d1;
+
+        $d8 = $d4 / 2.0;
+
+        $d5 = d1 * d1;
+
+        $d6 = $d5 / 4.0;
+
+        $d7 = $d6 - 1.0;
+
+        $d9 = staticinvoke <java.lang.Math: double sqrt(double)>($d7);
+
+        $d10 = $d8 + $d9;
+
+        d2 = staticinvoke <java.lang.Math: double cbrt(double)>($d10);
+
+        $d11 = -1.0 / d2;
+
+        $d12 = $d11 + d2;
+
+        $d13 = $d12 - 1.0;
+
+        return $d13;
+    }
+
+    private double getW1(double)
+    {
+        com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator r0;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27;
+
+        r0 := @this: com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator;
+
+        d0 := @parameter0: double;
+
+        d1 = 2.0 * d0;
+
+        $d10 = 3.0 + d0;
+
+        $d5 = 16.0 * d0;
+
+        $d7 = $d5 * d0;
+
+        $d6 = 87.0 * d0;
+
+        $d8 = $d7 + $d6;
+
+        $d9 = $d8 + 171.0;
+
+        $d11 = $d10 * $d9;
+
+        $d12 = $d11 / 27.0;
+
+        $d13 = staticinvoke <java.lang.Math: double sqrt(double)>($d12);
+
+        d2 = 2.0 * $d13;
+
+        $d14 = 7.0 + d1;
+
+        $d15 = $d14 + d2;
+
+        $d16 = staticinvoke <java.lang.Math: double cbrt(double)>($d15);
+
+        $d17 = d2 - 7.0;
+
+        $d18 = $d17 - d1;
+
+        $d19 = staticinvoke <java.lang.Math: double cbrt(double)>($d18);
+
+        $d20 = $d16 - $d19;
+
+        d3 = $d20 - 1.0;
+
+        d4 = staticinvoke <java.lang.Math: double sqrt(double)>(d3);
+
+        $d21 = 4.0 / d4;
+
+        $d22 = $d21 - d3;
+
+        $d23 = $d22 - 3.0;
+
+        $d24 = staticinvoke <java.lang.Math: double sqrt(double)>($d23);
+
+        $d25 = d4 + $d24;
+
+        $d26 = $d25 - 1.0;
+
+        $d27 = $d26 / 2.0;
+
+        return $d27;
+    }
+
+    private com.opengamma.analytics.math.function.Function1D getFunction(double, double)
+    {
+        com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator r0;
+        double d0, d1;
+        com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator$1 $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator;
+
+        d0 := @parameter0: double;
+
+        d1 := @parameter1: double;
+
+        $r1 = new com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator$1;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator$1: void <init>(com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator,double,double)>(r0, d1, d0);
+
+        return $r1;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator r0;
+        com.opengamma.analytics.math.function.Function $r1, $r2, $r3, $r4;
+        int $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, i10, i11, i12, i13;
+
+        r0 := @this: com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator;
+
+        $i1 = 31 * 1;
+
+        $r1 = r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _kurtosisCalculator>;
+
+        $i2 = virtualinvoke $r1.<java.lang.Object: int hashCode()>();
+
+        i10 = $i1 + $i2;
+
+        $i3 = 31 * i10;
+
+        $r2 = r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _meanCalculator>;
+
+        $i4 = virtualinvoke $r2.<java.lang.Object: int hashCode()>();
+
+        i11 = $i3 + $i4;
+
+        $i5 = 31 * i11;
+
+        $r3 = r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _skewCalculator>;
+
+        $i6 = virtualinvoke $r3.<java.lang.Object: int hashCode()>();
+
+        i12 = $i5 + $i6;
+
+        $i7 = 31 * i12;
+
+        $r4 = r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _stdCalculator>;
+
+        $i8 = virtualinvoke $r4.<java.lang.Object: int hashCode()>();
+
+        i13 = $i7 + $i8;
+
+        return i13;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator r0, r2;
+        java.lang.Object r1;
+        java.lang.Class $r3, $r4;
+        com.opengamma.analytics.math.function.Function $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12;
+        boolean $z0, $z1, $z2, $z3;
+
+        r0 := @this: com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        if r1 != null goto label2;
+
+        return 0;
+
+     label2:
+        $r3 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r4 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+
+        if $r3 == $r4 goto label3;
+
+        return 0;
+
+     label3:
+        r2 = (com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator) r1;
+
+        $r6 = r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _kurtosisCalculator>;
+
+        $r5 = r2.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _kurtosisCalculator>;
+
+        $z0 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r6, $r5);
+
+        if $z0 != 0 goto label4;
+
+        return 0;
+
+     label4:
+        $r8 = r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _meanCalculator>;
+
+        $r7 = r2.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _meanCalculator>;
+
+        $z1 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r8, $r7);
+
+        if $z1 != 0 goto label5;
+
+        return 0;
+
+     label5:
+        $r10 = r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _skewCalculator>;
+
+        $r9 = r2.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _skewCalculator>;
+
+        $z2 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r10, $r9);
+
+        if $z2 != 0 goto label6;
+
+        return 0;
+
+     label6:
+        $r12 = r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _stdCalculator>;
+
+        $r11 = r2.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.function.Function _stdCalculator>;
+
+        $z3 = staticinvoke <org.apache.commons.lang.ObjectUtils: boolean equals(java.lang.Object,java.lang.Object)>($r12, $r11);
+
+        return $z3;
+    }
+
+    public volatile com.opengamma.analytics.financial.var.VaRCalculationResult evaluate(java.lang.Object, java.lang.Object[])
+    {
+        com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator r0;
+        java.lang.Object r1;
+        java.lang.Object[] r2;
+        com.opengamma.analytics.financial.var.NormalVaRParameters $r3;
+        com.opengamma.analytics.financial.var.VaRCalculationResult $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator;
+
+        r1 := @parameter0: java.lang.Object;
+
+        r2 := @parameter1: java.lang.Object[];
+
+        $r3 = (com.opengamma.analytics.financial.var.NormalVaRParameters) r1;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.financial.var.VaRCalculationResult evaluate(com.opengamma.analytics.financial.var.NormalVaRParameters,java.lang.Object[])>($r3, r2);
+
+        return $r4;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.math.rootfinding.BisectionSingleRootFinder $r0;
+
+        $r0 = new com.opengamma.analytics.math.rootfinding.BisectionSingleRootFinder;
+
+        specialinvoke $r0.<com.opengamma.analytics.math.rootfinding.BisectionSingleRootFinder: void <init>()>();
+
+        <com.opengamma.analytics.financial.var.JohnsonSUDeltaGammaVaRCalculator: com.opengamma.analytics.math.rootfinding.RealSingleRootFinder ROOT_FINDER> = $r0;
+
+        return;
+    }
+}

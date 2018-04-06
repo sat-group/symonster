@@ -1,0 +1,208 @@
+public class com.opengamma.analytics.financial.equity.variance.pricing.RealizedVariance extends com.opengamma.analytics.math.function.Function1D
+{
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.RealizedVariance r0;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.RealizedVariance;
+
+        specialinvoke r0.<com.opengamma.analytics.math.function.Function1D: void <init>()>();
+
+        return;
+    }
+
+    public java.lang.Double evaluate(com.opengamma.analytics.financial.varianceswap.VarianceSwap)
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.RealizedVariance r0;
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap r1;
+        double[] r2, r3, $r5, $r6, $r7, $r14;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, i10, i12;
+        java.lang.Object[] $r8, $r12;
+        java.lang.Integer $r9, $r10, $r13;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, d14;
+        java.lang.Double $r11, $r15;
+        boolean $z0, $z1, $z2;
+        byte $b11;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.RealizedVariance;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.varianceswap.VarianceSwap;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "swap");
+
+        r2 = virtualinvoke r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] getObservations()>();
+
+        i0 = lengthof r2;
+
+        if i0 >= 2 goto label01;
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        return $r15;
+
+     label01:
+        $i1 = lengthof r2;
+
+        $i2 = $i1 - 1;
+
+        r3 = newarray (double)[$i2];
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] getObservationWeights()>();
+
+        $i3 = lengthof $r5;
+
+        if $i3 != 0 goto label02;
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>(r3, 1.0);
+
+        goto label06;
+
+     label02:
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] getObservationWeights()>();
+
+        $i4 = lengthof $r6;
+
+        if $i4 != 1 goto label03;
+
+        $r14 = virtualinvoke r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] getObservationWeights()>();
+
+        $d12 = $r14[0];
+
+        staticinvoke <java.util.Arrays: void fill(double[],double)>(r3, $d12);
+
+        goto label06;
+
+     label03:
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double[] getObservationWeights()>();
+
+        i10 = lengthof $r7;
+
+        $i5 = i0 - 1;
+
+        if i10 != $i5 goto label04;
+
+        $z0 = 1;
+
+        goto label05;
+
+     label04:
+        $z0 = 0;
+
+     label05:
+        $r8 = newarray (java.lang.Object)[2];
+
+        $r9 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i10);
+
+        $r8[0] = $r9;
+
+        $r10 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+
+        $r8[1] = $r10;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z0, "If provided, observationWeights must be of length one less than observations, as they weight returns log(obs[i]/obs[i-1]). Found {} weights and {} observations.", $r8);
+
+     label06:
+        $d13 = r2[0];
+
+        $b11 = $d13 cmpl 0.0;
+
+        if $b11 == 0 goto label07;
+
+        $z1 = 1;
+
+        goto label08;
+
+     label07:
+        $z1 = 0;
+
+     label08:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "In VarianceSwap, the first observation is zero so the estimate of RealizedVariance is undefined. Check time series.");
+
+        d14 = 0.0;
+
+        i12 = 1;
+
+     label09:
+        if i12 >= i0 goto label12;
+
+        $d4 = r2[i12];
+
+        $i7 = staticinvoke <java.lang.Double: int compare(double,double)>($d4, 0.0);
+
+        if $i7 == 0 goto label10;
+
+        $z2 = 1;
+
+        goto label11;
+
+     label10:
+        $z2 = 0;
+
+     label11:
+        $r12 = newarray (java.lang.Object)[1];
+
+        $r13 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i12);
+
+        $r12[0] = $r13;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String,java.lang.Object[])>($z2, "Encountered an invalid observation of zero in VarianceSwap at {}\'th observation. The estimate of RealizedVariance is undefined. Check time series.", $r12);
+
+        $i8 = i12 - 1;
+
+        $d8 = r3[$i8];
+
+        $d6 = r2[i12];
+
+        $i9 = i12 - 1;
+
+        $d5 = r2[$i9];
+
+        $d7 = $d6 / $d5;
+
+        $d9 = staticinvoke <java.lang.Math: double log(double)>($d7);
+
+        $d10 = staticinvoke <com.opengamma.analytics.math.FunctionUtils: double square(double)>($d9);
+
+        $d11 = $d8 * $d10;
+
+        d14 = d14 + $d11;
+
+        i12 = i12 + 1;
+
+        goto label09;
+
+     label12:
+        $i6 = i0 - 1;
+
+        $d0 = (double) $i6;
+
+        $d1 = d14 / $d0;
+
+        $d2 = virtualinvoke r1.<com.opengamma.analytics.financial.varianceswap.VarianceSwap: double getAnnualizationFactor()>();
+
+        $d3 = $d1 * $d2;
+
+        $r11 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        return $r11;
+    }
+
+    public volatile java.lang.Object evaluate(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.equity.variance.pricing.RealizedVariance r0;
+        java.lang.Object r1;
+        com.opengamma.analytics.financial.varianceswap.VarianceSwap $r2;
+        java.lang.Double $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.variance.pricing.RealizedVariance;
+
+        r1 := @parameter0: java.lang.Object;
+
+        $r2 = (com.opengamma.analytics.financial.varianceswap.VarianceSwap) r1;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.equity.variance.pricing.RealizedVariance: java.lang.Double evaluate(com.opengamma.analytics.financial.varianceswap.VarianceSwap)>($r2);
+
+        return $r3;
+    }
+}

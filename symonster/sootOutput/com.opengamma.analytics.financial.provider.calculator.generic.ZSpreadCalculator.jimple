@@ -1,0 +1,636 @@
+public class com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator extends java.lang.Object
+{
+    private static final com.opengamma.analytics.math.rootfinding.BracketRoot ROOT_BRACKETER;
+    private static final com.opengamma.analytics.math.rootfinding.RealSingleRootFinder ROOT_FINDER;
+    private final com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _pvCalculator;
+    private final com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _pvSensitivityCalculator;
+
+    public void <init>(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor, com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor r1, r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "present value calculator");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "curve sensitivity calculator");
+
+        r0.<com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _pvCalculator> = r1;
+
+        r0.<com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _pvSensitivityCalculator> = r2;
+
+        return;
+    }
+
+    public double calculateZSpread(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity, com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface, double)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface r2;
+        double d0, $d1, $d2, $d3;
+        double[] r4;
+        com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator$1 $r7;
+        com.opengamma.analytics.math.rootfinding.BracketRoot $r8;
+        com.opengamma.analytics.math.rootfinding.RealSingleRootFinder $r9;
+        java.lang.Double $r10, $r11, $r12;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface;
+
+        d0 := @parameter2: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "annuity");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "curves");
+
+        $r7 = new com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator$1;
+
+        specialinvoke $r7.<com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator$1: void <init>(com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator,com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface,double)>(r0, r1, r2, d0);
+
+        $r8 = <com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator: com.opengamma.analytics.math.rootfinding.BracketRoot ROOT_BRACKETER>;
+
+        r4 = virtualinvoke $r8.<com.opengamma.analytics.math.rootfinding.BracketRoot: double[] getBracketedPoints(com.opengamma.analytics.math.function.Function1D,double,double)>($r7, 0.0, 1.2);
+
+        $r9 = <com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator: com.opengamma.analytics.math.rootfinding.RealSingleRootFinder ROOT_FINDER>;
+
+        $d1 = r4[0];
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d1);
+
+        $d2 = r4[1];
+
+        $r11 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d2);
+
+        $r12 = virtualinvoke $r9.<com.opengamma.analytics.math.rootfinding.RealSingleRootFinder: java.lang.Double getRoot(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r7, $r10, $r11);
+
+        $d3 = virtualinvoke $r12.<java.lang.Double: double doubleValue()>();
+
+        return $d3;
+    }
+
+    public double calculatePriceForZSpread(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity, com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface, double)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface r2;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, d7;
+        int i0, $i1, i2;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment r3;
+        com.opengamma.util.money.MultipleCurrencyAmount r4;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor $r7;
+        java.lang.Object $r8, $r9;
+        com.opengamma.util.money.CurrencyAmount $r10;
+        java.lang.StringBuilder $r13, $r15, r17;
+        com.opengamma.util.money.CurrencyAmount[] $r14;
+        java.lang.String $r16;
+        java.lang.IllegalStateException r18;
+        java.lang.Iterable r19;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface;
+
+        d0 := @parameter2: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "annuity");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "curves");
+
+        d7 = 0.0;
+
+        i0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: int getNumberOfPayments()>();
+
+        i2 = 0;
+
+     label1:
+        if i2 >= i0 goto label3;
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i2);
+
+        $r7 = r0.<com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _pvCalculator>;
+
+        $r8 = virtualinvoke r3.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r7, r2);
+
+        r4 = (com.opengamma.util.money.MultipleCurrencyAmount) $r8;
+
+        $i1 = virtualinvoke r4.<com.opengamma.util.money.MultipleCurrencyAmount: int size()>();
+
+        if $i1 == 1 goto label2;
+
+        r18 = new java.lang.IllegalStateException;
+
+        r17 = new java.lang.StringBuilder;
+
+        specialinvoke r17.<java.lang.StringBuilder: void <init>()>();
+
+        $r13 = virtualinvoke r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Had more than one currency in result: ");
+
+        $r14 = virtualinvoke r4.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.CurrencyAmount[] getCurrencyAmounts()>();
+
+        $r15 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r14);
+
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke r18.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r16);
+
+        throw r18;
+
+     label2:
+        r19 = (java.lang.Iterable) r4;
+
+        $r9 = staticinvoke <com.google.common.collect.Iterables: java.lang.Object getOnlyElement(java.lang.Iterable)>(r19);
+
+        $r10 = (com.opengamma.util.money.CurrencyAmount) $r9;
+
+        d1 = virtualinvoke $r10.<com.opengamma.util.money.CurrencyAmount: double getAmount()>();
+
+        $d2 = neg d0;
+
+        $d3 = virtualinvoke r3.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: double getPaymentTime()>();
+
+        $d4 = $d2 * $d3;
+
+        $d5 = staticinvoke <java.lang.Math: double exp(double)>($d4);
+
+        $d6 = d1 * $d5;
+
+        d7 = d7 + $d6;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label3:
+        return d7;
+    }
+
+    public double calculatePriceSensitivityToZSpread(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity, com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface, double)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface r2;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, d8;
+        int i0, $i1, i2;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment r3;
+        com.opengamma.util.money.MultipleCurrencyAmount r4;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor $r7;
+        java.lang.Object $r8, $r9;
+        com.opengamma.util.money.CurrencyAmount $r10;
+        java.lang.StringBuilder $r13, $r15, r17;
+        com.opengamma.util.money.CurrencyAmount[] $r14;
+        java.lang.String $r16;
+        java.lang.IllegalStateException r18;
+        java.lang.Iterable r19;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface;
+
+        d0 := @parameter2: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "annuity");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "curves");
+
+        d8 = 0.0;
+
+        i0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: int getNumberOfPayments()>();
+
+        i2 = 0;
+
+     label1:
+        if i2 >= i0 goto label3;
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i2);
+
+        $r7 = r0.<com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _pvCalculator>;
+
+        $r8 = virtualinvoke r3.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r7, r2);
+
+        r4 = (com.opengamma.util.money.MultipleCurrencyAmount) $r8;
+
+        $i1 = virtualinvoke r4.<com.opengamma.util.money.MultipleCurrencyAmount: int size()>();
+
+        if $i1 == 1 goto label2;
+
+        r18 = new java.lang.IllegalStateException;
+
+        r17 = new java.lang.StringBuilder;
+
+        specialinvoke r17.<java.lang.StringBuilder: void <init>()>();
+
+        $r13 = virtualinvoke r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Had more than one currency in result: ");
+
+        $r14 = virtualinvoke r4.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.CurrencyAmount[] getCurrencyAmounts()>();
+
+        $r15 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r14);
+
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke r18.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r16);
+
+        throw r18;
+
+     label2:
+        r19 = (java.lang.Iterable) r4;
+
+        $r9 = staticinvoke <com.google.common.collect.Iterables: java.lang.Object getOnlyElement(java.lang.Iterable)>(r19);
+
+        $r10 = (com.opengamma.util.money.CurrencyAmount) $r9;
+
+        d1 = virtualinvoke $r10.<com.opengamma.util.money.CurrencyAmount: double getAmount()>();
+
+        d2 = virtualinvoke r3.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: double getPaymentTime()>();
+
+        $d5 = d2 * d1;
+
+        $d3 = neg d0;
+
+        $d4 = $d3 * d2;
+
+        $d6 = staticinvoke <java.lang.Math: double exp(double)>($d4);
+
+        $d7 = $d5 * $d6;
+
+        d8 = d8 - $d7;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label3:
+        return d8;
+    }
+
+    public java.util.Map calculatePriceSensitivityToCurve(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity, com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface, double)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface r2;
+        double d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity r3;
+        java.util.Set r4, $r22, $r33;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity r5;
+        java.util.Iterator r7, r11;
+        java.util.Map$Entry r8;
+        java.util.List r9;
+        com.opengamma.util.tuple.DoublesPair r12, r13;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor $r16;
+        java.lang.Object $r17, $r18, $r23, $r24, $r26, $r28;
+        int $i0, $i3;
+        com.opengamma.util.money.Currency $r19;
+        long $l1;
+        byte $b2;
+        java.util.HashMap $r20;
+        java.util.Map $r21, $r29;
+        boolean $z0, $z1;
+        java.util.ArrayList $r25;
+        java.lang.IllegalStateException $r30;
+        java.lang.StringBuilder $r31, $r32, $r34;
+        java.lang.String $r35;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface;
+
+        d0 := @parameter2: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "annuity");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "curves");
+
+        $r16 = r0.<com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _pvSensitivityCalculator>;
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r16, r2);
+
+        r3 = (com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity) $r17;
+
+        r4 = virtualinvoke r3.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: java.util.Set getCurrencies()>();
+
+        $i0 = interfaceinvoke r4.<java.util.Set: int size()>();
+
+        if $i0 == 1 goto label1;
+
+        $r30 = new java.lang.IllegalStateException;
+
+        $r31 = new java.lang.StringBuilder;
+
+        specialinvoke $r31.<java.lang.StringBuilder: void <init>()>();
+
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Had more than one currency in result: ");
+
+        $r33 = virtualinvoke r3.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: java.util.Set getCurrencies()>();
+
+        $r34 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r33);
+
+        $r35 = virtualinvoke $r34.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r30.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r35);
+
+        throw $r30;
+
+     label1:
+        $r18 = staticinvoke <com.google.common.collect.Iterables: java.lang.Object getOnlyElement(java.lang.Iterable)>(r4);
+
+        $r19 = (com.opengamma.util.money.Currency) $r18;
+
+        r5 = virtualinvoke r3.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity getSensitivity(com.opengamma.util.money.Currency)>($r19);
+
+        $l1 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d0);
+
+        $b2 = $l1 cmp 0L;
+
+        if $b2 != 0 goto label2;
+
+        $r29 = virtualinvoke r5.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: java.util.Map getYieldDiscountingSensitivities()>();
+
+        return $r29;
+
+     label2:
+        $r20 = new java.util.HashMap;
+
+        specialinvoke $r20.<java.util.HashMap: void <init>()>();
+
+        $r21 = virtualinvoke r5.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: java.util.Map getYieldDiscountingSensitivities()>();
+
+        $r22 = interfaceinvoke $r21.<java.util.Map: java.util.Set entrySet()>();
+
+        r7 = interfaceinvoke $r22.<java.util.Set: java.util.Iterator iterator()>();
+
+     label3:
+        $z0 = interfaceinvoke r7.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label6;
+
+        $r23 = interfaceinvoke r7.<java.util.Iterator: java.lang.Object next()>();
+
+        r8 = (java.util.Map$Entry) $r23;
+
+        $r24 = interfaceinvoke r8.<java.util.Map$Entry: java.lang.Object getValue()>();
+
+        r9 = (java.util.List) $r24;
+
+        $r25 = new java.util.ArrayList;
+
+        $i3 = interfaceinvoke r9.<java.util.List: int size()>();
+
+        specialinvoke $r25.<java.util.ArrayList: void <init>(int)>($i3);
+
+        r11 = interfaceinvoke r9.<java.util.List: java.util.Iterator iterator()>();
+
+     label4:
+        $z1 = interfaceinvoke r11.<java.util.Iterator: boolean hasNext()>();
+
+        if $z1 == 0 goto label5;
+
+        $r28 = interfaceinvoke r11.<java.util.Iterator: java.lang.Object next()>();
+
+        r12 = (com.opengamma.util.tuple.DoublesPair) $r28;
+
+        $d4 = r12.<com.opengamma.util.tuple.DoublesPair: double first>;
+
+        $d5 = r12.<com.opengamma.util.tuple.DoublesPair: double second>;
+
+        $d2 = neg d0;
+
+        $d1 = r12.<com.opengamma.util.tuple.DoublesPair: double first>;
+
+        $d3 = $d2 * $d1;
+
+        $d6 = staticinvoke <java.lang.Math: double exp(double)>($d3);
+
+        $d7 = $d5 * $d6;
+
+        r13 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d4, $d7);
+
+        virtualinvoke $r25.<java.util.ArrayList: boolean add(java.lang.Object)>(r13);
+
+        goto label4;
+
+     label5:
+        $r26 = interfaceinvoke r8.<java.util.Map$Entry: java.lang.Object getKey()>();
+
+        interfaceinvoke $r20.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r26, $r25);
+
+        goto label3;
+
+     label6:
+        return $r20;
+    }
+
+    public java.util.Map calculateZSpreadSensitivityToCurve(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity, com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface, double)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface r2;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity r3;
+        java.util.Set r4, $r22, $r33;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity r5;
+        java.util.Iterator r7, r11;
+        java.util.Map$Entry r8;
+        java.util.List r9;
+        com.opengamma.util.tuple.DoublesPair r12, r13;
+        long $l0, $l3;
+        byte $b1, $b4;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor $r16;
+        java.lang.Object $r17, $r18, $r23, $r24, $r26, $r28;
+        int $i2, $i5;
+        com.opengamma.util.money.Currency $r19;
+        java.util.HashMap $r20;
+        java.util.Map $r21, $r29;
+        boolean $z0, $z1, $z3;
+        java.util.ArrayList $r25;
+        java.lang.IllegalStateException $r30;
+        java.lang.StringBuilder $r31, $r32, $r34;
+        java.lang.String $r35;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface;
+
+        d0 := @parameter2: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "annuity");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "curves");
+
+        d1 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator: double calculatePriceSensitivityToZSpread(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity,com.opengamma.analytics.financial.provider.description.interestrate.ParameterProviderInterface,double)>(r1, r2, d0);
+
+        $l0 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d1);
+
+        $b1 = $l0 cmp 0L;
+
+        if $b1 == 0 goto label1;
+
+        $z3 = 1;
+
+        goto label2;
+
+     label1:
+        $z3 = 0;
+
+     label2:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "Price Sensitivity To ZSpread is zero");
+
+        $r16 = r0.<com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator: com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor _pvSensitivityCalculator>;
+
+        $r17 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r16, r2);
+
+        r3 = (com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity) $r17;
+
+        r4 = virtualinvoke r3.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: java.util.Set getCurrencies()>();
+
+        $i2 = interfaceinvoke r4.<java.util.Set: int size()>();
+
+        if $i2 == 1 goto label3;
+
+        $r30 = new java.lang.IllegalStateException;
+
+        $r31 = new java.lang.StringBuilder;
+
+        specialinvoke $r31.<java.lang.StringBuilder: void <init>()>();
+
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Had more than one currency in result: ");
+
+        $r33 = virtualinvoke r3.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: java.util.Set getCurrencies()>();
+
+        $r34 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r33);
+
+        $r35 = virtualinvoke $r34.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r30.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r35);
+
+        throw $r30;
+
+     label3:
+        $r18 = staticinvoke <com.google.common.collect.Iterables: java.lang.Object getOnlyElement(java.lang.Iterable)>(r4);
+
+        $r19 = (com.opengamma.util.money.Currency) $r18;
+
+        r5 = virtualinvoke r3.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyMulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity getSensitivity(com.opengamma.util.money.Currency)>($r19);
+
+        $l3 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d0);
+
+        $b4 = $l3 cmp 0L;
+
+        if $b4 != 0 goto label4;
+
+        $r29 = virtualinvoke r5.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: java.util.Map getYieldDiscountingSensitivities()>();
+
+        return $r29;
+
+     label4:
+        $r20 = new java.util.HashMap;
+
+        specialinvoke $r20.<java.util.HashMap: void <init>()>();
+
+        $r21 = virtualinvoke r5.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: java.util.Map getYieldDiscountingSensitivities()>();
+
+        $r22 = interfaceinvoke $r21.<java.util.Map: java.util.Set entrySet()>();
+
+        r7 = interfaceinvoke $r22.<java.util.Set: java.util.Iterator iterator()>();
+
+     label5:
+        $z0 = interfaceinvoke r7.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label8;
+
+        $r23 = interfaceinvoke r7.<java.util.Iterator: java.lang.Object next()>();
+
+        r8 = (java.util.Map$Entry) $r23;
+
+        $r24 = interfaceinvoke r8.<java.util.Map$Entry: java.lang.Object getValue()>();
+
+        r9 = (java.util.List) $r24;
+
+        $r25 = new java.util.ArrayList;
+
+        $i5 = interfaceinvoke r9.<java.util.List: int size()>();
+
+        specialinvoke $r25.<java.util.ArrayList: void <init>(int)>($i5);
+
+        r11 = interfaceinvoke r9.<java.util.List: java.util.Iterator iterator()>();
+
+     label6:
+        $z1 = interfaceinvoke r11.<java.util.Iterator: boolean hasNext()>();
+
+        if $z1 == 0 goto label7;
+
+        $r28 = interfaceinvoke r11.<java.util.Iterator: java.lang.Object next()>();
+
+        r12 = (com.opengamma.util.tuple.DoublesPair) $r28;
+
+        $d6 = r12.<com.opengamma.util.tuple.DoublesPair: double first>;
+
+        $d2 = r12.<com.opengamma.util.tuple.DoublesPair: double second>;
+
+        $d7 = neg $d2;
+
+        $d4 = neg d0;
+
+        $d3 = r12.<com.opengamma.util.tuple.DoublesPair: double first>;
+
+        $d5 = $d4 * $d3;
+
+        $d8 = staticinvoke <java.lang.Math: double exp(double)>($d5);
+
+        $d9 = $d7 * $d8;
+
+        $d10 = $d9 / d1;
+
+        r13 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d6, $d10);
+
+        virtualinvoke $r25.<java.util.ArrayList: boolean add(java.lang.Object)>(r13);
+
+        goto label6;
+
+     label7:
+        $r26 = interfaceinvoke r8.<java.util.Map$Entry: java.lang.Object getKey()>();
+
+        interfaceinvoke $r20.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r26, $r25);
+
+        goto label5;
+
+     label8:
+        return $r20;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.math.rootfinding.BracketRoot $r0;
+        com.opengamma.analytics.math.rootfinding.BrentSingleRootFinder $r1;
+
+        $r0 = new com.opengamma.analytics.math.rootfinding.BracketRoot;
+
+        specialinvoke $r0.<com.opengamma.analytics.math.rootfinding.BracketRoot: void <init>()>();
+
+        <com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator: com.opengamma.analytics.math.rootfinding.BracketRoot ROOT_BRACKETER> = $r0;
+
+        $r1 = new com.opengamma.analytics.math.rootfinding.BrentSingleRootFinder;
+
+        specialinvoke $r1.<com.opengamma.analytics.math.rootfinding.BrentSingleRootFinder: void <init>()>();
+
+        <com.opengamma.analytics.financial.provider.calculator.generic.ZSpreadCalculator: com.opengamma.analytics.math.rootfinding.RealSingleRootFinder ROOT_FINDER> = $r1;
+
+        return;
+    }
+}

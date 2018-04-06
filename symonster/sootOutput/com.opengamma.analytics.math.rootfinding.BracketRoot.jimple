@@ -1,0 +1,518 @@
+public class com.opengamma.analytics.math.rootfinding.BracketRoot extends java.lang.Object
+{
+    private static final double RATIO;
+    private static final int MAX_STEPS;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.math.rootfinding.BracketRoot r0;
+
+        r0 := @this: com.opengamma.analytics.math.rootfinding.BracketRoot;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public double[] getBracketedPoints(com.opengamma.analytics.math.function.Function1D, double, double)
+    {
+        com.opengamma.analytics.math.rootfinding.BracketRoot r0;
+        com.opengamma.analytics.math.function.Function1D r1;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, d9, d10, d13, d14;
+        java.lang.Double $r2, $r4, $r5, $r7, $r9, $r11, $r19, $r21;
+        java.lang.Object $r3, $r6, $r10, $r20;
+        boolean $z0, $z1, $z2, $z3;
+        com.opengamma.analytics.math.MathException $r8, $r12, $r22, $r30, $r37;
+        byte $b0, $b1;
+        java.lang.StringBuilder $r13, $r14, $r15, $r16, $r17, $r23, $r24, $r25, $r26, $r27, $r31, $r32, $r33, $r34, $r35, $r38, $r39, $r40, $r41, $r42;
+        java.lang.String $r18, $r28, $r36, $r43;
+        double[] $r29;
+        int i2;
+
+        r0 := @this: com.opengamma.analytics.math.rootfinding.BracketRoot;
+
+        r1 := @parameter0: com.opengamma.analytics.math.function.Function1D;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "f");
+
+        d9 = d0;
+
+        d10 = d1;
+
+        $r2 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r2);
+
+        $r4 = (java.lang.Double) $r3;
+
+        d13 = virtualinvoke $r4.<java.lang.Double: double doubleValue()>();
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r5);
+
+        $r7 = (java.lang.Double) $r6;
+
+        d14 = virtualinvoke $r7.<java.lang.Double: double doubleValue()>();
+
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d13);
+
+        if $z0 == 0 goto label1;
+
+        $r37 = new com.opengamma.analytics.math.MathException;
+
+        $r38 = new java.lang.StringBuilder;
+
+        specialinvoke $r38.<java.lang.StringBuilder: void <init>()>();
+
+        $r39 = virtualinvoke $r38.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Failed to bracket root: function invalid at x = ");
+
+        $r40 = virtualinvoke $r39.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d0);
+
+        $r41 = virtualinvoke $r40.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" f(x) = ");
+
+        $r42 = virtualinvoke $r41.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d13);
+
+        $r43 = virtualinvoke $r42.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r37.<com.opengamma.analytics.math.MathException: void <init>(java.lang.String)>($r43);
+
+        throw $r37;
+
+     label1:
+        $z1 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d14);
+
+        if $z1 == 0 goto label2;
+
+        $r30 = new com.opengamma.analytics.math.MathException;
+
+        $r31 = new java.lang.StringBuilder;
+
+        specialinvoke $r31.<java.lang.StringBuilder: void <init>()>();
+
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Failed to bracket root: function invalid at x = ");
+
+        $r33 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d1);
+
+        $r34 = virtualinvoke $r33.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" f(x) = ");
+
+        $r35 = virtualinvoke $r34.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d14);
+
+        $r36 = virtualinvoke $r35.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r30.<com.opengamma.analytics.math.MathException: void <init>(java.lang.String)>($r36);
+
+        throw $r30;
+
+     label2:
+        i2 = 0;
+
+     label3:
+        if i2 >= 50 goto label7;
+
+        $d2 = d13 * d14;
+
+        $b0 = $d2 cmpg 0.0;
+
+        if $b0 >= 0 goto label4;
+
+        $r29 = newarray (double)[2];
+
+        $r29[0] = d9;
+
+        $r29[1] = d10;
+
+        return $r29;
+
+     label4:
+        $d3 = staticinvoke <java.lang.Math: double abs(double)>(d13);
+
+        $d4 = staticinvoke <java.lang.Math: double abs(double)>(d14);
+
+        $b1 = $d3 cmpg $d4;
+
+        if $b1 >= 0 goto label5;
+
+        $d7 = d9 - d10;
+
+        $d8 = 1.6 * $d7;
+
+        d9 = d9 + $d8;
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d9);
+
+        $r20 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r19);
+
+        $r21 = (java.lang.Double) $r20;
+
+        d13 = virtualinvoke $r21.<java.lang.Double: double doubleValue()>();
+
+        $z3 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d13);
+
+        if $z3 == 0 goto label6;
+
+        $r22 = new com.opengamma.analytics.math.MathException;
+
+        $r23 = new java.lang.StringBuilder;
+
+        specialinvoke $r23.<java.lang.StringBuilder: void <init>()>();
+
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Failed to bracket root: function invalid at x = ");
+
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d9);
+
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" f(x) = ");
+
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d13);
+
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r22.<com.opengamma.analytics.math.MathException: void <init>(java.lang.String)>($r28);
+
+        throw $r22;
+
+     label5:
+        $d5 = d10 - d9;
+
+        $d6 = 1.6 * $d5;
+
+        d10 = d10 + $d6;
+
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d10);
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r9);
+
+        $r11 = (java.lang.Double) $r10;
+
+        d14 = virtualinvoke $r11.<java.lang.Double: double doubleValue()>();
+
+        $z2 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d14);
+
+        if $z2 == 0 goto label6;
+
+        $r12 = new com.opengamma.analytics.math.MathException;
+
+        $r13 = new java.lang.StringBuilder;
+
+        specialinvoke $r13.<java.lang.StringBuilder: void <init>()>();
+
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Failed to bracket root: function invalid at x = ");
+
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d10);
+
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" f(x) = ");
+
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d14);
+
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r12.<com.opengamma.analytics.math.MathException: void <init>(java.lang.String)>($r18);
+
+        throw $r12;
+
+     label6:
+        i2 = i2 + 1;
+
+        goto label3;
+
+     label7:
+        $r8 = new com.opengamma.analytics.math.MathException;
+
+        specialinvoke $r8.<com.opengamma.analytics.math.MathException: void <init>(java.lang.String)>("Failed to bracket root");
+
+        throw $r8;
+    }
+
+    public double[] getBracketedPoints(com.opengamma.analytics.math.function.Function1D, double, double, double, double)
+    {
+        com.opengamma.analytics.math.rootfinding.BracketRoot r0;
+        com.opengamma.analytics.math.function.Function1D r1;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, d11, d12, d15, d16;
+        byte $b0, $b1, $b2, $b3, $b4, $b5;
+        java.lang.Double $r2, $r4, $r5, $r7, $r9, $r11, $r19, $r21;
+        java.lang.Object $r3, $r6, $r10, $r20;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, z6, z7;
+        com.opengamma.analytics.math.MathException $r8, $r12, $r22, $r29, $r31, $r38;
+        java.lang.StringBuilder $r13, $r14, $r15, $r16, $r17, $r23, $r24, $r25, $r26, $r27, $r32, $r33, $r34, $r35, $r36, $r39, $r40, $r41, $r42, $r43;
+        java.lang.String $r18, $r28, $r37, $r44;
+        double[] $r30;
+        int i6;
+
+        r0 := @this: com.opengamma.analytics.math.rootfinding.BracketRoot;
+
+        r1 := @parameter0: com.opengamma.analytics.math.function.Function1D;
+
+        d0 := @parameter1: double;
+
+        d1 := @parameter2: double;
+
+        d2 := @parameter3: double;
+
+        d3 := @parameter4: double;
+
+        staticinvoke <org.apache.commons.lang.Validate: void notNull(java.lang.Object,java.lang.String)>(r1, "f");
+
+        $b0 = d0 cmpl d2;
+
+        if $b0 < 0 goto label01;
+
+        $z4 = 1;
+
+        goto label02;
+
+     label01:
+        $z4 = 0;
+
+     label02:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z4, "xLower < minX");
+
+        $b1 = d1 cmpg d3;
+
+        if $b1 > 0 goto label03;
+
+        $z5 = 1;
+
+        goto label04;
+
+     label03:
+        $z5 = 0;
+
+     label04:
+        staticinvoke <org.apache.commons.lang.Validate: void isTrue(boolean,java.lang.String)>($z5, "xUpper < maxX");
+
+        d11 = d0;
+
+        d12 = d1;
+
+        z6 = 0;
+
+        z7 = 0;
+
+        $r2 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r2);
+
+        $r4 = (java.lang.Double) $r3;
+
+        d15 = virtualinvoke $r4.<java.lang.Double: double doubleValue()>();
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r5);
+
+        $r7 = (java.lang.Double) $r6;
+
+        d16 = virtualinvoke $r7.<java.lang.Double: double doubleValue()>();
+
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d15);
+
+        if $z0 == 0 goto label05;
+
+        $r38 = new com.opengamma.analytics.math.MathException;
+
+        $r39 = new java.lang.StringBuilder;
+
+        specialinvoke $r39.<java.lang.StringBuilder: void <init>()>();
+
+        $r40 = virtualinvoke $r39.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Failed to bracket root: function invalid at x = ");
+
+        $r41 = virtualinvoke $r40.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d0);
+
+        $r42 = virtualinvoke $r41.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" f(x) = ");
+
+        $r43 = virtualinvoke $r42.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d15);
+
+        $r44 = virtualinvoke $r43.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r38.<com.opengamma.analytics.math.MathException: void <init>(java.lang.String)>($r44);
+
+        throw $r38;
+
+     label05:
+        $z1 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d16);
+
+        if $z1 == 0 goto label06;
+
+        $r31 = new com.opengamma.analytics.math.MathException;
+
+        $r32 = new java.lang.StringBuilder;
+
+        specialinvoke $r32.<java.lang.StringBuilder: void <init>()>();
+
+        $r33 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Failed to bracket root: function invalid at x = ");
+
+        $r34 = virtualinvoke $r33.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d1);
+
+        $r35 = virtualinvoke $r34.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" f(x) = ");
+
+        $r36 = virtualinvoke $r35.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d16);
+
+        $r37 = virtualinvoke $r36.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r31.<com.opengamma.analytics.math.MathException: void <init>(java.lang.String)>($r37);
+
+        throw $r31;
+
+     label06:
+        i6 = 0;
+
+     label07:
+        if i6 >= 50 goto label14;
+
+        $d4 = d15 * d16;
+
+        $b2 = $d4 cmpg 0.0;
+
+        if $b2 > 0 goto label08;
+
+        $r30 = newarray (double)[2];
+
+        $r30[0] = d11;
+
+        $r30[1] = d12;
+
+        return $r30;
+
+     label08:
+        if z6 == 0 goto label09;
+
+        if z7 == 0 goto label09;
+
+        $r29 = new com.opengamma.analytics.math.MathException;
+
+        specialinvoke $r29.<com.opengamma.analytics.math.MathException: void <init>(java.lang.String)>("Failed to bracket root: no root found between minX and maxX");
+
+        throw $r29;
+
+     label09:
+        $d5 = staticinvoke <java.lang.Math: double abs(double)>(d15);
+
+        $d6 = staticinvoke <java.lang.Math: double abs(double)>(d16);
+
+        $b3 = $d5 cmpg $d6;
+
+        if $b3 >= 0 goto label11;
+
+        if z6 != 0 goto label11;
+
+        $d9 = d11 - d12;
+
+        $d10 = 1.6 * $d9;
+
+        d11 = d11 + $d10;
+
+        $b5 = d11 cmpg d2;
+
+        if $b5 >= 0 goto label10;
+
+        d11 = d2;
+
+        z6 = 1;
+
+     label10:
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d11);
+
+        $r20 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r19);
+
+        $r21 = (java.lang.Double) $r20;
+
+        d15 = virtualinvoke $r21.<java.lang.Double: double doubleValue()>();
+
+        $z3 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d15);
+
+        if $z3 == 0 goto label13;
+
+        $r22 = new com.opengamma.analytics.math.MathException;
+
+        $r23 = new java.lang.StringBuilder;
+
+        specialinvoke $r23.<java.lang.StringBuilder: void <init>()>();
+
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Failed to bracket root: function invalid at x = ");
+
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d11);
+
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" f(x) = ");
+
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d15);
+
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r22.<com.opengamma.analytics.math.MathException: void <init>(java.lang.String)>($r28);
+
+        throw $r22;
+
+     label11:
+        $d7 = d12 - d11;
+
+        $d8 = 1.6 * $d7;
+
+        d12 = d12 + $d8;
+
+        $b4 = d12 cmpl d3;
+
+        if $b4 <= 0 goto label12;
+
+        d12 = d3;
+
+        z7 = 1;
+
+     label12:
+        $r9 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d12);
+
+        $r10 = virtualinvoke r1.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r9);
+
+        $r11 = (java.lang.Double) $r10;
+
+        d16 = virtualinvoke $r11.<java.lang.Double: double doubleValue()>();
+
+        $z2 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d16);
+
+        if $z2 == 0 goto label13;
+
+        $r12 = new com.opengamma.analytics.math.MathException;
+
+        $r13 = new java.lang.StringBuilder;
+
+        specialinvoke $r13.<java.lang.StringBuilder: void <init>()>();
+
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Failed to bracket root: function invalid at x = ");
+
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d12);
+
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" f(x) = ");
+
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(double)>(d16);
+
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r12.<com.opengamma.analytics.math.MathException: void <init>(java.lang.String)>($r18);
+
+        throw $r12;
+
+     label13:
+        i6 = i6 + 1;
+
+        goto label07;
+
+     label14:
+        $r8 = new com.opengamma.analytics.math.MathException;
+
+        specialinvoke $r8.<com.opengamma.analytics.math.MathException: void <init>(java.lang.String)>("Failed to bracket root: max iterations");
+
+        throw $r8;
+    }
+
+    public static void <clinit>()
+    {
+        <com.opengamma.analytics.math.rootfinding.BracketRoot: int MAX_STEPS> = 50;
+
+        <com.opengamma.analytics.math.rootfinding.BracketRoot: double RATIO> = 1.6;
+
+        return;
+    }
+}

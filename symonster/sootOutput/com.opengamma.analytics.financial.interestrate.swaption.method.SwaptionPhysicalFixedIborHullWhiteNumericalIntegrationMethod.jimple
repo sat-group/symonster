@@ -1,0 +1,240 @@
+public class com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborHullWhiteNumericalIntegrationMethod extends java.lang.Object implements com.opengamma.analytics.financial.interestrate.method.PricingMethod
+{
+    private static final com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel MODEL;
+    private static final com.opengamma.analytics.financial.interestrate.CashFlowEquivalentCalculator CFEC;
+    private static final int NB_INTEGRATION;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborHullWhiteNumericalIntegrationMethod r0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborHullWhiteNumericalIntegrationMethod;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.util.money.CurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor, com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantDataBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborHullWhiteNumericalIntegrationMethod r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor r1;
+        com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantDataBundle r2;
+        double d0, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d16, d17;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed r3;
+        double[] r4, r5, r6;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon $r11;
+        com.opengamma.analytics.financial.interestrate.CashFlowEquivalentCalculator $r12;
+        java.lang.Object $r13;
+        int $i0, $i1, $i2, $i3, i4;
+        com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborHullWhiteNumericalIntegrationMethod$SwaptionIntegrant $r14;
+        com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D $r15;
+        java.lang.Double $r16, $r17, $r18;
+        boolean $z0;
+        com.opengamma.util.money.Currency $r19;
+        com.opengamma.util.money.CurrencyAmount $r20;
+        com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel $r21;
+        com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters $r22;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment $r23, $r27, $r29;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r24, $r28, $r30;
+        java.lang.String $r25;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r26;
+        java.lang.Exception $r31;
+        java.lang.RuntimeException $r32;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborHullWhiteNumericalIntegrationMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantDataBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "swaption");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Hull-White data");
+
+        d0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: double getTimeToExpiry()>();
+
+        $r11 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon getUnderlyingSwap()>();
+
+        $r12 = <com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.interestrate.CashFlowEquivalentCalculator CFEC>;
+
+        $r13 = virtualinvoke $r11.<com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r12, r2);
+
+        r3 = (com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed) $r13;
+
+        $i0 = virtualinvoke r3.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        r4 = newarray (double)[$i0];
+
+        $i1 = virtualinvoke r3.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        r5 = newarray (double)[$i1];
+
+        $i2 = virtualinvoke r3.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        r6 = newarray (double)[$i2];
+
+        i4 = 0;
+
+     label1:
+        $i3 = virtualinvoke r3.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: int getNumberOfPayments()>();
+
+        if i4 >= $i3 goto label2;
+
+        $r21 = <com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel MODEL>;
+
+        $r22 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantDataBundle: com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters getHullWhiteParameter()>();
+
+        $r23 = virtualinvoke r3.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i4);
+
+        $r24 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r23;
+
+        $d8 = virtualinvoke $r24.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getPaymentTime()>();
+
+        $d9 = virtualinvoke $r21.<com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel: double alpha(com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantParameters,double,double,double,double)>($r22, 0.0, d0, d0, $d8);
+
+        r4[i4] = $d9;
+
+        $r25 = virtualinvoke r3.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: java.lang.String getDiscountCurve()>();
+
+        $r26 = virtualinvoke r2.<com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getCurve(java.lang.String)>($r25);
+
+        $r27 = virtualinvoke r3.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i4);
+
+        $r28 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r27;
+
+        $d10 = virtualinvoke $r28.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getPaymentTime()>();
+
+        $d11 = virtualinvoke $r26.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getDiscountFactor(double)>($d10);
+
+        r5[i4] = $d11;
+
+        $d12 = r5[i4];
+
+        $r29 = virtualinvoke r3.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityPaymentFixed: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment getNthPayment(int)>(i4);
+
+        $r30 = (com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed) $r29;
+
+        $d13 = virtualinvoke $r30.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        $d14 = $d12 * $d13;
+
+        r6[i4] = $d14;
+
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label2:
+        $r14 = new com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborHullWhiteNumericalIntegrationMethod$SwaptionIntegrant;
+
+        specialinvoke $r14.<com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborHullWhiteNumericalIntegrationMethod$SwaptionIntegrant: void <init>(double[],double[])>(r6, r4);
+
+        $r15 = new com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D;
+
+        specialinvoke $r15.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: void <init>(double,double,int)>(0.01, 1.0E-6, 6);
+
+     label3:
+        $d4 = staticinvoke <java.lang.Math: double sqrt(double)>(6.283185307179586);
+
+        $d5 = 1.0 / $d4;
+
+        $r16 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(-10.0);
+
+        $r17 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(10.0);
+
+        $r18 = virtualinvoke $r15.<com.opengamma.analytics.math.integration.RungeKuttaIntegrator1D: java.lang.Double integrate(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>($r14, $r16, $r17);
+
+        $d6 = virtualinvoke $r18.<java.lang.Double: double doubleValue()>();
+
+        $d7 = $d5 * $d6;
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: boolean isLong()>();
+
+        if $z0 == 0 goto label4;
+
+        $d16 = 1.0;
+
+        goto label5;
+
+     label4:
+        $d16 = -1.0;
+
+     label5:
+        d17 = $d7 * $d16;
+
+     label6:
+        goto label8;
+
+     label7:
+        $r31 := @caughtexception;
+
+        $r32 = new java.lang.RuntimeException;
+
+        specialinvoke $r32.<java.lang.RuntimeException: void <init>(java.lang.Throwable)>($r31);
+
+        throw $r32;
+
+     label8:
+        $r19 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r20 = staticinvoke <com.opengamma.util.money.CurrencyAmount: com.opengamma.util.money.CurrencyAmount of(com.opengamma.util.money.Currency,double)>($r19, d17);
+
+        return $r20;
+
+        catch java.lang.Exception from label3 to label6 with label7;
+    }
+
+    public com.opengamma.util.money.CurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.InstrumentDerivative, com.opengamma.analytics.financial.interestrate.YieldCurveBundle)
+    {
+        com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborHullWhiteNumericalIntegrationMethod r0;
+        com.opengamma.analytics.financial.interestrate.InstrumentDerivative r1;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantDataBundle $r3;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor $r4;
+        com.opengamma.util.money.CurrencyAmount $r5;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborHullWhiteNumericalIntegrationMethod;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.InstrumentDerivative;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        $z0 = r1 instanceof com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "Physical delivery swaption");
+
+        $z1 = r2 instanceof com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantDataBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "Bundle should contain Hull-White data");
+
+        $r4 = (com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor) r1;
+
+        $r3 = (com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantDataBundle) r2;
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborHullWhiteNumericalIntegrationMethod: com.opengamma.util.money.CurrencyAmount presentValue(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor,com.opengamma.analytics.financial.model.interestrate.definition.HullWhiteOneFactorPiecewiseConstantDataBundle)>($r4, $r3);
+
+        return $r5;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel $r0;
+        com.opengamma.analytics.financial.interestrate.CashFlowEquivalentCalculator $r1;
+
+        <com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborHullWhiteNumericalIntegrationMethod: int NB_INTEGRATION> = 6;
+
+        $r0 = new com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.model.interestrate.HullWhiteOneFactorPiecewiseConstantInterestRateModel MODEL> = $r0;
+
+        $r1 = staticinvoke <com.opengamma.analytics.financial.interestrate.CashFlowEquivalentCalculator: com.opengamma.analytics.financial.interestrate.CashFlowEquivalentCalculator getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.swaption.method.SwaptionPhysicalFixedIborHullWhiteNumericalIntegrationMethod: com.opengamma.analytics.financial.interestrate.CashFlowEquivalentCalculator CFEC> = $r1;
+
+        return;
+    }
+}

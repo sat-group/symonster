@@ -261,6 +261,7 @@ public class BuildNetNoVoid{
                     transitionName += t.toString() + " ";
                 }
                 transitionName += ")";
+                transitionName += k.getRetType().toString();
                 petrinet.createTransition(transitionName);
             } else { //The method is not static, so it has an extra argument
                 transitionName = "(static)" + className + "." + methodname + "(";
@@ -269,6 +270,7 @@ public class BuildNetNoVoid{
                     transitionName += t.toString() + " ";
                 }
                 transitionName += ")";
+                transitionName += k.getRetType().toString();
                 petrinet.createTransition(transitionName);
 
                 //creating the place for the class instance

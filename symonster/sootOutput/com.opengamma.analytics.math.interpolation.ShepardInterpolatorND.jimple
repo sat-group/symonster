@@ -1,0 +1,179 @@
+public class com.opengamma.analytics.math.interpolation.ShepardInterpolatorND extends com.opengamma.analytics.math.interpolation.InterpolatorND
+{
+    private final com.opengamma.analytics.math.function.Function1D _basisFunction;
+
+    public void <init>(double)
+    {
+        com.opengamma.analytics.math.interpolation.ShepardInterpolatorND r0;
+        double d0;
+        com.opengamma.analytics.math.interpolation.ShepardNormalizedRadialBasisFunction $r1;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShepardInterpolatorND;
+
+        d0 := @parameter0: double;
+
+        specialinvoke r0.<com.opengamma.analytics.math.interpolation.InterpolatorND: void <init>()>();
+
+        $r1 = new com.opengamma.analytics.math.interpolation.ShepardNormalizedRadialBasisFunction;
+
+        specialinvoke $r1.<com.opengamma.analytics.math.interpolation.ShepardNormalizedRadialBasisFunction: void <init>(double)>(d0);
+
+        r0.<com.opengamma.analytics.math.interpolation.ShepardInterpolatorND: com.opengamma.analytics.math.function.Function1D _basisFunction> = $r1;
+
+        return;
+    }
+
+    public java.lang.Double interpolate(com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle, double[])
+    {
+        com.opengamma.analytics.math.interpolation.ShepardInterpolatorND r0;
+        com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle r1;
+        double[] r2, r4;
+        java.util.List r3;
+        int i0, i2;
+        double d0, d1, d2, $d3, $d4, d5, d6;
+        com.opengamma.util.tuple.Pair r5;
+        java.lang.Double $r6, $r10, $r12, $r14, $r15;
+        java.lang.Object $r7, $r8, $r9, $r13;
+        byte $b1;
+        com.opengamma.analytics.math.function.Function1D $r11;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShepardInterpolatorND;
+
+        r1 := @parameter0: com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle;
+
+        r2 := @parameter1: double[];
+
+        virtualinvoke r0.<com.opengamma.analytics.math.interpolation.ShepardInterpolatorND: void validateInput(com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle,double[])>(r1, r2);
+
+        r3 = virtualinvoke r1.<com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle: java.util.List getData()>();
+
+        i0 = interfaceinvoke r3.<java.util.List: int size()>();
+
+        d5 = 0.0;
+
+        d6 = 0.0;
+
+        i2 = 0;
+
+     label1:
+        if i2 >= i0 goto label3;
+
+        $r7 = interfaceinvoke r3.<java.util.List: java.lang.Object get(int)>(i2);
+
+        r5 = (com.opengamma.util.tuple.Pair) $r7;
+
+        $r8 = virtualinvoke r5.<com.opengamma.util.tuple.Pair: java.lang.Object getFirst()>();
+
+        r4 = (double[]) $r8;
+
+        $r9 = virtualinvoke r5.<com.opengamma.util.tuple.Pair: java.lang.Object getSecond()>();
+
+        $r10 = (java.lang.Double) $r9;
+
+        d0 = virtualinvoke $r10.<java.lang.Double: double doubleValue()>();
+
+        d2 = staticinvoke <com.opengamma.analytics.math.interpolation.DistanceCalculator: double getDistance(double[],double[])>(r2, r4);
+
+        $b1 = d2 cmpl 0.0;
+
+        if $b1 != 0 goto label2;
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        return $r15;
+
+     label2:
+        $r11 = r0.<com.opengamma.analytics.math.interpolation.ShepardInterpolatorND: com.opengamma.analytics.math.function.Function1D _basisFunction>;
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r13 = virtualinvoke $r11.<com.opengamma.analytics.math.function.Function1D: java.lang.Object evaluate(java.lang.Object)>($r12);
+
+        $r14 = (java.lang.Double) $r13;
+
+        d1 = virtualinvoke $r14.<java.lang.Double: double doubleValue()>();
+
+        $d4 = d0 * d1;
+
+        d5 = d5 + $d4;
+
+        d6 = d6 + d1;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label3:
+        $d3 = d5 / d6;
+
+        $r6 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        return $r6;
+    }
+
+    public com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle getDataBundle(double[], double[], double[], double[])
+    {
+        com.opengamma.analytics.math.interpolation.ShepardInterpolatorND r0;
+        double[] r1, r2, r3, r4;
+        com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle $r5;
+        java.util.List $r6;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShepardInterpolatorND;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[];
+
+        r4 := @parameter3: double[];
+
+        $r5 = new com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle;
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.ShepardInterpolatorND: java.util.List transformData(double[],double[],double[],double[])>(r1, r2, r3, r4);
+
+        specialinvoke $r5.<com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle: void <init>(java.util.List)>($r6);
+
+        return $r5;
+    }
+
+    public com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle getDataBundle(java.util.List)
+    {
+        com.opengamma.analytics.math.interpolation.ShepardInterpolatorND r0;
+        java.util.List r1;
+        com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle $r2;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShepardInterpolatorND;
+
+        r1 := @parameter0: java.util.List;
+
+        $r2 = new com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle;
+
+        specialinvoke $r2.<com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle: void <init>(java.util.List)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Double interpolate(java.lang.Object, java.lang.Object)
+    {
+        com.opengamma.analytics.math.interpolation.ShepardInterpolatorND r0;
+        java.lang.Object r1, r2;
+        double[] $r3;
+        com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle $r4;
+        java.lang.Double $r5;
+
+        r0 := @this: com.opengamma.analytics.math.interpolation.ShepardInterpolatorND;
+
+        r1 := @parameter0: java.lang.Object;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r4 = (com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle) r1;
+
+        $r3 = (double[]) r2;
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.math.interpolation.ShepardInterpolatorND: java.lang.Double interpolate(com.opengamma.analytics.math.interpolation.data.InterpolatorNDDataBundle,double[])>($r4, $r3);
+
+        return $r5;
+    }
+}

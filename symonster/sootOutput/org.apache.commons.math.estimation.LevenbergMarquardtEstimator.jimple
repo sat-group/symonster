@@ -1,0 +1,2361 @@
+public class org.apache.commons.math.estimation.LevenbergMarquardtEstimator extends org.apache.commons.math.estimation.AbstractEstimator implements java.io.Serializable
+{
+    private static final long serialVersionUID;
+    private int solvedCols;
+    private double[] diagR;
+    private double[] jacNorm;
+    private double[] beta;
+    private int[] permutation;
+    private int rank;
+    private double lmPar;
+    private double[] lmDir;
+    private double initialStepBoundFactor;
+    private double costRelativeTolerance;
+    private double parRelativeTolerance;
+    private double orthoTolerance;
+
+    public void <init>()
+    {
+        org.apache.commons.math.estimation.LevenbergMarquardtEstimator r0;
+
+        r0 := @this: org.apache.commons.math.estimation.LevenbergMarquardtEstimator;
+
+        specialinvoke r0.<org.apache.commons.math.estimation.AbstractEstimator: void <init>()>();
+
+        virtualinvoke r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: void setMaxCostEval(int)>(1000);
+
+        virtualinvoke r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: void setInitialStepBoundFactor(double)>(100.0);
+
+        virtualinvoke r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: void setCostRelativeTolerance(double)>(1.0E-10);
+
+        virtualinvoke r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: void setParRelativeTolerance(double)>(1.0E-10);
+
+        virtualinvoke r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: void setOrthoTolerance(double)>(1.0E-10);
+
+        return;
+    }
+
+    public void setInitialStepBoundFactor(double)
+    {
+        org.apache.commons.math.estimation.LevenbergMarquardtEstimator r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math.estimation.LevenbergMarquardtEstimator;
+
+        d0 := @parameter0: double;
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double initialStepBoundFactor> = d0;
+
+        return;
+    }
+
+    public void setCostRelativeTolerance(double)
+    {
+        org.apache.commons.math.estimation.LevenbergMarquardtEstimator r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math.estimation.LevenbergMarquardtEstimator;
+
+        d0 := @parameter0: double;
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double costRelativeTolerance> = d0;
+
+        return;
+    }
+
+    public void setParRelativeTolerance(double)
+    {
+        org.apache.commons.math.estimation.LevenbergMarquardtEstimator r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math.estimation.LevenbergMarquardtEstimator;
+
+        d0 := @parameter0: double;
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double parRelativeTolerance> = d0;
+
+        return;
+    }
+
+    public void setOrthoTolerance(double)
+    {
+        org.apache.commons.math.estimation.LevenbergMarquardtEstimator r0;
+        double d0;
+
+        r0 := @this: org.apache.commons.math.estimation.LevenbergMarquardtEstimator;
+
+        d0 := @parameter0: double;
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double orthoTolerance> = d0;
+
+        return;
+    }
+
+    public void estimate(org.apache.commons.math.estimation.EstimationProblem) throws org.apache.commons.math.estimation.EstimationException
+    {
+        org.apache.commons.math.estimation.LevenbergMarquardtEstimator r0;
+        org.apache.commons.math.estimation.EstimationProblem r1;
+        double[] r2, r3, r4, r5, r6, $r7, $r8, $r9, $r11, $r12, $r29, $r30, $r32, $r33, $r35, $r37, $r41, $r43, $r44, $r45, $r46, $r50, $r51, r52, r53, r55;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i18, $i20, $i21, $i23, $i27, $i35, $i40, $i41, $i43, $i44, $i47, $i48, $i49, i50, $i51, i52, i53, i55, i56, i57, i58, i59, i60, i61, i62, $i63, i64, i65, i66, i68, i69, i70;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, d61, d62, d63, d64, d65, $d66, d67, $d68, d69, d70, d71, d72, d73, d74, d75, d76, d77, d78, d79, d80, d81, d82, $d83, $d84, d85, $d86, $d87, $d88, $d89, d90, d91, $d92, $d93, $d94;
+        int[] $r10, $r22, $r28, $r31, $r38, $r42, $r49;
+        byte $b17, $b19, $b22, $b24, $b25, $b26, $b28, $b29, $b30, $b31, $b32, $b33, $b34, $b36, $b37, $b38, $b39, $b42, $b45, $b46, $b54, $b67, $b71, $b72;
+        org.apache.commons.math.estimation.EstimationException $r13, $r16, $r19;
+        java.lang.Object[] $r14, $r17, $r20;
+        java.lang.Double $r15, $r18, $r21;
+        org.apache.commons.math.estimation.EstimatedParameter[] $r23, $r25, $r34, $r39, $r47;
+        org.apache.commons.math.estimation.EstimatedParameter $r24, $r26, $r36, $r40, $r48;
+        boolean z0;
+
+        r0 := @this: org.apache.commons.math.estimation.LevenbergMarquardtEstimator;
+
+        r1 := @parameter0: org.apache.commons.math.estimation.EstimationProblem;
+
+        virtualinvoke r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: void initializeEstimate(org.apache.commons.math.estimation.EstimationProblem)>(r1);
+
+        $i4 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int rows>;
+
+        $i3 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $i5 = staticinvoke <org.apache.commons.math.util.FastMath: int min(int,int)>($i4, $i3);
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols> = $i5;
+
+        $i6 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $r7 = newarray (double)[$i6];
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] diagR> = $r7;
+
+        $i7 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $r8 = newarray (double)[$i7];
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacNorm> = $r8;
+
+        $i8 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $r9 = newarray (double)[$i8];
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] beta> = $r9;
+
+        $i9 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $r10 = newarray (int)[$i9];
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation> = $r10;
+
+        $i10 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $r11 = newarray (double)[$i10];
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] lmDir> = $r11;
+
+        d61 = 0.0;
+
+        d62 = 0.0;
+
+        $i11 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        r2 = newarray (double)[$i11];
+
+        $i12 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        r3 = newarray (double)[$i12];
+
+        $i13 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int rows>;
+
+        r52 = newarray (double)[$i13];
+
+        $i14 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        r4 = newarray (double)[$i14];
+
+        $i15 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        r5 = newarray (double)[$i15];
+
+        $i16 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        r6 = newarray (double)[$i16];
+
+        virtualinvoke r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: void updateResidualsAndCost()>();
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar> = 0.0;
+
+        z0 = 1;
+
+     label01:
+        virtualinvoke r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: void updateJacobian()>();
+
+        specialinvoke r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: void qrDecomposition()>();
+
+        $r12 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] residuals>;
+
+        specialinvoke r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: void qTy(double[])>($r12);
+
+        i50 = 0;
+
+     label02:
+        $i51 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i50 >= $i51 goto label03;
+
+        $r49 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i52 = $r49[i50];
+
+        $r51 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $i47 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $i48 = i50 * $i47;
+
+        $i49 = $i48 + i52;
+
+        $r50 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] diagR>;
+
+        $d60 = $r50[i52];
+
+        $r51[$i49] = $d60;
+
+        i50 = i50 + 1;
+
+        goto label02;
+
+     label03:
+        if z0 == 0 goto label09;
+
+        d63 = 0.0;
+
+        i53 = 0;
+
+     label04:
+        $i44 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        if i53 >= $i44 goto label06;
+
+        $r46 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacNorm>;
+
+        d64 = $r46[i53];
+
+        $b46 = d64 cmpl 0.0;
+
+        if $b46 != 0 goto label05;
+
+        d64 = 1.0;
+
+     label05:
+        $r47 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $r48 = $r47[i53];
+
+        $d58 = virtualinvoke $r48.<org.apache.commons.math.estimation.EstimatedParameter: double getEstimate()>();
+
+        d65 = d64 * $d58;
+
+        $d59 = d65 * d65;
+
+        d63 = d63 + $d59;
+
+        r2[i53] = d64;
+
+        i53 = i53 + 1;
+
+        goto label04;
+
+     label06:
+        d62 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>(d63);
+
+        $b45 = d62 cmpl 0.0;
+
+        if $b45 != 0 goto label07;
+
+        $d66 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double initialStepBoundFactor>;
+
+        goto label08;
+
+     label07:
+        $d57 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double initialStepBoundFactor>;
+
+        $d66 = $d57 * d62;
+
+     label08:
+        d61 = $d66;
+
+     label09:
+        d67 = 0.0;
+
+        $d68 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double cost>;
+
+        $b54 = $d68 cmpl 0.0;
+
+        if $b54 == 0 goto label14;
+
+        i55 = 0;
+
+     label10:
+        $i41 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i55 >= $i41 goto label14;
+
+        $r42 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i56 = $r42[i55];
+
+        $r43 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacNorm>;
+
+        d69 = $r43[i56];
+
+        $b42 = d69 cmpl 0.0;
+
+        if $b42 == 0 goto label13;
+
+        d70 = 0.0;
+
+        i57 = i56;
+
+        i58 = 0;
+
+     label11:
+        if i58 > i55 goto label12;
+
+        $r44 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $d55 = $r44[i57];
+
+        $r45 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] residuals>;
+
+        $d54 = $r45[i58];
+
+        $d56 = $d55 * $d54;
+
+        d70 = d70 + $d56;
+
+        $i43 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        i57 = i57 + $i43;
+
+        i58 = i58 + 1;
+
+        goto label11;
+
+     label12:
+        $d50 = staticinvoke <org.apache.commons.math.util.FastMath: double abs(double)>(d70);
+
+        $d51 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double cost>;
+
+        $d52 = d69 * $d51;
+
+        $d53 = $d50 / $d52;
+
+        d67 = staticinvoke <org.apache.commons.math.util.FastMath: double max(double,double)>(d67, $d53);
+
+     label13:
+        i55 = i55 + 1;
+
+        goto label10;
+
+     label14:
+        $d2 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double orthoTolerance>;
+
+        $b17 = d67 cmpg $d2;
+
+        if $b17 > 0 goto label15;
+
+        return;
+
+     label15:
+        i59 = 0;
+
+     label16:
+        $i18 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        if i59 >= $i18 goto label17;
+
+        $d48 = r2[i59];
+
+        $r41 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacNorm>;
+
+        $d47 = $r41[i59];
+
+        $d49 = staticinvoke <org.apache.commons.math.util.FastMath: double max(double,double)>($d48, $d47);
+
+        r2[i59] = $d49;
+
+        i59 = i59 + 1;
+
+        goto label16;
+
+     label17:
+        d71 = 0.0;
+
+     label18:
+        $b19 = d71 cmpg 1.0E-4;
+
+        if $b19 >= 0 goto label52;
+
+        i60 = 0;
+
+     label19:
+        $i20 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i60 >= $i20 goto label20;
+
+        $r38 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i0 = $r38[i60];
+
+        $r39 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $r40 = $r39[i0];
+
+        $d46 = virtualinvoke $r40.<org.apache.commons.math.estimation.EstimatedParameter: double getEstimate()>();
+
+        r3[i0] = $d46;
+
+        i60 = i60 + 1;
+
+        goto label19;
+
+     label20:
+        d72 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double cost>;
+
+        r53 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] residuals>;
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] residuals> = r52;
+
+        r52 = r53;
+
+        specialinvoke r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: void determineLMParameter(double[],double,double[],double[],double[],double[])>(r53, d61, r2, r4, r5, r6);
+
+        d73 = 0.0;
+
+        i61 = 0;
+
+     label21:
+        $i21 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i61 >= $i21 goto label22;
+
+        $r31 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i1 = $r31[i61];
+
+        $r33 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] lmDir>;
+
+        $r32 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] lmDir>;
+
+        $d38 = $r32[i1];
+
+        $d39 = neg $d38;
+
+        $r33[i1] = $d39;
+
+        $r34 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $r36 = $r34[i1];
+
+        $d41 = r3[i1];
+
+        $r35 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] lmDir>;
+
+        $d40 = $r35[i1];
+
+        $d42 = $d41 + $d40;
+
+        virtualinvoke $r36.<org.apache.commons.math.estimation.EstimatedParameter: void setEstimate(double)>($d42);
+
+        $d44 = r2[i1];
+
+        $r37 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] lmDir>;
+
+        $d43 = $r37[i1];
+
+        d74 = $d44 * $d43;
+
+        $d45 = d74 * d74;
+
+        d73 = d73 + $d45;
+
+        i61 = i61 + 1;
+
+        goto label21;
+
+     label22:
+        d75 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>(d73);
+
+        if z0 == 0 goto label23;
+
+        d61 = staticinvoke <org.apache.commons.math.util.FastMath: double min(double,double)>(d61, d75);
+
+     label23:
+        virtualinvoke r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: void updateResidualsAndCost()>();
+
+        d76 = -1.0;
+
+        $d3 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double cost>;
+
+        $d4 = 0.1 * $d3;
+
+        $b22 = $d4 cmpg d72;
+
+        if $b22 >= 0 goto label24;
+
+        $d36 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double cost>;
+
+        d77 = $d36 / d72;
+
+        $d37 = d77 * d77;
+
+        d76 = 1.0 - $d37;
+
+     label24:
+        i62 = 0;
+
+     label25:
+        $i63 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i62 >= $i63 goto label28;
+
+        $r28 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i2 = $r28[i62];
+
+        $r29 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] lmDir>;
+
+        d78 = $r29[i2];
+
+        r4[i62] = 0.0;
+
+        i64 = i2;
+
+        i65 = 0;
+
+     label26:
+        if i65 > i62 goto label27;
+
+        $d34 = r4[i65];
+
+        $r30 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $d32 = $r30[i64];
+
+        $d33 = $d32 * d78;
+
+        $d35 = $d34 + $d33;
+
+        r4[i65] = $d35;
+
+        $i40 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        i64 = i64 + $i40;
+
+        i65 = i65 + 1;
+
+        goto label26;
+
+     label27:
+        i62 = i62 + 1;
+
+        goto label25;
+
+     label28:
+        d79 = 0.0;
+
+        i66 = 0;
+
+     label29:
+        $i23 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i66 >= $i23 goto label30;
+
+        $d30 = r4[i66];
+
+        $d29 = r4[i66];
+
+        $d31 = $d30 * $d29;
+
+        d79 = d79 + $d31;
+
+        i66 = i66 + 1;
+
+        goto label29;
+
+     label30:
+        d80 = d72 * d72;
+
+        d81 = d79 / d80;
+
+        $d5 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar>;
+
+        $d6 = $d5 * d75;
+
+        $d7 = $d6 * d75;
+
+        d82 = $d7 / d80;
+
+        $d8 = 2.0 * d82;
+
+        d0 = d81 + $d8;
+
+        $d9 = d81 + d82;
+
+        d1 = neg $d9;
+
+        $b24 = d0 cmpl 0.0;
+
+        if $b24 != 0 goto label31;
+
+        $d83 = 0.0;
+
+        goto label32;
+
+     label31:
+        $d83 = d76 / d0;
+
+     label32:
+        d71 = $d83;
+
+        $b25 = $d83 cmpg 0.25;
+
+        if $b25 > 0 goto label37;
+
+        $b37 = d76 cmpg 0.0;
+
+        if $b37 >= 0 goto label33;
+
+        $d28 = 0.5 * d1;
+
+        $d26 = 0.5 * d76;
+
+        $d27 = d1 + $d26;
+
+        $d84 = $d28 / $d27;
+
+        goto label34;
+
+     label33:
+        $d84 = 0.5;
+
+     label34:
+        d85 = $d84;
+
+        $d24 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double cost>;
+
+        $d25 = 0.1 * $d24;
+
+        $b38 = $d25 cmpl d72;
+
+        if $b38 >= 0 goto label35;
+
+        $b39 = $d84 cmpg 0.1;
+
+        if $b39 >= 0 goto label36;
+
+     label35:
+        d85 = 0.1;
+
+     label36:
+        $d86 = 10.0 * d75;
+
+        $d87 = staticinvoke <org.apache.commons.math.util.FastMath: double min(double,double)>(d61, $d86);
+
+        d61 = d85 * $d87;
+
+        $d88 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar>;
+
+        $d89 = $d88 / d85;
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar> = $d89;
+
+        goto label39;
+
+     label37:
+        $d10 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar>;
+
+        $b26 = $d10 cmpl 0.0;
+
+        if $b26 == 0 goto label38;
+
+        $b36 = $d83 cmpl 0.75;
+
+        if $b36 < 0 goto label39;
+
+     label38:
+        d61 = 2.0 * d75;
+
+        $d11 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar>;
+
+        $d12 = $d11 * 0.5;
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar> = $d12;
+
+     label39:
+        $b67 = d71 cmpl 1.0E-4;
+
+        if $b67 < 0 goto label42;
+
+        z0 = 0;
+
+        d90 = 0.0;
+
+        i68 = 0;
+
+     label40:
+        $i35 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        if i68 >= $i35 goto label41;
+
+        $d21 = r2[i68];
+
+        $r25 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $r26 = $r25[i68];
+
+        $d22 = virtualinvoke $r26.<org.apache.commons.math.estimation.EstimatedParameter: double getEstimate()>();
+
+        d91 = $d21 * $d22;
+
+        $d23 = d91 * d91;
+
+        d90 = d90 + $d23;
+
+        i68 = i68 + 1;
+
+        goto label40;
+
+     label41:
+        d62 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>(d90);
+
+        goto label45;
+
+     label42:
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double cost> = d72;
+
+        i69 = 0;
+
+     label43:
+        $i27 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i69 >= $i27 goto label44;
+
+        $r22 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i70 = $r22[i69];
+
+        $r23 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: org.apache.commons.math.estimation.EstimatedParameter[] parameters>;
+
+        $r24 = $r23[i70];
+
+        $d20 = r3[i70];
+
+        virtualinvoke $r24.<org.apache.commons.math.estimation.EstimatedParameter: void setEstimate(double)>($d20);
+
+        i69 = i69 + 1;
+
+        goto label43;
+
+     label44:
+        r55 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] residuals>;
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] residuals> = r53;
+
+        r52 = r55;
+
+     label45:
+        $d13 = staticinvoke <org.apache.commons.math.util.FastMath: double abs(double)>(d76);
+
+        $d14 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double costRelativeTolerance>;
+
+        $b28 = $d13 cmpg $d14;
+
+        if $b28 > 0 goto label46;
+
+        $d19 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double costRelativeTolerance>;
+
+        $b33 = d0 cmpg $d19;
+
+        if $b33 > 0 goto label46;
+
+        $b34 = d71 cmpg 2.0;
+
+        if $b34 <= 0 goto label47;
+
+     label46:
+        $d92 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double parRelativeTolerance>;
+
+        $d93 = $d92 * d62;
+
+        $b71 = d61 cmpg $d93;
+
+        if $b71 > 0 goto label48;
+
+     label47:
+        return;
+
+     label48:
+        $d15 = staticinvoke <org.apache.commons.math.util.FastMath: double abs(double)>(d76);
+
+        $b29 = $d15 cmpg 2.2204E-16;
+
+        if $b29 > 0 goto label49;
+
+        $b31 = d0 cmpg 2.2204E-16;
+
+        if $b31 > 0 goto label49;
+
+        $b32 = d71 cmpg 2.0;
+
+        if $b32 > 0 goto label49;
+
+        $r19 = new org.apache.commons.math.estimation.EstimationException;
+
+        $r20 = newarray (java.lang.Object)[1];
+
+        $d18 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double costRelativeTolerance>;
+
+        $r21 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d18);
+
+        $r20[0] = $r21;
+
+        specialinvoke $r19.<org.apache.commons.math.estimation.EstimationException: void <init>(java.lang.String,java.lang.Object[])>("cost relative tolerance is too small ({0}), no further reduction in the sum of squares is possible", $r20);
+
+        throw $r19;
+
+     label49:
+        $d94 = 2.2204E-16 * d62;
+
+        $b72 = d61 cmpg $d94;
+
+        if $b72 > 0 goto label50;
+
+        $r16 = new org.apache.commons.math.estimation.EstimationException;
+
+        $r17 = newarray (java.lang.Object)[1];
+
+        $d17 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double parRelativeTolerance>;
+
+        $r18 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d17);
+
+        $r17[0] = $r18;
+
+        specialinvoke $r16.<org.apache.commons.math.estimation.EstimationException: void <init>(java.lang.String,java.lang.Object[])>("parameters relative tolerance is too small ({0}), no further improvement in the approximate solution is possible", $r17);
+
+        throw $r16;
+
+     label50:
+        $b30 = d67 cmpg 2.2204E-16;
+
+        if $b30 > 0 goto label51;
+
+        $r13 = new org.apache.commons.math.estimation.EstimationException;
+
+        $r14 = newarray (java.lang.Object)[1];
+
+        $d16 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double orthoTolerance>;
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d16);
+
+        $r14[0] = $r15;
+
+        specialinvoke $r13.<org.apache.commons.math.estimation.EstimationException: void <init>(java.lang.String,java.lang.Object[])>("orthogonality tolerance is too small ({0}), solution is orthogonal to the jacobian", $r14);
+
+        throw $r13;
+
+     label51:
+        goto label18;
+
+     label52:
+        goto label01;
+    }
+
+    private void determineLMParameter(double[], double, double[], double[], double[], double[])
+    {
+        org.apache.commons.math.estimation.LevenbergMarquardtEstimator r0;
+        double[] r1, r2, r3, r4, r5, $r9, $r12, $r15, $r17, $r18, $r22, $r24, $r25, $r26, $r28, $r29, $r31, $r33;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, $d48, $d49, $d50, $d51, $d52, $d53, $d54, $d55, $d56, $d57, $d58, $d59, $d60, $d61, d62, d63, d64, d65, d66, d67, d68, d69, d70, d71, d72, d73, d74, d75, d76, d77, d78, d79, d80, d81, d82, d83, $d84, $d85, $d86;
+        int i0, i1, $i2, $i3, $i4, $i5, $i7, $i8, $i12, $i15, $i16, $i19, $i20, $i21, $i22, $i23, $i24, $i27, $i28, $i29, $i30, $i31, $i32, $i33, $i34, $i35, i36, i37, i38, i39, i40, i41, i42, i43, i44, i45, i46, i47, i48, $i49, i50, i51, i52, i53, i54, $i55, i56, i57, i58, i59, $i60, i61, i62, i63, i64, i65;
+        byte $b6, $b9, $b10, $b11, $b13, $b14, $b17, $b18, $b25, $b26;
+        int[] $r6, $r7, $r8, $r10, $r11, $r13, $r14, $r16, $r19, $r20, $r21, $r23, $r27, $r30, $r32;
+
+        r0 := @this: org.apache.commons.math.estimation.LevenbergMarquardtEstimator;
+
+        r1 := @parameter0: double[];
+
+        d0 := @parameter1: double;
+
+        r2 := @parameter2: double[];
+
+        r3 := @parameter3: double[];
+
+        r4 := @parameter4: double[];
+
+        r5 := @parameter5: double[];
+
+        i36 = 0;
+
+     label01:
+        $i2 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int rank>;
+
+        if i36 >= $i2 goto label02;
+
+        $r33 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] lmDir>;
+
+        $r32 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        $i35 = $r32[i36];
+
+        $d61 = r1[i36];
+
+        $r33[$i35] = $d61;
+
+        i36 = i36 + 1;
+
+        goto label01;
+
+     label02:
+        i37 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int rank>;
+
+     label03:
+        $i3 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        if i37 >= $i3 goto label04;
+
+        $r31 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] lmDir>;
+
+        $r30 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        $i34 = $r30[i37];
+
+        $r31[$i34] = 0.0;
+
+        i37 = i37 + 1;
+
+        goto label03;
+
+     label04:
+        $i4 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int rank>;
+
+        i38 = $i4 - 1;
+
+     label05:
+        if i38 < 0 goto label08;
+
+        $r23 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i0 = $r23[i38];
+
+        $r24 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] lmDir>;
+
+        $d56 = $r24[i0];
+
+        $r25 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] diagR>;
+
+        $d55 = $r25[i0];
+
+        d62 = $d56 / $d55;
+
+        i39 = i0;
+
+        i40 = 0;
+
+     label06:
+        if i40 >= i38 goto label07;
+
+        $r28 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] lmDir>;
+
+        $r27 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        $i32 = $r27[i40];
+
+        $d59 = $r28[$i32];
+
+        $r29 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $d57 = $r29[i39];
+
+        $d58 = d62 * $d57;
+
+        $d60 = $d59 - $d58;
+
+        $r28[$i32] = $d60;
+
+        $i33 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        i39 = i39 + $i33;
+
+        i40 = i40 + 1;
+
+        goto label06;
+
+     label07:
+        $r26 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] lmDir>;
+
+        $r26[i0] = d62;
+
+        i38 = i38 + -1;
+
+        goto label05;
+
+     label08:
+        d63 = 0.0;
+
+        i41 = 0;
+
+     label09:
+        $i5 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i41 >= $i5 goto label10;
+
+        $r21 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i1 = $r21[i41];
+
+        $d53 = r2[i1];
+
+        $r22 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] lmDir>;
+
+        $d52 = $r22[i1];
+
+        d64 = $d53 * $d52;
+
+        r3[i1] = d64;
+
+        $d54 = d64 * d64;
+
+        d63 = d63 + $d54;
+
+        i41 = i41 + 1;
+
+        goto label09;
+
+     label10:
+        d65 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>(d63);
+
+        d66 = d65 - d0;
+
+        $d2 = 0.1 * d0;
+
+        $b6 = d66 cmpg $d2;
+
+        if $b6 > 0 goto label11;
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar> = 0.0;
+
+        return;
+
+     label11:
+        d67 = 0.0;
+
+        $i8 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int rank>;
+
+        $i7 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if $i8 != $i7 goto label18;
+
+        i42 = 0;
+
+     label12:
+        $i28 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i42 >= $i28 goto label13;
+
+        $r20 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i43 = $r20[i42];
+
+        $d50 = r3[i43];
+
+        $d48 = r2[i43];
+
+        $d49 = $d48 / d65;
+
+        $d51 = $d50 * $d49;
+
+        r3[i43] = $d51;
+
+        i42 = i42 + 1;
+
+        goto label12;
+
+     label13:
+        d68 = 0.0;
+
+        i44 = 0;
+
+     label14:
+        $i29 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i44 >= $i29 goto label17;
+
+        $r16 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i45 = $r16[i44];
+
+        d69 = 0.0;
+
+        i46 = i45;
+
+        i47 = 0;
+
+     label15:
+        if i47 >= i44 goto label16;
+
+        $r18 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $d46 = $r18[i46];
+
+        $r19 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        $i30 = $r19[i47];
+
+        $d45 = r3[$i30];
+
+        $d47 = $d46 * $d45;
+
+        d69 = d69 + $d47;
+
+        $i31 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        i46 = i46 + $i31;
+
+        i47 = i47 + 1;
+
+        goto label15;
+
+     label16:
+        $d41 = r3[i45];
+
+        $d43 = $d41 - d69;
+
+        $r17 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] diagR>;
+
+        $d42 = $r17[i45];
+
+        d70 = $d43 / $d42;
+
+        r3[i45] = d70;
+
+        $d44 = d70 * d70;
+
+        d68 = d68 + $d44;
+
+        i44 = i44 + 1;
+
+        goto label14;
+
+     label17:
+        $d40 = d0 * d68;
+
+        d67 = d66 / $d40;
+
+     label18:
+        d71 = 0.0;
+
+        i48 = 0;
+
+     label19:
+        $i49 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i48 >= $i49 goto label22;
+
+        $r14 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i50 = $r14[i48];
+
+        d72 = 0.0;
+
+        i51 = i50;
+
+        i52 = 0;
+
+     label20:
+        if i52 > i48 goto label21;
+
+        $r15 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $d38 = $r15[i51];
+
+        $d37 = r1[i52];
+
+        $d39 = $d38 * $d37;
+
+        d72 = d72 + $d39;
+
+        $i27 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        i51 = i51 + $i27;
+
+        i52 = i52 + 1;
+
+        goto label20;
+
+     label21:
+        $d35 = r2[i50];
+
+        d73 = d72 / $d35;
+
+        $d36 = d73 * d73;
+
+        d71 = d71 + $d36;
+
+        i48 = i48 + 1;
+
+        goto label19;
+
+     label22:
+        d74 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>(d71);
+
+        d75 = d74 / d0;
+
+        $b9 = d75 cmpl 0.0;
+
+        if $b9 != 0 goto label23;
+
+        $d34 = staticinvoke <org.apache.commons.math.util.FastMath: double min(double,double)>(d0, 0.1);
+
+        d75 = 2.2251E-308 / $d34;
+
+     label23:
+        $d3 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar>;
+
+        $d4 = staticinvoke <org.apache.commons.math.util.FastMath: double max(double,double)>($d3, d67);
+
+        $d5 = staticinvoke <org.apache.commons.math.util.FastMath: double min(double,double)>(d75, $d4);
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar> = $d5;
+
+        $d6 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar>;
+
+        $b10 = $d6 cmpl 0.0;
+
+        if $b10 != 0 goto label24;
+
+        $d33 = d74 / d65;
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar> = $d33;
+
+     label24:
+        i53 = 10;
+
+     label25:
+        if i53 < 0 goto label43;
+
+        $d7 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar>;
+
+        $b11 = $d7 cmpl 0.0;
+
+        if $b11 != 0 goto label26;
+
+        $d31 = 0.001 * d75;
+
+        $d32 = staticinvoke <org.apache.commons.math.util.FastMath: double max(double,double)>(2.2251E-308, $d31);
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar> = $d32;
+
+     label26:
+        $d8 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar>;
+
+        d76 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>($d8);
+
+        i54 = 0;
+
+     label27:
+        $i55 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i54 >= $i55 goto label28;
+
+        $r13 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i56 = $r13[i54];
+
+        $d29 = r2[i56];
+
+        $d30 = d76 * $d29;
+
+        r3[i56] = $d30;
+
+        i54 = i54 + 1;
+
+        goto label27;
+
+     label28:
+        specialinvoke r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: void determineLMDirection(double[],double[],double[],double[])>(r1, r3, r4, r5);
+
+        d77 = 0.0;
+
+        i57 = 0;
+
+     label29:
+        $i12 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i57 >= $i12 goto label30;
+
+        $r11 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i58 = $r11[i57];
+
+        $d27 = r2[i58];
+
+        $r12 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] lmDir>;
+
+        $d26 = $r12[i58];
+
+        d78 = $d27 * $d26;
+
+        r5[i58] = d78;
+
+        $d28 = d78 * d78;
+
+        d77 = d77 + $d28;
+
+        i57 = i57 + 1;
+
+        goto label29;
+
+     label30:
+        d79 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>(d77);
+
+        d80 = d66;
+
+        d66 = d79 - d0;
+
+        $d9 = staticinvoke <org.apache.commons.math.util.FastMath: double abs(double)>(d66);
+
+        $d10 = 0.1 * d0;
+
+        $b13 = $d9 cmpg $d10;
+
+        if $b13 <= 0 goto label31;
+
+        $b14 = d67 cmpl 0.0;
+
+        if $b14 != 0 goto label32;
+
+        $b25 = d66 cmpg d80;
+
+        if $b25 > 0 goto label32;
+
+        $b26 = d80 cmpg 0.0;
+
+        if $b26 >= 0 goto label32;
+
+     label31:
+        return;
+
+     label32:
+        i59 = 0;
+
+     label33:
+        $i60 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i59 >= $i60 goto label34;
+
+        $r10 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i61 = $r10[i59];
+
+        $d23 = r5[i61];
+
+        $d22 = r2[i61];
+
+        $d24 = $d23 * $d22;
+
+        $d25 = $d24 / d79;
+
+        r3[i61] = $d25;
+
+        i59 = i59 + 1;
+
+        goto label33;
+
+     label34:
+        i62 = 0;
+
+     label35:
+        $i15 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i62 >= $i15 goto label38;
+
+        $r7 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i63 = $r7[i62];
+
+        $d16 = r3[i63];
+
+        $d15 = r4[i62];
+
+        $d17 = $d16 / $d15;
+
+        r3[i63] = $d17;
+
+        d1 = r3[i63];
+
+        i64 = i62 + 1;
+
+     label36:
+        $i20 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i64 >= $i20 goto label37;
+
+        $r8 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        $i21 = $r8[i64];
+
+        $d20 = r3[$i21];
+
+        $r9 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $i22 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $i23 = i64 * $i22;
+
+        $i24 = $i23 + i63;
+
+        $d18 = $r9[$i24];
+
+        $d19 = $d18 * d1;
+
+        $d21 = $d20 - $d19;
+
+        r3[$i21] = $d21;
+
+        i64 = i64 + 1;
+
+        goto label36;
+
+     label37:
+        i62 = i62 + 1;
+
+        goto label35;
+
+     label38:
+        d81 = 0.0;
+
+        i65 = 0;
+
+     label39:
+        $i16 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i65 >= $i16 goto label40;
+
+        $r6 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        $i19 = $r6[i65];
+
+        d82 = r3[$i19];
+
+        $d14 = d82 * d82;
+
+        d81 = d81 + $d14;
+
+        i65 = i65 + 1;
+
+        goto label39;
+
+     label40:
+        $d11 = d0 * d81;
+
+        d83 = d66 / $d11;
+
+        $b17 = d66 cmpl 0.0;
+
+        if $b17 <= 0 goto label41;
+
+        $d13 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar>;
+
+        d67 = staticinvoke <org.apache.commons.math.util.FastMath: double max(double,double)>(d67, $d13);
+
+        goto label42;
+
+     label41:
+        $b18 = d66 cmpg 0.0;
+
+        if $b18 >= 0 goto label42;
+
+        $d12 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar>;
+
+        d75 = staticinvoke <org.apache.commons.math.util.FastMath: double min(double,double)>(d75, $d12);
+
+     label42:
+        $d84 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar>;
+
+        $d85 = $d84 + d83;
+
+        $d86 = staticinvoke <org.apache.commons.math.util.FastMath: double max(double,double)>(d67, $d85);
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double lmPar> = $d86;
+
+        i53 = i53 + -1;
+
+        goto label25;
+
+     label43:
+        return;
+    }
+
+    private void determineLMDirection(double[], double[], double[], double[])
+    {
+        org.apache.commons.math.estimation.LevenbergMarquardtEstimator r0;
+        double[] r1, r2, r3, r4, $r6, $r8, $r11, $r12, $r13, $r15, $r16, $r17, $r18, $r20, $r21, $r23, $r24, $r25;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i9, $i11, $i12, $i13, $i15, $i16, $i17, $i19, $i20, $i21, $i22, $i23, $i24, $i25, $i26, $i27, $i28, $i29, $i30, $i31, $i32, $i33, $i34, $i35, $i36, $i37, i38, i39, i40, i41, i42, i43, $i44, i45, $i46, i47, i48, i49, $i50, i51, i52, i53, i54, $i55;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, $d40, $d41, $d42, $d43, $d44, $d45, $d46, $d47, d48, d49, d50, d51, d52, d53, d54, d55;
+        int[] $r5, $r7, $r9, $r10, $r14, $r19, $r22;
+        byte $b8, $b10, $b14, $b18;
+
+        r0 := @this: org.apache.commons.math.estimation.LevenbergMarquardtEstimator;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        r3 := @parameter2: double[];
+
+        r4 := @parameter3: double[];
+
+        i38 = 0;
+
+     label01:
+        $i1 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i38 >= $i1 goto label04;
+
+        $r19 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i39 = $r19[i38];
+
+        i40 = i38 + 1;
+
+     label02:
+        $i30 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i40 >= $i30 goto label03;
+
+        $r24 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $i31 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $i32 = i40 * $i31;
+
+        $i37 = $i32 + i39;
+
+        $r23 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $i33 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $i35 = i38 * $i33;
+
+        $r22 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        $i34 = $r22[i40];
+
+        $i36 = $i35 + $i34;
+
+        $d47 = $r23[$i36];
+
+        $r24[$i37] = $d47;
+
+        i40 = i40 + 1;
+
+        goto label02;
+
+     label03:
+        $r21 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] lmDir>;
+
+        $r20 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] diagR>;
+
+        $d45 = $r20[i39];
+
+        $r21[i38] = $d45;
+
+        $d46 = r1[i38];
+
+        r4[i38] = $d46;
+
+        i38 = i38 + 1;
+
+        goto label01;
+
+     label04:
+        i41 = 0;
+
+     label05:
+        $i2 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i41 >= $i2 goto label13;
+
+        $r9 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i42 = $r9[i41];
+
+        d48 = r2[i42];
+
+        $b10 = d48 cmpl 0.0;
+
+        if $b10 == 0 goto label06;
+
+        $i29 = i41 + 1;
+
+        $i28 = lengthof r3;
+
+        staticinvoke <java.util.Arrays: void fill(double[],int,int,double)>(r3, $i29, $i28, 0.0);
+
+     label06:
+        r3[i41] = d48;
+
+        d49 = 0.0;
+
+        i43 = i41;
+
+     label07:
+        $i44 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i43 >= $i44 goto label12;
+
+        $r14 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i0 = $r14[i43];
+
+        $d14 = r3[i43];
+
+        $b14 = $d14 cmpl 0.0;
+
+        if $b14 == 0 goto label11;
+
+        $r15 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $i15 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $i16 = i43 * $i15;
+
+        $i17 = $i16 + i0;
+
+        d0 = $r15[$i17];
+
+        $d15 = staticinvoke <org.apache.commons.math.util.FastMath: double abs(double)>(d0);
+
+        $d16 = r3[i43];
+
+        $d17 = staticinvoke <org.apache.commons.math.util.FastMath: double abs(double)>($d16);
+
+        $b18 = $d15 cmpg $d17;
+
+        if $b18 >= 0 goto label08;
+
+        $d41 = r3[i43];
+
+        d50 = d0 / $d41;
+
+        $d42 = d50 * d50;
+
+        $d43 = 1.0 + $d42;
+
+        $d44 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>($d43);
+
+        d51 = 1.0 / $d44;
+
+        d52 = d51 * d50;
+
+        goto label09;
+
+     label08:
+        $d18 = r3[i43];
+
+        d53 = $d18 / d0;
+
+        $d19 = d53 * d53;
+
+        $d20 = 1.0 + $d19;
+
+        $d21 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>($d20);
+
+        d52 = 1.0 / $d21;
+
+        d51 = d52 * d53;
+
+     label09:
+        $r16 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $i19 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $i20 = i43 * $i19;
+
+        $i21 = $i20 + i0;
+
+        $d24 = d52 * d0;
+
+        $d22 = r3[i43];
+
+        $d23 = d51 * $d22;
+
+        $d25 = $d24 + $d23;
+
+        $r16[$i21] = $d25;
+
+        $d26 = r4[i43];
+
+        $d28 = d52 * $d26;
+
+        $d27 = d51 * d49;
+
+        d54 = $d28 + $d27;
+
+        $d30 = neg d51;
+
+        $d29 = r4[i43];
+
+        $d32 = $d30 * $d29;
+
+        $d31 = d52 * d49;
+
+        d49 = $d32 + $d31;
+
+        r4[i43] = d54;
+
+        i45 = i43 + 1;
+
+     label10:
+        $i46 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i45 >= $i46 goto label11;
+
+        $r17 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $i22 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $i23 = i45 * $i22;
+
+        $i24 = $i23 + i0;
+
+        d1 = $r17[$i24];
+
+        $d35 = d52 * d1;
+
+        $d33 = r3[i45];
+
+        $d34 = d51 * $d33;
+
+        d2 = $d35 + $d34;
+
+        $d36 = neg d51;
+
+        $d39 = $d36 * d1;
+
+        $d37 = r3[i45];
+
+        $d38 = d52 * $d37;
+
+        $d40 = $d39 + $d38;
+
+        r3[i45] = $d40;
+
+        $r18 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $i25 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $i26 = i45 * $i25;
+
+        $i27 = $i26 + i0;
+
+        $r18[$i27] = d2;
+
+        i45 = i45 + 1;
+
+        goto label10;
+
+     label11:
+        i43 = i43 + 1;
+
+        goto label07;
+
+     label12:
+        $i11 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $i13 = i41 * $i11;
+
+        $r10 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        $i12 = $r10[i41];
+
+        i47 = $i13 + $i12;
+
+        $r11 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $d12 = $r11[i47];
+
+        r3[i41] = $d12;
+
+        $r13 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $r12 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] lmDir>;
+
+        $d13 = $r12[i41];
+
+        $r13[i47] = $d13;
+
+        i41 = i41 + 1;
+
+        goto label05;
+
+     label13:
+        i48 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        i49 = 0;
+
+     label14:
+        $i3 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i49 >= $i3 goto label17;
+
+        $d11 = r3[i49];
+
+        $b8 = $d11 cmpl 0.0;
+
+        if $b8 != 0 goto label15;
+
+        $i9 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i48 != $i9 goto label15;
+
+        i48 = i49;
+
+     label15:
+        $i50 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        if i48 >= $i50 goto label16;
+
+        r4[i49] = 0.0;
+
+     label16:
+        i49 = i49 + 1;
+
+        goto label14;
+
+     label17:
+        if i48 <= 0 goto label21;
+
+        i51 = i48 - 1;
+
+     label18:
+        if i51 < 0 goto label21;
+
+        $r7 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i52 = $r7[i51];
+
+        d55 = 0.0;
+
+        i53 = i51 + 1;
+
+     label19:
+        if i53 >= i48 goto label20;
+
+        $r8 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $i5 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $i6 = i53 * $i5;
+
+        $i7 = $i6 + i52;
+
+        $d9 = $r8[$i7];
+
+        $d8 = r4[i53];
+
+        $d10 = $d9 * $d8;
+
+        d55 = d55 + $d10;
+
+        i53 = i53 + 1;
+
+        goto label19;
+
+     label20:
+        $d4 = r4[i51];
+
+        $d6 = $d4 - d55;
+
+        $d5 = r3[i51];
+
+        $d7 = $d6 / $d5;
+
+        r4[i51] = $d7;
+
+        i51 = i51 + -1;
+
+        goto label18;
+
+     label21:
+        i54 = 0;
+
+     label22:
+        $r25 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] lmDir>;
+
+        $i55 = lengthof $r25;
+
+        if i54 >= $i55 goto label23;
+
+        $r6 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] lmDir>;
+
+        $r5 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        $i4 = $r5[i54];
+
+        $d3 = r4[i54];
+
+        $r6[$i4] = $d3;
+
+        i54 = i54 + 1;
+
+        goto label22;
+
+     label23:
+        return;
+    }
+
+    private void qrDecomposition() throws org.apache.commons.math.estimation.EstimationException
+    {
+        org.apache.commons.math.estimation.LevenbergMarquardtEstimator r0;
+        double d0, d1, d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, d18, d19, d20, d21, $d22, d24, d25;
+        int i0, i1, $i2, $i3, $i4, $i5, $i7, $i8, $i9, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i22, $i23, $i24, $i25, $i26, $i27, $i29, $i30, $i31, i32, i33, i34, i35, i36, i37, i38, i39, i40, i41, i42;
+        byte $b6, $b10, $b28;
+        int[] $r1, $r2, $r3, $r4, $r9, $r16, $r24;
+        double[] $r5, $r6, $r7, $r8, $r10, $r11, $r12, $r13, $r14, $r15, $r17, $r23, $r25, $r26, $r27;
+        boolean $z0, $z1;
+        org.apache.commons.math.estimation.EstimationException $r18;
+        java.lang.Object[] $r19;
+        org.apache.commons.math.exception.util.LocalizedFormats $r20;
+        java.lang.Integer $r21, $r22;
+
+        r0 := @this: org.apache.commons.math.estimation.LevenbergMarquardtEstimator;
+
+        i32 = 0;
+
+     label01:
+        $i2 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        if i32 >= $i2 goto label04;
+
+        $r24 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        $r24[i32] = i32;
+
+        d18 = 0.0;
+
+        i33 = i32;
+
+     label02:
+        $r25 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $i30 = lengthof $r25;
+
+        if i33 >= $i30 goto label03;
+
+        $r27 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        d19 = $r27[i33];
+
+        $d17 = d19 * d19;
+
+        d18 = d18 + $d17;
+
+        $i31 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        i33 = i33 + $i31;
+
+        goto label02;
+
+     label03:
+        $r26 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacNorm>;
+
+        $d16 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>(d18);
+
+        $r26[i32] = $d16;
+
+        i32 = i32 + 1;
+
+        goto label01;
+
+     label04:
+        i34 = 0;
+
+     label05:
+        $i3 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        if i34 >= $i3 goto label22;
+
+        i35 = -1;
+
+        d20 = #-Infinity;
+
+        i36 = i34;
+
+     label06:
+        $i5 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        if i36 >= $i5 goto label12;
+
+        d21 = 0.0;
+
+        $i22 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $i24 = i34 * $i22;
+
+        $r16 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        $i23 = $r16[i36];
+
+        i0 = $i24 + $i23;
+
+        i37 = i0;
+
+     label07:
+        $r17 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $i25 = lengthof $r17;
+
+        if i37 >= $i25 goto label08;
+
+        $r23 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        d1 = $r23[i37];
+
+        $d15 = d1 * d1;
+
+        d21 = d21 + $d15;
+
+        $i29 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        i37 = i37 + $i29;
+
+        goto label07;
+
+     label08:
+        $z0 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d21);
+
+        if $z0 != 0 goto label09;
+
+        $z1 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d21);
+
+        if $z1 == 0 goto label10;
+
+     label09:
+        $r18 = new org.apache.commons.math.estimation.EstimationException;
+
+        $r20 = <org.apache.commons.math.exception.util.LocalizedFormats: org.apache.commons.math.exception.util.LocalizedFormats UNABLE_TO_PERFORM_QR_DECOMPOSITION_ON_JACOBIAN>;
+
+        $r19 = newarray (java.lang.Object)[2];
+
+        $i26 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int rows>;
+
+        $r21 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i26);
+
+        $r19[0] = $r21;
+
+        $i27 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $r22 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i27);
+
+        $r19[1] = $r22;
+
+        specialinvoke $r18.<org.apache.commons.math.estimation.EstimationException: void <init>(org.apache.commons.math.exception.util.Localizable,java.lang.Object[])>($r20, $r19);
+
+        throw $r18;
+
+     label10:
+        $b28 = d21 cmpl d20;
+
+        if $b28 <= 0 goto label11;
+
+        i35 = i36;
+
+        d20 = d21;
+
+     label11:
+        i36 = i36 + 1;
+
+        goto label06;
+
+     label12:
+        $b6 = d20 cmpl 0.0;
+
+        if $b6 != 0 goto label13;
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int rank> = i34;
+
+        return;
+
+     label13:
+        $r1 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i38 = $r1[i35];
+
+        $r3 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        $r2 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        $i7 = $r2[i34];
+
+        $r3[i35] = $i7;
+
+        $r4 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        $r4[i34] = i38;
+
+        $i8 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $i9 = i34 * $i8;
+
+        i39 = $i9 + i38;
+
+        $r5 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        d0 = $r5[i39];
+
+        $b10 = d0 cmpl 0.0;
+
+        if $b10 <= 0 goto label14;
+
+        $d14 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>(d20);
+
+        $d22 = neg $d14;
+
+        goto label15;
+
+     label14:
+        $d22 = staticinvoke <org.apache.commons.math.util.FastMath: double sqrt(double)>(d20);
+
+     label15:
+        $d3 = d0 * $d22;
+
+        $d4 = d20 - $d3;
+
+        d2 = 1.0 / $d4;
+
+        $r6 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] beta>;
+
+        $r6[i38] = d2;
+
+        $r7 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] diagR>;
+
+        $r7[i38] = $d22;
+
+        $r8 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $d5 = $r8[i39];
+
+        $d6 = $d5 - $d22;
+
+        $r8[i39] = $d6;
+
+        $i11 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $i12 = $i11 - 1;
+
+        i40 = $i12 - i34;
+
+     label16:
+        if i40 <= 0 goto label21;
+
+        $r9 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        $i13 = i34 + i40;
+
+        $i14 = $r9[$i13];
+
+        i1 = $i14 - i38;
+
+        d24 = 0.0;
+
+        i41 = i39;
+
+     label17:
+        $r10 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $i15 = lengthof $r10;
+
+        if i41 >= $i15 goto label18;
+
+        $r14 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $d12 = $r14[i41];
+
+        $r15 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $i19 = i41 + i1;
+
+        $d11 = $r15[$i19];
+
+        $d13 = $d12 * $d11;
+
+        d24 = d24 + $d13;
+
+        $i20 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        i41 = i41 + $i20;
+
+        goto label17;
+
+     label18:
+        d25 = d24 * d2;
+
+        i42 = i39;
+
+     label19:
+        $r11 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $i16 = lengthof $r11;
+
+        if i42 >= $i16 goto label20;
+
+        $r12 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $i17 = i42 + i1;
+
+        $d9 = $r12[$i17];
+
+        $r13 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $d7 = $r13[i42];
+
+        $d8 = d25 * $d7;
+
+        $d10 = $d9 - $d8;
+
+        $r12[$i17] = $d10;
+
+        $i18 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        i42 = i42 + $i18;
+
+        goto label19;
+
+     label20:
+        i40 = i40 + -1;
+
+        goto label16;
+
+     label21:
+        i34 = i34 + 1;
+
+        goto label05;
+
+     label22:
+        $i4 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int solvedCols>;
+
+        r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int rank> = $i4;
+
+        return;
+    }
+
+    private void qTy(double[])
+    {
+        org.apache.commons.math.estimation.LevenbergMarquardtEstimator r0;
+        double[] r1, $r3, $r4, $r5;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, i9, i10, i11, i12, i13;
+        int[] $r2;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, d8, d9;
+
+        r0 := @this: org.apache.commons.math.estimation.LevenbergMarquardtEstimator;
+
+        r1 := @parameter0: double[];
+
+        i9 = 0;
+
+     label1:
+        $i2 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        if i9 >= $i2 goto label6;
+
+        $r2 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int[] permutation>;
+
+        i0 = $r2[i9];
+
+        $i3 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        $i4 = i9 * $i3;
+
+        i1 = $i4 + i0;
+
+        d8 = 0.0;
+
+        i10 = i1;
+
+        i11 = i9;
+
+     label2:
+        $i5 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int rows>;
+
+        if i11 >= $i5 goto label3;
+
+        $r5 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $d6 = $r5[i10];
+
+        $d5 = r1[i11];
+
+        $d7 = $d6 * $d5;
+
+        d8 = d8 + $d7;
+
+        $i8 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        i10 = i10 + $i8;
+
+        i11 = i11 + 1;
+
+        goto label2;
+
+     label3:
+        $r3 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] beta>;
+
+        $d0 = $r3[i0];
+
+        d9 = d8 * $d0;
+
+        i12 = i1;
+
+        i13 = i9;
+
+     label4:
+        $i6 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int rows>;
+
+        if i13 >= $i6 goto label5;
+
+        $d3 = r1[i13];
+
+        $r4 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: double[] jacobian>;
+
+        $d1 = $r4[i12];
+
+        $d2 = d9 * $d1;
+
+        $d4 = $d3 - $d2;
+
+        r1[i13] = $d4;
+
+        $i7 = r0.<org.apache.commons.math.estimation.LevenbergMarquardtEstimator: int cols>;
+
+        i12 = i12 + $i7;
+
+        i13 = i13 + 1;
+
+        goto label4;
+
+     label5:
+        i9 = i9 + 1;
+
+        goto label1;
+
+     label6:
+        return;
+    }
+
+    public static void <clinit>()
+    {
+        <org.apache.commons.math.estimation.LevenbergMarquardtEstimator: long serialVersionUID> = -5705952631533171019L;
+
+        return;
+    }
+}

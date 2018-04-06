@@ -1,0 +1,267 @@
+public class com.opengamma.analytics.financial.calculator.PortfolioHedgingCalculator extends java.lang.Object
+{
+    private static final com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra MATRIX;
+    private static final com.opengamma.analytics.math.linearalgebra.SVDecompositionCommons DECOMPOSITION;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.financial.calculator.PortfolioHedgingCalculator r0;
+
+        r0 := @this: com.opengamma.analytics.financial.calculator.PortfolioHedgingCalculator;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public static double[] hedgeQuantity(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity, com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity[], com.opengamma.analytics.math.matrix.DoubleMatrix2D, java.util.LinkedHashSet, com.opengamma.analytics.financial.forex.method.FXMatrix)
+    {
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity r0, r6, $r38, $r41, $r42;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity[] r1, r7;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D r2, r9, r10, r11, $r20, $r23, $r29, $r35;
+        java.util.LinkedHashSet r3;
+        com.opengamma.analytics.financial.forex.method.FXMatrix r4;
+        com.opengamma.util.money.Currency r5;
+        int i0, i1, i2;
+        double[][] r8;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r12, r14, $r39, r43;
+        com.opengamma.analytics.math.linearalgebra.SVDecompositionResult r13;
+        java.util.Set $r15;
+        java.util.Iterator $r16;
+        java.lang.Object $r17, $r19;
+        com.opengamma.util.tuple.Pair $r18;
+        com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra $r21, $r22, $r25, $r27, $r28, $r31, $r32;
+        com.opengamma.analytics.math.matrix.Matrix $r24, $r26, $r30, $r33, $r34;
+        com.opengamma.analytics.math.linearalgebra.SVDecompositionCommons $r36;
+        double[] $r37, $r40;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity;
+
+        r1 := @parameter1: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity[];
+
+        r2 := @parameter2: com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        r3 := @parameter3: java.util.LinkedHashSet;
+
+        r4 := @parameter4: com.opengamma.analytics.financial.forex.method.FXMatrix;
+
+        $r15 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity: java.util.Set getAllNamesCurrency()>();
+
+        $r16 = interfaceinvoke $r15.<java.util.Set: java.util.Iterator iterator()>();
+
+        $r17 = interfaceinvoke $r16.<java.util.Iterator: java.lang.Object next()>();
+
+        $r18 = (com.opengamma.util.tuple.Pair) $r17;
+
+        $r19 = virtualinvoke $r18.<com.opengamma.util.tuple.Pair: java.lang.Object getSecond()>();
+
+        r5 = (com.opengamma.util.money.Currency) $r19;
+
+        i0 = lengthof r1;
+
+        r6 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity converted(com.opengamma.analytics.financial.forex.method.FXMatrix,com.opengamma.util.money.Currency)>(r4, r5);
+
+        r7 = newarray (com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity)[i0];
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $r41 = r1[i1];
+
+        $r42 = virtualinvoke $r41.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity converted(com.opengamma.analytics.financial.forex.method.FXMatrix,com.opengamma.util.money.Currency)>(r4, r5);
+
+        r7[i1] = $r42;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        r43 = staticinvoke <com.opengamma.analytics.financial.calculator.PortfolioHedgingCalculator: com.opengamma.analytics.math.matrix.DoubleMatrix1D toMatrix(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity,java.util.LinkedHashSet)>(r6, r3);
+
+        r8 = newarray (double[])[i0];
+
+        i2 = 0;
+
+     label3:
+        if i2 >= i0 goto label4;
+
+        $r38 = r7[i2];
+
+        $r39 = staticinvoke <com.opengamma.analytics.financial.calculator.PortfolioHedgingCalculator: com.opengamma.analytics.math.matrix.DoubleMatrix1D toMatrix(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity,java.util.LinkedHashSet)>($r38, r3);
+
+        $r40 = virtualinvoke $r39.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        r8[i2] = $r40;
+
+        i2 = i2 + 1;
+
+        goto label3;
+
+     label4:
+        $r20 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r20.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r8);
+
+        $r22 = <com.opengamma.analytics.financial.calculator.PortfolioHedgingCalculator: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra MATRIX>;
+
+        $r21 = <com.opengamma.analytics.financial.calculator.PortfolioHedgingCalculator: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra MATRIX>;
+
+        $r23 = virtualinvoke $r21.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.DoubleMatrix2D getTranspose(com.opengamma.analytics.math.matrix.Matrix)>(r2);
+
+        $r24 = virtualinvoke $r22.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>($r23, r2);
+
+        r9 = (com.opengamma.analytics.math.matrix.DoubleMatrix2D) $r24;
+
+        $r25 = <com.opengamma.analytics.financial.calculator.PortfolioHedgingCalculator: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra MATRIX>;
+
+        $r26 = virtualinvoke $r25.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>($r20, r9);
+
+        r10 = (com.opengamma.analytics.math.matrix.DoubleMatrix2D) $r26;
+
+        $r28 = <com.opengamma.analytics.financial.calculator.PortfolioHedgingCalculator: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra MATRIX>;
+
+        $r27 = <com.opengamma.analytics.financial.calculator.PortfolioHedgingCalculator: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra MATRIX>;
+
+        $r29 = virtualinvoke $r27.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.DoubleMatrix2D getTranspose(com.opengamma.analytics.math.matrix.Matrix)>($r20);
+
+        $r30 = virtualinvoke $r28.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r10, $r29);
+
+        r11 = (com.opengamma.analytics.math.matrix.DoubleMatrix2D) $r30;
+
+        $r32 = <com.opengamma.analytics.financial.calculator.PortfolioHedgingCalculator: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra MATRIX>;
+
+        $r31 = <com.opengamma.analytics.financial.calculator.PortfolioHedgingCalculator: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra MATRIX>;
+
+        $r33 = virtualinvoke $r31.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>(r10, r43);
+
+        $r34 = virtualinvoke $r32.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix scale(com.opengamma.analytics.math.matrix.Matrix,double)>($r33, -1.0);
+
+        $r35 = (com.opengamma.analytics.math.matrix.DoubleMatrix2D) $r34;
+
+        r12 = virtualinvoke $r35.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: com.opengamma.analytics.math.matrix.DoubleMatrix1D getColumnVector(int)>(0);
+
+        $r36 = <com.opengamma.analytics.financial.calculator.PortfolioHedgingCalculator: com.opengamma.analytics.math.linearalgebra.SVDecompositionCommons DECOMPOSITION>;
+
+        r13 = virtualinvoke $r36.<com.opengamma.analytics.math.linearalgebra.SVDecompositionCommons: com.opengamma.analytics.math.linearalgebra.SVDecompositionResult evaluate(com.opengamma.analytics.math.matrix.DoubleMatrix2D)>(r11);
+
+        r14 = interfaceinvoke r13.<com.opengamma.analytics.math.linearalgebra.SVDecompositionResult: com.opengamma.analytics.math.matrix.DoubleMatrix1D solve(com.opengamma.analytics.math.matrix.DoubleMatrix1D)>(r12);
+
+        $r37 = virtualinvoke r14.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        return $r37;
+    }
+
+    public static com.opengamma.analytics.math.matrix.DoubleMatrix1D toMatrix(com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity, java.util.LinkedHashSet)
+    {
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity r0;
+        java.util.LinkedHashSet r1;
+        com.opengamma.util.money.Currency r2;
+        java.util.Iterator r3, $r6;
+        com.opengamma.util.tuple.Pair r4, $r8;
+        java.util.Set $r5;
+        java.lang.Object $r7, $r9, $r11, $r13, $r15, $r18;
+        boolean $z0, $z1;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r10, $r20;
+        java.util.Map $r12;
+        com.opengamma.util.tuple.ObjectsPair $r14;
+        java.lang.Integer $r16;
+        int $i0;
+        double[] $r17, $r21, r22;
+        java.lang.String $r19;
+
+        r0 := @parameter0: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity;
+
+        r1 := @parameter1: java.util.LinkedHashSet;
+
+        r22 = newarray (double)[0];
+
+        $r5 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity: java.util.Set getAllNamesCurrency()>();
+
+        $r6 = interfaceinvoke $r5.<java.util.Set: java.util.Iterator iterator()>();
+
+        $r7 = interfaceinvoke $r6.<java.util.Iterator: java.lang.Object next()>();
+
+        $r8 = (com.opengamma.util.tuple.Pair) $r7;
+
+        $r9 = virtualinvoke $r8.<com.opengamma.util.tuple.Pair: java.lang.Object getSecond()>();
+
+        r2 = (com.opengamma.util.money.Currency) $r9;
+
+        r3 = virtualinvoke r1.<java.util.LinkedHashSet: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label4;
+
+        $r11 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+
+        r4 = (com.opengamma.util.tuple.Pair) $r11;
+
+        $r12 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity: java.util.Map getSensitivities()>();
+
+        $r13 = virtualinvoke r4.<com.opengamma.util.tuple.Pair: java.lang.Object getFirst()>();
+
+        $r14 = staticinvoke <com.opengamma.util.tuple.ObjectsPair: com.opengamma.util.tuple.ObjectsPair of(java.lang.Object,java.lang.Object)>($r13, r2);
+
+        $z1 = interfaceinvoke $r12.<java.util.Map: boolean containsKey(java.lang.Object)>($r14);
+
+        if $z1 == 0 goto label2;
+
+        $r18 = virtualinvoke r4.<com.opengamma.util.tuple.Pair: java.lang.Object getFirst()>();
+
+        $r19 = (java.lang.String) $r18;
+
+        $r20 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MultipleCurrencyParameterSensitivity: com.opengamma.analytics.math.matrix.DoubleMatrix1D getSensitivity(java.lang.String,com.opengamma.util.money.Currency)>($r19, r2);
+
+        $r21 = virtualinvoke $r20.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: double[] getData()>();
+
+        r22 = staticinvoke <org.apache.commons.lang.ArrayUtils: double[] addAll(double[],double[])>(r22, $r21);
+
+        goto label3;
+
+     label2:
+        $r15 = virtualinvoke r4.<com.opengamma.util.tuple.Pair: java.lang.Object getSecond()>();
+
+        $r16 = (java.lang.Integer) $r15;
+
+        $i0 = virtualinvoke $r16.<java.lang.Integer: int intValue()>();
+
+        $r17 = newarray (double)[$i0];
+
+        r22 = staticinvoke <org.apache.commons.lang.ArrayUtils: double[] addAll(double[],double[])>(r22, $r17);
+
+     label3:
+        goto label1;
+
+     label4:
+        $r10 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r10.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r22);
+
+        return $r10;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra $r0;
+        com.opengamma.analytics.math.linearalgebra.SVDecompositionCommons $r1;
+
+        $r0 = new com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra;
+
+        specialinvoke $r0.<com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra: void <init>()>();
+
+        <com.opengamma.analytics.financial.calculator.PortfolioHedgingCalculator: com.opengamma.analytics.math.matrix.CommonsMatrixAlgebra MATRIX> = $r0;
+
+        $r1 = new com.opengamma.analytics.math.linearalgebra.SVDecompositionCommons;
+
+        specialinvoke $r1.<com.opengamma.analytics.math.linearalgebra.SVDecompositionCommons: void <init>()>();
+
+        <com.opengamma.analytics.financial.calculator.PortfolioHedgingCalculator: com.opengamma.analytics.math.linearalgebra.SVDecompositionCommons DECOMPOSITION> = $r1;
+
+        return;
+    }
+}

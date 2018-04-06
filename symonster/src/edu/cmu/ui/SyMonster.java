@@ -4,9 +4,7 @@ import edu.cmu.compilation.Test;
 import edu.cmu.equivprogram.DependencyMap;
 import edu.cmu.parser.*;
 import edu.cmu.petrinet.BuildNetNoVoid;
-import edu.cmu.petrinet.BuildNet;
 import edu.cmu.reachability.*;
-import edu.cmu.utils.TimerUtils;
 import org.sat4j.specs.TimeoutException;
 import uniol.apt.adt.pn.PetriNet;
 
@@ -28,7 +26,7 @@ public class SyMonster {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/joda/18/benchmark18.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/joda/17/benchmark17.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -49,10 +47,12 @@ public class SyMonster {
         }
         String testCode = fileContents.toString();
 
-        System.out.println(0);
 		// 2. Parse library
+        System.out.println("Parsing libraries.");
         List<MethodSignature> sigs = JarParser.parseJar(libs,jsonInput.packages,jsonConfig.blacklist);
-        System.out.println(sigs);
+        System.out.println("# of signatures: "+sigs.size());
+
+        System.out.println("Resolving polymorphisms");
         Map<String,Set<String>> superclassMap = JarParser.getSuperClasses(acceptableSuperClasses);
         Map<String,Set<String>> subclassMap = new HashMap<>();
         for (String key : superclassMap.keySet()){
@@ -63,25 +63,25 @@ public class SyMonster {
                 subclassMap.get(value).add(key);
             }
         }
-        System.out.println(1);
         // 3. build a petrinet and signatureMap of library
         // Currently built without clone edges
-		BuildNetNoVoid b = new BuildNetNoVoid();                          // Set petrinet
-		//BuildNetWithoutClone b = new BuildNetWithoutClone(noVoid);
-		PetriNet net = b.build(sigs, superclassMap, subclassMap);
-        System.out.println(1.5);
-		Map<String, MethodSignature> signatureMap = b.dict;
+        System.out.println("Creating dependency graph");
+        Set<List<MethodSignature>> repeatSolutions = new HashSet<>();
+        DependencyMap dependencyMap = JarParser.createDependencyMap();
 
-		int loc = 1;
+        System.out.println("Building graph.");
+        BuildNetNoVoid b = new BuildNetNoVoid();// Set petrinet
+        //BuildNetWithoutClone b = new BuildNetWithoutClone(noVoid);
+		PetriNet net = b.build(sigs, superclassMap, subclassMap);
+		Map<String, MethodSignature> signatureMap = b.dict;
+        int loc = 1;
 		int paths = 0;
 		int programs = 0;
 		boolean solution = false;
 
-        TimerUtils.startTimer("total");
 
-        Set<List<MethodSignature>> repeatSolutions = new HashSet<>();
-        //DependencyMap dependencyMap = JarParser.createDependencyMap();
-        System.out.println(2);
+
+        System.out.println("Solver starts");
 		while (!solution) {
 			// create a formula that has the same semantics as the petri-net
 			Encoding encoding = new SequentialEncoding(net, loc);                     // Set encoding
@@ -109,10 +109,9 @@ public class SyMonster {
 						signatures.add(sig);
 					}
 				}
-                System.out.println(path);
-                if (true){//!repeatSolutions.contains(signatures)){
-                    //List<List<MethodSignature>> repeated = dependencyMap.findAllTopSorts(signatures);
-                    //repeatSolutions.addAll(repeated);
+                if (!repeatSolutions.contains(signatures)){
+                    List<List<MethodSignature>> repeated = dependencyMap.findAllTopSorts(signatures);
+                    repeatSolutions.addAll(repeated);
                     // 5. Convert a path to a program
                     // NOTE: one path may correspond to multiple programs and we may need a loop here!
                     boolean sat = true;
@@ -128,9 +127,8 @@ public class SyMonster {
                         }
                         sat = !former.isUnsat();
                         programs++;
-                        if (true)
+                        if (programs % 50 == 0)
                         {
-                            System.out.println(path);
                             System.out.println("programs: "+programs);
                             System.out.println(signatures);
                             System.out.println("n signatures: "+ signatures.size());
@@ -147,8 +145,9 @@ public class SyMonster {
                             System.out.println("Paths explored = " + paths);
                             System.out.println("code:");
                             System.out.println(code);
-                            TimerUtils.stopTimer("total");
-                            System.out.println("total time: "+TimerUtils.getCumulativeTime("total"));
+
+                            File compfile = new File("build/Target.class");
+                            compfile.delete();
                             break;
                         }
                     }

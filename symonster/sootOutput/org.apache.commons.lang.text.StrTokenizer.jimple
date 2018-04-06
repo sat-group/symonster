@@ -1,0 +1,1727 @@
+public class org.apache.commons.lang.text.StrTokenizer extends java.lang.Object implements java.util.ListIterator, java.lang.Cloneable
+{
+    private static final org.apache.commons.lang.text.StrTokenizer CSV_TOKENIZER_PROTOTYPE;
+    private static final org.apache.commons.lang.text.StrTokenizer TSV_TOKENIZER_PROTOTYPE;
+    private char[] chars;
+    private java.lang.String[] tokens;
+    private int tokenPos;
+    private org.apache.commons.lang.text.StrMatcher delimMatcher;
+    private org.apache.commons.lang.text.StrMatcher quoteMatcher;
+    private org.apache.commons.lang.text.StrMatcher ignoredMatcher;
+    private org.apache.commons.lang.text.StrMatcher trimmerMatcher;
+    private boolean emptyAsNull;
+    private boolean ignoreEmptyTokens;
+
+    private static org.apache.commons.lang.text.StrTokenizer getCSVClone()
+    {
+        org.apache.commons.lang.text.StrTokenizer $r0, $r2;
+        java.lang.Object $r1;
+
+        $r0 = <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer CSV_TOKENIZER_PROTOTYPE>;
+
+        $r1 = virtualinvoke $r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.Object clone()>();
+
+        $r2 = (org.apache.commons.lang.text.StrTokenizer) $r1;
+
+        return $r2;
+    }
+
+    public static org.apache.commons.lang.text.StrTokenizer getCSVInstance()
+    {
+        org.apache.commons.lang.text.StrTokenizer $r0;
+
+        $r0 = staticinvoke <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer getCSVClone()>();
+
+        return $r0;
+    }
+
+    public static org.apache.commons.lang.text.StrTokenizer getCSVInstance(java.lang.String)
+    {
+        java.lang.String r0;
+        org.apache.commons.lang.text.StrTokenizer r1;
+
+        r0 := @parameter0: java.lang.String;
+
+        r1 = staticinvoke <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer getCSVClone()>();
+
+        virtualinvoke r1.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer reset(java.lang.String)>(r0);
+
+        return r1;
+    }
+
+    public static org.apache.commons.lang.text.StrTokenizer getCSVInstance(char[])
+    {
+        char[] r0;
+        org.apache.commons.lang.text.StrTokenizer r1;
+
+        r0 := @parameter0: char[];
+
+        r1 = staticinvoke <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer getCSVClone()>();
+
+        virtualinvoke r1.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer reset(char[])>(r0);
+
+        return r1;
+    }
+
+    private static org.apache.commons.lang.text.StrTokenizer getTSVClone()
+    {
+        org.apache.commons.lang.text.StrTokenizer $r0, $r2;
+        java.lang.Object $r1;
+
+        $r0 = <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer TSV_TOKENIZER_PROTOTYPE>;
+
+        $r1 = virtualinvoke $r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.Object clone()>();
+
+        $r2 = (org.apache.commons.lang.text.StrTokenizer) $r1;
+
+        return $r2;
+    }
+
+    public static org.apache.commons.lang.text.StrTokenizer getTSVInstance()
+    {
+        org.apache.commons.lang.text.StrTokenizer $r0;
+
+        $r0 = staticinvoke <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer getTSVClone()>();
+
+        return $r0;
+    }
+
+    public static org.apache.commons.lang.text.StrTokenizer getTSVInstance(java.lang.String)
+    {
+        java.lang.String r0;
+        org.apache.commons.lang.text.StrTokenizer r1;
+
+        r0 := @parameter0: java.lang.String;
+
+        r1 = staticinvoke <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer getTSVClone()>();
+
+        virtualinvoke r1.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer reset(java.lang.String)>(r0);
+
+        return r1;
+    }
+
+    public static org.apache.commons.lang.text.StrTokenizer getTSVInstance(char[])
+    {
+        char[] r0;
+        org.apache.commons.lang.text.StrTokenizer r1;
+
+        r0 := @parameter0: char[];
+
+        r1 = staticinvoke <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer getTSVClone()>();
+
+        virtualinvoke r1.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer reset(char[])>(r0);
+
+        return r1;
+    }
+
+    public void <init>()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        org.apache.commons.lang.text.StrMatcher $r1, $r2, $r3, $r4;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $r1 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher splitMatcher()>();
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher delimMatcher> = $r1;
+
+        $r2 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher noneMatcher()>();
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher quoteMatcher> = $r2;
+
+        $r3 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher noneMatcher()>();
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher ignoredMatcher> = $r3;
+
+        $r4 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher noneMatcher()>();
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher trimmerMatcher> = $r4;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: boolean emptyAsNull> = 0;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: boolean ignoreEmptyTokens> = 1;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: char[] chars> = null;
+
+        return;
+    }
+
+    public void <init>(java.lang.String)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.lang.String r1;
+        org.apache.commons.lang.text.StrMatcher $r2, $r3, $r4, $r5;
+        char[] $r6;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: java.lang.String;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $r2 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher splitMatcher()>();
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher delimMatcher> = $r2;
+
+        $r3 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher noneMatcher()>();
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher quoteMatcher> = $r3;
+
+        $r4 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher noneMatcher()>();
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher ignoredMatcher> = $r4;
+
+        $r5 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher noneMatcher()>();
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher trimmerMatcher> = $r5;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: boolean emptyAsNull> = 0;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: boolean ignoreEmptyTokens> = 1;
+
+        if r1 == null goto label1;
+
+        $r6 = virtualinvoke r1.<java.lang.String: char[] toCharArray()>();
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: char[] chars> = $r6;
+
+        goto label2;
+
+     label1:
+        r0.<org.apache.commons.lang.text.StrTokenizer: char[] chars> = null;
+
+     label2:
+        return;
+    }
+
+    public void <init>(java.lang.String, char)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.lang.String r1;
+        char c0;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: java.lang.String;
+
+        c0 := @parameter1: char;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void <init>(java.lang.String)>(r1);
+
+        virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setDelimiterChar(char)>(c0);
+
+        return;
+    }
+
+    public void <init>(java.lang.String, java.lang.String)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.lang.String r1, r2;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: java.lang.String;
+
+        r2 := @parameter1: java.lang.String;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void <init>(java.lang.String)>(r1);
+
+        virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setDelimiterString(java.lang.String)>(r2);
+
+        return;
+    }
+
+    public void <init>(java.lang.String, org.apache.commons.lang.text.StrMatcher)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.lang.String r1;
+        org.apache.commons.lang.text.StrMatcher r2;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: java.lang.String;
+
+        r2 := @parameter1: org.apache.commons.lang.text.StrMatcher;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void <init>(java.lang.String)>(r1);
+
+        virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setDelimiterMatcher(org.apache.commons.lang.text.StrMatcher)>(r2);
+
+        return;
+    }
+
+    public void <init>(java.lang.String, char, char)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.lang.String r1;
+        char c0, c1;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: java.lang.String;
+
+        c0 := @parameter1: char;
+
+        c1 := @parameter2: char;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void <init>(java.lang.String,char)>(r1, c0);
+
+        virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setQuoteChar(char)>(c1);
+
+        return;
+    }
+
+    public void <init>(java.lang.String, org.apache.commons.lang.text.StrMatcher, org.apache.commons.lang.text.StrMatcher)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.lang.String r1;
+        org.apache.commons.lang.text.StrMatcher r2, r3;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: java.lang.String;
+
+        r2 := @parameter1: org.apache.commons.lang.text.StrMatcher;
+
+        r3 := @parameter2: org.apache.commons.lang.text.StrMatcher;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void <init>(java.lang.String,org.apache.commons.lang.text.StrMatcher)>(r1, r2);
+
+        virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setQuoteMatcher(org.apache.commons.lang.text.StrMatcher)>(r3);
+
+        return;
+    }
+
+    public void <init>(char[])
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        char[] r1;
+        org.apache.commons.lang.text.StrMatcher $r2, $r3, $r4, $r5;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: char[];
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        $r2 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher splitMatcher()>();
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher delimMatcher> = $r2;
+
+        $r3 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher noneMatcher()>();
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher quoteMatcher> = $r3;
+
+        $r4 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher noneMatcher()>();
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher ignoredMatcher> = $r4;
+
+        $r5 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher noneMatcher()>();
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher trimmerMatcher> = $r5;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: boolean emptyAsNull> = 0;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: boolean ignoreEmptyTokens> = 1;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: char[] chars> = r1;
+
+        return;
+    }
+
+    public void <init>(char[], char)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        char[] r1;
+        char c0;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: char[];
+
+        c0 := @parameter1: char;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void <init>(char[])>(r1);
+
+        virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setDelimiterChar(char)>(c0);
+
+        return;
+    }
+
+    public void <init>(char[], java.lang.String)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        char[] r1;
+        java.lang.String r2;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: char[];
+
+        r2 := @parameter1: java.lang.String;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void <init>(char[])>(r1);
+
+        virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setDelimiterString(java.lang.String)>(r2);
+
+        return;
+    }
+
+    public void <init>(char[], org.apache.commons.lang.text.StrMatcher)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        char[] r1;
+        org.apache.commons.lang.text.StrMatcher r2;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: char[];
+
+        r2 := @parameter1: org.apache.commons.lang.text.StrMatcher;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void <init>(char[])>(r1);
+
+        virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setDelimiterMatcher(org.apache.commons.lang.text.StrMatcher)>(r2);
+
+        return;
+    }
+
+    public void <init>(char[], char, char)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        char[] r1;
+        char c0, c1;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: char[];
+
+        c0 := @parameter1: char;
+
+        c1 := @parameter2: char;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void <init>(char[],char)>(r1, c0);
+
+        virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setQuoteChar(char)>(c1);
+
+        return;
+    }
+
+    public void <init>(char[], org.apache.commons.lang.text.StrMatcher, org.apache.commons.lang.text.StrMatcher)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        char[] r1;
+        org.apache.commons.lang.text.StrMatcher r2, r3;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: char[];
+
+        r2 := @parameter1: org.apache.commons.lang.text.StrMatcher;
+
+        r3 := @parameter2: org.apache.commons.lang.text.StrMatcher;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void <init>(char[],org.apache.commons.lang.text.StrMatcher)>(r1, r2);
+
+        virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setQuoteMatcher(org.apache.commons.lang.text.StrMatcher)>(r3);
+
+        return;
+    }
+
+    public int size()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.lang.String[] $r1;
+        int $i0;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void checkTokenized()>();
+
+        $r1 = r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.String[] tokens>;
+
+        $i0 = lengthof $r1;
+
+        return $i0;
+    }
+
+    public java.lang.String nextToken()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        boolean $z0;
+        int $i0, $i1;
+        java.lang.String[] $r1;
+        java.lang.String $r2;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        $z0 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: boolean hasNext()>();
+
+        if $z0 == 0 goto label1;
+
+        $r1 = r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.String[] tokens>;
+
+        $i0 = r0.<org.apache.commons.lang.text.StrTokenizer: int tokenPos>;
+
+        $i1 = $i0 + 1;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: int tokenPos> = $i1;
+
+        $r2 = $r1[$i0];
+
+        return $r2;
+
+     label1:
+        return null;
+    }
+
+    public java.lang.String previousToken()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        boolean $z0;
+        int $i0, $i1;
+        java.lang.String[] $r1;
+        java.lang.String $r2;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        $z0 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: boolean hasPrevious()>();
+
+        if $z0 == 0 goto label1;
+
+        $r1 = r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.String[] tokens>;
+
+        $i0 = r0.<org.apache.commons.lang.text.StrTokenizer: int tokenPos>;
+
+        $i1 = $i0 - 1;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: int tokenPos> = $i1;
+
+        $r2 = $r1[$i1];
+
+        return $r2;
+
+     label1:
+        return null;
+    }
+
+    public java.lang.String[] getTokenArray()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.lang.String[] $r1, $r3, $r4;
+        java.lang.Object $r2;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void checkTokenized()>();
+
+        $r1 = r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.String[] tokens>;
+
+        $r2 = virtualinvoke $r1.<java.lang.Object: java.lang.Object clone()>();
+
+        $r3 = (java.lang.String[]) $r2;
+
+        $r4 = (java.lang.String[]) $r3;
+
+        return $r4;
+    }
+
+    public java.util.List getTokenList()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.util.ArrayList $r2;
+        java.lang.String[] $r3, $r4, $r5;
+        int $i0, $i1, i2;
+        java.lang.String $r6;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void checkTokenized()>();
+
+        $r2 = new java.util.ArrayList;
+
+        $r3 = r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.String[] tokens>;
+
+        $i0 = lengthof $r3;
+
+        specialinvoke $r2.<java.util.ArrayList: void <init>(int)>($i0);
+
+        i2 = 0;
+
+     label1:
+        $r4 = r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.String[] tokens>;
+
+        $i1 = lengthof $r4;
+
+        if i2 >= $i1 goto label2;
+
+        $r5 = r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.String[] tokens>;
+
+        $r6 = $r5[i2];
+
+        interfaceinvoke $r2.<java.util.List: boolean add(java.lang.Object)>($r6);
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        return $r2;
+    }
+
+    public org.apache.commons.lang.text.StrTokenizer reset()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: int tokenPos> = 0;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.String[] tokens> = null;
+
+        return r0;
+    }
+
+    public org.apache.commons.lang.text.StrTokenizer reset(java.lang.String)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.lang.String r1;
+        char[] $r3;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: java.lang.String;
+
+        virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer reset()>();
+
+        if r1 == null goto label1;
+
+        $r3 = virtualinvoke r1.<java.lang.String: char[] toCharArray()>();
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: char[] chars> = $r3;
+
+        goto label2;
+
+     label1:
+        r0.<org.apache.commons.lang.text.StrTokenizer: char[] chars> = null;
+
+     label2:
+        return r0;
+    }
+
+    public org.apache.commons.lang.text.StrTokenizer reset(char[])
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        char[] r1;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: char[];
+
+        virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer reset()>();
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: char[] chars> = r1;
+
+        return r0;
+    }
+
+    public boolean hasNext()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.lang.String[] $r1;
+        int $i0, $i1;
+        boolean $z0;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void checkTokenized()>();
+
+        $i1 = r0.<org.apache.commons.lang.text.StrTokenizer: int tokenPos>;
+
+        $r1 = r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.String[] tokens>;
+
+        $i0 = lengthof $r1;
+
+        if $i1 >= $i0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    public java.lang.Object next()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        boolean $z0;
+        java.util.NoSuchElementException $r1;
+        int $i0, $i1;
+        java.lang.String[] $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        $z0 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: boolean hasNext()>();
+
+        if $z0 == 0 goto label1;
+
+        $r2 = r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.String[] tokens>;
+
+        $i0 = r0.<org.apache.commons.lang.text.StrTokenizer: int tokenPos>;
+
+        $i1 = $i0 + 1;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: int tokenPos> = $i1;
+
+        $r3 = $r2[$i0];
+
+        return $r3;
+
+     label1:
+        $r1 = new java.util.NoSuchElementException;
+
+        specialinvoke $r1.<java.util.NoSuchElementException: void <init>()>();
+
+        throw $r1;
+    }
+
+    public int nextIndex()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        int $i0;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        $i0 = r0.<org.apache.commons.lang.text.StrTokenizer: int tokenPos>;
+
+        return $i0;
+    }
+
+    public boolean hasPrevious()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        int $i0;
+        boolean $z0;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void checkTokenized()>();
+
+        $i0 = r0.<org.apache.commons.lang.text.StrTokenizer: int tokenPos>;
+
+        if $i0 <= 0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    public java.lang.Object previous()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        boolean $z0;
+        java.util.NoSuchElementException $r1;
+        int $i0, $i1;
+        java.lang.String[] $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        $z0 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: boolean hasPrevious()>();
+
+        if $z0 == 0 goto label1;
+
+        $r2 = r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.String[] tokens>;
+
+        $i0 = r0.<org.apache.commons.lang.text.StrTokenizer: int tokenPos>;
+
+        $i1 = $i0 - 1;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: int tokenPos> = $i1;
+
+        $r3 = $r2[$i1];
+
+        return $r3;
+
+     label1:
+        $r1 = new java.util.NoSuchElementException;
+
+        specialinvoke $r1.<java.util.NoSuchElementException: void <init>()>();
+
+        throw $r1;
+    }
+
+    public int previousIndex()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        int $i0, $i1;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        $i0 = r0.<org.apache.commons.lang.text.StrTokenizer: int tokenPos>;
+
+        $i1 = $i0 - 1;
+
+        return $i1;
+    }
+
+    public void remove()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.lang.UnsupportedOperationException $r1;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        $r1 = new java.lang.UnsupportedOperationException;
+
+        specialinvoke $r1.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>("remove() is unsupported");
+
+        throw $r1;
+    }
+
+    public void set(java.lang.Object)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.lang.Object r1;
+        java.lang.UnsupportedOperationException $r2;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: java.lang.Object;
+
+        $r2 = new java.lang.UnsupportedOperationException;
+
+        specialinvoke $r2.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>("set() is unsupported");
+
+        throw $r2;
+    }
+
+    public void add(java.lang.Object)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.lang.Object r1;
+        java.lang.UnsupportedOperationException $r2;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: java.lang.Object;
+
+        $r2 = new java.lang.UnsupportedOperationException;
+
+        specialinvoke $r2.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>("add() is unsupported");
+
+        throw $r2;
+    }
+
+    private void checkTokenized()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.lang.String[] $r1, $r5, $r7, $r8, $r9, $r11, $r12;
+        char[] $r2, $r3, $r4;
+        int $i0, $i1, $i2;
+        java.lang.Object[] $r6, $r10;
+        java.util.List r13, r14;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        $r1 = r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.String[] tokens>;
+
+        if $r1 != null goto label2;
+
+        $r2 = r0.<org.apache.commons.lang.text.StrTokenizer: char[] chars>;
+
+        if $r2 != null goto label1;
+
+        r13 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: java.util.List tokenize(char[],int,int)>(null, 0, 0);
+
+        $i2 = interfaceinvoke r13.<java.util.List: int size()>();
+
+        $r9 = newarray (java.lang.String)[$i2];
+
+        $r10 = interfaceinvoke r13.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r9);
+
+        $r11 = (java.lang.String[]) $r10;
+
+        $r12 = (java.lang.String[]) $r11;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.String[] tokens> = $r12;
+
+        goto label2;
+
+     label1:
+        $r4 = r0.<org.apache.commons.lang.text.StrTokenizer: char[] chars>;
+
+        $r3 = r0.<org.apache.commons.lang.text.StrTokenizer: char[] chars>;
+
+        $i0 = lengthof $r3;
+
+        r14 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: java.util.List tokenize(char[],int,int)>($r4, 0, $i0);
+
+        $i1 = interfaceinvoke r14.<java.util.List: int size()>();
+
+        $r5 = newarray (java.lang.String)[$i1];
+
+        $r6 = interfaceinvoke r14.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r5);
+
+        $r7 = (java.lang.String[]) $r6;
+
+        $r8 = (java.lang.String[]) $r7;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.String[] tokens> = $r8;
+
+     label2:
+        return;
+    }
+
+    protected java.util.List tokenize(char[], int, int)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        char[] r1;
+        int i0, i1, i2;
+        java.util.List $r4;
+        org.apache.commons.lang.text.StrBuilder $r5;
+        java.util.ArrayList $r6;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: char[];
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        if r1 == null goto label1;
+
+        if i1 != 0 goto label2;
+
+     label1:
+        $r4 = <java.util.Collections: java.util.List EMPTY_LIST>;
+
+        return $r4;
+
+     label2:
+        $r5 = new org.apache.commons.lang.text.StrBuilder;
+
+        specialinvoke $r5.<org.apache.commons.lang.text.StrBuilder: void <init>()>();
+
+        $r6 = new java.util.ArrayList;
+
+        specialinvoke $r6.<java.util.ArrayList: void <init>()>();
+
+        i2 = i0;
+
+     label3:
+        if i2 < 0 goto label4;
+
+        if i2 >= i1 goto label4;
+
+        i2 = specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: int readNextToken(char[],int,int,org.apache.commons.lang.text.StrBuilder,java.util.List)>(r1, i2, i1, $r5, $r6);
+
+        if i2 < i1 goto label3;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void addToken(java.util.List,java.lang.String)>($r6, "");
+
+        goto label3;
+
+     label4:
+        return $r6;
+    }
+
+    private void addToken(java.util.List, java.lang.String)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.util.List r1;
+        boolean $z0, $z1;
+        int $i0;
+        java.lang.String r2;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: java.util.List;
+
+        r2 := @parameter1: java.lang.String;
+
+        if r2 == null goto label1;
+
+        $i0 = virtualinvoke r2.<java.lang.String: int length()>();
+
+        if $i0 != 0 goto label3;
+
+     label1:
+        $z0 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: boolean isIgnoreEmptyTokens()>();
+
+        if $z0 == 0 goto label2;
+
+        return;
+
+     label2:
+        $z1 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: boolean isEmptyTokenAsNull()>();
+
+        if $z1 == 0 goto label3;
+
+        r2 = null;
+
+     label3:
+        interfaceinvoke r1.<java.util.List: boolean add(java.lang.Object)>(r2);
+
+        return;
+    }
+
+    private int readNextToken(char[], int, int, org.apache.commons.lang.text.StrBuilder, java.util.List)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        char[] r1;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, i10, i11, i12;
+        org.apache.commons.lang.text.StrBuilder r2;
+        java.util.List r3;
+        org.apache.commons.lang.text.StrMatcher $r4, $r5, $r6, $r7, $r8, $r9;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: char[];
+
+        i10 := @parameter1: int;
+
+        i0 := @parameter2: int;
+
+        r2 := @parameter3: org.apache.commons.lang.text.StrBuilder;
+
+        r3 := @parameter4: java.util.List;
+
+     label1:
+        if i10 >= i0 goto label3;
+
+        $r6 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher getIgnoredMatcher()>();
+
+        $i6 = virtualinvoke $r6.<org.apache.commons.lang.text.StrMatcher: int isMatch(char[],int,int,int)>(r1, i10, i10, i0);
+
+        $r7 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher getTrimmerMatcher()>();
+
+        $i7 = virtualinvoke $r7.<org.apache.commons.lang.text.StrMatcher: int isMatch(char[],int,int,int)>(r1, i10, i10, i0);
+
+        i11 = staticinvoke <java.lang.Math: int max(int,int)>($i6, $i7);
+
+        if i11 == 0 goto label3;
+
+        $r8 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher getDelimiterMatcher()>();
+
+        $i8 = virtualinvoke $r8.<org.apache.commons.lang.text.StrMatcher: int isMatch(char[],int,int,int)>(r1, i10, i10, i0);
+
+        if $i8 > 0 goto label3;
+
+        $r9 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher getQuoteMatcher()>();
+
+        $i9 = virtualinvoke $r9.<org.apache.commons.lang.text.StrMatcher: int isMatch(char[],int,int,int)>(r1, i10, i10, i0);
+
+        if $i9 <= 0 goto label2;
+
+        goto label3;
+
+     label2:
+        i10 = i10 + i11;
+
+        goto label1;
+
+     label3:
+        if i10 < i0 goto label4;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void addToken(java.util.List,java.lang.String)>(r3, "");
+
+        return -1;
+
+     label4:
+        $r4 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher getDelimiterMatcher()>();
+
+        i12 = virtualinvoke $r4.<org.apache.commons.lang.text.StrMatcher: int isMatch(char[],int,int,int)>(r1, i10, i10, i0);
+
+        if i12 <= 0 goto label5;
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void addToken(java.util.List,java.lang.String)>(r3, "");
+
+        $i5 = i10 + i12;
+
+        return $i5;
+
+     label5:
+        $r5 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher getQuoteMatcher()>();
+
+        i1 = virtualinvoke $r5.<org.apache.commons.lang.text.StrMatcher: int isMatch(char[],int,int,int)>(r1, i10, i10, i0);
+
+        if i1 <= 0 goto label6;
+
+        $i3 = i10 + i1;
+
+        $i4 = specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: int readWithQuotes(char[],int,int,org.apache.commons.lang.text.StrBuilder,java.util.List,int,int)>(r1, $i3, i0, r2, r3, i10, i1);
+
+        return $i4;
+
+     label6:
+        $i2 = specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: int readWithQuotes(char[],int,int,org.apache.commons.lang.text.StrBuilder,java.util.List,int,int)>(r1, i10, i0, r2, r3, 0, 0);
+
+        return $i2;
+    }
+
+    private int readWithQuotes(char[], int, int, org.apache.commons.lang.text.StrBuilder, java.util.List, int, int)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        char[] r1;
+        int i0, i1, i2, i3, i4, i5, i6, $i7, $i9, $i10, $i12, $i13, i14, i15;
+        org.apache.commons.lang.text.StrBuilder r2;
+        java.util.List r3;
+        java.lang.String $r5, $r11;
+        org.apache.commons.lang.text.StrMatcher $r6, $r7, $r8;
+        char $c8, $c11;
+        boolean $z0, $z1, $z2, $z3, z4;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: char[];
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        r2 := @parameter3: org.apache.commons.lang.text.StrBuilder;
+
+        r3 := @parameter4: java.util.List;
+
+        i2 := @parameter5: int;
+
+        i3 := @parameter6: int;
+
+        virtualinvoke r2.<org.apache.commons.lang.text.StrBuilder: org.apache.commons.lang.text.StrBuilder clear()>();
+
+        i14 = i0;
+
+        if i3 <= 0 goto label01;
+
+        $z3 = 1;
+
+        goto label02;
+
+     label01:
+        $z3 = 0;
+
+     label02:
+        z4 = $z3;
+
+        i15 = 0;
+
+     label03:
+        if i14 >= i1 goto label11;
+
+        if z4 == 0 goto label06;
+
+        $z1 = specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: boolean isQuote(char[],int,int,int,int)>(r1, i14, i1, i2, i3);
+
+        if $z1 == 0 goto label05;
+
+        $i12 = i14 + i3;
+
+        $z2 = specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: boolean isQuote(char[],int,int,int,int)>(r1, $i12, i1, i2, i3);
+
+        if $z2 == 0 goto label04;
+
+        virtualinvoke r2.<org.apache.commons.lang.text.StrBuilder: org.apache.commons.lang.text.StrBuilder append(char[],int,int)>(r1, i14, i3);
+
+        $i13 = i3 * 2;
+
+        i14 = i14 + $i13;
+
+        i15 = virtualinvoke r2.<org.apache.commons.lang.text.StrBuilder: int size()>();
+
+        goto label03;
+
+     label04:
+        z4 = 0;
+
+        i14 = i14 + i3;
+
+        goto label03;
+
+     label05:
+        $i10 = i14;
+
+        i14 = i14 + 1;
+
+        $c11 = r1[$i10];
+
+        virtualinvoke r2.<org.apache.commons.lang.text.StrBuilder: org.apache.commons.lang.text.StrBuilder append(char)>($c11);
+
+        i15 = virtualinvoke r2.<org.apache.commons.lang.text.StrBuilder: int size()>();
+
+        goto label03;
+
+     label06:
+        $r6 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher getDelimiterMatcher()>();
+
+        i4 = virtualinvoke $r6.<org.apache.commons.lang.text.StrMatcher: int isMatch(char[],int,int,int)>(r1, i14, i0, i1);
+
+        if i4 <= 0 goto label07;
+
+        $r11 = virtualinvoke r2.<org.apache.commons.lang.text.StrBuilder: java.lang.String substring(int,int)>(0, i15);
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void addToken(java.util.List,java.lang.String)>(r3, $r11);
+
+        $i9 = i14 + i4;
+
+        return $i9;
+
+     label07:
+        if i3 <= 0 goto label08;
+
+        $z0 = specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: boolean isQuote(char[],int,int,int,int)>(r1, i14, i1, i2, i3);
+
+        if $z0 == 0 goto label08;
+
+        z4 = 1;
+
+        i14 = i14 + i3;
+
+        goto label03;
+
+     label08:
+        $r7 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher getIgnoredMatcher()>();
+
+        i5 = virtualinvoke $r7.<org.apache.commons.lang.text.StrMatcher: int isMatch(char[],int,int,int)>(r1, i14, i0, i1);
+
+        if i5 <= 0 goto label09;
+
+        i14 = i14 + i5;
+
+        goto label03;
+
+     label09:
+        $r8 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher getTrimmerMatcher()>();
+
+        i6 = virtualinvoke $r8.<org.apache.commons.lang.text.StrMatcher: int isMatch(char[],int,int,int)>(r1, i14, i0, i1);
+
+        if i6 <= 0 goto label10;
+
+        virtualinvoke r2.<org.apache.commons.lang.text.StrBuilder: org.apache.commons.lang.text.StrBuilder append(char[],int,int)>(r1, i14, i6);
+
+        i14 = i14 + i6;
+
+        goto label03;
+
+     label10:
+        $i7 = i14;
+
+        i14 = i14 + 1;
+
+        $c8 = r1[$i7];
+
+        virtualinvoke r2.<org.apache.commons.lang.text.StrBuilder: org.apache.commons.lang.text.StrBuilder append(char)>($c8);
+
+        i15 = virtualinvoke r2.<org.apache.commons.lang.text.StrBuilder: int size()>();
+
+        goto label03;
+
+     label11:
+        $r5 = virtualinvoke r2.<org.apache.commons.lang.text.StrBuilder: java.lang.String substring(int,int)>(0, i15);
+
+        specialinvoke r0.<org.apache.commons.lang.text.StrTokenizer: void addToken(java.util.List,java.lang.String)>(r3, $r5);
+
+        return -1;
+    }
+
+    private boolean isQuote(char[], int, int, int, int)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        char[] r1;
+        int i0, i1, i2, i3, $i4, $i5, $i6, i9;
+        char $c7, $c8;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: char[];
+
+        i0 := @parameter1: int;
+
+        i1 := @parameter2: int;
+
+        i2 := @parameter3: int;
+
+        i3 := @parameter4: int;
+
+        i9 = 0;
+
+     label1:
+        if i9 >= i3 goto label4;
+
+        $i4 = i0 + i9;
+
+        if $i4 >= i1 goto label2;
+
+        $i5 = i0 + i9;
+
+        $c8 = r1[$i5];
+
+        $i6 = i2 + i9;
+
+        $c7 = r1[$i6];
+
+        if $c8 == $c7 goto label3;
+
+     label2:
+        return 0;
+
+     label3:
+        i9 = i9 + 1;
+
+        goto label1;
+
+     label4:
+        return 1;
+    }
+
+    public org.apache.commons.lang.text.StrMatcher getDelimiterMatcher()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        org.apache.commons.lang.text.StrMatcher $r1;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        $r1 = r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher delimMatcher>;
+
+        return $r1;
+    }
+
+    public org.apache.commons.lang.text.StrTokenizer setDelimiterMatcher(org.apache.commons.lang.text.StrMatcher)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        org.apache.commons.lang.text.StrMatcher r1, $r2;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: org.apache.commons.lang.text.StrMatcher;
+
+        if r1 != null goto label1;
+
+        $r2 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher noneMatcher()>();
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher delimMatcher> = $r2;
+
+        goto label2;
+
+     label1:
+        r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher delimMatcher> = r1;
+
+     label2:
+        return r0;
+    }
+
+    public org.apache.commons.lang.text.StrTokenizer setDelimiterChar(char)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0, $r2;
+        char c0;
+        org.apache.commons.lang.text.StrMatcher $r1;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        c0 := @parameter0: char;
+
+        $r1 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher charMatcher(char)>(c0);
+
+        $r2 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setDelimiterMatcher(org.apache.commons.lang.text.StrMatcher)>($r1);
+
+        return $r2;
+    }
+
+    public org.apache.commons.lang.text.StrTokenizer setDelimiterString(java.lang.String)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0, $r3;
+        java.lang.String r1;
+        org.apache.commons.lang.text.StrMatcher $r2;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: java.lang.String;
+
+        $r2 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher stringMatcher(java.lang.String)>(r1);
+
+        $r3 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setDelimiterMatcher(org.apache.commons.lang.text.StrMatcher)>($r2);
+
+        return $r3;
+    }
+
+    public org.apache.commons.lang.text.StrMatcher getQuoteMatcher()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        org.apache.commons.lang.text.StrMatcher $r1;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        $r1 = r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher quoteMatcher>;
+
+        return $r1;
+    }
+
+    public org.apache.commons.lang.text.StrTokenizer setQuoteMatcher(org.apache.commons.lang.text.StrMatcher)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        org.apache.commons.lang.text.StrMatcher r1;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: org.apache.commons.lang.text.StrMatcher;
+
+        if r1 == null goto label1;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher quoteMatcher> = r1;
+
+     label1:
+        return r0;
+    }
+
+    public org.apache.commons.lang.text.StrTokenizer setQuoteChar(char)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0, $r2;
+        char c0;
+        org.apache.commons.lang.text.StrMatcher $r1;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        c0 := @parameter0: char;
+
+        $r1 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher charMatcher(char)>(c0);
+
+        $r2 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setQuoteMatcher(org.apache.commons.lang.text.StrMatcher)>($r1);
+
+        return $r2;
+    }
+
+    public org.apache.commons.lang.text.StrMatcher getIgnoredMatcher()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        org.apache.commons.lang.text.StrMatcher $r1;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        $r1 = r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher ignoredMatcher>;
+
+        return $r1;
+    }
+
+    public org.apache.commons.lang.text.StrTokenizer setIgnoredMatcher(org.apache.commons.lang.text.StrMatcher)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        org.apache.commons.lang.text.StrMatcher r1;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: org.apache.commons.lang.text.StrMatcher;
+
+        if r1 == null goto label1;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher ignoredMatcher> = r1;
+
+     label1:
+        return r0;
+    }
+
+    public org.apache.commons.lang.text.StrTokenizer setIgnoredChar(char)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0, $r2;
+        char c0;
+        org.apache.commons.lang.text.StrMatcher $r1;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        c0 := @parameter0: char;
+
+        $r1 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher charMatcher(char)>(c0);
+
+        $r2 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setIgnoredMatcher(org.apache.commons.lang.text.StrMatcher)>($r1);
+
+        return $r2;
+    }
+
+    public org.apache.commons.lang.text.StrMatcher getTrimmerMatcher()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        org.apache.commons.lang.text.StrMatcher $r1;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        $r1 = r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher trimmerMatcher>;
+
+        return $r1;
+    }
+
+    public org.apache.commons.lang.text.StrTokenizer setTrimmerMatcher(org.apache.commons.lang.text.StrMatcher)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        org.apache.commons.lang.text.StrMatcher r1;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        r1 := @parameter0: org.apache.commons.lang.text.StrMatcher;
+
+        if r1 == null goto label1;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrMatcher trimmerMatcher> = r1;
+
+     label1:
+        return r0;
+    }
+
+    public boolean isEmptyTokenAsNull()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        $z0 = r0.<org.apache.commons.lang.text.StrTokenizer: boolean emptyAsNull>;
+
+        return $z0;
+    }
+
+    public org.apache.commons.lang.text.StrTokenizer setEmptyTokenAsNull(boolean)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        boolean z0;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        z0 := @parameter0: boolean;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: boolean emptyAsNull> = z0;
+
+        return r0;
+    }
+
+    public boolean isIgnoreEmptyTokens()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        $z0 = r0.<org.apache.commons.lang.text.StrTokenizer: boolean ignoreEmptyTokens>;
+
+        return $z0;
+    }
+
+    public org.apache.commons.lang.text.StrTokenizer setIgnoreEmptyTokens(boolean)
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        boolean z0;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        z0 := @parameter0: boolean;
+
+        r0.<org.apache.commons.lang.text.StrTokenizer: boolean ignoreEmptyTokens> = z0;
+
+        return r0;
+    }
+
+    public java.lang.String getContent()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        char[] $r1, $r3;
+        java.lang.String $r2;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        $r1 = r0.<org.apache.commons.lang.text.StrTokenizer: char[] chars>;
+
+        if $r1 != null goto label1;
+
+        return null;
+
+     label1:
+        $r2 = new java.lang.String;
+
+        $r3 = r0.<org.apache.commons.lang.text.StrTokenizer: char[] chars>;
+
+        specialinvoke $r2.<java.lang.String: void <init>(char[])>($r3);
+
+        return $r2;
+    }
+
+    public java.lang.Object clone()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.lang.Object $r2;
+        java.lang.CloneNotSupportedException $r3;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+     label1:
+        $r2 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.Object cloneReset()>();
+
+     label2:
+        return $r2;
+
+     label3:
+        $r3 := @caughtexception;
+
+        return null;
+
+        catch java.lang.CloneNotSupportedException from label1 to label2 with label3;
+    }
+
+    java.lang.Object cloneReset() throws java.lang.CloneNotSupportedException
+    {
+        org.apache.commons.lang.text.StrTokenizer r0, r1;
+        java.lang.Object $r2, $r6;
+        char[] $r3, $r5, $r7, $r8;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        $r2 = specialinvoke r0.<java.lang.Object: java.lang.Object clone()>();
+
+        r1 = (org.apache.commons.lang.text.StrTokenizer) $r2;
+
+        $r3 = r1.<org.apache.commons.lang.text.StrTokenizer: char[] chars>;
+
+        if $r3 == null goto label1;
+
+        $r5 = r1.<org.apache.commons.lang.text.StrTokenizer: char[] chars>;
+
+        $r6 = virtualinvoke $r5.<java.lang.Object: java.lang.Object clone()>();
+
+        $r7 = (char[]) $r6;
+
+        $r8 = (char[]) $r7;
+
+        r1.<org.apache.commons.lang.text.StrTokenizer: char[] chars> = $r8;
+
+     label1:
+        virtualinvoke r1.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer reset()>();
+
+        return r1;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.commons.lang.text.StrTokenizer r0;
+        java.lang.String[] $r1;
+        java.lang.StringBuffer $r2, $r3, $r5;
+        java.util.List $r4;
+        java.lang.String $r6;
+
+        r0 := @this: org.apache.commons.lang.text.StrTokenizer;
+
+        $r1 = r0.<org.apache.commons.lang.text.StrTokenizer: java.lang.String[] tokens>;
+
+        if $r1 != null goto label1;
+
+        return "StrTokenizer[not tokenized yet]";
+
+     label1:
+        $r2 = new java.lang.StringBuffer;
+
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("StrTokenizer");
+
+        $r4 = virtualinvoke r0.<org.apache.commons.lang.text.StrTokenizer: java.util.List getTokenList()>();
+
+        $r5 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r4);
+
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+
+        return $r6;
+    }
+
+    static void <clinit>()
+    {
+        org.apache.commons.lang.text.StrTokenizer $r0, $r1, $r4, $r7, $r10, $r13, $r15, $r17, $r18, $r21, $r24, $r27, $r30, $r32;
+        org.apache.commons.lang.text.StrMatcher $r2, $r5, $r8, $r11, $r19, $r22, $r25, $r28;
+
+        $r0 = new org.apache.commons.lang.text.StrTokenizer;
+
+        specialinvoke $r0.<org.apache.commons.lang.text.StrTokenizer: void <init>()>();
+
+        <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer CSV_TOKENIZER_PROTOTYPE> = $r0;
+
+        $r1 = <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer CSV_TOKENIZER_PROTOTYPE>;
+
+        $r2 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher commaMatcher()>();
+
+        virtualinvoke $r1.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setDelimiterMatcher(org.apache.commons.lang.text.StrMatcher)>($r2);
+
+        $r4 = <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer CSV_TOKENIZER_PROTOTYPE>;
+
+        $r5 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher doubleQuoteMatcher()>();
+
+        virtualinvoke $r4.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setQuoteMatcher(org.apache.commons.lang.text.StrMatcher)>($r5);
+
+        $r7 = <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer CSV_TOKENIZER_PROTOTYPE>;
+
+        $r8 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher noneMatcher()>();
+
+        virtualinvoke $r7.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setIgnoredMatcher(org.apache.commons.lang.text.StrMatcher)>($r8);
+
+        $r10 = <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer CSV_TOKENIZER_PROTOTYPE>;
+
+        $r11 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher trimMatcher()>();
+
+        virtualinvoke $r10.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setTrimmerMatcher(org.apache.commons.lang.text.StrMatcher)>($r11);
+
+        $r13 = <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer CSV_TOKENIZER_PROTOTYPE>;
+
+        virtualinvoke $r13.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setEmptyTokenAsNull(boolean)>(0);
+
+        $r15 = <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer CSV_TOKENIZER_PROTOTYPE>;
+
+        virtualinvoke $r15.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setIgnoreEmptyTokens(boolean)>(0);
+
+        $r17 = new org.apache.commons.lang.text.StrTokenizer;
+
+        specialinvoke $r17.<org.apache.commons.lang.text.StrTokenizer: void <init>()>();
+
+        <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer TSV_TOKENIZER_PROTOTYPE> = $r17;
+
+        $r18 = <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer TSV_TOKENIZER_PROTOTYPE>;
+
+        $r19 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher tabMatcher()>();
+
+        virtualinvoke $r18.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setDelimiterMatcher(org.apache.commons.lang.text.StrMatcher)>($r19);
+
+        $r21 = <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer TSV_TOKENIZER_PROTOTYPE>;
+
+        $r22 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher doubleQuoteMatcher()>();
+
+        virtualinvoke $r21.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setQuoteMatcher(org.apache.commons.lang.text.StrMatcher)>($r22);
+
+        $r24 = <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer TSV_TOKENIZER_PROTOTYPE>;
+
+        $r25 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher noneMatcher()>();
+
+        virtualinvoke $r24.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setIgnoredMatcher(org.apache.commons.lang.text.StrMatcher)>($r25);
+
+        $r27 = <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer TSV_TOKENIZER_PROTOTYPE>;
+
+        $r28 = staticinvoke <org.apache.commons.lang.text.StrMatcher: org.apache.commons.lang.text.StrMatcher trimMatcher()>();
+
+        virtualinvoke $r27.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setTrimmerMatcher(org.apache.commons.lang.text.StrMatcher)>($r28);
+
+        $r30 = <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer TSV_TOKENIZER_PROTOTYPE>;
+
+        virtualinvoke $r30.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setEmptyTokenAsNull(boolean)>(0);
+
+        $r32 = <org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer TSV_TOKENIZER_PROTOTYPE>;
+
+        virtualinvoke $r32.<org.apache.commons.lang.text.StrTokenizer: org.apache.commons.lang.text.StrTokenizer setIgnoreEmptyTokens(boolean)>(0);
+
+        return;
+    }
+}

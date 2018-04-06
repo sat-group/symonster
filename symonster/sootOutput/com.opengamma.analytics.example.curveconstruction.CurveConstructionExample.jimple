@@ -1,0 +1,794 @@
+public class com.opengamma.analytics.example.curveconstruction.CurveConstructionExample extends java.lang.Object
+{
+    static com.opengamma.util.money.Currency ccy;
+    static double t;
+    static double r;
+    static double notional;
+    static double y;
+    static int maturity;
+    static java.lang.String yieldCurveName;
+    static com.opengamma.analytics.financial.interestrate.PresentValueCalculator presentValueCalculator;
+    static com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve yieldCurve;
+    static com.opengamma.analytics.financial.interestrate.ParRateCalculator parRateCalculator;
+    static com.opengamma.analytics.financial.interestrate.YieldCurveBundle bundle;
+    static com.opengamma.analytics.math.interpolation.CombinedInterpolatorExtrapolator interpolator;
+    static final boolean $assertionsDisabled;
+
+    public void <init>()
+    {
+        com.opengamma.analytics.example.curveconstruction.CurveConstructionExample r0;
+
+        r0 := @this: com.opengamma.analytics.example.curveconstruction.CurveConstructionExample;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public static void matrixDemo(java.io.PrintStream)
+    {
+        java.io.PrintStream r0;
+        double[][] r1, r2;
+        java.lang.Object[] $r4, $r7, $r11;
+        java.lang.String $r5, $r8, $r12;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D $r10;
+
+        r0 := @parameter0: java.io.PrintStream;
+
+        r1 = staticinvoke <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double[][] identityMatrix(int)>(2);
+
+        $r4 = newarray (java.lang.Object)[1];
+
+        $r5 = staticinvoke <java.util.Arrays: java.lang.String deepToString(java.lang.Object[])>(r1);
+
+        $r4[0] = $r5;
+
+        virtualinvoke r0.<java.io.PrintStream: java.io.PrintStream format(java.lang.String,java.lang.Object[])>("2x2 identity matrix:%n%s%n%n", $r4);
+
+        r2 = staticinvoke <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double[][] identityMatrix(int)>(4);
+
+        $r7 = newarray (java.lang.Object)[1];
+
+        $r8 = staticinvoke <java.util.Arrays: java.lang.String deepToString(java.lang.Object[])>(r2);
+
+        $r7[0] = $r8;
+
+        virtualinvoke r0.<java.io.PrintStream: java.io.PrintStream format(java.lang.String,java.lang.Object[])>("4x4 identity matrix:%n%s%n%n", $r7);
+
+        $r10 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r10.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r2);
+
+        $r11 = newarray (java.lang.Object)[1];
+
+        $r12 = virtualinvoke $r10.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: java.lang.String toString()>();
+
+        $r11[0] = $r12;
+
+        virtualinvoke r0.<java.io.PrintStream: java.io.PrintStream format(java.lang.String,java.lang.Object[])>("DoubleMatrix2D:%n%s%n%n", $r11);
+
+        return;
+    }
+
+    public static void matrixMultiplyDemo(java.io.PrintStream)
+    {
+        java.io.PrintStream r0;
+        double[][] r1;
+        com.opengamma.analytics.math.matrix.DoubleMatrix2D $r6;
+        double[] $r7;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r8;
+        com.opengamma.analytics.math.matrix.ColtMatrixAlgebra $r9;
+        com.opengamma.analytics.math.matrix.Matrix $r10;
+
+        r0 := @parameter0: java.io.PrintStream;
+
+        r1 = staticinvoke <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double[][] identityMatrix(int)>(4);
+
+        $r6 = new com.opengamma.analytics.math.matrix.DoubleMatrix2D;
+
+        specialinvoke $r6.<com.opengamma.analytics.math.matrix.DoubleMatrix2D: void <init>(double[][])>(r1);
+
+        $r7 = newarray (double)[4];
+
+        $r7[0] = 1.0;
+
+        $r7[1] = 2.0;
+
+        $r7[2] = 3.0;
+
+        $r7[3] = 4.0;
+
+        $r8 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r8.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>($r7);
+
+        $r9 = new com.opengamma.analytics.math.matrix.ColtMatrixAlgebra;
+
+        specialinvoke $r9.<com.opengamma.analytics.math.matrix.ColtMatrixAlgebra: void <init>()>();
+
+        $r10 = virtualinvoke $r9.<com.opengamma.analytics.math.matrix.ColtMatrixAlgebra: com.opengamma.analytics.math.matrix.Matrix multiply(com.opengamma.analytics.math.matrix.Matrix,com.opengamma.analytics.math.matrix.Matrix)>($r6, $r8);
+
+        virtualinvoke r0.<java.io.PrintStream: void println(java.lang.Object)>($r10);
+
+        return;
+    }
+
+    public static com.opengamma.analytics.math.function.RealPolynomialFunction1D getFunction()
+    {
+        double[] $r1;
+        com.opengamma.analytics.math.function.RealPolynomialFunction1D $r2;
+
+        $r1 = newarray (double)[4];
+
+        $r1[0] = -125.0;
+
+        $r1[1] = 75.0;
+
+        $r1[2] = -15.0;
+
+        $r1[3] = 1.0;
+
+        $r2 = new com.opengamma.analytics.math.function.RealPolynomialFunction1D;
+
+        specialinvoke $r2.<com.opengamma.analytics.math.function.RealPolynomialFunction1D: void <init>(double[])>($r1);
+
+        return $r2;
+    }
+
+    public static void polyDerivativeDemo(java.io.PrintStream)
+    {
+        java.io.PrintStream r0;
+        com.opengamma.analytics.math.function.RealPolynomialFunction1D r1, r2;
+        double[] r3;
+        boolean $z0;
+        java.lang.String $r4;
+        java.lang.Double $r5, $r6;
+        double $d0;
+        byte $b0;
+        java.lang.AssertionError $r7;
+
+        r0 := @parameter0: java.io.PrintStream;
+
+        r1 = staticinvoke <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.analytics.math.function.RealPolynomialFunction1D getFunction()>();
+
+        $z0 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: boolean $assertionsDisabled>;
+
+        if $z0 != 0 goto label1;
+
+        $r5 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(5.0);
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.math.function.RealPolynomialFunction1D: java.lang.Double evaluate(java.lang.Double)>($r5);
+
+        $d0 = virtualinvoke $r6.<java.lang.Double: double doubleValue()>();
+
+        $b0 = $d0 cmpl 0.0;
+
+        if $b0 == 0 goto label1;
+
+        $r7 = new java.lang.AssertionError;
+
+        specialinvoke $r7.<java.lang.AssertionError: void <init>()>();
+
+        throw $r7;
+
+     label1:
+        r2 = virtualinvoke r1.<com.opengamma.analytics.math.function.RealPolynomialFunction1D: com.opengamma.analytics.math.function.RealPolynomialFunction1D derivative()>();
+
+        r3 = virtualinvoke r2.<com.opengamma.analytics.math.function.RealPolynomialFunction1D: double[] getCoefficients()>();
+
+        $r4 = staticinvoke <java.util.Arrays: java.lang.String toString(double[])>(r3);
+
+        virtualinvoke r0.<java.io.PrintStream: void println(java.lang.String)>($r4);
+
+        return;
+    }
+
+    public static void rootFindingDemo(java.io.PrintStream)
+    {
+        java.io.PrintStream r0;
+        com.opengamma.analytics.math.function.RealPolynomialFunction1D r1;
+        java.lang.Double[] r3;
+        java.lang.Double r5, $r10, $r11, $r12, $r13;
+        com.opengamma.analytics.math.rootfinding.CubicRealRootFinder $r7;
+        java.lang.String $r8;
+        com.opengamma.analytics.math.rootfinding.BrentSingleRootFinder $r9;
+        java.lang.IllegalArgumentException $r15;
+
+        r0 := @parameter0: java.io.PrintStream;
+
+        r1 = staticinvoke <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.analytics.math.function.RealPolynomialFunction1D getFunction()>();
+
+        $r7 = new com.opengamma.analytics.math.rootfinding.CubicRealRootFinder;
+
+        specialinvoke $r7.<com.opengamma.analytics.math.rootfinding.CubicRealRootFinder: void <init>()>();
+
+        r3 = virtualinvoke $r7.<com.opengamma.analytics.math.rootfinding.CubicRealRootFinder: java.lang.Double[] getRoots(com.opengamma.analytics.math.function.RealPolynomialFunction1D)>(r1);
+
+        $r8 = staticinvoke <java.util.Arrays: java.lang.String toString(java.lang.Object[])>(r3);
+
+        virtualinvoke r0.<java.io.PrintStream: void println(java.lang.String)>($r8);
+
+        $r9 = new com.opengamma.analytics.math.rootfinding.BrentSingleRootFinder;
+
+        specialinvoke $r9.<com.opengamma.analytics.math.rootfinding.BrentSingleRootFinder: void <init>()>();
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(-10.0);
+
+        $r11 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(10.0);
+
+        r5 = virtualinvoke $r9.<com.opengamma.analytics.math.rootfinding.BrentSingleRootFinder: java.lang.Double getRoot(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>(r1, $r10, $r11);
+
+        virtualinvoke r0.<java.io.PrintStream: void println(java.lang.Object)>(r5);
+
+     label1:
+        virtualinvoke r0.<java.io.PrintStream: void println(java.lang.String)>("Trying to call getRoot with arguments that don\'t bracket the root...");
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(-1.0);
+
+        $r13 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(1.0);
+
+        virtualinvoke $r9.<com.opengamma.analytics.math.rootfinding.BrentSingleRootFinder: java.lang.Double getRoot(com.opengamma.analytics.math.function.Function1D,java.lang.Double,java.lang.Double)>(r1, $r12, $r13);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r15 := @caughtexception;
+
+        virtualinvoke r0.<java.io.PrintStream: void println(java.lang.String)>("IllegalArgumentException called");
+
+     label4:
+        return;
+
+        catch java.lang.IllegalArgumentException from label1 to label2 with label3;
+    }
+
+    public static void annuityDerivativeDemo(java.io.PrintStream)
+    {
+        java.io.PrintStream r0;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        double d0, $d1, $d2, $d3;
+        double[] $r4;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed $r5;
+        java.lang.String $r6;
+        com.opengamma.util.money.Currency $r7;
+        com.opengamma.analytics.financial.interestrate.PresentValueCalculator $r8;
+        java.lang.Object $r9;
+        java.lang.Double $r10, $r12;
+        java.lang.Object[] $r11;
+
+        r0 := @parameter0: java.io.PrintStream;
+
+        $r4 = newarray (double)[1];
+
+        $d1 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double t>;
+
+        $r4[0] = $d1;
+
+        $d2 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double y>;
+
+        r2 = staticinvoke <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.analytics.financial.interestrate.YieldCurveBundle getBundle(double)>($d2);
+
+        $r5 = new com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed;
+
+        $r7 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.util.money.Currency ccy>;
+
+        $d3 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double r>;
+
+        $r6 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: java.lang.String yieldCurveName>;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: void <init>(com.opengamma.util.money.Currency,double[],double,java.lang.String,boolean)>($r7, $r4, $d3, $r6, 0);
+
+        $r8 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.analytics.financial.interestrate.PresentValueCalculator presentValueCalculator>;
+
+        $r9 = virtualinvoke $r5.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r8, r2);
+
+        $r10 = (java.lang.Double) $r9;
+
+        d0 = virtualinvoke $r10.<java.lang.Double: double doubleValue()>();
+
+        $r11 = newarray (java.lang.Object)[1];
+
+        $r12 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        $r11[0] = $r12;
+
+        virtualinvoke r0.<java.io.PrintStream: java.io.PrintStream format(java.lang.String,java.lang.Object[])>("Present value of 1-period annuity: %f%n", $r11);
+
+        return;
+    }
+
+    public static com.opengamma.analytics.financial.interestrate.YieldCurveBundle getBundle(double)
+    {
+        double d0;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle $r1;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve $r2;
+        java.lang.String $r3;
+
+        d0 := @parameter0: double;
+
+        $r1 = new com.opengamma.analytics.financial.interestrate.YieldCurveBundle;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.interestrate.YieldCurveBundle: void <init>()>();
+
+        $r3 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: java.lang.String yieldCurveName>;
+
+        $r2 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve yieldCurve>;
+
+        virtualinvoke $r1.<com.opengamma.analytics.financial.interestrate.YieldCurveBundle: void setCurve(java.lang.String,com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve)>($r3, $r2);
+
+        return $r1;
+    }
+
+    public static void interestRateDerivativeDemo(java.io.PrintStream)
+    {
+        java.io.PrintStream r0;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle r2;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, d27, d28;
+        com.opengamma.analytics.financial.interestrate.cash.derivative.Cash $r3;
+        java.lang.String $r4;
+        com.opengamma.util.money.Currency $r5;
+        byte $b0, $b1, $b2;
+        com.opengamma.analytics.financial.interestrate.PresentValueCalculator $r6;
+        java.lang.Object $r7;
+        java.lang.Double $r8, $r10, $r14, $r17, $r20, $r22, $r27, $r29, $r30, $r33, $r35;
+        java.lang.Object[] $r9, $r13, $r16, $r21, $r26, $r32;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve $r12, $r28, $r34;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator $r19;
+        java.lang.AssertionError $r24, $r25;
+
+        r0 := @parameter0: java.io.PrintStream;
+
+        $r3 = new com.opengamma.analytics.financial.interestrate.cash.derivative.Cash;
+
+        $r5 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.util.money.Currency ccy>;
+
+        $d7 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double t>;
+
+        $d6 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double notional>;
+
+        $d5 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double r>;
+
+        $d4 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double t>;
+
+        $r4 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: java.lang.String yieldCurveName>;
+
+        specialinvoke $r3.<com.opengamma.analytics.financial.interestrate.cash.derivative.Cash: void <init>(com.opengamma.util.money.Currency,double,double,double,double,double,java.lang.String)>($r5, 0.0, $d7, $d6, $d5, $d4, $r4);
+
+        $d8 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double y>;
+
+        r2 = staticinvoke <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.analytics.financial.interestrate.YieldCurveBundle getBundle(double)>($d8);
+
+        d27 = 1.0;
+
+     label1:
+        $b0 = d27 cmpg 3.0;
+
+        if $b0 >= 0 goto label2;
+
+        $r26 = newarray (java.lang.Object)[2];
+
+        $r27 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d27);
+
+        $r26[0] = $r27;
+
+        $r28 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve yieldCurve>;
+
+        $r29 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d27);
+
+        $d25 = virtualinvoke $r28.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: double getInterestRate(java.lang.Double)>($r29);
+
+        $r30 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d25);
+
+        $r26[1] = $r30;
+
+        virtualinvoke r0.<java.io.PrintStream: java.io.PrintStream format(java.lang.String,java.lang.Object[])>("Yield curve interest rate at %f: %f%n", $r26);
+
+        $r32 = newarray (java.lang.Object)[2];
+
+        $r33 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d27);
+
+        $r32[0] = $r33;
+
+        $r34 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve yieldCurve>;
+
+        $d26 = virtualinvoke $r34.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: double getDiscountFactor(double)>(d27);
+
+        $r35 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d26);
+
+        $r32[1] = $r35;
+
+        virtualinvoke r0.<java.io.PrintStream: java.io.PrintStream format(java.lang.String,java.lang.Object[])>("Yield curve discount factor at %f: %f%n", $r32);
+
+        d27 = d27 + 1.0;
+
+        goto label1;
+
+     label2:
+        $r6 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.analytics.financial.interestrate.PresentValueCalculator presentValueCalculator>;
+
+        $r7 = virtualinvoke $r3.<com.opengamma.analytics.financial.interestrate.cash.derivative.Cash: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor,java.lang.Object)>($r6, r2);
+
+        $r8 = (java.lang.Double) $r7;
+
+        d28 = virtualinvoke $r8.<java.lang.Double: double doubleValue()>();
+
+        $r9 = newarray (java.lang.Object)[1];
+
+        $r10 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d28);
+
+        $r9[0] = $r10;
+
+        virtualinvoke r0.<java.io.PrintStream: java.io.PrintStream format(java.lang.String,java.lang.Object[])>("Present value of loan using this yield curve bundle %f%n", $r9);
+
+        $r12 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve yieldCurve>;
+
+        $d9 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double t>;
+
+        d0 = virtualinvoke $r12.<com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: double getDiscountFactor(double)>($d9);
+
+        $d16 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double notional>;
+
+        $d11 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double r>;
+
+        $d10 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double t>;
+
+        $d12 = $d11 * $d10;
+
+        $d13 = 1.0 + $d12;
+
+        $d14 = d0 * $d13;
+
+        $d15 = $d14 - 1.0;
+
+        d1 = $d16 * $d15;
+
+        $r13 = newarray (java.lang.Object)[1];
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d1);
+
+        $r13[0] = $r14;
+
+        virtualinvoke r0.<java.io.PrintStream: java.io.PrintStream format(java.lang.String,java.lang.Object[])>("Manually calculating value of loan gives %f%n", $r13);
+
+        $z0 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: boolean $assertionsDisabled>;
+
+        if $z0 != 0 goto label3;
+
+        $d24 = d28 - d1;
+
+        $b2 = $d24 cmpg 1.0E-4;
+
+        if $b2 < 0 goto label3;
+
+        $r25 = new java.lang.AssertionError;
+
+        specialinvoke $r25.<java.lang.AssertionError: void <init>()>();
+
+        throw $r25;
+
+     label3:
+        $d18 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double y>;
+
+        $d17 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double t>;
+
+        $d19 = $d18 * $d17;
+
+        $d20 = staticinvoke <java.lang.Math: double exp(double)>($d19);
+
+        $d22 = $d20 - 1.0;
+
+        $d21 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double t>;
+
+        d2 = $d22 / $d21;
+
+        $r16 = newarray (java.lang.Object)[1];
+
+        $r17 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        $r16[0] = $r17;
+
+        virtualinvoke r0.<java.io.PrintStream: java.io.PrintStream format(java.lang.String,java.lang.Object[])>("Calculate par rate manually: %f%n", $r16);
+
+        $r19 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.analytics.financial.interestrate.ParRateCalculator parRateCalculator>;
+
+        $r20 = virtualinvoke $r19.<com.opengamma.analytics.financial.interestrate.ParRateCalculator: java.lang.Double visitCash(com.opengamma.analytics.financial.interestrate.cash.derivative.Cash,com.opengamma.analytics.financial.interestrate.YieldCurveBundle)>($r3, r2);
+
+        d3 = virtualinvoke $r20.<java.lang.Double: double doubleValue()>();
+
+        $r21 = newarray (java.lang.Object)[1];
+
+        $r22 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        $r21[0] = $r22;
+
+        virtualinvoke r0.<java.io.PrintStream: java.io.PrintStream format(java.lang.String,java.lang.Object[])>("Calculate par rate using ParRateCalculator: %f%n", $r21);
+
+        $z1 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: boolean $assertionsDisabled>;
+
+        if $z1 != 0 goto label4;
+
+        $d23 = d3 - d2;
+
+        $b1 = $d23 cmpg 1.0E-4;
+
+        if $b1 < 0 goto label4;
+
+        $r24 = new java.lang.AssertionError;
+
+        specialinvoke $r24.<java.lang.AssertionError: void <init>()>();
+
+        throw $r24;
+
+     label4:
+        return;
+    }
+
+    public static void yieldPoints(java.io.PrintStream)
+    {
+        java.io.PrintStream r0;
+        com.opengamma.util.money.Currency r1;
+        double[] r4, r8, $r9;
+        java.util.LinkedHashMap $r10, $r11, $r12;
+        com.opengamma.analytics.math.rootfinding.newton.BroydenVectorRootFinder $r13;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D $r14;
+        int i1, i2;
+
+        r0 := @parameter0: java.io.PrintStream;
+
+        r1 = <com.opengamma.util.money.Currency: com.opengamma.util.money.Currency EUR>;
+
+        $r9 = newarray (double)[10];
+
+        $r9[0] = 0.025;
+
+        $r9[1] = 0.02;
+
+        $r9[2] = 0.0225;
+
+        $r9[3] = 0.025;
+
+        $r9[4] = 0.03;
+
+        $r9[5] = 0.035;
+
+        $r9[6] = 0.04;
+
+        $r9[7] = 0.045;
+
+        $r9[8] = 0.04;
+
+        $r9[9] = 0.045;
+
+        r4 = newarray (double)[10];
+
+        i1 = 0;
+
+     label1:
+        if i1 >= 10 goto label2;
+
+        r4[i1] = 0.0;
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        $r10 = new java.util.LinkedHashMap;
+
+        specialinvoke $r10.<java.util.LinkedHashMap: void <init>()>();
+
+        $r11 = new java.util.LinkedHashMap;
+
+        specialinvoke $r11.<java.util.LinkedHashMap: void <init>()>();
+
+        $r12 = new java.util.LinkedHashMap;
+
+        specialinvoke $r12.<java.util.LinkedHashMap: void <init>()>();
+
+        $r13 = new com.opengamma.analytics.math.rootfinding.newton.BroydenVectorRootFinder;
+
+        specialinvoke $r13.<com.opengamma.analytics.math.rootfinding.newton.BroydenVectorRootFinder: void <init>()>();
+
+        r8 = newarray (double)[10];
+
+        i2 = 0;
+
+     label3:
+        if i2 >= 10 goto label4;
+
+        r8[i2] = 0.01;
+
+        i2 = i2 + 1;
+
+        goto label3;
+
+     label4:
+        $r14 = new com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        specialinvoke $r14.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: void <init>(double[])>(r8);
+
+        return;
+    }
+
+    public static void makeSwap(com.opengamma.util.money.Currency, int, double, java.lang.String)
+    {
+        com.opengamma.util.money.Currency r0;
+        int i0, $i1, $i2, i3, i4;
+        double d0, $d1, $d2, $d3;
+        java.lang.String r1;
+        double[] r2, r3;
+
+        r0 := @parameter0: com.opengamma.util.money.Currency;
+
+        i0 := @parameter1: int;
+
+        d0 := @parameter2: double;
+
+        r1 := @parameter3: java.lang.String;
+
+        $i1 = 2 * i0;
+
+        r2 = newarray (double)[$i1];
+
+        i3 = 0;
+
+     label1:
+        $i2 = 2 * i0;
+
+        if i3 > $i2 goto label2;
+
+        $d2 = (double) i3;
+
+        $d3 = 0.5 * $d2;
+
+        r2[i3] = $d3;
+
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label2:
+        r3 = newarray (double)[i0];
+
+        i4 = 0;
+
+     label3:
+        if i4 > i0 goto label4;
+
+        $d1 = (double) i4;
+
+        r3[i4] = $d1;
+
+        i4 = i4 + 1;
+
+        goto label3;
+
+     label4:
+        return;
+    }
+
+    public static double[][] identityMatrix(int)
+    {
+        int i0, i1, i2;
+        double[][] r0;
+        double[] $r1, $r2;
+
+        i0 := @parameter0: int;
+
+        r0 = newmultiarray (double)[i0][i0];
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label6;
+
+        i2 = 0;
+
+     label2:
+        if i2 >= i0 goto label5;
+
+        if i1 != i2 goto label3;
+
+        $r2 = r0[i1];
+
+        $r2[i2] = 1.0;
+
+        goto label4;
+
+     label3:
+        $r1 = r0[i1];
+
+        $r1[i2] = 0.0;
+
+     label4:
+        i2 = i2 + 1;
+
+        goto label2;
+
+     label5:
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label6:
+        return r0;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0, $z1;
+        com.opengamma.util.money.Currency $r1;
+        com.opengamma.analytics.financial.interestrate.PresentValueCalculator $r2;
+        com.opengamma.analytics.math.curve.ConstantDoublesCurve $r3;
+        double $d0, $d1;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve $r4;
+        com.opengamma.analytics.financial.interestrate.ParRateCalculator $r5;
+        com.opengamma.analytics.financial.interestrate.YieldCurveBundle $r6;
+        com.opengamma.analytics.math.interpolation.CombinedInterpolatorExtrapolator $r7;
+
+        $r0 = class "com/opengamma/analytics/example/curveconstruction/CurveConstructionExample";
+
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+
+        if $z0 != 0 goto label1;
+
+        $z1 = 1;
+
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: boolean $assertionsDisabled> = $z1;
+
+        $r1 = <com.opengamma.util.money.Currency: com.opengamma.util.money.Currency EUR>;
+
+        <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.util.money.Currency ccy> = $r1;
+
+        <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double t> = 1.0;
+
+        <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double r> = 0.03;
+
+        <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double notional> = 10000.0;
+
+        <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double y> = 0.02;
+
+        <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: int maturity> = 5;
+
+        <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: java.lang.String yieldCurveName> = "Euro Yield Curve Fixed 2%";
+
+        $r2 = staticinvoke <com.opengamma.analytics.financial.interestrate.PresentValueCalculator: com.opengamma.analytics.financial.interestrate.PresentValueCalculator getInstance()>();
+
+        <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.analytics.financial.interestrate.PresentValueCalculator presentValueCalculator> = $r2;
+
+        $r3 = new com.opengamma.analytics.math.curve.ConstantDoublesCurve;
+
+        $d0 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double y>;
+
+        specialinvoke $r3.<com.opengamma.analytics.math.curve.ConstantDoublesCurve: void <init>(double)>($d0);
+
+        $r4 = staticinvoke <com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve 'from'(com.opengamma.analytics.math.curve.DoublesCurve)>($r3);
+
+        <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.analytics.financial.model.interestrate.curve.YieldCurve yieldCurve> = $r4;
+
+        $r5 = staticinvoke <com.opengamma.analytics.financial.interestrate.ParRateCalculator: com.opengamma.analytics.financial.interestrate.ParRateCalculator getInstance()>();
+
+        <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.analytics.financial.interestrate.ParRateCalculator parRateCalculator> = $r5;
+
+        $d1 = <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: double y>;
+
+        $r6 = staticinvoke <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.analytics.financial.interestrate.YieldCurveBundle getBundle(double)>($d1);
+
+        <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.analytics.financial.interestrate.YieldCurveBundle bundle> = $r6;
+
+        $r7 = staticinvoke <com.opengamma.analytics.math.interpolation.CombinedInterpolatorExtrapolatorFactory: com.opengamma.analytics.math.interpolation.CombinedInterpolatorExtrapolator getInterpolator(java.lang.String,java.lang.String,java.lang.String)>("NaturalCubicSpline", "LinearExtrapolator", "FlatExtrapolator");
+
+        <com.opengamma.analytics.example.curveconstruction.CurveConstructionExample: com.opengamma.analytics.math.interpolation.CombinedInterpolatorExtrapolator interpolator> = $r7;
+
+        return;
+    }
+}

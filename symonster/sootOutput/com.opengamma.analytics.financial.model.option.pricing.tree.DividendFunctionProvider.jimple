@@ -1,0 +1,388 @@
+public abstract class com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider extends java.lang.Object
+{
+    private double[] _dividendTimes;
+    private double[] _dividends;
+    private int _nDividends;
+
+    public void <init>(double[], double[])
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider r0;
+        double[] r1, r2, $r5, $r6;
+        int i0, $i1, $i2, i6, i7;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6;
+        byte $b3, $b4, $b5;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider;
+
+        r1 := @parameter0: double[];
+
+        r2 := @parameter1: double[];
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "dividendTimes");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "dividends");
+
+        i0 = lengthof r1;
+
+        $i1 = lengthof r2;
+
+        if i0 != $i1 goto label01;
+
+        $z2 = 1;
+
+        goto label02;
+
+     label01:
+        $z2 = 0;
+
+     label02:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z2, "Wrong data length");
+
+        i6 = 0;
+
+     label03:
+        if i6 >= i0 goto label08;
+
+        $d3 = r1[i6];
+
+        $b4 = $d3 cmpl 0.0;
+
+        if $b4 <= 0 goto label04;
+
+        $z3 = 1;
+
+        goto label05;
+
+     label04:
+        $z3 = 0;
+
+     label05:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "dividendTimes should be positive");
+
+        $d4 = r1[i6];
+
+        $z0 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d4);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z0, "dividendTimes should be finite");
+
+        $d5 = r2[i6];
+
+        $b5 = $d5 cmpl 0.0;
+
+        if $b5 <= 0 goto label06;
+
+        $z4 = 1;
+
+        goto label07;
+
+     label06:
+        $z4 = 0;
+
+     label07:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z4, "dividends should be positive");
+
+        $d6 = r2[i6];
+
+        $z1 = staticinvoke <com.google.common.primitives.Doubles: boolean isFinite(double)>($d6);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "dividends should be finite");
+
+        i6 = i6 + 1;
+
+        goto label03;
+
+     label08:
+        i7 = 1;
+
+     label09:
+        if i7 >= i0 goto label12;
+
+        $d1 = r1[i7];
+
+        $i2 = i7 - 1;
+
+        $d0 = r1[$i2];
+
+        $d2 = $d1 - $d0;
+
+        $b3 = $d2 cmpl 0.0;
+
+        if $b3 <= 0 goto label10;
+
+        $z5 = 1;
+
+        goto label11;
+
+     label10:
+        $z5 = 0;
+
+     label11:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z5, "dividendTimes should be in ascending order");
+
+        i7 = i7 + 1;
+
+        goto label09;
+
+     label12:
+        $r5 = staticinvoke <java.util.Arrays: double[] copyOf(double[],int)>(r1, i0);
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] _dividendTimes> = $r5;
+
+        $r6 = staticinvoke <java.util.Arrays: double[] copyOf(double[],int)>(r2, i0);
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] _dividends> = $r6;
+
+        r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: int _nDividends> = i0;
+
+        return;
+    }
+
+    public abstract double spotModifier(double, double);
+
+    public abstract double dividendCorrections(double, double, double, int);
+
+    public abstract double[] getAssetPricesForDelta(double, double, int[], double, double, double);
+
+    public abstract double[] getAssetPricesForGamma(double, double, int[], double, double, double);
+
+    public abstract double[] getAssetPricesForDelta(double, double, int[], double, double, double, double);
+
+    public abstract double[] getAssetPricesForGamma(double, double, int[], double, double, double, double);
+
+    public int[] getDividendSteps(double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider r0;
+        double d0, $d1, $d2;
+        int i0, $i1, i2;
+        int[] r1;
+        double[] $r2, $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider;
+
+        d0 := @parameter0: double;
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] _dividendTimes>;
+
+        i0 = lengthof $r2;
+
+        r1 = newarray (int)[i0];
+
+        i2 = 0;
+
+     label1:
+        if i2 >= i0 goto label2;
+
+        $r3 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] _dividendTimes>;
+
+        $d1 = $r3[i2];
+
+        $d2 = $d1 / d0;
+
+        $i1 = (int) $d2;
+
+        r1[i2] = $i1;
+
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label2:
+        return r1;
+    }
+
+    public boolean checkTimeSteps(double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider r0;
+        double d0, $d1, $d2, $d3;
+        int i0, $i1, $i2, i4;
+        double[] $r1, $r2;
+        byte $b3;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider;
+
+        d0 := @parameter0: double;
+
+        $i1 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: int _nDividends>;
+
+        i0 = $i1 - 1;
+
+        i4 = 0;
+
+     label1:
+        if i4 >= i0 goto label3;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] _dividendTimes>;
+
+        $i2 = i4 + 1;
+
+        $d2 = $r1[$i2];
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] _dividendTimes>;
+
+        $d1 = $r2[i4];
+
+        $d3 = $d2 - $d1;
+
+        $b3 = $d3 cmpg d0;
+
+        if $b3 >= 0 goto label2;
+
+        return 0;
+
+     label2:
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label3:
+        return 1;
+    }
+
+    public boolean checkDividendBeforeExpiry(double)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider r0;
+        double d0, $d1;
+        int i0, i2;
+        double[] $r1;
+        byte $b1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider;
+
+        d0 := @parameter0: double;
+
+        i0 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: int _nDividends>;
+
+        i2 = 0;
+
+     label1:
+        if i2 >= i0 goto label3;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] _dividendTimes>;
+
+        $d1 = $r1[i2];
+
+        $b1 = $d1 cmpl d0;
+
+        if $b1 <= 0 goto label2;
+
+        return 0;
+
+     label2:
+        i2 = i2 + 1;
+
+        goto label1;
+
+     label3:
+        return 1;
+    }
+
+    public double[] getDividendTimes()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider r0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] _dividendTimes>;
+
+        return $r1;
+    }
+
+    public double[] getDividends()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider r0;
+        double[] $r1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] _dividends>;
+
+        return $r1;
+    }
+
+    public int getNumberOfDividends()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider r0;
+        int $i0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider;
+
+        $i0 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: int _nDividends>;
+
+        return $i0;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider r0;
+        double[] $r1, $r2;
+        int $i1, $i2, $i3, $i4, $i5, $i6, i8, i9, i10;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider;
+
+        $i1 = 31 * 1;
+
+        $r1 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] _dividendTimes>;
+
+        $i2 = staticinvoke <java.util.Arrays: int hashCode(double[])>($r1);
+
+        i8 = $i1 + $i2;
+
+        $i3 = 31 * i8;
+
+        $r2 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] _dividends>;
+
+        $i4 = staticinvoke <java.util.Arrays: int hashCode(double[])>($r2);
+
+        i9 = $i3 + $i4;
+
+        $i6 = 31 * i9;
+
+        $i5 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: int _nDividends>;
+
+        i10 = $i6 + $i5;
+
+        return i10;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider r0, r2;
+        java.lang.Object r1;
+        double[] $r3, $r4, $r5, $r6;
+        boolean $z0, $z1;
+
+        r0 := @this: com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider;
+
+        r1 := @parameter0: java.lang.Object;
+
+        r2 = (com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider) r1;
+
+        $r4 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] _dividendTimes>;
+
+        $r3 = r2.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] _dividendTimes>;
+
+        $z0 = staticinvoke <java.util.Arrays: boolean equals(double[],double[])>($r4, $r3);
+
+        if $z0 != 0 goto label1;
+
+        return 0;
+
+     label1:
+        $r6 = r0.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] _dividends>;
+
+        $r5 = r2.<com.opengamma.analytics.financial.model.option.pricing.tree.DividendFunctionProvider: double[] _dividends>;
+
+        $z1 = staticinvoke <java.util.Arrays: boolean equals(double[],double[])>($r6, $r5);
+
+        if $z1 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        return 1;
+    }
+}

@@ -1,0 +1,303 @@
+public class com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator extends com.opengamma.analytics.financial.schedule.Schedule
+{
+    private final org.threeten.bp.DayOfWeek _dayOfWeek;
+
+    public void <init>(org.threeten.bp.DayOfWeek)
+    {
+        com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator r0;
+        org.threeten.bp.DayOfWeek r1;
+
+        r0 := @this: com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator;
+
+        r1 := @parameter0: org.threeten.bp.DayOfWeek;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.schedule.Schedule: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator: org.threeten.bp.DayOfWeek _dayOfWeek> = r1;
+
+        return;
+    }
+
+    public org.threeten.bp.LocalDate[] getSchedule(org.threeten.bp.LocalDate, org.threeten.bp.LocalDate, boolean, boolean)
+    {
+        com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator r0;
+        org.threeten.bp.LocalDate r1, r2;
+        boolean z0, z1;
+        org.threeten.bp.LocalDate[] $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator;
+
+        r1 := @parameter0: org.threeten.bp.LocalDate;
+
+        r2 := @parameter1: org.threeten.bp.LocalDate;
+
+        z0 := @parameter2: boolean;
+
+        z1 := @parameter3: boolean;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator: org.threeten.bp.LocalDate[] getSchedule(org.threeten.bp.LocalDate,org.threeten.bp.LocalDate)>(r1, r2);
+
+        return $r3;
+    }
+
+    public org.threeten.bp.LocalDate[] getSchedule(org.threeten.bp.LocalDate, org.threeten.bp.LocalDate)
+    {
+        com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator r0;
+        org.threeten.bp.LocalDate r1, r2, r19;
+        boolean $z0, $z1, $z2;
+        java.util.ArrayList $r6;
+        org.threeten.bp.DayOfWeek $r7, $r12, $r14, $r15;
+        org.threeten.bp.temporal.TemporalAdjuster $r8, $r13;
+        org.threeten.bp.LocalDate[] $r9, $r11, $r17;
+        java.lang.Object[] $r10;
+        java.lang.IllegalArgumentException $r16;
+
+        r0 := @this: com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator;
+
+        r1 := @parameter0: org.threeten.bp.LocalDate;
+
+        r2 := @parameter1: org.threeten.bp.LocalDate;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "start date");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "end date");
+
+        $z0 = virtualinvoke r1.<org.threeten.bp.LocalDate: boolean isAfter(org.threeten.bp.chrono.ChronoLocalDate)>(r2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z0, "start date must not be after end date");
+
+        $z1 = virtualinvoke r1.<org.threeten.bp.LocalDate: boolean equals(java.lang.Object)>(r2);
+
+        if $z1 == 0 goto label2;
+
+        $r14 = virtualinvoke r1.<org.threeten.bp.LocalDate: org.threeten.bp.DayOfWeek getDayOfWeek()>();
+
+        $r15 = r0.<com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator: org.threeten.bp.DayOfWeek _dayOfWeek>;
+
+        if $r14 != $r15 goto label1;
+
+        $r17 = newarray (org.threeten.bp.LocalDate)[1];
+
+        $r17[0] = r1;
+
+        return $r17;
+
+     label1:
+        $r16 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r16.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Start date and end date were the same but their day of week was not the same as that required");
+
+        throw $r16;
+
+     label2:
+        $r6 = new java.util.ArrayList;
+
+        specialinvoke $r6.<java.util.ArrayList: void <init>()>();
+
+        $r7 = r0.<com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator: org.threeten.bp.DayOfWeek _dayOfWeek>;
+
+        $r8 = staticinvoke <org.threeten.bp.temporal.TemporalAdjusters: org.threeten.bp.temporal.TemporalAdjuster nextOrSame(org.threeten.bp.DayOfWeek)>($r7);
+
+        r19 = virtualinvoke r1.<org.threeten.bp.LocalDate: org.threeten.bp.LocalDate 'with'(org.threeten.bp.temporal.TemporalAdjuster)>($r8);
+
+     label3:
+        $z2 = virtualinvoke r19.<org.threeten.bp.LocalDate: boolean isAfter(org.threeten.bp.chrono.ChronoLocalDate)>(r2);
+
+        if $z2 != 0 goto label4;
+
+        interfaceinvoke $r6.<java.util.List: boolean add(java.lang.Object)>(r19);
+
+        $r12 = r0.<com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator: org.threeten.bp.DayOfWeek _dayOfWeek>;
+
+        $r13 = staticinvoke <org.threeten.bp.temporal.TemporalAdjusters: org.threeten.bp.temporal.TemporalAdjuster next(org.threeten.bp.DayOfWeek)>($r12);
+
+        r19 = virtualinvoke r19.<org.threeten.bp.LocalDate: org.threeten.bp.LocalDate 'with'(org.threeten.bp.temporal.TemporalAdjuster)>($r13);
+
+        goto label3;
+
+     label4:
+        $r9 = <com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator: org.threeten.bp.LocalDate[] EMPTY_LOCAL_DATE_ARRAY>;
+
+        $r10 = interfaceinvoke $r6.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r9);
+
+        $r11 = (org.threeten.bp.LocalDate[]) $r10;
+
+        return $r11;
+    }
+
+    public org.threeten.bp.ZonedDateTime[] getSchedule(org.threeten.bp.ZonedDateTime, org.threeten.bp.ZonedDateTime, boolean, boolean)
+    {
+        com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator r0;
+        org.threeten.bp.ZonedDateTime r1, r2;
+        boolean z0, z1;
+        org.threeten.bp.ZonedDateTime[] $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator;
+
+        r1 := @parameter0: org.threeten.bp.ZonedDateTime;
+
+        r2 := @parameter1: org.threeten.bp.ZonedDateTime;
+
+        z0 := @parameter2: boolean;
+
+        z1 := @parameter3: boolean;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator: org.threeten.bp.ZonedDateTime[] getSchedule(org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime)>(r1, r2);
+
+        return $r3;
+    }
+
+    public org.threeten.bp.ZonedDateTime[] getSchedule(org.threeten.bp.ZonedDateTime, org.threeten.bp.ZonedDateTime)
+    {
+        com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator r0;
+        org.threeten.bp.ZonedDateTime r1, r2, r19;
+        boolean $z0, $z1, $z2;
+        java.util.ArrayList $r6;
+        org.threeten.bp.DayOfWeek $r7, $r12, $r14, $r15;
+        org.threeten.bp.temporal.TemporalAdjuster $r8, $r13;
+        org.threeten.bp.ZonedDateTime[] $r9, $r11, $r17;
+        java.lang.Object[] $r10;
+        java.lang.IllegalArgumentException $r16;
+
+        r0 := @this: com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator;
+
+        r1 := @parameter0: org.threeten.bp.ZonedDateTime;
+
+        r2 := @parameter1: org.threeten.bp.ZonedDateTime;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "start date");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "end date");
+
+        $z0 = virtualinvoke r1.<org.threeten.bp.ZonedDateTime: boolean isAfter(org.threeten.bp.chrono.ChronoZonedDateTime)>(r2);
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isFalse(boolean,java.lang.String)>($z0, "start date must not be after end date");
+
+        $z1 = virtualinvoke r1.<org.threeten.bp.ZonedDateTime: boolean equals(java.lang.Object)>(r2);
+
+        if $z1 == 0 goto label2;
+
+        $r14 = virtualinvoke r1.<org.threeten.bp.ZonedDateTime: org.threeten.bp.DayOfWeek getDayOfWeek()>();
+
+        $r15 = r0.<com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator: org.threeten.bp.DayOfWeek _dayOfWeek>;
+
+        if $r14 != $r15 goto label1;
+
+        $r17 = newarray (org.threeten.bp.ZonedDateTime)[1];
+
+        $r17[0] = r1;
+
+        return $r17;
+
+     label1:
+        $r16 = new java.lang.IllegalArgumentException;
+
+        specialinvoke $r16.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Start date and end date were the same but their day of week was not the same as that required");
+
+        throw $r16;
+
+     label2:
+        $r6 = new java.util.ArrayList;
+
+        specialinvoke $r6.<java.util.ArrayList: void <init>()>();
+
+        $r7 = r0.<com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator: org.threeten.bp.DayOfWeek _dayOfWeek>;
+
+        $r8 = staticinvoke <org.threeten.bp.temporal.TemporalAdjusters: org.threeten.bp.temporal.TemporalAdjuster nextOrSame(org.threeten.bp.DayOfWeek)>($r7);
+
+        r19 = virtualinvoke r1.<org.threeten.bp.ZonedDateTime: org.threeten.bp.ZonedDateTime 'with'(org.threeten.bp.temporal.TemporalAdjuster)>($r8);
+
+     label3:
+        $z2 = virtualinvoke r19.<org.threeten.bp.ZonedDateTime: boolean isAfter(org.threeten.bp.chrono.ChronoZonedDateTime)>(r2);
+
+        if $z2 != 0 goto label4;
+
+        interfaceinvoke $r6.<java.util.List: boolean add(java.lang.Object)>(r19);
+
+        $r12 = r0.<com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator: org.threeten.bp.DayOfWeek _dayOfWeek>;
+
+        $r13 = staticinvoke <org.threeten.bp.temporal.TemporalAdjusters: org.threeten.bp.temporal.TemporalAdjuster next(org.threeten.bp.DayOfWeek)>($r12);
+
+        r19 = virtualinvoke r19.<org.threeten.bp.ZonedDateTime: org.threeten.bp.ZonedDateTime 'with'(org.threeten.bp.temporal.TemporalAdjuster)>($r13);
+
+        goto label3;
+
+     label4:
+        $r9 = <com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator: org.threeten.bp.ZonedDateTime[] EMPTY_ZONED_DATE_TIME_ARRAY>;
+
+        $r10 = interfaceinvoke $r6.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r9);
+
+        $r11 = (org.threeten.bp.ZonedDateTime[]) $r10;
+
+        return $r11;
+    }
+
+    public int hashCode()
+    {
+        com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator r0;
+        org.threeten.bp.DayOfWeek $r1;
+        int $i1, $i2, i4;
+
+        r0 := @this: com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator;
+
+        $i1 = 31 * 1;
+
+        $r1 = r0.<com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator: org.threeten.bp.DayOfWeek _dayOfWeek>;
+
+        $i2 = virtualinvoke $r1.<org.threeten.bp.DayOfWeek: int hashCode()>();
+
+        i4 = $i1 + $i2;
+
+        return i4;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator r0, r2;
+        java.lang.Object r1;
+        java.lang.Class $r3, $r4;
+        org.threeten.bp.DayOfWeek $r5, $r6;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator;
+
+        r1 := @parameter0: java.lang.Object;
+
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        if r1 != null goto label2;
+
+        return 0;
+
+     label2:
+        $r3 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r4 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+
+        if $r3 == $r4 goto label3;
+
+        return 0;
+
+     label3:
+        r2 = (com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator) r1;
+
+        $r6 = r0.<com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator: org.threeten.bp.DayOfWeek _dayOfWeek>;
+
+        $r5 = r2.<com.opengamma.analytics.financial.schedule.WeeklyScheduleOnDayCalculator: org.threeten.bp.DayOfWeek _dayOfWeek>;
+
+        if $r6 != $r5 goto label4;
+
+        $z0 = 1;
+
+        goto label5;
+
+     label4:
+        $z0 = 0;
+
+     label5:
+        return $z0;
+    }
+}

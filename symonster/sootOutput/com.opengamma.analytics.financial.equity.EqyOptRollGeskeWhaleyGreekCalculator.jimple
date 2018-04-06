@@ -1,0 +1,840 @@
+public final class com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator extends com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter
+{
+    private static final com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator INSTANCE;
+    private static final com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel MODEL;
+
+    public static com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator getInstance()
+    {
+        com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator $r0;
+
+        $r0 = <com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator: com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator INSTANCE>;
+
+        return $r0;
+    }
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator r0;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.analytics.financial.greeks.GreekResultCollection visitEquityIndexOption(com.opengamma.analytics.financial.equity.option.EquityIndexOption, com.opengamma.analytics.financial.equity.StaticReplicationDataBundle)
+    {
+        com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator r0;
+        com.opengamma.analytics.financial.equity.option.EquityIndexOption r1;
+        com.opengamma.analytics.financial.equity.StaticReplicationDataBundle r2;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, d17;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve r3, $r6, $r28;
+        double[] r4, $r9, $r10, r33, r34;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r7;
+        java.lang.Double $r8, $r15, $r17, $r19, $r21, $r23, $r25, $r27;
+        com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface $r11;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel $r12;
+        com.opengamma.analytics.financial.greeks.GreekResultCollection $r13, $r31;
+        com.opengamma.analytics.financial.greeks.Greek $r14, $r16, $r18, $r20, $r22, $r24, $r26;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends $r29;
+        com.opengamma.analytics.financial.equity.EqyOptBjerksundStenslandGreekCalculator $r30;
+        com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends r32;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.option.EquityIndexOption;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.equity.StaticReplicationDataBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "option");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "data");
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityIndexOption: boolean isCall()>();
+
+        if $z0 != 0 goto label1;
+
+        $r30 = staticinvoke <com.opengamma.analytics.financial.equity.EqyOptBjerksundStenslandGreekCalculator: com.opengamma.analytics.financial.equity.EqyOptBjerksundStenslandGreekCalculator getInstance()>();
+
+        $r31 = virtualinvoke $r30.<com.opengamma.analytics.financial.equity.EqyOptBjerksundStenslandGreekCalculator: com.opengamma.analytics.financial.greeks.GreekResultCollection visitEquityIndexOption(com.opengamma.analytics.financial.equity.option.EquityIndexOption,com.opengamma.analytics.financial.equity.StaticReplicationDataBundle)>(r1, r2);
+
+        return $r31;
+
+     label1:
+        $r6 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        d0 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: double getSpot()>();
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityIndexOption: double getStrike()>();
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityIndexOption: double getTimeToExpiry()>();
+
+        $r7 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getDiscountCurve()>();
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        d3 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getInterestRate(java.lang.Object)>($r8);
+
+        r3 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        $z1 = r3 instanceof com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends;
+
+        if $z1 == 0 goto label2;
+
+        $r28 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        $r29 = (com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends) $r28;
+
+        r32 = virtualinvoke $r29.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends: com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends getDividends()>();
+
+        r33 = virtualinvoke r32.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double[] getTau()>();
+
+        r34 = virtualinvoke r32.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double[] getAlpha()>();
+
+        goto label3;
+
+     label2:
+        $r9 = newarray (double)[1];
+
+        $r9[0] = 0.0;
+
+        r33 = $r9;
+
+        $r10 = newarray (double)[1];
+
+        $r10[0] = 0.0;
+
+        r34 = $r10;
+
+     label3:
+        $r11 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface getVolatilitySurface()>();
+
+        d17 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface: double getVolatility(double,double)>(d2, d1);
+
+        $r12 = <com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel MODEL>;
+
+        r4 = virtualinvoke $r12.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double[] getPriceAdjoint(double,double,double,double,double,double[],double[])>(d0, d1, d3, d2, d17, r34, r33);
+
+        $r13 = new com.opengamma.analytics.financial.greeks.GreekResultCollection;
+
+        specialinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void <init>()>();
+
+        $r14 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek DELTA>;
+
+        $d4 = r4[1];
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d4);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r14, $r15);
+
+        $r16 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek DUAL_DELTA>;
+
+        $d5 = r4[2];
+
+        $r17 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d5);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r16, $r17);
+
+        $r18 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek RHO>;
+
+        $d6 = r4[3];
+
+        $d7 = $d6 / 100.0;
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d7);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r18, $r19);
+
+        $r20 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek CARRY_RHO>;
+
+        $r21 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r20, $r21);
+
+        $r22 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek THETA>;
+
+        $d8 = r4[4];
+
+        $d9 = neg $d8;
+
+        $d12 = $d9 / 365.0;
+
+        $d10 = r4[5];
+
+        $d11 = $d10 / 365.0;
+
+        $d13 = $d12 - $d11;
+
+        $r23 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d13);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r22, $r23);
+
+        $r24 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek VEGA>;
+
+        $d14 = r4[6];
+
+        $d15 = $d14 / 100.0;
+
+        $r25 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d15);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r24, $r25);
+
+        $r26 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek GAMMA>;
+
+        $d16 = r4[7];
+
+        $r27 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d16);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r26, $r27);
+
+        return $r13;
+    }
+
+    public com.opengamma.analytics.financial.greeks.GreekResultCollection visitEquityOption(com.opengamma.analytics.financial.equity.option.EquityOption, com.opengamma.analytics.financial.equity.StaticReplicationDataBundle)
+    {
+        com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator r0;
+        com.opengamma.analytics.financial.equity.option.EquityOption r1;
+        com.opengamma.analytics.financial.equity.StaticReplicationDataBundle r2;
+        double d0, d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, d16, d17, d18, d19, d20;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve r3, $r6, $r28;
+        double[] r4, $r9, $r10, r34, r35;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r7;
+        java.lang.Double $r8, $r15, $r17, $r19, $r21, $r23, $r25, $r27;
+        com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface $r11, $r31;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel $r12;
+        com.opengamma.analytics.financial.greeks.GreekResultCollection $r13, $r32;
+        com.opengamma.analytics.financial.greeks.Greek $r14, $r16, $r18, $r20, $r22, $r24, $r26;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends $r29;
+        com.opengamma.analytics.financial.equity.EqyOptBjerksundStenslandGreekCalculator $r30;
+        com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends r33;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.option.EquityOption;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.equity.StaticReplicationDataBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "option");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "data");
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityOption: boolean isCall()>();
+
+        if $z0 != 0 goto label1;
+
+        d16 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityOption: double getStrike()>();
+
+        d17 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityOption: double getTimeToExpiry()>();
+
+        $r30 = staticinvoke <com.opengamma.analytics.financial.equity.EqyOptBjerksundStenslandGreekCalculator: com.opengamma.analytics.financial.equity.EqyOptBjerksundStenslandGreekCalculator getInstance()>();
+
+        $r31 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface getVolatilitySurface()>();
+
+        $d15 = virtualinvoke $r31.<com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface: double getVolatility(double,double)>(d17, d16);
+
+        $r32 = virtualinvoke $r30.<com.opengamma.analytics.financial.equity.EqyOptBjerksundStenslandGreekCalculator: com.opengamma.analytics.financial.greeks.GreekResultCollection getGreeksDirectEquityOption(com.opengamma.analytics.financial.equity.option.EquityOption,com.opengamma.analytics.financial.equity.StaticReplicationDataBundle,double)>(r1, r2, $d15);
+
+        return $r32;
+
+     label1:
+        $r6 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        d18 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: double getSpot()>();
+
+        d19 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityOption: double getStrike()>();
+
+        d0 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityOption: double getTimeToExpiry()>();
+
+        $r7 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getDiscountCurve()>();
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d0);
+
+        d1 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getInterestRate(java.lang.Object)>($r8);
+
+        r3 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        $z1 = r3 instanceof com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends;
+
+        if $z1 == 0 goto label2;
+
+        $r28 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        $r29 = (com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends) $r28;
+
+        r33 = virtualinvoke $r29.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends: com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends getDividends()>();
+
+        r34 = virtualinvoke r33.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double[] getTau()>();
+
+        r35 = virtualinvoke r33.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double[] getAlpha()>();
+
+        goto label3;
+
+     label2:
+        $r9 = newarray (double)[1];
+
+        $r9[0] = 0.0;
+
+        r34 = $r9;
+
+        $r10 = newarray (double)[1];
+
+        $r10[0] = 0.0;
+
+        r35 = $r10;
+
+     label3:
+        $r11 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface getVolatilitySurface()>();
+
+        d20 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface: double getVolatility(double,double)>(d0, d19);
+
+        $r12 = <com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel MODEL>;
+
+        r4 = virtualinvoke $r12.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double[] getPriceAdjoint(double,double,double,double,double,double[],double[])>(d18, d19, d1, d0, d20, r35, r34);
+
+        $r13 = new com.opengamma.analytics.financial.greeks.GreekResultCollection;
+
+        specialinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void <init>()>();
+
+        $r14 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek DELTA>;
+
+        $d2 = r4[1];
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d2);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r14, $r15);
+
+        $r16 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek DUAL_DELTA>;
+
+        $d3 = r4[2];
+
+        $r17 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d3);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r16, $r17);
+
+        $r18 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek RHO>;
+
+        $d4 = r4[3];
+
+        $d5 = $d4 / 100.0;
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d5);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r18, $r19);
+
+        $r20 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek CARRY_RHO>;
+
+        $r21 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r20, $r21);
+
+        $r22 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek THETA>;
+
+        $d6 = r4[4];
+
+        $d7 = neg $d6;
+
+        $d10 = $d7 / 365.0;
+
+        $d8 = r4[5];
+
+        $d9 = $d8 / 365.0;
+
+        $d11 = $d10 - $d9;
+
+        $r23 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d11);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r22, $r23);
+
+        $r24 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek VEGA>;
+
+        $d12 = r4[6];
+
+        $d13 = $d12 / 100.0;
+
+        $r25 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d13);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r24, $r25);
+
+        $r26 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek GAMMA>;
+
+        $d14 = r4[7];
+
+        $r27 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d14);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r26, $r27);
+
+        return $r13;
+    }
+
+    public com.opengamma.analytics.financial.greeks.GreekResultCollection visitEquityIndexFutureOption(com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption, com.opengamma.analytics.financial.equity.StaticReplicationDataBundle)
+    {
+        com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator r0;
+        com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption r1;
+        com.opengamma.analytics.financial.equity.StaticReplicationDataBundle r2;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, d17;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve r3, $r6, $r28;
+        double[] r4, $r9, $r10, r33, r34;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r7;
+        java.lang.Double $r8, $r15, $r17, $r19, $r21, $r23, $r25, $r27;
+        com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface $r11;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel $r12;
+        com.opengamma.analytics.financial.greeks.GreekResultCollection $r13, $r31;
+        com.opengamma.analytics.financial.greeks.Greek $r14, $r16, $r18, $r20, $r22, $r24, $r26;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends $r29;
+        com.opengamma.analytics.financial.equity.EqyOptBjerksundStenslandGreekCalculator $r30;
+        com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends r32;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.equity.StaticReplicationDataBundle;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "option");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "data");
+
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption: boolean isCall()>();
+
+        if $z0 != 0 goto label1;
+
+        $r30 = staticinvoke <com.opengamma.analytics.financial.equity.EqyOptBjerksundStenslandGreekCalculator: com.opengamma.analytics.financial.equity.EqyOptBjerksundStenslandGreekCalculator getInstance()>();
+
+        $r31 = virtualinvoke $r30.<com.opengamma.analytics.financial.equity.EqyOptBjerksundStenslandGreekCalculator: com.opengamma.analytics.financial.greeks.GreekResultCollection visitEquityIndexFutureOption(com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption,com.opengamma.analytics.financial.equity.StaticReplicationDataBundle)>(r1, r2);
+
+        return $r31;
+
+     label1:
+        $r6 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        d0 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: double getSpot()>();
+
+        d1 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption: double getStrike()>();
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption: double getExpiry()>();
+
+        $r7 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getDiscountCurve()>();
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d2);
+
+        d3 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getInterestRate(java.lang.Object)>($r8);
+
+        r3 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        $z1 = r3 instanceof com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends;
+
+        if $z1 == 0 goto label2;
+
+        $r28 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        $r29 = (com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends) $r28;
+
+        r32 = virtualinvoke $r29.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends: com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends getDividends()>();
+
+        r33 = virtualinvoke r32.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double[] getTau()>();
+
+        r34 = virtualinvoke r32.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double[] getAlpha()>();
+
+        goto label3;
+
+     label2:
+        $r9 = newarray (double)[1];
+
+        $r9[0] = 0.0;
+
+        r33 = $r9;
+
+        $r10 = newarray (double)[1];
+
+        $r10[0] = 0.0;
+
+        r34 = $r10;
+
+     label3:
+        $r11 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface getVolatilitySurface()>();
+
+        d17 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurface: double getVolatility(double,double)>(d2, d1);
+
+        $r12 = <com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel MODEL>;
+
+        r4 = virtualinvoke $r12.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double[] getPriceAdjoint(double,double,double,double,double,double[],double[])>(d0, d1, d3, d2, d17, r34, r33);
+
+        $r13 = new com.opengamma.analytics.financial.greeks.GreekResultCollection;
+
+        specialinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void <init>()>();
+
+        $r14 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek DELTA>;
+
+        $d4 = r4[1];
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d4);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r14, $r15);
+
+        $r16 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek DUAL_DELTA>;
+
+        $d5 = r4[2];
+
+        $r17 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d5);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r16, $r17);
+
+        $r18 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek RHO>;
+
+        $d6 = r4[3];
+
+        $d7 = $d6 / 100.0;
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d7);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r18, $r19);
+
+        $r20 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek CARRY_RHO>;
+
+        $r21 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r20, $r21);
+
+        $r22 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek THETA>;
+
+        $d8 = r4[4];
+
+        $d9 = neg $d8;
+
+        $d12 = $d9 / 365.0;
+
+        $d10 = r4[5];
+
+        $d11 = $d10 / 365.0;
+
+        $d13 = $d12 - $d11;
+
+        $r23 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d13);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r22, $r23);
+
+        $r24 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek VEGA>;
+
+        $d14 = r4[6];
+
+        $d15 = $d14 / 100.0;
+
+        $r25 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d15);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r24, $r25);
+
+        $r26 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek GAMMA>;
+
+        $d16 = r4[7];
+
+        $r27 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d16);
+
+        virtualinvoke $r13.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r26, $r27);
+
+        return $r13;
+    }
+
+    public com.opengamma.analytics.financial.greeks.GreekResultCollection getGreeksDirectEquityOption(com.opengamma.analytics.financial.equity.option.EquityOption, com.opengamma.analytics.financial.equity.StaticReplicationDataBundle, double)
+    {
+        com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator r0;
+        com.opengamma.analytics.financial.equity.option.EquityOption r1;
+        com.opengamma.analytics.financial.equity.StaticReplicationDataBundle r2;
+        double d0, d1, d2, d3, d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve r4, $r6, $r26;
+        com.opengamma.analytics.financial.greeks.GreekResultCollection $r5, $r29;
+        byte $b0;
+        boolean $z0, $z1;
+        com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve $r7;
+        java.lang.Double $r8, $r13, $r15, $r17, $r19, $r21, $r23, $r25, $r31, $r33, $r35, $r37, $r39, $r41, $r43;
+        double[] $r9, $r10, r45, r46, r47;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel $r11;
+        com.opengamma.analytics.financial.greeks.Greek $r12, $r14, $r16, $r18, $r20, $r22, $r24, $r30, $r32, $r34, $r36, $r38, $r40, $r42;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends $r27;
+        com.opengamma.analytics.financial.equity.EqyOptBjerksundStenslandGreekCalculator $r28;
+        com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends r44;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.option.EquityOption;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.equity.StaticReplicationDataBundle;
+
+        d0 := @parameter2: double;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "option");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "data");
+
+        $r5 = new com.opengamma.analytics.financial.greeks.GreekResultCollection;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void <init>()>();
+
+        $b0 = d0 cmpl 0.0;
+
+        if $b0 != 0 goto label1;
+
+        $r30 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek DELTA>;
+
+        $r31 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        virtualinvoke $r5.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r30, $r31);
+
+        $r32 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek DUAL_DELTA>;
+
+        $r33 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        virtualinvoke $r5.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r32, $r33);
+
+        $r34 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek RHO>;
+
+        $r35 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        virtualinvoke $r5.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r34, $r35);
+
+        $r36 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek CARRY_RHO>;
+
+        $r37 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        virtualinvoke $r5.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r36, $r37);
+
+        $r38 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek THETA>;
+
+        $r39 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        virtualinvoke $r5.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r38, $r39);
+
+        $r40 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek VEGA>;
+
+        $r41 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        virtualinvoke $r5.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r40, $r41);
+
+        $r42 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek GAMMA>;
+
+        $r43 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        virtualinvoke $r5.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r42, $r43);
+
+        goto label5;
+
+     label1:
+        $z0 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityOption: boolean isCall()>();
+
+        if $z0 != 0 goto label2;
+
+        $r28 = staticinvoke <com.opengamma.analytics.financial.equity.EqyOptBjerksundStenslandGreekCalculator: com.opengamma.analytics.financial.equity.EqyOptBjerksundStenslandGreekCalculator getInstance()>();
+
+        $r29 = virtualinvoke $r28.<com.opengamma.analytics.financial.equity.EqyOptBjerksundStenslandGreekCalculator: com.opengamma.analytics.financial.greeks.GreekResultCollection getGreeksDirectEquityOption(com.opengamma.analytics.financial.equity.option.EquityOption,com.opengamma.analytics.financial.equity.StaticReplicationDataBundle,double)>(r1, r2, d0);
+
+        return $r29;
+
+     label2:
+        $r6 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        d1 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: double getSpot()>();
+
+        d2 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityOption: double getStrike()>();
+
+        d3 = virtualinvoke r1.<com.opengamma.analytics.financial.equity.option.EquityOption: double getTimeToExpiry()>();
+
+        $r7 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve getDiscountCurve()>();
+
+        $r8 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        d4 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.interestrate.curve.YieldAndDiscountCurve: double getInterestRate(java.lang.Object)>($r8);
+
+        r4 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        $z1 = r4 instanceof com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends;
+
+        if $z1 == 0 goto label3;
+
+        $r26 = virtualinvoke r2.<com.opengamma.analytics.financial.equity.StaticReplicationDataBundle: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve getForwardCurve()>();
+
+        $r27 = (com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends) $r26;
+
+        r44 = virtualinvoke $r27.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurveAffineDividends: com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends getDividends()>();
+
+        r45 = virtualinvoke r44.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double[] getTau()>();
+
+        r46 = virtualinvoke r44.<com.opengamma.analytics.financial.equity.variance.pricing.AffineDividends: double[] getAlpha()>();
+
+        goto label4;
+
+     label3:
+        $r9 = newarray (double)[1];
+
+        $r9[0] = 0.0;
+
+        r45 = $r9;
+
+        $r10 = newarray (double)[1];
+
+        $r10[0] = 0.0;
+
+        r46 = $r10;
+
+     label4:
+        $r11 = <com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel MODEL>;
+
+        r47 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: double[] getPriceAdjoint(double,double,double,double,double,double[],double[])>(d1, d2, d4, d3, d0, r46, r45);
+
+        $r12 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek DELTA>;
+
+        $d5 = r47[1];
+
+        $r13 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d5);
+
+        virtualinvoke $r5.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r12, $r13);
+
+        $r14 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek DUAL_DELTA>;
+
+        $d6 = r47[2];
+
+        $r15 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d6);
+
+        virtualinvoke $r5.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r14, $r15);
+
+        $r16 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek RHO>;
+
+        $d7 = r47[3];
+
+        $d8 = $d7 / 100.0;
+
+        $r17 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d8);
+
+        virtualinvoke $r5.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r16, $r17);
+
+        $r18 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek CARRY_RHO>;
+
+        $r19 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(0.0);
+
+        virtualinvoke $r5.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r18, $r19);
+
+        $r20 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek THETA>;
+
+        $d9 = r47[4];
+
+        $d10 = neg $d9;
+
+        $d13 = $d10 / 365.0;
+
+        $d11 = r47[5];
+
+        $d12 = $d11 / 365.0;
+
+        $d14 = $d13 - $d12;
+
+        $r21 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d14);
+
+        virtualinvoke $r5.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r20, $r21);
+
+        $r22 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek VEGA>;
+
+        $d15 = r47[6];
+
+        $d16 = $d15 / 100.0;
+
+        $r23 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d16);
+
+        virtualinvoke $r5.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r22, $r23);
+
+        $r24 = <com.opengamma.analytics.financial.greeks.Greek: com.opengamma.analytics.financial.greeks.Greek GAMMA>;
+
+        $d17 = r47[7];
+
+        $r25 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d17);
+
+        virtualinvoke $r5.<com.opengamma.analytics.financial.greeks.GreekResultCollection: void put(com.opengamma.analytics.financial.greeks.Greek,java.lang.Double)>($r24, $r25);
+
+     label5:
+        return $r5;
+    }
+
+    public volatile java.lang.Object visitEquityOption(com.opengamma.analytics.financial.equity.option.EquityOption, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator r0;
+        com.opengamma.analytics.financial.equity.option.EquityOption r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.equity.StaticReplicationDataBundle $r3;
+        com.opengamma.analytics.financial.greeks.GreekResultCollection $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.option.EquityOption;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.equity.StaticReplicationDataBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator: com.opengamma.analytics.financial.greeks.GreekResultCollection visitEquityOption(com.opengamma.analytics.financial.equity.option.EquityOption,com.opengamma.analytics.financial.equity.StaticReplicationDataBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitEquityIndexFutureOption(com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator r0;
+        com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.equity.StaticReplicationDataBundle $r3;
+        com.opengamma.analytics.financial.greeks.GreekResultCollection $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.equity.StaticReplicationDataBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator: com.opengamma.analytics.financial.greeks.GreekResultCollection visitEquityIndexFutureOption(com.opengamma.analytics.financial.equity.option.EquityIndexFutureOption,com.opengamma.analytics.financial.equity.StaticReplicationDataBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitEquityIndexOption(com.opengamma.analytics.financial.equity.option.EquityIndexOption, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator r0;
+        com.opengamma.analytics.financial.equity.option.EquityIndexOption r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.equity.StaticReplicationDataBundle $r3;
+        com.opengamma.analytics.financial.greeks.GreekResultCollection $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.equity.option.EquityIndexOption;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.equity.StaticReplicationDataBundle) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator: com.opengamma.analytics.financial.greeks.GreekResultCollection visitEquityIndexOption(com.opengamma.analytics.financial.equity.option.EquityIndexOption,com.opengamma.analytics.financial.equity.StaticReplicationDataBundle)>(r1, $r3);
+
+        return $r4;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator $r0;
+        com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel $r1;
+
+        $r0 = new com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator: void <init>()>();
+
+        <com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator: com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator INSTANCE> = $r0;
+
+        $r1 = new com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel;
+
+        specialinvoke $r1.<com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel: void <init>()>();
+
+        <com.opengamma.analytics.financial.equity.EqyOptRollGeskeWhaleyGreekCalculator: com.opengamma.analytics.financial.model.option.pricing.analytic.RollGeskeWhaleyModel MODEL> = $r1;
+
+        return;
+    }
+}

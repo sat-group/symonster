@@ -1,0 +1,819 @@
+public class com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition extends com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponDefinition
+{
+    protected static final com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon[] EMPTY_ARRAY_CPN;
+
+    public void <init>(com.opengamma.analytics.financial.instrument.payment.CouponDefinition[], com.opengamma.financial.convention.calendar.Calendar)
+    {
+        com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition r0;
+        com.opengamma.analytics.financial.instrument.payment.CouponDefinition[] r1;
+        com.opengamma.financial.convention.calendar.Calendar r2;
+        com.opengamma.analytics.financial.instrument.payment.CouponDefinition $r3, $r4, $r5;
+        boolean $z0, $z1, $z2, $z3;
+        int i0, $i1;
+
+        r0 := @this: com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.instrument.payment.CouponDefinition[];
+
+        r2 := @parameter1: com.opengamma.financial.convention.calendar.Calendar;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponDefinition: void <init>(com.opengamma.analytics.financial.instrument.payment.CouponDefinition[],com.opengamma.financial.convention.calendar.Calendar)>(r1, r2);
+
+        $r3 = r1[0];
+
+        $z0 = $r3 instanceof com.opengamma.analytics.financial.instrument.payment.CouponFixedDefinition;
+
+        if $z0 != 0 goto label1;
+
+        $r5 = r1[0];
+
+        $z2 = $r5 instanceof com.opengamma.analytics.financial.instrument.payment.CouponIborGearingDefinition;
+
+        if $z2 == 0 goto label2;
+
+     label1:
+        $z3 = 1;
+
+        goto label3;
+
+     label2:
+        $z3 = 0;
+
+     label3:
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z3, "First coupon should be CouponFixedDefinition or a CouponIborGearingDefinition");
+
+        i0 = 1;
+
+     label4:
+        $i1 = lengthof r1;
+
+        if i0 >= $i1 goto label5;
+
+        $r4 = r1[i0];
+
+        $z1 = $r4 instanceof com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: void isTrue(boolean,java.lang.String)>($z1, "Next coupons should be CouponIborRatchetDefinition");
+
+        i0 = i0 + 1;
+
+        goto label4;
+
+     label5:
+        return;
+    }
+
+    public static com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition withFirstCouponFixed(org.threeten.bp.ZonedDateTime, org.threeten.bp.Period, double, com.opengamma.analytics.financial.instrument.index.IborIndex, boolean, double, double[], double[], double[], com.opengamma.financial.convention.calendar.Calendar)
+    {
+        org.threeten.bp.ZonedDateTime r0, $r13, $r14, $r16, $r20, $r21, $r22, $r24, $r25, $r26, $r27;
+        org.threeten.bp.Period r1, $r9;
+        double d0, d1, d2, $d3, $d4, $d6;
+        com.opengamma.analytics.financial.instrument.index.IborIndex r2;
+        boolean z0, $z1;
+        double[] r3, r4, r5;
+        com.opengamma.financial.convention.calendar.Calendar r6;
+        org.threeten.bp.ZonedDateTime[] r7;
+        com.opengamma.analytics.financial.instrument.payment.CouponDefinition[] r8;
+        com.opengamma.financial.convention.businessday.BusinessDayConvention $r10;
+        int $i0, $i1, $i2, $i3, $i4, $i5, i6, $i7;
+        com.opengamma.analytics.financial.instrument.payment.CouponFixedDefinition $r11;
+        com.opengamma.util.money.Currency $r12, $r19;
+        com.opengamma.financial.convention.daycount.DayCount $r15, $r23;
+        com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition $r17;
+        com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition $r18;
+
+        r0 := @parameter0: org.threeten.bp.ZonedDateTime;
+
+        r1 := @parameter1: org.threeten.bp.Period;
+
+        d0 := @parameter2: double;
+
+        r2 := @parameter3: com.opengamma.analytics.financial.instrument.index.IborIndex;
+
+        z0 := @parameter4: boolean;
+
+        d1 := @parameter5: double;
+
+        r3 := @parameter6: double[];
+
+        r4 := @parameter7: double[];
+
+        r5 := @parameter8: double[];
+
+        r6 := @parameter9: com.opengamma.financial.convention.calendar.Calendar;
+
+        $r9 = virtualinvoke r2.<com.opengamma.analytics.financial.instrument.index.IborIndex: org.threeten.bp.Period getTenor()>();
+
+        $r10 = virtualinvoke r2.<com.opengamma.analytics.financial.instrument.index.IborIndex: com.opengamma.financial.convention.businessday.BusinessDayConvention getBusinessDayConvention()>();
+
+        $z1 = virtualinvoke r2.<com.opengamma.analytics.financial.instrument.index.IborIndex: boolean isEndOfMonth()>();
+
+        r7 = staticinvoke <com.opengamma.analytics.financial.schedule.ScheduleCalculator: org.threeten.bp.ZonedDateTime[] getAdjustedDateSchedule(org.threeten.bp.ZonedDateTime,org.threeten.bp.Period,org.threeten.bp.Period,com.opengamma.financial.convention.businessday.BusinessDayConvention,com.opengamma.financial.convention.calendar.Calendar,boolean)>(r0, r1, $r9, $r10, r6, $z1);
+
+        $i0 = lengthof r7;
+
+        r8 = newarray (com.opengamma.analytics.financial.instrument.payment.CouponDefinition)[$i0];
+
+        if z0 == 0 goto label1;
+
+        $d6 = -1.0;
+
+        goto label2;
+
+     label1:
+        $d6 = 1.0;
+
+     label2:
+        d2 = d0 * $d6;
+
+        $r11 = new com.opengamma.analytics.financial.instrument.payment.CouponFixedDefinition;
+
+        $r12 = virtualinvoke r2.<com.opengamma.analytics.financial.instrument.index.IborIndex: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r13 = r7[0];
+
+        $r14 = r7[0];
+
+        $r15 = virtualinvoke r2.<com.opengamma.analytics.financial.instrument.index.IborIndex: com.opengamma.financial.convention.daycount.DayCount getDayCount()>();
+
+        $r16 = r7[0];
+
+        $d3 = interfaceinvoke $r15.<com.opengamma.financial.convention.daycount.DayCount: double getDayCountFraction(org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime,com.opengamma.financial.convention.calendar.Calendar)>(r0, $r16, r6);
+
+        specialinvoke $r11.<com.opengamma.analytics.financial.instrument.payment.CouponFixedDefinition: void <init>(com.opengamma.util.money.Currency,org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime,double,double,double)>($r12, $r13, r0, $r14, $d3, d2, d1);
+
+        r8[0] = $r11;
+
+        i6 = 1;
+
+     label3:
+        $i7 = lengthof r7;
+
+        if i6 >= $i7 goto label4;
+
+        $r18 = new com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition;
+
+        $r19 = virtualinvoke r2.<com.opengamma.analytics.financial.instrument.index.IborIndex: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r20 = r7[i6];
+
+        $i1 = i6 - 1;
+
+        $r21 = r7[$i1];
+
+        $r22 = r7[i6];
+
+        $r23 = virtualinvoke r2.<com.opengamma.analytics.financial.instrument.index.IborIndex: com.opengamma.financial.convention.daycount.DayCount getDayCount()>();
+
+        $i2 = i6 - 1;
+
+        $r25 = r7[$i2];
+
+        $r24 = r7[i6];
+
+        $d4 = interfaceinvoke $r23.<com.opengamma.financial.convention.daycount.DayCount: double getDayCountFraction(org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime,com.opengamma.financial.convention.calendar.Calendar)>($r25, $r24, r6);
+
+        $i3 = i6 - 1;
+
+        $r26 = r7[$i3];
+
+        $i4 = virtualinvoke r2.<com.opengamma.analytics.financial.instrument.index.IborIndex: int getSpotLag()>();
+
+        $i5 = neg $i4;
+
+        $r27 = staticinvoke <com.opengamma.analytics.financial.schedule.ScheduleCalculator: org.threeten.bp.ZonedDateTime getAdjustedDate(org.threeten.bp.ZonedDateTime,int,com.opengamma.financial.convention.calendar.Calendar)>($r26, $i5, r6);
+
+        specialinvoke $r18.<com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition: void <init>(com.opengamma.util.money.Currency,org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime,double,double,org.threeten.bp.ZonedDateTime,com.opengamma.analytics.financial.instrument.index.IborIndex,double[],double[],double[],com.opengamma.financial.convention.calendar.Calendar)>($r19, $r20, $r21, $r22, $d4, d2, $r27, r2, r3, r4, r5, r6);
+
+        r8[i6] = $r18;
+
+        i6 = i6 + 1;
+
+        goto label3;
+
+     label4:
+        $r17 = new com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition;
+
+        specialinvoke $r17.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: void <init>(com.opengamma.analytics.financial.instrument.payment.CouponDefinition[],com.opengamma.financial.convention.calendar.Calendar)>(r8, r6);
+
+        return $r17;
+    }
+
+    public static com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition withFirstCouponIborGearing(org.threeten.bp.ZonedDateTime, org.threeten.bp.Period, double, com.opengamma.analytics.financial.instrument.index.IborIndex, boolean, double[], double[], double[], com.opengamma.financial.convention.calendar.Calendar)
+    {
+        org.threeten.bp.ZonedDateTime r0, $r11, $r13, $r18, $r19, $r20, $r22, $r23, $r24, $r25;
+        org.threeten.bp.Period r1, $r9;
+        double d0, d1, $d2, $d3, $d4, $d5, $d7;
+        com.opengamma.analytics.financial.instrument.index.IborIndex r2;
+        boolean z0, $z1;
+        double[] r3, r4, r5;
+        com.opengamma.financial.convention.calendar.Calendar r6;
+        org.threeten.bp.ZonedDateTime[] r7;
+        com.opengamma.analytics.financial.instrument.payment.CouponDefinition[] r8;
+        com.opengamma.financial.convention.businessday.BusinessDayConvention $r10;
+        int $i0, $i1, $i2, $i3, $i4, $i5, i6, $i7;
+        com.opengamma.financial.convention.daycount.DayCount $r12, $r21;
+        com.opengamma.analytics.financial.instrument.payment.CouponIborGearingDefinition $r14;
+        com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition $r15;
+        com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition $r16;
+        com.opengamma.util.money.Currency $r17;
+
+        r0 := @parameter0: org.threeten.bp.ZonedDateTime;
+
+        r1 := @parameter1: org.threeten.bp.Period;
+
+        d0 := @parameter2: double;
+
+        r2 := @parameter3: com.opengamma.analytics.financial.instrument.index.IborIndex;
+
+        z0 := @parameter4: boolean;
+
+        r3 := @parameter5: double[];
+
+        r4 := @parameter6: double[];
+
+        r5 := @parameter7: double[];
+
+        r6 := @parameter8: com.opengamma.financial.convention.calendar.Calendar;
+
+        $r9 = virtualinvoke r2.<com.opengamma.analytics.financial.instrument.index.IborIndex: org.threeten.bp.Period getTenor()>();
+
+        $r10 = virtualinvoke r2.<com.opengamma.analytics.financial.instrument.index.IborIndex: com.opengamma.financial.convention.businessday.BusinessDayConvention getBusinessDayConvention()>();
+
+        $z1 = virtualinvoke r2.<com.opengamma.analytics.financial.instrument.index.IborIndex: boolean isEndOfMonth()>();
+
+        r7 = staticinvoke <com.opengamma.analytics.financial.schedule.ScheduleCalculator: org.threeten.bp.ZonedDateTime[] getAdjustedDateSchedule(org.threeten.bp.ZonedDateTime,org.threeten.bp.Period,org.threeten.bp.Period,com.opengamma.financial.convention.businessday.BusinessDayConvention,com.opengamma.financial.convention.calendar.Calendar,boolean)>(r0, r1, $r9, $r10, r6, $z1);
+
+        $i0 = lengthof r7;
+
+        r8 = newarray (com.opengamma.analytics.financial.instrument.payment.CouponDefinition)[$i0];
+
+        if z0 == 0 goto label1;
+
+        $d7 = -1.0;
+
+        goto label2;
+
+     label1:
+        $d7 = 1.0;
+
+     label2:
+        d1 = d0 * $d7;
+
+        $r11 = r7[0];
+
+        $r12 = virtualinvoke r2.<com.opengamma.analytics.financial.instrument.index.IborIndex: com.opengamma.financial.convention.daycount.DayCount getDayCount()>();
+
+        $r13 = r7[0];
+
+        $d2 = interfaceinvoke $r12.<com.opengamma.financial.convention.daycount.DayCount: double getDayCountFraction(org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime,com.opengamma.financial.convention.calendar.Calendar)>(r0, $r13, r6);
+
+        $d4 = r3[2];
+
+        $d3 = r3[1];
+
+        $r14 = staticinvoke <com.opengamma.analytics.financial.instrument.payment.CouponIborGearingDefinition: com.opengamma.analytics.financial.instrument.payment.CouponIborGearingDefinition 'from'(org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime,double,double,com.opengamma.analytics.financial.instrument.index.IborIndex,double,double,com.opengamma.financial.convention.calendar.Calendar)>(r0, $r11, $d2, d1, r2, $d4, $d3, r6);
+
+        r8[0] = $r14;
+
+        i6 = 1;
+
+     label3:
+        $i7 = lengthof r7;
+
+        if i6 >= $i7 goto label4;
+
+        $r16 = new com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition;
+
+        $r17 = virtualinvoke r2.<com.opengamma.analytics.financial.instrument.index.IborIndex: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r18 = r7[i6];
+
+        $i1 = i6 - 1;
+
+        $r19 = r7[$i1];
+
+        $r20 = r7[i6];
+
+        $r21 = virtualinvoke r2.<com.opengamma.analytics.financial.instrument.index.IborIndex: com.opengamma.financial.convention.daycount.DayCount getDayCount()>();
+
+        $i2 = i6 - 1;
+
+        $r23 = r7[$i2];
+
+        $r22 = r7[i6];
+
+        $d5 = interfaceinvoke $r21.<com.opengamma.financial.convention.daycount.DayCount: double getDayCountFraction(org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime,com.opengamma.financial.convention.calendar.Calendar)>($r23, $r22, r6);
+
+        $i3 = i6 - 1;
+
+        $r24 = r7[$i3];
+
+        $i4 = virtualinvoke r2.<com.opengamma.analytics.financial.instrument.index.IborIndex: int getSpotLag()>();
+
+        $i5 = neg $i4;
+
+        $r25 = staticinvoke <com.opengamma.analytics.financial.schedule.ScheduleCalculator: org.threeten.bp.ZonedDateTime getAdjustedDate(org.threeten.bp.ZonedDateTime,int,com.opengamma.financial.convention.calendar.Calendar)>($r24, $i5, r6);
+
+        specialinvoke $r16.<com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition: void <init>(com.opengamma.util.money.Currency,org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime,double,double,org.threeten.bp.ZonedDateTime,com.opengamma.analytics.financial.instrument.index.IborIndex,double[],double[],double[],com.opengamma.financial.convention.calendar.Calendar)>($r17, $r18, $r19, $r20, $d5, d1, $r25, r2, r3, r4, r5, r6);
+
+        r8[i6] = $r16;
+
+        i6 = i6 + 1;
+
+        goto label3;
+
+     label4:
+        $r15 = new com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition;
+
+        specialinvoke $r15.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: void <init>(com.opengamma.analytics.financial.instrument.payment.CouponDefinition[],com.opengamma.financial.convention.calendar.Calendar)>(r8, r6);
+
+        return $r15;
+    }
+
+    public com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet toDerivative(org.threeten.bp.ZonedDateTime, com.opengamma.timeseries.DoubleTimeSeries)
+    {
+        com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition r0;
+        org.threeten.bp.ZonedDateTime r1, $r16, $r22, $r30, $r35, $r38, $r39, $r44, $r47, $r48, $r52, $r74, $r85;
+        com.opengamma.timeseries.DoubleTimeSeries r2;
+        boolean[] r5;
+        double d0, d1, d2, d3, $d4, $d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, $d31, $d32, $d33, $d34, $d35, $d36, $d37, $d38, $d39, d40;
+        java.util.ArrayList $r7, $r8;
+        int $i0, $i2, $i3, $i4, $i5, i6, $i7, i8, $i9, i10, $i11;
+        com.opengamma.analytics.financial.instrument.payment.PaymentDefinition[] $r9, $r12, $r18, $r49, $r71, $r81;
+        com.opengamma.analytics.financial.instrument.payment.CouponDefinition[] $r10, $r13, $r19, $r50, $r72, $r82;
+        com.opengamma.analytics.financial.instrument.payment.CouponDefinition $r11, $r14, $r20, $r29, $r51, $r73, $r83, r91, r92;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z8, $z11, $z15, $z16;
+        com.opengamma.analytics.financial.instrument.payment.CouponIborGearingDefinition $r15, $r40, r89;
+        java.lang.Object $r17, $r36, $r45, $r53, $r56, $r61, $r66, $r75, $r86;
+        com.opengamma.analytics.financial.instrument.payment.PaymentDefinition $r21, $r27, $r28, $r78;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet $r23;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon[] $r24, $r26;
+        java.lang.Object[] $r25;
+        com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition $r31, $r84, r90;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet $r32;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed $r33, $r42;
+        com.opengamma.util.money.Currency $r34, $r43;
+        java.lang.Double $r37, $r46, $r54, $r57, $r62, $r67, $r70, $r76, $r77, $r80;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing $r41;
+        double[] $r55, $r58, $r59, $r60, $r63, $r64, $r65, $r68, $r69;
+        com.opengamma.analytics.financial.instrument.payment.CouponFixedDefinition $r79;
+
+        r0 := @this: com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition;
+
+        r1 := @parameter0: org.threeten.bp.ZonedDateTime;
+
+        r2 := @parameter1: com.opengamma.timeseries.DoubleTimeSeries;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "date");
+
+        $r7 = new java.util.ArrayList;
+
+        specialinvoke $r7.<java.util.ArrayList: void <init>()>();
+
+        $r8 = new java.util.ArrayList;
+
+        specialinvoke $r8.<java.util.ArrayList: void <init>()>();
+
+        $i0 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: int getNumberOfPayments()>();
+
+        r5 = newarray (boolean)[$i0];
+
+        $r9 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: com.opengamma.analytics.financial.instrument.payment.PaymentDefinition[] getPayments()>();
+
+        $r10 = (com.opengamma.analytics.financial.instrument.payment.CouponDefinition[]) $r9;
+
+        $r11 = $r10[0];
+
+        $z0 = $r11 instanceof com.opengamma.analytics.financial.instrument.payment.CouponFixedDefinition;
+
+        if $z0 == 0 goto label01;
+
+        r5[0] = 1;
+
+        goto label04;
+
+     label01:
+        $r12 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: com.opengamma.analytics.financial.instrument.payment.PaymentDefinition[] getPayments()>();
+
+        $r13 = (com.opengamma.analytics.financial.instrument.payment.CouponDefinition[]) $r12;
+
+        $r14 = $r13[0];
+
+        $r15 = (com.opengamma.analytics.financial.instrument.payment.CouponIborGearingDefinition) $r14;
+
+        $r16 = virtualinvoke $r15.<com.opengamma.analytics.financial.instrument.payment.CouponIborGearingDefinition: org.threeten.bp.ZonedDateTime getFixingDate()>();
+
+        $r17 = interfaceinvoke r2.<com.opengamma.timeseries.DoubleTimeSeries: java.lang.Object getValue(java.lang.Object)>($r16);
+
+        if $r17 == null goto label02;
+
+        $z15 = 1;
+
+        goto label03;
+
+     label02:
+        $z15 = 0;
+
+     label03:
+        r5[0] = $z15;
+
+     label04:
+        i6 = 1;
+
+     label05:
+        $i7 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: int getNumberOfPayments()>();
+
+        if i6 >= $i7 goto label08;
+
+        $i5 = i6;
+
+        $r81 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: com.opengamma.analytics.financial.instrument.payment.PaymentDefinition[] getPayments()>();
+
+        $r82 = (com.opengamma.analytics.financial.instrument.payment.CouponDefinition[]) $r81;
+
+        $r83 = $r82[i6];
+
+        $r84 = (com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition) $r83;
+
+        $r85 = virtualinvoke $r84.<com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition: org.threeten.bp.ZonedDateTime getFixingDate()>();
+
+        $r86 = interfaceinvoke r2.<com.opengamma.timeseries.DoubleTimeSeries: java.lang.Object getValue(java.lang.Object)>($r85);
+
+        if $r86 == null goto label06;
+
+        $z16 = 1;
+
+        goto label07;
+
+     label06:
+        $z16 = 0;
+
+     label07:
+        r5[$i5] = $z16;
+
+        i6 = i6 + 1;
+
+        goto label05;
+
+     label08:
+        $r18 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: com.opengamma.analytics.financial.instrument.payment.PaymentDefinition[] getPayments()>();
+
+        $r19 = (com.opengamma.analytics.financial.instrument.payment.CouponDefinition[]) $r18;
+
+        $r20 = $r19[0];
+
+        $z1 = $r20 instanceof com.opengamma.analytics.financial.instrument.payment.CouponFixedDefinition;
+
+        if $z1 == 0 goto label09;
+
+        $r78 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: com.opengamma.analytics.financial.instrument.payment.PaymentDefinition getNthPayment(int)>(0);
+
+        $r79 = (com.opengamma.analytics.financial.instrument.payment.CouponFixedDefinition) $r78;
+
+        $d39 = virtualinvoke $r79.<com.opengamma.analytics.financial.instrument.payment.CouponFixedDefinition: double getRate()>();
+
+        $r80 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d39);
+
+        interfaceinvoke $r8.<java.util.List: boolean add(java.lang.Object)>($r80);
+
+        goto label10;
+
+     label09:
+        $z2 = r5[0];
+
+        if $z2 == 0 goto label10;
+
+        $r71 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: com.opengamma.analytics.financial.instrument.payment.PaymentDefinition[] getPayments()>();
+
+        $r72 = (com.opengamma.analytics.financial.instrument.payment.CouponDefinition[]) $r71;
+
+        $r73 = $r72[0];
+
+        r89 = (com.opengamma.analytics.financial.instrument.payment.CouponIborGearingDefinition) $r73;
+
+        $r74 = virtualinvoke r89.<com.opengamma.analytics.financial.instrument.payment.CouponIborGearingDefinition: org.threeten.bp.ZonedDateTime getFixingDate()>();
+
+        $r75 = interfaceinvoke r2.<com.opengamma.timeseries.DoubleTimeSeries: java.lang.Object getValue(java.lang.Object)>($r74);
+
+        $r76 = (java.lang.Double) $r75;
+
+        $d34 = virtualinvoke $r76.<java.lang.Double: double doubleValue()>();
+
+        $d35 = virtualinvoke r89.<com.opengamma.analytics.financial.instrument.payment.CouponIborGearingDefinition: double getFactor()>();
+
+        $d36 = $d34 * $d35;
+
+        $d37 = virtualinvoke r89.<com.opengamma.analytics.financial.instrument.payment.CouponIborGearingDefinition: double getSpread()>();
+
+        $d38 = $d36 + $d37;
+
+        $r77 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d38);
+
+        interfaceinvoke $r8.<java.util.List: boolean add(java.lang.Object)>($r77);
+
+     label10:
+        i8 = 1;
+
+     label11:
+        $i9 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: int getNumberOfPayments()>();
+
+        if i8 >= $i9 goto label13;
+
+        $z11 = r5[i8];
+
+        if $z11 == 0 goto label12;
+
+        $r49 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: com.opengamma.analytics.financial.instrument.payment.PaymentDefinition[] getPayments()>();
+
+        $r50 = (com.opengamma.analytics.financial.instrument.payment.CouponDefinition[]) $r49;
+
+        $r51 = $r50[i8];
+
+        r90 = (com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition) $r51;
+
+        $r52 = virtualinvoke r90.<com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition: org.threeten.bp.ZonedDateTime getFixingDate()>();
+
+        $r53 = interfaceinvoke r2.<com.opengamma.timeseries.DoubleTimeSeries: java.lang.Object getValue(java.lang.Object)>($r52);
+
+        $r54 = (java.lang.Double) $r53;
+
+        d40 = virtualinvoke $r54.<java.lang.Double: double doubleValue()>();
+
+        $r55 = virtualinvoke r90.<com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition: double[] getMainCoefficients()>();
+
+        $d12 = $r55[0];
+
+        $i2 = i8 - 1;
+
+        $r56 = interfaceinvoke $r8.<java.util.List: java.lang.Object get(int)>($i2);
+
+        $r57 = (java.lang.Double) $r56;
+
+        $d13 = virtualinvoke $r57.<java.lang.Double: double doubleValue()>();
+
+        $d14 = $d12 * $d13;
+
+        $r58 = virtualinvoke r90.<com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition: double[] getMainCoefficients()>();
+
+        $d15 = $r58[1];
+
+        $d16 = $d15 * d40;
+
+        $d17 = $d14 + $d16;
+
+        $r59 = virtualinvoke r90.<com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition: double[] getMainCoefficients()>();
+
+        $d18 = $r59[2];
+
+        d0 = $d17 + $d18;
+
+        $r60 = virtualinvoke r90.<com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition: double[] getFloorCoefficients()>();
+
+        $d19 = $r60[0];
+
+        $i3 = i8 - 1;
+
+        $r61 = interfaceinvoke $r8.<java.util.List: java.lang.Object get(int)>($i3);
+
+        $r62 = (java.lang.Double) $r61;
+
+        $d20 = virtualinvoke $r62.<java.lang.Double: double doubleValue()>();
+
+        $d21 = $d19 * $d20;
+
+        $r63 = virtualinvoke r90.<com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition: double[] getFloorCoefficients()>();
+
+        $d22 = $r63[1];
+
+        $d23 = $d22 * d40;
+
+        $d24 = $d21 + $d23;
+
+        $r64 = virtualinvoke r90.<com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition: double[] getFloorCoefficients()>();
+
+        $d25 = $r64[2];
+
+        d1 = $d24 + $d25;
+
+        $r65 = virtualinvoke r90.<com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition: double[] getCapCoefficients()>();
+
+        $d26 = $r65[0];
+
+        $i4 = i8 - 1;
+
+        $r66 = interfaceinvoke $r8.<java.util.List: java.lang.Object get(int)>($i4);
+
+        $r67 = (java.lang.Double) $r66;
+
+        $d27 = virtualinvoke $r67.<java.lang.Double: double doubleValue()>();
+
+        $d28 = $d26 * $d27;
+
+        $r68 = virtualinvoke r90.<com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition: double[] getCapCoefficients()>();
+
+        $d29 = $r68[1];
+
+        $d30 = $d29 * d40;
+
+        $d31 = $d28 + $d30;
+
+        $r69 = virtualinvoke r90.<com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition: double[] getCapCoefficients()>();
+
+        $d32 = $r69[2];
+
+        d2 = $d31 + $d32;
+
+        $d33 = staticinvoke <java.lang.Math: double max(double,double)>(d1, d0);
+
+        d3 = staticinvoke <java.lang.Math: double min(double,double)>($d33, d2);
+
+        $r70 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>(d3);
+
+        interfaceinvoke $r8.<java.util.List: boolean add(java.lang.Object)>($r70);
+
+     label12:
+        i8 = i8 + 1;
+
+        goto label11;
+
+     label13:
+        $r21 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: com.opengamma.analytics.financial.instrument.payment.PaymentDefinition getNthPayment(int)>(0);
+
+        r91 = (com.opengamma.analytics.financial.instrument.payment.CouponDefinition) $r21;
+
+        $r22 = virtualinvoke r91.<com.opengamma.analytics.financial.instrument.payment.CouponDefinition: org.threeten.bp.ZonedDateTime getPaymentDate()>();
+
+        $z3 = virtualinvoke r1.<org.threeten.bp.ZonedDateTime: boolean isAfter(org.threeten.bp.chrono.ChronoZonedDateTime)>($r22);
+
+        if $z3 != 0 goto label15;
+
+        $z8 = r5[0];
+
+        if $z8 == 0 goto label14;
+
+        $r42 = new com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        $r43 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r44 = virtualinvoke r91.<com.opengamma.analytics.financial.instrument.payment.CouponDefinition: org.threeten.bp.ZonedDateTime getPaymentDate()>();
+
+        $d8 = staticinvoke <com.opengamma.analytics.util.time.TimeCalculator: double getTimeBetween(org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime)>(r1, $r44);
+
+        $d9 = virtualinvoke r91.<com.opengamma.analytics.financial.instrument.payment.CouponDefinition: double getPaymentYearFraction()>();
+
+        $d10 = virtualinvoke r91.<com.opengamma.analytics.financial.instrument.payment.CouponDefinition: double getNotional()>();
+
+        $r45 = interfaceinvoke $r8.<java.util.List: java.lang.Object get(int)>(0);
+
+        $r46 = (java.lang.Double) $r45;
+
+        $d11 = virtualinvoke $r46.<java.lang.Double: double doubleValue()>();
+
+        $r47 = virtualinvoke r91.<com.opengamma.analytics.financial.instrument.payment.CouponDefinition: org.threeten.bp.ZonedDateTime getAccrualStartDate()>();
+
+        $r48 = virtualinvoke r91.<com.opengamma.analytics.financial.instrument.payment.CouponDefinition: org.threeten.bp.ZonedDateTime getAccrualEndDate()>();
+
+        specialinvoke $r42.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: void <init>(com.opengamma.util.money.Currency,double,double,double,double,org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime)>($r43, $d8, $d9, $d10, $d11, $r47, $r48);
+
+        interfaceinvoke $r7.<java.util.List: boolean add(java.lang.Object)>($r42);
+
+        goto label15;
+
+     label14:
+        $r40 = (com.opengamma.analytics.financial.instrument.payment.CouponIborGearingDefinition) r91;
+
+        $r41 = virtualinvoke $r40.<com.opengamma.analytics.financial.instrument.payment.CouponIborGearingDefinition: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing toDerivative(org.threeten.bp.ZonedDateTime)>(r1);
+
+        interfaceinvoke $r7.<java.util.List: boolean add(java.lang.Object)>($r41);
+
+     label15:
+        i10 = 1;
+
+     label16:
+        $i11 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: int getNumberOfPayments()>();
+
+        if i10 >= $i11 goto label19;
+
+        $r27 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: com.opengamma.analytics.financial.instrument.payment.PaymentDefinition getNthPayment(int)>(i10);
+
+        r92 = (com.opengamma.analytics.financial.instrument.payment.CouponDefinition) $r27;
+
+        $r28 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: com.opengamma.analytics.financial.instrument.payment.PaymentDefinition getNthPayment(int)>(i10);
+
+        $r29 = (com.opengamma.analytics.financial.instrument.payment.CouponDefinition) $r28;
+
+        $r30 = virtualinvoke $r29.<com.opengamma.analytics.financial.instrument.payment.CouponDefinition: org.threeten.bp.ZonedDateTime getPaymentDate()>();
+
+        $z4 = virtualinvoke r1.<org.threeten.bp.ZonedDateTime: boolean isAfter(org.threeten.bp.chrono.ChronoZonedDateTime)>($r30);
+
+        if $z4 != 0 goto label18;
+
+        $z5 = r5[i10];
+
+        if $z5 == 0 goto label17;
+
+        $r33 = new com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        $r34 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r35 = virtualinvoke r92.<com.opengamma.analytics.financial.instrument.payment.CouponDefinition: org.threeten.bp.ZonedDateTime getPaymentDate()>();
+
+        $d4 = staticinvoke <com.opengamma.analytics.util.time.TimeCalculator: double getTimeBetween(org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime)>(r1, $r35);
+
+        $d5 = virtualinvoke r92.<com.opengamma.analytics.financial.instrument.payment.CouponDefinition: double getPaymentYearFraction()>();
+
+        $d6 = virtualinvoke r92.<com.opengamma.analytics.financial.instrument.payment.CouponDefinition: double getNotional()>();
+
+        $r36 = interfaceinvoke $r8.<java.util.List: java.lang.Object get(int)>(i10);
+
+        $r37 = (java.lang.Double) $r36;
+
+        $d7 = virtualinvoke $r37.<java.lang.Double: double doubleValue()>();
+
+        $r38 = virtualinvoke r92.<com.opengamma.analytics.financial.instrument.payment.CouponDefinition: org.threeten.bp.ZonedDateTime getAccrualStartDate()>();
+
+        $r39 = virtualinvoke r92.<com.opengamma.analytics.financial.instrument.payment.CouponDefinition: org.threeten.bp.ZonedDateTime getAccrualEndDate()>();
+
+        specialinvoke $r33.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: void <init>(com.opengamma.util.money.Currency,double,double,double,double,org.threeten.bp.ZonedDateTime,org.threeten.bp.ZonedDateTime)>($r34, $d4, $d5, $d6, $d7, $r38, $r39);
+
+        interfaceinvoke $r7.<java.util.List: boolean add(java.lang.Object)>($r33);
+
+        goto label18;
+
+     label17:
+        $r31 = (com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition) r92;
+
+        $r32 = virtualinvoke $r31.<com.opengamma.analytics.financial.instrument.payment.CouponIborRatchetDefinition: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborRatchet toDerivative(org.threeten.bp.ZonedDateTime)>(r1);
+
+        interfaceinvoke $r7.<java.util.List: boolean add(java.lang.Object)>($r32);
+
+     label18:
+        i10 = i10 + 1;
+
+        goto label16;
+
+     label19:
+        $r23 = new com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet;
+
+        $r24 = <com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon[] EMPTY_ARRAY_CPN>;
+
+        $r25 = interfaceinvoke $r7.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r24);
+
+        $r26 = (com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon[]) $r25;
+
+        specialinvoke $r23.<com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet: void <init>(com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon[])>($r26);
+
+        return $r23;
+    }
+
+    public volatile com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity toDerivative(org.threeten.bp.ZonedDateTime, com.opengamma.timeseries.DoubleTimeSeries)
+    {
+        com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition r0;
+        org.threeten.bp.ZonedDateTime r1;
+        com.opengamma.timeseries.DoubleTimeSeries r2;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet $r3;
+
+        r0 := @this: com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition;
+
+        r1 := @parameter0: org.threeten.bp.ZonedDateTime;
+
+        r2 := @parameter1: com.opengamma.timeseries.DoubleTimeSeries;
+
+        $r3 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet toDerivative(org.threeten.bp.ZonedDateTime,com.opengamma.timeseries.DoubleTimeSeries)>(r1, r2);
+
+        return $r3;
+    }
+
+    public volatile com.opengamma.analytics.financial.interestrate.InstrumentDerivative toDerivative(org.threeten.bp.ZonedDateTime, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition r0;
+        org.threeten.bp.ZonedDateTime r1;
+        java.lang.Object r2;
+        com.opengamma.timeseries.DoubleTimeSeries $r3;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition;
+
+        r1 := @parameter0: org.threeten.bp.ZonedDateTime;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.timeseries.DoubleTimeSeries) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponIborRatchet toDerivative(org.threeten.bp.ZonedDateTime,com.opengamma.timeseries.DoubleTimeSeries)>(r1, $r3);
+
+        return $r4;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon[] $r0;
+
+        $r0 = newarray (com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon)[0];
+
+        <com.opengamma.analytics.financial.instrument.annuity.AnnuityCouponIborRatchetDefinition: com.opengamma.analytics.financial.interestrate.payments.derivative.Coupon[] EMPTY_ARRAY_CPN> = $r0;
+
+        return;
+    }
+}

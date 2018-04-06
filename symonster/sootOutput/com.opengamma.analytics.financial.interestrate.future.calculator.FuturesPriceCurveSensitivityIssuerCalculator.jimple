@@ -1,0 +1,163 @@
+public final class com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator extends com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter
+{
+    private static final com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator INSTANCE;
+    private static final com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod METHOD_BND;
+
+    public static com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator getInstance()
+    {
+        com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator $r0;
+
+        $r0 = <com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator: com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator INSTANCE>;
+
+        return $r0;
+    }
+
+    private void <init>()
+    {
+        com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator r0;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter: void <init>()>();
+
+        return;
+    }
+
+    public com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity visitBondFuturesSecurity(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity, com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface)
+    {
+        com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity r1;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface r2;
+        double[] r3, $r12, $r18;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] $r6, $r7, $r9, $r15;
+        int $i0, $i1, i3, i4;
+        com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod $r8, $r14;
+        com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity $r10, $r16;
+        com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface $r11, $r17;
+        double $d0, $d1, $d2, $d3, $d4, $d5, d6;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity $r13, r19;
+        byte $b2;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "Future");
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r2, "Issuer and multi-curves provider");
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasketAtDeliveryDate()>();
+
+        $i0 = lengthof $r6;
+
+        r3 = newarray (double)[$i0];
+
+        i3 = 0;
+
+        d6 = 2.0;
+
+        i4 = 0;
+
+     label1:
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasketAtDeliveryDate()>();
+
+        $i1 = lengthof $r7;
+
+        if i4 >= $i1 goto label3;
+
+        $r14 = <com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator: com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod METHOD_BND>;
+
+        $r15 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasketAtDeliveryDate()>();
+
+        $r16 = $r15[i4];
+
+        $r17 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface getIssuerProvider()>();
+
+        $d2 = virtualinvoke $r14.<com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod: double cleanPriceFromCurves(com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity,com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface)>($r16, $r17);
+
+        $r18 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity: double[] getConversionFactor()>();
+
+        $d3 = $r18[i4];
+
+        $d4 = $d2 / $d3;
+
+        r3[i4] = $d4;
+
+        $d5 = r3[i4];
+
+        $b2 = $d5 cmpg d6;
+
+        if $b2 >= 0 goto label2;
+
+        d6 = r3[i4];
+
+        i3 = i4;
+
+     label2:
+        i4 = i4 + 1;
+
+        goto label1;
+
+     label3:
+        $r8 = <com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator: com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod METHOD_BND>;
+
+        $r9 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity: com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity[] getDeliveryBasketAtDeliveryDate()>();
+
+        $r10 = $r9[i3];
+
+        $r11 = interfaceinvoke r2.<com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface: com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface getIssuerProvider()>();
+
+        r19 = virtualinvoke $r8.<com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity dirtyPriceCurveSensitivity(com.opengamma.analytics.financial.interestrate.bond.definition.BondFixedSecurity,com.opengamma.analytics.financial.provider.description.interestrate.IssuerProviderInterface)>($r10, $r11);
+
+        $r12 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity: double[] getConversionFactor()>();
+
+        $d0 = $r12[i3];
+
+        $d1 = 1.0 / $d0;
+
+        $r13 = virtualinvoke r19.<com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity multipliedBy(double)>($d1);
+
+        return $r13;
+    }
+
+    public volatile java.lang.Object visitBondFuturesSecurity(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity, java.lang.Object)
+    {
+        com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity r1;
+        java.lang.Object r2;
+        com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface $r3;
+        com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity;
+
+        r2 := @parameter1: java.lang.Object;
+
+        $r3 = (com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface) r2;
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator: com.opengamma.analytics.financial.provider.sensitivity.multicurve.MulticurveSensitivity visitBondFuturesSecurity(com.opengamma.analytics.financial.interestrate.future.derivative.BondFuturesSecurity,com.opengamma.analytics.financial.provider.description.interestrate.ParameterIssuerProviderInterface)>(r1, $r3);
+
+        return $r4;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator $r0;
+        com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod $r1;
+
+        $r0 = new com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator: void <init>()>();
+
+        <com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator: com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator INSTANCE> = $r0;
+
+        $r1 = staticinvoke <com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod: com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod getInstance()>();
+
+        <com.opengamma.analytics.financial.interestrate.future.calculator.FuturesPriceCurveSensitivityIssuerCalculator: com.opengamma.analytics.financial.interestrate.bond.provider.BondSecurityDiscountingMethod METHOD_BND> = $r1;
+
+        return;
+    }
+}

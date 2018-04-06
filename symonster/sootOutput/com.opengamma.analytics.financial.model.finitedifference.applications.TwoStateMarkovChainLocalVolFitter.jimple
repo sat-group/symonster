@@ -1,0 +1,879 @@
+public class com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter extends java.lang.Object
+{
+    private static final com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D INTERPOLATOR_1D;
+    private static final com.opengamma.analytics.math.interpolation.GridInterpolator2D GRID_INTERPOLATOR2D;
+    private static final com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainFitter CHAIN_FITTER;
+    private static final com.opengamma.analytics.financial.model.volatility.local.DupireLocalVolatilityCalculator LOCAL_VOL_CALC;
+    private static final com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolCalculator MC_LOCAL_VOL_CALC;
+    private final boolean _print;
+
+    public void <init>(boolean)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter r0;
+        boolean z0;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter;
+
+        z0 := @parameter0: boolean;
+
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: boolean _print> = z0;
+
+        return;
+    }
+
+    public void fit(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve, com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceStrike, java.util.List, com.opengamma.analytics.math.matrix.DoubleMatrix1D)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter r0;
+        com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve r1;
+        com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceStrike r2;
+        java.util.List r3;
+        com.opengamma.analytics.math.matrix.DoubleMatrix1D r4, r8;
+        java.util.Map r5, r17;
+        java.util.Set r6;
+        com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResultsWithTransform r7;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, d19, d20, d21, d22, d23;
+        int i2, i7, i8;
+        double[] r10;
+        com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface r11, $r38, r70, r71, r72;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D r16, $r50, $r55, $r62, $r63;
+        com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainFitter $r19;
+        int[] $r20, $r22, $r24, $r26, $r28, $r30;
+        java.lang.Double $r21, $r23, $r25, $r27, $r29, $r31;
+        com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle $r32;
+        com.opengamma.analytics.financial.model.volatility.local.DupireLocalVolatilityCalculator $r33;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6;
+        com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing $r34;
+        com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing $r35;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r36;
+        com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainWithLocalVolDensity $r37, $r43;
+        com.opengamma.analytics.math.surface.ConstantDoublesSurface $r39;
+        com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolCalculator $r40, $r44, $r45;
+        com.opengamma.analytics.math.surface.Surface $r41, $r42, $r60, $r61, $r64, $r65;
+        java.lang.StringBuilder $r46, $r47, $r48, $r51, $r52, $r53, $r56, $r57, $r58;
+        java.lang.String $r49, $r54, $r59;
+        java.lang.Object $r66, $r68;
+        com.opengamma.util.tuple.Pair $r67;
+        byte $b3, $b4, $b5, $b6;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D[] r69, r74;
+        com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainPricer $r75;
+        com.opengamma.analytics.math.interpolation.GridInterpolator2D $r77;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceStrike;
+
+        r3 := @parameter2: java.util.List;
+
+        r4 := @parameter3: com.opengamma.analytics.math.matrix.DoubleMatrix1D;
+
+        r5 = specialinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: java.util.Map convertFormatt(java.util.List)>(r3);
+
+        r6 = interfaceinvoke r5.<java.util.Map: java.util.Set keySet()>();
+
+        $r19 = <com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainFitter CHAIN_FITTER>;
+
+        r7 = virtualinvoke $r19.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainFitter: com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResultsWithTransform fit(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,java.util.List,com.opengamma.analytics.math.matrix.DoubleMatrix1D)>(r1, r3, r4);
+
+        r8 = virtualinvoke r7.<com.opengamma.analytics.math.statistics.leastsquare.LeastSquareResultsWithTransform: com.opengamma.analytics.math.matrix.DoubleMatrix1D getModelParameters()>();
+
+        $r20 = newarray (int)[1];
+
+        $r20[0] = 0;
+
+        $r21 = virtualinvoke r8.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: java.lang.Double getEntry(int[])>($r20);
+
+        d0 = virtualinvoke $r21.<java.lang.Double: double doubleValue()>();
+
+        $r22 = newarray (int)[1];
+
+        $r22[0] = 1;
+
+        $r23 = virtualinvoke r8.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: java.lang.Double getEntry(int[])>($r22);
+
+        $d9 = virtualinvoke $r23.<java.lang.Double: double doubleValue()>();
+
+        d1 = $d9 + d0;
+
+        $r24 = newarray (int)[1];
+
+        $r24[0] = 2;
+
+        $r25 = virtualinvoke r8.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: java.lang.Double getEntry(int[])>($r24);
+
+        d2 = virtualinvoke $r25.<java.lang.Double: double doubleValue()>();
+
+        $r26 = newarray (int)[1];
+
+        $r26[0] = 3;
+
+        $r27 = virtualinvoke r8.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: java.lang.Double getEntry(int[])>($r26);
+
+        d3 = virtualinvoke $r27.<java.lang.Double: double doubleValue()>();
+
+        $r28 = newarray (int)[1];
+
+        $r28[0] = 4;
+
+        $r29 = virtualinvoke r8.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: java.lang.Double getEntry(int[])>($r28);
+
+        d4 = virtualinvoke $r29.<java.lang.Double: double doubleValue()>();
+
+        $r30 = newarray (int)[1];
+
+        $r30[0] = 5;
+
+        $r31 = virtualinvoke r8.<com.opengamma.analytics.math.matrix.DoubleMatrix1D: java.lang.Double getEntry(int[])>($r30);
+
+        d5 = virtualinvoke $r31.<java.lang.Double: double doubleValue()>();
+
+        $r32 = new com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle;
+
+        specialinvoke $r32.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle: void <init>(double,double,double,double,double,double,double)>(d0, d1, d2, d3, d4, d5, d5);
+
+        i2 = interfaceinvoke r3.<java.util.List: int size()>();
+
+        d19 = #Infinity;
+
+        d20 = #Infinity;
+
+        d21 = 0.0;
+
+        d22 = 0.0;
+
+        i7 = 0;
+
+     label01:
+        if i7 >= i2 goto label06;
+
+        $r66 = interfaceinvoke r3.<java.util.List: java.lang.Object get(int)>(i7);
+
+        $r67 = (com.opengamma.util.tuple.Pair) $r66;
+
+        $r68 = virtualinvoke $r67.<com.opengamma.util.tuple.Pair: java.lang.Object getFirst()>();
+
+        r10 = (double[]) $r68;
+
+        $d15 = r10[0];
+
+        $b3 = $d15 cmpl d21;
+
+        if $b3 <= 0 goto label02;
+
+        d21 = r10[0];
+
+     label02:
+        $d16 = r10[0];
+
+        $b4 = $d16 cmpg d19;
+
+        if $b4 >= 0 goto label03;
+
+        d19 = r10[0];
+
+     label03:
+        $d17 = r10[1];
+
+        $b5 = $d17 cmpl d22;
+
+        if $b5 <= 0 goto label04;
+
+        d22 = r10[1];
+
+     label04:
+        $d18 = r10[1];
+
+        $b6 = $d18 cmpg d20;
+
+        if $b6 >= 0 goto label05;
+
+        d20 = r10[1];
+
+     label05:
+        i7 = i7 + 1;
+
+        goto label01;
+
+     label06:
+        d23 = 0.6 * d19;
+
+        d6 = 0.9 * d20;
+
+        d7 = 1.0 * d21;
+
+        d8 = 1.1 * d22;
+
+        $r33 = <com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: com.opengamma.analytics.financial.model.volatility.local.DupireLocalVolatilityCalculator LOCAL_VOL_CALC>;
+
+        $d10 = virtualinvoke r1.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: double getSpot()>();
+
+        $d11 = virtualinvoke r1.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: double getDrift(double)>(0.0);
+
+        r11 = virtualinvoke $r33.<com.opengamma.analytics.financial.model.volatility.local.DupireLocalVolatilityCalculator: com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface getAbsoluteLocalVolatilitySurface(com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceStrike,double,double)>(r2, $d10, $d11);
+
+        $z0 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: boolean _print>;
+
+        if $z0 == 0 goto label07;
+
+        $r64 = virtualinvoke r2.<com.opengamma.analytics.financial.model.volatility.surface.BlackVolatilitySurfaceStrike: com.opengamma.analytics.math.surface.Surface getSurface()>();
+
+        staticinvoke <com.opengamma.analytics.financial.model.finitedifference.applications.PDEUtilityTools: void printSurface(java.lang.String,com.opengamma.analytics.math.surface.Surface,double,double,double,double)>("Market implied Vols", $r64, d23, d7, d6, d8);
+
+        $r65 = virtualinvoke r11.<com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface: com.opengamma.analytics.math.surface.Surface getSurface()>();
+
+        staticinvoke <com.opengamma.analytics.financial.model.finitedifference.applications.PDEUtilityTools: void printSurface(java.lang.String,com.opengamma.analytics.math.surface.Surface,double,double,double,double)>("Market local Vols", $r65, d23, d7, d6, d8);
+
+     label07:
+        $r34 = new com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing;
+
+        specialinvoke $r34.<com.opengamma.analytics.financial.model.finitedifference.ExponentialMeshing: void <init>(double,double,int,double)>(0.0, d21, 50, 2.0);
+
+        $r35 = new com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing;
+
+        $d12 = virtualinvoke r1.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: double getForward(double)>(d21);
+
+        $d13 = 6.0 * $d12;
+
+        $d14 = virtualinvoke r1.<com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve: double getForward(double)>(0.0);
+
+        specialinvoke $r35.<com.opengamma.analytics.financial.model.finitedifference.HyperbolicMeshing: void <init>(double,double,double,int,double)>(0.0, $d13, $d14, 100, 0.01);
+
+        $r36 = new com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D;
+
+        specialinvoke $r36.<com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D: void <init>(com.opengamma.analytics.financial.model.finitedifference.MeshingFunction,com.opengamma.analytics.financial.model.finitedifference.MeshingFunction)>($r34, $r35);
+
+        $r37 = new com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainWithLocalVolDensity;
+
+        $r38 = new com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface;
+
+        $r39 = staticinvoke <com.opengamma.analytics.math.surface.ConstantDoublesSurface: com.opengamma.analytics.math.surface.ConstantDoublesSurface 'from'(double)>(1.0);
+
+        specialinvoke $r38.<com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface: void <init>(com.opengamma.analytics.math.surface.Surface)>($r39);
+
+        specialinvoke $r37.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainWithLocalVolDensity: void <init>(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle,com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface)>(r1, $r32, $r38);
+
+        r69 = virtualinvoke $r37.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainWithLocalVolDensity: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D[] solve(com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D)>($r36);
+
+        $z1 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: boolean _print>;
+
+        if $z1 == 0 goto label08;
+
+        $r62 = r69[0];
+
+        staticinvoke <com.opengamma.analytics.financial.model.finitedifference.applications.PDEUtilityTools: void printSurface(java.lang.String,com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D)>("State 1 densities", $r62);
+
+        $r63 = r69[1];
+
+        staticinvoke <com.opengamma.analytics.financial.model.finitedifference.applications.PDEUtilityTools: void printSurface(java.lang.String,com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D)>("State 2 densities", $r63);
+
+     label08:
+        $r40 = <com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolCalculator MC_LOCAL_VOL_CALC>;
+
+        r70 = virtualinvoke $r40.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolCalculator: com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface calc(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D[],com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle,com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface)>(r69, $r32, null);
+
+        $z2 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: boolean _print>;
+
+        if $z2 == 0 goto label09;
+
+        $r61 = virtualinvoke r70.<com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface: com.opengamma.analytics.math.surface.Surface getSurface()>();
+
+        staticinvoke <com.opengamma.analytics.financial.model.finitedifference.applications.PDEUtilityTools: void printSurface(java.lang.String,com.opengamma.analytics.math.surface.Surface,double,double,double,double)>("Markov local Vols", $r61, d23, d7, d6, d8);
+
+     label09:
+        r71 = null;
+
+        r72 = r70;
+
+        i8 = 0;
+
+     label10:
+        $z6 = specialinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: boolean converged(com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface,com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface,java.util.Set)>(r11, r72, r6);
+
+        if $z6 != 0 goto label13;
+
+        if i8 >= 10 goto label13;
+
+        i8 = i8 + 1;
+
+        r71 = specialinvoke r0.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface getLocalVolOverlay(com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface,com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface)>(r11, r70);
+
+        $z4 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: boolean _print>;
+
+        if $z4 == 0 goto label11;
+
+        $r56 = new java.lang.StringBuilder;
+
+        specialinvoke $r56.<java.lang.StringBuilder: void <init>()>();
+
+        $r57 = virtualinvoke $r56.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Local vol overlay at step ");
+
+        $r58 = virtualinvoke $r57.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i8);
+
+        $r59 = virtualinvoke $r58.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        $r60 = virtualinvoke r71.<com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface: com.opengamma.analytics.math.surface.Surface getSurface()>();
+
+        staticinvoke <com.opengamma.analytics.financial.model.finitedifference.applications.PDEUtilityTools: void printSurface(java.lang.String,com.opengamma.analytics.math.surface.Surface,double,double,double,double)>($r59, $r60, d23, d7, d6, d8);
+
+     label11:
+        $r43 = new com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainWithLocalVolDensity;
+
+        specialinvoke $r43.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainWithLocalVolDensity: void <init>(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle,com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface)>(r1, $r32, r71);
+
+        r74 = virtualinvoke $r43.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainWithLocalVolDensity: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D[] solve(com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D)>($r36);
+
+        $z5 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: boolean _print>;
+
+        if $z5 == 0 goto label12;
+
+        $r46 = new java.lang.StringBuilder;
+
+        specialinvoke $r46.<java.lang.StringBuilder: void <init>()>();
+
+        $r47 = virtualinvoke $r46.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("State 1 densities at step ");
+
+        $r48 = virtualinvoke $r47.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i8);
+
+        $r49 = virtualinvoke $r48.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        $r50 = r74[0];
+
+        staticinvoke <com.opengamma.analytics.financial.model.finitedifference.applications.PDEUtilityTools: void printSurface(java.lang.String,com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D)>($r49, $r50);
+
+        $r51 = new java.lang.StringBuilder;
+
+        specialinvoke $r51.<java.lang.StringBuilder: void <init>()>();
+
+        $r52 = virtualinvoke $r51.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("State 2 densities at step");
+
+        $r53 = virtualinvoke $r52.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i8);
+
+        $r54 = virtualinvoke $r53.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        $r55 = r74[1];
+
+        staticinvoke <com.opengamma.analytics.financial.model.finitedifference.applications.PDEUtilityTools: void printSurface(java.lang.String,com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D)>($r54, $r55);
+
+     label12:
+        $r44 = <com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolCalculator MC_LOCAL_VOL_CALC>;
+
+        r70 = virtualinvoke $r44.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolCalculator: com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface calc(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D[],com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle,com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface)>(r74, $r32, null);
+
+        $r45 = <com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolCalculator MC_LOCAL_VOL_CALC>;
+
+        r72 = virtualinvoke $r45.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolCalculator: com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface calc(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D[],com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle,com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface)>(r74, $r32, r71);
+
+        goto label10;
+
+     label13:
+        $z3 = r0.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: boolean _print>;
+
+        if $z3 == 0 goto label14;
+
+        $r41 = virtualinvoke r72.<com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface: com.opengamma.analytics.math.surface.Surface getSurface()>();
+
+        staticinvoke <com.opengamma.analytics.financial.model.finitedifference.applications.PDEUtilityTools: void printSurface(java.lang.String,com.opengamma.analytics.math.surface.Surface,double,double,double,double)>("Markov LV local Vols", $r41, d23, d7, d6, d8);
+
+        if r71 == null goto label14;
+
+        $r42 = virtualinvoke r71.<com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface: com.opengamma.analytics.math.surface.Surface getSurface()>();
+
+        staticinvoke <com.opengamma.analytics.financial.model.finitedifference.applications.PDEUtilityTools: void printSurface(java.lang.String,com.opengamma.analytics.math.surface.Surface,double,double,double,double)>("Local vol overlay ", $r42, d23, d7, d6, d8);
+
+     label14:
+        $r75 = new com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainPricer;
+
+        specialinvoke $r75.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainPricer: void <init>(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle,com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface)>(r1, $r32, r71);
+
+        r16 = virtualinvoke $r75.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainPricer: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D solve(com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D,double)>($r36, 1.0);
+
+        r17 = staticinvoke <com.opengamma.analytics.financial.model.finitedifference.applications.PDEUtilityTools: java.util.Map priceToImpliedVol(com.opengamma.analytics.financial.model.interestrate.curve.ForwardCurve,com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D,double,double,double,double,boolean)>(r1, r16, d23, d7, d6, d8, 1);
+
+        $r77 = <com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: com.opengamma.analytics.math.interpolation.GridInterpolator2D GRID_INTERPOLATOR2D>;
+
+        virtualinvoke $r77.<com.opengamma.analytics.math.interpolation.GridInterpolator2D: java.util.Map getDataBundle(java.util.Map)>(r17);
+
+        return;
+    }
+
+    private boolean converged(com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface, com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface, java.util.Set)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter r0;
+        com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface r1, r2;
+        java.util.Set r3;
+        java.util.Iterator r4;
+        com.opengamma.util.tuple.DoublesPair r5;
+        double d0, $d1, $d2, $d3, d4;
+        boolean $z0, $z1;
+        byte $b0;
+        java.lang.Object $r6;
+        java.lang.Double $r7, $r8;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface;
+
+        r3 := @parameter2: java.util.Set;
+
+        d4 = 0.0;
+
+        r4 = interfaceinvoke r3.<java.util.Set: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r4.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label2;
+
+        $r6 = interfaceinvoke r4.<java.util.Iterator: java.lang.Object next()>();
+
+        r5 = (com.opengamma.util.tuple.DoublesPair) $r6;
+
+        $r7 = virtualinvoke r1.<com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface: java.lang.Double getVolatility(com.opengamma.util.tuple.DoublesPair)>(r5);
+
+        $d1 = virtualinvoke $r7.<java.lang.Double: double doubleValue()>();
+
+        $r8 = virtualinvoke r2.<com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface: java.lang.Double getVolatility(com.opengamma.util.tuple.DoublesPair)>(r5);
+
+        $d2 = virtualinvoke $r8.<java.lang.Double: double doubleValue()>();
+
+        d0 = $d1 - $d2;
+
+        $d3 = d0 * d0;
+
+        d4 = d4 + $d3;
+
+        goto label1;
+
+     label2:
+        $b0 = d4 cmpg 1.0E-5;
+
+        if $b0 >= 0 goto label3;
+
+        $z1 = 1;
+
+        goto label4;
+
+     label3:
+        $z1 = 0;
+
+     label4:
+        return $z1;
+    }
+
+    private com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D getLocalVol(com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D[], com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter r0;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D[] r1;
+        com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle r2;
+        int i0, i1, i3, i4;
+        double[][] r3;
+        double d0, d1, d2, d3, d4, d5, $d6, $d7, $d8, $d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D $r4, $r5, $r6, $r7, $r9, $r10, $r11;
+        com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D $r8;
+        byte $b2;
+        double[] $r12;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D[];
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle;
+
+        $r4 = r1[0];
+
+        i0 = virtualinvoke $r4.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: int getNumberTimeNodes()>();
+
+        $r5 = r1[0];
+
+        i1 = virtualinvoke $r5.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: int getNumberSpaceNodes()>();
+
+        r3 = newmultiarray (double)[i0][i1];
+
+        i3 = 0;
+
+     label1:
+        if i3 >= i1 goto label5;
+
+        $r9 = r1[0];
+
+        d0 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getSpaceValue(int)>(i3);
+
+        $d6 = virtualinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle: double getVol1()>();
+
+        $d7 = virtualinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle: double getVol1()>();
+
+        $d8 = $d6 * $d7;
+
+        $d9 = virtualinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle: double getBeta1()>();
+
+        $d10 = 2.0 * $d9;
+
+        $d11 = $d10 - 2.0;
+
+        $d12 = staticinvoke <java.lang.Math: double pow(double,double)>(d0, $d11);
+
+        d1 = $d8 * $d12;
+
+        $d13 = virtualinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle: double getVol2()>();
+
+        $d14 = virtualinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle: double getVol2()>();
+
+        $d15 = $d13 * $d14;
+
+        $d16 = virtualinvoke r2.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle: double getBeta2()>();
+
+        $d17 = 2.0 * $d16;
+
+        $d18 = $d17 - 2.0;
+
+        $d19 = staticinvoke <java.lang.Math: double pow(double,double)>(d0, $d18);
+
+        d2 = $d15 * $d19;
+
+        i4 = 0;
+
+     label2:
+        if i4 >= i0 goto label4;
+
+        $r10 = r1[0];
+
+        d3 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int,int)>(i3, i4);
+
+        $r11 = r1[1];
+
+        d4 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int,int)>(i3, i4);
+
+        d5 = d3 + d4;
+
+        $b2 = d5 cmpl 0.0;
+
+        if $b2 <= 0 goto label3;
+
+        $r12 = r3[i4];
+
+        $d21 = d1 * d3;
+
+        $d20 = d2 * d4;
+
+        $d22 = $d21 + $d20;
+
+        $d23 = $d22 / d5;
+
+        $d24 = staticinvoke <java.lang.Math: double sqrt(double)>($d23);
+
+        $r12[i3] = $d24;
+
+     label3:
+        i4 = i4 + 1;
+
+        goto label2;
+
+     label4:
+        i3 = i3 + 1;
+
+        goto label1;
+
+     label5:
+        $r6 = new com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D;
+
+        $r7 = r1[0];
+
+        $r8 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D getGrid()>();
+
+        specialinvoke $r6.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: void <init>(com.opengamma.analytics.financial.model.finitedifference.PDEGrid1D,double[][])>($r8, r3);
+
+        return $r6;
+    }
+
+    private com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface getLocalVolOverlay(com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface, com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter r0;
+        com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface r1, r2, $r5;
+        com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter$1 $r4;
+        com.opengamma.analytics.math.surface.FunctionalDoublesSurface $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface;
+
+        $r4 = new com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter$1;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter$1: void <init>(com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter,com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface,com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface)>(r0, r1, r2);
+
+        $r5 = new com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface;
+
+        $r6 = staticinvoke <com.opengamma.analytics.math.surface.FunctionalDoublesSurface: com.opengamma.analytics.math.surface.FunctionalDoublesSurface 'from'(com.opengamma.analytics.math.function.Function)>($r4);
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.model.volatility.local.AbsoluteLocalVolatilitySurface: void <init>(com.opengamma.analytics.math.surface.Surface)>($r6);
+
+        return $r5;
+    }
+
+    private java.util.Map getLocalVolOverlay(com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike, com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D[], com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle, com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter r0;
+        com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike r1, r4;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D[] r2;
+        com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle r3;
+        int i0, i1, $i2, i6, i7;
+        double d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, $d10, $d11, $d12, $d13, $d14, $d15, $d16, $d17, $d18, $d19, $d20, $d21, $d22, $d23, $d24, $d25, $d26, $d27, $d28, $d29, $d30, d31;
+        com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D $r6, $r7, $r9, $r10, $r11, $r12;
+        java.util.HashMap $r8;
+        byte $b3, $b4, $b5;
+        com.opengamma.util.tuple.DoublesPair $r13;
+        java.lang.Double $r14;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike;
+
+        r2 := @parameter1: com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D[];
+
+        r3 := @parameter2: com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle;
+
+        r4 := @parameter3: com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike;
+
+        $r6 = r2[0];
+
+        i0 = virtualinvoke $r6.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: int getNumberTimeNodes()>();
+
+        $r7 = r2[0];
+
+        i1 = virtualinvoke $r7.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: int getNumberSpaceNodes()>();
+
+        $r8 = new java.util.HashMap;
+
+        $i2 = i0 * i1;
+
+        specialinvoke $r8.<java.util.HashMap: void <init>(int)>($i2);
+
+        i6 = 0;
+
+     label1:
+        if i6 >= i1 goto label6;
+
+        $r9 = r2[0];
+
+        d1 = virtualinvoke $r9.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getSpaceValue(int)>(i6);
+
+        $d10 = virtualinvoke r3.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle: double getVol1()>();
+
+        $d11 = virtualinvoke r3.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle: double getVol1()>();
+
+        $d12 = $d10 * $d11;
+
+        $d13 = virtualinvoke r3.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle: double getBeta1()>();
+
+        $d14 = 2.0 * $d13;
+
+        $d15 = $d14 - 2.0;
+
+        $d16 = staticinvoke <java.lang.Math: double pow(double,double)>(d1, $d15);
+
+        d2 = $d12 * $d16;
+
+        $d17 = virtualinvoke r3.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle: double getVol2()>();
+
+        $d18 = virtualinvoke r3.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle: double getVol2()>();
+
+        $d19 = $d17 * $d18;
+
+        $d20 = virtualinvoke r3.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainDataBundle: double getBeta2()>();
+
+        $d21 = 2.0 * $d20;
+
+        $d22 = $d21 - 2.0;
+
+        $d23 = staticinvoke <java.lang.Math: double pow(double,double)>(d1, $d22);
+
+        d3 = $d19 * $d23;
+
+        i7 = 0;
+
+     label2:
+        if i7 >= i0 goto label5;
+
+        $r10 = r2[0];
+
+        d0 = virtualinvoke $r10.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getTimeValue(int)>(i7);
+
+        $r11 = r2[0];
+
+        d4 = virtualinvoke $r11.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int,int)>(i6, i7);
+
+        $r12 = r2[1];
+
+        d5 = virtualinvoke $r12.<com.opengamma.analytics.financial.model.finitedifference.PDEFullResults1D: double getFunctionValue(int,int)>(i6, i7);
+
+        d6 = d4 + d5;
+
+        $b3 = d6 cmpl 0.0;
+
+        if $b3 <= 0 goto label4;
+
+        $d25 = d2 * d4;
+
+        $d24 = d3 * d5;
+
+        $d26 = $d25 + $d24;
+
+        d7 = $d26 / d6;
+
+        d8 = virtualinvoke r1.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike: double getVolatility(double,double)>(d0, d1);
+
+        d31 = 1.0;
+
+        if r4 == null goto label3;
+
+        d31 = virtualinvoke r4.<com.opengamma.analytics.financial.model.volatility.local.LocalVolatilitySurfaceStrike: double getVolatility(double,double)>(d0, d1);
+
+     label3:
+        $b4 = d7 cmpl 0.0;
+
+        if $b4 <= 0 goto label4;
+
+        $b5 = d31 cmpl 0.0;
+
+        if $b5 <= 0 goto label4;
+
+        $d27 = d8 * d8;
+
+        $d28 = $d27 / d31;
+
+        $d29 = $d28 / d31;
+
+        d9 = $d29 / d7;
+
+        $r13 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>(d0, d1);
+
+        $d30 = staticinvoke <java.lang.Math: double sqrt(double)>(d9);
+
+        $r14 = staticinvoke <java.lang.Double: java.lang.Double valueOf(double)>($d30);
+
+        interfaceinvoke $r8.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r13, $r14);
+
+     label4:
+        i7 = i7 + 1;
+
+        goto label2;
+
+     label5:
+        i6 = i6 + 1;
+
+        goto label1;
+
+     label6:
+        return $r8;
+    }
+
+    private java.util.Map convertFormatt(java.util.List)
+    {
+        com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter r0;
+        java.util.List r1;
+        java.util.Iterator r3;
+        com.opengamma.util.tuple.Pair r4;
+        java.util.HashMap $r5;
+        int $i0;
+        boolean $z0;
+        java.lang.Object $r6, $r7, $r9, $r12;
+        double[] $r8, $r10;
+        double $d0, $d1;
+        com.opengamma.util.tuple.DoublesPair $r11;
+
+        r0 := @this: com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter;
+
+        r1 := @parameter0: java.util.List;
+
+        $r5 = new java.util.HashMap;
+
+        $i0 = interfaceinvoke r1.<java.util.List: int size()>();
+
+        specialinvoke $r5.<java.util.HashMap: void <init>(int)>($i0);
+
+        r3 = interfaceinvoke r1.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+
+        if $z0 == 0 goto label2;
+
+        $r6 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+
+        r4 = (com.opengamma.util.tuple.Pair) $r6;
+
+        $r7 = virtualinvoke r4.<com.opengamma.util.tuple.Pair: java.lang.Object getFirst()>();
+
+        $r8 = (double[]) $r7;
+
+        $d0 = $r8[0];
+
+        $r9 = virtualinvoke r4.<com.opengamma.util.tuple.Pair: java.lang.Object getFirst()>();
+
+        $r10 = (double[]) $r9;
+
+        $d1 = $r10[1];
+
+        $r11 = staticinvoke <com.opengamma.util.tuple.DoublesPair: com.opengamma.util.tuple.DoublesPair of(double,double)>($d0, $d1);
+
+        $r12 = virtualinvoke r4.<com.opengamma.util.tuple.Pair: java.lang.Object getSecond()>();
+
+        interfaceinvoke $r5.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r11, $r12);
+
+        goto label1;
+
+     label2:
+        return $r5;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D $r0, $r2, $r3;
+        com.opengamma.analytics.math.interpolation.GridInterpolator2D $r1;
+        com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainFitter $r4;
+        com.opengamma.analytics.financial.model.volatility.local.DupireLocalVolatilityCalculator $r5;
+        com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolCalculator $r6;
+
+        $r0 = new com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D;
+
+        specialinvoke $r0.<com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D INTERPOLATOR_1D> = $r0;
+
+        $r1 = new com.opengamma.analytics.math.interpolation.GridInterpolator2D;
+
+        $r3 = <com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D INTERPOLATOR_1D>;
+
+        $r2 = <com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: com.opengamma.analytics.math.interpolation.DoubleQuadraticInterpolator1D INTERPOLATOR_1D>;
+
+        specialinvoke $r1.<com.opengamma.analytics.math.interpolation.GridInterpolator2D: void <init>(com.opengamma.analytics.math.interpolation.Interpolator1D,com.opengamma.analytics.math.interpolation.Interpolator1D)>($r3, $r2);
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: com.opengamma.analytics.math.interpolation.GridInterpolator2D GRID_INTERPOLATOR2D> = $r1;
+
+        $r4 = new com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainFitter;
+
+        specialinvoke $r4.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainFitter: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainFitter CHAIN_FITTER> = $r4;
+
+        $r5 = new com.opengamma.analytics.financial.model.volatility.local.DupireLocalVolatilityCalculator;
+
+        specialinvoke $r5.<com.opengamma.analytics.financial.model.volatility.local.DupireLocalVolatilityCalculator: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: com.opengamma.analytics.financial.model.volatility.local.DupireLocalVolatilityCalculator LOCAL_VOL_CALC> = $r5;
+
+        $r6 = new com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolCalculator;
+
+        specialinvoke $r6.<com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolCalculator: void <init>()>();
+
+        <com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolFitter: com.opengamma.analytics.financial.model.finitedifference.applications.TwoStateMarkovChainLocalVolCalculator MC_LOCAL_VOL_CALC> = $r6;
+
+        return;
+    }
+}

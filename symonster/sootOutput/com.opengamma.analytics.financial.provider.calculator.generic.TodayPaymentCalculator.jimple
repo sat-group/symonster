@@ -1,0 +1,1187 @@
+public final class com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator extends com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter
+{
+    private static final double DEFAULT_TIME_LIMIT_TODAY;
+    private static final com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator INSTANCE;
+    private final double _timeLimit;
+
+    public static com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator getInstance()
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator $r0;
+
+        $r0 = <com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator INSTANCE>;
+
+        return $r0;
+    }
+
+    public static com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator getInstance(double)
+    {
+        double d0;
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator $r0;
+
+        d0 := @parameter0: double;
+
+        $r0 = new com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: void <init>(double)>(d0);
+
+        return $r0;
+    }
+
+    private void <init>(double)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        double d0;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        d0 := @parameter0: double;
+
+        specialinvoke r0.<com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitorAdapter: void <init>()>();
+
+        r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: double _timeLimit> = d0;
+
+        return;
+    }
+
+    private boolean isWithinLimit(double)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        double d0, $d1, $d2, $d3, $d4, $d5;
+        byte $b0, $b1;
+        boolean $z0;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        d0 := @parameter0: double;
+
+        $d1 = staticinvoke <java.lang.Math: double abs(double)>(d0);
+
+        $d2 = r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: double _timeLimit>;
+
+        $d3 = staticinvoke <java.lang.Math: double abs(double)>($d2);
+
+        $b0 = $d1 cmpg $d3;
+
+        if $b0 >= 0 goto label1;
+
+        $d4 = r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: double _timeLimit>;
+
+        $d5 = $d4 * d0;
+
+        $b1 = $d5 cmpl 0.0;
+
+        if $b1 < 0 goto label1;
+
+        $z0 = 1;
+
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitCash(com.opengamma.analytics.financial.interestrate.cash.derivative.Cash)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.cash.derivative.Cash r1;
+        com.opengamma.util.money.Currency $r3, $r4, $r5;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6;
+        boolean $z0, $z1;
+        com.opengamma.util.money.MultipleCurrencyAmount r6;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.cash.derivative.Cash;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.Cash: com.opengamma.util.money.Currency getCurrency()>();
+
+        r6 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        $d0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.Cash: double getStartTime()>();
+
+        $z0 = specialinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: boolean isWithinLimit(double)>($d0);
+
+        if $z0 == 0 goto label1;
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.Cash: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.Cash: double getInitialAmount()>();
+
+        $d6 = neg $d5;
+
+        r6 = virtualinvoke r6.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.Currency,double)>($r5, $d6);
+
+     label1:
+        $d1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.Cash: double getEndTime()>();
+
+        $z1 = specialinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: boolean isWithinLimit(double)>($d1);
+
+        if $z1 == 0 goto label2;
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.Cash: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d2 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.Cash: double getNotional()>();
+
+        $d3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.Cash: double getInterestAmount()>();
+
+        $d4 = $d2 + $d3;
+
+        r6 = virtualinvoke r6.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.Currency,double)>($r4, $d4);
+
+     label2:
+        return r6;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitDepositZero(com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero r1;
+        com.opengamma.util.money.Currency $r3, $r4, $r5;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6;
+        boolean $z0, $z1;
+        com.opengamma.util.money.MultipleCurrencyAmount r6;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero: com.opengamma.util.money.Currency getCurrency()>();
+
+        r6 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        $d0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero: double getStartTime()>();
+
+        $z0 = specialinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: boolean isWithinLimit(double)>($d0);
+
+        if $z0 == 0 goto label1;
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero: double getInitialAmount()>();
+
+        $d6 = neg $d5;
+
+        r6 = virtualinvoke r6.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.Currency,double)>($r5, $d6);
+
+     label1:
+        $d1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero: double getEndTime()>();
+
+        $z1 = specialinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: boolean isWithinLimit(double)>($d1);
+
+        if $z1 == 0 goto label2;
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d2 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero: double getNotional()>();
+
+        $d3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero: double getInterestAmount()>();
+
+        $d4 = $d2 + $d3;
+
+        r6 = virtualinvoke r6.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.Currency,double)>($r4, $d4);
+
+     label2:
+        return r6;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitDepositCounterpart(com.opengamma.analytics.financial.interestrate.cash.derivative.DepositCounterpart)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.cash.derivative.DepositCounterpart r1;
+        com.opengamma.util.money.Currency $r3, $r4, $r5;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6;
+        boolean $z0, $z1;
+        com.opengamma.util.money.MultipleCurrencyAmount r6;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.cash.derivative.DepositCounterpart;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.DepositCounterpart: com.opengamma.util.money.Currency getCurrency()>();
+
+        r6 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        $d0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.DepositCounterpart: double getStartTime()>();
+
+        $z0 = specialinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: boolean isWithinLimit(double)>($d0);
+
+        if $z0 == 0 goto label1;
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.DepositCounterpart: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.DepositCounterpart: double getInitialAmount()>();
+
+        $d6 = neg $d5;
+
+        r6 = virtualinvoke r6.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.Currency,double)>($r5, $d6);
+
+     label1:
+        $d1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.DepositCounterpart: double getEndTime()>();
+
+        $z1 = specialinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: boolean isWithinLimit(double)>($d1);
+
+        if $z1 == 0 goto label2;
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.DepositCounterpart: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d2 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.DepositCounterpart: double getNotional()>();
+
+        $d3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.cash.derivative.DepositCounterpart: double getInterestAmount()>();
+
+        $d4 = $d2 + $d3;
+
+        r6 = virtualinvoke r6.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.Currency,double)>($r4, $d4);
+
+     label2:
+        return r6;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitForwardRateAgreement(com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement r1;
+        com.opengamma.util.money.Currency $r3;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r4 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        return $r4;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitInterestRateFutureTransaction(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureTransaction)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureTransaction r1;
+        com.opengamma.util.money.Currency $r3;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureTransaction;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureTransaction: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r4 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        return $r4;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitInterestRateFutureOptionMarginTransaction(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginTransaction)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginTransaction r1;
+        com.opengamma.analytics.financial.interestrate.future.derivative.FuturesSecurity $r3;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity $r4;
+        com.opengamma.util.money.Currency $r5;
+        com.opengamma.util.money.MultipleCurrencyAmount $r6;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginTransaction;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginTransaction: com.opengamma.analytics.financial.interestrate.future.derivative.FuturesSecurity getUnderlyingSecurity()>();
+
+        $r4 = (com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity) $r3;
+
+        $r5 = virtualinvoke $r4.<com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginSecurity: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r6 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r5, 0.0);
+
+        return $r6;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitCouponFixed(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed r1;
+        com.opengamma.util.money.Currency $r3, $r4;
+        double $d0, $d1;
+        boolean $z0;
+        com.opengamma.util.money.MultipleCurrencyAmount r5;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: com.opengamma.util.money.Currency getCurrency()>();
+
+        r5 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        $d0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: double getPaymentTime()>();
+
+        $z0 = specialinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: boolean isWithinLimit(double)>($d0);
+
+        if $z0 == 0 goto label1;
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed: double getAmount()>();
+
+        r5 = virtualinvoke r5.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.Currency,double)>($r4, $d1);
+
+     label1:
+        return r5;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitFixedPayment(com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed r1;
+        com.opengamma.util.money.Currency $r3, $r4;
+        double $d0, $d1;
+        boolean $z0;
+        com.opengamma.util.money.MultipleCurrencyAmount r5;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: com.opengamma.util.money.Currency getCurrency()>();
+
+        r5 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        $d0 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getPaymentTime()>();
+
+        $z0 = specialinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: boolean isWithinLimit(double)>($d0);
+
+        if $z0 == 0 goto label1;
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: com.opengamma.util.money.Currency getCurrency()>();
+
+        $d1 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed: double getAmount()>();
+
+        r5 = virtualinvoke r5.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.Currency,double)>($r4, $d1);
+
+     label1:
+        return r5;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitCouponIbor(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor r1;
+        com.opengamma.util.money.Currency $r3;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r4 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        return $r4;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitCouponIborSpread(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread r1;
+        com.opengamma.util.money.Currency $r3;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r4 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        return $r4;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitCouponIborGearing(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing r1;
+        com.opengamma.util.money.Currency $r3;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r4 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        return $r4;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitCouponOIS(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON r1;
+        com.opengamma.util.money.Currency $r3;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r4 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        return $r4;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitCouponFixedAccruedCompounding(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixedAccruedCompounding)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixedAccruedCompounding r1;
+        com.opengamma.util.money.Currency $r3;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixedAccruedCompounding;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixedAccruedCompounding: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r4 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        return $r4;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitCouponONCompounded(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONCompounded)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONCompounded r1;
+        com.opengamma.util.money.Currency $r3;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONCompounded;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONCompounded: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r4 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        return $r4;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitGenericAnnuity(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity r1;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment[] r2;
+        int i0, i1;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.Payment r3;
+        com.opengamma.util.money.Currency $r5;
+        java.lang.Object $r6;
+        com.opengamma.util.money.MultipleCurrencyAmount $r7, r8;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.util.money.Currency getCurrency()>();
+
+        r8 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r5, 0.0);
+
+        r2 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: com.opengamma.analytics.financial.interestrate.payments.derivative.Payment[] getPayments()>();
+
+        i0 = lengthof r2;
+
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        r3 = r2[i1];
+
+        $r6 = virtualinvoke r3.<com.opengamma.analytics.financial.interestrate.payments.derivative.Payment: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)>(r0);
+
+        $r7 = (com.opengamma.util.money.MultipleCurrencyAmount) $r6;
+
+        r8 = virtualinvoke r8.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.MultipleCurrencyAmount)>($r7);
+
+        i1 = i1 + 1;
+
+        goto label1;
+
+     label2:
+        return r8;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitFixedCouponAnnuity(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitGenericAnnuity(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity)>(r1);
+
+        return $r2;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.Swap)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.Swap r1;
+        com.opengamma.util.money.MultipleCurrencyAmount r2, $r8, $r9;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity $r4, $r6;
+        java.lang.Object $r5, $r7;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swap.derivative.Swap;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r4 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.Swap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getFirstLeg()>();
+
+        $r5 = virtualinvoke $r4.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)>(r0);
+
+        r2 = (com.opengamma.util.money.MultipleCurrencyAmount) $r5;
+
+        $r6 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swap.derivative.Swap: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity getSecondLeg()>();
+
+        $r7 = virtualinvoke $r6.<com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity: java.lang.Object accept(com.opengamma.analytics.financial.interestrate.InstrumentDerivativeVisitor)>(r0);
+
+        $r8 = (com.opengamma.util.money.MultipleCurrencyAmount) $r7;
+
+        $r9 = virtualinvoke r2.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.MultipleCurrencyAmount)>($r8);
+
+        return $r9;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.Swap)>(r1);
+
+        return $r2;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitSwaptionPhysicalFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor r1;
+        com.opengamma.util.money.Currency $r3;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r4 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        return $r4;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitSwaptionCashFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor r1;
+        com.opengamma.util.money.Currency $r3;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor: com.opengamma.util.money.Currency getCurrency()>();
+
+        $r4 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        return $r4;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitForex(com.opengamma.analytics.financial.forex.derivative.Forex)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.forex.derivative.Forex r1;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed $r3, $r5;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4, $r6, $r7;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.Forex;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency1()>();
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitFixedPayment(com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed)>($r3);
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.Forex: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed getPaymentCurrency2()>();
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitFixedPayment(com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed)>($r5);
+
+        $r7 = virtualinvoke $r4.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.MultipleCurrencyAmount)>($r6);
+
+        return $r7;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitForexSwap(com.opengamma.analytics.financial.forex.derivative.ForexSwap)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexSwap r1;
+        com.opengamma.analytics.financial.forex.derivative.Forex $r3, $r5;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4, $r6, $r7;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexSwap;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexSwap: com.opengamma.analytics.financial.forex.derivative.Forex getNearLeg()>();
+
+        $r4 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitForex(com.opengamma.analytics.financial.forex.derivative.Forex)>($r3);
+
+        $r5 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexSwap: com.opengamma.analytics.financial.forex.derivative.Forex getFarLeg()>();
+
+        $r6 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitForex(com.opengamma.analytics.financial.forex.derivative.Forex)>($r5);
+
+        $r7 = virtualinvoke $r4.<com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount plus(com.opengamma.util.money.MultipleCurrencyAmount)>($r6);
+
+        return $r7;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitForexOptionVanilla(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla r1;
+        com.opengamma.util.money.Currency $r3;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r4 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        return $r4;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitForexOptionSingleBarrier(com.opengamma.analytics.financial.forex.derivative.ForexOptionSingleBarrier)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionSingleBarrier r1;
+        com.opengamma.util.money.Currency $r3;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionSingleBarrier;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionSingleBarrier: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r4 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        return $r4;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitForexOptionDigital(com.opengamma.analytics.financial.forex.derivative.ForexOptionDigital)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionDigital r1;
+        com.opengamma.util.money.Currency $r3;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionDigital;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexOptionDigital: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r4 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        return $r4;
+    }
+
+    public com.opengamma.util.money.MultipleCurrencyAmount visitForexNonDeliverableForward(com.opengamma.analytics.financial.forex.derivative.ForexNonDeliverableForward)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexNonDeliverableForward r1;
+        com.opengamma.util.money.Currency $r3;
+        com.opengamma.util.money.MultipleCurrencyAmount $r4;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexNonDeliverableForward;
+
+        staticinvoke <com.opengamma.util.ArgumentChecker: java.lang.Object notNull(java.lang.Object,java.lang.String)>(r1, "instrument");
+
+        $r3 = virtualinvoke r1.<com.opengamma.analytics.financial.forex.derivative.ForexNonDeliverableForward: com.opengamma.util.money.Currency getCurrency1()>();
+
+        $r4 = staticinvoke <com.opengamma.util.money.MultipleCurrencyAmount: com.opengamma.util.money.MultipleCurrencyAmount of(com.opengamma.util.money.Currency,double)>($r3, 0.0);
+
+        return $r4;
+    }
+
+    public volatile java.lang.Object visitForexOptionDigital(com.opengamma.analytics.financial.forex.derivative.ForexOptionDigital)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionDigital r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionDigital;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitForexOptionDigital(com.opengamma.analytics.financial.forex.derivative.ForexOptionDigital)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitForexNonDeliverableForward(com.opengamma.analytics.financial.forex.derivative.ForexNonDeliverableForward)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexNonDeliverableForward r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexNonDeliverableForward;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitForexNonDeliverableForward(com.opengamma.analytics.financial.forex.derivative.ForexNonDeliverableForward)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitForexOptionSingleBarrier(com.opengamma.analytics.financial.forex.derivative.ForexOptionSingleBarrier)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionSingleBarrier r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionSingleBarrier;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitForexOptionSingleBarrier(com.opengamma.analytics.financial.forex.derivative.ForexOptionSingleBarrier)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitForexOptionVanilla(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitForexOptionVanilla(com.opengamma.analytics.financial.forex.derivative.ForexOptionVanilla)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitForexSwap(com.opengamma.analytics.financial.forex.derivative.ForexSwap)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.forex.derivative.ForexSwap r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.ForexSwap;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitForexSwap(com.opengamma.analytics.financial.forex.derivative.ForexSwap)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitForex(com.opengamma.analytics.financial.forex.derivative.Forex)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.forex.derivative.Forex r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.forex.derivative.Forex;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitForex(com.opengamma.analytics.financial.forex.derivative.Forex)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitDepositZero(com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitDepositZero(com.opengamma.analytics.financial.interestrate.cash.derivative.DepositZero)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitDepositCounterpart(com.opengamma.analytics.financial.interestrate.cash.derivative.DepositCounterpart)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.cash.derivative.DepositCounterpart r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.cash.derivative.DepositCounterpart;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitDepositCounterpart(com.opengamma.analytics.financial.interestrate.cash.derivative.DepositCounterpart)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.Swap)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.Swap r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swap.derivative.Swap;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.Swap)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitInterestRateFutureOptionMarginTransaction(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginTransaction)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginTransaction r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginTransaction;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitInterestRateFutureOptionMarginTransaction(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureOptionMarginTransaction)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitInterestRateFutureTransaction(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureTransaction)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureTransaction r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureTransaction;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitInterestRateFutureTransaction(com.opengamma.analytics.financial.interestrate.future.derivative.InterestRateFutureTransaction)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitCouponOIS(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitCouponOIS(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponON)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitCouponONCompounded(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONCompounded)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONCompounded r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONCompounded;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitCouponONCompounded(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponONCompounded)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitCouponIborGearing(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitCouponIborGearing(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborGearing)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitCouponIborSpread(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitCouponIborSpread(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIborSpread)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitCouponIbor(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitCouponIbor(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponIbor)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitCouponFixedAccruedCompounding(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixedAccruedCompounding)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixedAccruedCompounding r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixedAccruedCompounding;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitCouponFixedAccruedCompounding(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixedAccruedCompounding)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitCouponFixed(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitCouponFixed(com.opengamma.analytics.financial.interestrate.payments.derivative.CouponFixed)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitFixedPayment(com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitFixedPayment(com.opengamma.analytics.financial.interestrate.payments.derivative.PaymentFixed)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitFixedCouponSwap(com.opengamma.analytics.financial.interestrate.swap.derivative.SwapFixedCoupon)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitSwaptionPhysicalFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitSwaptionPhysicalFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionPhysicalFixedIbor)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitSwaptionCashFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitSwaptionCashFixedIbor(com.opengamma.analytics.financial.interestrate.swaption.derivative.SwaptionCashFixedIbor)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitGenericAnnuity(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitGenericAnnuity(com.opengamma.analytics.financial.interestrate.annuity.derivative.Annuity)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitForwardRateAgreement(com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitForwardRateAgreement(com.opengamma.analytics.financial.interestrate.fra.derivative.ForwardRateAgreement)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitCash(com.opengamma.analytics.financial.interestrate.cash.derivative.Cash)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.cash.derivative.Cash r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.cash.derivative.Cash;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitCash(com.opengamma.analytics.financial.interestrate.cash.derivative.Cash)>(r1);
+
+        return $r2;
+    }
+
+    public volatile java.lang.Object visitFixedCouponAnnuity(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed)
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator r0;
+        com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed r1;
+        com.opengamma.util.money.MultipleCurrencyAmount $r2;
+
+        r0 := @this: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        r1 := @parameter0: com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed;
+
+        $r2 = virtualinvoke r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.util.money.MultipleCurrencyAmount visitFixedCouponAnnuity(com.opengamma.analytics.financial.interestrate.annuity.derivative.AnnuityCouponFixed)>(r1);
+
+        return $r2;
+    }
+
+    static void <clinit>()
+    {
+        com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator $r0;
+
+        <com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: double DEFAULT_TIME_LIMIT_TODAY> = 0.002;
+
+        $r0 = new com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator;
+
+        specialinvoke $r0.<com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: void <init>(double)>(0.002);
+
+        <com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator: com.opengamma.analytics.financial.provider.calculator.generic.TodayPaymentCalculator INSTANCE> = $r0;
+
+        return;
+    }
+}
