@@ -37,12 +37,23 @@ public class BuildNetWithoutClone {
     private static void handlePolymorphism() {
         // This method handles polymorphism by creating methods that transforms each
         // subclass into its super class
-
         for(String subClass : superDict.keySet()) {
+            try {
+                petrinet.getPlace(subClass.toString());
+            } catch (NoSuchNodeException e ) {
+                petrinet.createPlace(subClass.toString());
+            }
+            assert (petrinet.containsNode(subClass));
             for (String superClass : superDict.get(subClass)) {
-                assert (petrinet.containsNode(subClass));
+                // If the class is not in the petrinet, create the class
+                try {
+                    petrinet.getPlace(superClass.toString());
+                } catch (NoSuchNodeException e) {
+                    petrinet.createPlace(superClass.toString());
+                }
                 assert (petrinet.containsNode(superClass));
-                String methodName = subClass + "=" + superClass;
+
+                String methodName = subClass + "IsPolymorphicTo" + superClass;
                 petrinet.createTransition(methodName);
                 petrinet.createFlow(subClass, methodName);
                 petrinet.createFlow(methodName, superClass);
@@ -74,6 +85,7 @@ public class BuildNetWithoutClone {
                                             int count,
                                             List<Place> inputs,
                                             List<Place> trueInputs) {
+        System.out.println(inputs.size() + "  " + count);
         if(inputs.size() == count) {
             // skip if true inputs is same as inputs
             boolean skip = true;
@@ -97,6 +109,7 @@ public class BuildNetWithoutClone {
             }
             Transition newTransition  = petrinet.createTransition(newTransitionName);
             // Add inputs
+            System.out.println(inputs.size() + " " + trueInputs.size());
             for(Place p : trueInputs) {
                 try {
                     Flow f = petrinet.getFlow(p, newTransition);
@@ -122,7 +135,15 @@ public class BuildNetWithoutClone {
                 return;
             } else {
                 for(String subclass : subClasses) {
-                    Place polyClass = petrinet.getPlace(subclass);
+                    Place polyClass;
+                    try {
+                        polyClass = petrinet.getPlace(subclass);
+                    } catch (NoSuchNodeException e) {
+                        polyClass = petrinet.createPlace(subclass);
+                    }
+
+                    assert(petrinet.getPlace(subclass) != null);
+
                     trueInputs.add(polyClass);
                     generatePolymophism(t, count+1, inputs, trueInputs);
                     trueInputs.remove(polyClass);
@@ -234,15 +255,6 @@ public class BuildNetWithoutClone {
         petrinet.createPlace("void");
 
         //iterate through each method
-        for(MethodSignature k : result) {
-            if(k.getHostClass().toString() == "org.apache.commons.math3.linear.BlockRealMatrix") {
-                System.out.println(k);
-                System.out.println(k.getIsStatic());
-                System.out.println(k.getHostClass());
-                System.out.println(k.getArgTypes());
-                System.out.println();
-            }
-        }
 
         for (MethodSignature k : result) {
             String methodname = k.getName();
@@ -337,6 +349,7 @@ public class BuildNetWithoutClone {
         handlePolymorphismAlt();
         // TODO check the logic here
         for(Transition t : petrinet.getTransitions()) {
+            System.out.println(t.getId());
             createCopies(t);
         }
         //handlePolymorphism();

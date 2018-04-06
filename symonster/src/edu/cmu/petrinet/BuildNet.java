@@ -29,10 +29,22 @@ public class BuildNet {
         // This method handles polymorphism by creating methods that transforms each
         // subclass into its super class
         for(String subClass : superDict.keySet()) {
+            try {
+                petrinet.getPlace(subClass.toString());
+            } catch (NoSuchNodeException e ) {
+                petrinet.createPlace(subClass.toString());
+            }
+            assert (petrinet.containsNode(subClass));
             for (String superClass : superDict.get(subClass)) {
-                assert (petrinet.containsNode(subClass));
+                // If the class is not in the petrinet, create the class
+                try {
+                    petrinet.getPlace(superClass.toString());
+                } catch (NoSuchNodeException e) {
+                    petrinet.createPlace(superClass.toString());
+                }
                 assert (petrinet.containsNode(superClass));
-                String methodName = subClass + "=" + superClass;
+
+                String methodName = subClass + "IsPolymorphicTo" + superClass;
                 petrinet.createTransition(methodName);
                 petrinet.createFlow(subClass, methodName);
                 petrinet.createFlow(methodName, superClass);

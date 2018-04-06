@@ -3,7 +3,7 @@ import edu.cmu.codeformer.CodeFormer;
 import edu.cmu.compilation.Test;
 import edu.cmu.equivprogram.DependencyMap;
 import edu.cmu.parser.*;
-import edu.cmu.petrinet.BuildNetNoVoid;
+import edu.cmu.petrinet.*;
 import edu.cmu.reachability.*;
 import org.sat4j.specs.TimeoutException;
 import uniol.apt.adt.pn.PetriNet;
@@ -26,7 +26,7 @@ public class SyMonster {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/joda/17/benchmark17.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/joda/16/benchmark16.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -70,8 +70,8 @@ public class SyMonster {
         DependencyMap dependencyMap = JarParser.createDependencyMap();
 
         System.out.println("Building graph.");
-        BuildNetNoVoid b = new BuildNetNoVoid();// Set petrinet
-        //BuildNetWithoutClone b = new BuildNetWithoutClone(noVoid);
+        //BuildNetNoVoid b = new BuildNetNoVoid();// Set petrinet
+        BuildNetWithoutClone b = new BuildNetWithoutClone();
 		PetriNet net = b.build(sigs, superclassMap, subclassMap);
 		Map<String, MethodSignature> signatureMap = b.dict;
         int loc = 1;
