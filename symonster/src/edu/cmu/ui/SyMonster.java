@@ -26,7 +26,8 @@ public class SyMonster {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/xml/24/benchmark24.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/point/point.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/tests/8/test8.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);

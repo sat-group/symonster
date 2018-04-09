@@ -1,5 +1,4 @@
 package edu.cmu.petrinet;
-
 import edu.cmu.parser.JarParser;
 import edu.cmu.parser.MethodSignature;
 import soot.Type;
@@ -10,6 +9,8 @@ import uniol.apt.adt.pn.Flow;
 import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
+
+import java.beans.Visibility;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -21,174 +22,116 @@ public class BuildNetNoVoid {
     // A map from transition name to a method signature
     static public Map<String, MethodSignature> dict = new HashMap<String, MethodSignature>();
 
-    // TODO polymorphism information is currently hardcoded
-    // A map that encodes the polymorphism
     static private Map<String, List<String>> superDict = new HashMap<>();
 
+    // This method handles polymorphism by creating methods that transforms each
+    // subclass into its super class
     private static void handlePolymorphism() {
-        // This method handles polymorphism by creating methods that transforms each
-        // subclass into its super class
-        for(String subClass : superDict.keySet()) {
-            try {
-                petrinet.getPlace(subClass.toString());
-            } catch (NoSuchNodeException e ) {
-                petrinet.createPlace(subClass.toString());
-            }
-            assert (petrinet.containsNode(subClass));
-            for (String superClass : superDict.get(subClass)) {
-                // If the class is not in the petrinet, create the class
-                try {
-                    petrinet.getPlace(superClass.toString());
-                } catch (NoSuchNodeException e) {
-                    petrinet.createPlace(superClass.toString());
-                }
-                assert (petrinet.containsNode(superClass));
 
+        for(String subClass : superDict.keySet()) {
+            addPlace(subClass);
+            for (String superClass : superDict.get(subClass)) {
+                addPlace(superClass);
                 String methodName = subClass + "IsPolymorphicTo" + superClass;
                 petrinet.createTransition(methodName);
-                petrinet.createFlow(subClass, methodName);
-                petrinet.createFlow(methodName, superClass);
+                petrinet.createFlow(subClass, methodName, 1);
+                petrinet.createFlow(methodName, superClass, 1);
             }
         }
     }
 
-    private static void handlePolyorphismAlt(MethodSignature k) {
-        // This method handles polymorphism by creating altered version for
-        // each existing method that work on polymorphic types
-        // TODO polymorphism information is currently hardcoded
-        // TODO First check if method is non-static, if so, add an argument
-    }
-
-    public static PetriNet build(List<MethodSignature> result,
-                                 Map<String, Set<String>> superClassMap,
-                                 Map<String, Set<String>> subClassMap,
-                                 List<String> inputs) {
-        // Create polymorphism dicts
+    private static void getPolymorphismInformation(
+            Map<String, Set<String>> superClassMap,
+            Map<String, Set<String>> subClassMap) {
         for(String s : superClassMap.keySet()) {
             Set<String> superClasses = superClassMap.get(s);
-            List<String> li = new ArrayList<>(superClasses);
-            if(li.size() != 0) {
-                superDict.put(s, li);
+            if(superClasses.size() != 0) {
+                List<String> superClassList = new ArrayList<>(superClasses);
+                superDict.put(s, superClassList);
             }
         }
+    }
 
-        //create void type
-        //petrinet.createPlace("void");
-        //petrinet.createTransition("voidClone");
-        //petrinet.createFlow("void", "voidClone", 1);
-        //petrinet.createFlow("voidClone", "void", 2);
 
-        //iterate through each method
-        for (MethodSignature k : result) {
-            String methodname = k.getName();
-            boolean isStatic = k.getIsStatic();
-            boolean isConstructor = k.getIsConstructor();
-            String className = k.getHostClass().getName();
-            String transitionName;
+    private static void addPlace(String placeID) {
+        try {
+            petrinet.getPlace(placeID);
+        } catch (NoSuchNodeException e) {
+            petrinet.createPlace(placeID);
+            petrinet.createTransition(placeID + "Clone");
+            petrinet.createFlow(placeID, placeID + "Clone", 1);
+            petrinet.createFlow(placeID + "Clone", placeID, 2);
+        }
+    }
 
-            List<Type> args = k.getArgTypes();
-            //adding transition
-            if(isConstructor) {
-                transitionName = methodname + "(";
-                for(Type t : args) {
-                    transitionName += t.toString() + " ";
-                }
-                transitionName += ")";
-                petrinet.createTransition(transitionName);
+
+    private static void addFlow(String ID1, String ID2, int weight) {
+        Flow f;
+        try {
+            f = petrinet.getFlow(ID1, ID2);
+            f.setWeight(f.getWeight() + weight);
+        } catch (NoSuchEdgeException e) {
+            petrinet.createFlow(ID1, ID2, weight);
+        }
+    }
+
+
+    private static void addTransition(MethodSignature methodSig) {
+        String methodname = methodSig.getName();
+        boolean isStatic = methodSig.getIsStatic();
+        boolean isConstructor = methodSig.getIsConstructor();
+        String className = methodSig.getHostClass().getName();
+        String transitionName;
+        List<Type> args = methodSig.getArgTypes();
+
+        if(isConstructor) {
+            transitionName = methodname + "Constructor" +  "(";
+            for(Type t : args) {
+                transitionName += t.toString() + " ";
             }
-            else if (isStatic) {
-                transitionName =  className + "." + methodname + "(";
-                for(Type t : args) {
-                    transitionName += t.toString() + " ";
-                }
-                transitionName += ")";
-                transitionName += k.getRetType();
-                petrinet.createTransition(transitionName);
-            } else { //The method is not static, so it has an extra argument
-                transitionName = className + "." + methodname + "(";
-                for(Type t : args) {
-                    transitionName += t.toString() + " ";
-                }
-                transitionName += ")";
-                transitionName += k.getRetType();
-                petrinet.createTransition(transitionName);
-
-                //creating the place and flow for class instance
-                Flow f;
-                try {
-                    petrinet.getPlace(k.getHostClass().toString());
-                } catch (NoSuchNodeException e) {
-                    petrinet.createPlace(k.getHostClass().toString());
-                    petrinet.createTransition(k.getHostClass().toString() + "Clone");
-                    petrinet.createFlow(k.getHostClass().toString(), k.getHostClass().toString() + "Clone", 1);
-                    petrinet.createFlow(k.getHostClass().toString() + "Clone", k.getHostClass().toString(), 2);
-                }
-                try {
-                    f = petrinet.getFlow(k.getHostClass().toString(), transitionName);
-                    f.setWeight(f.getWeight() + 1);
-                } catch (NoSuchEdgeException e) {
-                    petrinet.createFlow(k.getHostClass().toString(), transitionName);
-                }
+            transitionName += ")";
+            petrinet.createTransition(transitionName);
+        }
+        else if (isStatic) {
+            transitionName =  "static" + className + "." + methodname + "(";
+            for(Type t : args) {
+                transitionName += t.toString() + " ";
             }
-            dict.put(transitionName, k); //add signature into map
-
-            //Add a edge from void if the method has no argument and is static
-            if(args.size() == 0 && (isStatic || isConstructor)) {
-                //petrinet.createFlow("void", transitionName);
+            transitionName += ")";
+            transitionName += methodSig.getRetType();
+            petrinet.createTransition(transitionName);
+        } else { //The method is not static, so it has an extra argument
+            transitionName = className + "." + methodname + "(";
+            for(Type t : args) {
+                transitionName += t.toString() + " ";
             }
+            transitionName += ")";
+            transitionName += methodSig.getRetType();
+            petrinet.createTransition(transitionName);
 
-            for (Type t : args) {
-                //add place for each argument
-                try {
-                    petrinet.getPlace(t.toString());
-                } catch (NoSuchNodeException e) {
-                    petrinet.createPlace(t.toString());
-                    //add clone transition
-                    petrinet.createTransition(t.toString() + "Clone");
-                    petrinet.createFlow(t.toString(), t.toString() + "Clone", 1);
-                    petrinet.createFlow(t.toString() + "Clone", t.toString(), 2);
-                }
+            addPlace(className);
+            addFlow(className, transitionName, 1);
+        }
+        dict.put(transitionName, methodSig); //add signature into map
 
-                //add flow for each argument
-                try {
-                    Flow originalFlow = petrinet.getFlow(t.toString(), transitionName);
-                    originalFlow.setWeight(originalFlow.getWeight() + 1);
-                } catch (NoSuchEdgeException e) {
-                    petrinet.createFlow(t.toString(), transitionName, 1);
-                }
-            }
-
-            //add place for the return type
-            Type retType = k.getRetType();
-            if(retType.toString() != "void") {
-                try {
-                    petrinet.getPlace(retType.toString());
-                } catch (NoSuchNodeException e) {
-                    petrinet.createPlace(retType.toString());
-                    //add clone transition
-                    petrinet.createTransition(retType.toString() + "Clone");
-                    petrinet.createFlow(retType.toString(), retType.toString() + "Clone", 1);
-                    petrinet.createFlow(retType.toString() + "Clone", retType.toString(), 2);
-                }
-                //add flow for the return type
-                petrinet.createFlow(transitionName, retType.toString(), 1);
-            } else {  // TODO Assume that it is not static
-                String hostclass = k.getHostClass().toString();
-                try{
-                    petrinet.getPlace(hostclass);
-                } catch (NoSuchNodeException e) {
-                    petrinet.createPlace(hostclass);
-                    //add clone transition
-                    petrinet.createTransition(hostclass + "Clone");
-                    petrinet.createFlow(hostclass, hostclass + "Clone", 1);
-                    petrinet.createFlow(hostclass + "Clone", hostclass, 2);
-                }
-            }
+        for (Type t : args) {
+            addPlace(t.toString());
+            addFlow(t.toString(), transitionName, 1);
         }
 
-        // Create methods that handle polymorphism
-        handlePolymorphism();
+        //add place for the return type
+        Type retType = methodSig.getRetType();
+        if(retType.toString() != "void") {
+            addPlace(retType.toString());
+            addFlow(transitionName, retType.toString(), 1);
+        } else {
+            // TODO Can I do this ?
+            addPlace(className);
+            addFlow(transitionName, className, 1);
+        }
+    }
 
+    private static void setMaxTokens(List<String> inputs) {
         //Set max tokens for each place
         for (Place p : petrinet.getPlaces()) {
             int count = 0;
@@ -196,11 +139,8 @@ public class BuildNetNoVoid {
                 try {
                     Flow f = petrinet.getFlow(p.getId(), t.getId());
                     count = Math.max(count, f.getWeight() + 1);
-                } catch (NoSuchEdgeException e) {
-                    continue;
-                }
+                } catch (NoSuchEdgeException e) {}
             }
-
             if(count != 0) {
                 p.setMaxToken(count);
             } else {
@@ -223,6 +163,23 @@ public class BuildNetNoVoid {
                 p.setMaxToken(count.get(p));
             }
         }
+    }
+
+    public static PetriNet build(List<MethodSignature> result,
+                                 Map<String, Set<String>> superClassMap,
+                                 Map<String, Set<String>> subClassMap,
+                                 List<String> inputs
+                                 ) {
+
+        getPolymorphismInformation(superClassMap, subClassMap);
+
+        for (MethodSignature k : result) {
+            addTransition(k);
+        }
+
+        handlePolymorphism();
+
+        setMaxTokens(inputs);
 
         return petrinet;
     }
