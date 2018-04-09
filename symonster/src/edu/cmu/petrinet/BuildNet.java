@@ -60,9 +60,10 @@ public class BuildNet {
 
     }
 
-    public static PetriNet build(List<MethodSignature> result,
+    public PetriNet build(List<MethodSignature> result,
                                  Map<String, Set<String>> superClassMap,
-                                 Map<String, Set<String>> subClassMap) {
+                                 Map<String, Set<String>> subClassMap,
+                                 List<String> inputs) {
         // Create polymorphism dicts
         for(String s : superClassMap.keySet()) {
             Set<String> superClasses = superClassMap.get(s);
@@ -74,9 +75,9 @@ public class BuildNet {
 
         //create void type
         petrinet.createPlace("void");
-        petrinet.createTransition("voidClone");
-        petrinet.createFlow("void", "voidClone", 1);
-        petrinet.createFlow("voidClone", "void", 2);
+//        petrinet.createTransition("voidClone");
+//        petrinet.createFlow("void", "voidClone", 1);
+//        petrinet.createFlow("voidClone", "void", 2);
 
         //iterate through each method
         for (MethodSignature k : result) {
@@ -178,18 +179,42 @@ public class BuildNet {
         handlePolymorphism();
 
         //Set max tokens for each place
-        for (Place p : petrinet.getPlaces()) {
-            int count = 0;
-            for(Transition t : petrinet.getTransitions()) {
-                try {
-                    Flow f = petrinet.getFlow(p.getId(), t.getId());
-                    count = Math.max(count, f.getWeight()+1);
-                } catch (NoSuchEdgeException e) {
-                    continue;
-                }
+		for (Place p : petrinet.getPlaces()) {
+			System.out.println("place p = " + p);
+			if (p.getId().equals("void"))
+				p.setMaxToken(1);
+			else {
+				int count = 0;
+				for (Transition t : petrinet.getTransitions()) {
+					try {
+						Flow f = petrinet.getFlow(p.getId(), t.getId());
+						count = Math.max(count, f.getWeight() + 1);
+					} catch (NoSuchEdgeException e) {
+						continue;
+					}
+				}
+				p.setMaxToken(count);
+			}
+		}
+        
+        // Update the maxtoken for inputs
+        HashMap<Place, Integer> count = new HashMap<Place, Integer>();
+        for (String input : inputs) {
+            Place p;
+            p = petrinet.getPlace(input);
+            if (count.containsKey(p)) {
+                count.put(p, count.get(p) + 1);
+            } else {
+                count.put(p, 1);
             }
-            p.setMaxToken(count);
         }
+        for(Place p : count.keySet()) {
+             if(count.get(p) > p.getMaxToken()) {
+                p.setMaxToken(count.get(p));
+            }
+        }
+
+        
         return petrinet;
     }
 }
