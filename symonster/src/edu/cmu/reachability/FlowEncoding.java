@@ -268,13 +268,21 @@ public class FlowEncoding implements Encoding {
 
 		for (Place p : pnet.getPlaces()) {
 			for (int t = 0; t <= loc; t++) {
-				for (int v = 0; v <= p.getMaxToken(); v++) {
-					// create a variable with <place in the petri-net, timestamp, value>
-					Triple<Place, Integer, Integer> triple = new ImmutableTriple<Place, Integer, Integer>(p, t, v);
-					// TODO: instead of Type.PLACE use Type.FLOWPLACE
-					Variable var = new Variable(nbVariables, p.getId(), Type.PLACE, t, v);
-					place2variable.put(triple, var);
-					nbVariables++;
+				for (int v = 0; v < p.getMaxToken(); v++) {
+					for(int c = 0; c <= loc; c++) {
+						// create a variable with <place in the petri-net, timestamp, value>
+						Triple<Place, Integer, Integer> triple = new ImmutableTriple<Place, Integer, Integer>(p, t, v);
+						// TODO: instead of Type.PLACE use Type.FLOWPLACE
+						//Variable var = new Variable(nbVariables, p.getId(), Type.PLACE, t, v);
+						//place2variable.put(triple, var);
+						nbVariables++;
+						Triple<Integer, Integer, Integer> trip = new ImmutableTriple<Integer, Integer, Integer>(t, v, 0);
+		
+						Pair<Place, Triple<Integer, Integer, Integer>> quad = new ImmutablePair<Place, Triple<Integer, Integer,Integer>> (p, trip);
+						Variable var = new Variable(nbVariables, p.getId(), Type.FLOWPLACE, t, v, c);
+						quad2variable.put(quad, var);
+					}
+					
 				}
 			}
 		}
