@@ -105,7 +105,7 @@ public class SequentialEncoding implements Encoding {
 						Variable nextState = place2variable.get(placeAfter);
 						VecInt state = new VecInt(
 								new int[] { -fireTr.getId(), -previousState.getId(), nextState.getId() });
-						solver.addConstraint(state, ConstraintType.GTE, 1);
+						solver.addClause(state);
 						
 						// f AND a => b
 						// clause: ~f OR ~a OR B
@@ -148,7 +148,7 @@ public class SequentialEncoding implements Encoding {
 				// if f is fired then there are enough resources to fire it
 				for (VecInt pc : preconditions) {
 					pc.push(-fireTr.getId());
-					solver.addConstraint(pc, ConstraintType.GTE, 1);
+					solver.addClause(pc);
 				}
 
 				// we cannot fire a transition if we are at max capacity
@@ -178,7 +178,7 @@ public class SequentialEncoding implements Encoding {
 
 					if (ok) {
 						VecInt clause = new VecInt(new int[] { -v.getId(), -fireTr.getId() });
-						solver.addConstraint(clause, ConstraintType.GTE, 1);
+						solver.addClause(clause);
 					}
 				}
 			}
@@ -228,7 +228,7 @@ public class SequentialEncoding implements Encoding {
 					transitionsConstr.copyTo(clause);
 					clause.push(-place2variable.get(current).getId());
 					clause.push(place2variable.get(next).getId());
-					solver.addConstraint(clause, ConstraintType.GTE, 1);
+					solver.addClause(clause);
 				}
 			}
 		}

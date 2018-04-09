@@ -27,8 +27,8 @@ public class SootUtils {
     public static String[] getSootArgs(List<String> libs) {
         String separator = System.getProperty("file.separator");
         String pathSeparator = System.getProperty("path.separator");
-        String rtJarPath = "lib" + separator + "rt.jar";
-        rtJarPath += pathSeparator + "lib" + separator + "jce.jar";
+        String rtJarPath = "../lib" + separator + "rt.jar";
+        rtJarPath += pathSeparator + "../lib" + separator + "jce.jar";
         String sootClasspath = rtJarPath + pathSeparator + "build";
         List<String> argList = new ArrayList<>();
         argList.add("cp");

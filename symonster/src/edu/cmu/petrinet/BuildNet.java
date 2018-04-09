@@ -180,7 +180,6 @@ public class BuildNet {
 
         //Set max tokens for each place
 		for (Place p : petrinet.getPlaces()) {
-			System.out.println("place p = " + p);
 			if (p.getId().equals("void"))
 				p.setMaxToken(1);
 			else {
