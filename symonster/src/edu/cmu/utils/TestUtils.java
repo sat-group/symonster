@@ -20,7 +20,7 @@ import javax.tools.ToolProvider;
 
 public class TestUtils {
     /** where shall the compiled class be saved to (should exist already) */
-    private static String classOutputFolder = "folder";
+    private static String classOutputFolder = "build";
 
     public static class MyDiagnosticListener implements DiagnosticListener<JavaFileObject>
     {
@@ -111,15 +111,18 @@ public class TestUtils {
             Method thisMethod = thisClass.getDeclaredMethod("test", params);
 
             // run the testAdd() method on the instance:
-            return (boolean)thisMethod.invoke(instance, paramsObj);
+            boolean ret = (boolean)thisMethod.invoke(instance, paramsObj);
+            return ret;
         }
         catch (MalformedURLException e)
         {
-            System.out.println("bug1");
+            System.out.println("File not found");
+            e.printStackTrace();
         }
         catch (ClassNotFoundException e)
         {
-            System.out.println("bug2");
+            System.out.println("Does not compile");
+            e.printStackTrace();
         }
         catch (Exception ex)
         {

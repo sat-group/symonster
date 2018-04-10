@@ -6,14 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.sat4j.core.VecInt;
-import org.sat4j.minisat.SolverFactory;
+//import org.sat4j.minisat.SolverFactory;
+//import org.sat4j.specs.ISolver;
+import org.sat4j.pb.IPBSolver;
+import org.sat4j.pb.SolverFactory;
 import org.sat4j.specs.ContradictionException;
-import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
 public class SATSolver {
 	
-	private ISolver solver = null;
+	private IPBSolver solver = null;
 	private boolean unsat = false;
 	
 	enum ConstraintType { LTE, EQ, GTE; }
@@ -34,6 +36,10 @@ public class SATSolver {
 		nbVariables = 0;
 	}
 	
+	public int getNbConstraints(){
+		return solver.nConstraints();
+	}
+	
 	public void setNbVariables(int vars){
 		nbVariables = vars;
 		solver.newVar(nbVariables);
@@ -41,6 +47,34 @@ public class SATSolver {
 	
 	public int getNbVariables(){
 		return nbVariables;
+	}
+	
+	public void addClause(VecInt constraint) {
+		try {
+			solver.addClause(constraint);
+		} catch (ContradictionException e) {
+			unsat = false;
+		}
+	}
+	
+	public void addConstraint(VecInt constraint, VecInt coeffs, ConstraintType ct, int k){ 
+		try {
+			switch(ct){
+				case LTE:
+					solver.addAtMost(constraint, coeffs, k);
+					break;
+				case EQ:
+					solver.addExactly(constraint, coeffs, k);
+					break;
+				case GTE:
+					solver.addAtLeast(constraint, coeffs, k);
+					break;
+				default:
+					assert(false);
+			}
+		} catch (ContradictionException e) {
+			unsat = true;
+		}
 	}
 	
 	public void addConstraint(VecInt constraint, ConstraintType ct, int k){ 
@@ -53,9 +87,7 @@ public class SATSolver {
 					solver.addExactly(constraint, k);
 					break;
 				case GTE:
-					// if k == 1 then it is a clause
-					if (k == 1) solver.addClause(constraint);
-					else solver.addAtLeast(constraint, k);
+					solver.addAtLeast(constraint, k);
 					break;
 				default:
 					assert(false);

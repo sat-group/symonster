@@ -207,7 +207,7 @@ public class CodeFormer {
             varCount += 1;
             if (i != inputTypes.size() - 1) builder.append(", ");
         }
-        builder.append("){\n");
+        builder.append(") throws Throwable{\n");
 
         for (MethodSignature sig : sigs){
             if (!sig.getRetType().toString().equals("void")){

@@ -1,7 +1,7 @@
-public static boolean test() throws Throwable {
+public boolean test() throws Throwable {
 	double[][] xMat = new double[][]{{1,2},{2,2},{2,1}};
 	com.opengamma.analytics.math.matrix.DoubleMatrix2D x = new com.opengamma.analytics.math.matrix.DoubleMatrix2D(xMat);
-	com.opengamma.analytics.math.linearalgebra.SVDecompositionResult res2 = Source.evaluate(x);
+	com.opengamma.analytics.math.linearalgebra.SVDecompositionResult res2 = evaluate(x);
 	double inv_sqrt2 = 1/Math.sqrt(2);
 	double[][] UMat = new double[][]{{3/Math.sqrt(34),-1/Math.sqrt(2)},{4/Math.sqrt(34),0},{3/Math.sqrt(34),1/Math.sqrt(2)}};
 	double[][] SMat = new double[][]{{Math.sqrt(17),0},{0,1}};

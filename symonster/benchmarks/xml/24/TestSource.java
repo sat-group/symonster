@@ -1,4 +1,4 @@
-public static boolean test() throws Throwable {
+public boolean test() throws Throwable {
      java.lang.String html = " <html>\n"
                 + "   <head>\n"
                 + "     <title>An example HTMLDocument</title>\n"
@@ -20,7 +20,7 @@ public static boolean test() throws Throwable {
     javax.swing.text.html.HTMLDocument htmlDoc = (javax.swing.text.html.HTMLDocument) htmlKit.createDefaultDocument();
     htmlKit.read(stringReader, htmlDoc, 0);
      
-    javax.swing.text.Element elem = Source.getParagraphElement(htmlDoc, 1);
+    javax.swing.text.Element elem = getParagraphElement(htmlDoc, 1);
     String head = elem.getName();
 
     if("head".equals(head))

@@ -1,9 +1,9 @@
-public static boolean test() throws Throwable {
+public boolean test() throws Throwable {
     double[][] mat = new double[][]{{1,2},{3,4}};
     com.opengamma.analytics.math.matrix.DoubleMatrix2D m = new com.opengamma.analytics.math.matrix.DoubleMatrix2D(mat);
     
     double[][] mat2 = new double[][]{{-2,1},{1.5,-0.5}};
-	double[][] res = Source.invert(m).toArray();
+	double[][] res = invert(m).toArray();
 	
 	if(mat2.length != res.length || mat2[0].length != res[0].length)
 		return false;
