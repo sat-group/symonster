@@ -1,6 +1,5 @@
 package edu.cmu.petrinet;
 
-import edu.cmu.parser.JarParser;
 import edu.cmu.parser.MethodSignature;
 import soot.Type;
 

@@ -38,7 +38,7 @@ public class SyMonsterFlow {
         for (String key : superclassMap.keySet()){
             for (String value :superclassMap.get(key)){
                 if (!subclassMap.containsKey(value)){
-                    subclassMap.put(value,new HashSet<>());
+                    subclassMap.put(value,new HashSet<String>());
                 }
                 subclassMap.get(value).add(key);
             }

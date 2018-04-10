@@ -35,7 +35,8 @@ public class DependencyMapSmall implements DependencyMap {
      * @param signatures sequence
      * @return the set of all possible sequences
      */
-    public List<List<MethodSignature>> findAllTopSorts(List<MethodSignature> signatures){
+    @Override
+	public List<List<MethodSignature>> findAllTopSorts(List<MethodSignature> signatures){
         if (signatures.size() == 0) return new LinkedList<>();
         List<List<Integer>> inGraph = new LinkedList<>();
         List<List<Integer>> outGraph = new LinkedList<>();
@@ -79,7 +80,7 @@ public class DependencyMapSmall implements DependencyMap {
         //Base case
         if (starts.size() == 0) {
             if (length == 0){
-                bigResult.add(new LinkedList<>());
+                bigResult.add(new LinkedList<Integer>());
             }
             return bigResult;
         }
