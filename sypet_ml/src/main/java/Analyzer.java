@@ -129,11 +129,14 @@ public class Analyzer {
                 testData.add(method);
             } else {
                 int i = testData.size() + 1;
+                System.out.println(method);
+
                 while (i > k && !testData.isEmpty()) {
                     testData.remove(testData.iterator().next());
                     i--;
                 }
                 testData.add(method);
+                System.out.println(testData);
             }
             reports.add(report);
         }
@@ -209,7 +212,8 @@ public class Analyzer {
             this.originalMethod = originalMethod;
             if (strict) {
                 String[] splitted = originalMethod.split(" ");
-                this.type = splitted[0] + " " + splitted[1];
+                this.type = splitted[1];
+                System.out.println(type);
             }
             this.testData = new HashSet<>(testData);
 
@@ -219,7 +223,7 @@ public class Analyzer {
             for (String method : predictedMethods.keySet()) {
                 if (k < 10) {
                     if (strict) {
-                        if (method.contains(type)) {
+                        if (method.split(" ")[1].equals(type)) {
                             if (method.equals(originalMethod)) {
                                 matched = k;
                             }

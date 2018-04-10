@@ -19,7 +19,7 @@ public class GenericPrediction {
 
         // jar to predict, name of result csv, package of concern, name pretrained data csv, name of output analysis csv, filepath of lib if not rt
         // comment this out if you want to input from command line
-        //args = new String[]{"lib/corpus/java.awt.geom/geometry.jar", "result_geom_k=3", "java.awt.geom", "data_geom", "analysis_geom", "3"};
+        args = new String[]{"lib/corpus/org.joda.time/joda.jar", "result_jodatime", "org.joda.time", "data_jodatime", "analysis_jodatime", "1", "lib/joda-time-2.8.2.jar"};
 
         // Use Analyzer to generate kNN
         if(args.length > 6) {
@@ -40,12 +40,21 @@ public class GenericPrediction {
         List<List<Analyzer.TestReport>> testReports = Analyzer.getTestReports(data.values(), Integer.parseInt(args[5]), true);
         PrintWriter pw = new PrintWriter(new File("src/resources/"+args[1]+".csv"));
         pw.write("match,method,prediction\n");
+        int total = 0;
+        int correct = 0;
         for(List<Analyzer.TestReport> reports : testReports){
             for(Analyzer.TestReport report : reports){
                 pw.write(report.getMatched()+","+report.testDataString()+","+report.predictionString());
+                if(report.getMatched() >= 0){
+                    correct++;
+                }
+                total++;
                 pw.write("\n");
             }
         }
+        pw.write("correct: "+(float)correct/(float) total+"\n");
+        pw.write("total: " + total+"\n");
+        pw.write("correct: "+correct);
         pw.close();
     }
 }

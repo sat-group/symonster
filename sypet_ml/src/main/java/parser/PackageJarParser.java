@@ -10,13 +10,18 @@ import java.util.*;
  */
 public class PackageJarParser extends BodyTransformer {
     public static final String ANALYSIS_NAME = "jap.analysis";
-    public static Set<String> packages = new HashSet<>();
+    private Set<String> packages = new HashSet<>();
+
+
+    public PackageJarParser(){
+
+    }
 
     /**
      * Parse a list of given jar files, and stores the result in methodDict and methodVarDict
      * @param libs physical addresses of libraries. e.g. "lib/hamcrest-core-1.3.jar"
      */
-    public static void parseJar(List<String> libs) {
+    public void parseJar(List<String> libs) {
         packages.clear();
         String[] args = parser.SootUtils.getSootArgs(libs);
         G.reset();
@@ -24,7 +29,7 @@ public class PackageJarParser extends BodyTransformer {
         SootUtils.runSoot(args);
     }
 
-    public static Set<String> getPackages(){
+    public Set<String> getPackages(){
         return packages;
     }
 
