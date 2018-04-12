@@ -54,6 +54,7 @@ public class JarParser extends BodyTransformer{
                                 break;
                             }
                         }
+                        if (method.getParameterTypes().size() > 2) sat = false;
                         if (sat) sigs.add(getMethodSignature(method));
                     }
                 }
