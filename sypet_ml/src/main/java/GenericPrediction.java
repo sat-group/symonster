@@ -19,7 +19,7 @@ public class GenericPrediction {
 
         // jar to predict, name of result csv, package of concern, name pretrained data csv, name of output analysis csv, filepath of lib if not rt
         // comment this out if you want to input from command line
-        //args = new String[]{"lib/corpus/java.awt.geom/geometry.jar", "result_geom_k=3", "java.awt.geom", "data_geom", "analysis_geom", "3"};
+        args = new String[]{"lib/corpus/java.awt.geom/geometry.jar", "result_geom", "java.awt.geom", "data_geom", "analysis_geom", "1"};
 
         // Use Analyzer to generate kNN
         if(args.length > 6) {
@@ -29,7 +29,7 @@ public class GenericPrediction {
         }
 
         // Mock test on geometry.jar
-        ArrayList<String> libs = new ArrayList<>();
+        List<String> libs = new ArrayList<>();
         libs.add(args[0]);
         JarParser.parseJar(libs, DataSource.generateCustomLib(args[2]));
 
@@ -37,15 +37,24 @@ public class GenericPrediction {
         Map<String, LinkedHashSet<String>> data = JarParser.getMethodToAppearancesMap();
 
         // Generate test reports
-        List<List<Analyzer.TestReport>> testReports = Analyzer.getTestReports(data.values(), Integer.parseInt(args[5]), true);
+        List<List<Analyzer.TestReport>> testReports = Analyzer.getTestReports(data.values(), Analyzer.getModel(), Integer.parseInt(args[5]), true);
         PrintWriter pw = new PrintWriter(new File("src/resources/"+args[1]+".csv"));
-        pw.write("match,method,prediction\n");
+        pw.write("match,method,prediction,original\n");
+        int total = 0;
+        int correct = 0;
         for(List<Analyzer.TestReport> reports : testReports){
             for(Analyzer.TestReport report : reports){
-                pw.write(report.getMatched()+","+report.testDataString()+","+report.predictionString());
+                pw.write(report.getMatched()+","+report.getType()+","+report.testDataString()+","+report.predictionString()+","+report.getOriginalMethod());
+                if(report.getMatched() >= 0){
+                    correct++;
+                }
+                total++;
                 pw.write("\n");
             }
         }
+        pw.write("correct: "+(float)correct/(float) total+"\n");
+        pw.write("total: " + total+"\n");
+        pw.write("correct: "+correct);
         pw.close();
     }
 }

@@ -88,7 +88,7 @@ public class JarParser extends BodyTransformer {
                         String method = invokeExp.getMethod().toString();
                         boolean fitsPackage = false;
                         for(String pck : targetPackage){
-                            if(method.contains(pck)){
+                            if(invokeExp.getMethod().getDeclaringClass().getPackageName().startsWith(pck)){
                                 methodSet.add(method);
                                 fitsPackage = true;
                                 break;
@@ -126,7 +126,7 @@ public class JarParser extends BodyTransformer {
                     InvokeStmt invokeStmt = (InvokeStmt) stmt;
                     String method = invokeStmt.getInvokeExpr().getMethod().toString();
                     for(String pck : targetPackage){
-                        if(method.contains(pck)){
+                        if(invokeStmt.getInvokeExpr().getMethod().getDeclaringClass().getPackageName().startsWith(pck)){
                             methodSet.add(method);
                             break;
                         }

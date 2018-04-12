@@ -1,6 +1,5 @@
 package edu.cmu.parser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SyMonsterInput {
