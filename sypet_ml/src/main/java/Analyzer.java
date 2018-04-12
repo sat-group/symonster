@@ -35,12 +35,16 @@ public class Analyzer {
         knn = new KNN(LibraryJarParser.getLabelSet(), vectors);
     }
 
-    public static List<List<TestReport>> getTestReports(Collection<LinkedHashSet<String>> testData,
+    public static KNN getModel(){
+        return knn;
+    }
+
+    public static List<List<TestReport>> getTestReports(Collection<LinkedHashSet<String>> testData, KNN model,
                                                         int k, boolean strict) {
         List<List<TestReport>> testReportsList = new ArrayList<>();
 
         for (LinkedHashSet<String> program : testData) {
-            List<TestReport> reports = generateReport(program, knn, k, strict);
+            List<TestReport> reports = generateReport(program, model, k, strict);
             testReportsList.add(reports);
         }
 
@@ -112,33 +116,31 @@ public class Analyzer {
      * Generates a report from a given set of program lines using kNN
      *
      * @param program set of program methods
-     * @param knn     trained kNN
+     * @param model     trained kNN
      * @param k       distance
      * @return report containing predicted results for the program
      */
-    private static List<TestReport> generateReport(LinkedHashSet<String> program, KNN knn, int k, boolean strict) {
+    private static List<TestReport> generateReport(LinkedHashSet<String> program, KNN model, int k, boolean strict) {
         LinkedHashSet<String> testData = new LinkedHashSet<>();
         List<TestReport> reports = new ArrayList<>();
+
         for (String method : program) {
-            LinkedHashMap<String, Float> predictedResults = knn.predict(testData);
-            TestReport report = new TestReport(method, predictedResults, testData, strict);
-            if (method.equals("<java.awt.geom.Area: void <init>(java.awt.Shape)>")) {
-                method = "<java.awt.geom.Area: void <init>()>";
+            if(testData.size()>0) {
+                LinkedHashMap<String, Float> predictedResults = model.predict(testData);
+                TestReport report = new TestReport(method, predictedResults, testData, strict);
+                reports.add(report);
             }
             if (k <= 0) {
                 testData.add(method);
             } else {
                 int i = testData.size() + 1;
-                System.out.println(method);
 
                 while (i > k && !testData.isEmpty()) {
                     testData.remove(testData.iterator().next());
                     i--;
                 }
                 testData.add(method);
-                System.out.println(testData);
             }
-            reports.add(report);
         }
         return reports;
     }
@@ -239,6 +241,14 @@ public class Analyzer {
                     }
                 }
             }
+        }
+
+        public String getOriginalMethod(){
+            return originalMethod;
+        }
+
+        public String getType(){
+            return type;
         }
 
         /**
