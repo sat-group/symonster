@@ -72,7 +72,8 @@ public class SootUtils {
     // code courtesy of http://stackoverflow.com/questions/5401281/preventing-system-exit-from-api
     private static void forbidSystemExitCall() {
         final SecurityManager securityManager = new SecurityManager() {
-            public void checkPermission( Permission permission ) {
+            @Override
+			public void checkPermission( Permission permission ) {
                 if( permission.getName().startsWith("exitVM") ) {
                     throw new ExitTrappedException() ;
                 }

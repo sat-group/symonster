@@ -24,7 +24,8 @@ public class TestUtils {
 
     public static class MyDiagnosticListener implements DiagnosticListener<JavaFileObject>
     {
-        public void report(Diagnostic<? extends JavaFileObject> diagnostic)
+        @Override
+		public void report(Diagnostic<? extends JavaFileObject> diagnostic)
         {
 
         }
@@ -43,7 +44,8 @@ public class TestUtils {
             this.contents = contents;
         }
 
-        public CharSequence getCharContent(boolean ignoreEncodingErrors)
+        @Override
+		public CharSequence getCharContent(boolean ignoreEncodingErrors)
                 throws IOException
         {
             return contents;

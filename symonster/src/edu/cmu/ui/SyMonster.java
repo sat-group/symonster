@@ -59,7 +59,7 @@ public class SyMonster {
         for (String key : superclassMap.keySet()){
             for (String value :superclassMap.get(key)){
                 if (!subclassMap.containsKey(value)){
-                    subclassMap.put(value,new HashSet<>());
+                    subclassMap.put(value,new HashSet<String>());
                 }
                 subclassMap.get(value).add(key);
             }
@@ -73,8 +73,8 @@ public class SyMonster {
         System.out.println("Building graph.");
         BuildNetNoVoid b = new BuildNetNoVoid();  // Set petrinet
         //BuildNetNoVoidClone b = new BuildNetNoVoidClone();
-		PetriNet net = b.build(sigs, superclassMap, subclassMap, inputs);
-		Map<String, MethodSignature> signatureMap = b.dict;
+		PetriNet net = BuildNetNoVoid.build(sigs, superclassMap, subclassMap, inputs);
+		Map<String, MethodSignature> signatureMap = BuildNetNoVoid.dict;
         int loc = 1;
 		int paths = 0;
 		int programs = 0;
@@ -139,7 +139,7 @@ public class SyMonster {
 
                         // 6. Run the test cases
                         // TODO: write this code; if all test cases pass then we can terminate
-                        if (test.runTest(code,testCode)) {
+                        if (Test.runTest(code,testCode)) {
                             solution = true;
                             System.out.println("Programs explored = " + programs);
                             System.out.println("Paths explored = " + paths);
