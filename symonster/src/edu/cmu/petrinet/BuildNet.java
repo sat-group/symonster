@@ -1,6 +1,5 @@
 package edu.cmu.petrinet;
 
-import edu.cmu.parser.JarParser;
 import edu.cmu.parser.MethodSignature;
 import soot.Type;
 
@@ -180,7 +179,6 @@ public class BuildNet {
 
         //Set max tokens for each place
 		for (Place p : petrinet.getPlaces()) {
-			System.out.println("place p = " + p);
 			if (p.getId().equals("void"))
 				p.setMaxToken(1);
 			else {

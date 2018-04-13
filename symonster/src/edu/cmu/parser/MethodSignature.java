@@ -4,7 +4,6 @@ import soot.SootClass;
 import soot.SootMethod;
 import soot.Type;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 /**

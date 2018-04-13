@@ -59,7 +59,7 @@ public class TrainedDataCSVGenerator {
             if (JarParser.getMethodToAppearancesMap().size() != 0) {
 
                 // Train dummy kNN
-                trainVarIndependent(trainData, dummyKnn);
+                trainVarIndependent(dummyKnn);
                 String resultString = dummyKnn.getTrainAnalysisInfoString();
                 pw.write(",true,");
                 pw.write(resultString);
@@ -68,7 +68,7 @@ public class TrainedDataCSVGenerator {
                 dummyKnn = new KNN(LibraryJarParser.getLabelSet());
 
                 // Train actual kNN
-                trainVarIndependent(trainData, completeKnn);
+                trainVarIndependent(completeKnn);
 
             } else {
 
@@ -82,7 +82,7 @@ public class TrainedDataCSVGenerator {
     }
 
     // Adds var dependent traning data from parser.JarParser
-    private static void trainVarDependent(List<String> libs, KNN knn) {
+    private static void trainVarDependent(KNN knn) {
         Map<String, Map<String, Set<String>>> varData = JarParser.getMethodToVarAppearancesMap();
         Map<String, LinkedHashSet<String>> data = JarParser.getMethodToAppearancesMap();
         for (Map<String, Set<String>> s : varData.values()) {
@@ -96,7 +96,7 @@ public class TrainedDataCSVGenerator {
     }
 
     // Adds var independent traning data from parser.JarParser
-    private static void trainVarIndependent(List<String> libs, KNN knn) {
+    private static void trainVarIndependent(KNN knn) {
         Map<String, LinkedHashSet<String>> data = JarParser.getMethodToAppearancesMap();
 
         for (Set<String> set : data.values()) {

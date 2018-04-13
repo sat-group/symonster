@@ -191,15 +191,25 @@ public class FlowEncoding implements Encoding {
 		for (int t = 0; t <= loc; t++) {
 			// loop for each place
 			for (Place p : pnet.getPlaces()) {
-				VecInt amo = new VecInt();
 				// loop for each number of tokens
 				for (int w = 0; w <= p.getMaxToken(); w++) {
-					Triple<Place, Integer, Integer> triple = new ImmutableTriple<Place, Integer, Integer>(p, t, w);
-					Variable v = place2variable.get(triple);
-					amo.push(v.getId());
+					
+					VecInt amo = new VecInt();
+
+					//Triple<Place, Integer, Integer> triple = new ImmutableTriple<Place, Integer, Integer>(p, t, w);
+					//Variable v = place2variable.get(triple);
+					//amo.push(v.getId());
+					for(int c = 0; c <= t; c++) {
+						Triple<Integer, Integer, Integer> trip = new ImmutableTriple<Integer, Integer, Integer> (t,w,c); 
+						Pair<Place, Triple<Integer,Integer,Integer>> quad = new ImmutablePair<Place, Triple<Integer,Integer,Integer>> (p, trip);		
+						Variable v = quad2variable.get(quad);	
+						amo.push(v.getId());
+					}
+					// enforce token restrictions 
+					solver.addConstraint(amo, ConstraintType.EQ, 1);
+						
+					
 				}
-				// enforce token restrictions
-				solver.addConstraint(amo, ConstraintType.EQ, 1);
 			}
 		}
 
@@ -268,13 +278,21 @@ public class FlowEncoding implements Encoding {
 
 		for (Place p : pnet.getPlaces()) {
 			for (int t = 0; t <= loc; t++) {
-				for (int v = 0; v <= p.getMaxToken(); v++) {
-					// create a variable with <place in the petri-net, timestamp, value>
-					Triple<Place, Integer, Integer> triple = new ImmutableTriple<Place, Integer, Integer>(p, t, v);
-					// TODO: instead of Type.PLACE use Type.FLOWPLACE
-					Variable var = new Variable(nbVariables, p.getId(), Type.PLACE, t, v);
-					place2variable.put(triple, var);
-					nbVariables++;
+				for (int v = 0; v < p.getMaxToken(); v++) {
+					for(int c = 0; c <= t; c++) {
+						// create a variable with <place in the petri-net, timestamp, value>
+						Triple<Place, Integer, Integer> triple = new ImmutableTriple<Place, Integer, Integer>(p, t, v);
+						// TODO: instead of Type.PLACE use Type.FLOWPLACE
+						//Variable var = new Variable(nbVariables, p.getId(), Type.PLACE, t, v);
+						//place2variable.put(triple, var);
+						nbVariables++;
+						Triple<Integer, Integer, Integer> trip = new ImmutableTriple<Integer, Integer, Integer>(t, v, c);
+		
+						Pair<Place, Triple<Integer, Integer, Integer>> quad = new ImmutablePair<Place, Triple<Integer, Integer,Integer>> (p, trip);
+						Variable var = new Variable(nbVariables, p.getId(), Type.FLOWPLACE, t, v, c);
+						quad2variable.put(quad, var);
+					}
+					
 				}
 			}
 		}

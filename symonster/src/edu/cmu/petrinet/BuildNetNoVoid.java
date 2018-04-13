@@ -11,7 +11,6 @@ import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
 
-import java.beans.Visibility;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

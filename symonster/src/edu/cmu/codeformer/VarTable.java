@@ -11,7 +11,7 @@ public class VarTable {
 
     public void addEntry(String type, int var){
         if (!table.containsKey(type)){
-            table.put(type,new ArrayList<>());
+            table.put(type,new ArrayList<Integer>());
         }
         table.get(type).add(var);
         lookupTable.put(var,type);

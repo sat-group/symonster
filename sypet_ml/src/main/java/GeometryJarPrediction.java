@@ -22,7 +22,7 @@ public class GeometryJarPrediction {
         Map<String, LinkedHashSet<String>> data = JarParser.getMethodToAppearancesMap();
 
         // Generate test reports
-        List<List<Analyzer.TestReport>> testReports = Analyzer.getTestReports(data.values(), 10, true);
+        List<List<Analyzer.TestReport>> testReports = Analyzer.getTestReports(data.values(), Analyzer.getModel(),10, true);
         for(List<Analyzer.TestReport> reports : testReports){
             System.out.println("============start============");
             for(Analyzer.TestReport report : reports){
