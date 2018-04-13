@@ -1,9 +1,6 @@
 package edu.cmu.petrinet;
-<<<<<<< HEAD
-=======
 import edu.cmu.parser.JarParser;
 import edu.cmu.petrinet.Visualization;
->>>>>>> 0aab3bd41aa47af091127a4942197760d0115e3f
 import edu.cmu.parser.MethodSignature;
 import soot.Type;
 
@@ -14,6 +11,7 @@ import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
 
+import java.beans.Visibility;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

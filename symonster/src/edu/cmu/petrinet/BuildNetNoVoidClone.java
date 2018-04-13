@@ -16,24 +16,13 @@ import java.util.Stack;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
-   An reimplementation of BuildNet, but eliminates all clone edges by creating
-   a copy for each method that returns its own arguments.
- */
 public class BuildNetNoVoidClone {
-    static public PetriNet petrinet;
+    static public PetriNet petrinet = new PetriNet("net");
     //map from transition name to a method signature
-    static public Map<String, MethodSignature> dict;
+    static public Map<String, MethodSignature> dict = new HashMap<String, MethodSignature>();
 
-    static private Map<String, List<String>> superDict;
-    static private Map<String, List<String>> subDict;
-
-    public BuildNetNoVoidClone() {
-        petrinet = new PetriNet("net");
-        dict = new HashMap<String, MethodSignature>();
-        superDict = new HashMap<>();
-        subDict = new HashMap<>();
-    }
+    static private Map<String, List<String>> superDict = new HashMap<>();
+    static private Map<String, List<String>> subDict = new HashMap<>();
 
     private static void handlePolymorphism() {
         for(String subClass : superDict.keySet()) {
@@ -127,7 +116,7 @@ public class BuildNetNoVoidClone {
             if(outputs.size() == 0) {
                 return;
             }
-            String newTransitionName = t.getId()+ "(";
+            String newTransitionName = t.getId()+ "Copy:(";
             for(Place p : outputs) {
                 newTransitionName += p.getId() + " ";
             }
@@ -161,7 +150,6 @@ public class BuildNetNoVoidClone {
     }
 
     private static void createCopies(Transition t) {
-        System.out.println(t);
         Set<Flow> inputEdges = petrinet.getPresetEdges(t);
         List<Place> inputs = new ArrayList<>();
         for(Flow e : inputEdges) {
@@ -331,9 +319,11 @@ public class BuildNetNoVoidClone {
         Visualization.translate(petrinet);
 
         // print all transitions
-        /*
+
         for(Transition t : petrinet.getTransitions()) {
-            System.out.println(t.getId());
+                System.out.println(t.getId());
+
+            /*
             System.out.println("in:");
             for(Flow in : t.getPresetEdges()) {
                 System.out.println(in.getPlace());
@@ -343,8 +333,9 @@ public class BuildNetNoVoidClone {
                 System.out.println(out.getPlace());
             }
             System.out.println();
+            */
         }
-        */
+
         System.out.println("Done");
         return petrinet;
     }

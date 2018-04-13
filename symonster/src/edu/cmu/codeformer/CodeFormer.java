@@ -263,7 +263,7 @@ public class CodeFormer {
             builder.append(";\n");
         }
         builder.append("}");
-        return builder.toString();
+        return builder.toString().replace('$','.');
     }
 
 
