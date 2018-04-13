@@ -1,14 +1,6 @@
 package edu.cmu.petrinet;
-<<<<<<< HEAD
 import edu.cmu.parser.JarParser;
 import edu.cmu.petrinet.Visualization;
-=======
-<<<<<<< HEAD
-=======
-import edu.cmu.parser.JarParser;
-import edu.cmu.petrinet.Visualization;
->>>>>>> 0aab3bd41aa47af091127a4942197760d0115e3f
->>>>>>> b88dd56f0bfa223bd4d54c79d7b2cb35e1f6e80e
 import edu.cmu.parser.MethodSignature;
 import soot.Type;
 
