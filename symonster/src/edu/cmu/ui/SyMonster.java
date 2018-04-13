@@ -26,8 +26,7 @@ public class SyMonster {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/point/point.json");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/tests/8/test8.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/joda/17/benchmark17.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -71,8 +70,8 @@ public class SyMonster {
         DependencyMap dependencyMap = JarParser.createDependencyMap();
 
         System.out.println("Building graph.");
-        BuildNetNoVoid b = new BuildNetNoVoid();  // Set petrinet
-        //BuildNetNoVoidClone b = new BuildNetNoVoidClone();
+        //BuildNetNoVoid b = new BuildNetNoVoid();  // Set petrinet
+        BuildNetNoVoidClone b = new BuildNetNoVoidClone();
 		PetriNet net = b.build(sigs, superclassMap, subclassMap, inputs);
 		Map<String, MethodSignature> signatureMap = b.dict;
         int loc = 1;
@@ -109,6 +108,11 @@ public class SyMonster {
 						signatures.add(sig);
 					}
 				}
+
+
+
+
+                System.out.println(path);
                 if (!repeatSolutions.contains(signatures)){
                     List<List<MethodSignature>> repeated = dependencyMap.findAllTopSorts(signatures);
                     repeatSolutions.addAll(repeated);

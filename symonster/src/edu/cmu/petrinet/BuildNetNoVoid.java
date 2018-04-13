@@ -1,5 +1,6 @@
 package edu.cmu.petrinet;
 import edu.cmu.parser.JarParser;
+import edu.cmu.petrinet.Visualization;
 import edu.cmu.parser.MethodSignature;
 import soot.Type;
 
@@ -85,15 +86,16 @@ public class BuildNetNoVoid {
         List<Type> args = methodSig.getArgTypes();
 
         if(isConstructor) {
-            transitionName = methodname + "Constructor" +  "(";
+            transitionName = methodname + "(Constructor)" +  "(";
             for(Type t : args) {
                 transitionName += t.toString() + " ";
             }
             transitionName += ")";
+            transitionName += methodSig.getRetType();
             petrinet.createTransition(transitionName);
         }
         else if (isStatic) {
-            transitionName =  "static" + className + "." + methodname + "(";
+            transitionName =  "(static)" + className + "." + methodname + "(";
             for(Type t : args) {
                 transitionName += t.toString() + " ";
             }
@@ -102,6 +104,7 @@ public class BuildNetNoVoid {
             petrinet.createTransition(transitionName);
         } else { //The method is not static, so it has an extra argument
             transitionName = className + "." + methodname + "(";
+            transitionName += className + " ";
             for(Type t : args) {
                 transitionName += t.toString() + " ";
             }
@@ -125,7 +128,7 @@ public class BuildNetNoVoid {
             addPlace(retType.toString());
             addFlow(transitionName, retType.toString(), 1);
         } else {
-            // TODO Can I do this ?
+            // TODO Can I do this
             addPlace(className);
             addFlow(transitionName, className, 1);
         }
@@ -169,7 +172,7 @@ public class BuildNetNoVoid {
                                  Map<String, Set<String>> superClassMap,
                                  Map<String, Set<String>> subClassMap,
                                  List<String> inputs
-                                 ) {
+                                 ) throws java.io.IOException {
 
         getPolymorphismInformation(superClassMap, subClassMap);
 
@@ -180,6 +183,14 @@ public class BuildNetNoVoid {
         handlePolymorphism();
 
         setMaxTokens(inputs);
+
+        Visualization.translate(petrinet);
+
+        /*
+        for(Place p : petrinet.getPlaces()) {
+            System.out.println(p.toString() + " " + p.getMaxToken());
+        }
+        */
 
         return petrinet;
     }
