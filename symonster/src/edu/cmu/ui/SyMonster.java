@@ -71,16 +71,10 @@ public class SyMonster {
         DependencyMap dependencyMap = JarParser.createDependencyMap();
 
         System.out.println("Building graph.");
-<<<<<<< HEAD
         //BuildNetNoVoid b = new BuildNetNoVoid();  // Set petrinet
         BuildNetNoVoidClone b = new BuildNetNoVoidClone();
 		PetriNet net = b.build(sigs, superclassMap, subclassMap, inputs);
 		Map<String, MethodSignature> signatureMap = b.dict;
-=======
-        //BuildNetNoVoidClone b = new BuildNetNoVoidClone();
-		PetriNet net = BuildNetNoVoid.build(sigs, superclassMap, subclassMap, inputs);
-		Map<String, MethodSignature> signatureMap = BuildNetNoVoid.dict;
->>>>>>> c47fb57821b7bc31b24ae11097b28c4cc97475ea
         int loc = 1;
 		int paths = 0;
 		int programs = 0;
