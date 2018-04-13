@@ -1,4 +1,4 @@
-package parser;
+package stat.parser;
 
 import soot.*;
 import soot.jimple.*;
@@ -21,7 +21,7 @@ public class JarParser extends BodyTransformer {
      */
     public static void parseJar(List<String> libs, List<String> targetPackage) {
         clear();
-        String[] args = parser.SootUtils.getSootArgs(libs);
+        String[] args = SootUtils.getSootArgs(libs);
         JarParser.targetPackage = targetPackage;
         G.reset();
         PackManager.v().getPack("jap").add(new Transform(ANALYSIS_NAME, new JarParser()));
@@ -88,7 +88,8 @@ public class JarParser extends BodyTransformer {
                         String method = invokeExp.getMethod().toString();
                         boolean fitsPackage = false;
                         for(String pck : targetPackage){
-                            if(invokeExp.getMethod().getDeclaringClass().getPackageName().startsWith(pck)){
+                            SootClass sootClass = invokeExp.getMethod().getDeclaringClass();
+                            if(sootClass.getPackageName().startsWith(pck)){
                                 methodSet.add(method);
                                 fitsPackage = true;
                                 break;
@@ -126,7 +127,8 @@ public class JarParser extends BodyTransformer {
                     InvokeStmt invokeStmt = (InvokeStmt) stmt;
                     String method = invokeStmt.getInvokeExpr().getMethod().toString();
                     for(String pck : targetPackage){
-                        if(invokeStmt.getInvokeExpr().getMethod().getDeclaringClass().getPackageName().startsWith(pck)){
+                        SootClass sootClass = invokeStmt.getInvokeExpr().getMethod().getDeclaringClass();
+                        if(sootClass.getPackageName().startsWith(pck)){
                             methodSet.add(method);
                             break;
                         }

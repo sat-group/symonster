@@ -1,6 +1,9 @@
-import knn.KNN;
-import parser.JarParser;
-import parser.LibraryJarParser;
+package stat;
+
+import stat.common.DataSource;
+import stat.parser.JarParser;
+import stat.parser.LibraryJarParser;
+import stat.knn.KNN;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,7 +22,7 @@ import java.util.*;
  * final result: <0/1,0/1, ... , 0/1>
  * ...
  */
-public class TrainedDataCSVGenerator {
+public class KNNModelGenerator {
 
     private static KNN completeKnn; // kNN for all jars
     private static KNN dummyKnn; // dummy kNN that changes for every different jar
@@ -81,7 +84,7 @@ public class TrainedDataCSVGenerator {
         pw.close();
     }
 
-    // Adds var dependent traning data from parser.JarParser
+    // Adds var dependent traning data from JarParser
     private static void trainVarDependent(KNN knn) {
         Map<String, Map<String, Set<String>>> varData = JarParser.getMethodToVarAppearancesMap();
         Map<String, LinkedHashSet<String>> data = JarParser.getMethodToAppearancesMap();
@@ -95,7 +98,7 @@ public class TrainedDataCSVGenerator {
         }
     }
 
-    // Adds var independent traning data from parser.JarParser
+    // Adds var independent traning data from JarParser
     private static void trainVarIndependent(KNN knn) {
         Map<String, LinkedHashSet<String>> data = JarParser.getMethodToAppearancesMap();
 

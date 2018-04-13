@@ -1,5 +1,8 @@
-import knn.KNN;
-import parser.LibraryJarParser;
+package stat;
+
+import stat.common.DataSource;
+import stat.parser.LibraryJarParser;
+import stat.knn.KNN;
 
 import java.io.*;
 import java.util.*;
@@ -126,7 +129,7 @@ public class Analyzer {
 
         for (String method : program) {
             if(testData.size()>0) {
-                LinkedHashMap<String, Float> predictedResults = model.predict(testData);
+                LinkedHashMap<String, Double> predictedResults = model.predict(testData);
                 TestReport report = new TestReport(method, predictedResults, testData, strict);
                 reports.add(report);
             }
@@ -210,7 +213,7 @@ public class Analyzer {
          * @param testData         give test data
          * @param strict           whether toString should restrict matching and type
          */
-        TestReport(String originalMethod, LinkedHashMap<String, Float> predictedMethods, Set<String> testData, boolean strict) {
+        TestReport(String originalMethod, LinkedHashMap<String, Double> predictedMethods, Set<String> testData, boolean strict) {
             this.originalMethod = originalMethod;
             if (strict) {
                 String[] splitted = originalMethod.split(" ");

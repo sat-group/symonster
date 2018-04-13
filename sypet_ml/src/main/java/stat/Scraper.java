@@ -1,3 +1,5 @@
+package stat;
+
 import java.io.*;
 import java.util.*;
 

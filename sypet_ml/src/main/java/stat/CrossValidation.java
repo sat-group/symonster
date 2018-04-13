@@ -1,14 +1,17 @@
-import knn.KNN;
-import parser.JarParser;
-import parser.LibraryJarParser;
+package stat;
+
+import stat.common.DataSource;
+import stat.knn.KNN;
+import stat.parser.JarParser;
+import stat.parser.LibraryJarParser;
 
 import java.io.*;
 import java.util.*;
 
 /**
- * Does knn cross validation based on 30/70 rule
+ * Does knn cross validation based on k-fold rule
  * 4 fold to start with
- * input: 
+ * input:
  * package of concern, corpus location, output csv file name, analysis txt name, paramter-k, library jar location(rt if not specified)
  * e.g.:
  * args = new String[]{"org.jsoup", "lib/org.jsoup/", "jsoup", "analysis_jsoup", 1, "../sypet_ml/lib/jsoup-1.8.3.jar"};
@@ -39,7 +42,7 @@ public class CrossValidation {
         parameterK = Integer.parseInt(args[4]);
 
         if(args.length > 5) {
-            libraryJarPath = args[4];
+            libraryJarPath = args[5];
         }else{
             libraryJarPath = "";
         }
@@ -149,7 +152,7 @@ public class CrossValidation {
         pw.close();
     }
 
-    // Adds var dependent traning data from parser.JarParser
+    // Adds var dependent traning data from JarParser
     private static void trainVarDependent(KNN knn) {
         Map<String, Map<String, Set<String>>> varData = JarParser.getMethodToVarAppearancesMap();
         Map<String, LinkedHashSet<String>> data = JarParser.getMethodToAppearancesMap();
@@ -163,7 +166,7 @@ public class CrossValidation {
         }
     }
 
-    // Adds var independent traning data from parser.JarParser
+    // Adds var independent traning data from JarParser
     private static void trainVarIndependent(KNN knn) {
         Map<String, LinkedHashSet<String>> data = JarParser.getMethodToAppearancesMap();
 

@@ -1,4 +1,4 @@
-package parser;
+package stat.parser;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,14 +11,14 @@ import soot.SourceLocator;
 import soot.options.Options;
 
 /**
- * Parser for library jar files used as labesl
+ * Parser for library jar files used as labels
  */
 public class LibraryJarParser {
 
-    private static Set<String> labelSet = new HashSet<>();
+    private static LinkedHashSet<String> labelSet = new LinkedHashSet<>(); // Make order deterministic
 
-    public static Set<SootMethod> parse(String lib, List<String> packages, boolean visible) {
-        Set<SootMethod> methods = new HashSet<>();
+    public static LinkedHashSet<SootMethod> parse(String lib, List<String> packages, boolean visible) {
+        LinkedHashSet<SootMethod> methods = new LinkedHashSet<>();
 
         for (String cl : SourceLocator.v().getClassesUnder(lib)) {
             SootClass clazz = Scene.v().getSootClass(cl);
@@ -43,6 +43,7 @@ public class LibraryJarParser {
                     continue;
 
                 methods.add(method);
+                System.out.println("lib: "+method);
             }
         }
 
@@ -78,13 +79,15 @@ public class LibraryJarParser {
         initSoot(libs, packages);
 
         for (String lib : libs) {
-            Set<SootMethod> methods = parse(lib, packages, true);
-            labelSet = methods.stream().map(SootMethod::getSignature).collect(Collectors.toSet());
+            LinkedHashSet<SootMethod> methods = parse(lib, packages, true);
+            for(SootMethod method : methods){
+                labelSet.add(method.getSignature());
+            }
             System.out.println("#methods = " + labelSet.size());
         }
     }
 
-    public static Set<String> getLabelSet() {
+    public static LinkedHashSet<String> getLabelSet() {
         return labelSet;
     }
 }
