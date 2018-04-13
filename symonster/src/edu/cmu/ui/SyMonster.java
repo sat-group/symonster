@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class SyMonster {
-    public static void main(String[] args) throws IOException {
-        Test test = new Test();
+	public static void main(String[] args) throws IOException {
+		Test test = new Test();
         // 0. Read config
         SymonsterConfig jsonConfig = JsonParser.parseJsonConfig("config/config.json");
         Set<String> acceptableSuperClasses = new HashSet<>();
@@ -26,15 +26,15 @@ public class SyMonster {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/math/9/benchmark9.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/geometry/10/benchmark10.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
         }
-
         String methodName = jsonInput.methodName;
         List<String> libs = jsonInput.libs;
         List<String> inputs = jsonInput.srcTypes;
+
         List<String> varNames = jsonInput.paramNames;
         String retType = jsonInput.tgtType;
         File file = new File(jsonInput.testPath);
@@ -46,8 +46,6 @@ public class SyMonster {
             line = br.readLine();
         }
         String testCode = fileContents.toString();
-
-        // 2. Parse library
         System.out.println("Parsing libraries.");
         List<MethodSignature> sigs = JarParser.parseJar(libs,jsonInput.packages,jsonConfig.blacklist);
         System.out.println("# of signatures: "+sigs.size());
@@ -70,14 +68,14 @@ public class SyMonster {
         DependencyMap dependencyMap = JarParser.createDependencyMap();
 
         System.out.println("Building graph.");
+        //BuildNetNoVoid b = new BuildNetNoVoid();  // Set petrinet
         BuildNetNoVoidClone b = new BuildNetNoVoidClone();
-        PetriNet net = b.build(sigs, superclassMap, subclassMap, inputs);
-        Map<String, MethodSignature> signatureMap = b.dict;
+		PetriNet net = b.build(sigs, superclassMap, subclassMap, inputs);
+		Map<String, MethodSignature> signatureMap = b.dict;
         int loc = 1;
-        int paths = 0;
-        int programs = 0;
-        boolean solution = false;
-
+		int paths = 0;
+		int programs = 0;
+		boolean solution = false;
 
 
         System.out.println("Solver starts");
@@ -110,6 +108,7 @@ public class SyMonster {
                         System.out.println(s.getName());
                     }
                 }
+
                 System.out.println(path);
                 if (!repeatSolutions.contains(signatures)){
                     List<List<MethodSignature>> repeated = dependencyMap.findAllTopSorts(signatures);
@@ -155,13 +154,13 @@ public class SyMonster {
                     }
                 }
 
-                // the current path did not result in a program that passes all test cases
-                // find the next path
-                result = Encoding.solver.findPath();
-            }
-
-            // we did not find a program of length = loc
-            loc++;
-        }
-    }
+				// the current path did not result in a program that passes all test cases
+				// find the next path
+				result = Encoding.solver.findPath();
+			}
+			
+			// we did not find a program of length = loc
+			loc++;
+		}
+	}
 }

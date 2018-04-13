@@ -1,4 +1,4 @@
-package parser;
+package stat.parser;
 
 import soot.*;
 import soot.jimple.*;
@@ -23,7 +23,7 @@ public class PackageJarParser extends BodyTransformer {
      */
     public void parseJar(List<String> libs) {
         packages.clear();
-        String[] args = parser.SootUtils.getSootArgs(libs);
+        String[] args = SootUtils.getSootArgs(libs);
         G.reset();
         PackManager.v().getPack("jap").add(new Transform(ANALYSIS_NAME, new PackageJarParser()));
         SootUtils.runSoot(args);

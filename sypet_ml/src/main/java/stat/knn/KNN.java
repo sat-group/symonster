@@ -1,5 +1,7 @@
-package knn;
+package stat.knn;
 
+import stat.common.Entry;
+import stat.common.EntryComparator;
 import soot.util.ArraySet;
 
 import java.util.*;
@@ -16,9 +18,10 @@ public class KNN {
 
     /**
      * Constructor that starts with method names as columns
+     *
      * @param labels one method name for each column
      */
-    public KNN(Set<String> labels) {
+    public KNN(LinkedHashSet<String> labels) {
         if (labels.size() <= 0) {
             throw new IllegalArgumentException();
         } else {
@@ -45,10 +48,11 @@ public class KNN {
 
     /**
      * Constructor if we already have all the trained data available
-     * @param labels method names that serve as columns
+     *
+     * @param labels     method names that serve as columns
      * @param preTrained pre-trained data
      */
-    public KNN(Set<String> labels, List<int[]> preTrained){
+    public KNN(Set<String> labels, List<int[]> preTrained) {
         this.labelSize = labels.size();
         this.labels = new String[labelSize];
         int j = 0;
@@ -70,13 +74,13 @@ public class KNN {
      * Labels from Soot somehow have two representations... One with "$" sign, and one without.
      * I am going to just assume these two are the same, so I need to bind those labels into a union structure.
      */
-    private void unionDollarLabels(){
+    private void unionDollarLabels() {
         Map<Integer, Set<Integer>> sameLabelMap = new HashMap<>();
-        for(int i=0; i<labelSize-1; i++){
-            for(int j=i+1; j<labelSize; j++){
-                if(labels[i].contains("$")){
+        for (int i = 0; i < labelSize - 1; i++) {
+            for (int j = i + 1; j < labelSize; j++) {
+                if (labels[i].contains("$")) {
                     String[] tmpArr = labels[i].split("\\$");
-                    if(tmpArr[tmpArr.length-1].contains(":")) {
+                    if (tmpArr[tmpArr.length - 1].contains(":")) {
                         String tmp1 = tmpArr[0] + ":" + tmpArr[tmpArr.length - 1].split(":")[1];
                         if (tmp1.contains(labels[j])) {
                             if (sameLabelMap.containsKey(i)) {
@@ -96,9 +100,9 @@ public class KNN {
                             }
                         }
                     }
-                }else if(labels[j].contains("$")){
+                } else if (labels[j].contains("$")) {
                     String[] tmpArr = labels[j].split("\\$");
-                    if(tmpArr[tmpArr.length-1].contains(":")) {
+                    if (tmpArr[tmpArr.length - 1].contains(":")) {
                         String tmp1 = tmpArr[0] + ":" + tmpArr[tmpArr.length - 1].split(":")[1];
                         if (tmp1.contains(labels[i])) {
 
@@ -127,6 +131,7 @@ public class KNN {
 
     /**
      * Adds a training data into values as a vector
+     *
      * @param appearances training data that consists of method names
      */
     public void addTrainVector(Set<String> appearances) {
@@ -139,7 +144,7 @@ public class KNN {
                 hasOne = true;
             }
         }
-        if(hasOne) {
+        if (hasOne) {
             values.add(vector);
         }
     }
@@ -162,9 +167,10 @@ public class KNN {
 
     /**
      * Gives sparse representation of trained data
+     *
      * @return string for sparse form of trained data
      */
-    public String getTrainSparseString(){
+    public String getTrainSparseString() {
         StringBuilder vecString = new StringBuilder();
         for (int[] vec : values) {
             vecString.append("[");
@@ -173,7 +179,7 @@ public class KNN {
                     vecString.append(labels[i] + "=1,");
                 }
             }
-            if(vecString.length()>1)
+            if (vecString.length() > 1)
                 vecString.deleteCharAt(vecString.length() - 1);
             vecString.append("]\n");
         }
@@ -184,29 +190,31 @@ public class KNN {
      * Provides information about
      * - rows (total size of training set)
      * - average number of ones
+     *
      * @return string representation of information
      */
-    public String getTrainAnalysisInfoString(){
+    public String getTrainAnalysisInfoString() {
         StringBuilder vecString = new StringBuilder();
         vecString.append(values.size()).append(",");
         float total = 0;
         for (int[] vec : values) {
             for (int i = 0; i < vec.length; i++) {
                 if (vec[i] == 1) {
-                    total+=1;
+                    total += 1;
                 }
             }
         }
-        float average = total/values.size();
+        float average = total / values.size();
         vecString.append(average).append('\n');
         return vecString.toString();
     }
 
     /**
      * Gives dense representation of trained data
+     *
      * @return string for dense form of trained data
      */
-    public String getTrainDenseString(){
+    public String getTrainDenseString() {
         StringBuilder vecString = new StringBuilder();
         for (int[] vec : values) {
             vecString.append("<");
@@ -231,7 +239,7 @@ public class KNN {
                     vecString.append(labels[i].split(":")[1].split(">")[0] + "=1,");
                 }
             }
-            if(vecString.length()>1)
+            if (vecString.length() > 1)
                 vecString.deleteCharAt(vecString.length() - 1);
             vecString.append("]");
             System.out.println(vecString.toString());
@@ -240,39 +248,38 @@ public class KNN {
 
     /**
      * Gives a prediction based on given vector using KNN
+     *
      * @param appearances given test data vector
      * @return a sorted mapping of possible methods with probabilities
      */
-    public LinkedHashMap<String, Float> predict(Set<String> appearances) {
+    public LinkedHashMap<String, Double> predict(Set<String> appearances) {
+        System.out.println(appearances);
 
         // Initialize
-        List<Float> sumVector = new ArrayList<>(labelSize);
-        for(int i=0; i<labelSize; i++){
-            sumVector.add((float) 0);
+        List<Double> sumVector = new ArrayList<>(labelSize);
+        for (int i = 0; i < labelSize; i++) {
+            sumVector.add((double) 0);
         }
         int count = 0;
 
         List<Integer> indexList = new ArrayList<>();
-        for(String s : appearances){
-            if(labelMap.containsKey(s)) {
+        for (String s : appearances) {
+            if (labelMap.containsKey(s)) {
                 indexList.add(labelMap.get(s));
             }
         }
 
         // For every trained data
-        for(int[] vec : values) {
+        for (int[] vec : values) {
 
             // Check to see if a row vector has 1 in all columns matching given test data
             boolean containsAll = true;
             for (int i : indexList) {
                 boolean someUnitContains = false;
-                for(int k : equivLabels(i)) {
-                    if (vec[k] == 1) {
-                        someUnitContains = true;
-                        break;
-                    }
+                if (vec[i] == 1) {
+                    someUnitContains = true;
                 }
-                if(!someUnitContains){
+                if (!someUnitContains) {
                     containsAll = false;
                     break;
                 }
@@ -281,36 +288,36 @@ public class KNN {
             if (containsAll) {
 
                 // Matches, update sum
-                for(int i : indexList){
-                    for(int k : equivLabels(i)) {
-                        sumVector.set(k, sumVector.get(k) - 1);
-                    }
+                for (int i : indexList) {
+                    sumVector.set(i, sumVector.get(i) - 1);
                 }
                 for (int i = 0; i < labelSize; i++) {
-                    sumVector.set(i, sumVector.get(i)+vec[i]);
+                    sumVector.set(i, sumVector.get(i) + vec[i]);
                 }
                 count++;
             }
         }
 
         // Does not exit, abort
-        if(count == 0){
+        if (count == 0) {
+            System.out.println("bad");
             return new LinkedHashMap<>();
         }
+        System.out.println("good");
 
         // Add tuples to list for sorting
         List<Entry> entryList = new ArrayList<>(labelSize);
 
-        for(int i=0; i<labelSize; i++){
-            sumVector.set(i, sumVector.get(i)/count);
+        for (int i = 0; i < labelSize; i++) {
+            sumVector.set(i, sumVector.get(i) / count);
             entryList.add(new Entry(labels[i], sumVector.get(i)));
         }
 
         entryList.sort(new EntryComparator());
 
         // Generate map result
-        LinkedHashMap<String, Float> result = new LinkedHashMap<>();
-        for(Entry e : entryList){
+        LinkedHashMap<String, Double> result = new LinkedHashMap<>();
+        for (Entry e : entryList) {
             result.put(e.label, e.freq);
         }
 
@@ -318,47 +325,12 @@ public class KNN {
     }
 
     // Check if 2 labels are equivalent ($ and not $)
-    private Set<Integer> equivLabels(int i){
-        if(idMap.containsKey(i)) {
+    private Set<Integer> equivLabels(int i) {
+        if (idMap.containsKey(i)) {
             Set<Integer> l = idMap.get(i);
             l.add(i);
             return l;
         }
         return Collections.singleton(i);
-    }
-
-    /**
-     * Represents a method associated with its kNN distance value(frequency)
-     */
-    class Entry{
-        String label;
-        Float freq;
-
-        Entry(String label, Float freq){
-            this.label = label;
-            this.freq = freq;
-        }
-    }
-
-    /**
-     * Comparator for sorting methods by kNN distance
-     */
-    class EntryComparator implements Comparator {
-
-        @Override
-        public int compare(Object o1, Object o2) {
-            if(!(o1 instanceof Entry) || !(o2 instanceof Entry)){
-                return 0;
-            }else{
-                Entry e1 = (Entry) o1;
-                Entry e2 = (Entry) o2;
-                return -e1.freq.compareTo(e2.freq);
-            }
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return false;
-        }
     }
 }

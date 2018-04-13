@@ -1,4 +1,4 @@
-package parser;
+package stat.parser;
 
 import soot.Main;
 import soot.Body;
@@ -58,7 +58,7 @@ public class SootUtils {
                 System.out.println(arg);
             }
             Main.main(args);
-            //parser.SootUtils.enableSystemExitCall();
+            //SootUtils.enableSystemExitCall();
         } catch (Exception e){
 
         }

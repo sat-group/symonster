@@ -1,4 +1,7 @@
-import parser.JarParser;
+package stat;
+
+import stat.common.DataSource;
+import stat.parser.JarParser;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,7 +11,7 @@ import java.util.*;
 /**
  * Prediction for custom jar
  */
-public class GenericPrediction {
+public class KNNPredictor {
 
     /**
      * Output prediction for jar file using given csv
@@ -19,7 +22,7 @@ public class GenericPrediction {
 
         // jar to predict, name of result csv, package of concern, name pretrained data csv, name of output analysis csv, filepath of lib if not rt
         // comment this out if you want to input from command line
-        args = new String[]{"lib/corpus/java.awt.geom/geometry.jar", "result_geom", "java.awt.geom", "data_geom", "analysis_geom", "1"};
+        args = new String[]{"lib/corpus/org.joda.time/joda.jar", "result_jodatime", "org.joda.time", "data_jodatime_g", "analysis_jodatime", "1", "lib/joda-time-2.8.2.jar"};
 
         // Use Analyzer to generate kNN
         if(args.length > 6) {
@@ -44,7 +47,7 @@ public class GenericPrediction {
         int correct = 0;
         for(List<Analyzer.TestReport> reports : testReports){
             for(Analyzer.TestReport report : reports){
-                pw.write(report.getMatched()+","+report.getType()+","+report.testDataString()+","+report.predictionString()+","+report.getOriginalMethod());
+                pw.write(report.getMatched()+","+report.getType()+","+report.testDataString()+","+report.getOriginalMethod());
                 if(report.getMatched() >= 0){
                     correct++;
                 }

@@ -1,4 +1,6 @@
-import parser.PackageJarParser;
+package stat;
+
+import stat.parser.PackageJarParser;
 
 
 import java.io.File;
