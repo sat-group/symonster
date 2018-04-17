@@ -17,6 +17,7 @@ public class SATSolver {
 	
 	private IPBSolver solver = null;
 	private boolean unsat = false;
+	private VecInt assumptions;
 	
 	enum ConstraintType { LTE, EQ, GTE; }
 	
@@ -24,9 +25,12 @@ public class SATSolver {
 	public HashMap<Integer,Variable> id2variable = new HashMap<>();
 	
 	private int nbVariables = 0;
+	private VecInt loc_variables;
 	
 	public SATSolver(){
 		solver = SolverFactory.newDefault();
+		assumptions = new VecInt();
+		loc_variables = new VecInt();
 	}
 	
 	public void reset(){
@@ -41,8 +45,10 @@ public class SATSolver {
 	}
 	
 	public void setNbVariables(int vars){
-		nbVariables = vars;
-		solver.newVar(nbVariables);
+		for (int i = vars+1; i <= vars+100; i++)
+			loc_variables.push(i);
+		nbVariables = vars+100;
+		solver.newVar(nbVariables+100);
 	}
 	
 	public int getNbVariables(){
@@ -96,6 +102,10 @@ public class SATSolver {
 			unsat = true;
 		}
 	}
+	
+	public void setAssumption(int v) {
+		assumptions.push(v);
+	}
 		
 	public void setTrue(int v){
 		try{
@@ -115,12 +125,17 @@ public class SATSolver {
 		}
 	}
 	
-	public List<Variable> findPath(){
+	public List<Variable> findPath(int loc){
 		
 		ArrayList<Variable> res = new ArrayList<>();
-		
+		// TODO: what happens when loc -> loc+1
+		// 1) initial state can be encoded as constraints
+		// clear the assumptions: 1) final state, 2) blocking of models
+		// set a new final state
+		// set the previous state as true (you can use constraints -> setTrue)
+		// incrementally increase the encoding to loc+1
 		try {
-			if(!unsat && solver.isSatisfiable()){
+			if(!unsat && solver.isSatisfiable(assumptions)){
 				int [] model = solver.model();  
 				assert (model.length == nbVariables);
 				VecInt block = new VecInt();
@@ -133,6 +148,10 @@ public class SATSolver {
 
 				// block model
 				try {
+					// ~getX(loc=1) OR ~setX(loc=2) OR ~setY(loc=3)
+					// ~getX(loc=1) OR ~setX(loc=2) OR ~setY(loc=3) OR L1
+					block.push(loc_variables.get(loc-1));
+					assumptions.push(-loc_variables.get(loc-1));
 					solver.addClause(block);
 				}
 				catch (ContradictionException e) {

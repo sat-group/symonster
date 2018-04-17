@@ -35,6 +35,33 @@ public class SequentialEncoding implements Encoding {
 		createConstraints();
 		System.out.println("#constraints = " + solver.getNbConstraints());
 	}
+	
+	public void atMostK(int k) {
+		for (Transition tr : pnet.getTransitions()) {
+			VecInt constraint = new VecInt();
+			for (int t = 0; t < loc; t++) {
+				// create a variable with <place in the petri-net, timestamp, value>
+				Pair<Transition, Integer> pair = new ImmutablePair<Transition, Integer>(tr, t);
+				Variable var = transition2variable.get(pair);
+				constraint.push(var.getId());
+			}
+			solver.addConstraint(constraint, ConstraintType.LTE, k);
+		}
+	}
+	
+	public void atLeastK(int k, String transition) {
+//		for (Transition tr : pnet.getTransitions()) {
+		Transition tr = pnet.getTransition(transition);
+			VecInt constraint = new VecInt();
+			for (int t = 0; t < loc; t++) {
+				// create a variable with <place in the petri-net, timestamp, value>
+				Pair<Transition, Integer> pair = new ImmutablePair<Transition, Integer>(tr, t);
+				Variable var = transition2variable.get(pair);
+				constraint.push(var.getId());
+			}
+			solver.addConstraint(constraint, ConstraintType.GTE, k);
+	}
+
 
 	// Exactly one transition f is fired at each time step t
 	private void sequentialTransitions() {
@@ -242,19 +269,6 @@ public class SequentialEncoding implements Encoding {
 			solver.addConstraint(constraint, ConstraintType.LTE, 1);
 		}
 
-	}
-
-	private void atMostK(int k) {
-		for (Transition tr : pnet.getTransitions()) {
-			VecInt constraint = new VecInt();
-			for (int t = 0; t < loc; t++) {
-				// create a variable with <place in the petri-net, timestamp, value>
-				Pair<Transition, Integer> pair = new ImmutablePair<Transition, Integer>(tr, t);
-				Variable var = transition2variable.get(pair);
-				constraint.push(var.getId());
-			}
-			solver.addConstraint(constraint, ConstraintType.LTE, k);
-		}
 	}
 
 	@Override

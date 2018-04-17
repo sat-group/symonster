@@ -89,7 +89,7 @@ public class SyMonster {
             // 4. Perform reachability analysis
 
             // for each loc find all possible programs
-            List<Variable> result = Encoding.solver.findPath();
+            List<Variable> result = Encoding.solver.findPath(loc);
             System.out.println(result.size());
             while(!result.isEmpty() && !solution){
                 paths++;
@@ -156,7 +156,7 @@ public class SyMonster {
 
 				// the current path did not result in a program that passes all test cases
 				// find the next path
-				result = Encoding.solver.findPath();
+				result = Encoding.solver.findPath(loc);
 			}
 			
 			// we did not find a program of length = loc
