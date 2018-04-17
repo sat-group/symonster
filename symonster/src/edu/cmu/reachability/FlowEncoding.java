@@ -192,7 +192,7 @@ public class FlowEncoding implements Encoding {
 			// loop for each place
 			for (Place p : pnet.getPlaces()) {
 				// loop for each number of tokens
-				for (int w = 0; w <= p.getMaxToken(); w++) {
+				for (int w = 0; w < p.getMaxToken(); w++) {
 					
 					VecInt amo = new VecInt();
 
