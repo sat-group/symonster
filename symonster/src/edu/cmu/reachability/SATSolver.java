@@ -13,6 +13,8 @@ import org.sat4j.pb.SolverFactory;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.TimeoutException;
 
+import edu.cmu.reachability.SATSolver.ConstraintType;
+
 public class SATSolver {
 	
 	private IPBSolver solver = null;
@@ -45,10 +47,25 @@ public class SATSolver {
 	}
 	
 	public void setNbVariables(int vars){
+		/*
+		 // version for additional variables
 		for (int i = vars+1; i <= vars+100; i++)
 			loc_variables.push(i);
 		nbVariables = vars+100;
 		solver.newVar(nbVariables+100);
+		
+		// dummy constraints for the additional variables
+		// each variable much appear at least once in the solver
+		for (int i = vars+1; i <= 100; i++) {
+			try {
+				solver.addAtLeast(new VecInt(new int[] {i}), 1);
+			} catch (ContradictionException e) {
+				assert(false);
+			}
+		}
+		*/
+		nbVariables = vars;
+		solver.newVar(nbVariables);
 	}
 	
 	public int getNbVariables(){
@@ -135,6 +152,8 @@ public class SATSolver {
 		// set the previous state as true (you can use constraints -> setTrue)
 		// incrementally increase the encoding to loc+1
 		try {
+			// comment the below assert when using assumptions
+			assert(assumptions.isEmpty());
 			if(!unsat && solver.isSatisfiable(assumptions)){
 				int [] model = solver.model();  
 				assert (model.length == nbVariables);
@@ -150,8 +169,8 @@ public class SATSolver {
 				try {
 					// ~getX(loc=1) OR ~setX(loc=2) OR ~setY(loc=3)
 					// ~getX(loc=1) OR ~setX(loc=2) OR ~setY(loc=3) OR L1
-					block.push(loc_variables.get(loc-1));
-					assumptions.push(-loc_variables.get(loc-1));
+					//block.push(loc_variables.get(loc-1));
+					//assumptions.push(-loc_variables.get(loc-1));
 					solver.addClause(block);
 				}
 				catch (ContradictionException e) {
