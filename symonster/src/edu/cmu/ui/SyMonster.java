@@ -82,7 +82,9 @@ public class SyMonster {
         if (equiv){
             dependencyMap = JarParser.createDependencyMap();
         }
+        TimerUtils.stopTimer("equiv");
         PetriNet net;
+        TimerUtils.startTimer("buildnet");
         if (clone){
             BuildNetNoVoid b = new BuildNetNoVoid();
             net = b.build(sigs, superclassMap, subclassMap, inputs);
@@ -93,6 +95,7 @@ public class SyMonster {
             net = b.build(sigs, superclassMap, subclassMap, inputs);
             signatureMap = b.dict;
         }
+        TimerUtils.stopTimer("buildnet");
 
         int loc = 1;
 		int paths = 0;
@@ -101,6 +104,7 @@ public class SyMonster {
 
 
         while (!solution) {
+            TimerUtils.startTimer("path");
             // create a formula that has the same semantics as the petri-net
             Encoding encoding = new SequentialEncoding(net, loc);                     // Set encoding
             // set initial state and final state
@@ -111,8 +115,9 @@ public class SyMonster {
 
             // for each loc find all possible programs
             List<Variable> result = Encoding.solver.findPath(loc);
-            System.out.println(result.size());
+            TimerUtils.stopTimer("path");
             while(!result.isEmpty() && !solution){
+                TimerUtils.startTimer("path");
                 paths++;
                 String path = "Path #" + paths + " =\n";
                 List<String> apis  = new ArrayList<String>();
@@ -129,7 +134,7 @@ public class SyMonster {
                         System.out.println(s.getName());
                     }
                 }
-
+                TimerUtils.stopTimer("path");
                 if (!equiv || !repeatSolutions.contains(signatures)){
                     if (equiv){
                         List<List<MethodSignature>> repeated = dependencyMap.findAllTopSorts(signatures);
@@ -140,7 +145,7 @@ public class SyMonster {
                     boolean sat = true;
                     CodeFormer former = new CodeFormer(signatures,inputs,retType, varNames, methodName,subclassMap, superclassMap);
                     while (sat){
-                        //TODO Replace the null pointers with inputs/output types
+                        TimerUtils.startTimer("code");
                         String code;
                         try {
                             code = former.solve();
@@ -150,14 +155,28 @@ public class SyMonster {
                         }
                         sat = !former.isUnsat();
                         programs++;
+                        TimerUtils.stopTimer("code");
                         // 6. Run the test cases
                         // TODO: write this code; if all test cases pass then we can terminate
-                        if (Test.runTest(code,testCode)) {
+                        TimerUtils.startTimer("compile");
+                        boolean compre = Test.runTest(code,testCode);
+                        TimerUtils.stopTimer("compile");
+                        if (compre) {
                             solution = true;
+                            writeLog(out,"Options:\n");
+                            writeLog(out,"Clone: "+clone + "\n");
+                            writeLog(out,"Copy polymorphism: "+copyPoly + "\n");
+                            writeLog(out,"Equivalent program: "+equiv + "\n");
                             writeLog(out,"Programs explored = " + programs+"\n");
                             writeLog(out,"Paths explored = " + paths+"\n");
                             writeLog(out,"code:\n");
-                            writeLog(out,code);
+                            writeLog(out,code+"\n");
+                            writeLog(out,"Soot time: "+TimerUtils.getCumulativeTime("soot")+"\n");
+                            writeLog(out,"Equivalent program preprocess time: "+TimerUtils.getCumulativeTime("equiv")+"\n");
+                            writeLog(out,"Build graph time: "+TimerUtils.getCumulativeTime("buildnet")+"\n");
+                            writeLog(out,"Find path time: "+TimerUtils.getCumulativeTime("path")+"\n");
+                            writeLog(out,"Form code time: "+TimerUtils.getCumulativeTime("code")+"\n");
+                            writeLog(out,"Compilation time: "+TimerUtils.getCumulativeTime("compile")+"\n");
 
                             File compfile = new File("build/Target.class");
                             compfile.delete();

@@ -25,7 +25,7 @@ public class TimerUtils {
         }
         return ret;
     }
-    public static synchronized long getCumulativeTime(String name){
-        return cumulativeTimers.get(name);
+    public static synchronized double getCumulativeTime(String name){
+        return cumulativeTimers.get(name)/1000.0;
     }
 }
