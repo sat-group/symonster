@@ -5,24 +5,24 @@ import edu.cmu.equivprogram.DependencyMap;
 import edu.cmu.parser.*;
 import edu.cmu.petrinet.*;
 import edu.cmu.reachability.*;
+import edu.cmu.utils.TimerUtils;
 import org.sat4j.specs.TimeoutException;
 import uniol.apt.adt.pn.PetriNet;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class SyMonster {
 	public static void main(String[] args) throws IOException {
-		Test test = new Test();
-        // 0. Read config
-        SymonsterConfig jsonConfig = JsonParser.parseJsonConfig("config/config.json");
-        Set<String> acceptableSuperClasses = new HashSet<>();
-        acceptableSuperClasses.addAll(jsonConfig.acceptableSuperClasses);
-
-        // 1. Read input from the user
+	    //Command line arguments
+        List<String> arglist = Arrays.asList(args);
+        boolean clone = false;
+        boolean equiv = false;
+        boolean copyPoly = false;
+        String jsonPath;
+        BufferedWriter out = null;
+        // 0. Read input from the user
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
@@ -30,7 +30,20 @@ public class SyMonster {
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
+            String outputPath = args[1];
+            File outfile = new File(outputPath);
+            if (!outfile.exists()) outfile.createNewFile();
+            out = new BufferedWriter(new FileWriter(outfile));
+            clone = arglist.contains("-c");
+            equiv = arglist.contains("-e");
+            copyPoly = arglist.contains("-cp");
         }
+
+        // 1. Read config
+        SymonsterConfig jsonConfig = JsonParser.parseJsonConfig("config/config.json");
+        Set<String> acceptableSuperClasses = new HashSet<>();
+        acceptableSuperClasses.addAll(jsonConfig.acceptableSuperClasses);
+
         String methodName = jsonInput.methodName;
         List<String> libs = jsonInput.libs;
         List<String> inputs = jsonInput.srcTypes;
@@ -46,11 +59,9 @@ public class SyMonster {
             line = br.readLine();
         }
         String testCode = fileContents.toString();
-        System.out.println("Parsing libraries.");
+        TimerUtils.startTimer("total");
+        TimerUtils.startTimer("soot");
         List<MethodSignature> sigs = JarParser.parseJar(libs,jsonInput.packages,jsonConfig.blacklist);
-        System.out.println("# of signatures: "+sigs.size());
-
-        System.out.println("Resolving polymorphisms");
         Map<String,Set<String>> superclassMap = JarParser.getSuperClasses(acceptableSuperClasses);
         Map<String,Set<String>> subclassMap = new HashMap<>();
         for (String key : superclassMap.keySet()){
@@ -61,24 +72,34 @@ public class SyMonster {
                 subclassMap.get(value).add(key);
             }
         }
+        TimerUtils.stopTimer("soot");
         // 3. build a petrinet and signatureMap of library
         // Currently built without clone edges
-        System.out.println("Creating dependency graph");
+        TimerUtils.startTimer("equiv");
         Set<List<MethodSignature>> repeatSolutions = new HashSet<>();
-        DependencyMap dependencyMap = JarParser.createDependencyMap();
+        DependencyMap dependencyMap = null;
+        Map<String, MethodSignature> signatureMap;
+        if (equiv){
+            dependencyMap = JarParser.createDependencyMap();
+        }
+        PetriNet net;
+        if (clone){
+            BuildNetNoVoid b = new BuildNetNoVoid();
+            net = b.build(sigs, superclassMap, subclassMap, inputs);
+            signatureMap = b.dict;
+        }
+        else{
+            BuildNetNoVoidClone b = new BuildNetNoVoidClone();
+            net = b.build(sigs, superclassMap, subclassMap, inputs);
+            signatureMap = b.dict;
+        }
 
-        System.out.println("Building graph.");
-        //BuildNetNoVoid b = new BuildNetNoVoid();  // Set petrinet
-        BuildNetNoVoidClone b = new BuildNetNoVoidClone();
-		PetriNet net = b.build(sigs, superclassMap, subclassMap, inputs);
-		Map<String, MethodSignature> signatureMap = b.dict;
         int loc = 1;
 		int paths = 0;
 		int programs = 0;
 		boolean solution = false;
 
 
-        System.out.println("Solver starts");
         while (!solution) {
             // create a formula that has the same semantics as the petri-net
             Encoding encoding = new SequentialEncoding(net, loc);                     // Set encoding
@@ -109,10 +130,11 @@ public class SyMonster {
                     }
                 }
 
-                System.out.println(path);
-                if (!repeatSolutions.contains(signatures)){
-                    List<List<MethodSignature>> repeated = dependencyMap.findAllTopSorts(signatures);
-                    repeatSolutions.addAll(repeated);
+                if (!equiv || !repeatSolutions.contains(signatures)){
+                    if (equiv){
+                        List<List<MethodSignature>> repeated = dependencyMap.findAllTopSorts(signatures);
+                        repeatSolutions.addAll(repeated);
+                    }
                     // 5. Convert a path to a program
                     // NOTE: one path may correspond to multiple programs and we may need a loop here!
                     boolean sat = true;
@@ -128,24 +150,14 @@ public class SyMonster {
                         }
                         sat = !former.isUnsat();
                         programs++;
-                        if (programs % 50 == 0)
-                        {
-                            System.out.println("programs: "+programs);
-                            System.out.println(signatures);
-                            System.out.println("n signatures: "+ signatures.size());
-                            System.out.println(code);
-                            System.out.println();
-                        }
-
-
                         // 6. Run the test cases
                         // TODO: write this code; if all test cases pass then we can terminate
                         if (Test.runTest(code,testCode)) {
                             solution = true;
-                            System.out.println("Programs explored = " + programs);
-                            System.out.println("Paths explored = " + paths);
-                            System.out.println("code:");
-                            System.out.println(code);
+                            writeLog(out,"Programs explored = " + programs+"\n");
+                            writeLog(out,"Paths explored = " + paths+"\n");
+                            writeLog(out,"code:\n");
+                            writeLog(out,code);
 
                             File compfile = new File("build/Target.class");
                             compfile.delete();
@@ -162,5 +174,14 @@ public class SyMonster {
 			// we did not find a program of length = loc
 			loc++;
 		}
+		out.close();
 	}
+
+	private static void writeLog(BufferedWriter out,String string){
+        try {
+            out.write(string);
+        } catch (IOException e) {
+            System.exit(1);
+        }
+    }
 }

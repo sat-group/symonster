@@ -11,7 +11,6 @@ public class TimerUtils {
     private static Map<String,Long> cumulativeTimers = new HashMap<>();
 
     public static synchronized void startTimer(String name){
-
         timers.put(name, System.currentTimeMillis());
     }
     public static synchronized long stopTimer(String name){
