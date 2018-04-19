@@ -6,8 +6,8 @@ import edu.cmu.parser.*;
 import edu.cmu.petrinet.*;
 import edu.cmu.reachability.*;
 import edu.cmu.utils.TimerUtils;
-import org.sat4j.specs.TimeoutException;
 import uniol.apt.adt.pn.PetriNet;
+import org.sat4j.specs.TimeoutException;
 
 import java.io.*;
 import java.util.*;
@@ -87,12 +87,12 @@ public class SyMonster {
         TimerUtils.startTimer("buildnet");
         if (clone){
             BuildNetNoVoid b = new BuildNetNoVoid();
-            net = b.build(sigs, superclassMap, subclassMap, inputs);
+            net = b.build(sigs, superclassMap, subclassMap, inputs, copyPoly);
             signatureMap = b.dict;
         }
         else{
             BuildNetNoVoidClone b = new BuildNetNoVoidClone();
-            net = b.build(sigs, superclassMap, subclassMap, inputs);
+            net = b.build(sigs, superclassMap, subclassMap, inputs, copyPoly);
             signatureMap = b.dict;
         }
         TimerUtils.stopTimer("buildnet");

@@ -12,11 +12,7 @@ import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
 
 import java.beans.Visibility;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class BuildNetNoVoid {
     static public PetriNet petrinet = new PetriNet("net");
@@ -24,11 +20,85 @@ public class BuildNetNoVoid {
     static public Map<String, MethodSignature> dict = new HashMap<String, MethodSignature>();
 
     static private Map<String, List<String>> superDict = new HashMap<>();
+    static private Map<String, List<String>> subDict = new HashMap<>();
+
+
+    private static void generatePolymophism(Transition t,
+                                            int count,
+                                            List<Place> inputs,
+                                            Stack<Place> polyInputs) {
+        if(inputs.size() == count) {
+            boolean skip = true;
+            for(int i = 0; i < inputs.size(); i++) {
+                if(!inputs.get(i).equals(polyInputs.get(i))) {
+                    skip = false;
+                }
+            }
+            if(skip) {
+                return;
+            }
+
+            String newTransitionName = t.getId() + "Poly:(";
+            for(Place p : polyInputs) {
+                newTransitionName += p.getId() + " ";
+            }
+            newTransitionName += ")";
+
+            if(petrinet.containsTransition(newTransitionName)) {
+                return;
+            }
+            Transition newTransition  = petrinet.createTransition(newTransitionName);
+            for(Place p : polyInputs) {
+                addFlow(p.getId(), newTransitionName, 1);
+            }
+
+            for(Flow f : t.getPostsetEdges()) {
+                Place p = f.getPlace();
+                int w = f.getWeight();
+                petrinet.createFlow(newTransition, p, w);
+            }
+            dict.put(newTransitionName, dict.get(t.getId()));
+
+        } else {
+            Place p = inputs.get(count);
+            List<String> subClasses = subDict.get(p.getId());
+            if(subClasses == null) { // No possible polymophism
+                polyInputs.push(p);
+                generatePolymophism(t, count+1, inputs, polyInputs);
+                polyInputs.pop();
+                return;
+            } else {
+                for(String subclass : subClasses) {
+                    addPlace(subclass);
+                    Place polyClass = petrinet.getPlace(subclass);
+                    polyInputs.push(polyClass);
+                    generatePolymophism(t, count+1, inputs, polyInputs);
+                    polyInputs.pop();
+                }
+                return;
+            }
+        }
+    }
+
+    private static void copyPolymorphism() {
+        // Handles polymorphism by creating copies for each method that
+        // has superclass as input type
+        for(Transition t : petrinet.getTransitions()) {
+            List<Place> inputs = new ArrayList<>();
+            Set<Flow> inEdges = t.getPresetEdges();
+            for(Flow f : inEdges) {
+                for(int i = 0; i < f.getWeight(); i++) {
+                    inputs.add(f.getPlace());
+                }
+            }
+            Stack<Place> polyInputs = new Stack<>();
+            generatePolymophism(t, 0, inputs, polyInputs);
+        }
+    }
 
     // This method handles polymorphism by creating methods that transforms each
     // subclass into its super class
-    private static void handlePolymorphism() {
-
+    private static void normalPolymorphism() {
         for(String subClass : superDict.keySet()) {
             addPlace(subClass);
             for (String superClass : superDict.get(subClass)) {
@@ -49,6 +119,13 @@ public class BuildNetNoVoid {
             if(superClasses.size() != 0) {
                 List<String> superClassList = new ArrayList<>(superClasses);
                 superDict.put(s, superClassList);
+            }
+        }
+        for(String s : subClassMap.keySet()) {
+            Set<String> subClasses = subClassMap.get(s);
+            if(subClasses.size() != 0) {
+                List<String> subClassList = new ArrayList<>(subClasses);
+                subDict.put(s, subClassList);
             }
         }
     }
@@ -171,8 +248,8 @@ public class BuildNetNoVoid {
     public static PetriNet build(List<MethodSignature> result,
                                  Map<String, Set<String>> superClassMap,
                                  Map<String, Set<String>> subClassMap,
-                                 List<String> inputs
-                                 ) throws java.io.IOException {
+                                 List<String> inputs,
+                                 boolean copyPoly) throws java.io.IOException {
 
         getPolymorphismInformation(superClassMap, subClassMap);
 
@@ -180,18 +257,15 @@ public class BuildNetNoVoid {
             addTransition(k);
         }
 
-        handlePolymorphism();
+        if(copyPoly) {
+            copyPolymorphism();
+        } else {
+            normalPolymorphism();
+        }
 
         setMaxTokens(inputs);
 
-        Visualization.translate(petrinet);
-
-        /*
-        for(Place p : petrinet.getPlaces()) {
-            System.out.println(p.toString() + " " + p.getMaxToken());
-        }
-        */
-
+        System.out.println("Done.");
         return petrinet;
     }
 }

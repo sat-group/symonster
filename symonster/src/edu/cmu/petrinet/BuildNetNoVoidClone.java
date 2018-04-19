@@ -24,7 +24,7 @@ public class BuildNetNoVoidClone {
     static private Map<String, List<String>> superDict = new HashMap<>();
     static private Map<String, List<String>> subDict = new HashMap<>();
 
-    private static void handlePolymorphism() {
+    private static void normalPolymorphism() {
         for(String subClass : superDict.keySet()) {
             addPlace(subClass);
             for (String superClass : superDict.get(subClass)) {
@@ -95,7 +95,7 @@ public class BuildNetNoVoidClone {
         }
     }
 
-    private static void handlePolymorphismAlt() {
+    private static void copyPolymorphism() {
         // Handles polymorphism by creating copies for each method that
         // has superclass as input type
         for(Transition t : petrinet.getTransitions()) {
@@ -301,7 +301,8 @@ public class BuildNetNoVoidClone {
     public static PetriNet build(List<MethodSignature> result,
                                  Map<String, Set<String>> superClassMap,
                                  Map<String, Set<String>> subClassMap,
-                                 List<String> inputs)  throws java.io.IOException{
+                                 List<String> inputs,
+                                 boolean polyCopy)  throws java.io.IOException{
         getPolymorphismInformation(superClassMap, subClassMap);
 
         //iterate through each method
@@ -309,32 +310,20 @@ public class BuildNetNoVoidClone {
             addTransition(k);
         }
 
-        handlePolymorphismAlt();
+
+        if(polyCopy) {
+            copyPolymorphism();
+        } else {
+            normalPolymorphism();
+        }
         for(Transition t : petrinet.getTransitions()) {
             createCopies(t);
         }
 
         setMaxTokens(inputs);
 
-        Visualization.translate(petrinet);
-
+        //Visualization.translate(petrinet);
         // print all transitions
-
-        for(Transition t : petrinet.getTransitions()) {
-                System.out.println(t.getId());
-
-            /*
-            System.out.println("in:");
-            for(Flow in : t.getPresetEdges()) {
-                System.out.println(in.getPlace());
-            }
-            System.out.println("out:");
-            for(Flow out: t.getPostsetEdges()) {
-                System.out.println(out.getPlace());
-            }
-            System.out.println();
-            */
-        }
 
         System.out.println("Done");
         return petrinet;
