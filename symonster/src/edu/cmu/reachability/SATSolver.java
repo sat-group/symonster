@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.sat4j.core.VecInt;
 //import org.sat4j.minisat.SolverFactory;
 //import org.sat4j.specs.ISolver;
@@ -14,6 +18,7 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.TimeoutException;
 
 import edu.cmu.reachability.SATSolver.ConstraintType;
+import uniol.apt.adt.pn.Place;
 
 public class SATSolver {
 	
@@ -47,7 +52,7 @@ public class SATSolver {
 	}
 	
 	public void setNbVariables(int vars){
-		/*
+		
 		 // version for additional variables
 		for (int i = vars+1; i <= vars+100; i++)
 			loc_variables.push(i);
@@ -63,8 +68,8 @@ public class SATSolver {
 				assert(false);
 			}
 		}
-		*/
-		nbVariables = vars;
+		
+		//nbVariables = vars;
 		solver.newVar(nbVariables);
 	}
 	
@@ -142,7 +147,17 @@ public class SATSolver {
 		}
 	}
 	
-	public List<Variable> findPath(int loc){
+	public void setFState( List<Integer> fstate) {
+		//Clear all old assumptions since loc has been updated
+		assumptions.clear();
+		
+		//Add new final state as an assumption
+		for (int x: fstate) {
+			assumptions.push(x);
+		}
+	}
+	
+	public List<Variable> findPath( int loc){
 		
 		ArrayList<Variable> res = new ArrayList<>();
 		// TODO: what happens when loc -> loc+1
@@ -151,9 +166,11 @@ public class SATSolver {
 		// set a new final state
 		// set the previous state as true (you can use constraints -> setTrue)
 		// incrementally increase the encoding to loc+1
+		
+		
 		try {
 			// comment the below assert when using assumptions
-			assert(assumptions.isEmpty());
+			//assert(assumptions.isEmpty());
 			if(!unsat && solver.isSatisfiable(assumptions)){
 				int [] model = solver.model();  
 				assert (model.length == nbVariables);
@@ -169,8 +186,9 @@ public class SATSolver {
 				try {
 					// ~getX(loc=1) OR ~setX(loc=2) OR ~setY(loc=3)
 					// ~getX(loc=1) OR ~setX(loc=2) OR ~setY(loc=3) OR L1
-					//block.push(loc_variables.get(loc-1));
-					//assumptions.push(-loc_variables.get(loc-1));
+					
+					block.push(loc_variables.get(loc-1));
+					assumptions.push(-loc_variables.get(loc-1));
 					solver.addClause(block);
 				}
 				catch (ContradictionException e) {

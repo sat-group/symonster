@@ -7,6 +7,9 @@ import edu.cmu.petrinet.*;
 import edu.cmu.reachability.*;
 import edu.cmu.utils.TimerUtils;
 import uniol.apt.adt.pn.PetriNet;
+import uniol.apt.adt.pn.Place;
+
+import org.apache.commons.lang3.tuple.Pair;
 import org.sat4j.specs.TimeoutException;
 
 import java.io.*;
@@ -101,19 +104,25 @@ public class SyMonster {
 		int paths = 0;
 		int programs = 0;
 		boolean solution = false;
+		
+        Encoding encoding = new SequentialEncoding(net);                     // Set encoding
+        // set initial state and final state
+        encoding.updateSAT(loc);
+        encoding.setState(EncodingUtil.setInitialState(net, inputs),  0);
+        
 
 
         while (!solution) {
             TimerUtils.startTimer("path");
             // create a formula that has the same semantics as the petri-net
-            Encoding encoding = new SequentialEncoding(net, loc);                     // Set encoding
-            // set initial state and final state
-            encoding.setState(EncodingUtil.setInitialState(net, inputs),  0);
-            encoding.setState(EncodingUtil.setGoalState(net, retType),  loc);
+            List<Integer> fstate  = encoding.getFState(EncodingUtil.setGoalState(net, retType), loc);
 
+            
             // 4. Perform reachability analysis
-
+            
+            
             // for each loc find all possible programs
+            Encoding.solver.setFState(fstate);
             List<Variable> result = Encoding.solver.findPath(loc);
             TimerUtils.stopTimer("path");
             while(!result.isEmpty() && !solution){
@@ -192,6 +201,7 @@ public class SyMonster {
 			
 			// we did not find a program of length = loc
 			loc++;
+			encoding.updateSAT(loc);
 		}
 		out.close();
 	}

@@ -22,18 +22,26 @@ public class SequentialEncoding implements Encoding {
 	int nbVariables = 1;
 	int nbConstraints = 0;
 
-	public SequentialEncoding(PetriNet pnet, int loc) {
+	public SequentialEncoding(PetriNet pnet) {
 		this.pnet = pnet;
-		this.loc = loc;
+		
 
 		// clean the data structures before creating a new encoding
-		place2variable.clear();
-		transition2variable.clear();
-		solver.reset();
+		// place2variable.clear();
+		// transition2variable.clear();
+		// solver.reset();
 
+		//createVariables();
+		//createConstraints();
+		//System.out.println("#constraints = " + solver.getNbConstraints());
+	}
+	
+	public void updateSAT(int loc) {
+		this.loc = loc;
 		createVariables();
 		createConstraints();
 		System.out.println("#constraints = " + solver.getNbConstraints());
+		
 	}
 	
 	public void atMostK(int k) {
@@ -67,7 +75,7 @@ public class SequentialEncoding implements Encoding {
 	private void sequentialTransitions() {
 
 		// loop for each time step t
-		for (int t = 0; t < loc; t++) {
+		for (int t = loc-1; t < loc; t++) {
 			// loop for each transition
 			VecInt constraint = new VecInt();
 			for (Transition tr : pnet.getTransitions()) {
@@ -86,7 +94,7 @@ public class SequentialEncoding implements Encoding {
 
 	private void postConditionsTransitions() {
 		// loop for each time step t
-		for (int t = 0; t < loc; t++) {
+		for (int t = loc-1; t < loc; t++) {
 			// loop for each transition
 			for (Transition tr : pnet.getTransitions()) {
 
@@ -153,7 +161,7 @@ public class SequentialEncoding implements Encoding {
 
 	private void preConditionsTransitions() {
 		// loop for each time step t
-		for (int t = 0; t < loc; t++) {
+		for (int t = loc-1; t < loc; t++) {
 			// loop for each transition
 			for (Transition tr : pnet.getTransitions()) {
 				List<VecInt> preconditions = new ArrayList<VecInt>();
@@ -215,7 +223,8 @@ public class SequentialEncoding implements Encoding {
 	private void tokenRestrictions() {
 
 		// loop for each time step t
-		for (int t = 0; t <= loc; t++) {
+		// TODO: Confirm change here
+		for (int t = loc-1; t <= loc; t++) {
 			// loop for each place
 			for (Place p : pnet.getPlaces()) {
 				VecInt amo = new VecInt();
@@ -235,7 +244,7 @@ public class SequentialEncoding implements Encoding {
 	private void noTransitionTokens() {
 
 		// loop for each time step t
-		for (int t = 0; t < loc; t++) {
+		for (int t = loc-1; t < loc; t++) {
 			// loop for each place
 			for (Place p : pnet.getPlaces()) {
 				Set<Transition> transitions = new HashSet<Transition>();
@@ -281,7 +290,7 @@ public class SequentialEncoding implements Encoding {
 		// MyPoint(0,b1,c), MyPoint(0,b2,c) ; LOC=2, MyPoint(0,b1,0),MyPoint(0,b1,1),MyPoint(0,b1,2) ...
 
 		for (Place p : pnet.getPlaces()) {
-			for (int t = 0; t <= loc; t++) {
+			for (int t = loc-1; t <= loc; t++) {
 				for (int v = 0; v <= p.getMaxToken(); v++) {
 					// create a variable with <place in the petri-net, timestamp, value>
 					Triple<Place, Integer, Integer> triple = new ImmutableTriple<Place, Integer, Integer>(p, t, v);
@@ -295,7 +304,7 @@ public class SequentialEncoding implements Encoding {
 		}
 
 		for (Transition tr : pnet.getTransitions()) {
-			for (int t = 0; t < loc; t++) {
+			for (int t = loc-1; t < loc; t++) {
 				// create a variable with <transition in the petri-net,timestamp>
 				Pair<Transition, Integer> pair = new ImmutablePair<Transition, Integer>(tr, t);
 				Variable var = new Variable(nbVariables, tr.getLabel(), Type.TRANSITION, t);
@@ -351,6 +360,20 @@ public class SequentialEncoding implements Encoding {
 			solver.setTrue(v);
 			visited.add(p.getLeft());
 		}
+	}
+	
+	public List<Integer> getFState(Set<Pair<Place, Integer>> state, int timestep) {
+
+		Set<Place> visited = new HashSet<Place>();
+		List<Integer> fstate = new ArrayList<Integer>();
+		for (Pair<Place, Integer> p : state) {
+			Triple<Place, Integer, Integer> place = new ImmutableTriple<Place, Integer, Integer>(p.getLeft(), timestep,
+					p.getRight());
+			int v = place2variable.get(place).getId();
+			fstate.add(v);
+			visited.add(p.getLeft());
+		}
+		return fstate;
 	}
 
 }

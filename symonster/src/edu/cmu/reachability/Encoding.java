@@ -5,6 +5,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 public interface Encoding {
@@ -21,6 +22,10 @@ public interface Encoding {
 	SATSolver solver = new SATSolver();
 	
 	public void setState(Set<Pair<Place, Integer>> state, int timestep);
+	
+	public List<Integer> getFState(Set<Pair<Place, Integer>> state, int timestep);
+	
+	public void updateSAT(int loc);
 	
 	public void createConstraints();
 	
