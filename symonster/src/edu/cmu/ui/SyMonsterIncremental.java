@@ -8,7 +8,7 @@ import uniol.apt.adt.pn.PetriNet;
 import java.io.IOException;
 import java.util.*;
 
-public class SyMonsterFlow {
+public class SyMonsterIncremental {
 	public static void main(String[] args) throws IOException {
         // 0. Read config
         SymonsterConfig jsonConfig = JsonParser.parseJsonConfig("config/config.json");
@@ -19,7 +19,7 @@ public class SyMonsterFlow {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/flow/example.json");
+            jsonInput = JsonParser.parseJsonInput("untested/tests/1/test1.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -53,16 +53,30 @@ public class SyMonsterFlow {
         int loc = 1;
 		int paths = 0;
 		boolean solution = false;
+		
+		boolean incremental = false;
+		Encoding encoding = null;
 
         TimerUtils.startTimer("total");
-
-		while (!solution && loc < 4) {
-			// create a formula that has the same semantics as the petri-net
-			Encoding encoding = new FlowEncoding(net, loc);                     // Set encoding
-			
+		if (incremental) {
+			encoding = new SequentialEncoding(net); // Set encoding
 			// set initial state and final state
-			encoding.setState(EncodingUtil.setInitialState(net, inputs),  0);
-			encoding.setState(EncodingUtil.setGoalState(net, retType),  loc);
+			encoding.updateSAT(loc);
+			encoding.setState(EncodingUtil.setInitialState(net, inputs), 0);
+		}
+
+		while (!solution && loc < 5) {
+			// create a formula that has the same semantics as the petri-net
+			if (incremental) {
+			List<Integer> fstate  = encoding.getFState(EncodingUtil.setGoalState(net, retType), loc);
+			            // for each loc find all possible programs
+            Encoding.solver.setFState(fstate);
+			} else {
+				encoding = new OldEncoding(net, loc);                     // Set encoding
+            // set initial state and final state
+				encoding.setState(EncodingUtil.setInitialState(net, inputs),  0);
+				encoding.setState(EncodingUtil.setGoalState(net, retType),  loc);
+			}
 
 			// 4. Perform reachability analysis
 			

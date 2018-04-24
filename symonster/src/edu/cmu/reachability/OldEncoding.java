@@ -15,14 +15,14 @@ import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
 
-public class FlowEncoding implements Encoding {
+public class OldEncoding implements Encoding {
 
 	int loc = 1;
 	PetriNet pnet = null;
 	int nbVariables = 1;
 	int nbConstraints = 0;
 
-	public FlowEncoding(PetriNet pnet, int loc) {
+	public OldEncoding(PetriNet pnet, int loc) {
 		this.pnet = pnet;
 		this.loc = loc;
 
@@ -35,6 +35,33 @@ public class FlowEncoding implements Encoding {
 		createConstraints();
 		System.out.println("#constraints = " + solver.getNbConstraints());
 	}
+	
+	public void atMostK(int k) {
+		for (Transition tr : pnet.getTransitions()) {
+			VecInt constraint = new VecInt();
+			for (int t = 0; t < loc; t++) {
+				// create a variable with <place in the petri-net, timestamp, value>
+				Pair<Transition, Integer> pair = new ImmutablePair<Transition, Integer>(tr, t);
+				Variable var = transition2variable.get(pair);
+				constraint.push(var.getId());
+			}
+			solver.addConstraint(constraint, ConstraintType.LTE, k);
+		}
+	}
+	
+	public void atLeastK(int k, String transition) {
+//		for (Transition tr : pnet.getTransitions()) {
+		Transition tr = pnet.getTransition(transition);
+			VecInt constraint = new VecInt();
+			for (int t = 0; t < loc; t++) {
+				// create a variable with <place in the petri-net, timestamp, value>
+				Pair<Transition, Integer> pair = new ImmutablePair<Transition, Integer>(tr, t);
+				Variable var = transition2variable.get(pair);
+				constraint.push(var.getId());
+			}
+			solver.addConstraint(constraint, ConstraintType.GTE, k);
+	}
+
 
 	// Exactly one transition f is fired at each time step t
 	private void sequentialTransitions() {
@@ -105,7 +132,7 @@ public class FlowEncoding implements Encoding {
 						Variable nextState = place2variable.get(placeAfter);
 						VecInt state = new VecInt(
 								new int[] { -fireTr.getId(), -previousState.getId(), nextState.getId() });
-						solver.addConstraint(state, ConstraintType.GTE, 1);
+						solver.addClause(state);
 						
 						// f AND a => b
 						// clause: ~f OR ~a OR B
@@ -148,7 +175,7 @@ public class FlowEncoding implements Encoding {
 				// if f is fired then there are enough resources to fire it
 				for (VecInt pc : preconditions) {
 					pc.push(-fireTr.getId());
-					solver.addConstraint(pc, ConstraintType.GTE, 1);
+					solver.addClause(pc);
 				}
 
 				// we cannot fire a transition if we are at max capacity
@@ -178,7 +205,7 @@ public class FlowEncoding implements Encoding {
 
 					if (ok) {
 						VecInt clause = new VecInt(new int[] { -v.getId(), -fireTr.getId() });
-						solver.addConstraint(clause, ConstraintType.GTE, 1);
+						solver.addClause(clause);
 					}
 				}
 			}
@@ -191,25 +218,15 @@ public class FlowEncoding implements Encoding {
 		for (int t = 0; t <= loc; t++) {
 			// loop for each place
 			for (Place p : pnet.getPlaces()) {
+				VecInt amo = new VecInt();
 				// loop for each number of tokens
-				for (int w = 0; w < p.getMaxToken(); w++) {
-					
-					VecInt amo = new VecInt();
-
-					//Triple<Place, Integer, Integer> triple = new ImmutableTriple<Place, Integer, Integer>(p, t, w);
-					//Variable v = place2variable.get(triple);
-					//amo.push(v.getId());
-					for(int c = 0; c <= t; c++) {
-						Triple<Integer, Integer, Integer> trip = new ImmutableTriple<Integer, Integer, Integer> (t,w,c); 
-						Pair<Place, Triple<Integer,Integer,Integer>> quad = new ImmutablePair<Place, Triple<Integer,Integer,Integer>> (p, trip);		
-						Variable v = quad2variable.get(quad);	
-						amo.push(v.getId());
-					}
-					// enforce token restrictions 
-					solver.addConstraint(amo, ConstraintType.EQ, 1);
-						
-					
+				for (int w = 0; w <= p.getMaxToken(); w++) {
+					Triple<Place, Integer, Integer> triple = new ImmutableTriple<Place, Integer, Integer>(p, t, w);
+					Variable v = place2variable.get(triple);
+					amo.push(v.getId());
 				}
+				// enforce token restrictions
+				solver.addConstraint(amo, ConstraintType.EQ, 1);
 			}
 		}
 
@@ -238,7 +255,7 @@ public class FlowEncoding implements Encoding {
 					transitionsConstr.copyTo(clause);
 					clause.push(-place2variable.get(current).getId());
 					clause.push(place2variable.get(next).getId());
-					solver.addConstraint(clause, ConstraintType.GTE, 1);
+					solver.addClause(clause);
 				}
 			}
 		}
@@ -254,19 +271,6 @@ public class FlowEncoding implements Encoding {
 
 	}
 
-	private void atMostK(int k) {
-		for (Transition tr : pnet.getTransitions()) {
-			VecInt constraint = new VecInt();
-			for (int t = 0; t < loc; t++) {
-				// create a variable with <place in the petri-net, timestamp, value>
-				Pair<Transition, Integer> pair = new ImmutablePair<Transition, Integer>(tr, t);
-				Variable var = transition2variable.get(pair);
-				constraint.push(var.getId());
-			}
-			solver.addConstraint(constraint, ConstraintType.LTE, k);
-		}
-	}
-
 	@Override
 	public void createVariables() {
 		assert (pnet != null);
@@ -278,21 +282,14 @@ public class FlowEncoding implements Encoding {
 
 		for (Place p : pnet.getPlaces()) {
 			for (int t = 0; t <= loc; t++) {
-				for (int v = 0; v < p.getMaxToken(); v++) {
-					for(int c = 0; c <= t; c++) {
-						// create a variable with <place in the petri-net, timestamp, value>
-						Triple<Place, Integer, Integer> triple = new ImmutableTriple<Place, Integer, Integer>(p, t, v);
-						// TODO: instead of Type.PLACE use Type.FLOWPLACE
-						//Variable var = new Variable(nbVariables, p.getId(), Type.PLACE, t, v);
-						//place2variable.put(triple, var);
-						nbVariables++;
-						Triple<Integer, Integer, Integer> trip = new ImmutableTriple<Integer, Integer, Integer>(t, v, c);
-		
-						Pair<Place, Triple<Integer, Integer, Integer>> quad = new ImmutablePair<Place, Triple<Integer, Integer,Integer>> (p, trip);
-						Variable var = new Variable(nbVariables, p.getId(), Type.FLOWPLACE, t, v, c);
-						quad2variable.put(quad, var);
-					}
-					
+				for (int v = 0; v <= p.getMaxToken(); v++) {
+					// create a variable with <place in the petri-net, timestamp, value>
+					Triple<Place, Integer, Integer> triple = new ImmutableTriple<Place, Integer, Integer>(p, t, v);
+					Variable var = new Variable(nbVariables, p.getId(), Type.PLACE, t, v);
+					place2variable.put(triple, var);
+					// solver.id2variable.put(nbVariables, var);
+					// each variable is associated with an id (starts at 1)
+					nbVariables++;
 				}
 			}
 		}
@@ -302,9 +299,7 @@ public class FlowEncoding implements Encoding {
 				// create a variable with <transition in the petri-net,timestamp>
 				Pair<Transition, Integer> pair = new ImmutablePair<Transition, Integer>(tr, t);
 				Variable var = new Variable(nbVariables, tr.getLabel(), Type.TRANSITION, t);
-				// This map is useful to create the encoding
 				transition2variable.put(pair, var);
-				// This map is only useful to interpret the SAT solver output
 				solver.id2variable.put(nbVariables, var);
 				// each variable is associated with an id (starts at 1)
 				nbVariables++;
@@ -347,19 +342,13 @@ public class FlowEncoding implements Encoding {
 
 	@Override
 	public void setState(Set<Pair<Place, Integer>> state, int timestep) {
-		
-		/*
-		 * TODO: if you have a pair <int,2>, then we need to put variables <int, 1, 0, 0> and <int, 0, 0, 0> (int, id, flow, loc) to true.
-		 * TODO: you need to manually put the ones that do not happen to false, e.g. (int, 2, 0, 0) = false
-		 * 
-		 */
 
 		Set<Place> visited = new HashSet<Place>();
 		for (Pair<Place, Integer> p : state) {
 			Triple<Place, Integer, Integer> place = new ImmutableTriple<Place, Integer, Integer>(p.getLeft(), timestep,
 					p.getRight());
 			int v = place2variable.get(place).getId();
-			solver.setTrue(v); // TODO: variables that do not appear set false
+			solver.setTrue(v);
 			visited.add(p.getLeft());
 		}
 	}

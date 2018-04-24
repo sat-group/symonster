@@ -356,4 +356,16 @@ public class ParallelEncoding implements Encoding {
         }
     }
 
+	@Override
+	public List<Integer> getFState(Set<Pair<Place, Integer>> state, int timestep) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateSAT(int loc) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
