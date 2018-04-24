@@ -5,7 +5,7 @@ import java.util.Comparator;
 /**
  * Comparator for sorting methods by freq
  */
-public class EntryComparator implements Comparator {
+public class EntryComparator implements Comparator{
 
     @Override
     public int compare(Object o1, Object o2) {

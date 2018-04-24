@@ -1,5 +1,6 @@
 package stat.knn;
 
+import stat.StatModel;
 import stat.common.Entry;
 import stat.common.EntryComparator;
 import soot.util.ArraySet;
@@ -9,7 +10,7 @@ import java.util.*;
 /**
  * k-Nearest Neighbors, finds nearest neighbor through frequency as distance.
  */
-public class KNN {
+public class KNN implements StatModel{
     private String[] labels;
     private Map<String, Integer> labelMap;
     private List<int[]> values;
@@ -252,6 +253,7 @@ public class KNN {
      * @param appearances given test data vector
      * @return a sorted mapping of possible methods with probabilities
      */
+    @Override
     public LinkedHashMap<String, Double> predict(Set<String> appearances) {
         System.out.println(appearances);
 
