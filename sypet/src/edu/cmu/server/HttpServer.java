@@ -62,7 +62,7 @@ public class HttpServer extends NanoHTTPD {
 		}
 
 		PetriNet pNet = pNetList.get(pn);
-		HttpServer.LOG.info("PetriNet for path length: " + local + " [places: " + pNet.getPlaces().size()
+		HttpServer.LOG.info("PetriNet for path length: " + (local-1) + " [places: " + pNet.getPlaces().size()
 				+ " ; transitions: " + pNet.getTransitions().size() + " ; edges: " + pNet.getEdges().size() + "]");
 
 		List<Place> inits = new ArrayList<>();
@@ -115,7 +115,7 @@ public class HttpServer extends NanoHTTPD {
 		int roundRobinIterations = 0;
 		int roundRobinIterationsLimit = 40;
 		int roundRobinRange = 3;
-		boolean roundRobinFlag = true;
+		boolean roundRobinFlag = false;
 		objectiveOption = Option.AT_LEAST_ONE;
 		maxIterations = 5;
 
@@ -134,7 +134,8 @@ public class HttpServer extends NanoHTTPD {
 
 			// TODO: map from packages to required libraries
 			ArrayList<String> libs = new ArrayList<>();
-			libs.add("./lib/rt7.jar");
+			libs.add("../lib/rt7.jar");
+			libs.add("../lib/simplepoint.jar");
 			qb.setLibs(libs);
 
 			/////////////////////////////////////////////////////////////////////////////////
@@ -192,7 +193,7 @@ public class HttpServer extends NanoHTTPD {
 			int petriIterator = 0;
 
 			int cnt = 0;
-			int localMax = 1;
+			int localMax = 2;
 			boolean flag = false;
 			long start0 = System.nanoTime();
 
