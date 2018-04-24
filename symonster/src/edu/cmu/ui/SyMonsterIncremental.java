@@ -99,6 +99,7 @@ public class SyMonsterIncremental {
 			
 			// we did not find a program of length = loc
 			loc++;
+			encoding.updateSAT(loc);
 		}
 
 	}
