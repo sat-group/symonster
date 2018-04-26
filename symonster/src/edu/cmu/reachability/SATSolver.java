@@ -91,17 +91,17 @@ public class SATSolver {
 		switch(ct){
 		case LTE:
 			for (int i = 0 ;i < constraint.size(); i++)
-				System.out.print(coeffs.get(i) + "*x" + constraint.get(i) + " ");
+				System.out.print(coeffs.get(i) + "*" + id2variable.get(constraint.get(i)) + " ");
 			System.out.println("<= " + k);
 			break;
 		case EQ:
 			for (int i = 0 ;i < constraint.size(); i++)
-				System.out.print(coeffs.get(i) + "*x" + constraint.get(i) + " ");
+				System.out.print(coeffs.get(i) + "*" + id2variable.get(constraint.get(i)) + " ");
 			System.out.println("= " + k);
 			break;
 		case GTE:
 			for (int i = 0 ;i < constraint.size(); i++)
-				System.out.print(coeffs.get(i) + "*x" + constraint.get(i) + " ");
+				System.out.print(coeffs.get(i) + "*" + id2variable.get(constraint.get(i)) + " ");
 			System.out.println(">= " + k);
 			break;
 		default:
@@ -134,17 +134,17 @@ public class SATSolver {
 		switch(ct){
 		case LTE:
 			for (int i = 0 ;i < constraint.size(); i++)
-				System.out.print("x" + constraint.get(i) + " ");
+				System.out.print(id2variable.get(constraint.get(i)) + " ");
 			System.out.println("<= " + k);
 			break;
 		case EQ:
 			for (int i = 0 ;i < constraint.size(); i++)
-				System.out.print("x" + constraint.get(i) + " ");
+				System.out.print(id2variable.get(constraint.get(i)) + " ");
 			System.out.println("= " + k);
 			break;
 		case GTE:
 			for (int i = 0 ;i < constraint.size(); i++)
-				System.out.print("x" + constraint.get(i) + " ");
+				System.out.print(id2variable.get(constraint.get(i)) + " ");
 			System.out.println(">= " + k);
 			break;
 		default:

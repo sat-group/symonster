@@ -65,6 +65,7 @@ public class OldEncoding implements Encoding {
 
 	// Exactly one transition f is fired at each time step t
 	private void sequentialTransitions() {
+		System.out.println("**** Sequential Transitions Constraints");
 
 		// loop for each time step t
 		for (int t = 0; t < loc; t++) {
@@ -85,6 +86,8 @@ public class OldEncoding implements Encoding {
 	}
 
 	private void postConditionsTransitions() {
+		System.out.println("**** Post Conditions Transitions Constraints");
+		
 		// loop for each time step t
 		for (int t = 0; t < loc; t++) {
 			// loop for each transition
@@ -152,6 +155,8 @@ public class OldEncoding implements Encoding {
 	}
 
 	private void preConditionsTransitions() {
+		System.out.println("**** Pre Conditions Transitions Constraints");
+		
 		// loop for each time step t
 		for (int t = 0; t < loc; t++) {
 			// loop for each transition
@@ -213,6 +218,7 @@ public class OldEncoding implements Encoding {
 	}
 
 	private void tokenRestrictions() {
+		System.out.println("**** Token Restrictions Constraints");
 
 		// loop for each time step t
 		for (int t = 0; t <= loc; t++) {
@@ -233,6 +239,7 @@ public class OldEncoding implements Encoding {
 	}
 
 	private void noTransitionTokens() {
+		System.out.println("**** no Transitions Constraints");
 
 		// loop for each time step t
 		for (int t = 0; t < loc; t++) {
@@ -262,6 +269,7 @@ public class OldEncoding implements Encoding {
 	}
 
 	private void dummyConstraints() {
+		System.out.println("**** Dummy Constraints");
 
 		for (int v = 1; v <= nbVariables; v++) {
 			VecInt constraint = new VecInt();
@@ -287,7 +295,7 @@ public class OldEncoding implements Encoding {
 					Triple<Place, Integer, Integer> triple = new ImmutableTriple<Place, Integer, Integer>(p, t, v);
 					Variable var = new Variable(nbVariables, p.getId(), Type.PLACE, t, v);
 					place2variable.put(triple, var);
-					// solver.id2variable.put(nbVariables, var);
+					solver.id2variable.put(nbVariables, var);
 					// each variable is associated with an id (starts at 1)
 					nbVariables++;
 				}
@@ -324,17 +332,17 @@ public class OldEncoding implements Encoding {
 
 		// A place can only have 0, 1, 2, ..., n tokens. Example: if a place has
 		// 2 tokens then it cannot have 3 tokens
-		tokenRestrictions();
+		 tokenRestrictions();
 
 		// Pre-conditions for firing f
-		preConditionsTransitions();
+		 preConditionsTransitions();
 
 		// Post-conditions for firing f
-		postConditionsTransitions();
+		 postConditionsTransitions();
 
 		// if no transitions were fired that used the place p then the marking
 		// of p remains the same from times step t to t+1
-		noTransitionTokens();
+		 noTransitionTokens();
 		
 		//atMostK(1);
 

@@ -19,7 +19,8 @@ public class SyMonsterIncremental {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJsonInput("untested/tests/1/test1.json");
+            //jsonInput = JsonParser.parseJsonInput("untested/tests/1/test1.json");
+            jsonInput = JsonParser.parseJsonInput("untested/simplepoint/convert.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -54,7 +55,7 @@ public class SyMonsterIncremental {
 		int paths = 0;
 		boolean solution = false;
 		
-		boolean incremental = false;
+		boolean incremental = true;
 		Encoding encoding = null;
 
         TimerUtils.startTimer("total");
@@ -65,7 +66,7 @@ public class SyMonsterIncremental {
 			encoding.setState(EncodingUtil.setInitialState(net, inputs), 0);
 		}
 
-		while (!solution && loc < 5) {
+		while (!solution && loc < 2) {
 			// create a formula that has the same semantics as the petri-net
 			if (incremental) {
 			List<Integer> fstate  = encoding.getFState(EncodingUtil.setGoalState(net, retType), loc);
