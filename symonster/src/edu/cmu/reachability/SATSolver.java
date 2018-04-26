@@ -81,6 +81,7 @@ public class SATSolver {
 	
 	public void printClause(VecInt constraint) {
 		for (int i = 0 ;i < constraint.size(); i++) {
+			if (constraint.get(i) < 0) System.out.print("~");
 			System.out.print(id2variable.get(Math.abs(constraint.get(i))));
 			if (i != constraint.size()-1)
 				System.out.print(" OR ");
