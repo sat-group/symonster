@@ -87,8 +87,31 @@ public class SATSolver {
 		}
 	}
 	
+	public void printConstraint(VecInt constraint, VecInt coeffs, ConstraintType ct, int k) {
+		switch(ct){
+		case LTE:
+			for (int i = 0 ;i < constraint.size(); i++)
+				System.out.print(coeffs.get(i) + "*x" + constraint.get(i) + " ");
+			System.out.println("<= " + k);
+			break;
+		case EQ:
+			for (int i = 0 ;i < constraint.size(); i++)
+				System.out.print(coeffs.get(i) + "*x" + constraint.get(i) + " ");
+			System.out.println("= " + k);
+			break;
+		case GTE:
+			for (int i = 0 ;i < constraint.size(); i++)
+				System.out.print(coeffs.get(i) + "*x" + constraint.get(i) + " ");
+			System.out.println(">= " + k);
+			break;
+		default:
+			assert(false);
+	}
+	}
+	
 	public void addConstraint(VecInt constraint, VecInt coeffs, ConstraintType ct, int k){ 
 		try {
+			printConstraint(constraint, coeffs, ct, k);
 			switch(ct){
 				case LTE:
 					solver.addAtMost(constraint, coeffs, k);
@@ -107,8 +130,31 @@ public class SATSolver {
 		}
 	}
 	
+	public void printConstraint(VecInt constraint, ConstraintType ct, int k) {
+		switch(ct){
+		case LTE:
+			for (int i = 0 ;i < constraint.size(); i++)
+				System.out.print("x" + constraint.get(i) + " ");
+			System.out.println("<= " + k);
+			break;
+		case EQ:
+			for (int i = 0 ;i < constraint.size(); i++)
+				System.out.print("x" + constraint.get(i) + " ");
+			System.out.println("= " + k);
+			break;
+		case GTE:
+			for (int i = 0 ;i < constraint.size(); i++)
+				System.out.print("x" + constraint.get(i) + " ");
+			System.out.println(">= " + k);
+			break;
+		default:
+			assert(false);
+	}
+	}
+	
 	public void addConstraint(VecInt constraint, ConstraintType ct, int k){ 
 		try {
+			printConstraint(constraint, ct, k);
 			switch(ct){
 				case LTE:
 					solver.addAtMost(constraint, k);

@@ -54,7 +54,7 @@ public class SyMonsterIncremental {
 		int paths = 0;
 		boolean solution = false;
 		
-		boolean incremental = true;
+		boolean incremental = false;
 		Encoding encoding = null;
 
         TimerUtils.startTimer("total");

@@ -345,8 +345,6 @@ public class SequentialEncoding implements Encoding {
 		}
 		
 
-
-
 	}
 
 	public void createTVariables() {
