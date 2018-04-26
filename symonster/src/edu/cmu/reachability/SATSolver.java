@@ -50,6 +50,8 @@ public class SATSolver {
 	public int getNbConstraints(){
 		return solver.nConstraints();
 	}
+
+	
 	
 	public void setNbVariables(int vars){
 		

@@ -54,14 +54,14 @@ public class SyMonsterIncremental {
 		int paths = 0;
 		boolean solution = false;
 		
-		boolean incremental = false;
+		boolean incremental = true;
 		Encoding encoding = null;
 
         TimerUtils.startTimer("total");
 		if (incremental) {
 			encoding = new SequentialEncoding(net); // Set encoding
 			// set initial state and final state
-			encoding.updateSAT(loc);
+			//encoding.updateSAT(loc);
 			encoding.setState(EncodingUtil.setInitialState(net, inputs), 0);
 		}
 
