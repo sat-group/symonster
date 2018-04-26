@@ -42,6 +42,7 @@ public class SequentialEncoding implements Encoding {
 		
 		this.loc = 1;
 		tokenRestrictions();
+		System.out.println("#constraints = " + solver.getNbConstraints());
 		
 
 		// clean the data structures before creating a new encoding
@@ -70,8 +71,6 @@ public class SequentialEncoding implements Encoding {
 
 		this.loc = loc;
 		tokenRestrictions();
-
-		
 				
 		System.out.println("#constraints = " + solver.getNbConstraints());
 		

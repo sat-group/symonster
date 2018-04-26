@@ -66,7 +66,8 @@ public class SyMonsterIncremental {
 			encoding.setState(EncodingUtil.setInitialState(net, inputs), 0);
 		}
 
-		while (!solution && loc < 2) {
+		int limit = 2;
+		while (!solution && loc < limit) {
 			// create a formula that has the same semantics as the petri-net
 			if (incremental) {
 			List<Integer> fstate  = encoding.getFState(EncodingUtil.setGoalState(net, retType), loc);
@@ -100,6 +101,8 @@ public class SyMonsterIncremental {
 			
 			// we did not find a program of length = loc
 			loc++;
+			if (loc >= limit)
+				break;
 			encoding.updateSAT(loc);
 		}
 
