@@ -55,7 +55,7 @@ public class SyMonsterIncremental {
 		int paths = 0;
 		boolean solution = false;
 		
-		boolean incremental = true;
+		boolean incremental = false;
 		Encoding encoding = null;
 
         TimerUtils.startTimer("total");
@@ -66,7 +66,7 @@ public class SyMonsterIncremental {
 			encoding.setState(EncodingUtil.setInitialState(net, inputs), 0);
 		}
 
-		int limit = 2;
+		int limit = 3;
 		while (!solution && loc < limit) {
 			// create a formula that has the same semantics as the petri-net
 			if (incremental) {

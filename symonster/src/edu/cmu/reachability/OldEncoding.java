@@ -295,6 +295,7 @@ public class OldEncoding implements Encoding {
 					Triple<Place, Integer, Integer> triple = new ImmutableTriple<Place, Integer, Integer>(p, t, v);
 					Variable var = new Variable(nbVariables, p.getId(), Type.PLACE, t, v);
 					place2variable.put(triple, var);
+					//System.out.println("id = " + nbVariables + " variable= " + var);
 					solver.id2variable.put(nbVariables, var);
 					// each variable is associated with an id (starts at 1)
 					nbVariables++;
@@ -308,6 +309,7 @@ public class OldEncoding implements Encoding {
 				Pair<Transition, Integer> pair = new ImmutablePair<Transition, Integer>(tr, t);
 				Variable var = new Variable(nbVariables, tr.getLabel(), Type.TRANSITION, t);
 				transition2variable.put(pair, var);
+				//System.out.println("id = " + nbVariables + " variable= " + var);
 				solver.id2variable.put(nbVariables, var);
 				// each variable is associated with an id (starts at 1)
 				nbVariables++;

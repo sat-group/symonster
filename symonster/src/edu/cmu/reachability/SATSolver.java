@@ -79,8 +79,24 @@ public class SATSolver {
 		return nbVariables;
 	}
 	
+	public void printClause(VecInt constraint) {
+		for (int i = 0 ;i < constraint.size(); i++) {
+			System.out.print(id2variable.get(Math.abs(constraint.get(i))));
+			if (i != constraint.size()-1)
+				System.out.print(" OR ");
+		}
+		System.out.println("");
+//		for (int i = 0 ;i < constraint.size(); i++) {
+//			System.out.print(constraint.get(i));
+//			if (i != constraint.size()-1)
+//				System.out.print(" OR ");
+//		}
+//		System.out.println("");
+	}
+	
 	public void addClause(VecInt constraint) {
 		try {
+			printClause(constraint);
 			solver.addClause(constraint);
 		} catch (ContradictionException e) {
 			unsat = false;
