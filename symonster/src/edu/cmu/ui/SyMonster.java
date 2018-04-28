@@ -24,9 +24,10 @@ public class SyMonster {
         BufferedWriter out = null;
         // 0. Read input from the user
         SyMonsterInput jsonInput;
+
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            String outputPath = "/Users/allenxu/Desktop/haha.txt";
+            String outputPath = "/Users/liukaige/Desktop/haha.txt";
             File outfile = new File(outputPath);
             if (!outfile.exists()) outfile.createNewFile();
             out = new BufferedWriter(new FileWriter(outfile));
@@ -42,7 +43,6 @@ public class SyMonster {
             equiv = arglist.contains("-e");
             copyPoly = arglist.contains("-cp");
         }
-
         // 1. Read config
         SymonsterConfig jsonConfig = JsonParser.parseJsonConfig("config/config.json");
         Set<String> acceptableSuperClasses = new HashSet<>();
@@ -135,10 +135,9 @@ public class SyMonster {
                     if(sig != null) { //check if s is a line of a code
                         signatures.add(sig);
                     } else {
-                        System.out.println(s.getName());
+                        //System.out.println(s.getName());
                     }
                 }
-                System.out.println(path);
                 TimerUtils.stopTimer("path");
                 if (!equiv || !repeatSolutions.contains(signatures)){
                     if (equiv){

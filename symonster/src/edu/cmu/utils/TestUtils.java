@@ -135,7 +135,6 @@ public class TestUtils {
 
     public static boolean runTest(String code)
     {
-        System.out.println(code);
         //1.Construct an in-memory java source file from your dynamic code
         JavaFileObject file = getJavaFileObject(code);
         Iterable<? extends JavaFileObject> files = Arrays.asList(file);
