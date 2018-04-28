@@ -18,7 +18,7 @@ public class SyMonster {
 	    //Command line arguments
         List<String> arglist = Arrays.asList(args);
         boolean clone = false;
-        boolean equiv = false;
+        boolean equiv = true;
         boolean copyPoly = false;
         String jsonPath;
         BufferedWriter out = null;
@@ -26,7 +26,11 @@ public class SyMonster {
         SyMonsterInput jsonInput;
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/joda/17/benchmark17.json");
+            String outputPath = "/Users/allenxu/Desktop/haha.txt";
+            File outfile = new File(outputPath);
+            if (!outfile.exists()) outfile.createNewFile();
+            out = new BufferedWriter(new FileWriter(outfile));
+            jsonInput = JsonParser.parseJsonInput("benchmarks/xml/28/benchmark28.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -134,6 +138,7 @@ public class SyMonster {
                         System.out.println(s.getName());
                     }
                 }
+                System.out.println(path);
                 TimerUtils.stopTimer("path");
                 if (!equiv || !repeatSolutions.contains(signatures)){
                     if (equiv){

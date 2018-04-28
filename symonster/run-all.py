@@ -21,9 +21,9 @@ with open('result.txt', 'w') as resultFile:
                 '"' + path + ' temp.txt -e -cp"']
         for Darg in Dargs:
             print ("settings:" + Darg)
-	    cmd = 'timeout 900s ' + 'ant symonster -Dargs=' + Darg 
+            cmd = "timeout 900s " + "and symonster -Dargs=" + Darg
+            print "process starts."
             p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-	    print "process start"
             p.wait()
             print "process terminates"
             with open('temp.txt') as tempFile:

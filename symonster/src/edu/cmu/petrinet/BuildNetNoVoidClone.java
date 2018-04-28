@@ -43,6 +43,7 @@ public class BuildNetNoVoidClone {
                                             List<Place> inputs,
                                             Stack<Place> polyInputs) {
         if(inputs.size() == count) {
+            System.out.println(polyInputs);
             boolean skip = true;
             for(int i = 0; i < inputs.size(); i++) {
                 if(!inputs.get(i).equals(polyInputs.get(i))) {
@@ -310,7 +311,6 @@ public class BuildNetNoVoidClone {
             addTransition(k);
         }
 
-
         if(polyCopy) {
             copyPolymorphism();
         } else {
@@ -322,7 +322,7 @@ public class BuildNetNoVoidClone {
 
         setMaxTokens(inputs);
 
-        //Visualization.translate(petrinet);
+        Visualization.translate(petrinet);
         // print all transitions
 
         System.out.println("Done");
