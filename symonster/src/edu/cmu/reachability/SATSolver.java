@@ -32,12 +32,12 @@ public class SATSolver {
 	public HashMap<Integer,Variable> id2variable = new HashMap<>();
 	
 	private int nbVariables = 0;
-	private VecInt loc_variables;
+	private int loc_variable;
 	
 	public SATSolver(){
 		solver = SolverFactory.newDefault();
 		assumptions = new VecInt();
-		loc_variables = new VecInt();
+		
 	}
 	
 	public void reset(){
@@ -45,24 +45,35 @@ public class SATSolver {
 		unsat = false;
 		id2variable.clear();
 		nbVariables = 0;
+		assumptions.clear();
 	}
 	
 	public int getNbConstraints(){
 		return solver.nConstraints();
 	}
 
-	
+	public void initialVarSet() {
+		solver.newVar(1000000);
+	}
 	
 	public void setNbVariables(int vars){
+
+		nbVariables = vars;
+		solver.newVar(nbVariables);
+	}
+	
+	public void setNbVariables_new(int vars){
 		
 		 // version for additional variables
-		for (int i = vars+1; i <= vars+100; i++)
-			loc_variables.push(i);
-		nbVariables = vars+100;
-		solver.newVar(nbVariables+100);
+		
+		//for (int i = vars+1; i <= vars+100; i++)
+		//	loc_variables.push(i);
+		//nbVariables = vars+100;
+		//solver.newVar(nbVariables);
 		
 		// dummy constraints for the additional variables
 		// each variable much appear at least once in the solver
+		/*
 		for (int i = vars+1; i <= 100; i++) {
 			try {
 				solver.addAtLeast(new VecInt(new int[] {i}), 1);
@@ -70,9 +81,23 @@ public class SATSolver {
 				assert(false);
 			}
 		}
+		*/
 		
 		//nbVariables = vars;
-		solver.newVar(nbVariables);
+		//solver.newVar(nbVariables);
+	
+		
+		loc_variable = vars+1;
+		nbVariables = vars + 1;
+		//solver.newVar(nbVariables);
+		try {
+			solver.addAtLeast(new VecInt(new int[] {loc_variable}), 1);
+		} catch (ContradictionException e) {
+			assert(false);
+		}
+		
+		
+		
 	}
 	
 	public int getNbVariables(){
@@ -97,7 +122,7 @@ public class SATSolver {
 	
 	public void addClause(VecInt constraint) {
 		try {
-			printClause(constraint);
+			//printClause(constraint);
 			solver.addClause(constraint);
 		} catch (ContradictionException e) {
 			unsat = false;
@@ -128,7 +153,7 @@ public class SATSolver {
 	
 	public void addConstraint(VecInt constraint, VecInt coeffs, ConstraintType ct, int k){ 
 		try {
-			printConstraint(constraint, coeffs, ct, k);
+			//printConstraint(constraint, coeffs, ct, k);
 			switch(ct){
 				case LTE:
 					solver.addAtMost(constraint, coeffs, k);
@@ -171,7 +196,7 @@ public class SATSolver {
 	
 	public void addConstraint(VecInt constraint, ConstraintType ct, int k){ 
 		try {
-			printConstraint(constraint, ct, k);
+			//printConstraint(constraint, ct, k);
 			switch(ct){
 				case LTE:
 					solver.addAtMost(constraint, k);
@@ -252,8 +277,8 @@ public class SATSolver {
 					// ~getX(loc=1) OR ~setX(loc=2) OR ~setY(loc=3)
 					// ~getX(loc=1) OR ~setX(loc=2) OR ~setY(loc=3) OR L1
 					
-					block.push(loc_variables.get(loc-1));
-					assumptions.push(-loc_variables.get(loc-1));
+					//block.push(loc_variable);
+					//assumptions.push(-loc_variable);
 					solver.addClause(block);
 				}
 				catch (ContradictionException e) {

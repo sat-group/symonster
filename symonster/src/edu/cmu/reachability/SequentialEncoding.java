@@ -23,6 +23,8 @@ public class SequentialEncoding implements Encoding {
 	int nbConstraints = 0;
 
 	public SequentialEncoding(PetriNet pnet) {
+		solver.initialVarSet();
+		
 		this.pnet = pnet;
 		this.loc = 0;
 		createPVariables();
@@ -33,7 +35,8 @@ public class SequentialEncoding implements Encoding {
 		
 		createTVariables();
 		// set number of variables in the solver
-		solver.setNbVariables(nbVariables);
+		solver.setNbVariables_new(nbVariables);
+		nbVariables += 2;
 		assert (solver.getNbVariables() > 0);
 		
 		tokenRestrictions();
@@ -65,7 +68,8 @@ public class SequentialEncoding implements Encoding {
 		createTVariables();
 		
 		// set number of variables in the solver
-		solver.setNbVariables(nbVariables);
+		solver.setNbVariables_new(nbVariables);
+		nbVariables += 2;
 		assert (solver.getNbVariables() > 0);
 		createConstraints();
 

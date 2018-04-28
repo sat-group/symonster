@@ -66,13 +66,15 @@ public class SyMonsterIncremental {
 			encoding.setState(EncodingUtil.setInitialState(net, inputs), 0);
 		}
 
-		int limit = 3;
+		int limit = 7;
 		while (!solution && loc < limit) {
 			// create a formula that has the same semantics as the petri-net
 			if (incremental) {
 			List<Integer> fstate  = encoding.getFState(EncodingUtil.setGoalState(net, retType), loc);
 			            // for each loc find all possible programs
             Encoding.solver.setFState(fstate);
+				
+				
 			} else {
 				encoding = new OldEncoding(net, loc);                     // Set encoding
             // set initial state and final state
@@ -83,22 +85,24 @@ public class SyMonsterIncremental {
 			// 4. Perform reachability analysis
 			
 			// for each loc find all possible programs
-			List<Variable> result = Encoding.solver.findPath(loc);
+			//if (loc >= 4) {
+				//encoding.setState(EncodingUtil.setGoalState(net, retType),  loc);
+				List<Variable> result = Encoding.solver.findPath(loc);
             
-            while(!result.isEmpty() && !solution){
-				paths++;
-				String path = "Path #" + paths + " =\n";
-				for (Variable s : result) {
-					path += s.toString() + "\n";
+	            while(!result.isEmpty() && !solution){
+					paths++;
+					String path = "Path #" + paths + " =\n";
+					for (Variable s : result) {
+						path += s.toString() + "\n";
+					}
+					System.out.println(path);
+					
+	
+					// the current path did not result in a program that passes all test cases
+					// find the next path
+					result = Encoding.solver.findPath(loc);
 				}
-				System.out.println(path);
-				
-
-				// the current path did not result in a program that passes all test cases
-				// find the next path
-				result = Encoding.solver.findPath(loc);
-			}
-			
+			//}
 			// we did not find a program of length = loc
 			loc++;
 			if (loc >= limit)
@@ -107,5 +111,5 @@ public class SyMonsterIncremental {
 		}
 
 	}
-
+	
 }
