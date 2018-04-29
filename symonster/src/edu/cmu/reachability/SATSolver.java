@@ -263,7 +263,7 @@ public class SATSolver {
 			//assert(assumptions.isEmpty());
 			if(!unsat && solver.isSatisfiable(assumptions)){
 				int [] model = solver.model();  
-				assert (model.length == nbVariables);
+				//assert (model.length == nbVariables);
 				VecInt block = new VecInt();
 				for (Integer id : id2variable.keySet()){
 					if (model[id-1] > 0){

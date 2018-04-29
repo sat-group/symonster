@@ -65,7 +65,7 @@ public class SequentialEncoding implements Encoding {
 
 	// Exactly one transition f is fired at each time step t
 	private void sequentialTransitions() {
-		System.out.println("**** Sequential Transitions Constraints");
+		//System.out.println("**** Sequential Transitions Constraints");
 
 		// loop for each time step t
 		for (int t = 0; t < loc; t++) {
@@ -86,7 +86,7 @@ public class SequentialEncoding implements Encoding {
 	}
 
 	private void postConditionsTransitions() {
-		System.out.println("**** Post Conditions Transitions Constraints");
+		//System.out.println("**** Post Conditions Transitions Constraints");
 		
 		// loop for each time step t
 		for (int t = 0; t < loc; t++) {
@@ -155,7 +155,7 @@ public class SequentialEncoding implements Encoding {
 	}
 
 	private void preConditionsTransitions() {
-		System.out.println("**** Pre Conditions Transitions Constraints");
+		//System.out.println("**** Pre Conditions Transitions Constraints");
 		
 		// loop for each time step t
 		for (int t = 0; t < loc; t++) {
@@ -218,7 +218,7 @@ public class SequentialEncoding implements Encoding {
 	}
 
 	private void tokenRestrictions() {
-		System.out.println("**** Token Restrictions Constraints");
+		//System.out.println("**** Token Restrictions Constraints");
 
 		// loop for each time step t
 		for (int t = 0; t <= loc; t++) {
@@ -239,7 +239,7 @@ public class SequentialEncoding implements Encoding {
 	}
 
 	private void noTransitionTokens() {
-		System.out.println("**** no Transitions Constraints");
+		//System.out.println("**** no Transitions Constraints");
 
 		// loop for each time step t
 		for (int t = 0; t < loc; t++) {
@@ -269,7 +269,7 @@ public class SequentialEncoding implements Encoding {
 	}
 
 	private void dummyConstraints() {
-		System.out.println("**** Dummy Constraints");
+		//System.out.println("**** Dummy Constraints");
 
 		for (int v = 1; v <= nbVariables; v++) {
 			VecInt constraint = new VecInt();

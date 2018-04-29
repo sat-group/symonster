@@ -7,9 +7,6 @@ import edu.cmu.petrinet.*;
 import edu.cmu.reachability.*;
 import edu.cmu.utils.TimerUtils;
 import uniol.apt.adt.pn.PetriNet;
-import uniol.apt.adt.pn.Place;
-
-import org.apache.commons.lang3.tuple.Pair;
 import org.sat4j.specs.TimeoutException;
 
 import java.io.*;
@@ -21,15 +18,21 @@ public class SyMonster {
 	    //Command line arguments
         List<String> arglist = Arrays.asList(args);
         boolean clone = false;
-        boolean equiv = false;
+        boolean equiv = true;
         boolean copyPoly = false;
+        boolean incremental = false;
         String jsonPath;
         BufferedWriter out = null;
         // 0. Read input from the user
         SyMonsterInput jsonInput;
+
         if (args.length == 0) {
             System.out.println("Please use the program args next time.");
-            jsonInput = JsonParser.parseJsonInput("benchmarks/geometry/10/benchmark10.json");
+            String outputPath = "symonster-output.txt";
+            File outfile = new File(outputPath);
+            if (!outfile.exists()) outfile.createNewFile();
+            out = new BufferedWriter(new FileWriter(outfile));
+            jsonInput = JsonParser.parseJsonInput("untested/large/benchmark10.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -40,8 +43,8 @@ public class SyMonster {
             clone = arglist.contains("-c");
             equiv = arglist.contains("-e");
             copyPoly = arglist.contains("-cp");
+            incremental = arglist.contains("-i");
         }
-
         // 1. Read config
         SymonsterConfig jsonConfig = JsonParser.parseJsonConfig("config/config.json");
         Set<String> acceptableSuperClasses = new HashSet<>();
@@ -99,30 +102,42 @@ public class SyMonster {
             signatureMap = b.dict;
         }
         TimerUtils.stopTimer("buildnet");
+//        System.out.println("#places = " + net.getPlaces().size());
+//        System.out.println("#transitions = " + net.getTransitions().size());
 
         int loc = 1;
 		int paths = 0;
 		int programs = 0;
 		boolean solution = false;
+		Encoding encoding = null;
 		
-        Encoding encoding = new SequentialEncoding(net, loc);                     // Set encoding
-        // set initial state and final state
-        encoding.updateSAT(loc);
-        encoding.setState(EncodingUtil.setInitialState(net, inputs),  0);
-        
-
+		if (incremental) {
+			TimerUtils.startTimer("encoding");
+			encoding = new IncrementalEncoding(net);
+			encoding.setState(EncodingUtil.setInitialState(net, inputs), 0);
+			TimerUtils.stopTimer("encoding");
+		}
 
         while (!solution) {
             TimerUtils.startTimer("path");
             // create a formula that has the same semantics as the petri-net
-            List<Integer> fstate  = encoding.getFState(EncodingUtil.setGoalState(net, retType), loc);
-
-            
+            if (incremental) {
+            	TimerUtils.startTimer("encoding");
+				List<Integer> fstate  = encoding.getFState(EncodingUtil.setGoalState(net, retType), loc);
+				// for each loc find all possible programs
+				Encoding.solver.setFState(fstate);
+				TimerUtils.stopTimer("encoding");
+			} else {
+				TimerUtils.startTimer("encoding");
+				encoding = new SequentialEncoding(net, loc);                     // Set encoding
+				// set initial state and final state
+				encoding.setState(EncodingUtil.setInitialState(net, inputs),  0);
+				encoding.setState(EncodingUtil.setGoalState(net, retType),  loc);
+				TimerUtils.stopTimer("encoding");
+			}
             // 4. Perform reachability analysis
-            
-            
+
             // for each loc find all possible programs
-            Encoding.solver.setFState(fstate);
             List<Variable> result = Encoding.solver.findPath(loc);
             TimerUtils.stopTimer("path");
             while(!result.isEmpty() && !solution){
@@ -140,7 +155,7 @@ public class SyMonster {
                     if(sig != null) { //check if s is a line of a code
                         signatures.add(sig);
                     } else {
-                        System.out.println(s.getName());
+                        //System.out.println(s.getName());
                     }
                 }
                 TimerUtils.stopTimer("path");
@@ -172,7 +187,11 @@ public class SyMonster {
                         TimerUtils.stopTimer("compile");
                         if (compre) {
                             solution = true;
+//                            System.out.println("Code: " + code);
+//                            System.out.println("Encoding time: "+TimerUtils.getCumulativeTime("encoding")+"\n");
+//                            System.out.println("Find path time: "+TimerUtils.getCumulativeTime("path")+"\n");
                             writeLog(out,"Options:\n");
+                            writeLog(out,"Incremental: "+incremental + "\n");
                             writeLog(out,"Clone: "+clone + "\n");
                             writeLog(out,"Copy polymorphism: "+copyPoly + "\n");
                             writeLog(out,"Equivalent program: "+equiv + "\n");
@@ -186,6 +205,9 @@ public class SyMonster {
                             writeLog(out,"Find path time: "+TimerUtils.getCumulativeTime("path")+"\n");
                             writeLog(out,"Form code time: "+TimerUtils.getCumulativeTime("code")+"\n");
                             writeLog(out,"Compilation time: "+TimerUtils.getCumulativeTime("compile")+"\n");
+                            writeLog(out,"Encoding time: "+TimerUtils.getCumulativeTime("encoding")+"\n");
+                            writeLog(out,"#Places: "+net.getPlaces().size());
+                            writeLog(out,"#Transitions: "+net.getTransitions().size());
 
                             File compfile = new File("build/Target.class");
                             compfile.delete();
@@ -201,7 +223,11 @@ public class SyMonster {
 			
 			// we did not find a program of length = loc
 			loc++;
-			encoding.updateSAT(loc);
+			if (incremental) {
+				TimerUtils.startTimer("encoding");
+				encoding.updateSAT(loc);
+				TimerUtils.stopTimer("encoding");
+			}
 		}
 		out.close();
 	}
