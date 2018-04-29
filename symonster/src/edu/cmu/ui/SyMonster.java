@@ -105,7 +105,7 @@ public class SyMonster {
 		int programs = 0;
 		boolean solution = false;
 		
-        Encoding encoding = new SequentialEncoding(net);                     // Set encoding
+        Encoding encoding = new SequentialEncoding(net, loc);                     // Set encoding
         // set initial state and final state
         encoding.updateSAT(loc);
         encoding.setState(EncodingUtil.setInitialState(net, inputs),  0);

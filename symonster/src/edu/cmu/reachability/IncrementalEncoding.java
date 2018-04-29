@@ -15,25 +15,69 @@ import uniol.apt.adt.pn.PetriNet;
 import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
 
-public class OldEncoding implements Encoding {
+public class IncrementalEncoding implements Encoding {
 
 	int loc = 1;
 	PetriNet pnet = null;
 	int nbVariables = 1;
 	int nbConstraints = 0;
 
-	public OldEncoding(PetriNet pnet, int loc) {
+	public IncrementalEncoding(PetriNet pnet) {
+		solver.initialVarSet();
+		
 		this.pnet = pnet;
-		this.loc = loc;
+		this.loc = 0;
+		createPVariables();
+		this.loc = 1;
+		createPVariables();
+		
+		this.loc = 0;
+		
+		createTVariables();
+		// set number of variables in the solver
+		solver.setNbVariables_new(nbVariables);
+		nbVariables += 2;
+		assert (solver.getNbVariables() > 0);
+		
+		tokenRestrictions();
+		createConstraints();
+		
+		
+		this.loc = 1;
+		tokenRestrictions();
+		System.out.println("#constraints = " + solver.getNbConstraints());
+		
 
 		// clean the data structures before creating a new encoding
-		place2variable.clear();
-		transition2variable.clear();
-		solver.reset();
+		// place2variable.clear();
+		// transition2variable.clear();
+		// solver.reset();
 
-		createVariables();
+		//createVariables();
+		//createConstraints();
+		//System.out.println("#constraints = " + solver.getNbConstraints());
+	}
+	
+	public void updateSAT(int loc) {
+		this.loc = loc;
+		createPVariables();
+		
+		this.loc = loc-1;
+		//createVariables();
+		//createPVariables();
+		createTVariables();
+		
+		// set number of variables in the solver
+		solver.setNbVariables_new(nbVariables);
+		nbVariables += 2;
+		assert (solver.getNbVariables() > 0);
 		createConstraints();
+
+		this.loc = loc;
+		tokenRestrictions();
+				
 		System.out.println("#constraints = " + solver.getNbConstraints());
+		
 	}
 	
 	public void atMostK(int k) {
@@ -68,7 +112,7 @@ public class OldEncoding implements Encoding {
 		System.out.println("**** Sequential Transitions Constraints");
 
 		// loop for each time step t
-		for (int t = 0; t < loc; t++) {
+		for (int t = loc; t < loc+1; t++) {
 			// loop for each transition
 			VecInt constraint = new VecInt();
 			for (Transition tr : pnet.getTransitions()) {
@@ -87,9 +131,9 @@ public class OldEncoding implements Encoding {
 
 	private void postConditionsTransitions() {
 		System.out.println("**** Post Conditions Transitions Constraints");
-		
+
 		// loop for each time step t
-		for (int t = 0; t < loc; t++) {
+		for (int t = loc; t < loc+1; t++) {
 			// loop for each transition
 			for (Transition tr : pnet.getTransitions()) {
 
@@ -158,7 +202,7 @@ public class OldEncoding implements Encoding {
 		System.out.println("**** Pre Conditions Transitions Constraints");
 		
 		// loop for each time step t
-		for (int t = 0; t < loc; t++) {
+		for (int t = loc; t < loc+1; t++) {
 			// loop for each transition
 			for (Transition tr : pnet.getTransitions()) {
 				List<VecInt> preconditions = new ArrayList<VecInt>();
@@ -221,7 +265,8 @@ public class OldEncoding implements Encoding {
 		System.out.println("**** Token Restrictions Constraints");
 
 		// loop for each time step t
-		for (int t = 0; t <= loc; t++) {
+		// TODO: Confirm change here
+		for (int t = loc; t <= loc; t++) {
 			// loop for each place
 			for (Place p : pnet.getPlaces()) {
 				VecInt amo = new VecInt();
@@ -242,7 +287,7 @@ public class OldEncoding implements Encoding {
 		System.out.println("**** no Transitions Constraints");
 
 		// loop for each time step t
-		for (int t = 0; t < loc; t++) {
+		for (int t = loc; t < loc+1; t++) {
 			// loop for each place
 			for (Place p : pnet.getPlaces()) {
 				Set<Transition> transitions = new HashSet<Transition>();
@@ -288,38 +333,46 @@ public class OldEncoding implements Encoding {
 		// e.g. LOC = 1; MaxTokens = 2; MyPoint(0,0), MyPoint(0,1), MyPoint(0,2), MyPoint(1,0), MyPoint(1,1), MyPoint(1,2)
 		// MyPoint(0,b1,c), MyPoint(0,b2,c) ; LOC=2, MyPoint(0,b1,0),MyPoint(0,b1,1),MyPoint(0,b1,2) ...
 
+		
+	
+	
+		
+	}
+		
+	public void createPVariables() {
+		
 		for (Place p : pnet.getPlaces()) {
-			for (int t = 0; t <= loc; t++) {
+			for (int t = loc; t <= loc; t++) {
 				for (int v = 0; v <= p.getMaxToken(); v++) {
 					// create a variable with <place in the petri-net, timestamp, value>
 					Triple<Place, Integer, Integer> triple = new ImmutableTriple<Place, Integer, Integer>(p, t, v);
 					Variable var = new Variable(nbVariables, p.getId(), Type.PLACE, t, v);
 					place2variable.put(triple, var);
-					//System.out.println("id = " + nbVariables + " variable= " + var);
 					solver.id2variable.put(nbVariables, var);
 					// each variable is associated with an id (starts at 1)
 					nbVariables++;
 				}
 			}
 		}
+		
 
+	}
+
+	public void createTVariables() {
 		for (Transition tr : pnet.getTransitions()) {
-			for (int t = 0; t < loc; t++) {
+			for (int t = loc; t < loc+1; t++) {
 				// create a variable with <transition in the petri-net,timestamp>
 				Pair<Transition, Integer> pair = new ImmutablePair<Transition, Integer>(tr, t);
 				Variable var = new Variable(nbVariables, tr.getLabel(), Type.TRANSITION, t);
 				transition2variable.put(pair, var);
-				//System.out.println("id = " + nbVariables + " variable= " + var);
 				solver.id2variable.put(nbVariables, var);
 				// each variable is associated with an id (starts at 1)
 				nbVariables++;
 			}
 		}
 
-		// set number of variables in the solver
-		solver.setNbVariables(nbVariables);
-		assert (solver.getNbVariables() > 0);
 	}
+
 
 	@Override
 	public void createConstraints() {
@@ -334,17 +387,17 @@ public class OldEncoding implements Encoding {
 
 		// A place can only have 0, 1, 2, ..., n tokens. Example: if a place has
 		// 2 tokens then it cannot have 3 tokens
-		 tokenRestrictions();
+		//tokenRestrictions();
 
 		// Pre-conditions for firing f
-		 preConditionsTransitions();
+		preConditionsTransitions();
 
 		// Post-conditions for firing f
-		 postConditionsTransitions();
+		postConditionsTransitions();
 
 		// if no transitions were fired that used the place p then the marking
 		// of p remains the same from times step t to t+1
-		 noTransitionTokens();
+		noTransitionTokens();
 		
 		//atMostK(1);
 
@@ -362,17 +415,19 @@ public class OldEncoding implements Encoding {
 			visited.add(p.getLeft());
 		}
 	}
-
-	@Override
+	
 	public List<Integer> getFState(Set<Pair<Place, Integer>> state, int timestep) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public void updateSAT(int loc) {
-		// TODO Auto-generated method stub
-		
+		Set<Place> visited = new HashSet<Place>();
+		List<Integer> fstate = new ArrayList<Integer>();
+		for (Pair<Place, Integer> p : state) {
+			Triple<Place, Integer, Integer> place = new ImmutableTriple<Place, Integer, Integer>(p.getLeft(), timestep,
+					p.getRight());
+			int v = place2variable.get(place).getId();
+			fstate.add(v);
+			visited.add(p.getLeft());
+		}
+		return fstate;
 	}
 
 }
