@@ -368,4 +368,10 @@ public class ParallelEncoding implements Encoding {
 		
 	}
 
+	@Override
+	public void forceTransition(String api) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

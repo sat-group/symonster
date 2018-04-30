@@ -320,6 +320,30 @@ public class SequentialEncoding implements Encoding {
 		solver.setNbVariables(nbVariables);
 		assert (solver.getNbVariables() > 0);
 	}
+	
+	public void forceTransition(String s) {
+		List<Transition> match_transitions = new ArrayList<>();
+		for (Transition tr : pnet.getTransitions()) {
+			if (tr.getLabel().contains(s)) {
+				match_transitions.add(tr);
+				//System.out.println("match = " + tr);
+			}
+		}
+
+		// loop for each time step t
+		VecInt constraint = new VecInt();
+		for (int t = 0; t < loc; t++) {
+			// loop for each transition
+			for (Transition tr : match_transitions) {
+				Pair<Transition, Integer> pair = new ImmutablePair<Transition, Integer>(tr, t);
+				Variable var = transition2variable.get(pair);
+				constraint.push(var.getId());
+			}
+		}
+		solver.addConstraint(constraint, ConstraintType.GTE, 1);
+
+		
+	}
 
 	@Override
 	public void createConstraints() {

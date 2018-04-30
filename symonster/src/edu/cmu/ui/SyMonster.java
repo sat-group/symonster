@@ -14,6 +14,13 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class SyMonster {
+	
+	public static void enforceSolution(List<String> solution, Encoding encoding) {
+		for (String api : solution) {
+			encoding.forceTransition(api);
+		}
+	}
+	
 	public static void main(String[] args) throws IOException {
 	    //Command line arguments
         List<String> arglist = Arrays.asList(args);
@@ -32,7 +39,10 @@ public class SyMonster {
             File outfile = new File(outputPath);
             if (!outfile.exists()) outfile.createNewFile();
             out = new BufferedWriter(new FileWriter(outfile));
-            jsonInput = JsonParser.parseJsonInput("untested/large/benchmark10.json");
+            //jsonInput = JsonParser.parseJsonInput("untested/large/benchmark10.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/geometry/13/benchmark13.json");
+            clone = true;
+            copyPoly = true;
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -111,6 +121,13 @@ public class SyMonster {
 		boolean solution = false;
 		Encoding encoding = null;
 		
+		// put here the methods you want to force to be true
+		List<String> force_methods = new ArrayList<>();
+		force_methods.add("getX");
+		force_methods.add("getY");
+		force_methods.add("getRotateInstance");
+		force_methods.add("createTransformedArea");
+		
 		if (incremental) {
 			TimerUtils.startTimer("encoding");
 			encoding = new IncrementalEncoding(net);
@@ -133,6 +150,8 @@ public class SyMonster {
 				// set initial state and final state
 				encoding.setState(EncodingUtil.setInitialState(net, inputs),  0);
 				encoding.setState(EncodingUtil.setGoalState(net, retType),  loc);
+				// force methods here if needed
+				enforceSolution(force_methods, encoding);
 				TimerUtils.stopTimer("encoding");
 			}
             // 4. Perform reachability analysis
@@ -187,7 +206,7 @@ public class SyMonster {
                         TimerUtils.stopTimer("compile");
                         if (compre) {
                             solution = true;
-//                            System.out.println("Code: " + code);
+                            System.out.println("Code: " + code);
 //                            System.out.println("Encoding time: "+TimerUtils.getCumulativeTime("encoding")+"\n");
 //                            System.out.println("Find path time: "+TimerUtils.getCumulativeTime("path")+"\n");
                             writeLog(out,"Options:\n");

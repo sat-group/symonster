@@ -430,4 +430,10 @@ public class IncrementalEncoding implements Encoding {
 		return fstate;
 	}
 
+	@Override
+	public void forceTransition(String api) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

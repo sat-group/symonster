@@ -25,6 +25,8 @@ public interface Encoding {
 	
 	public List<Integer> getFState(Set<Pair<Place, Integer>> state, int timestep);
 	
+	public void forceTransition(String api);
+	
 	public void updateSAT(int loc);
 	
 	public void createConstraints();
