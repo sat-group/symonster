@@ -23,7 +23,7 @@ public class BiGramModelGenerator {
     public static void main(String[] args) throws FileNotFoundException {
         // corpus, name of result csv, package of concern, filepath of lib if not rt
         // comment this out if you want to input from command line
-        //args = new String[]{"lib/corpus/", "data_bigram_jodatime", "org.joda.time", "lib/joda-time-2.8.2.jar"};
+        args = new String[]{"lib/corpus/java.awt.geom/", "data_bigram_geom", "java.awt.geom"};
 
         targetPackage = args[2];
         corpusPath = args[0];
@@ -53,10 +53,10 @@ public class BiGramModelGenerator {
             if(JarParser.getMethodToAppearancesMap().size() > 0){
                 trainingSets.addAll(JarParser.getMethodToAppearancesMap().values());
             }
-            System.out.println("size: "+trainingSets.size());
         }
 
         BiGram biGram = new BiGram(LibraryJarParser.getLabelSet(), trainingSets);
+
 
         // output table
         PrintWriter pw = new PrintWriter(new File("src/resources/"+outputName+".csv"));

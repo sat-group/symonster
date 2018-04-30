@@ -1,6 +1,7 @@
 package stat;
 
 import stat.common.DataSource;
+import stat.ngram.BiGram;
 import stat.parser.LibraryJarParser;
 import stat.knn.KNN;
 
@@ -28,9 +29,9 @@ public class Analyzer {
         write(args[2]);
 
         // Get labels from library
-        if(args.length > 3) {
+        if (args.length > 3) {
             LibraryJarParser.init(DataSource.generateLib(args[3]), DataSource.generateCustomLib(args[0]));
-        }else {
+        } else {
             LibraryJarParser.init(DataSource.generateLib(""), DataSource.generateCustomLib(args[0]));
         }
 
@@ -38,17 +39,20 @@ public class Analyzer {
         knn = new KNN(LibraryJarParser.getLabelSet(), vectors);
     }
 
-    public static KNN getModel(){
+    public static KNN getModel() {
         return knn;
     }
 
-    public static List<List<TestReport>> getTestReports(Collection<LinkedHashSet<String>> testData, KNN model,
+    public static List<List<TestReport>> getTestReports(Collection<LinkedHashSet<String>> testData, StatModel model,
                                                         int k, boolean strict) {
         List<List<TestReport>> testReportsList = new ArrayList<>();
 
         for (LinkedHashSet<String> program : testData) {
             List<TestReport> reports = generateReport(program, model, k, strict);
             testReportsList.add(reports);
+            if(model instanceof BiGram){
+                ((BiGram) model).clearSeen();
+            }
         }
 
         return testReportsList;
@@ -119,30 +123,45 @@ public class Analyzer {
      * Generates a report from a given set of program lines using kNN
      *
      * @param program set of program methods
-     * @param model     trained kNN
+     * @param model   trained kNN
      * @param k       distance
      * @return report containing predicted results for the program
      */
-    private static List<TestReport> generateReport(LinkedHashSet<String> program, KNN model, int k, boolean strict) {
+    private static List<TestReport> generateReport(LinkedHashSet<String> program, StatModel model, int k, boolean strict) {
         LinkedHashSet<String> testData = new LinkedHashSet<>();
         List<TestReport> reports = new ArrayList<>();
 
         for (String method : program) {
-            if(testData.size()>0) {
-                LinkedHashMap<String, Double> predictedResults = model.predict(testData);
-                TestReport report = new TestReport(method, predictedResults, testData, strict);
-                reports.add(report);
-            }
-            if (k <= 0) {
-                testData.add(method);
-            } else {
+            if (model instanceof BiGram) {
+                if (testData.size() > 0) {
+                    LinkedHashMap<String, Double> predictedResults = model.predict(testData);
+                    TestReport report = new TestReport(method, predictedResults, testData, strict);
+                    reports.add(report);
+                }
                 int i = testData.size() + 1;
 
-                while (i > k && !testData.isEmpty()) {
+                while (i > 1 && !testData.isEmpty()) {
                     testData.remove(testData.iterator().next());
                     i--;
                 }
                 testData.add(method);
+            } else if (model instanceof KNN) {
+                if (testData.size() > 0) {
+                    LinkedHashMap<String, Double> predictedResults = model.predict(testData);
+                    TestReport report = new TestReport(method, predictedResults, testData, strict);
+                    reports.add(report);
+                }
+                if (k <= 0) {
+                    testData.add(method);
+                } else {
+                    int i = testData.size() + 1;
+
+                    while (i > k && !testData.isEmpty()) {
+                        testData.remove(testData.iterator().next());
+                        i--;
+                    }
+                    testData.add(method);
+                }
             }
         }
         return reports;
@@ -218,13 +237,13 @@ public class Analyzer {
             if (strict) {
                 String[] splitted = originalMethod.split(" ");
                 this.type = splitted[1];
-                System.out.println(type);
             }
             this.testData = new HashSet<>(testData);
 
             this.predictionStringBuilder = new StringBuilder();
             this.strict = strict;
             int k = 0;
+            System.out.println(predictedMethods);
             for (String method : predictedMethods.keySet()) {
                 if (k < 10) {
                     if (strict) {
@@ -246,11 +265,11 @@ public class Analyzer {
             }
         }
 
-        public String getOriginalMethod(){
+        public String getOriginalMethod() {
             return originalMethod;
         }
 
-        public String getType(){
+        public String getType() {
             return type;
         }
 

@@ -22,7 +22,7 @@ public class KNNPredictor {
 
         // jar to predict, name of result csv, package of concern, name pretrained data csv, name of output analysis csv, filepath of lib if not rt
         // comment this out if you want to input from command line
-        args = new String[]{"lib/corpus/org.joda.time/joda.jar", "result_jodatime", "org.joda.time", "data_jodatime_g", "analysis_jodatime", "1", "lib/joda-time-2.8.2.jar"};
+        args = new String[]{"lib/corpus/geom_only/geometry.jar", "result_geom", "java.awt.geom", "data_geom_g", "analysis_geom", "1"};
 
         // Use Analyzer to generate kNN
         if(args.length > 6) {
@@ -47,7 +47,7 @@ public class KNNPredictor {
         int correct = 0;
         for(List<Analyzer.TestReport> reports : testReports){
             for(Analyzer.TestReport report : reports){
-                pw.write(report.getMatched()+","+report.getType()+","+report.testDataString()+","+report.getOriginalMethod());
+                pw.write(report.getMatched()+","+report.getType()+","+report.testDataString()+","+report.predictionString()+","+report.getOriginalMethod());
                 if(report.getMatched() >= 0){
                     correct++;
                 }

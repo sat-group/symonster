@@ -41,8 +41,6 @@ public class SyMonster {
             out = new BufferedWriter(new FileWriter(outfile));
             //jsonInput = JsonParser.parseJsonInput("untested/large/benchmark10.json");
             jsonInput = JsonParser.parseJsonInput("benchmarks/geometry/13/benchmark13.json");
-            clone = true;
-            copyPoly = true;
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -123,10 +121,10 @@ public class SyMonster {
 		
 		// put here the methods you want to force to be true
 		List<String> force_methods = new ArrayList<>();
-		force_methods.add("getX");
-		force_methods.add("getY");
-		force_methods.add("getRotateInstance");
-		force_methods.add("createTransformedArea");
+//		force_methods.add("getX");
+//		force_methods.add("getY");
+//		force_methods.add("getRotateInstance");
+//		force_methods.add("createTransformedArea");
 		
 		if (incremental) {
 			TimerUtils.startTimer("encoding");

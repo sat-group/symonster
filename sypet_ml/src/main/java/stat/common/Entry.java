@@ -12,4 +12,9 @@ public class Entry {
         this.label = label;
         this.freq = freq;
     }
+
+    @Override
+    public String toString(){
+        return "LABEL: "+label+", FREQ: "+freq;
+    }
 }
