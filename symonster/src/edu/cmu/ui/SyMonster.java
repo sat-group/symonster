@@ -17,7 +17,7 @@ public class SyMonster {
 	public static void main(String[] args) throws IOException {
 	    //Command line arguments
         List<String> arglist = Arrays.asList(args);
-        boolean clone = false;
+        boolean clone = true;
         boolean equiv = true;
         boolean copyPoly = false;
         String jsonPath;
@@ -31,7 +31,7 @@ public class SyMonster {
             File outfile = new File(outputPath);
             if (!outfile.exists()) outfile.createNewFile();
             out = new BufferedWriter(new FileWriter(outfile));
-            jsonInput = JsonParser.parseJsonInput("benchmarks/xml/28/benchmark28.json");
+            jsonInput = JsonParser.parseJsonInput("benchmarks/math/1/benchmark1.json");
         }
         else{
             jsonInput = JsonParser.parseJsonInput(args[0]);
@@ -76,6 +76,8 @@ public class SyMonster {
                 subclassMap.get(value).add(key);
             }
         }
+        System.out.println(sigs);
+
         TimerUtils.stopTimer("soot");
         // 3. build a petrinet and signatureMap of library
         // Currently built without clone edges
@@ -99,13 +101,19 @@ public class SyMonster {
             net = b.build(sigs, superclassMap, subclassMap, inputs, copyPoly);
             signatureMap = b.dict;
         }
+
         TimerUtils.stopTimer("buildnet");
+
 
         int loc = 1;
 		int paths = 0;
 		int programs = 0;
 		boolean solution = false;
-
+        JarParser.bodies = null;
+        JarParser.usedFieldDict = null;
+        JarParser.bodies = null;
+        JarParser.pkgs = null;
+        System.gc();
 
         while (!solution) {
             TimerUtils.startTimer("path");
@@ -139,11 +147,7 @@ public class SyMonster {
                     }
                 }
                 TimerUtils.stopTimer("path");
-                if (!equiv || !repeatSolutions.contains(signatures)){
-                    if (equiv){
-                        List<List<MethodSignature>> repeated = dependencyMap.findAllTopSorts(signatures);
-                        repeatSolutions.addAll(repeated);
-                    }
+                if (true){
                     // 5. Convert a path to a program
                     // NOTE: one path may correspond to multiple programs and we may need a loop here!
                     boolean sat = true;

@@ -18,11 +18,11 @@ import java.util.*;
  */
 public class JarParser extends BodyTransformer{
     public static final String ANALYSIS_NAME = "jap.analysis";
-    private static Map<MethodSignature,Set<SootField>> usedFieldDict = new HashMap<>();
-    private static Map<SootMethod,Body> bodies = new HashMap<>();
-    private static Set<MethodSignature> workings = new HashSet<>();
-    private static List<String> pkgs;
-    private static final int SMALLS_LIB_LIMIT = 3000;
+    public static Map<MethodSignature,Set<SootField>> usedFieldDict = new HashMap<>();
+    public static Map<SootMethod,Body> bodies = new HashMap<>();
+    public static Set<MethodSignature> workings = new HashSet<>();
+    public static List<String> pkgs;
+    public static final int SMALLS_LIB_LIMIT = 3000;
 
     /**
      * Parse a list of given jar files, and produce a list of method signatures.
@@ -205,11 +205,13 @@ public class JarParser extends BodyTransformer{
         else if (unit instanceof JInvokeStmt){
             JInvokeStmt st = (JInvokeStmt)unit;
             SootMethod met = st.getInvokeExpr().getMethod();
-            if (bodies.keySet().contains(met))  result.addAll(addProgramMethod(bodies.get(met),getMethodSignature(met)));
+            if (bodies.keySet().contains(met)){
+                //result.addAll(addProgramMethod(bodies.get(met),getMethodSignature(met)));
+            }
 
         }
         for (ValueBox b : boxes){
-            result.addAll(addAllFieldInValue(b.getValue()));
+            //result.addAll(addAllFieldInValue(b.getValue()));
         }
         return result;
     }
@@ -233,10 +235,12 @@ public class JarParser extends BodyTransformer{
         else if (value instanceof InvokeExpr){
             InvokeExpr expr = (InvokeExpr)value;
             SootMethod met = expr.getMethod();
-            if (bodies.keySet().contains(met))  result.addAll(addProgramMethod(bodies.get(met),getMethodSignature(met)));
+            if (bodies.keySet().contains(met)) {
+                //result.addAll(addProgramMethod(bodies.get(met), getMethodSignature(met)));
+            }
         }
         for (ValueBox b : boxes){
-            result.addAll(addAllFieldInValue(b.getValue()));
+            //result.addAll(addAllFieldInValue(b.getValue()));
         }
         return result;
     }

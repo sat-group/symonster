@@ -141,7 +141,6 @@ public class TestUtils {
 
         //2.Compile your files by JavaCompiler
         compile(files);
-
         //3.Load your class by URLClassLoader, then instantiate the instance, and call method by reflection
         return runIt();
     }
