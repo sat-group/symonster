@@ -15,6 +15,7 @@ import org.sat4j.core.VecInt;
 import org.sat4j.pb.IPBSolver;
 import org.sat4j.pb.SolverFactory;
 import org.sat4j.specs.ContradictionException;
+import org.sat4j.specs.IConstr;
 import org.sat4j.specs.TimeoutException;
 
 import edu.cmu.reachability.SATSolver.ConstraintType;
@@ -25,6 +26,7 @@ public class SATSolver {
 	private IPBSolver solver = null;
 	private boolean unsat = false;
 	private VecInt assumptions;
+	private List<IConstr> blocking_constraints;
 	
 	enum ConstraintType { LTE, EQ, GTE; }
 	
@@ -36,6 +38,7 @@ public class SATSolver {
 	
 	public SATSolver(){
 		solver = SolverFactory.newDefault();
+		blocking_constraints = new ArrayList<>();
 		assumptions = new VecInt();
 		
 	}
@@ -241,6 +244,11 @@ public class SATSolver {
 		//Clear all old assumptions since loc has been updated
 		assumptions.clear();
 		
+		for (IConstr c : blocking_constraints) {
+			solver.removeConstr(c);
+		}
+		blocking_constraints.clear();
+		
 		//Add new final state as an assumption
 		for (int x: fstate) {
 			assumptions.push(x);
@@ -279,7 +287,9 @@ public class SATSolver {
 					
 					//block.push(loc_variable);
 					//assumptions.push(-loc_variable);
-					solver.addClause(block);
+					IConstr clause = solver.addClause(block);
+					blocking_constraints.add(clause);
+					
 				}
 				catch (ContradictionException e) {
 					unsat = true;

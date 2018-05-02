@@ -223,8 +223,8 @@ public class SyMonster {
                             writeLog(out,"Form code time: "+TimerUtils.getCumulativeTime("code")+"\n");
                             writeLog(out,"Compilation time: "+TimerUtils.getCumulativeTime("compile")+"\n");
                             writeLog(out,"Encoding time: "+TimerUtils.getCumulativeTime("encoding")+"\n");
-                            writeLog(out,"#Places: "+net.getPlaces().size());
-                            writeLog(out,"#Transitions: "+net.getTransitions().size());
+                            writeLog(out,"#Places: "+net.getPlaces().size()+"\n");
+                            writeLog(out,"#Transitions: "+net.getTransitions().size()+"\n");
 
                             File compfile = new File("build/Target.class");
                             compfile.delete();
@@ -235,16 +235,19 @@ public class SyMonster {
 
 				// the current path did not result in a program that passes all test cases
 				// find the next path
-				result = Encoding.solver.findPath(loc);
+                if (!solution)
+                	result = Encoding.solver.findPath(loc);
 			}
 			
 			// we did not find a program of length = loc
+            if (!solution) {
 			loc++;
 			if (incremental) {
 				TimerUtils.startTimer("encoding");
 				encoding.updateSAT(loc);
 				TimerUtils.stopTimer("encoding");
 			}
+            }
 		}
 		out.close();
 	}
