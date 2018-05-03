@@ -3,5 +3,5 @@ public boolean test() throws Throwable {
 	mp.setName("foo");
 	cmu.symonster.Point p = convert(mp);
 
-	return (p.getRoll() == 3 && p.getYaw() == 5 && p.getName().equals("foo"));
+	return (p.getPitch() == 1 && p.getName().equals("foo"));
 }
