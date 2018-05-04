@@ -115,8 +115,9 @@ public class SyMonster {
         JarParser.pkgs = null;
         System.gc();
 
+	int eq_programs = 0;
+
         while (!solution) {
-            TimerUtils.startTimer("path");
             // create a formula that has the same semantics as the petri-net
             Encoding encoding = new SequentialEncoding(net, loc);                     // Set encoding
             // set initial state and final state
@@ -126,10 +127,10 @@ public class SyMonster {
             // 4. Perform reachability analysis
 
             // for each loc find all possible programs
+	    TimerUtils.startTimer("path");
             List<Variable> result = Encoding.solver.findPath(loc);
             TimerUtils.stopTimer("path");
             while(!result.isEmpty() && !solution){
-                TimerUtils.startTimer("path");
                 paths++;
                 String path = "Path #" + paths + " =\n";
                 List<String> apis  = new ArrayList<String>();
@@ -146,8 +147,16 @@ public class SyMonster {
                         //System.out.println(s.getName());
                     }
                 }
-                TimerUtils.stopTimer("path");
-                if (true){
+		//if (!equiv || !repeatSolutions.contains(signatures)){
+		if(true){
+		    boolean eq_flag = false;
+		    if (equiv && repeatSolutions.contains(signatures))
+			eq_flag = true;
+		    if (equiv){
+			List<List<MethodSignature>> repeated = dependencyMap.findAllTopSorts(signatures);
+			repeatSolutions.addAll(repeated);
+		    }
+		    
                     // 5. Convert a path to a program
                     // NOTE: one path may correspond to multiple programs and we may need a loop here!
                     boolean sat = true;
@@ -162,6 +171,8 @@ public class SyMonster {
                             break;
                         }
                         sat = !former.isUnsat();
+			if (eq_flag)
+			    eq_programs++;
                         programs++;
                         TimerUtils.stopTimer("code");
                         // 6. Run the test cases
@@ -176,6 +187,7 @@ public class SyMonster {
                             writeLog(out,"Copy polymorphism: "+copyPoly + "\n");
                             writeLog(out,"Equivalent program: "+equiv + "\n");
                             writeLog(out,"Programs explored = " + programs+"\n");
+			    writeLog(out,"Equivalent programs that could be avoided = " + eq_programs+"\n");
                             writeLog(out,"Paths explored = " + paths+"\n");
                             writeLog(out,"code:\n");
                             writeLog(out,code+"\n");
@@ -195,8 +207,12 @@ public class SyMonster {
 
 				// the current path did not result in a program that passes all test cases
 				// find the next path
-				result = Encoding.solver.findPath(loc);
-			}
+		if (!solution){
+		    TimerUtils.startTimer("path");
+		    result = Encoding.solver.findPath(loc);
+		    TimerUtils.stopTimer("path");
+		}
+	    }
 			
 			// we did not find a program of length = loc
 			loc++;
