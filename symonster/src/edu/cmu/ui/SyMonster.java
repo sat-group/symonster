@@ -147,7 +147,6 @@ public class SyMonster {
                         //System.out.println(s.getName());
                     }
                 }
-		//if (!equiv || !repeatSolutions.contains(signatures)){
 		if(true){
 		    boolean eq_flag = false;
 		    if (equiv && repeatSolutions.contains(signatures))

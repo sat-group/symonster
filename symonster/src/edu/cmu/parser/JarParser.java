@@ -130,7 +130,7 @@ public class JarParser extends BodyTransformer{
                     }
                     else{
                         if (s2.getArgTypes().contains(s1.getRetType()) ||
-                                s1.getArgTypes().contains(s2.getRetType())){
+                                s1.getArgTypes().contains(s2.getRetType()) || s2.getRetType().equals(s1.getRetType())){
                             dependencyMap.addDep(s1,s2);
                         }
                     }
@@ -206,12 +206,12 @@ public class JarParser extends BodyTransformer{
             JInvokeStmt st = (JInvokeStmt)unit;
             SootMethod met = st.getInvokeExpr().getMethod();
             if (bodies.keySet().contains(met)){
-                //result.addAll(addProgramMethod(bodies.get(met),getMethodSignature(met)));
+                result.addAll(addProgramMethod(bodies.get(met),getMethodSignature(met)));
             }
 
         }
         for (ValueBox b : boxes){
-            //result.addAll(addAllFieldInValue(b.getValue()));
+            result.addAll(addAllFieldInValue(b.getValue()));
         }
         return result;
     }
@@ -236,11 +236,11 @@ public class JarParser extends BodyTransformer{
             InvokeExpr expr = (InvokeExpr)value;
             SootMethod met = expr.getMethod();
             if (bodies.keySet().contains(met)) {
-                //result.addAll(addProgramMethod(bodies.get(met), getMethodSignature(met)));
+                result.addAll(addProgramMethod(bodies.get(met), getMethodSignature(met)));
             }
         }
         for (ValueBox b : boxes){
-            //result.addAll(addAllFieldInValue(b.getValue()));
+            result.addAll(addAllFieldInValue(b.getValue()));
         }
         return result;
     }
