@@ -1,5 +1,7 @@
 package edu.cmu.parser;
 import edu.cmu.equivprogram.DependencyMap;
+import edu.cmu.equivprogram.DependencyMapBig;
+import edu.cmu.equivprogram.DependencyMapSmall;
 import edu.cmu.utils.SootUtils;
 import soot.*;
 import soot.jimple.FieldRef;
@@ -7,9 +9,7 @@ import soot.jimple.InvokeExpr;
 import soot.jimple.Stmt;
 import soot.jimple.internal.JInstanceFieldRef;
 import soot.jimple.internal.JInvokeStmt;
-import soot.util.ArraySet;
 
-import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -18,17 +18,19 @@ import java.util.*;
  */
 public class JarParser extends BodyTransformer{
     public static final String ANALYSIS_NAME = "jap.analysis";
-    private static Map<MethodSignature,Set<SootField>> usedFieldDict = new HashMap<>();
-    private static DependencyMap dependencyMap = new DependencyMap();
-    private static Map<SootMethod,Body> bodies = new HashMap<>();
-    private static Set<MethodSignature> workings = new HashSet<>();
+    public static Map<MethodSignature,Set<SootField>> usedFieldDict = new HashMap<>();
+    public static Map<SootMethod,Body> bodies = new HashMap<>();
+    public static Set<MethodSignature> workings = new HashSet<>();
+    public static List<String> pkgs;
+    public static final int SMALLS_LIB_LIMIT = 3000;
 
     /**
      * Parse a list of given jar files, and produce a list of method signatures.
      * @param libs physical addresses of libraries. e.g. "lib/hamcrest-core-1.3.jar"
      * @return the list of method signature contained in the given libraries
      */
-    public static List<MethodSignature> parseJar(List<String> libs,List<String> pkgs) {
+    public static List<MethodSignature> parseJar(List<String> libs,List<String> pkgss, List<String> blacklist) {
+        pkgs = pkgss;
         PackManager.v().getPack("jap").add(new Transform(ANALYSIS_NAME, new JarParser()));
         SootUtils.runSoot(SootUtils.getSootArgs(libs));
         List<MethodSignature> sigs = new LinkedList<>();
@@ -41,11 +43,18 @@ public class JarParser extends BodyTransformer{
                     if (method.isPublic()){
                         boolean sat = false;
                         for (String pkg : pkgs){
-                            if (method.getDeclaringClass().getName().startsWith(pkg)){
+                            if (clazz.getName().startsWith(pkg)){
                                 sat = true;
                                 break;
                             }
                         }
+                        for (String bl : blacklist){
+                            if (method.getName().endsWith(bl)) {
+                                sat = false;
+                                break;
+                            }
+                        }
+                        if (method.getParameterTypes().size() > 3) sat = false;
                         if (sat) sigs.add(getMethodSignature(method));
                     }
                 }
@@ -62,8 +71,13 @@ public class JarParser extends BodyTransformer{
      */
     public static Map<String,Set<String>> getSuperClasses(Set<String> acceptableSuperClasses){
         Map<String,Set<String>> result = new HashMap<>();
-        for (SootClass cl : Scene.v().getApplicationClasses()){
-            result.put(cl.getName(),getSuperClassesOfClass(acceptableSuperClasses,cl));
+        for (SootClass cl : Scene.v().getClasses()){
+            for (String pkg : pkgs){
+                if (cl.getName().startsWith(pkg)){
+                    result.put(cl.getName(),getSuperClassesOfClass(acceptableSuperClasses,cl));
+                    break;
+                }
+            }
         }
         return result;
     }
@@ -79,7 +93,8 @@ public class JarParser extends BodyTransformer{
             res = new HashSet<>();
         }
         for (SootClass interf:cl.getInterfaces()){
-            if (acceptableSuperClasses.contains(interf.getName())) res.add(cl.getSuperclass().getName());
+            String name = interf.getName();
+            if (acceptableSuperClasses.contains(name)) res.add(name);
             res.addAll(getSuperClassesOfClass(acceptableSuperClasses,interf));
         }
         return res;
@@ -93,28 +108,42 @@ public class JarParser extends BodyTransformer{
      */
 
     public static DependencyMap createDependencyMap(){
-        DependencyMap ret = dependencyMap;
-        dependencyMap = new DependencyMap();
         analyzeDep();
-        List<MethodSignature> keyset = new ArrayList<>(usedFieldDict.keySet());
-        //Create dependencies
-        for (int i = 0 ; i < keyset.size() ; i++){
-            for (int j = i + 1; j < keyset.size() ; j++){
-                MethodSignature s1 = keyset.get(i);
-                MethodSignature s2 = keyset.get(j);
-                boolean intersect = false;
-                for (SootField field : usedFieldDict.get(s1)){
-                    if (usedFieldDict.get(s2).contains(field)){
-                        intersect = true;
-                        break;
+        if (usedFieldDict.size() < SMALLS_LIB_LIMIT){
+            DependencyMapSmall dependencyMap = new DependencyMapSmall();
+            System.out.println("Creating dependencies On2");
+            List<MethodSignature> keyset = new ArrayList<>(usedFieldDict.keySet());
+            //Create dependencies
+            for (int i = 0 ; i < keyset.size() ; i++){
+                for (int j = i + 1; j < keyset.size() ; j++){
+                    MethodSignature s1 = keyset.get(i);
+                    MethodSignature s2 = keyset.get(j);
+                    boolean intersect = false;
+                    for (SootField field : usedFieldDict.get(s1)){
+                        if (usedFieldDict.get(s2).contains(field)){
+                            intersect = true;
+                            break;
+                        }
+                    }
+                    if (intersect){
+                        dependencyMap.addDep(s1,s2);
+                    }
+                    else{
+                        if (s2.getArgTypes().contains(s1.getRetType()) ||
+                                s1.getArgTypes().contains(s2.getRetType()) || s2.getRetType().equals(s1.getRetType())){
+                            dependencyMap.addDep(s1,s2);
+                        }
                     }
                 }
-                if (intersect){
-                    dependencyMap.addDep(s1,s2);
-                }
             }
+            return dependencyMap;
         }
-        return dependencyMap;
+        else{
+            System.out.println("Creating dependencies linear.");
+            DependencyMapBig dependencyMap = new DependencyMapBig(usedFieldDict);
+            return dependencyMap;
+        }
+
     }
 
     private static MethodSignature getMethodSignature(SootMethod method){
@@ -160,6 +189,7 @@ public class JarParser extends BodyTransformer{
             }
         }
         workings.remove(methodSignature);
+        usedFieldDict.put(methodSignature,result);
         return result;
 
     }
@@ -175,8 +205,9 @@ public class JarParser extends BodyTransformer{
         else if (unit instanceof JInvokeStmt){
             JInvokeStmt st = (JInvokeStmt)unit;
             SootMethod met = st.getInvokeExpr().getMethod();
-            if (bodies.keySet().contains(met))  result.addAll(addProgramMethod(bodies.get(met),getMethodSignature(met)));
-            else result.add(null);
+            if (bodies.keySet().contains(met)){
+                result.addAll(addProgramMethod(bodies.get(met),getMethodSignature(met)));
+            }
 
         }
         for (ValueBox b : boxes){
@@ -204,8 +235,9 @@ public class JarParser extends BodyTransformer{
         else if (value instanceof InvokeExpr){
             InvokeExpr expr = (InvokeExpr)value;
             SootMethod met = expr.getMethod();
-            if (bodies.keySet().contains(met))  result.addAll(addProgramMethod(bodies.get(met),getMethodSignature(met)));
-            else result.add(null);
+            if (bodies.keySet().contains(met)) {
+                result.addAll(addProgramMethod(bodies.get(met), getMethodSignature(met)));
+            }
         }
         for (ValueBox b : boxes){
             result.addAll(addAllFieldInValue(b.getValue()));

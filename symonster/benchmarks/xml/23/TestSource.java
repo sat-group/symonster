@@ -1,4 +1,4 @@
-public static boolean test() throws Throwable {
+public boolean test() throws Throwable {
      java.lang.String html = " <html>\n"
                 + "   <head>\n"
                 + "     <title>An example HTMLDocument</title>\n"
@@ -20,7 +20,7 @@ public static boolean test() throws Throwable {
     javax.swing.text.html.HTMLDocument htmlDoc = (javax.swing.text.html.HTMLDocument) htmlKit.createDefaultDocument();
     htmlKit.read(stringReader, htmlDoc, 0);
      
-    int lineNum = Source.getOffsetForLine(htmlDoc, 1);
+    int lineNum = getOffsetForLine(htmlDoc, 1);
     if(lineNum == 3)
         return true;
     else

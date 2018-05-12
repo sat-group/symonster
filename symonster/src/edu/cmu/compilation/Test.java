@@ -3,29 +3,21 @@ package edu.cmu.compilation;
 import edu.cmu.utils.TestUtils;
 
 import java.io.IOException;
-import java.util.List;
 
+/**
+ * Write code given the tests and classes.
+ */
 public class Test {
     private static String classOutputFolder = "build";
-    public boolean runTest(List<String> program){
-
-		// TODO: compile the program and run the test cases
-		// Currently we are just checking if the sequence of APIs is the one we expect
-		// NOTE: there may be other programs that would pass all test cases, e.g. reordering the APIs
-		if (program.get(0).equals("Point<-Point(void)") &&
-			program.get(1).equals("MyPoint<-clone(MyPoint)") &&
-			program.get(2).equals("int<-getX(MyPoint)") &&
-			program.get(3).equals("int<-getY(MyPoint)") &&
-			program.get(4).equals("Point<-clone(Point)") &&
-			program.get(5).equals("void<-setX(Point,int)") &&
-			program.get(6).equals("Point<-clone(Point)") &&
-			program.get(7).equals("void<-setY(Point,int)"))
-			return true;
-		else
-			return false;
-	}
 
     private static final String CLASSNAME = "Target";
+
+    /**
+     * run test class based on the synthesized code and test code.
+     * @param code synthesized code
+     * @param testCode test code with name "test"
+     * @return whether test pasted
+     */
     public static boolean runTest(String code,String testCode) throws IOException {
         //Create file;
         String classCode = writeCode(code,testCode);

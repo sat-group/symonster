@@ -10,5 +10,4 @@ public class Solution {
         Rectangle2D v3 = v2.createIntersection(arg0);
         return v3;
     }
-
 }

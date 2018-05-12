@@ -4,10 +4,19 @@ import com.google.gson.GsonBuilder;
 
 import java.io.*;
 
+/**
+ * Factory to parse symonster specific Json files.
+ */
 public class JsonParser {
     public static void main(String[] args) {
         parseJsonInput("/Users/liukaige/Desktop/testJson.json");
     }
+
+    /**
+     * Parse a json file as symonster input.
+     * @param path file path.
+     * @return input obj.
+     */
     public static SyMonsterInput parseJsonInput(String path){
         try(Reader reader = new InputStreamReader(new FileInputStream(new File(path)))){
             Gson gson = new GsonBuilder().create();
@@ -21,6 +30,11 @@ public class JsonParser {
         return null;
     }
 
+    /**
+     * Parse a json file as symonster configuration settings.
+     * @param path file path.
+     * @return input config.
+     */
     public static SymonsterConfig parseJsonConfig(String path){
         try(Reader reader = new InputStreamReader(new FileInputStream(new File(path)))){
             Gson gson = new GsonBuilder().create();

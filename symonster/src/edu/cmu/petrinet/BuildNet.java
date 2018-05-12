@@ -23,23 +23,28 @@ public class BuildNet {
 
     // TODO polymorphism information is currently hardcoded
     // A map that encodes the polymorphism
-    static private Map<String, List<String>> poly = new HashMap<>();
+    static private Map<String, List<String>> superDict = new HashMap<>();
 
     private static void handlePolymorphism() {
         // This method handles polymorphism by creating methods that transforms each
         // subclass into its super class
-        // TODO polymorphism information is currently hardcoded
-        List<String> l1 = new ArrayList<>();
-        l1.add("cmu.symonster.Shape");
-
-        poly.put("cmu.symonster.Rectangle", l1);
-        poly.put("cmu.symonster.Triangle", l1);
-
-        for(String subClass : poly.keySet()) {
-            for (String superClass : poly.get(subClass)) {
-                assert (petrinet.containsNode(subClass));
+        for(String subClass : superDict.keySet()) {
+            try {
+                petrinet.getPlace(subClass.toString());
+            } catch (NoSuchNodeException e ) {
+                petrinet.createPlace(subClass.toString());
+            }
+            assert (petrinet.containsNode(subClass));
+            for (String superClass : superDict.get(subClass)) {
+                // If the class is not in the petrinet, create the class
+                try {
+                    petrinet.getPlace(superClass.toString());
+                } catch (NoSuchNodeException e) {
+                    petrinet.createPlace(superClass.toString());
+                }
                 assert (petrinet.containsNode(superClass));
-                String methodName = subClass + "=" + superClass;
+
+                String methodName = subClass + "IsPolymorphicTo" + superClass;
                 petrinet.createTransition(methodName);
                 petrinet.createFlow(subClass, methodName);
                 petrinet.createFlow(methodName, superClass);
@@ -51,21 +56,28 @@ public class BuildNet {
         // This method handles polymorphism by creating altered version for
         // each existing method that work on polymorphic types
         // TODO polymorphism information is currently hardcoded
-        List<String> l1 = new ArrayList<>();
-        poly.put("cmu.symonster.Rectangle", l1);
-        poly.put("cmu.symonster.Triangle", l1);
-
         // TODO First check if method is non-static, if so, add an argument
-        // Iterate each argument to check if has a polymophism, if so, create a new version
 
     }
 
-    public static PetriNet build (List<MethodSignature> result) {
+    public PetriNet build(List<MethodSignature> result,
+                                 Map<String, Set<String>> superClassMap,
+                                 Map<String, Set<String>> subClassMap,
+                                 List<String> inputs) {
+        // Create polymorphism dicts
+        for(String s : superClassMap.keySet()) {
+            Set<String> superClasses = superClassMap.get(s);
+            List<String> li = new ArrayList<>(superClasses);
+            if(li.size() != 0) {
+                superDict.put(s, li);
+            }
+        }
+
         //create void type
         petrinet.createPlace("void");
-        petrinet.createTransition("voidClone");
-        petrinet.createFlow("void", "voidClone", 1);
-        petrinet.createFlow("voidClone", "void", 2);
+//        petrinet.createTransition("voidClone");
+//        petrinet.createFlow("void", "voidClone", 1);
+//        petrinet.createFlow("voidClone", "void", 2);
 
         //iterate through each method
         for (MethodSignature k : result) {
@@ -91,6 +103,7 @@ public class BuildNet {
                     transitionName += t.toString() + " ";
                 }
                 transitionName += ")";
+                transitionName += k.getRetType();
                 petrinet.createTransition(transitionName);
             } else { //The method is not static, so it has an extra argument
                 transitionName = className + "." + methodname + "(";
@@ -98,6 +111,7 @@ public class BuildNet {
                     transitionName += t.toString() + " ";
                 }
                 transitionName += ")";
+                transitionName += k.getRetType();
                 petrinet.createTransition(transitionName);
 
                 //creating the place and flow for class instance
@@ -162,22 +176,45 @@ public class BuildNet {
 
 
         // Create methods that handle polymorphism
-        //handlePolymorphism();
+        handlePolymorphism();
 
         //Set max tokens for each place
-        for (Place p : petrinet.getPlaces()) {
-            int count = 0;
-            for(Transition t : petrinet.getTransitions()) {
-                try {
-                    Flow f = petrinet.getFlow(p.getId(), t.getId());
-                    count = Math.max(count, f.getWeight()+1);
-                } catch (NoSuchEdgeException e) {
-                    continue;
-                }
+		for (Place p : petrinet.getPlaces()) {
+			System.out.println("place p = " + p);
+			if (p.getId().equals("void"))
+				p.setMaxToken(1);
+			else {
+				int count = 0;
+				for (Transition t : petrinet.getTransitions()) {
+					try {
+						Flow f = petrinet.getFlow(p.getId(), t.getId());
+						count = Math.max(count, f.getWeight() + 1);
+					} catch (NoSuchEdgeException e) {
+						continue;
+					}
+				}
+				p.setMaxToken(count);
+			}
+		}
+        
+        // Update the maxtoken for inputs
+        HashMap<Place, Integer> count = new HashMap<Place, Integer>();
+        for (String input : inputs) {
+            Place p;
+            p = petrinet.getPlace(input);
+            if (count.containsKey(p)) {
+                count.put(p, count.get(p) + 1);
+            } else {
+                count.put(p, 1);
             }
-            p.setMaxToken(count);
+        }
+        for(Place p : count.keySet()) {
+             if(count.get(p) > p.getMaxToken()) {
+                p.setMaxToken(count.get(p));
+            }
         }
 
+        
         return petrinet;
     }
 }

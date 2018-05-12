@@ -4,7 +4,6 @@ import soot.SootClass;
 import soot.SootMethod;
 import soot.Type;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -65,9 +64,8 @@ public class MethodSignature {
 
     @Override
     public String toString(){
-        String result =  retType + " " + name + "(";
+        String result =  retType + " " +  hostClass + "."+name + "(";
         if (isStatic) result = "static "+result;
-        result = hostClass + ": " + result;
         int i = 0;
         for (Type t : argTypes){
             if (i != argTypes.size()-1) result += t + ", ";
@@ -75,14 +73,15 @@ public class MethodSignature {
             i += 1;
         }
         result += ")";
-        return name;
+        return result;
     }
 
     @Override
     public boolean equals(Object o){
         if (!(o instanceof MethodSignature)) return false;
         MethodSignature sig = (MethodSignature)o;
-        return sig.method.equals(method);
+        return sig.name.equals(name) && sig.hostClass.equals(hostClass) && sig.retType.equals(retType) &&
+                sig.isStatic == isStatic && sig.argTypes.equals(argTypes) && sig.isConstructor == isConstructor;
     }
 
     @Override

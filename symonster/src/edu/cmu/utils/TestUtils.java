@@ -20,11 +20,12 @@ import javax.tools.ToolProvider;
 
 public class TestUtils {
     /** where shall the compiled class be saved to (should exist already) */
-    private static String classOutputFolder = "folder";
+    private static String classOutputFolder = "build";
 
     public static class MyDiagnosticListener implements DiagnosticListener<JavaFileObject>
     {
-        public void report(Diagnostic<? extends JavaFileObject> diagnostic)
+        @Override
+		public void report(Diagnostic<? extends JavaFileObject> diagnostic)
         {
 
         }
@@ -43,7 +44,8 @@ public class TestUtils {
             this.contents = contents;
         }
 
-        public CharSequence getCharContent(boolean ignoreEncodingErrors)
+        @Override
+		public CharSequence getCharContent(boolean ignoreEncodingErrors)
                 throws IOException
         {
             return contents;
@@ -111,20 +113,22 @@ public class TestUtils {
             Method thisMethod = thisClass.getDeclaredMethod("test", params);
 
             // run the testAdd() method on the instance:
-            return (boolean)thisMethod.invoke(instance, paramsObj);
+            boolean ret = (boolean)thisMethod.invoke(instance, paramsObj);
+            return ret;
         }
         catch (MalformedURLException e)
         {
-            System.out.println("bug1");
+            System.out.println("File not found");
+            e.printStackTrace();
         }
         catch (ClassNotFoundException e)
         {
-            System.out.println("bug2");
+            System.out.println("Does not compile");
+            e.printStackTrace();
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
-            System.out.println("bug3");
+            //Produced by the target program
         }
         return false;
     }
@@ -137,7 +141,6 @@ public class TestUtils {
 
         //2.Compile your files by JavaCompiler
         compile(files);
-
         //3.Load your class by URLClassLoader, then instantiate the instance, and call method by reflection
         return runIt();
     }

@@ -1,4 +1,4 @@
-public static boolean test0() throws Throwable {
+public boolean test0() throws Throwable {
 				
 		if (getDayFromString("2015/10/21", "yyyy/MM/dd") == 21)
 			return true;
@@ -6,7 +6,7 @@ public static boolean test0() throws Throwable {
 			return false;
 	}
 	
-	public static boolean test1() throws Throwable {
+	public boolean test1() throws Throwable {
 
 		if (getDayFromString("2013/6/13", "yyyy/MM/dd") == 13)
 			return true;
@@ -14,7 +14,7 @@ public static boolean test0() throws Throwable {
 			return false;
 	}
 	
-	public static boolean test() throws Throwable {
+	public boolean test() throws Throwable {
 		
 		
 		return test0() && test1();

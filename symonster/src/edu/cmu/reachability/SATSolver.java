@@ -6,15 +6,20 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.sat4j.core.VecInt;
-import org.sat4j.minisat.SolverFactory;
+//import org.sat4j.minisat.SolverFactory;
+//import org.sat4j.specs.ISolver;
+import org.sat4j.pb.IPBSolver;
+import org.sat4j.pb.SolverFactory;
 import org.sat4j.specs.ContradictionException;
-import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
+
+import edu.cmu.reachability.SATSolver.ConstraintType;
 
 public class SATSolver {
 	
-	private ISolver solver = null;
+	private IPBSolver solver = null;
 	private boolean unsat = false;
+	private VecInt assumptions;
 	
 	enum ConstraintType { LTE, EQ, GTE; }
 	
@@ -22,9 +27,12 @@ public class SATSolver {
 	public HashMap<Integer,Variable> id2variable = new HashMap<>();
 	
 	private int nbVariables = 0;
+	private VecInt loc_variables;
 	
 	public SATSolver(){
 		solver = SolverFactory.newDefault();
+		assumptions = new VecInt();
+		loc_variables = new VecInt();
 	}
 	
 	public void reset(){
@@ -34,13 +42,62 @@ public class SATSolver {
 		nbVariables = 0;
 	}
 	
+	public int getNbConstraints(){
+		return solver.nConstraints();
+	}
+	
 	public void setNbVariables(int vars){
+		/*
+		 // version for additional variables
+		for (int i = vars+1; i <= vars+100; i++)
+			loc_variables.push(i);
+		nbVariables = vars+100;
+		solver.newVar(nbVariables+100);
+		
+		// dummy constraints for the additional variables
+		// each variable much appear at least once in the solver
+		for (int i = vars+1; i <= 100; i++) {
+			try {
+				solver.addAtLeast(new VecInt(new int[] {i}), 1);
+			} catch (ContradictionException e) {
+				assert(false);
+			}
+		}
+		*/
 		nbVariables = vars;
 		solver.newVar(nbVariables);
 	}
 	
 	public int getNbVariables(){
 		return nbVariables;
+	}
+	
+	public void addClause(VecInt constraint) {
+		try {
+			solver.addClause(constraint);
+		} catch (ContradictionException e) {
+			unsat = false;
+		}
+	}
+	
+	public void addConstraint(VecInt constraint, VecInt coeffs, ConstraintType ct, int k){ 
+		try {
+			switch(ct){
+				case LTE:
+					solver.addAtMost(constraint, coeffs, k);
+					break;
+				case EQ:
+					solver.addExactly(constraint, coeffs, k);
+					break;
+				case GTE:
+					solver.addAtLeast(constraint, coeffs, k);
+					break;
+				default:
+					assert(false);
+			}
+		} catch (ContradictionException e) {
+			unsat = true;
+		}
 	}
 	
 	public void addConstraint(VecInt constraint, ConstraintType ct, int k){ 
@@ -53,9 +110,7 @@ public class SATSolver {
 					solver.addExactly(constraint, k);
 					break;
 				case GTE:
-					// if k == 1 then it is a clause
-					if (k == 1) solver.addClause(constraint);
-					else solver.addAtLeast(constraint, k);
+					solver.addAtLeast(constraint, k);
 					break;
 				default:
 					assert(false);
@@ -63,6 +118,10 @@ public class SATSolver {
 		} catch (ContradictionException e) {
 			unsat = true;
 		}
+	}
+	
+	public void setAssumption(int v) {
+		assumptions.push(v);
 	}
 		
 	public void setTrue(int v){
@@ -83,12 +142,19 @@ public class SATSolver {
 		}
 	}
 	
-	public List<Variable> findPath(){
+	public List<Variable> findPath(int loc){
 		
 		ArrayList<Variable> res = new ArrayList<>();
-		
+		// TODO: what happens when loc -> loc+1
+		// 1) initial state can be encoded as constraints
+		// clear the assumptions: 1) final state, 2) blocking of models
+		// set a new final state
+		// set the previous state as true (you can use constraints -> setTrue)
+		// incrementally increase the encoding to loc+1
 		try {
-			if(!unsat && solver.isSatisfiable()){
+			// comment the below assert when using assumptions
+			assert(assumptions.isEmpty());
+			if(!unsat && solver.isSatisfiable(assumptions)){
 				int [] model = solver.model();  
 				assert (model.length == nbVariables);
 				VecInt block = new VecInt();
@@ -98,16 +164,19 @@ public class SATSolver {
 						res.add(id2variable.get(id));
 					}
 				}
-				
+
 				// block model
 				try {
+					// ~getX(loc=1) OR ~setX(loc=2) OR ~setY(loc=3)
+					// ~getX(loc=1) OR ~setX(loc=2) OR ~setY(loc=3) OR L1
+					//block.push(loc_variables.get(loc-1));
+					//assumptions.push(-loc_variables.get(loc-1));
 					solver.addClause(block);
 				}
 				catch (ContradictionException e) {
 					unsat = true;
 				}
-				
-				
+
 			}
 		} catch (TimeoutException e) {
 			// consider as it did not find a solution
@@ -118,7 +187,5 @@ public class SATSolver {
 		Collections.sort(res);
 		
 		return res;
-		
 	}
-
 }

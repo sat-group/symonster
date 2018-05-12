@@ -67,7 +67,7 @@ public class Experiment {
 
 		PetriNet pNet = pNetList.get(pn);
 
-		System.out.println("PetriNet for path length: " + local + " [places: " + pNet.getPlaces().size()
+		System.out.println("PetriNet for path length: " + (local-1) + " [places: " + pNet.getPlaces().size()
 				+ " ; transitions: " + pNet.getTransitions().size() + " ; edges: " + pNet.getEdges().size() + "]");
 
 		List<Place> inits = new ArrayList<>();
@@ -100,7 +100,7 @@ public class Experiment {
 		int roundRobinIterations = 0;
 		int roundRobinIterationsLimit = 40;
 		int roundRobinRange = 3;
-		boolean roundRobinFlag = true;
+		boolean roundRobinFlag = false;
 
 		Cli cmdOptions = new Cli(args);
 		cmdOptions.parse();
@@ -202,7 +202,7 @@ public class Experiment {
 			int cnt = 0;
 			// int localMax = 1 + clones.size();
 			// System.out.println("Lower bound: " + low);
-			int localMax = low;
+			int localMax = 2;
 			boolean flag = false;
 			long start0 = System.nanoTime();
 
