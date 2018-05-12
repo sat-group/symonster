@@ -1,7 +1,8 @@
-//#java.awt.geom
-//#java.awt.geom.Rectangle2D
+//# java.awt.geom
+//# java.awt.geom.Rectangle2D
+//# test
 public static FieldsConfig gf(java.awt.geom.Rectangle2D sypet_arg0, double sypet_arg1, double sypet_arg2) {
-    // SyPet error: Http Server exception!
+    //#Sypet
 }
 // # //
 public static boolean test() throws Throwable {
