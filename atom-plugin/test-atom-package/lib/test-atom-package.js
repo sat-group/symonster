@@ -64,12 +64,12 @@ export default {
 
 
         options = {
-            url: 'http://128.83.122.134:9093',
+            url: 'http://128.83.122.134:9092',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(config)
+            body: JSON.stringify(testj)
         };
         //console.log(JSON.stringify(testj))
         request.post(options, function (err, response, body) {
@@ -88,7 +88,7 @@ export default {
 
 },
 toggle() {
-  try {
+  //try {
     const editor = atom.workspace.getActiveTextEditor();
     const buf =  editor.getSelectedBufferRange()
     const words = editor.getSelectedText().split('\n');
@@ -122,6 +122,7 @@ toggle() {
     test = test.join('').replace(/\r/g, "").replace(w[2] + "(" , "test(")
     console.log(test)
     var regex = /((?:(?:public|private|protected|static|final|abstract|synchronized|volatile)\s+)*)\s*(\w+)\s*(\w+)\((.*?)\)\s*/g
+    console.log(w);
     var match = regex.exec(w[3])
 
     console.log(w[3])
@@ -179,10 +180,10 @@ toggle() {
             match.replace(code)
         })
     })
-    } catch(error) {
-        console.log(error)
-        atom.notifications.addError("Error! Please recheck selection and syntax.")
-    }
+    //} catch(error) {
+    //    console.log(error)
+    //    atom.notifications.addError("Error! Please recheck selection and syntax.")
+    //}
     //this.modalPanel.show();
     }
 

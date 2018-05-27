@@ -13,7 +13,6 @@ import soot.jimple.internal.JInvokeStmt;
 import java.util.*;
 
 /**
-
  *
  */
 public class JarParser extends BodyTransformer{
@@ -130,7 +129,7 @@ public class JarParser extends BodyTransformer{
                     }
                     else{
                         if (s2.getArgTypes().contains(s1.getRetType()) ||
-                                s1.getArgTypes().contains(s2.getRetType()) || s2.getRetType().equals(s1.getRetType())){
+                                s1.getArgTypes().contains(s2.getRetType())){
                             dependencyMap.addDep(s1,s2);
                         }
                     }
@@ -244,5 +243,4 @@ public class JarParser extends BodyTransformer{
         }
         return result;
     }
-
 }
