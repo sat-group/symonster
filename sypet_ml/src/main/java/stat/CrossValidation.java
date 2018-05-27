@@ -35,7 +35,7 @@ public class CrossValidation {
     public static void main(String[] args) throws IOException {
 
         // package of concern, corpus location, output csv file name, analysis txt name, paramter-k, library jar location(rt if not specified)
-        args = new String[]{"0","org.jsoup", "lib/org.jsoup/", "jsoup", "analysis_jsoup", "1", "../sypet_ml/lib/jsoup-1.8.3.jar"};
+        //args = new String[]{"0","org.jsoup", "lib/org.jsoup/", "jsoup", "analysis_jsoup", "1", "../sypet_ml/lib/jsoup-1.8.3.jar"};
         //args = new String[]{0,"org.jsoup", "lib/org.jsoup/", "jsoup", "analysis_jsoup", 1};
         model = Integer.parseInt(args[0]);
         targetPackage = args[1];

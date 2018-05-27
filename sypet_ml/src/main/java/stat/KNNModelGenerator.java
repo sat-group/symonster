@@ -34,13 +34,15 @@ public class KNNModelGenerator {
      */
     public static void main(String[] args) throws FileNotFoundException {
 
-        // package of concern, corpus location, output data csv file name, library jar location(rt if not specified)
-        //args = new String[]{"org.jsoup", "lib/javax.xml/", "jsoup", "../sypet_ml/lib/jsoup-1.8.3.jar"};
-        //args = new String[]{"org.jsoup", "lib/javax.xml/", "jsoup"};
+        // package of concern, corpus location, output data csv file name, flag for dependent or not, library jar location(rt if not specified)
+        //args = new String[]{"org.jsoup", "lib/javax.xml/", "jsoup", 0,"../sypet_ml/lib/jsoup-1.8.3.jar"};
+        //args = new String[]{"org.jsoup", "lib/javax.xml/", 0, "jsoup"};
+
+        int dependence = Integer.parseInt(args[3]);
         // Parse lib
         System.out.println("=== get lib ====");
-        if(args.length > 3) {
-            LibraryJarParser.init(DataSource.generateLib(args[3]), DataSource.generateCustomLib(args[0]));
+        if(args.length > 4) {
+            LibraryJarParser.init(DataSource.generateLib(args[4]), DataSource.generateCustomLib(args[0]));
         }else{
             LibraryJarParser.init(DataSource.generateLib(""), DataSource.generateCustomLib(args[0]));
         }
@@ -71,7 +73,11 @@ public class KNNModelGenerator {
                 dummyKnn = new KNN(LibraryJarParser.getLabelSet());
 
                 // Train actual kNN
-                trainVarIndependent(completeKnn);
+                if(dependence > 0){
+                    trainVarDependent(completeKnn);
+                }else {
+                    trainVarIndependent(completeKnn);
+                }
 
             } else {
 

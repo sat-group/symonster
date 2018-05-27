@@ -2,6 +2,7 @@ package stat;
 
 import stat.common.DataSource;
 import stat.parser.JarParser;
+import stat.parser.LibraryJarParser;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +23,7 @@ public class KNNPredictor {
 
         // jar to predict, name of result csv, package of concern, name pretrained data csv, name of output analysis csv, filepath of lib if not rt
         // comment this out if you want to input from command line
-        args = new String[]{"lib/corpus/geom_only/geometry.jar", "result_geom", "java.awt.geom", "data_geom_g", "analysis_geom", "1"};
+        args = new String[]{"lib/corpus/geom_only/geometry.jar", "result_geom_lib", "java.awt.geom", "data_geom_g", "analysis_geom", "1"};
 
         // Use Analyzer to generate kNN
         if(args.length > 6) {
@@ -35,13 +36,14 @@ public class KNNPredictor {
         List<String> libs = new ArrayList<>();
         libs.add(args[0]);
         JarParser.parseJar(libs, DataSource.generateCustomLib(args[2]));
-
+    
         // Use kNN to predict and generate report1
         Map<String, LinkedHashSet<String>> data = JarParser.getMethodToAppearancesMap();
 
         // Generate test reports
         List<List<Analyzer.TestReport>> testReports = Analyzer.getTestReports(data.values(), Analyzer.getModel(), Integer.parseInt(args[5]), true);
         PrintWriter pw = new PrintWriter(new File("src/resources/"+args[1]+".csv"));
+
         pw.write("match,method,prediction,original\n");
         int total = 0;
         int correct = 0;

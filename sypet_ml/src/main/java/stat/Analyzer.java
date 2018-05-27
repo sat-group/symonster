@@ -221,6 +221,7 @@ public class Analyzer {
         private String originalMethod;
         private String type; // expected prediction type
         private StringBuilder predictionStringBuilder;
+        private LinkedHashMap<String, Double> predictedMethods;
         private int matched = -1;
         private boolean strict;
 
@@ -243,7 +244,7 @@ public class Analyzer {
             this.predictionStringBuilder = new StringBuilder();
             this.strict = strict;
             int k = 0;
-            System.out.println(predictedMethods);
+            this.predictedMethods = predictedMethods;
             for (String method : predictedMethods.keySet()) {
                 if (k < 10) {
                     if (strict) {
@@ -263,6 +264,10 @@ public class Analyzer {
                     }
                 }
             }
+        }
+
+        public LinkedHashMap<String, Double> getPredictedMethods() {
+            return predictedMethods;
         }
 
         public String getOriginalMethod() {

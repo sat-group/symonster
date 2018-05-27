@@ -255,7 +255,6 @@ public class KNN implements StatModel{
      */
     @Override
     public LinkedHashMap<String, Double> predict(Set<String> appearances) {
-        System.out.println(appearances);
 
         // Initialize
         List<Double> sumVector = new ArrayList<>(labelSize);
@@ -302,10 +301,8 @@ public class KNN implements StatModel{
 
         // Does not exit, abort
         if (count == 0) {
-            System.out.println("bad");
             return new LinkedHashMap<>();
         }
-        System.out.println("good");
 
         // Add tuples to list for sorting
         List<Entry> entryList = new ArrayList<>(labelSize);
